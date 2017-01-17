@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.1";
+var VERSION = "1.2";
 
 var excluded_urls = [
   "web.archive.org/web/",
@@ -10,6 +10,8 @@ var excluded_urls = [
   "0.0.0.0",
   "127.0.0.1"
 ];
+
+var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
   for (var i = 0; i < excluded_urls.length; i++) {
@@ -19,6 +21,26 @@ function isValidUrl(url) {
   }
   return true;
 }
+
+function rewriteUserAgentHeader(e) {
+  for (var header of e.requestHeaders) {
+    if (header.name.toLowerCase() === "user-agent") {
+      header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION
+    }
+  }
+  return {requestHeaders: e.requestHeaders};
+}
+
+/*
+ * Add rewriteUserAgentHeader as a listener to onBeforeSendHeaders
+ * Make it "blocking" so we can modify the headers.
+*/
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  rewriteUserAgentHeader,
+  {urls: [WB_API_URL]},
+  ["blocking", "requestHeaders"]
+);
+
 
 /**
  * Header callback
@@ -55,11 +77,10 @@ chrome.webRequest.onCompleted.addListener(function(details) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var xhr = new XMLHttpRequest();
-  var requestUrl = "https://archive.org/wayback/available";
+  var requestUrl = WB_API_URL;
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Chrome/" + VERSION);
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onload = function() {
     var response = JSON.parse(xhr.responseText);
