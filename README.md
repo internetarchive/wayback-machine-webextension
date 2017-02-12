@@ -22,3 +22,4 @@ AGPL-3
 - Richard Caceres, @rchrd2
 - Mark Graham, @markjohngraham
 - Benjamin Mandel
+- Kumar Yogesh
