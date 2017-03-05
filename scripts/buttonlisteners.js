@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
   var save_now = document.getElementById('save_now');
   save_now.addEventListener('click', function() {
     chrome.tabs.executeScript(null, {code: "var save_now=1;"}, function() {
@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }, false);
-
   var view_all = document.getElementById('view_all');
   view_all.addEventListener('click', function() {
     chrome.tabs.executeScript(null, {code: "var view_all=1;"}, function() {
