@@ -16,7 +16,8 @@
     "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/background.js"],
+    "persistent":false
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
