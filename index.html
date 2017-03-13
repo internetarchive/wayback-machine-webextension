@@ -25,12 +25,15 @@
       <tr class="spaceUnder" align="center">
     		<td>
           <button type="button" class="btn btn-primary" id="recent_capture" tabindex='-1'>Recent Version</button>
-          <BR>
+          <img id="recent_capture_fb" class="social_icons_img" src="images/facebook.png">
+          <img id="recent_capture_twitter" class="social_icons_img" src="images/twitter.png">
     		</td>
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
+          <img id="first_capture_fb" class="social_icons_img" src="images/facebook.png">
+          <img id="first_capture_twitter" class="social_icons_img" src="images/twitter.png">
         </td>
     	</tr>
     </table>
@@ -56,5 +59,10 @@
       max-width:100%;
       max-height:100%;
       vertical-align: middle;
+  }
+  .social_icons_img{
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
   }
 </style>
