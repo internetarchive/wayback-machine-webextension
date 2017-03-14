@@ -365,6 +365,19 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
 }
 
 /**
+ * Async method for saving a URL snapshot
+ */
+function wmAsyncSaveURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  var requestUrl = url;
+  xhr.open("GET", requestUrl, true);
+  xhr.onload = function(){
+    callback();
+  };
+  xhr.send();
+}
+
+/**
  * @param response {object}
  * @return {string or null}
  */
@@ -397,18 +410,31 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
+/**
+ * Checks if snapshot exists for current page.
+ * If it doesnt, saves a new snapshot automatically.
+ */
 chrome.tabs.onUpdated.addListener(function(tabId , info) {
     if (info.status == "complete") {
       chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[13, 77, 136, 255]});
       chrome.browserAction.setBadgeText({tabId: tabId, text:"..."});
       chrome.tabs.get(tabId, function(tab) {
         var page_url = tab.url;
+        var wayback_url = "https://web.archive.org/save/";
+        var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+        url = page_url.replace(pattern, "");
+        request_url = wayback_url+encodeURI(url);
+
         wmAvailabilityCheck(page_url,function(){
           chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[52, 200, 74, 255]});
           chrome.browserAction.setBadgeText({tabId: tab.id, text:"Y"});
         },function(){
           chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[208, 58, 50, 255]});
           chrome.browserAction.setBadgeText({tabId: tab.id, text:"N"});
+          wmAsyncSaveURL(request_url, function(){
+            chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[52, 200, 74, 255]});
+            chrome.browserAction.setBadgeText({tabId: tab.id, text:"+"});
+          });
         })
       });
     }
