@@ -16,7 +16,7 @@
     "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js","scripts/datepicker.js"]
+    "scripts": ["scripts/background.js"]
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
