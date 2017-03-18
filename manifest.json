@@ -16,7 +16,7 @@
     "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/background.js","scripts/datepicker.js"]
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
@@ -27,5 +27,8 @@
   "browser_action": {
    "default_icon": "images/icon.png",
    "default_popup": "index.html"
-  }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+
+
 }
