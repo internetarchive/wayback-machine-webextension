@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.2";
+var VERSION = "1.3.2";
 
 var excluded_urls = [
   "web.archive.org/web/",
@@ -67,9 +67,13 @@ chrome.webRequest.onCompleted.addListener(function(details) {
       });
     }
   }
-  chrome.tabs.get(details.tabId, function(tab) {
-    tabIsReady(tab.incognito);
-  });
+  if(details.tabId >0 ){
+    chrome.tabs.get(details.tabId, function(tab) {
+      tabIsReady(tab.incognito);
+    });
+  }
+
+
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
 /**
@@ -126,3 +130,55 @@ function isValidSnapshotUrl(url) {
   return ((typeof url) === "string" &&
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
+
+
+// chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["http://*/*", "https://*/*"]});
+
+// function onErrorOccurred(details)
+// {
+//   // alert("DNS ERROR");
+//   if (details.error == "net::ERR_NAME_NOT_RESOLVED"){
+//     alert("DNS ERROR");
+//     // chrome.tabs.update(details.tabId, {url: "..."});
+//   }
+// }
+
+
+
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  // console.log(changeInfo.status+":"+tab.id+":"+tabId);
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    for(var i = 0; i<tabs.length;i++) {
+       chrome.tabs.sendMessage(tabs[i].id, {action: "open_dialog_box"}, function(response) {});
+    }
+  });
+
+  // if(changeInfo.status == "complete") {
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open("GET", tab.url, true);
+  //   xhr.onreadystatechange = function() {
+  //     if (xhr.readyState == 4) {
+  //       if(xhr.status == 0) {
+  //         console.log("wrong domain:"+  tabId);
+  //         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+  //           if(tabs!==undefined && tabs.length>0){
+  //             chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box"}, function(response) {});
+  //           }
+  //         });
+  //         // chrome.tabs.sendMessage(tabId, {action: "open_dialog_box"}, function(response) {});
+  //         console.log("sent");
+  //       }
+  //     }
+  //   }
+  //   xhr.send();
+  // }
+});
+
+
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+  if (message.message=='openurl') {
+    chrome.tabs.create({ url: message.url });
+  }
+});
