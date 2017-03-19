@@ -164,7 +164,7 @@
             }),
             createEl("img", function(el) {
               el.id = "no-more-404s-image";
-              el.src = chrome.extension.getURL("images/car.gif");
+              el.src = chrome.extension.getURL("images/logo.gif");
               el.style.height = "auto";
               el.style.position = "relative";
               el.style.width = "100%";
@@ -236,7 +236,7 @@
 
   }
 
-  // Listen to message from background.js
+// Listen to message from background.js
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.type === "SHOW_BANNER") {
@@ -245,4 +245,6 @@
         }
       }
   });
+
+
 })();
