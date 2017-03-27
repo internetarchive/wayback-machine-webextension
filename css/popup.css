@@ -1,0 +1,65 @@
+.mainbody
+{
+	width:200px;
+	min-height:300px;
+	max-height:400px;
+}
+.image-content
+{
+	background: white;
+}
+.see-image
+{
+	position:relative;
+	padding-left:10px; 
+	padding-top:5px;
+	padding-bottom:10px;
+}
+.col-lg-6
+{
+	padding-right:3px;
+	padding-left:4px;
+	padding-top:0px;
+}
+.btn-div
+{
+	padding-left:11px;
+	padding-top:20px;
+	font-family:"Helvetica Neue";
+}
+.save-page
+{
+	width:150px;
+	height:40px;
+}
+.recent-version
+{
+	width: 150px;
+	height:40px;
+}
+.first-version
+{
+	width: 150px;
+	height:40px;
+}
+.new-div
+{
+	padding-left:25px;
+	padding-top:15px;
+	font-family:"Helvetica Neue";
+}
+.new-button
+{
+	padding-left: 7px;
+}
+.newdiv
+{
+	padding-left:25px;
+	padding-top:15px;
+	font-family:"Helvetica Neue";
+}
+.newbutton
+{
+	width: 150px;
+	height:40px;
+}
