@@ -23,6 +23,13 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
+//Sharing on Social Media Social 
+function share_on_socialMedia()
+{
+	srch_url = $('#search').val();
+	window.open($(this).attr('href') + 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
+}
+$('.btn-social').click(share_on_socialMedia);
 
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
