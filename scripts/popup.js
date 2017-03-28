@@ -21,17 +21,17 @@ function view_all_function(){
     open_url = "https://web.archive.org/web/*/"+encodeURI(url);
     document.location.href = open_url;
 }
-function fb_share(searchurl){    
+function fb_share(search_url){    
     var fburl="https://www.facebook.com/sharer/sharer.php?u=";
-    chrome.tabs.create({url:fburl+searchurl});
+    chrome.tabs.create({url:fburl+search_url});
 }
-function twitter_share(searchurl){    
+function twitter_share(search_url){    
     var tweeturl="https://twitter.com/intent/tweet?text=";
-    chrome.tabs.create({url:tweeturl+searchurl});
+    chrome.tabs.create({url:tweeturl+search_url});
 }
-function google_share(searchurl){    
+function google_share(search_url){    
     var googleurl="https://plus.google.com/share?url=";
-    chrome.tabs.create({url:googleurl+searchurl});
+    chrome.tabs.create({url:googleurl+search_url});
 }
 window.onload=function start()
 {
