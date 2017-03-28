@@ -1,60 +1,40 @@
 <!doctype html>
 <html>
   <head>
-    <title>Wayback Machine</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/popup.css">
+    <script type="text/javascript" src="scripts/jquery.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/popup.js"></script>
   </head>
-  <body style="min-width: 200px;max-width: 200px;">
-  	<table width="100%" style="min-width: 120px; ">
-      <tr class="spaceUnder">
-        <td>
-            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-                <div class='container'>
-                    <img class='resize_fit_center'
-                      src='images/logo.gif' />
-                </div>
-            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-        </td>
-      </tr>
-  		<tr class="spaceUnder" align="center">
-  			<td>
-          <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
-          <BR>
-    		</td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-    		<td>
-          <button type="button" class="btn btn-primary" id="recent_capture" tabindex='-1'>Recent Version</button>
-          <BR>
-    		</td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
-        </td>
-    	</tr>
-    </table>
-    <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+  <body class="mainbody">
+    <div class="container">
+      <div class="row image-content">
+     		<a href="https://archive.org/web/" >
+    			<img class="see-image" src="images/waybackimage.png">
+    		</a>
+      </div>
+    	<div class="row latest">
+     		 <div class="col-lg-6">
+        		<div class="input-group">
+          		<input type="text" class="form-control" placeholder="Enter any URL" style="background-color:#eee">
+      		 	</div>
+    		</div>	
+    	</div>
+      <div class="btn-div">
+        <button type="button" class="btn btn-primary save-page" id="save_now">Save Now
+        </button>   
+      </div> 
+     <div class="btn-div">
+        <button type="button" class="btn btn-secondary recent-version" id="recent_capture">Recent Version</button>
+      </div>
+      <div class="btn-div">
+        <button type="button" class="btn btn-info first-version" id="first_capture" style="background:#3ca4b1">First Version</button>
+       </div>
+    </div>
   </body>
 </html>
-<script src="scripts/jquery.js"></script>
-<script src="scripts/popup.js"></script>
-<script src="scripts/bootstrap.min.js"></script>
-<style>
-  tr.spaceUnder > td
-  {
-    padding-bottom: 1em;
-  }
-  .container {
-    margin: 2px;
-    width: auto;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-  }
-  .resize_fit_center {
-      max-width:100%;
-      max-height:100%;
-      vertical-align: middle;
-  }
-</style>
