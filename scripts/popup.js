@@ -30,7 +30,6 @@ $(function()
                     $(".btn-fb").click(function()
                     {
                         var fburl="https://www.facebook.com/sharer/sharer.php?u=";
-                        var msg="Hey,look.How this page was looking on"+exact;
                         chrome.tabs.create({url:fburl+tosearch});
                     });
                     $(".btn-tweet").click(function()
