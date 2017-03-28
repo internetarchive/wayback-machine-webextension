@@ -2,10 +2,13 @@
 <html>
   <head>
     <title>Wayback Machine</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">  
+    <script src="scripts/jquery.js"></script> 
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/popup.js"></script>
   </head>
   <body style="min-width: 200px;max-width: 200px;">
-  	<table width="100%" style="min-width: 120px; ">
+  	<table width="100%" style="min-width: 120px;">
       <tr class="spaceUnder">
         <td>
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
@@ -14,6 +17,11 @@
                       src='images/logo.gif' />
                 </div>
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+        </td>
+      </tr>
+      <tr class="spaceUnder" id="search-option" align="center">
+        <td>
+          <input type="text" class="form-control" id="form" placeholder="Enter any URL" style="background-color:#eee;width:180px">
         </td>
       </tr>
   		<tr class="spaceUnder" align="center">
@@ -33,13 +41,17 @@
           <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
         </td>
     	</tr>
+      <tr class="spaceUnder" align="center">
+        <td>
+              <img src="images/facebook.png" id="fb-share-btn"><i class="fa fa-cog fa-fw" style="padding-left:10px"></i>
+              <img src="images/tweet.png" id="tweet-btn"><i class="fa fa-cog fa-fw" style="padding-left:10px"></i>
+              <img src="images/google+.png" id="googleplus-btn">
+        </td> 
+      </tr>
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
   </body>
 </html>
-<script src="scripts/jquery.js"></script>
-<script src="scripts/popup.js"></script>
-<script src="scripts/bootstrap.min.js"></script>
 <style>
   tr.spaceUnder > td
   {
@@ -53,8 +65,8 @@
     text-align: center;
   }
   .resize_fit_center {
-      max-width:100%;
-      max-height:100%;
-      vertical-align: middle;
+    max-width:100%;
+    max-height:100%;
+    vertical-align: middle;
   }
 </style>
