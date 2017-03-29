@@ -27,5 +27,11 @@
   "browser_action": {
    "default_icon": "images/icon.png",
    "default_popup": "index.html"
+  },
+  "omnibox": {
+    "keyword": "wm"
+  },
+  "icons": {
+    "32": "images/icon.png"
   }
 }
