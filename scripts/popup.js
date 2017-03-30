@@ -23,43 +23,70 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
-function get_alexa_info(){
-	chrome.runtime.sendMessage({message: "geturl" }, function(response) {
-		ask_for(response.url);
-	});
-	function ask_for(url) {
-		var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
-		var host = url.replace(/^https{0,1}:\/\//, '');
-		host = host.replace(/^www\./, '');
-		host = host.replace(/\/.*/, '');
-		var xhttp = new XMLHttpRequest();
-		xhttp.open("GET", alexa_url + host, true);
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var html = "<b>" + host + "</b><br/>Rank: ";
-				var xmlDoc = xhttp.responseXML.documentElement;
-				if (xmlDoc.getElementsByTagName("POPULARITY")) {
-					html += xmlDoc.getElementsByTagName("POPULARITY")[0].getAttribute('TEXT');
-				} else {
-					html += "N/A";
-				}
-				var rl = xmlDoc.getElementsByTagName("RL");
-				if (rl) {
-					html += "<br/>Related sites:<br/><ul>"
-					for (i = 0; i < rl.length; i++) {
-						html += "<li><a href='"
-						+ rl[i].getAttribute("HREF")
-						+ "'>"
-						+ rl[i].getAttribute("TITLE")
-						+ "</a></li>";
-					}
-					html += "</ul>";
-				}
-				document.getElementById("alexa_cont").innerHTML = html;
-			}
-		};
-		xhttp.send(null);
-	}
+function get_alexa_info() {
+  chrome.runtime.sendMessage({ message: "geturl" }, function(response) {
+    ask_for(response.url);
+  });
+  
+  function ask_for(url) {
+    var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
+    var host = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var html = '<span class="red"><b>' + host + '</b></span><br/>';
+        var xml = req.responseXML.documentElement;
+
+        // Get rank
+        if (xml.getElementsByTagName('POPULARITY').length > 0) {
+          html += '<span class="glyphicon glyphicon-signal red" aria-hidden="true"></span> ' +
+            '<b>Alexa rank:</b> ' +
+            xml.getElementsByTagName('POPULARITY')[0].getAttribute('TEXT') +
+            '<br/>';
+        }
+
+        // Get country
+        if (xml.getElementsByTagName('COUNTRY').length > 0) {
+          html += '<span class="glyphicon glyphicon-flag red" aria-hidden="true"></span> ' +
+            '<b>Country:</b> ' +
+            xml.getElementsByTagName('COUNTRY')[0].getAttribute('NAME') +
+            '<br/>';
+        }
+
+        // Get a list of related sites
+        var rl = xml.getElementsByTagName('RL');
+        var rl_links = [];
+        if (rl.length > 0) {
+          html += '<span class="glyphicon glyphicon-globe red" aria-hidden="true"></span> ' +
+            '<b>Related sites:</b><br/><ul class="rl-list rl-link">';
+          for (var i = 0, len = rl.length; i < len && i < 5; i++) {
+            var rl_title = rl[i].getAttribute('TITLE');
+            rl_links.push('http://' + rl[i].getAttribute('HREF'));
+            html += '<li><a href="" class="rl-a" id="rl' + i + '">' +
+              (rl_title.length > 18 ? rl_title.substring(0, 15) + '...' : rl_title) +
+              '</a></li>';
+          }
+          html += '</ul>';
+        }
+
+        // Inject results in pop-up if there are any
+        document.getElementById('alexa').innerHTML = html;
+
+        // Add event listeners for opening links
+        for (var i = 0, len = rl_links.length; i < len; i++) {
+          addLink("rl" + i, rl_links[i]);
+        }
+      }
+    };
+    req.open('GET', alexa_url + host, true);
+    req.send();
+  }
+}
+
+function addLink(id, link) {
+  document.getElementById(id).addEventListener("click", function() {
+    chrome.runtime.sendMessage({ message: "openlink", link: link }, function(response) {});
+  }, false);
 }
 
 window.onload = get_alexa_info();
