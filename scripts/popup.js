@@ -55,14 +55,12 @@ function get_alexa_info() {
 
         // Get a list of related sites
         var rl = xml.getElementsByTagName('RL');
-        var rl_links = [];
         if (rl.length > 0) {
           html += '<span class="glyphicon glyphicon-globe red" aria-hidden="true"></span> ' +
             '<b>Related sites:</b><br/><ul class="rl-list rl-link">';
           for (var i = 0, len = rl.length; i < len && i < 5; i++) {
             var rl_title = rl[i].getAttribute('TITLE');
-            rl_links.push('http://' + rl[i].getAttribute('HREF'));
-            html += '<li><a href="" class="rl-a" id="rl' + i + '">' +
+            html += '<li><a href="http://' + rl[i].getAttribute('HREF') + '" target="_blank" class="rl-a">' +
               (rl_title.length > 18 ? rl_title.substring(0, 15) + '...' : rl_title) +
               '</a></li>';
           }
@@ -71,22 +69,11 @@ function get_alexa_info() {
 
         // Inject results in pop-up if there are any
         document.getElementById('alexa').innerHTML = html;
-
-        // Add event listeners for opening links
-        for (var i = 0, len = rl_links.length; i < len; i++) {
-          addLink("rl" + i, rl_links[i]);
-        }
       }
     };
     req.open('GET', alexa_url + host, true);
     req.send();
   }
-}
-
-function addLink(id, link) {
-  document.getElementById(id).addEventListener("click", function() {
-    chrome.runtime.sendMessage({ message: "openlink", link: link }, function(response) {});
-  }, false);
 }
 
 window.onload = get_alexa_info();

@@ -428,10 +428,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       }
     });
     return true;
-  } else if (message.message == 'openlink') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      chrome.tabs.create({ url: message.link });
-    });
   }
 });
 
