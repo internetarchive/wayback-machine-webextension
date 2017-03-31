@@ -34,7 +34,52 @@ function search(){
 
     }
 
+function get_summary(){
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      var url = tabs[0].url;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://web.archive.org/web/*/'+url, true);
+      xhr.responseType = 'document';
+      xhr.send();
+      xhr.onload = function(e) {  
+
+          var doc = e.target.responseXML;
+          document.getElementById("message").appendChild(doc.getElementById('wbMeta').children[1]);
+          document.getElementById("times").appendChild(document.getElementById('message').children[0].children[0]);
+          document.getElementById("from").innerHTML += document.getElementById('message').children[0].children[0].text; 
+          document.getElementById("to").innerHTML += document.getElementById('message').children[0].children[1].text;
+          /*var line = document.createElement("p");
+          line.innerHTML =  document.getElementById('message').children[0].children[0].text;
+          document.getElementById("from").appendChild(line);
+          var line2 = document.createElement("p");
+          line2.innerHTML =  document.getElementById('message').children[0].children[1].text;
+          document.getElementById("to").appendChild(line2);*/
+          //document.getElementById("overview").appendChild(document.getElementById('message').children[0].children[0].text);
+          //console.log(document.getElementById('message').children[0].children[1].text);
+                    
+      }
+  });
+} 
+
+window.onload = get_summary();
+
 document.addEventListener('DOMContentLoaded', function() {
+  
+  //var ourRequest = new XMLHttpRequest();
+  //ourRequest.open('GET','http://web.archive.org/web/*/https://www.youtube.com/');
+  /*ourRequest.onload = function(){
+    //var str = ourRequest.responseText;
+    var n = str.indexOf("<p>Saved <strong>");
+    var i = n;
+    var empty = "";
+    for (i=n+17;i<n+27;i++){
+      empty = empty + str[i];
+    }
+    console.log(ourRequest.responseTe
+  };
+  ourRequest.send();
+  */
+
   var twitter_search = document.getElementById('twitter_search');
   twitter_search.addEventListener('click', function() {
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
