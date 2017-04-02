@@ -40,8 +40,32 @@ function search_tweet_function(){
 	}
 
 	chrome.tabs.create({ url: twitter_url+"\""+url_toSearch+"\"%20since%3A"+from_date+"%20until%3A"+to_date });
+
+//Sharing on Social Media 
+function shareon_facebook()
+{
+	var srch_url = document.getElementById('search').value;
+	var fbshr_url = "https://www.facebook.com/sharer/sharer.php?u="
+	window.open(fbshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
 
+function shareon_twitter()
+{
+	var srch_url = document.getElementById('search').value;
+	var twitshr_url = "https://twitter.com/home?status=";
+	window.open(twitshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
+}
+
+function shareon_googleplus()
+{
+	var srch_url = document.getElementById('search').value;
+	var gplusshr_url = "https://plus.google.com/share?url="; 
+	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
+}
+
+document.getElementById('twit_share').onclick = shareon_twitter;
+document.getElementById('fb_share').onclick = shareon_facebook;
+document.getElementById('gplus_share').onclick = shareon_googleplus;
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
