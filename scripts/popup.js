@@ -21,81 +21,31 @@ function view_all_function(){
     open_url = "https://web.archive.org/web/*/"+encodeURI(url);
     document.location.href = open_url;
 }
-function fb_share(search_url){    
-    var fburl="https://www.facebook.com/sharer/sharer.php?u=";
-    chrome.windows.create({url:fburl+search_url,height:600,width:600,top:0});
-}
-function twitter_share(search_url){    
-    var tweeturl="https://twitter.com/intent/tweet?text=";
-    chrome.windows.create({url:tweeturl+search_url,height:600,width:600,top:0});
-}
-function google_share(search_url){   
-    var googleurl="https://plus.google.com/share?url=";
-    chrome.windows.create({url:googleurl+search_url,height:600,width:600,top:0});
-}
-window.onload=function start()
+//Sharing on Social Media 
+function shareon_facebook()
 {
-    document.getElementById('facebook_btn').style.cursor="not-allowed";
-    document.getElementById('twitter_btn').style.cursor="not-allowed";
-    document.getElementById('googleplus_btn').style.cursor="not-allowed";
-    document.getElementById("form").addEventListener("keydown",function(e)
-    {
-        if(e.keyCode===13)
-        {
-            var http=new XMLHttpRequest();                                          
-            var take_url=document.getElementById("form").value;
-            var new_url="http://archive.org/wayback/available?url="+take_url;
-            http.open("GET",new_url,true);
-            http.send(null);
-            http.onload=function()
-            {
-                var data=JSON.parse(http.response);
-                if(typeof data.archived_snapshots.closest !=="undefined")
-                {
-                    var timestamp_date=data.archived_snapshots.closest.timestamp;
-                    var search_url=data.archived_snapshots.closest.url;
-                    var formatted_date=timestamp_date.substring(0,4)+'/'+timestamp_date.substring(4,6)+'/'+timestamp_date.substring(6,8);
-                    var time=timestamp_date.substring(8,10)+'/'+timestamp_date.substring(10,12)+'/'+timestamp_date.substring(12,14);
-                    var target_td = document.getElementById('search_td')
-                    target_td.innerHTML = "";
-                    var new_button = document.createElement("BUTTON");
-                    new_button.setAttribute("class","btn btn-success button");
-                    new_button.appendChild(document.createTextNode("See page On:"+formatted_date));
-                    target_td.appendChild(new_button);
-
-                    new_button.addEventListener("click",function()
-                    {
-                        chrome.tabs.create({url:search_url});
-                    });
-                    document.getElementById('facebook_btn').style.cursor="pointer";
-                    document.getElementById('twitter_btn').style.cursor="pointer";
-                    document.getElementById('googleplus_btn').style.cursor="pointer";
-                    document.getElementById('facebook_btn').addEventListener("click",function()
-                    {
-                        fb_share(search_url);
-                    });                    
-                    document.getElementById('twitter_btn').addEventListener("click",function()
-                    {
-                        twitter_share(search_url);
-                    });              
-                    document.getElementById('googleplus_btn').addEventListener("click",function()
-                    {
-                        google_share(search_url);
-                    });
-                }
-                else
-                {
-                    var target_td = document.getElementById('search_td')
-                    target_td.innerHTML = "";
-                    var new_button = document.createElement("BUTTON");
-                    new_button.setAttribute("class","btn btn-danger button");
-                    new_button.appendChild(document.createTextNode("Page Not Found"));
-                    target_td.appendChild(new_button);
-                }
-            };
-        }
-    });
-    document.getElementById('save_now').onclick = save_now_function;
-    document.getElementById('recent_capture').onclick = recent_capture_function;
-    document.getElementById('first_capture').onclick = first_capture_function;
+	var srch_url = document.getElementById('search').value;
+	var fbshr_url = "https://www.facebook.com/sharer/sharer.php?u="
+	window.open(fbshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
+
+function shareon_twitter()
+{
+	var srch_url = document.getElementById('search').value;
+	var twitshr_url = "https://twitter.com/home?status=";
+	window.open(twitshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
+}
+
+function shareon_googleplus()
+{
+	var srch_url = document.getElementById('search').value;
+	var gplusshr_url = "https://plus.google.com/share?url="; 
+	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
+}
+
+document.getElementById('twit_share').onclick = shareon_twitter;
+document.getElementById('fb_share').onclick = shareon_facebook;
+document.getElementById('gplus_share').onclick = shareon_googleplus;
+document.getElementById('save_now').onclick = save_now_function;
+document.getElementById('recent_capture').onclick = recent_capture_function;
+document.getElementById('first_capture').onclick = first_capture_function;
