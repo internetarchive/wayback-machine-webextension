@@ -64,7 +64,7 @@
             }else if(btn_clicked.id.indexOf('first')>=0){
                 url="https://web.archive.org/web/0/"+btn_clicked.page_url;
             }else{
-                url=btn_clicked.page_url;
+                url="https://web.archive.org/web/*/"+btn_clicked.page_url;
             }
 
             to_share_url=fb_url+url;                                                             
@@ -75,7 +75,7 @@
             }else if(btn_clicked.id.indexOf('first')>=0){
                 url="https://web.archive.org/web/0/"+btn_clicked.page_url;
             }else{
-                url=btn_clicked.page_url;
+                url="https://web.archive.org/web/*/"+btn_clicked.page_url;
             }
 
             to_share_url=tw_url+url;                                                             
