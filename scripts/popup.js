@@ -1,8 +1,3 @@
-function browse_history_function(){
-	var wb_url = "https://web.archive.org/web/*/";
-	var url_toSearch = document.getElementById('browse_history_input').value;
-	chrome.tabs.create({ url: wb_url+url_toSearch });
-}
 
 function save_now_function(){
 	var wb_url = "https://web.archive.org/save/";
@@ -29,8 +24,25 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
+function search_tweet_function(){
+	var twitter_url = "https://twitter.com/search?q=";
+	var url_toSearch = document.getElementById('tweet_URL_input').value;
+	var from_date = document.getElementById('from-date').value;
+	var to_date = document.getElementById('to-date').value;
 
-document.getElementById('browse_history').onclick = browse_history_function;
+	if(!from_date) {
+		from_date = "2006-03-21";	
+	}
+	
+	if (!to_date) {
+		var today = new Date();
+		to_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	}
+
+	chrome.tabs.create({ url: twitter_url+"\""+url_toSearch+"\"%20since%3A"+from_date+"%20until%3A"+to_date });
+}
+
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
+document.getElementById('search_tweet').onclick = search_tweet_function;

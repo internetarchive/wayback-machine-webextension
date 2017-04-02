@@ -18,31 +18,41 @@
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
-          <div class="input-group">
-            <input type="text" class="form-control" id="browse_history_input" placeholder="Browse History">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" id="browse_history" tabindex="-1">Go!</button>
-            </span>
-          </div>
-        </td>
-      </tr>
-  		<tr class="spaceUnder" align="center">
-  			<td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
           <BR>
-    		</td>
+        </td>
       </tr>
       <tr class="spaceUnder" align="center">
-    		<td>
+        <td>
           <button type="button" class="btn btn-primary" id="recent_capture" tabindex='-1'>Recent Version</button>
           <BR>
-    		</td>
+        </td>
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
         </td>
-    	</tr>
+      </tr>
+      <tr class="spaceUnder" align="center">
+        <td>
+          <form>
+            <div class="form-group">
+              <label for="tweet_URL_input">Enter URL to be searched in Tweets: </label>
+              <input type="text" class="form-control" id="tweet_URL_input" placeholder="Enter URL to be searched on Twitter" value="archive.org">
+            </div>
+            <div class="form-group">
+              <label for="from-date">From Date: </label>
+              <input type="date" class="form-control" id="from-date" name="from-date">
+            </div>
+            <div class="form-group">
+              <label for="to-date">Till Date: </label>
+              <input type="date" class="form-control" id="to-date" name="to-date">
+             </div> 
+            <button type="button" class="btn btn-default" id="search_tweet" tabindex="-1">Search</button>
+            
+          </form>
+        </td>
+      </tr>
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
   </body>
