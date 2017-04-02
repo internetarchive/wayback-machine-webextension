@@ -23,18 +23,21 @@ function view_all_function(){
 }
 function fb_share(search_url){    
     var fburl="https://www.facebook.com/sharer/sharer.php?u=";
-    chrome.tabs.create({url:fburl+search_url});
+    chrome.windows.create({url:fburl+search_url,height:600,width:600,top:0});
 }
 function twitter_share(search_url){    
     var tweeturl="https://twitter.com/intent/tweet?text=";
-    chrome.tabs.create({url:tweeturl+search_url});
+    chrome.windows.create({url:tweeturl+search_url,height:600,width:600,top:0});
 }
-function google_share(search_url){    
+function google_share(search_url){   
     var googleurl="https://plus.google.com/share?url=";
-    chrome.tabs.create({url:googleurl+search_url});
+    chrome.windows.create({url:googleurl+search_url,height:600,width:600,top:0});
 }
 window.onload=function start()
 {
+    document.getElementById('facebook_btn').style.cursor="not-allowed";
+    document.getElementById('twitter_btn').style.cursor="not-allowed";
+    document.getElementById('googleplus_btn').style.cursor="not-allowed";
     document.getElementById("form").addEventListener("keydown",function(e)
     {
         if(e.keyCode===13)
@@ -64,6 +67,9 @@ window.onload=function start()
                     {
                         chrome.tabs.create({url:search_url});
                     });
+                    document.getElementById('facebook_btn').style.cursor="pointer";
+                    document.getElementById('twitter_btn').style.cursor="pointer";
+                    document.getElementById('googleplus_btn').style.cursor="pointer";
                     document.getElementById('facebook_btn').addEventListener("click",function()
                     {
                         fb_share(search_url);
