@@ -40,6 +40,7 @@ function search_tweet_function(){
 	}
 
 	chrome.tabs.create({ url: twitter_url+"\""+url_toSearch+"\"%20since%3A"+from_date+"%20until%3A"+to_date });
+}
 
 //Sharing on Social Media 
 function shareon_facebook()
