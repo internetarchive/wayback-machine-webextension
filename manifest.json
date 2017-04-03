@@ -17,7 +17,8 @@
     "http://*/*",
     "https://*/*",
     "*://*/*",
-    "<all_urls>"
+    "<all_urls>",
+    "notifications"
   ],
   "background": {
     "scripts": ["scripts/background.js"]
