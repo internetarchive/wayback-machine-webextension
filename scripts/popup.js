@@ -44,13 +44,6 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
-function view_all_function(){
-	var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-	url = document.location.href.replace(pattern, "");
-	open_url = "https://web.archive.org/web/*/"+encodeURI(url);
-	document.location.href = open_url;
-}
-
 //Sharing on Social Media 
 function shareon_facebook()
 {
