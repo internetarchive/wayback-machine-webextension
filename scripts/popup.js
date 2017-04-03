@@ -4,16 +4,44 @@ function save_now_function(){
 	});
 }
 
+
 function recent_capture_function(){
 	var wb_url = "https://web.archive.org/web/2/";
 	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'recent' }, function(response) {
-	});
+			  
+			  if(!response.status){
+			  	notify("URL not found in wayback archives!");
+			  }
+		  
+});
+}
+
+function notify(msg)
+{
+	chrome.notifications.create(
+								'wayback-notification',{   
+								type: 'basic', 
+								iconUrl: '/images/icon@2x.png', 
+								title: "Message", 
+								message: msg
+								},
+								function(){} 
+							);
 }
 
 function first_capture_function(){
 	var wb_url = "https://web.archive.org/web/0/";
 	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'first' }, function(response) {
+	if(!response.status){
+			notify("URL not found in wayback archives!");
+		}	
 	});
+}
+function view_all_function(){
+	var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+	url = document.location.href.replace(pattern, "");
+	open_url = "https://web.archive.org/web/*/"+encodeURI(url);
+	document.location.href = open_url;
 }
 
 function view_all_function(){
