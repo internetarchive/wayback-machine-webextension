@@ -23,4 +23,3 @@ AGPL-3
 - Mark Graham, @markjohngraham
 - Benjamin Mandel
 - Kumar Yogesh
-- Anish Kumar Sarangi
