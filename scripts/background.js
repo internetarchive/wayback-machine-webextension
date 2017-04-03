@@ -315,10 +315,10 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   if(details.tabId >0 ){
     chrome.tabs.get(details.tabId, function(tab) {
       tabIsReady(tab.incognito);
-    });  
+    });
   }
 
-  
+
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
 
@@ -329,17 +329,17 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
         chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
       }, function() {
-        
+
       });
     }
   }
   if(details.tabId >0 ){
     chrome.tabs.get(details.tabId, function(tab) {
       tabIsReady(tab.incognito);
-    });  
+    });
   }
 
-  
+
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
 /**
@@ -362,6 +362,19 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     }
   };
   xhr.send(requestParams);
+}
+
+/**
+ * Async method for saving a URL snapshot
+ */
+function wmAsyncSaveURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  var requestUrl = url;
+  xhr.open("GET", requestUrl, true);
+  xhr.onload = function(){
+    callback();
+  };
+  xhr.send();
 }
 
 /**
@@ -397,6 +410,35 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
+/**
+ * Checks if snapshot exists for current page.
+ * If it doesnt, saves a new snapshot automatically.
+ */
+chrome.tabs.onUpdated.addListener(function(tabId , info) {
+    if (info.status == "complete") {
+      chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[13, 77, 136, 255]});
+      chrome.browserAction.setBadgeText({tabId: tabId, text:"..."});
+      chrome.tabs.get(tabId, function(tab) {
+        var page_url = tab.url;
+        var wayback_url = "https://web.archive.org/save/";
+        var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+        url = page_url.replace(pattern, "");
+        request_url = wayback_url+encodeURI(url);
+
+        wmAvailabilityCheck(page_url,function(){
+          chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[52, 200, 74, 255]});
+          chrome.browserAction.setBadgeText({tabId: tab.id, text:"Y"});
+        },function(){
+          chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[208, 58, 50, 255]});
+          chrome.browserAction.setBadgeText({tabId: tab.id, text:"N"});
+          wmAsyncSaveURL(request_url, function(){
+            chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[52, 200, 74, 255]});
+            chrome.browserAction.setBadgeText({tabId: tab.id, text:"+"});
+          });
+        })
+      });
+    }
+});
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
@@ -412,11 +454,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           chrome.tabs.create({ url:  open_url});
         },function(){
           alert("URL not found in wayback archives!");
-        })  
+        })
       }else{
         chrome.tabs.create({ url:  open_url});
       }
     });
   }
 });
-
