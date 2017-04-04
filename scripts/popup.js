@@ -97,3 +97,14 @@ document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
+window.onload=automatic_archive();
+function automatic_archive(){
+    chrome.runtime.sendMessage({message:"checkurl"},function(response)
+    {
+        console.log(response.status);
+        if(response.status===false){
+            save_now_function();
+        }
+        
+    });
+}
