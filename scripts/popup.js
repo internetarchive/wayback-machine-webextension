@@ -87,7 +87,6 @@ window.onload=automatic_archive();
 function automatic_archive(){
     chrome.runtime.sendMessage({message:"checkurl"},function(response)
     {
-        console.log(response.status);
         if(response.status===false){
             save_now_function();
         }
