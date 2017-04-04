@@ -92,3 +92,94 @@ document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
+
+window.onload=function(){
+
+    chrome.runtime.sendMessage({message: "sendurl"}, function(response) {
+        
+        display_alexa_info(response.sent_url);
+        display_whois_info(response.sent_url);
+    });
+    
+};
+
+function display_alexa_info(url){
+    var alexa_url = 'http://data.alexa.com/data?cli=10&dat=snbamz&url=';
+		
+		var xhr = new XMLHttpRequest();
+        
+    
+		xhr.open("GET", alexa_url+url, true);
+		xhr.onload = function() {
+        
+			var data=xhr.responseXML.documentElement;
+            
+            var alexadisp=document.getElementById('div_for_alexa');
+            if(data.getElementsByTagName('ALEXA')){
+                alexadisp.innerHTML="<b>Alexa:</b>";
+                var hostdisp=document.getElementById('host');
+            if(data.getElementsByTagName('SD')[0].getAttribute('HOST')){
+                var host=data.getElementsByTagName('SD')[0].getAttribute('HOST');
+                hostdisp.innerHTML='<br><b>Hosted on: '+host+'</b>';
+    
+            }
+            var countrydisp=document.getElementById('country');
+            var rankdisp=document.getElementById('rank');
+            if(data.getElementsByTagName('COUNTRY')[0]){
+                var country=data.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
+                var rank=data.getElementsByTagName('COUNTRY')[0].getAttribute('RANK');
+                countrydisp.innerHTML='<br><b>Country of origin: '+country+'</b>';
+                rankdisp.innerHTML='<br><b>Rank: '+rank+'</b>';
+        
+    
+                
+            }
+            var relateddisp=document.getElementById('related');
+           
+            if(data.getElementsByTagName('RL')!=null){
+                 var related="<br><b>Related sites :</b><ol> ";
+                 for(var i=0;i<data.getElementsByTagName('RL').length;i++){
+                     var link=data.getElementsByTagName('RL')[i].getAttribute('HREF');
+                     related=related+"<li><a href="+link+">"+link+"</a></li>"
+                 }
+                related=related+"</ol>";
+                relateddisp.innerHTML=related;
+        
+            }
+            }
+			
+		};
+		xhr.send(null);
+    
+}
+
+function display_whois_info(url){
+    var whois_url = 'http://api.bulkwhoisapi.com/whoisAPI.php?domain=';
+		url = url.slice(0, -1);
+		var xhr = new XMLHttpRequest();
+        
+        
+		xhr.open("GET", whois_url + url+"&token=usemeforfree", true);
+		xhr.onload = function() {
+
+            var data = xhr.responseText;
+            if(data.response_code=='success'){
+                var whoisdisp=document.getElementById('div_for_whois');
+                whoisdisp.innerHTML="<b>Whois:</b>";
+            var creationdisp=document.getElementById('creation');
+                if(data.formatted_data.CreationDate){
+            creationdisp.innerHTML="<b>Creation date : "+data.formatted_data.CreationDate+"</b>";
+                }
+                if(data.formatted_data.RegistrarRegistrationExpirationDate){
+            var expirationdisp=document.getElementById('expiration');
+            expirationdisp.innerHTML="<b> Expiry date: "+data.formatted_data.RegistrarRegistrationExpirationDate+"</b>";
+                }
+            var sysemail=document.getElementById('adminemail');
+                if(data.formatted_data.AdminEmail){
+            sysemail.innerHTML="<b>System admin: "+data.formatted_data.AdminEmail+"</b>";
+                }
+            }
+		};
+		xhr.send(null);
+    
+}

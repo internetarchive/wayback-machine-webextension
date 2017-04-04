@@ -245,7 +245,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.2";
+var VERSION = "1.4.2";
 
 var excluded_urls = [
   "web.archive.org/web/",
@@ -424,6 +424,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               }
           
           });
+  }else if(message.message=='sendurl'){
+            chrome.tabs.query({active: true, currentWindow: true},function(tabs){
+                var tab = tabs[0];
+                var page_url = tab.url;
+            
+                sendResponse({sent_url:page_url});
+            });
+            
   }
   
   return true; 
