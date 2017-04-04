@@ -430,7 +430,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
           var tab = tabs[0];
           var page_url = tab.url;
-          if(isValidUrl(page_url))
+          var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+          url = page_url.replace(pattern, "");
+          if(isValidSnapshotUrl(url))
           {
             var http=new XMLHttpRequest();
             var new_url="http://archive.org/wayback/available?url="+page_url;
@@ -441,11 +443,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 var data=JSON.parse(http.response);
                 if(typeof data.archived_snapshots.closest =="undefined")
                 {
-                    sendResponse({status:false});
+                    status=sendResponse({status:false});
                 }
                 else
                 {
-                  sendResponse({status:true});
+                    status=sendResponse({status:true});
                 }
             }
           }

@@ -96,7 +96,7 @@ window.onload=automatic_archive();
 function automatic_archive(){
     chrome.runtime.sendMessage({message:"checkurl"},function(response)
     {
-        if(response.status===false){
+        if(response.status==false){
             save_now_function();
         }
         
