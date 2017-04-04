@@ -1,22 +1,29 @@
-
-function save_now_function(){
-	var wb_url = "https://web.archive.org/save/";
-	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'save' }, function(response) {
-	});
-}
-
-
-function recent_capture_function(){
-	var wb_url = "https://web.archive.org/web/2/";
-	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'recent' }, function(response) {
-			  
-			  if(!response.status){
-			  	notify("URL not found in wayback archives!");
-			  }
-		  
+function search_url()
+{
+    document.getElementById('search').addEventListener("keyup",function(event){
+    var url_to_search=document.getElementById('search').value;
+    if (event.keyCode == 13){
+        var url_to_search=document.getElementById('search').value;
+        if(url_to_search){
+            var main_url="https://web-beta.archive.org/web/*/";
+            chrome.tabs.create({url:main_url+url_to_search});
+        }
+    }
 });
 }
-
+function save_now_function(){
+    var wb_url = "https://web.archive.org/save/";
+    chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'save' }, function(response) {
+    });
+}
+function recent_capture_function(){
+	var wb_url = "https://web.archive.org/web/2/";
+	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'recent' }, function(response) {		  
+			  if(!response.status){
+			  	notify("URL not found in wayback archives!");
+			  }	  
+});
+}
 function notify(msg)
 {
 	chrome.notifications.create(
@@ -39,12 +46,11 @@ function first_capture_function(){
 	});
 }
 function view_all_function(){
-	var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-	url = document.location.href.replace(pattern, "");
-	open_url = "https://web.archive.org/web/*/"+encodeURI(url);
-	document.location.href = open_url;
+    var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+    url = document.location.href.replace(pattern, "");
+    open_url = "https://web.archive.org/web/*/"+encodeURI(url);
+    document.location.href = open_url;
 }
-
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
 	var url_toSearch = document.getElementById('tweet_URL_input').value;
@@ -62,7 +68,6 @@ function search_tweet_function(){
 
 	chrome.tabs.create({ url: twitter_url+"\""+url_toSearch+"\"%20since%3A"+from_date+"%20until%3A"+to_date });
 }
-
 //Sharing on Social Media 
 function shareon_facebook()
 {
@@ -84,7 +89,7 @@ function shareon_googleplus()
 	var gplusshr_url = "https://plus.google.com/share?url="; 
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
-
+window.onload=search_url();
 document.getElementById('twit_share').onclick = shareon_twitter;
 document.getElementById('fb_share').onclick = shareon_facebook;
 document.getElementById('gplus_share').onclick = shareon_googleplus;
