@@ -430,21 +430,24 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
           var tab = tabs[0];
           var page_url = tab.url;
-          var http=new XMLHttpRequest();
-          var new_url="http://archive.org/wayback/available?url="+page_url;
-          http.open("GET",new_url,true);
-          http.send(null);
-          http.onload=function()
+          if(isValidUrl(page_url))
           {
-              var data=JSON.parse(http.response);
-              if(typeof data.archived_snapshots.closest =="undefined")
-              {
-                  sendResponse({status:false});
-              }
-              else
-              {
-                sendResponse({status:true});
-              }
+            var http=new XMLHttpRequest();
+            var new_url="http://archive.org/wayback/available?url="+page_url;
+            http.open("GET",new_url,true);
+            http.send(null);
+            http.onload=function()
+            {
+                var data=JSON.parse(http.response);
+                if(typeof data.archived_snapshots.closest =="undefined")
+                {
+                    sendResponse({status:false});
+                }
+                else
+                {
+                  sendResponse({status:true});
+                }
+            }
           }
       });
   }
