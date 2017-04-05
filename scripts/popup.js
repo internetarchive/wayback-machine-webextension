@@ -1,16 +1,17 @@
 function search_url()
 {
     document.getElementById('search').addEventListener("keyup",function(event){
-     var url_to_search=document.getElementById('search').value;
-    	if (event.keyCode == 13){
-       		var url_to_search=document.getElementById('search').value;
-     	 	if(url_to_search){
-            	var main_url="https://web-beta.archive.org/web/*/";
-           		chrome.tabs.create({url:main_url+url_to_search});
-       	 	}
-    	}
+    	var url_to_search=document.getElementById('search').value;
+    		if (event.keyCode == 13){
+       			var url_to_search=document.getElementById('search').value;
+     	 		if(url_to_search){
+	            	var main_url="https://web-beta.archive.org/web/*/";
+	           		chrome.tabs.create({url:main_url+url_to_search});
+       	 		}
+    		}
 	});
 }
+
 function save_now_function(){
 	var wb_url = "https://web.archive.org/save/";
 	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, method:'save' }, function(response) {
