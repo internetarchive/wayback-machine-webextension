@@ -249,6 +249,7 @@ var VERSION = "1.2";
 
 var excluded_urls = [
   "web.archive.org/web/",
+  "web.archive.org/save/",
   "localhost",
   "0.0.0.0",
   "127.0.0.1"
@@ -430,26 +431,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
           var tab = tabs[0];
           var page_url = tab.url;
-          var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-          url = page_url.replace(pattern, "");
-          if(isValidSnapshotUrl(url))
+          if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
           {
-            var http=new XMLHttpRequest();
-            var new_url="http://archive.org/wayback/available?url="+page_url;
-            http.open("GET",new_url,true);
-            http.send(null);
-            http.onload=function()
-            {
-                var data=JSON.parse(http.response);
-                if(typeof data.archived_snapshots.closest =="undefined")
-                {
-                    status=sendResponse({status:false});
-                }
-                else
-                {
-                    status=sendResponse({status:true});
-                }
-            }
+            var status=wmAvailabilityCheck(page_url,
+                                  function()
+                                  {
+                                    sendResponse({status:true});
+                                  },
+                                  function()
+                                  {
+                                    sendResponse({status:false});
+                                  });
+          }
+          else
+          {
+            sendResponse({status:true});
           }
       });
   }
