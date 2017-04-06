@@ -425,7 +425,15 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           
           });
   }
-  
-  return true; 
+  else if(message.message=='geturl') {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          var tab = tabs[0];
+          var page_url = tab.url;
+          if(isValidSnapshotUrl(page_url)){
+            sendResponse({url: page_url});
+          }
+      });
+  }
+   return true; 
 });
 
