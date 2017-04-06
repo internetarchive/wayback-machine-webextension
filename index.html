@@ -81,6 +81,10 @@
   		
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+    <div id="alexa">
+      <img src="images/loading.gif" class="loading" alt="Loading..." />
+      <i>Getting information about this domain from Alexa...</i>
+    </div>
   </body>
 </html>
 <script src="scripts/popup.js"></script>
@@ -101,6 +105,41 @@
       max-width:100%;
       max-height:100%;
       vertical-align: middle;
+  }
+  #alexa {
+    line-height: 25px;
+    overflow: hidden;
+    padding: 15px 10px 0px;
+    width: 100%;
+  }
+  .loading {
+    display: block;
+    margin: 15px auto;
+  }
+  .red {
+    color: #ad2c31;
+  }
+  .rl-a {
+    color: #333;
+    text-decoration: none;
+  }
+  .rl-a:hover {
+    color: #ad2c31;
+    text-decoration: underline;
+  }
+  .rl-list li {
+    display: block;
+    padding: 0;
+    position: relative;
+  }
+  .rl-list li:before {
+    font-family: 'Glyphicons Halflings';
+    font-size: 80%;
+    left: -20px;
+    position: absolute;
+  }
+  .rl-link li:before {
+    content: '\e144';
   }
 
 a.btn-social,
@@ -204,5 +243,4 @@ a.btn-social,
 {
     background-color: #83c3f3;
 }
-
 </style>

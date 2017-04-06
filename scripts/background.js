@@ -424,6 +424,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               }
           
           });
+  } else if (message.message == 'geturl') {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      var tab = tabs[0];
+      var page_url = tab.url;
+      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+      url = page_url.replace(pattern, "");
+      if (isValidSnapshotUrl(url)) {
+        sendResponse({ url: url });
+      }
+    });
+    return true;
   }
   
   return true; 

@@ -45,6 +45,61 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
+function get_alexa_info() {
+  chrome.runtime.sendMessage({ message: "geturl" }, function(response) {
+    ask_for(response.url);
+  });
+  
+  function ask_for(url) {
+    var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
+    var host = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var html = '<span class="red"><b>' + host + '</b></span><br/>';
+        var xml = req.responseXML.documentElement;
+
+        // Get rank
+        if (xml.getElementsByTagName('POPULARITY').length > 0) {
+          html += '<span class="glyphicon glyphicon-signal red" aria-hidden="true"></span> ' +
+            '<b>Alexa rank:</b> ' +
+            xml.getElementsByTagName('POPULARITY')[0].getAttribute('TEXT') +
+            '<br/>';
+        }
+
+        // Get country
+        if (xml.getElementsByTagName('COUNTRY').length > 0) {
+          html += '<span class="glyphicon glyphicon-flag red" aria-hidden="true"></span> ' +
+            '<b>Country:</b> ' +
+            xml.getElementsByTagName('COUNTRY')[0].getAttribute('NAME') +
+            '<br/>';
+        }
+
+        // Get a list of related sites
+        var rl = xml.getElementsByTagName('RL');
+        if (rl.length > 0) {
+          html += '<span class="glyphicon glyphicon-globe red" aria-hidden="true"></span> ' +
+            '<b>Related sites:</b><br/><ul class="rl-list rl-link">';
+          for (var i = 0, len = rl.length; i < len && i < 5; i++) {
+            var rl_title = rl[i].getAttribute('TITLE');
+            html += '<li><a href="http://' + rl[i].getAttribute('HREF') + '" target="_blank" class="rl-a">' +
+              (rl_title.length > 18 ? rl_title.substring(0, 15) + '...' : rl_title) +
+              '</a></li>';
+          }
+          html += '</ul>';
+        }
+
+        // Inject results in pop-up if there are any
+        document.getElementById('alexa').innerHTML = html;
+      }
+    };
+    req.open('GET', alexa_url + host, true);
+    req.send();
+  }
+}
+
+window.onload = get_alexa_info();
+
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
 	var url_toSearch = document.getElementById('search').value;
