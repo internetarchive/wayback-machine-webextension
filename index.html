@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   </head>
-  <body style="min-width: 200px;max-width: 200px;">
+  <body style="min-width: 200px;max-width: 300px;">
   	<table width="100%" style="min-width: 120px; ">
       <tr class="spaceUnder">
         <td>
@@ -17,6 +17,7 @@
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
         </td>
       </tr>
+      <tr class="spaceUnder" align="center">
         <td>
              <div class="container">
                   <div class="row">
@@ -30,6 +31,29 @@
                   </div>
               </div>
         </td>
+      </tr>
+      <tr class="spaceUnder" align="center">
+        <td>
+          <div class="col-md-4 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form>
+                          <div class="form-group col-sm">
+                              <label for="from-date">From Date: </label>
+                              <input type="date" class="form-control" id="from-date" name="from-date">
+                          </div>
+                          <div class="form-group">
+                            <label for="to-date">Till Date: </label>
+                            <input type="date" class="form-control" id="to-date" name="to-date" style="size:30px">
+                          </div> 
+                          <button type="button" class="btn btn-default btn-twitter" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button>
+                    </form>
+                </div>
+             </div>
+          </div>
+      </td>
+      </tr>
+      
       <tr class="spaceUnder" align="center">
   			<td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
@@ -47,24 +71,11 @@
           <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
         </td>
       </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <form>
-            <div class="form-group">
-              <label for="tweet_URL_input">Enter URL to be searched in Tweets: </label>
-              <input type="text" class="form-control" id="tweet_URL_input" placeholder="Enter URL to be searched on Twitter" value="archive.org">
-            </div>
-            <div class="form-group">
-              <label for="from-date">From Date: </label>
-              <input type="date" class="form-control" id="from-date" name="from-date">
-            </div>
-            <div class="form-group">
-              <label for="to-date">Till Date: </label>
-              <input type="date" class="form-control" id="to-date" name="to-date">
-             </div> 
-            <button type="button" class="btn btn-default" id="search_tweet" tabindex="-1">Search</button>
-            
-          </form>
+      <tr class="spaceUnder" allign="center">
+        <td id="show_nothing">
+          <h4 style="margin-top:0px;">Summary</h4> 
+          <pre id="show_alexa_data">  
+          </pre>
         </td>
       </tr>
       <tr class="spaceUnder" align="center">
@@ -200,5 +211,13 @@ a.btn-social,
 {
     background-color: #83c3f3;
 }
-
+.color_code
+{
+  color:#22c399;
+}
+#show_nothing
+{
+  display: none;
+  padding-bottom: 0px;
+}
 </style>

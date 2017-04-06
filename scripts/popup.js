@@ -47,7 +47,7 @@ function view_all_function(){
 
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
-	var url_toSearch = document.getElementById('tweet_URL_input').value;
+	var url_toSearch = document.getElementById('search').value;
 	var from_date = document.getElementById('from-date').value;
 	var to_date = document.getElementById('to-date').value;
 
@@ -101,4 +101,40 @@ function automatic_archive(){
         }
         
     });
+window.onload =get_alexa_info();
+
+function get_alexa_info(){
+ 	chrome.runtime.sendMessage({message: "geturl" }, function(response) {
+		url_getter(response.url);
+	});
+	function url_getter(url) {
+			var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
+			var host_url = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
+			var http = new XMLHttpRequest();
+			http.open("GET", alexa_url + host_url, true);
+			http.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var html = "<b>"+"<span class='color_code'>"+ host_url +'</span>'+"</b><br/><b>Alexa Rank: </b>";
+	 				var xmldata = http.responseXML.documentElement;
+					if (xmldata.getElementsByTagName("POPULARITY")) 
+					{
+	 					html +="<span class='color_code'>"+xmldata.getElementsByTagName("POPULARITY")[0].getAttribute('TEXT')+"</span>";
+	 				} 
+	 				else {
+	 					html += "N/A";
+					}
+					if(xmldata.getElementsByTagName("COUNTRY"))
+					{
+						html += '<br/>'+'<b>Country:</b>' +"<span class='color_code'>"+
+					            xmldata.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
+					}
+					else{
+						html+="N/A";
+					}
+				document.getElementById("show_alexa_data").innerHTML = html;
+				document.getElementById("show_nothing").style.display="block";
+				}
+			};
+		http.send(null);
+	}
 }
