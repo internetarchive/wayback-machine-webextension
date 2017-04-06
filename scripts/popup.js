@@ -47,7 +47,7 @@ function view_all_function(){
 
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
-	var url_toSearch = document.getElementById('tweet_URL_input').value;
+	var url_toSearch = document.getElementById('search').value;
 	var from_date = document.getElementById('from-date').value;
 	var to_date = document.getElementById('to-date').value;
 
