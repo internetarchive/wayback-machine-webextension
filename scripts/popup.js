@@ -129,3 +129,304 @@ function get_alexa_info(){
 		http.send(null);
 	}
 }
+
+
+document.getElementById('search_input').addEventListener('keydown',function(e){
+  document.getElementById('suggestion-box').innerHTML="";
+  document.getElementById('disp_search').innerHTML="";
+  document.getElementById('disp_months').innerHTML="";
+  document.getElementById('disp_days').innerHTML="";
+  document.getElementById('disp_time').innerHTML="";
+  window.setTimeout(function(){//setTimeout is used to get the text in the text field after key has been pressed
+    
+    var key_word=document.getElementById('search_input').value;
+    if(e.keyCode==13){
+      
+      
+      if(key_word.indexOf('http')>=0 || key_word.indexOf('https')>=0 || key_word.indexOf('www.')>=0){
+        search_url(key_word);
+        
+      }else if(key_word!=""){
+        search_key_word(key_word);
+      }else if(key_word==""){
+        document.getElementById('disp_search').innerHTML="Enter text";
+      }
+    }else{
+      
+      display_suggestions(key_word);
+    }
+  },0.1);
+});
+
+function display_suggestions(search_word){
+  
+  if(search_word!=""){
+    
+    var wb_url='https://web-beta.archive.org/web/*/';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "https://web-beta.archive.org/__wb/search/host?q="+search_word, true);
+    xhr.onload=function(e){
+      
+      var data=JSON.parse(xhr.response);
+      document.getElementById('suggestion-box').innerHTML="";
+      for(var i=0;i<data.hosts.length;i++){
+        
+        var name=data.hosts[i].display_name;
+        
+        var link=data.hosts[i].link;
+        var list=document.createElement('ul');
+        var list_el=document.createElement('li');
+        var list_link=document.createElement('a');
+        if(document.getElementById('search_input').value!=''){
+          list_el.appendChild(list_link);
+          list.appendChild(list_el);
+          document.getElementById('suggestion-box').appendChild(list);
+          list_link.innerHTML=name;
+          list_link.setAttribute('href',wb_url+link);
+          list_link.addEventListener('click',function(e){
+            document.getElementById('search_input').value=e.target.innerHTML;
+            chrome.tabs.create({url:e.target.href});
+          });
+        }
+      }
+    };
+    xhr.send();
+  }
+}
+
+
+function search_key_word(search_word){
+  document.getElementById('disp_search').innerHTML="Searching...";
+  document.getElementById('disp_months').setAttribute('class','hidden');
+  document.getElementById('disp_days').setAttribute('class','hidden');
+  document.getElementById('disp_time').setAttribute('class','hidden');
+  document.getElementById('suggestion-box').innerHTML="";
+  
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', "https://web-beta.archive.org/__wb/search/anchor?q="+search_word, true);
+  xhr.onload = function(e) {
+    
+    
+    var data=JSON.parse(xhr.response);
+    document.getElementById('disp_search').innerHTML="";
+    for(var i=0;i<data.length;i++){
+      
+      
+      var name=data[i].display_name;
+      var wb_url="https://web-beta.archive.org/web/*/"+data[i].link;
+      var myDiv=document.createElement('div');
+      document.getElementById('disp_search').appendChild(myDiv);
+      
+      myDiv.innerHTML="<a href="+wb_url+" id="+wb_url+">"+name+"</a>";
+      myDiv.addEventListener('click',function(event){
+        var id=event.target.id;
+        chrome.tabs.create({url:id});
+      })
+    }
+    
+  };
+  
+  xhr.send();
+  
+  
+  
+}
+
+function search_url(key_word){
+  document.getElementById('disp_search').innerHTML="Searching...";
+  document.getElementById('disp_months').setAttribute('class','shown');
+  document.getElementById('disp_days').setAttribute('class','shown');
+  document.getElementById('disp_time').setAttribute('class','shown');
+  document.getElementById('disp_months').innerHTML="";
+  document.getElementById('disp_days').innerHTML="";
+  document.getElementById('disp_time').innerHTML="";
+  document.getElementById('suggestion-box').innerHTML="";
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', "https://web-beta.archive.org/__wb/explore?url="+key_word, true);
+  xhr.onload = function(e) {
+    
+    document.getElementById('disp_search').innerHTML="";
+    var data=JSON.parse(xhr.response);
+    
+    
+    var year_arr=new Array();
+    var j=0;
+    for(var i=0;i<data.captures.length;i++){
+      
+      var cap=data.captures[i].date;
+      
+      if(i==0){
+        
+        year_arr[0]=new Array();
+        year_arr[0].push(cap);
+        
+      }else if(data.captures[i-1].date.substring(0,4)== data.captures[i].date.substring(0,4)){
+        year_arr[j].push(cap);
+      }else{
+        j++;
+        
+        year_arr[j]=new Array();
+        year_arr[j].push(cap);
+        
+        
+      }
+      
+    }
+    
+    for(var i=0;i<year_arr.length;i++){
+      var elem=document.getElementById('disp_search');
+      var el=document.createElement('button');
+      elem.appendChild(el);
+      
+      var index_of_arr;
+      if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+      
+      el.setAttribute('id',index_of_arr+year_arr[i][0].substring(0,4));
+      el.setAttribute('class','btn btn-sm btn-default');
+      el.addEventListener('click',function(event){
+        var id=event.target.id;
+        
+        displaymonths(id);
+      });
+      var year=year_arr[i][0].substring(0,4);
+      el.innerHTML=year;
+    }
+    
+    function displaymonths(id){
+      document.getElementById('disp_months').innerHTML="";
+      document.getElementById('disp_days').innerHTML="";
+      document.getElementById('disp_time').innerHTML="";
+      
+      var month_arr=[];
+      var j=0;
+      
+      var new_id=parseInt(id.substring(0,2));
+      
+      for(var i=0;i<year_arr[new_id].length;i++){
+        var date=year_arr[new_id][i];
+        if(i==0){
+          
+          month_arr[0]=new Array();
+          month_arr[0].push(date);
+          
+        }else if(year_arr[new_id][i-1].substring(4,6)==year_arr[new_id][i].substring(4,6)){
+          month_arr[j].push(date);
+        }else{
+          j++;
+          month_arr[j]=new Array();
+          month_arr[j].push(date);
+          
+          
+        }
+      }
+      for(var i=0;i<month_arr.length;i++){
+        var elem=document.getElementById('disp_months');
+        var el=document.createElement('button');
+        elem.appendChild(el);
+        var index_of_arr;
+        if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+        el.setAttribute('id',index_of_arr+""+id+""+month_arr[i][0].substring(4,6));
+        el.setAttribute('class','btn btn-sm btn-primary');
+        el.addEventListener('click',function(event){
+          var id=event.target.id;
+          displaydays(id);
+        });
+        var month=month_arr[i][0].substring(4,6);
+        el.innerHTML=month;
+      }
+      
+      function displaydays(id){
+        
+        document.getElementById('disp_days').innerHTML="";
+        document.getElementById('disp_time').innerHTML="";
+        var day_arr=[];
+        var j=0;
+        
+        var new_id=parseInt(id.substring(0,2));
+        for(var i=0;i<month_arr[new_id].length;i++){
+          var date=month_arr[new_id][i];
+          if(i==0){
+            
+            day_arr[0]=new Array();
+            day_arr[0].push(date);
+            
+          }else if(month_arr[new_id][i-1].substring(6,8)==month_arr[new_id][i].substring(6,8)){
+            day_arr[j].push(date);
+          }else{
+            j++;
+            day_arr[j]=new Array();
+            day_arr[j].push(date);
+            
+            
+          }
+        }
+        for(var i=0;i<day_arr.length;i++){
+          var elem=document.getElementById('disp_days');
+          var el=document.createElement('button');
+          elem.appendChild(el);
+          var index_of_arr;
+          if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+          el.setAttribute('id',index_of_arr+""+id+""+day_arr[i][0].substring(6,8));
+          el.setAttribute('class','btn btn-sm btn-info');
+          el.addEventListener('click',function(event){
+            var id=event.target.id;
+            displaytime(id);
+          });
+          var day=day_arr[i][0].substring(6,8);
+          el.innerHTML=day;
+        }
+        
+        function displaytime(id){
+          document.getElementById('disp_time').innerHTML="";
+          
+          var time_arr=[];
+          var j=0;
+          
+          var new_id=parseInt(id.substring(0,2));
+          
+          for(var i=0;i<day_arr[new_id].length;i++){
+            var date=day_arr[new_id][i];
+            time_arr.push(date);
+            
+          }
+          for(var i=0;i<time_arr.length;i++){
+            var elem=document.getElementById('disp_time');
+            var el=document.createElement('button');
+            elem.appendChild(el);
+            var index_of_arr;
+            if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+            el.setAttribute('id',id+""+time_arr[i].substring(8,14));
+            el.setAttribute('class','btn btn-sm btn-success');
+            el.addEventListener('click',function(event){
+              var id=event.target.id;
+              
+              chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+                var tab=tabs[0];
+                
+                var new_url="https://web.archive.org/web/"+id.slice(6)+"/"+key_word;
+                chrome.tabs.create({url:new_url});
+              });
+            });
+            var time=time_arr[i].substring(8,14);
+            
+            el.innerHTML=time.substring(0,2)+":"+time.substring(2,4)+":"+time.substring(4,6);
+            
+            
+          }
+          
+          
+        }
+        
+      }
+      
+      
+    } 
+    
+    
+    
+  };
+  
+  xhr.send();
+  
+}
