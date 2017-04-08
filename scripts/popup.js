@@ -84,25 +84,15 @@ function shareon_googleplus()
 	var gplusshr_url = "https://plus.google.com/share?url="; 
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
-
-document.getElementById('twit_share').onclick = shareon_twitter;
-document.getElementById('fb_share').onclick = shareon_facebook;
-document.getElementById('gplus_share').onclick = shareon_googleplus;
-document.getElementById('save_now').onclick = save_now_function;
-document.getElementById('recent_capture').onclick = recent_capture_function;
-document.getElementById('first_capture').onclick = first_capture_function;
-document.getElementById('search_tweet').onclick = search_tweet_function;
-window.onload=automatic_archive();
+//autoarchive of the current page url
 function automatic_archive(){
-    chrome.runtime.sendMessage({message:"checkurl"},function(response)
-    {
-        if(response.status==false){
-            save_now_function();
-        }
-        
+    chrome.runtime.sendMessage({message:"checkurl"},function(response){
+    	if(response.status)
+    	{
+    		notify("Page is automatically archived");
+    	}
     });
-window.onload =get_alexa_info();
-
+}
 function get_alexa_info(){
  	chrome.runtime.sendMessage({message: "geturl" }, function(response) {
 		url_getter(response.url);
@@ -138,3 +128,14 @@ function get_alexa_info(){
 		http.send(null);
 	}
 }
+window.onload= function() {
+		automatic_archive();
+		get_alexa_info();
+}
+document.getElementById('twit_share').onclick = shareon_twitter;
+document.getElementById('fb_share').onclick = shareon_facebook;
+document.getElementById('gplus_share').onclick = shareon_googleplus;
+document.getElementById('save_now').onclick = save_now_function;
+document.getElementById('recent_capture').onclick = recent_capture_function;
+document.getElementById('first_capture').onclick = first_capture_function;
+document.getElementById('search_tweet').onclick = search_tweet_function;

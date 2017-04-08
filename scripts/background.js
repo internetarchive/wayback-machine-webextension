@@ -427,28 +427,27 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           });
   }
    else if(message.message=='checkurl'){
-
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-          var tab = tabs[0];
-          var page_url = tab.url;
-          if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
-          {
-            var status=wmAvailabilityCheck(page_url,
-                                  function()
-                                  {
-                                    sendResponse({status:true});
-                                  },
-                                  function()
-                                  {
-                                    sendResponse({status:false});
-                                  });
-          }
-          else
-          {
-            sendResponse({status:true});
-          }
+    
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+      var tab = tabs[0];
+      var page_url = tab.url;
+        if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
+        {
+          wmAvailabilityCheck(page_url,function(){},
+                          function(){ 
+                            var http=new XMLHttpRequest();
+                            var new_url="https://web.archive.org/save/"+page_url;
+                            http.open("GET",new_url,true);
+                            http.send(null);
+                            http.onreadystatechange = function() {
+                              if (this.readyState==4 && this.status==200) {
+                                sendResponse({status:true}); 
+                              }
+                            }
+                          });
+        }
       });
-   }
+    }
   else if(message.message=='geturl') {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
           var tab = tabs[0];
