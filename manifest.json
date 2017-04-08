@@ -19,6 +19,12 @@
   "background": {
     "scripts": ["scripts/background.js"]
   },
+  "content_scripts":[
+    {
+      "matches":["http://*/*","https://*/*"],
+      "js":["scripts/show.js"]
+    }
+  ],
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",

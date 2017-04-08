@@ -84,17 +84,8 @@ function shareon_googleplus()
 	var gplusshr_url = "https://plus.google.com/share?url="; 
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
-//autoarchive of the current page url
-function automatic_archive(){
-    chrome.runtime.sendMessage({message:"checkurl"},function(response){
-    	if(response.status)
-    	{
-    		notify("Page is automatically archived");
-    	}
-    });
-}
 function get_alexa_info(){
- 	chrome.runtime.sendMessage({message: "geturl" }, function(response) {
+ 	chrome.runtime.sendMessage({message: "geturl"},function(response) {
 		url_getter(response.url);
 	});
 	function url_getter(url) {
@@ -129,7 +120,6 @@ function get_alexa_info(){
 	}
 }
 window.onload= function() {
-		automatic_archive();
 		get_alexa_info();
 }
 document.getElementById('twit_share').onclick = shareon_twitter;

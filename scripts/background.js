@@ -397,7 +397,18 @@ function isValidSnapshotUrl(url) {
   return ((typeof url) === "string" &&
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
-
+function notify(message)
+{
+  chrome.notifications.create(
+                'wayback-notify',{   
+                type: 'basic', 
+                iconUrl: '/images/icon.png', 
+                title: "Message", 
+                message:message
+                },
+                function(){} 
+              );
+}
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
@@ -427,7 +438,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           });
   }
    else if(message.message=='checkurl'){
-    
+
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
       var tab = tabs[0];
       var page_url = tab.url;
@@ -435,13 +446,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         {
           wmAvailabilityCheck(page_url,function(){},
                           function(){ 
+                            console.log("hi");
                             var http=new XMLHttpRequest();
                             var new_url="https://web.archive.org/save/"+page_url;
                             http.open("GET",new_url,true);
                             http.send(null);
                             http.onreadystatechange = function() {
                               if (this.readyState==4 && this.status==200) {
-                                sendResponse({status:true}); 
+                                notify("The page is automatically archived"); 
                               }
                             }
                           });
