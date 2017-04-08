@@ -435,40 +435,40 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.create({ url:  open_url});
               }
           
+
           });
   }
-   else if(message.message=='checkurl'){
-
+  else if(message.message=='checkurl'){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
       var tab = tabs[0];
       var page_url = tab.url;
-        if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
-        {
-          wmAvailabilityCheck(page_url,function(){},
-                          function(){ 
-                            console.log("hi");
-                            var http=new XMLHttpRequest();
-                            var new_url="https://web.archive.org/save/"+page_url;
-                            http.open("GET",new_url,true);
-                            http.send(null);
-                            http.onreadystatechange = function() {
-                              if (this.readyState==4 && this.status==200) {
-                                notify("The page is automatically archived"); 
-                              }
-                            }
-                          });
-        }
-      });
-    }
-  else if(message.message=='geturl') {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          var tab = tabs[0];
-          var page_url = tab.url;
-          if(isValidSnapshotUrl(page_url)){
-            sendResponse({url: page_url});
-          }
-      });
+      if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
+      {
+        wmAvailabilityCheck( page_url,
+          function() {}, // We don't need on-success callback
+          function() {
+            var http=new XMLHttpRequest();
+            var new_url="https://web.archive.org/save/"+page_url;
+            http.open("GET",new_url,true);
+            http.send(null);
+            http.onreadystatechange = function() {
+              if (this.readyState==4 && this.status==200) {
+                notify("The page had not been archived before. We have automatically archived it for you."); 
+              }
+            }
+        });
+      }
+    });
   }
-   return true; 
+  else if(message.message=='geturl') {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      var tab = tabs[0];
+      var page_url = tab.url;
+      if(isValidSnapshotUrl(page_url)) {
+        sendResponse({url: page_url});
+      }
+    });
+  }
+  return true; 
 });
 

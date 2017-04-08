@@ -112,8 +112,8 @@ function get_alexa_info(){
 					else{
 						html+="N/A";
 					}
-				document.getElementById("show_alexa_data").innerHTML = html;
-				document.getElementById("show_nothing").style.display="block";
+					document.getElementById("show_alexa_data").innerHTML = html;
+					document.getElementById("show_nothing").style.display="block";
 				}
 			};
 		http.send(null);
