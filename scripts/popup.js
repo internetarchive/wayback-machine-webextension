@@ -85,6 +85,13 @@ function shareon_googleplus()
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
 
+function web_search_function(){
+	var wb_url = "https://web-beta.archive.org/web/*/";
+	var url_toSearch = document.getElementById('search').value;
+	chrome.tabs.create({ url: wb_url+url_toSearch });
+}
+
+
 document.getElementById('twit_share').onclick = shareon_twitter;
 document.getElementById('fb_share').onclick = shareon_facebook;
 document.getElementById('gplus_share').onclick = shareon_googleplus;
@@ -92,6 +99,7 @@ document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
+document.getElementById('web_search').onclick = web_search_function;
 window.onload =get_alexa_info();
 
 function get_alexa_info(){
