@@ -397,6 +397,19 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
+function notify(msg)
+{
+  chrome.notifications.create(
+                'wayback-notification',{   
+                type: 'basic', 
+                iconUrl: '/images/icon.png', 
+                title: "Message", 
+                message: msg
+                },
+                function(){} 
+              );
+}
+
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
@@ -424,6 +437,33 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               }
           
           });
+  } 
+  else if(message.message=='checkurl'){
+    chrome.storage.sync.get(['auto_archive'],function(event){
+      if(event.auto_archive==true)
+      {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        var tab = tabs[0];
+        var page_url = tab.url;
+        if(isValidUrl(page_url) && isValidSnapshotUrl(page_url))
+          {
+            wmAvailabilityCheck( page_url,
+              function() {}, // We don't need on-success callback
+              function() {
+                var http=new XMLHttpRequest();
+                var new_url="https://web.archive.org/save/"+page_url;
+                http.open("GET",new_url,true);
+                http.send(null);
+                http.onreadystatechange = function() {
+                  if (this.readyState==4 && this.status==200) {
+                   notify("The page had not been archived before. We have automatically archived it for you."); 
+                  }
+                }
+            }); 
+          }
+        });
+      }
+    });
   }
   else if(message.message=='geturl') {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -436,4 +476,3 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   }
    return true; 
 });
-
