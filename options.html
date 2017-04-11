@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+	<head>
+		<title>
+			Options-Wayback Machine
+		</title>
+	</head>
+	<body>
+	  <table width="100%" style="min-width: 120px; ">
+    	<tr class="spaceUnder">
+        <td>
+            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+                <div class='container'>
+                    <img class='resize_fit_center'
+                      src='images/logo.gif'/>
+                </div>
+            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+        </td>
+    	</tr>
+    </table>
+    <h1><b>Wayback Notification Options</b></h1>
+    <div id="wrap">
+      <div class="show_option">
+        <label for="auto-archive">
+          <input type="checkbox" id="auto-archive">
+          <span class="enable"><b>Enable auto-archiving</b></span> 
+          <h3>This will allow to auto-archive all the pages that are not in wayback machine.</h3>
+        </label>
+      </div>
+      <div class="show_option">
+        <label for="notify-user">
+          <input type="checkbox" id="notify-user">
+          <span class="enable"><b>Enable to show notification</b></span> 
+          <h3>This will allow to show notification when a page is successfully archived in wayback machine</h3>
+        </label>
+      </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;" id="save">Save</button>
+		<div id="status"></div>
+	 	<script src="scripts/options.js"></script>
+	</body>
+</html>
+<style>
+	tr.spaceUnder > td
+	{
+    	padding-bottom: 1em;
+	}
+  .container
+	{
+	    margin: 2px;
+	    width: auto;
+	    height: 45px;
+	    line-height: 45px;
+	    text-align: center;
+	}
+	.resize_fit_center 
+	{
+		max-width:100%;
+		max-height:100%;
+		vertical-align: middle;
+  }
+  #wrap {
+    position:relative;
+    width: 100%;
+    height:300px;
+    border-style:groove;
+    border-color:rgba(121, 197, 165, 0.24);
+  }
+  .show_option
+  {
+    padding-left: 30px;
+    padding-top: 50px;
+  }
+</style>

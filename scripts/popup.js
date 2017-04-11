@@ -85,6 +85,17 @@ function shareon_googleplus()
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
 
+function options()
+{
+	if (chrome.runtime.openOptionsPage) 
+	{
+    	chrome.runtime.openOptionsPage();// New way to open options pages, if supported (Chrome 42+).
+	} 
+	else 
+	{
+    	window.open(chrome.runtime.getURL('options.html'));
+  	}
+}
 document.getElementById('twit_share').onclick = shareon_twitter;
 document.getElementById('fb_share').onclick = shareon_facebook;
 document.getElementById('gplus_share').onclick = shareon_googleplus;
@@ -92,6 +103,7 @@ document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
+document.getElementById('option_btn').onclick =options;
 window.onload =get_alexa_info();
 
 function get_alexa_info(){
