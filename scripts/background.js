@@ -456,7 +456,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 http.send(null);
                 http.onreadystatechange = function() {
                   if (this.readyState==4 && this.status==200) {
-                   notify("The page had not been archived before. We have automatically archived it for you."); 
+                    chrome.storage.sync.get(['notification'],function(events)
+                    {
+                      if(events.notification==true)
+                        notify("The page had not been archived before. We have automatically archived it for you."); 
+                    });
                   }
                 }
             }); 
