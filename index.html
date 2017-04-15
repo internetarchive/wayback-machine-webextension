@@ -3,6 +3,7 @@
   <head>
     <title>Wayback Machine</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/clndr.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   </head>
   <body style="min-width: 200px;max-width: 300px;">
@@ -17,6 +18,7 @@
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
         </td>
       </tr>
+
       <tr class="spaceUnder" align="center">
         <td>
              <div class="container">
@@ -31,8 +33,55 @@
                   </div>
               </div>
         </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
+    </tr>
+    
+    <tr class="spaceUnder" align="center" id = "result" style="display:none">
+      <td>
+          <button id="notify" class="btn"> 
+            <h4><span class="glyphicon" id ="notifyText"> </span></h4>
+          </button>
+      </td>
+    </tr>
+  	
+    <tr class="spaceUnder" align="center" id = "calender" >
+      <td>
+             <div id="mini-clndr" style="display:none">
+                    <script id="mini-clndr-template" type="text/template">
+
+                        <div class="controls">
+                          <div class="clndr-previous-button">&lsaquo;</div><div class="month"><%= month %> <%= year %></div><div class="clndr-next-button">&rsaquo;</div>
+                        </div>
+
+                        <div class="days-container">
+                          <div class="days">
+                            <div class="headers">
+                              <% _.each(daysOfTheWeek, function(day) { %><div class="day-header"><%= day %></div><% }); %>
+                            </div>
+                            <% _.each(days, function(day) { %><div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div><% }); %>
+                          </div>
+
+                          <div class="events">
+                            <div class="headers">
+                              <div class="x-button">x</div>
+                              <div class="event-header">ARCHIVED AT</div>
+                            </div>
+                          <div class="events-list">
+                            <% _.each(eventsThisMonth, function(event) { %>
+                              <div class="event">
+                                <a href="<%= event.url %>"><%= moment(event.date).format('YYYY MMMM Do') %>: <%= event.time %> </a>
+                              </div>
+                            <% }); %>
+                          </div>
+                            </div>
+                         </div>
+
+                  </script>
+              </div>
+
+      </td>
+    </tr>
+
+    <tr class="spaceUnder" align="center">
         <td>
           <div class="col-md-4 col-md-offset-3">
             <div class="panel panel-default">
@@ -51,19 +100,17 @@
                 </div>
              </div>
           </div>
-      </td>
+        </td>
       </tr>
       
       <tr class="spaceUnder" align="center">
   			<td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
-          <BR>
         </td>
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-primary" id="recent_capture" tabindex='-1'>Recent Version</button>
-          <BR>
         </td>
       </tr>
       <tr class="spaceUnder" align="center">
@@ -90,8 +137,12 @@
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
   </body>
 </html>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/underscore-min.js"></script>
+<script src="scripts/moment.min.js"></script>
+<script src="scripts/bootstrap.min.js"></script>
+<script src="scripts/clndr.min.js"></script>
 <script src="scripts/popup.js"></script>
-
 <style>
   tr.spaceUnder > td
   {
