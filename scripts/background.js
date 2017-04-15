@@ -400,23 +400,40 @@ function isValidSnapshotUrl(url) {
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab = tabs[0];
-      var page_url = tab.url;
-      wayback_url = message.wayback_url;
-      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-      url = page_url.replace(pattern, "");
-      open_url = wayback_url+encodeURI(url);
-      if(message.method!='save'){
-        wmAvailabilityCheck(page_url,function(){
-          chrome.tabs.create({ url:  open_url});
-        },function(){
-          alert("URL not found in wayback archives!");
-        })  
-      }else{
-        chrome.tabs.create({ url:  open_url});
-      }
-    });
+
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+              var tab = tabs[0];
+              var page_url = tab.url;
+              wayback_url = message.wayback_url;
+              var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+              url = page_url.replace(pattern, "");
+              open_url = wayback_url+encodeURI(url);
+              
+              if(message.method!='save'){
+                status = wmAvailabilityCheck(page_url,
+                                    function(){ chrome.tabs.create({ url:  open_url});
+                                        sendResponse({status:true});
+                                      },
+                                    function(){
+                                        //alert("URL not found in wayback archives!");
+                                        sendResponse({status:false});
+                                    });
+             }
+            else{
+                chrome.tabs.create({ url:  open_url});
+              }
+          
+          });
   }
+  else if(message.message=='geturl') {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          var tab = tabs[0];
+          var page_url = tab.url;
+          if(isValidSnapshotUrl(page_url)){
+            sendResponse({url: page_url});
+          }
+      });
+  }
+   return true; 
 });
 
