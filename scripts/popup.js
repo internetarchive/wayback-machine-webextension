@@ -45,7 +45,7 @@ function view_all_function(){
 	document.location.href = open_url;
 }
 
- 
+
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
 	var url_toSearch = document.getElementById('search').value;
@@ -103,6 +103,7 @@ document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
+
 
 window.onload=function(){
 

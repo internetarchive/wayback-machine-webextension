@@ -6,6 +6,7 @@
   "homepage_url": "https://archive.org/",
 
   "permissions": [
+    "contextMenus", 
     "tabs",
     "activeTab",
     "webRequest",
@@ -18,6 +19,9 @@
   ],
   "background": {
     "scripts": ["scripts/background.js"]
+  },
+  "icons": {
+    "16": "images/icon.png"
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
