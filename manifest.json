@@ -1,23 +1,31 @@
 {
-   "background": {
-      "scripts": [ "scripts/background.js" ]
-   },
-   "browser_action": {
-      "default_icon": "images/icon.png",
-      "default_popup": "index.html"
-   },
-   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
-   "homepage_url": "https://archive.org/",
-   "icons": {
-      "48": "images/icon.png",
-      "96": "images/icon@2x.png"
-   },
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh3awwK/MTAQBqRH7kebeUmNpU3jtbL7Q9ekNXSGPBATuS5hojpiQUx2r4w0aRO1BIx7cZ2URyxt4AGFiV7FGuvw2uz/WR/S8rYI8XNFfBkRo350btJFD4LNRqxan5BLNCrp5DWAFSCAJbfN/VsoaE9n4NOPHHurSgqcuXjZMLA1o/s6VAZTQWekKiwSFwfx6BHppKcnhvADtrNLi+y30hPQ0OkDc/RsXIlvBcvdC8xJBGdhMJm6yaWrFzgDL1sARBxDkzvb1zbMbiEnY2UNaZ/3Fo0vs42jNDSqM0wKIgQg1qjNWwyXJ/0mXi9Q0QiTVU12P/uqx32zbzZE4wi2rHQIDAQAB",
-   "manifest_version": 3,
-   "name": "Wayback Machine",
-   "permissions": [ "tabs", "activeTab", "webRequest", "webRequestBlocking", "http://*/*", "https://*/*", "*://*/*", "\u003Call_urls>" ],
-   "short_name": "Featuring Save Page Now",
-   "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.3.5",
-   "web_accessible_resources": [ "images/insetIcon.svg", "images/close.svg", "images/car.gif", "scripts/client.js" ]
+  "manifest_version": 2,
+  "name": "Wayback Machine",
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
+  "version": "1.4",
+  "homepage_url": "https://archive.org/",
+
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "http://*/*",
+    "https://*/*",
+    "*://*/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["scripts/background.js"]
+  },
+  "web_accessible_resources": [
+    "images/insetIcon.svg",
+    "images/close.svg",
+    "images/logo.gif",
+    "scripts/client.js"
+  ],
+  "browser_action": {
+   "default_icon": "images/icon.png",
+   "default_popup": "index.html"
+  }
 }
