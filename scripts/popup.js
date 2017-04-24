@@ -129,3 +129,231 @@ function get_alexa_info(){
 		http.send(null);
 	}
 }
+
+document.getElementById('over_btn').addEventListener('click',get_archive);
+function get_archive(){
+    chrome.runtime.sendMessage({message: "geturl"}, function(response) {
+	var url=response.url;
+    
+
+    search_url(url);
+    });
+    
+}
+
+function search_url(key_word){
+  document.getElementById('disp_search').innerHTML="Searching...";
+  document.getElementById('disp_months').setAttribute('class','shown');
+  document.getElementById('disp_days').setAttribute('class','shown');
+  document.getElementById('disp_time').setAttribute('class','shown');
+  document.getElementById('disp_months').innerHTML="";
+  document.getElementById('disp_days').innerHTML="";
+  document.getElementById('disp_time').innerHTML="";
+  //document.getElementById('suggestion-box').innerHTML="";
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', "https://web-beta.archive.org/__wb/explore?url="+key_word, true);
+  xhr.onload = function(e) {
+    
+    document.getElementById('disp_search').innerHTML="";
+    var data=JSON.parse(xhr.response);
+    
+    
+    var year_arr=new Array();
+    var j=0;
+    for(var i=0;i<data.captures.length;i++){
+      
+      var cap=data.captures[i].date;
+      
+      if(i==0){
+        
+        year_arr[0]=new Array();
+        year_arr[0].push(cap);
+        
+      }else if(data.captures[i-1].date.substring(0,4)== data.captures[i].date.substring(0,4)){
+        year_arr[j].push(cap);
+      }else{
+        j++;
+        
+        year_arr[j]=new Array();
+        year_arr[j].push(cap);
+        
+        
+      }
+      
+    }
+    
+    for(var i=0;i<year_arr.length;i++){
+      var elem=document.getElementById('disp_search');
+      var el=document.createElement('button');
+      elem.appendChild(el);
+      
+      var index_of_arr;
+      if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+      
+      el.setAttribute('id',index_of_arr+year_arr[i][0].substring(0,4));
+      el.setAttribute('class','btn btn-sm btn-default btn-halfwidth');
+      el.addEventListener('click',function(event){
+        var id=event.target.id;
+        
+        displaymonths(id);
+      });
+      var year=year_arr[i][0].substring(0,4);
+      var s="s";
+            if(year_arr[i].length==1){
+                s="";
+            }
+      
+          el.innerHTML=year_arr[i].length+" time"+s+" in "+year;
+        
+    }
+    
+    function displaymonths(id){
+      document.getElementById('disp_months').innerHTML="";
+      document.getElementById('disp_days').innerHTML="";
+      document.getElementById('disp_time').innerHTML="";
+      
+      var month_arr=[];
+      var j=0;
+      
+      var new_id=parseInt(id.substring(0,2));
+      
+      for(var i=0;i<year_arr[new_id].length;i++){
+        var date=year_arr[new_id][i];
+        if(i==0){
+          
+          month_arr[0]=new Array();
+          month_arr[0].push(date);
+          
+        }else if(year_arr[new_id][i-1].substring(4,6)==year_arr[new_id][i].substring(4,6)){
+          month_arr[j].push(date);
+        }else{
+          j++;
+          month_arr[j]=new Array();
+          month_arr[j].push(date);
+          
+          
+        }
+      }
+      for(var i=0;i<month_arr.length;i++){
+        var elem=document.getElementById('disp_months');
+        var el=document.createElement('button');
+        elem.appendChild(el);
+        var index_of_arr;
+        if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+        el.setAttribute('id',index_of_arr+""+id+""+month_arr[i][0].substring(4,6));
+        el.setAttribute('class','btn btn-sm btn-primary btn-halfwidth');
+        el.addEventListener('click',function(event){
+          var id=event.target.id;
+          displaydays(id);
+        });
+        var month=month_arr[i][0].substring(4,6);
+       var s="s";
+            if(month_arr[i].length==1){
+                s="";
+            }
+        
+          el.innerHTML=month_arr[i].length+" time"+s+" in "+month;
+
+      }
+      
+      function displaydays(id){
+        
+        document.getElementById('disp_days').innerHTML="";
+        document.getElementById('disp_time').innerHTML="";
+        var day_arr=[];
+        var j=0;
+        
+        var new_id=parseInt(id.substring(0,2));
+        for(var i=0;i<month_arr[new_id].length;i++){
+          var date=month_arr[new_id][i];
+          if(i==0){
+            
+            day_arr[0]=new Array();
+            day_arr[0].push(date);
+            
+          }else if(month_arr[new_id][i-1].substring(6,8)==month_arr[new_id][i].substring(6,8)){
+            day_arr[j].push(date);
+          }else{
+            j++;
+            day_arr[j]=new Array();
+            day_arr[j].push(date);
+            
+            
+          }
+        }
+        for(var i=0;i<day_arr.length;i++){
+          var elem=document.getElementById('disp_days');
+          var el=document.createElement('button');
+          elem.appendChild(el);
+          var index_of_arr;
+          if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+          el.setAttribute('id',index_of_arr+""+id+""+day_arr[i][0].substring(6,8));
+          el.setAttribute('class','btn btn-sm btn-info btn-halfwidth');
+          el.addEventListener('click',function(event){
+            var id=event.target.id;
+            displaytime(id);
+          });
+          var day=day_arr[i][0].substring(6,8);
+          var s="s";
+            if(day_arr[i].length==1){
+                s="";
+            }
+          
+          el.innerHTML=day_arr[i].length+" time"+s+" on "+day;
+
+      
+        }
+        
+        function displaytime(id){
+          document.getElementById('disp_time').innerHTML="";
+          
+          var time_arr=[];
+          var j=0;
+          
+          var new_id=parseInt(id.substring(0,2));
+          
+          for(var i=0;i<day_arr[new_id].length;i++){
+            var date=day_arr[new_id][i];
+            time_arr.push(date);
+            
+          }
+          for(var i=0;i<time_arr.length;i++){
+            var elem=document.getElementById('disp_time');
+            var el=document.createElement('button');
+            elem.appendChild(el);
+            var index_of_arr;
+            if(i<10){index_of_arr="0"+i;}else{index_of_arr=i;}
+            el.setAttribute('id',id+""+time_arr[i].substring(8,14));
+            el.setAttribute('class','btn btn-sm btn-success btn-halfwidth');
+            el.addEventListener('click',function(event){
+              var id=event.target.id;
+              
+              chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+                var tab=tabs[0];
+                
+                var new_url="https://web.archive.org/web/"+id.slice(6)+"/"+key_word;
+                chrome.tabs.create({url:new_url});
+              });
+            });
+            var time=time_arr[i].substring(8,14);
+            
+            el.innerHTML=time.substring(0,2)+":"+time.substring(2,4)+":"+time.substring(4,6);
+            
+            
+          }
+          
+          
+        }
+        
+      }
+      
+      
+    } 
+    
+    
+    
+  };
+  
+  xhr.send();
+  
+}

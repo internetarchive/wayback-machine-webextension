@@ -32,6 +32,19 @@
               </div>
         </td>
       </tr>
+      <tr><td><button id="over_btn">Overview of archives:</button></td></tr>
+      <tr>
+      <td><div id="disp_search"></div></td>
+    </tr>
+    <tr>
+      <td><div id="disp_months" class="hidden"></div></td>
+    </tr>
+    <tr>
+      <td><div id="disp_days" class="hidden"></div></td>
+    </tr>
+    <tr>
+      <td><div id="disp_time" class="hidden"></div></td>
+    </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <div class="col-md-4 col-md-offset-3">
@@ -220,4 +233,24 @@ a.btn-social,
   display: none;
   padding-bottom: 0px;
 }
+    
+.hidden{
+        display: none;
+      }
+      
+      .shown{
+        display: block;
+      }
+      
+      ul{
+        text-decoration: none;
+        list-style: none;
+      }
+    #disp_search , #disp_months , #disp_days , #disp_time{
+        margin-bottom: 5px;
+      }
+        
+      .btn-halfwidth{
+        width: 50%;
+    }
 </style>
