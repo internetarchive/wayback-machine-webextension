@@ -15,6 +15,19 @@
     "*://*/*",
     "<all_urls>"
   ],
+  "omnibox": { "keyword" : "wayback"},
+	"icons": { 
+	   	"16":"images/icon-2.png", 
+	    "48":"images/icon-2.png", 
+	    "128":"images/icon-2.png" 
+	}, 
+  "content_scripts": [
+    {
+      "matches": ["http://web.archive.org/web/*","https://web.archive.org/web/*"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_end" 
+    }
+  ],	
   "background": {
     "scripts": ["scripts/background.js"]
   },
@@ -25,7 +38,7 @@
     "scripts/client.js"
   ],
   "browser_action": {
-   "default_icon": "images/icon.png",
+   "default_icon": "images/icon-2.png",
    "default_popup": "index.html"
   }
 }
