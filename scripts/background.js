@@ -245,20 +245,22 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.2";
+var VERSION = "1.2.1";
 
 var excluded_urls = [
   "web.archive.org/web/",
   "localhost",
   "0.0.0.0",
-  "127.0.0.1"
+  "127.0.0.1",
+  "www.google.co.in/",
+  "www.google.com/"
 ];
 
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
   for (var i = 0; i < excluded_urls.length; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith("chrome://")) {
       return false;
     }
   }
@@ -427,5 +429,42 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   }
   
   return true; 
+});
+
+// This event listener is fired whenever a tab is updated
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+    if (changeInfo.status == "complete") {
+      chrome.tabs.get(tabId, function(tab) {
+        var page_url = tab.url;
+        if(isValidUrl(page_url)){
+          chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[0,0, 255, 1]});
+          chrome.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
+          wmAvailabilityCheck(page_url,function(){
+            chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[0, 255, 0, 1]});
+            chrome.browserAction.setBadgeText({tabId: tab.id, text:"YES"});  // webpage is archived
+          },function(){
+            chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[255, 0, 0, 1]});
+            chrome.browserAction.setBadgeText({tabId: tab.id, text:"NO"});                 // webpage not archived
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+              var tab = tabs[0];
+              var page_url = tab.url;
+              var wb_url = "https://web.archive.org/save/";
+              var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+              url = page_url.replace(pattern, "");
+              open_url = wb_url+encodeURI(url);
+              var xhr=new XMLHttpRequest();
+              xhr.open('GET',open_url,true);
+              xhr.onload=function(){
+                chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[255, 255, 0, 1]});
+                chrome.browserAction.setBadgeText({tabId: tab.id, text:"SAVED"});
+              };
+              xhr.send();
+            });
+          })
+        }
+      });
+    }
+  });
 });
 
