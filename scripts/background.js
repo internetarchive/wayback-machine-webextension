@@ -437,3 +437,59 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   return true; 
 });
 
+
+// Integration with the Wayback Machine search (showing suggestions)
+// Type in the omnibox "wm [TAB or space] [search query]"
+
+var currReq = null;
+
+chrome.omnibox.onInputChanged.addListener(function(txt, sugg) {
+  if (currReq != null) {
+    currReq.onreadystatechange = null;
+    currReq.abort();
+    currReq = null;
+  }
+  updateDefSugg(txt);
+
+  if (txt.length > 0) {
+    var currReq = getSugg(txt, function(data) {
+      if (data['hosts'].length >= 5) {
+        var hosts = [];
+        for (var i = 0; i < 5; i++) {
+          hosts.push({
+            content: data['hosts'][i]['display_name'],
+            description: data['hosts'][i]['display_name']
+          });
+        }
+        sugg(hosts);
+      }
+    });
+  }
+});
+
+function getSugg(key, callback) {
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      callback(JSON.parse(this.responseText));
+    }
+  };
+  req.open('GET', 'https://web-beta.archive.org/__wb/search/host?q=' + key, true);
+  req.send();
+};
+
+function resetDefSugg() {
+  chrome.omnibox.setDefaultSuggestion({ description: ' ' });
+};
+
+function updateDefSugg(txt) {
+  chrome.omnibox.setDefaultSuggestion({ description: 'Search: %s' });
+};
+
+chrome.omnibox.onInputStarted.addListener(function() { updateDefSugg(''); });
+
+chrome.omnibox.onInputCancelled.addListener(function() { resetDefSugg(); });
+
+chrome.omnibox.onInputEntered.addListener(function(txt) {
+  chrome.tabs.update(null, { url: 'https://web-beta.archive.org/web/*/' + txt });
+});
