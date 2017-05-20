@@ -16,16 +16,24 @@
     "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "persistent":true,
+      "scripts": ["scripts/background.js"]
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
     "images/logo.gif",
-    "scripts/client.js"
+    "scripts/client.js",
+      "scripts/OLcontent.js"
+  ],
+  "content_scripts":[
+      {
+          "matches":["*://*/*"],
+          "js":["scripts/OLcontent.js"]
+      }
   ],
   "browser_action": {
    "default_icon": "images/icon.png",
-   "default_popup": "index.html"
+   "default_popup":"index.html"
   }
 }
