@@ -5,7 +5,8 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   </head>
-  <body style="min-width: 200px;max-width: 300px;">
+  <body style="min-width:250px; width: auto;height: auto;">
+ 
   	<table width="100%" style="min-width: 120px; ">
       <tr class="spaceUnder">
         <td>
@@ -17,20 +18,25 @@
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
         </td>
       </tr>
-      <tr class="spaceUnder" align="center">
+      <tr class="spaceUnder">
+
         <td>
-             <div class="container">
-                  <div class="row">
-                      <div class="col-md-4 col-md-offset-3">
-                              <div class="form-group has-feedback">
-                              <label for="search" class="sr-only">Search</label>
-                              <input type="text" class="form-control" name="search" id="search" placeholder="search" value="">
-                              <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                            </div>
-                      </div>
-                  </div>
-              </div>
+          <form class="navbar-form" role="search">
+    <div class="input-group add-on" id="searchbox" style="padding: 16px;">
+      <input class="form-control" autocomplete="off" placeholder="Search" name="srch-term" id="srch_term" type="text"  >
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="submit" id="srch_button"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+
+    </div>
+  </form>
+  <div id="srch-box" style="min-width: 200px; height: auto; position: relative; text-align: left;display: none; background-color: white;border-radius: 25px;left:-5px">
+    <ul class = ".dropdown-menu" style="list-style-type: none;" id = "srch-drop">
+      
+    </ul>
+  </div>
         </td>
+ 
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
@@ -52,8 +58,7 @@
              </div>
           </div>
       </td>
-      </tr>
-      
+    </tr>   
       <tr class="spaceUnder" align="center">
   			<td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>

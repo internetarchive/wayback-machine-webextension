@@ -46,9 +46,63 @@ function view_all_function(){
 }
 
 
+
+function search_query_function(){
+	var wb_url = "https://web-beta.archive.org/__wb/search/host?q=";
+	var input = document.getElementById('srch_term');
+    var output = document.getElementById('srch-box');
+    var datalist = document.getElementById('srch-drop');
+    output.style.display = "none";
+    datalist.innerHTML="";
+    var request = new XMLHttpRequest();
+	request.onreadystatechange = function(response) {
+		if (request.readyState === 4) {
+			if (request.status === 200) {
+
+      			var jsonOptions = JSON.parse(request.responseText);
+      			
+      			 
+      				
+      				
+      				jsonOptions["hosts"].forEach(function(item,index) {
+      					var dat = document.createElement('li');
+      					dat.style.padding = "8px";
+      					dat.style.fontSize="16px";
+      				 
+      					var linkk = document.createElement('a');
+      					linkk.href="#";
+      					linkk.style.color="black";
+      					linkk.innerHTML = jsonOptions["hosts"][index]["thumb"];
+      					linkk.onclick = function(){
+      						input.value = linkk.innerHTML;
+      						output.style.display = "none";
+      					};
+      					 
+      					dat.appendChild(linkk); 
+      					
+      				datalist.appendChild(dat);	
+      				});
+      			output.style.display = "block";
+  			}  
+		 
+	}
+	};
+	request.open('GET', wb_url+input.value, true);
+	request.send(null);
+}
+
+function search_function(){
+	var wb_url = "https://web-beta.archive.org/web/*/";
+	var input = document.getElementById('srch_term').value;
+   chrome.tabs.create({ url: wb_url+input });
+    
+}
+
+
+
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?q=";
-	var url_toSearch = document.getElementById('search').value;
+	var url_toSearch = document.getElementById('srch_term').value;
 	var from_date = document.getElementById('from-date').value;
 	var to_date = document.getElementById('to-date').value;
 
@@ -68,21 +122,21 @@ function search_tweet_function(){
 //Sharing on Social Media 
 function shareon_facebook()
 {
-	var srch_url = document.getElementById('search').value;
+	var srch_url = document.getElementById('srch_term').value;
 	var fbshr_url = "https://www.facebook.com/sharer/sharer.php?u="
 	window.open(fbshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
 
 function shareon_twitter()
 {
-	var srch_url = document.getElementById('search').value;
+	var srch_url = document.getElementById('srch_term').value;
 	var twitshr_url = "https://twitter.com/home?status=";
 	window.open(twitshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
 
 function shareon_googleplus()
 {
-	var srch_url = document.getElementById('search').value;
+	var srch_url = document.getElementById('srch_term').value;
 	var gplusshr_url = "https://plus.google.com/share?url="; 
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
@@ -101,6 +155,8 @@ document.getElementById('gplus_share').onclick = shareon_googleplus;
 document.getElementById('linkedin_share').onclick = shareon_linkedin;
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
+document.getElementById('srch_term').onkeyup = search_query_function;
+document.getElementById('srch_button').onclick = search_function;
 document.getElementById('first_capture').onclick = first_capture_function;
 document.getElementById('search_tweet').onclick = search_tweet_function;
 
@@ -195,3 +251,4 @@ function display_whois_info(url){
 		xhr.send(null);
     
 }
+
