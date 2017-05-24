@@ -140,6 +140,52 @@ function shareon_googleplus()
 	var gplusshr_url = "https://plus.google.com/share?url="; 
 	window.open(gplusshr_url+ 'https://web.archive.org/web/*/' + srch_url , 'newwindow', 'width=500, height=400');
 }
+function get_alexa_info(){
+ 	chrome.runtime.sendMessage({message: "geturl"},function(response) {
+		url_getter(response.url);
+	});
+	function url_getter(url) {
+			var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
+			var host_url = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
+			var http = new XMLHttpRequest();
+			http.open("GET", alexa_url + host_url, true);
+			http.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var html = "<b>"+"<span class='color_code'>"+ host_url +'</span>'+"</b><br/><b>Alexa Rank: </b>";
+	 				var xmldata = http.responseXML.documentElement;
+					if (xmldata.getElementsByTagName("POPULARITY")) 
+					{
+	 					html +="<span class='color_code'>"+xmldata.getElementsByTagName("POPULARITY")[0].getAttribute('TEXT')+"</span>";
+	 				} 
+	 				else {
+	 					html += "N/A";
+					}
+					if(xmldata.getElementsByTagName("COUNTRY"))
+					{
+						html += '<br/>'+'<b>Country:</b>' +"<span class='color_code'>"+
+					            xmldata.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
+					}
+					else{
+						html+="N/A";
+					}
+					document.getElementById("show_alexa_data").innerHTML = html;
+					document.getElementById("show_nothing").style.display="block";
+				}
+			};
+		http.send(null);
+	}
+}
+window.onload= function() {
+		get_alexa_info();
+}
+document.getElementById('twit_share').onclick = shareon_twitter;
+document.getElementById('fb_share').onclick = shareon_facebook;
+document.getElementById('gplus_share').onclick = shareon_googleplus;
+document.getElementById('save_now').onclick = save_now_function;
+document.getElementById('recent_capture').onclick = recent_capture_function;
+document.getElementById('first_capture').onclick = first_capture_function;
+document.getElementById('search_tweet').onclick = search_tweet_function;
+=======
  
 function shareon_linkedin()
 {
@@ -251,4 +297,3 @@ function display_whois_info(url){
 		xhr.send(null);
     
 }
-
