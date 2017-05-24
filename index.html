@@ -5,7 +5,8 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   </head>
-  <body style="min-width: 200px;max-width: 300px;">
+  <body style="min-width:250px; width: auto;height: auto;">
+ 
   	<table width="100%" style="min-width: 120px; ">
       <tr class="spaceUnder">
         <td>
@@ -17,20 +18,25 @@
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
         </td>
       </tr>
-      <tr class="spaceUnder" align="center">
+      <tr class="spaceUnder">
+
         <td>
-             <div class="container">
-                  <div class="row">
-                      <div class="col-md-4 col-md-offset-3">
-                              <div class="form-group has-feedback">
-                              <label for="search" class="sr-only">Search</label>
-                              <input type="text" class="form-control" name="search" id="search" placeholder="search" value="">
-                              <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                            </div>
-                      </div>
-                  </div>
-              </div>
+          <form class="navbar-form" role="search">
+    <div class="input-group add-on" id="searchbox" style="padding: 16px;">
+      <input class="form-control" autocomplete="off" placeholder="Search" name="srch-term" id="srch_term" type="text"  >
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="submit" id="srch_button"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+
+    </div>
+  </form>
+  <div id="srch-box" style="min-width: 200px; height: auto; position: relative; text-align: left;display: none; background-color: white;border-radius: 25px;left:-5px">
+    <ul class = ".dropdown-menu" style="list-style-type: none;" id = "srch-drop">
+      
+    </ul>
+  </div>
         </td>
+ 
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
@@ -52,8 +58,7 @@
              </div>
           </div>
       </td>
-      </tr>
-      
+    </tr>   
       <tr class="spaceUnder" align="center">
   			<td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
@@ -71,26 +76,33 @@
           <button type="button" class="btn btn-warning" id="first_capture" tabindex='-1'>First Version</button>
         </td>
       </tr>
-      <tr class="spaceUnder" allign="center">
-        <td id="show_nothing">
-          <h4 style="margin-top:0px;">Summary</h4> 
-          <pre id="show_alexa_data">  
-          </pre>
-        </td>
-      </tr>
       <tr class="spaceUnder" align="center">
         <td>
            <a id="fb_share" class="btn-social btn-sm btn-facebook" ><i class="fa fa-facebook"></i></a>
             <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
             <a id="gplus_share" class="btn-social btn-sm btn-google-plus"><i class="fa fa-google-plus"></i></a>
+            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
          </td>
     	</tr>
   		
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+      <div id="div_for_alexa">
+          </div>
+          <div id="host"></div>
+          <div id="country"></div>
+          <div id="rank"></div>
+          <div id="related"></div>
+      
+      <div id="div_for_whois"></div>
+          <div id="creation"></div>
+          <div id="expiration"></div>
+          <div id="adminemail"></div>
   </body>
 </html>
-<script src="scripts/popup.js"></script>
+
+<script type="text/javascript" src="scripts/popup.js"></script>
+<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
 
 <style>
   tr.spaceUnder > td
@@ -179,11 +191,11 @@ a.btn-social,
     width: 72px;
 }
 
-.btn-behance
+.btn-linkedin
 {
-    background-color: #1769ff;
+    background-color: #1E88E5;
 }
-.btn-behance:hover
+.btn-linkedin:hover
 {
     background-color: #4a8aff;
 }
@@ -211,6 +223,13 @@ a.btn-social,
 {
     background-color: #83c3f3;
 }
+
+
+    #div_for_alexa,#div_for_alexa{
+        color:blue;
+        font-size:20px;
+    }
+
 .color_code
 {
   color:#22c399;
@@ -220,4 +239,5 @@ a.btn-social,
   display: none;
   padding-bottom: 0px;
 }
+
 </style>
