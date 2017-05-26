@@ -29,8 +29,6 @@ function view_all_function(){
 function search_tweet_function(){
 	var twitter_url = "https://twitter.com/search?l=&q=";
 	var url_toSearch = document.getElementById('tweet_URL_input').value;
-	var from_date = document.getElementById('from-date').value;
-	var to_date = document.getElementById('to-date').value;
 	var commonWords = ['i','a','about','an','and','are','as','at','be','by','com','de','en','for','from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where','who','will','with','und','the','www','','in','to','the','all','and','by','of','for','on','is','this','or','with','are','an','home','be','that','you','from','it','about','at','not','have','was','if','new','also','en','will','your','more','one','site','so','any','can','time','top','may','has','do','only','see','view','use','web','our','these','but','terms','my','we','me','out','been','when','information','la','they','there','email','free','like','next','online','date','name','index','links','over','their','first','am','id','policy','last','service','here','add','back'];
     var text = url_toSearch;
     var text = text.replace(/^https?\:\/\//i, ""); //removing https
@@ -56,16 +54,8 @@ function search_tweet_function(){
 	}*/
 	final_term += result.join("%20OR%20"); // adding backups for keywords in URL
 
-	if(!from_date) {
-		from_date = "2006-03-21";	
-	}
-	
-	if (!to_date) {
-		var today = new Date();
-		to_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-	}
 
-	var final_url = twitter_url + final_term + "%20since%3A" + from_date + "%20until%3A" + to_date; //smarter search
+	var final_url = twitter_url + final_term + "%20since%3A" + "%20until%3A"; //smarter search
 
 	chrome.tabs.create({ url: final_url });
 }
