@@ -30,7 +30,7 @@
   ],	
   "background": {
     "scripts": ["scripts/background.js"],
-    "persistent":false
+    "persistent": true
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
