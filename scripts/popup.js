@@ -47,15 +47,15 @@ function search_tweet_function(){
     });
 
 
-	var final_term = link + "%20";
+	var final_term = link + "%20OR%20" + result ;
 	/*for (var i = 1; i < result.length ; i++) {
 		final_term += "%20";
 		final_term += result[i];
 	}*/
-	final_term += result.join("%20OR%20"); // adding backups for keywords in URL
+	
 
 
-	var final_url = twitter_url + final_term + "%20since%3A" + "%20until%3A"; //smarter search
+	var final_url = twitter_url + final_term ; //smarter search
 
 	chrome.tabs.create({ url: final_url });
 }
