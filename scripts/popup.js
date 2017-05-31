@@ -57,7 +57,7 @@ function search_tweet_function(){
 
 	var final_url = twitter_url + final_term ; //smarter search
 
-	chrome.tabs.create({ url: final_url });
+	window.open(final_url, "", "width=750,height=1000");
 }
 
 
