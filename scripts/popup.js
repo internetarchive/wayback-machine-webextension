@@ -47,7 +47,7 @@ function search_tweet_function(){
     });
 
 
-	var final_term = link + "%20OR%20" + result ;
+	var final_term = link;
 	/*for (var i = 1; i < result.length ; i++) {
 		final_term += "%20";
 		final_term += result[i];
