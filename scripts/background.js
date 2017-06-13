@@ -2,59 +2,6 @@
  * LICENSE: AGPL-3
  * Copyright 2016, Internet Archive
  */
-
-var count_to_link = 1;
-
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-      //alert(request.newIconPath);
-      // read `newIconPath` from request and read `tab.id` from sender
-      chrome.browserAction.setIcon({
-          path: {"32":"/images/logo_high.png"},
-          tabId: sender.tab.id
-      });
-
-      chrome.browserAction.setBadgeText( { text: String(count_to_link) } );
-      chrome.browserAction.setBadgeBackgroundColor({color: [156,39,176,1.0]});
-      count_to_link += 1;
-  });
-
-function resetDefaultSuggestion() {
-    chrome.omnibox.setDefaultSuggestion({
-    description: 'Search the Internet Archive for %s'
-    });
-  }
-
-resetDefaultSuggestion();
-
-
-
-function navigate_wayback(url) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.update(tabs[0].id, {url: url});
-    });
-  }
-
-chrome.omnibox.onInputEntered.addListener(function(text) {
-    navigate_wayback("https://archive.org/search.php?query=" + text);
-  });
-
-
-
-
-
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-      
-      // read `newIconPath` from request and read `tab.id` from sender
-      //alert("good");
-      chrome.browserAction.setIcon({
-          path: request.newIconPath,
-          tabId: sender.tab.id
-      });
-  });
-
-
 (function() {
   var enforceBannerInterval;
   var archiveLinkWasClicked = false;
@@ -453,23 +400,32 @@ function isValidSnapshotUrl(url) {
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab = tabs[0];
-      var page_url = tab.url;
-      wayback_url = message.wayback_url;
-      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-      url = page_url.replace(pattern, "");
-      open_url = wayback_url+encodeURI(url);
-      if(message.method!='save'){
-        wmAvailabilityCheck(page_url,function(){
-          chrome.tabs.create({ url:  open_url});
-        },function(){
-          alert("URL not found in wayback archives!");
-        })  
-      }else{
-        chrome.tabs.create({ url:  open_url});
-      }
-    });
+
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+              var tab = tabs[0];
+              var page_url = tab.url;
+              wayback_url = message.wayback_url;
+              var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+              url = page_url.replace(pattern, "");
+              open_url = wayback_url+encodeURI(url);
+              
+              if(message.method!='save'){
+                status = wmAvailabilityCheck(page_url,
+                                    function(){ chrome.tabs.create({ url:  open_url});
+                                        sendResponse({status:true});
+                                      },
+                                    function(){
+                                        //alert("URL not found in wayback archives!");
+                                        sendResponse({status:false});
+                                    });
+             }
+            else{
+                chrome.tabs.create({ url:  open_url});
+              }
+          
+          });
   }
+  
+  return true; 
 });
 
