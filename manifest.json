@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Wayback Machine",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
-  "version": "1.5",
+  "version": "1.5.1",
   "homepage_url": "https://archive.org/",
 
   "permissions": [
