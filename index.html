@@ -4,6 +4,7 @@
     <title>Wayback Machine</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <script src="https://use.fontawesome.com/9a2f4f815f.js"></script>
   </head>
   <!--<body style="min-width: 200px;max-width: 200px;">-->
   <body style="min-width:250px; width: auto;height: auto;">
@@ -32,12 +33,20 @@
                   </div>
               </div>
               -->
+              <tr class="spaceUnder" align="center">
+        <td>
+          <button type="button" class="btn btn-primary" id="recent_capture" tabindex='-1'>V.1.5.2</button>
+          <BR>
+        </td>
+      </tr>
+              
               <form class="navbar-form" role="search">
     <div class="input-group add-on" id="searchbox" style="padding: 16px;">
        <input class="form-control" autocomplete="off" placeholder="Search" name="srch-term" id="srch_term" type="text"  >
        <div class="input-group-btn">
          <button class="btn btn-default" type="submit" id="srch_button"><i class="glyphicon glyphicon-search"></i></button>
        </div>
+
  
      </div>
    </form>
@@ -67,13 +76,19 @@
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
+          <button type="button" class="btn btn-primary" id="search_tweet" tabindex="-1">Tweets</button>
+
+        </td>
+      </tr>
+      <tr class="spaceUnder" align="center">
+        <td>
           <form>
             <div class="form-group">
-              <label for="tweet_URL_input"> URL for Tweets</label>
-              <input type="text" class="form-control" id="tweet_URL_input" placeholder="Enter URL to be searched on Twitter">
+              
+              <input type="hidden" class="form-control" id="tweet_URL_input" placeholder="Enter URL to be searched on Twitter">
             </div>
             
-            <button type="button" class="btn btn-primary" id="search_tweet" tabindex="-1">Tweets</button>
+            
             
           </form>
         </td>
@@ -86,6 +101,7 @@
             <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
          </td>
       </tr>
+
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
   </body>
@@ -210,5 +226,6 @@ a.btn-social,
 {
     background-color: #83c3f3;
 }
+
 
 </style>
