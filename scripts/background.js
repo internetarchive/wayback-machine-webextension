@@ -417,6 +417,13 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         chrome.tabs.create({ url:  open_url});
       }
     });
+  }else if(message.message=='injectol'){
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          var tab = tabs[0];
+          chrome.tabs.executeScript(tab.id, {
+                  file:"scripts/OLcontent.js"
+                });
+      });
   }
 });
 

@@ -26,12 +26,7 @@
     "scripts/client.js",
       "scripts/OLcontent.js"
   ],
-  "content_scripts":[
-      {
-          "matches":["*://*/*"],
-          "js":["scripts/OLcontent.js"]
-      }
-  ],
+  
   "browser_action": {
    "default_icon": "images/icon.png",
    "default_popup":"index.html"
