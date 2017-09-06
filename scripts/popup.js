@@ -333,8 +333,8 @@ function makeModal(){
     if(search_term()==""){
         var url=global_url;
     }else{
-        //var url=search_term();
-        var url=global_url;
+        var url=search_term();
+        //var url=global_url;
     }
     if(wbm_url(url)){
         url=remove_wbm(url);
