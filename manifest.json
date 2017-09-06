@@ -1,31 +1,44 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
-  "version": "1.4",
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
+  "version": "1.3.4",
   "homepage_url": "https://archive.org/",
-
+  "icons": {
+    "48": "images/icon.png",
+    "96": "images/icon@2x.png"
+  },
+  
   "permissions": [
+      "notifications",
     "tabs",
-    "activeTab",
-    "webRequest",
-    "webRequestBlocking",
-    "http://*/*",
-    "https://*/*",
-    "*://*/*",
-    "<all_urls>"
+        "activeTab",
+      "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "http://*/*",
+        "https://*/*",
+        "*://*/*",
+        "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/background.js"],
+    "persistent": true
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
     "images/logo.gif",
-    "scripts/client.js"
+    "scripts/client.js",
+      "scripts/RTcontent.js",
+"scripts/sequences.js",
+"scripts/d3.js",
+"css/RTstyle.css",
+"css/sequences.css",
+      "css/googlestyle.css"
   ],
   "browser_action": {
-   "default_icon": "images/icon.png",
-   "default_popup": "index.html"
+    "default_icon": "images/icon.png",
+    "default_popup": "index.html"
   }
 }

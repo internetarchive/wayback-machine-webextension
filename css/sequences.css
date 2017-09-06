@@ -1,0 +1,72 @@
+
+
+#main{
+  padding-top: 5px;
+}
+
+
+
+#sequence {
+  display: block;
+  clear: both;
+  padding-top: 10px;
+  height: 30px;
+  font-size: 18px;
+  color: white;
+  font-style: bold;
+  text-align: left;
+}
+
+#legend {
+  padding: 10px 0 0 3px;
+}
+
+#sequence text, #legend text {
+  font-weight: 600;
+  fill: #fff;
+}
+
+#chart{
+    width: 100%;
+}
+
+#chart svg {
+
+    margin: auto;
+}
+
+/*
+#chart path {
+  stroke: #fff;
+}
+*/
+
+
+
+#percentage {
+  font-size: 2.5em;
+}
+
+.divBtn{
+    width: 100%;
+}
+
+.yearbtn{
+    float: left;
+    background-color: black !important;
+    color: white !important;
+    font-size: 18px;
+    padding: 5px !important;
+    text-align: center;
+}
+
+.activebtn{
+    background-color: green !important;
+    color: white !important;
+    font-size: 18px;
+}
+
+.symb{
+    color: red;
+    font-size: 18px;
+}
