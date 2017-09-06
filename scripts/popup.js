@@ -17,7 +17,12 @@ function remove_port(url){
 
 function remove_wbm(url){
     var pos=url.indexOf('/http');
-    var new_url=url.substring(pos+1);
+    if(pos!=-1){
+        var new_url=url.substring(pos+1);
+    }else{
+        var pos=url.indexOf('/www');
+        var new_url=url.substring(pos+1);
+    }
     new_url=remove_port(new_url);
     return new_url;
 }

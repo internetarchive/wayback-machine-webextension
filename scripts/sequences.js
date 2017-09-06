@@ -3,8 +3,9 @@ IAglobvar=0;
 //console.log('sequences');
 chrome.runtime.sendMessage({message:'sendurlforrt'});
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.RTurl){
+  if(message.RTurl!=""){
     var url=message.RTurl;
+    console.log('THE URL is '+url);  
     if(url.includes('https')){
       url=url.replace('https://','');
     }else{
@@ -12,8 +13,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     }
     
     var pos=url.indexOf('/');
-    url=url.substring(0,pos);
-    console.log('THE URL is '+url);
+    if(pos!=-1) url=url.substring(0,pos);
+    
     var xhr = new XMLHttpRequest();
     xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
     

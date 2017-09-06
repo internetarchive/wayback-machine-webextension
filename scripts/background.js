@@ -136,7 +136,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
-                var url=tabs[0].url;
+                var url=RTurl;
                 if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
                     alert("Structure as radial tree not available on archive.org pages");
@@ -152,9 +152,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 });
                 }
                 
-                
-                
             });
+                
+            
                 
         }else if(message.message=='sendurl'){
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
