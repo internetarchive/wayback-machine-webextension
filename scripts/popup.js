@@ -185,7 +185,7 @@ function alexa_statistics_function(eventObj){
         url=remove_whois(url);
     }
     var open_url="http://www.alexa.com/siteinfo/"+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function whois_statistics_function(eventObj){
@@ -202,7 +202,7 @@ function whois_statistics_function(eventObj){
         url=remove_whois(url);
     }
     var open_url="https://www.whois.com/whois/"+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function search_tweet_function(eventObj){
@@ -225,7 +225,7 @@ function search_tweet_function(eventObj){
     }
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');    
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');    
 }
 
 function display_list(key_word){
@@ -287,8 +287,9 @@ function display_suggestions(e){
 }
 
 function about_support(){
-  var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
-  myWindow.document.write("<p>Description about the Extension will go here</p><br><p>Contact us at info@archive.org</>");         // Some text in the new window
+  var myWindow = window.open("", "", "width=1000, height=1000");   // Opens a new window
+  myWindow.document.write('<h2><strong>The Official Wayback Machine Extension:</strong></h2><p>In cooperation with GSoC, The Internet Archive presents The Official WayBack Machine Extension. With the power of the WayBack&nbsp;Machine, we let you go in time to see how a URL has changed and evolved through the history of the Web!</p><p><strong> Features</strong></p><ul><li><strong>Save Page Now</strong></li><ul>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</ul><li><strong>Recent Version &amp; First Version</strong></li><ul>View the most recent, and the first version of a page, in the WayBack Machine.</ul><li><strong>Alexa &amp; Whois</strong></li><ul>gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.</ul><li><strong>Tweets</strong></li><ul>Searches Twitter For information Regarding your current page.</ul></ul><p><strong>Modes</strong></p><ul><li><span>✅</span><br>Your page is in the WayBack Machine.</li><li><span style="background-color:red;color:white;">☓</span><br>Your page is not Currently in the WayBack Machine.</li><li><span>⛔</p>Your page can not be saved in the Wayback Machine.<span><br><strong>License</strong></p><p>&nbsp;Copyright Internet Archive, 2017 AGPL-3&nbsp;</p><p><strong>Credit</strong></p><p>Richard Caceres, @rchrd2&nbsp;<br />Mark Graham, @markgraham&nbsp;<br />Benjamin Mandel&nbsp;<br />Kumar Yoges&nbsp;<br />Anton, @&nbsp;<br />Abhidhas, @abhidas17695&nbsp;<br />Rakesh N Chinta, @rakesh-chinta</p><p><strong>Support</strong></p><p>info@archive.org</p></li></ul>');
+//myWindow.document.write('<h2><strong>The Official Wayback Machine Extension:</strong></h2><p>In cooperation with GSoC, The Internet Archive presents "The Official WayBack Machine Extension". With the power of the WayBack&nbsp;Machine, we let you go in time to see how a URL has changed and evolved through the history of the Web!</p><p><strong> Features</strong></p><ul><li><strong>Save Page Now</strong></li>Allows you to instantly save the page you are currently viewing in The WayBack Machine.<li><strong>Recent Version &amp; First Version</strong></li>View the most recent, and the first version of a page, in the WayBack Machine.<li><strong>Alexa &amp; Whois</strong></li>gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.<li><strong>Tweets</strong></li>Searches Twitter For information Regarding your current page.</ul><p><strong>Modes</strong></p><ul><li><p>✅</p>Your page is in the WayBack Machine.</li><li><p>☓</p>Your page is not Currently in the WayBack Machine.</li><li><p>⛔</p>Your page can not be saved in the Wayback Machine.</li></ul><p><strong>License</strong></p><p>&nbsp;Copyright Internet Archive, 2017 AGPL-3&nbsp;</p><p><strong>Credit</strong></p><p>Richard Caceres, @rchrd2&nbsp;<br />Mark Graham, @markgraham&nbsp;<br />Benjamin Mandel&nbsp;<br />Kumar Yoges&nbsp;<br />Anton, @&nbsp;<br />Abhidhas, @abhidas17695&nbsp;<br />Rakesh N Chinta, @rakesh-chinta<br />Will Austin, @williamaustin3</p><p><strong>Support</strong></p><p>info@archive.org</p>');
   myWindow.focus();        
 }
 
