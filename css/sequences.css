@@ -47,26 +47,28 @@
   font-size: 2.5em;
 }
 
-.divBtn{
+#divBtn{
     width: 100%;
+    
 }
 
-.yearbtn{
-    float: left;
-    background-color: black !important;
+#divBtn .yearbtn{
+    float: left!important;
+    background: black !important;
     color: white !important;
-    font-size: 18px;
+    font-size: 18px!important;
     padding: 5px !important;
-    text-align: center;
+    text-align: center!important;
+    text-decoration:none!important;
+    font-style: normal!important;
+    font-weight: normal!important;
+    
+    border-radius: 0px!important;
 }
 
-.activebtn{
+#divBtn .yearbtn .activebtn{
     background-color: green !important;
     color: white !important;
     font-size: 18px;
 }
 
-.symb{
-    color: red;
-    font-size: 18px;
-}
