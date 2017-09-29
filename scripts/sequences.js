@@ -157,7 +157,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           if(url.includes('//')){
             url=url.split('//').join('/');
           }
-          url=url.split('/').join('>');
+          url=url.split('/').join('/');
           years[i][j]=url;
         }
       }
@@ -181,9 +181,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         for(var i=x;i<years[n].length;i++){
           
           if(i!=(years[n].length-1)){
-            text=text+years[n][i]+">end,1"+"\n";
+            text=text+years[n][i]+"/end,1"+"\n";
           }else{
-            text=text+years[n][i]+">end,1";
+            text=text+years[n][i]+"/end,1";
           }
         }
         return text;
@@ -433,7 +433,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         var text="";
         var symb=document.createElement('span');
         symb.setAttribute('class','symb');
-        symb.innerHTML=">";
+        symb.innerHTML="/";
         for(var i=0;i<anc_arr.length;i++){
           if(i==0){
             text=" "+anc_arr[i].data.name;
@@ -508,7 +508,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           if (isNaN(size)) { // e.g. if this is a header row
             continue;
           }
-          var parts = sequence.split(">");
+          var parts = sequence.split("/");
           var currentNode = root;
           for (var j = 0; j < parts.length; j++) {
             var children = currentNode["children"];

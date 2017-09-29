@@ -363,9 +363,9 @@ function showSettings(eventObj){
 }
 
 window.onload=get_url;
-restoreSettings();
+//restoreSettings();
 
-document.getElementById('settings_div').style.display="none";
+//document.getElementById('settings_div').style.display="none";
 
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
@@ -380,8 +380,8 @@ document.getElementById('search_tweet').onclick =search_tweet_function;
 document.getElementById('about_support_button').onclick = about_support;
 //document.getElementById('support_button').onclick = support_function;
 document.getElementById('overview').onclick = view_all_function;
-document.getElementById('settings_btn').onclick=showSettings;
-document.getElementById('settings_save_btn').onclick=saveSettings;
+//document.getElementById('settings_btn').onclick=showSettings;
+//document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
