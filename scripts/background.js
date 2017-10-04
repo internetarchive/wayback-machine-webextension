@@ -246,7 +246,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.1";
+var VERSION = "2.2";
 Globalstatuscode="";
 var excluded_urls = [
   
