@@ -53,6 +53,7 @@
 }
 
 #divBtn .yearbtn{
+    cursor: pointer;
     float: left!important;
     background: black !important;
     color: white !important;
@@ -62,12 +63,12 @@
     text-decoration:none!important;
     font-style: normal!important;
     font-weight: normal!important;
-    
     border-radius: 0px!important;
 }
 
-#divBtn .yearbtn .activebtn{
-    background-color: green !important;
+#divBtn .activebtn{
+    cursor: pointer;
+    background: green !important;
     color: white !important;
     font-size: 18px;
 }

@@ -181,9 +181,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         for(var i=x;i<years[n].length;i++){
           
           if(i!=(years[n].length-1)){
-            text=text+years[n][i]+"/end,1"+"\n";
+            text=text+years[n][i]+" ,1"+"\n";
           }else{
-            text=text+years[n][i]+"/end,1";
+            text=text+years[n][i]+" ,1";
           }
         }
         return text;
@@ -323,6 +323,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             
           })
           .style("opacity", 1)
+          .style("cursor",'pointer')
           .on("mouseover", mouseover)
           .on("click",openTheUrl);
           // Add the mouseleave handler to the bounding circle.
@@ -345,7 +346,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             
             
           }
-          var wb_url="https://web.archive.org/web/"+year+"*";
+          var wb_url="https://web.archive.org/web/"+year+"0630";
           //console.log(url);
           
           //chrome.runtime.sendMessage({message:'openurl',url:wayback_url});
@@ -354,7 +355,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         // Fade all but the current sequence, and show it in the breadcrumb trail.
         function mouseover(d) {
-          
+        
           var percentage = (100 * d.value / totalSize).toPrecision(3);
           var percentageString = percentage + "%";
           if (percentage < 0.1) {
