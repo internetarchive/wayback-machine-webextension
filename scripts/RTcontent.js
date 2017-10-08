@@ -1,4 +1,4 @@
-console.log('RT running');
+
 if(document.getElementById('myModal')!=null){
     document.getElementById('myModal').style.display="block";
     var count=document.getElementById('myModal').getAttribute('count');
@@ -53,7 +53,7 @@ modal.appendChild(message);
 document.body.appendChild(modal);
 
 modal.style.display = "block";
-console.log('END of RT');    
+  
 
 
 span.onclick = function() {
