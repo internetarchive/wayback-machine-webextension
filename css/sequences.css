@@ -17,19 +17,20 @@
   text-align: left;
 }
 
-#legend {
-  padding: 10px 0 0 3px;
-}
 
-#sequence text, #legend text {
-  font-weight: 600;
-  fill: #fff;
-}
+
+
 
 #chart{
-    width: 100%;
+    width:100%;
+    
 }
-
+#animated-logo{
+    float:none!important;
+    width: 100%!important;
+    margin: auto!important;
+    
+}
 #chart svg {
 
     margin: auto;
@@ -43,9 +44,7 @@
 
 
 
-#percentage {
-  font-size: 2.5em;
-}
+
 
 #divBtn{
     width: 100%;

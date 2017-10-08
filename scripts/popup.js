@@ -1,5 +1,5 @@
 global_url="";
-count=0;
+
 function wbm_url(url){
     if(url.includes('web.archive.org')){
         return true;
@@ -263,8 +263,8 @@ function display_list(key_word){
 }
 
 function display_suggestions(e){
-    count++;
-    //console.log(count);
+    
+    
     document.getElementById('suggestion-box').style.display='none';
     document.getElementById('suggestion-box').innerHTML="";
     
@@ -287,49 +287,35 @@ function display_suggestions(e){
 }
 
 function about_support(){
-  var myWindow = window.open("about.html", "", "width=1000, height=1000");   // Opens a new window
-//  myWindow.document.write('<h2><strong>The Official Wayback Machine Extension:</strong></h2><p>In cooperation with Google Summer of Code, The Internet Archive presents The Official WayBack Machine Extension. With the power of the WayBack&nbsp;Machine, we let you go in time to see how a URL has changed and evolved through the history of the Web!</p><p><strong> Features</strong></p><ul><li><strong>Save Page Now</strong></li><ul>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</ul><li><strong>Recent Version &amp; First Version</strong></li><ul>View the most recent, and the first version of a page, in the WayBack Machine.</ul><li><strong>Alexa &amp; Whois</strong></li><ul>gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.</ul><li><strong>Tweets</strong></li><ul>Searches Twitter For information Regarding your current page.</ul></ul><span><br><strong>License</strong></p><p>&nbsp;Copyright Internet Archive, 2017 AGPL-3&nbsp;<br /><strong>Credit</strong></p><p>Caceres Richard<a href="https://github.com/rchrd2">&nbsp;@rchrd2<br /></a>Chinta Rakesh N&nbsp;<a href="https://github.com/rakesh-chinta">@rakesh-chinta</a><br />Das&nbsp;Abhishek <a href="http://github.com/abhidas17695">@abhidas17695</a><br />Graham Mark&nbsp;<a href="https://github.com/markjgraham">@markgraham</a><br />Benjamin Mandel&nbsp;<a href="http://github.com/BenjaminMandel">@BenjaminMandel<br /></a>Anton Shiryaev&nbsp;<a href="https://github.com/Eagle19243">@Eagle19243<br /></a>Yogesh&nbsp;Kumar <a href="https://github.com/kumarjyogesh">@kumarjyogesh&nbsp;</a>&nbsp;</p><p><strong>Support</strong></p><p>info@archive.org</p></li></ul>');
-//  myWindow.document.write('<h2><strong>The Official Wayback Machine Extension:</strong></h2><p>In cooperation with GSoC, The Internet Archive presents The Official WayBack Machine Extension. With the power of the WayBack&nbsp;Machine, we let you go in time to see how a URL has changed and evolved through the history of the Web!</p><p><strong> Features</strong></p><ul><li><strong>Save Page Now</strong></li><ul>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</ul><li><strong>Recent Version &amp; First Version</strong></li><ul>View the most recent, and the first version of a page, in the WayBack Machine.</ul><li><strong>Alexa &amp; Whois</strong></li><ul>gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.</ul><li><strong>Tweets</strong></li><ul>Searches Twitter For information Regarding your current page.</ul></ul><p><strong>Modes</strong></p><ul><li><span>✅</span><br>Your page is in the WayBack Machine.</li><li><span style="background-color:red;color:white;">☓</span><br>Your page is not Currently in the WayBack Machine.</li><li><span>⛔</p>Your page can not be saved in the Wayback Machine.<span><br><strong>License</strong></p><p>&nbsp;Copyright Internet Archive, 2017 AGPL-3&nbsp;</p><p><strong>Credit</strong></p><p>Richard Caceres, @rchrd2&nbsp;<br />Mark Graham, @markgraham&nbsp;<br />Benjamin Mandel&nbsp;<br />Kumar Yoges&nbsp;<br />Anton, @&nbsp;<br />Abhidhas, @abhidas17695&nbsp;<br />Rakesh N Chinta, @rakesh-chinta</p><p><strong>Support</strong></p><p>info@archive.org</p></li></ul>');
+  var myWindow = window.open("about.html", "", "width=1000, height=1000");
+
 
   myWindow.focus();        
 }
 
-function support_function(){
-  var final_support = "mailto:info@archive.org";
-  //window.open(final_support, "", "width=500, height=400");
-    //chrome.tabs.create({url:final_support});
-    var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
-  myWindow.document.write("<p>mailto:info@archive.org</p>");         // Some text in the new window
-  //myWindow.focus();
-}
 
 
-function restoreSettings() {
-  //count=0;
-  chrome.storage.sync.get({
-    
-    as:false
-  }, function(items) {
-    
-    document.getElementById('as').checked = items.as;  
-      if(items.as){
-          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
-      }
-     });
-}
 
-function saveSettings(){
-    var as = document.getElementById('as').checked;
-    
-//    if(as){
-//        chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
-//    }
-
-    chrome.storage.sync.set({
-    
-    as: as
-  });
-}
+//function restoreSettings() {
+//  
+//  chrome.storage.sync.get({
+//    
+//    as:false
+//  }, function(items) {
+//    
+//    document.getElementById('as').checked = items.as;  
+//      if(items.as){
+//          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
+//      }
+//     });
+//}
+//
+//function saveSettings(){
+//    var as = document.getElementById('as').checked;
+//      chrome.storage.sync.set({
+//      as: as
+//  });
+//}
 
 function makeModal(){
     if(search_term()==""){
@@ -351,17 +337,17 @@ function makeModal(){
     
 }
 
-function showSettings(eventObj){
-    var target=eventObj.target;
-    if(target.getAttribute('toggle')=='off'){
-        document.getElementById('settings_btn').setAttribute('toggle','on');
-    document.getElementById('settings_div').style.display="block";
-    }else{
-        document.getElementById('settings_btn').setAttribute('toggle','off');
-        document.getElementById('settings_div').style.display="none";
-    }
-    
-}
+//function showSettings(eventObj){
+//    var target=eventObj.target;
+//    if(target.getAttribute('toggle')=='off'){
+//        document.getElementById('settings_btn').setAttribute('toggle','on');
+//    document.getElementById('settings_div').style.display="block";
+//    }else{
+//        document.getElementById('settings_btn').setAttribute('toggle','off');
+//        document.getElementById('settings_div').style.display="none";
+//    }
+//    
+//}
 
 window.onload=get_url;
 //restoreSettings();
@@ -379,7 +365,7 @@ document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
 document.getElementById('whois_statistics').onclick =whois_statistics_function;
 document.getElementById('search_tweet').onclick =search_tweet_function;
 document.getElementById('about_support_button').onclick = about_support;
-//document.getElementById('support_button').onclick = support_function;
+
 document.getElementById('overview').onclick = view_all_function;
 //document.getElementById('settings_btn').onclick=showSettings;
 //document.getElementById('settings_save_btn').onclick=saveSettings;
