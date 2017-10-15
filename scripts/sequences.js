@@ -36,7 +36,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var j=0;
       for(var i=1;i<response.length;i++){
         var url=response[i][1].toLowerCase();
-        if(url.includes('jpg') || url.includes('pdf') || url.includes('png') || url.includes('form') || url.includes('gif')){
+        if(url.match(/jpg|pdf|png|form|gif/)) {
           continue;
         }
         if(url.startsWith('https')){
@@ -45,16 +45,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         if(response[i][1].indexOf(':80')>(-1)){
           url=response[i][1].replace(':80','');
         }
-        
-        if(url.includes('www1')){
-          url=url.replace('www1','www');
-        }else if(url.includes('www2')){
-          url=url.replace('www2','www');
-        }else if(url.includes('www3')){
-          url=url.replace('www3','www');
-        }else if(url.includes('www0')){
-            url=url.replace('www0','www');
-        }
+        url = url.replace(/www0|www1|www2|www3/gi, 'www');
         if(url.indexOf('://www')==(-1)){
           
           url="http://www."+url.substring(7);
