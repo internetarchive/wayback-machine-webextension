@@ -459,23 +459,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
         
       }
-      
-      
-      
-      
-      
+
       // Take a 2-column CSV and transform it into a hierarchical structure suitable
       // for a partition layout. The first column is a sequence of step names, from
       // root to leaf, separated by hyphens. The second column is a count of how 
       // often that sequence occurred.
+      // Algorithm:
+      // 1. Sort by length (shorter first). Shorter paths always are at the
+      // beginning of the tree.
       function buildHierarchy(csv) {
-        var length=csv.length;
-//        if(length>10000){
-//            length=10000;
-//            document.getElementById('message').innerHTML="There are "+csv.length;
-//        }
+        csv.sort(function(a, b) {
+          return a[0].length - b[0].length || a[0].localeCompare(b[0]);
+        });
+
         var root = {"name": "root", "children": []};
-        for (var i = 0; i < length; i++) {
+        for (var i = 0, length=csv.length; i < length; i++) {
           var sequence = csv[i][0];
           var size = +csv[i][1];
           if (isNaN(size)) { // e.g. if this is a header row
