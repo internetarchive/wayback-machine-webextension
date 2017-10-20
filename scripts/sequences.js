@@ -25,7 +25,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
     var pos=url.indexOf('/');
     if(pos!=-1) url=url.substring(0,pos);
-    
+
+    var base_url = url;
     var xhr = new XMLHttpRequest();
     xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
     
@@ -47,11 +48,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         }
         url = url.replace(/www0|www1|www2|www3/gi, 'www');
         if(url.indexOf('://www')==(-1)){
-          
-          url="http://www."+url.substring(7);
-          
+          url="http://"+url.substring(7);
         }
-        
+
         var format=/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var n=0;
         while(format.test(url.charAt(url.length-1))){
@@ -467,10 +466,24 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       // Algorithm:
       // 1. Sort by length (shorter first). Shorter paths always are at the
       // beginning of the tree.
+      // 2. Create a dictionary with all real URLs as seen from CDX. Add also
+      // URL with trailing slash when missing. Include also base URL
       function buildHierarchy(csv) {
         csv.sort(function(a, b) {
           return a[0].length - b[0].length || a[0].localeCompare(b[0]);
         });
+        var real_urls = {};
+        real_urls[base_url] = 1;
+        if(base_url.slice(-1) != '/') {
+          real_urls[base_url + '/'] = 1;
+        }
+        for(var i = 0, length=csv.length; i<length; i++) {
+          var key = String(csv[i][0]).trim().replace(":80/", "/");
+          real_urls[key] = 1;
+          if(key.slice(-1) != '/') {
+            real_urls[key + '/'] = 1;
+          }
+        }
 
         var root = {"name": "root", "children": []};
         for (var i = 0, length=csv.length; i < length; i++) {
