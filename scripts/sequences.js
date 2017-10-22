@@ -468,6 +468,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       // beginning of the tree.
       // 2. Create a dictionary with all real URLs as seen from CDX. Add also
       // URL with trailing slash when missing. Include also base URL
+      // 3. Check all potential URLs and replace `/` with DELIMITER '|' for
+      // NOT real URLs.
+      // 4. After generating the tree and building each node, replace '|' with
+      // '/' to have valid URLs.
+      // This way, we avoid spliting on '/' everywhere and we also use the
+      // existing ``buildHierarchy`` method.
       function buildHierarchy(csv) {
         csv.sort(function(a, b) {
           return a[0].length - b[0].length || a[0].localeCompare(b[0]);
@@ -484,15 +490,41 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             real_urls[key + '/'] = 1;
           }
         }
+        // Add DELIMITER instead of '/' for NOT real URLs.
+        var DELIMITER = '|';
+        function filter_real_url(url) {
+          var parts = url.trim().split("/");
+          var delimiter_index = [];
+          for(var i=1; i<parts.length; i++) {
+            var potentialUrl = parts.slice(0, i).join("/");
+            if(potentialUrl in real_urls === false && i > 0) {
+              var pos = parts.slice(0, i).join('/').length;
+              delimiter_index.push(pos);
+            }
+          }
+          if(delimiter_index.length > 0) {
+            var result_url = url;
+            for(var j=1; j<delimiter_index.length; j++) {
+              var index = delimiter_index[j];
+              result_url = result_url.substr(0, index) + DELIMITER + result_url.substr(index+1);
+            }
+            console.log(url);
+            console.log(result_url);
+            return result_url;
+          }
+          return url;
+        }
 
         var root = {"name": "root", "children": []};
         for (var i = 0, length=csv.length; i < length; i++) {
-          var sequence = csv[i][0];
+          var sequence = filter_real_url(csv[i][0]);
+
           var size = +csv[i][1];
           if (isNaN(size)) { // e.g. if this is a header row
             continue;
           }
           var parts = sequence.split("/");
+          parts = parts.map(function(s) { return s.replace(/\|/g, '/'); });
           var currentNode = root;
           for (var j = 0; j < parts.length; j++) {
             var children = currentNode["children"];
@@ -502,7 +534,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               // Not yet at the end of the sequence; move down the tree.
               var foundChild = false;
               for (var k = 0; k < children.length; k++) {
-                if (children[k]["name"] == nodeName) {
+                if (children[k].name == nodeName) {
                   childNode = children[k];
                   foundChild = true;
                   break;
@@ -522,8 +554,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           }
         }
         return root;
-      }; 
-    }      
+      }
+    }
     
     
     
