@@ -25,7 +25,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
     var pos=url.indexOf('/');
     if(pos!=-1) url=url.substring(0,pos);
-
     var base_url = url;
     var xhr = new XMLHttpRequest();
     xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
@@ -48,9 +47,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         }
         url = url.replace(/www0|www1|www2|www3/gi, 'www');
         if(url.indexOf('://www')==(-1)){
-          url="http://"+url.substring(7);
+          
+          url="http://www."+url.substring(7);
+          
         }
-
+        
         var format=/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var n=0;
         while(format.test(url.charAt(url.length-1))){
@@ -292,7 +293,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         var csv = d3.csvParseRows(text);
         var json = buildHierarchy(csv);
-        //console.log(json);
+        console.log(json);
         createVisualization(json);
         //document.getElementById('chart').removeChild(animate);
         
@@ -364,7 +365,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         // Fade all but the current sequence, and show it in the breadcrumb trail.
         function mouseover(d) {
-        
+         console.log("Mouse entered");
           var percentage = (100 * d.value / totalSize).toPrecision(3);
           var percentageString = percentage + "%";
           if (percentage < 0.1) {
@@ -395,7 +396,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         function mouseleave(d) {
           
           
-          document.getElementById("sequence").innerHTML="";
+         console.log("Mouse left"); document.getElementById("sequence").innerHTML="";
           // Deactivate all segments during transition.
           d3.selectAll("path").on("mouseover", null);
           
@@ -458,23 +459,16 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
         
       }
-
+      
+      
+      
+      
+      
       // Take a 2-column CSV and transform it into a hierarchical structure suitable
       // for a partition layout. The first column is a sequence of step names, from
       // root to leaf, separated by hyphens. The second column is a count of how 
       // often that sequence occurred.
-      // Algorithm:
-      // 1. Sort by length (shorter first). Shorter paths always are at the
-      // beginning of the tree.
-      // 2. Create a dictionary with all real URLs as seen from CDX. Add also
-      // URL with trailing slash when missing. Include also base URL
-      // 3. Check all potential URLs and replace `/` with DELIMITER '|' for
-      // NOT real URLs.
-      // 4. After generating the tree and building each node, replace '|' with
-      // '/' to have valid URLs.
-      // This way, we avoid spliting on '/' everywhere and we also use the
-      // existing ``buildHierarchy`` method.
-      function buildHierarchy(csv) {
+              function buildHierarchy(csv) {
         csv.sort(function(a, b) {
           return a[0].length - b[0].length || a[0].localeCompare(b[0]);
         });
@@ -508,17 +502,16 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               var index = delimiter_index[j];
               result_url = result_url.substr(0, index) + DELIMITER + result_url.substr(index+1);
             }
-            console.log(url);
-            console.log(result_url);
+            //console.log(url);
+            //console.log(result_url);
             return result_url;
           }
           return url;
         }
 
         var root = {"name": "root", "children": []};
-        for (var i = 0, length=csv.length; i < length; i++) {
+        for (var i = 0; i < length; i++) {
           var sequence = filter_real_url(csv[i][0]);
-
           var size = +csv[i][1];
           if (isNaN(size)) { // e.g. if this is a header row
             continue;
@@ -534,7 +527,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               // Not yet at the end of the sequence; move down the tree.
               var foundChild = false;
               for (var k = 0; k < children.length; k++) {
-                if (children[k].name == nodeName) {
+                if (children[k]["name"] == nodeName) {
                   childNode = children[k];
                   foundChild = true;
                   break;
@@ -555,7 +548,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         }
         return root;
       }
-    }
+
+    }      
     
     
     
