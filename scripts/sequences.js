@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     if(pos!=-1) url=url.substring(0,pos);
     var base_url = url;
     var xhr = new XMLHttpRequest();
-    xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
+    xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original,urlkey&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
     
     xhr.onload = function() {
       var response = JSON.parse(xhr.responseText);
@@ -35,54 +35,73 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var paths_arr=new Array();
       var j=0;
       for(var i=1;i<response.length;i++){
-        var url=response[i][1].toLowerCase();
-        if(url.match(/jpg|pdf|png|form|gif/)) {
-          continue;
+        //var url=response[i][1].toLowerCase();
+        var urlkey=response[i][2];
+        var urlkey_arr=urlkey.split(',');
+        var domain="";
+        for(var k=0;k<urlkey_arr.length-1;k++){
+            if(k==0) domain=urlkey_arr[0]; 
+            else domain=urlkey_arr[k]+'.'+domain;
         }
-        if(url.startsWith('https')){
-          url=url.replace('https','http');
+        if(urlkey_arr[urlkey_arr.length-1].indexOf('/')==urlkey_arr[urlkey_arr.length-1].length-1){
+            //var url=domain[1].replace(")/",'.'+domain[0]+'/');
+            var url=urlkey_arr[urlkey_arr.length-1].replace(")/",'.'+domain+'/');
+            url="http://www."+url;
+        }else{
+            var url=urlkey_arr[urlkey_arr.length-1].replace(")/",'.'+domain+'/');
+            url="http://www."+url+'/';
         }
-        if(response[i][1].indexOf(':80')>(-1)){
-          url=response[i][1].replace(':80','');
-        }
-        url = url.replace(/www0|www1|www2|www3/gi, 'www');
-        if(url.indexOf('://www')==(-1)){
-          
-          url="http://www."+url.substring(7);
-          
-        }
+            
         
-        var format=/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-        var n=0;
-        while(format.test(url.charAt(url.length-1))){
-          
-          
-          n++;
-          url = url.substring(0, url.length -1);
-          
-          
-        }
         
-        if(url.charAt(url.length-1)!='/'){
-          if(url.charAt(url.length-2)!='/'){
-            url=url+'/';
-          }else{
-            url = url.substring(0, url.length -1);
-          }
-          
-          
-        }
-        if(url.includes('%0a')){
-          
-          url.replace('%0a','');
-        }
-        
-        if(url.slice(-2)=='//'){
-          url = url.substring(0, url.length -1);
-        }
-        if(url.includes(',')){
-          url=url.replace(/,/g ,'');
-        }
+          //console.log(url);
+//        if(url.match(/jpg|pdf|png|form|gif/)) {
+//          continue;
+//        }
+//        if(url.startsWith('https')){
+//          url=url.replace('https','http');
+//        }
+//        if(response[i][1].indexOf(':80')>(-1)){
+//          url=response[i][1].replace(':80','');
+//        }
+//        url = url.replace(/www0|www1|www2|www3/gi, 'www');
+//        if(url.indexOf('://www')==(-1)){
+//          
+//          url="http://www."+url.substring(7);
+//          
+//        }
+//        
+//        var format=/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+//        var n=0;
+//        while(format.test(url.charAt(url.length-1))){
+//          
+//          
+//          n++;
+//          url = url.substring(0, url.length -1);
+//          
+//          
+//        }
+//        
+//        if(url.charAt(url.length-1)!='/'){
+//          if(url.charAt(url.length-2)!='/'){
+//            url=url+'/';
+//          }else{
+//            url = url.substring(0, url.length -1);
+//          }
+//          
+//          
+//        }
+//        if(url.includes('%0a')){
+//          
+//          url.replace('%0a','');
+//        }
+//        
+//        if(url.slice(-2)=='//'){
+//          url = url.substring(0, url.length -1);
+//        }
+//        if(url.includes(',')){
+//          url=url.replace(/,/g ,'');
+//        }
         
         
         
@@ -293,7 +312,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         var csv = d3.csvParseRows(text);
         var json = buildHierarchy(csv);
-        console.log(json);
+        //console.log(json);
         createVisualization(json);
         //document.getElementById('chart').removeChild(animate);
         
@@ -365,7 +384,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         // Fade all but the current sequence, and show it in the breadcrumb trail.
         function mouseover(d) {
-         console.log("Mouse entered");
+         //console.log("Mouse entered");
           var percentage = (100 * d.value / totalSize).toPrecision(3);
           var percentageString = percentage + "%";
           if (percentage < 0.1) {
@@ -396,7 +415,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         function mouseleave(d) {
           
           
-         console.log("Mouse left"); document.getElementById("sequence").innerHTML="";
+         //console.log("Mouse left"); 
+            document.getElementById("sequence").innerHTML="";
           // Deactivate all segments during transition.
           d3.selectAll("path").on("mouseover", null);
           
