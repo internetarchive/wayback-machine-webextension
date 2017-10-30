@@ -28,10 +28,19 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     var base_url = url;
     var xhr = new XMLHttpRequest();
     xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original,urlkey&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
-    
+    xhr.onerror=function(){
+        var animateSvg=document.getElementById('animated-logo');
+        document.getElementById('chart').removeChild(animateSvg);
+        alert("An error occured. Please refresh the page and try again");
+    };
+    xhr.ontimeout=function(){
+        var animateSvg=document.getElementById('animated-logo');
+        document.getElementById('chart').removeChild(animateSvg);
+        alert("Time out. Please refresh the page and try again");
+    }
     xhr.onload = function() {
       var response = JSON.parse(xhr.responseText);
-      
+      if(response.length>0){
       var paths_arr=new Array();
       var j=0;
       for(var i=1;i<response.length;i++){
@@ -255,9 +264,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         
       }else{
-        btns[0].classList.add('activebtn');
+        if(btns.length>=2){
+            btns[btns.length-2].classList.add('activebtn');
+            var text=make_new_text(btns.length-2);   
+        }else{
+            btns[0].classList.add('activebtn');
+            var text=make_new_text(0);
+        }
         GlobYear= document.getElementsByClassName('activebtn')[0].id;
-        var text=make_new_text(0);
         make_chart(text);
       }
       
@@ -573,7 +587,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
     
     
-    
+    }else{
+        var animateSvg=document.getElementById('animated-logo');
+        document.getElementById('chart').removeChild(animateSvg);
+        alert("No results found");
+    }
   };
   xhr.send();
 }
