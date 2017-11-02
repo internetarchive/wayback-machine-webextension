@@ -1,3 +1,39 @@
+//copy-paste inside onload if required and call after check for pdf,gif etc
+function normaliseURL(url) {
+if (url.startsWith('https')) {
+	url = url.replace('https', 'http');
+				  }
+if (response[i][1].indexOf(':80') > (-1)) {
+	url = response[i][1].replace(':80', '');
+}
+url = url.replace(/www0|www1|www2|www3/gi, 'www');
+if (url.indexOf('://www') == (-1)) {
+	url = "http://www." + url.substring(7);
+}
+var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+var n = 0;
+while (format.test(url.charAt(url.length - 1))) {
+	n++;
+	url = url.substring(0, url.length - 1);
+}
+if (url.charAt(url.length - 1) != '/') {
+	if (url.charAt(url.length - 2) != '/') {
+		url = url + '/';
+	} else {
+		url = url.substring(0, url.length - 1);
+	}
+}
+if (url.includes('%0a')) {
+	url.replace('%0a', '');
+}
+if (url.slice(-2) == '//') {
+	url = url.substring(0, url.length - 1);
+}
+if (url.includes(',')) {
+	url = url.replace(/,/g, '');
+}
+return url;
+}
 GlobYear = 0;
 if (document.getElementById('myModal').getAttribute('count') == 1) {
 	var animate = document.createElement('img');
@@ -37,6 +73,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 var year_arr = new Array();
 				var j = 0;
 				for (var i = 1; i < response.length; i++) {
+                    if(response[i][1].match(/jpg|pdf|png|form|gif/)){
+                        continue;   
+                    }
 					var urlkey = response[i][2];
 					var urlkey_arr = urlkey.split(',');
 					var domain = "";
@@ -51,45 +90,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 						var url = urlkey_arr[urlkey_arr.length - 1].replace(")/", '.' + domain + '/');
 						url = "http://www." + url + '/';
 					}
-
-					function normaliseURL(url) {
-						if (url.match(/jpg|pdf|png|form|gif/)) {
-							continue;
-						}
-						if (url.startsWith('https')) {
-							url = url.replace('https', 'http');
-						}
-						if (response[i][1].indexOf(':80') > (-1)) {
-							url = response[i][1].replace(':80', '');
-						}
-						url = url.replace(/www0|www1|www2|www3/gi, 'www');
-						if (url.indexOf('://www') == (-1)) {
-							url = "http://www." + url.substring(7);
-						}
-						var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-						var n = 0;
-						while (format.test(url.charAt(url.length - 1))) {
-							n++;
-							url = url.substring(0, url.length - 1);
-						}
-						if (url.charAt(url.length - 1) != '/') {
-							if (url.charAt(url.length - 2) != '/') {
-								url = url + '/';
-							} else {
-								url = url.substring(0, url.length - 1);
-							}
-						}
-						if (url.includes('%0a')) {
-							url.replace('%0a', '');
-						}
-						if (url.slice(-2) == '//') {
-							url = url.substring(0, url.length - 1);
-						}
-						if (url.includes(',')) {
-							url = url.replace(/,/g, '');
-						}
-					}
-					
                     response[i][1] = url;
 					if (i == 1) {
                         year_arr[0]= new Array();
