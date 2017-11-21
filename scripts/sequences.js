@@ -149,6 +149,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 				if (document.getElementById('myModal').getAttribute('count') == 1) {
 					var animateSvg = document.getElementById('animated-logo');
 					document.getElementById('chart').removeChild(animateSvg);
+                    document.getElementById('sequence').style.backgroundColor="black";
 				}
 
 				function make_new_text(n) {

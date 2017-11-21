@@ -3,6 +3,7 @@
  * Copyright 2016, Internet Archive
  */
 (function() {
+  console.log("Client injected");
   var enforceBannerInterval;
   var archiveLinkWasClicked = false;
   var bannerWasShown = false;

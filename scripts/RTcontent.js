@@ -38,7 +38,7 @@ message.setAttribute('id','message');
 span.innerHTML='&times';
 span.setAttribute('class','RTclose');
 var main=document.createElement('div');
-var sequence=document.createElement('div');
+var sequence=document.createElement('p');
 var chart=document.createElement('div');
 sequence.setAttribute('id','sequence');
 chart.setAttribute('id','chart');
