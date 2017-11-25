@@ -10,6 +10,7 @@
 /*  display: block;*/
   clear: both;
   padding-top: 10px;
+  
   height: 30px;
   font-size: 18px;
   color: white;
@@ -23,6 +24,8 @@
 
 
 #chart{
+    
+
     width:100%;
     
 }
