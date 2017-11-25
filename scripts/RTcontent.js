@@ -38,9 +38,10 @@ message.setAttribute('id','message');
 span.innerHTML='&times';
 span.setAttribute('class','RTclose');
 var main=document.createElement('div');
-var sequence=document.createElement('p');
+var sequence=document.createElement('div');
 var chart=document.createElement('div');
 sequence.setAttribute('id','sequence');
+
 chart.setAttribute('id','chart');
 main.setAttribute('id','main');
 
@@ -50,6 +51,7 @@ modal.appendChild(span);
 modal.appendChild(sequence);
 modal.appendChild(chart);
 modal.appendChild(message);
+
 document.body.appendChild(modal);
 
 modal.style.display = "block";

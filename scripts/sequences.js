@@ -149,7 +149,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 				if (document.getElementById('myModal').getAttribute('count') == 1) {
 					var animateSvg = document.getElementById('animated-logo');
 					document.getElementById('chart').removeChild(animateSvg);
-                    document.getElementById('sequence').style.backgroundColor="black";
+                    //document.getElementById('sequence').style.backgroundColor="black";
 				}
 
 				function make_new_text(n) {
@@ -295,6 +295,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 						var anc_arr = nodeArray;
 						// Data join; key function combines name and depth (= position in sequence).
 						var trail = document.getElementById("sequence");
+                        
+                        var textElem = document.createElement('span');
 						var text = "";
 						var symb = document.createElement('span');
 						symb.setAttribute('class', 'symb');
@@ -306,8 +308,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 								text = text + symb.innerHTML + anc_arr[i].data.name;
 							}
 						}
-						trail.innerHTML = text;
-						// Make the breadcrumb trail visible, if it's hidden.
+						//trail.innerHTML =text;
+                        //text = text + new Array(5).join(' ');
+                     
+                        if(trail.childElementCount>0){
+                            var child=trail.childNodes[0];
+                            trail.removeChild(child);
+                        }
+                       
+                        textElem.innerHTML='&nbsp;&nbsp;'+text+'&nbsp;&nbsp;';
+                        textElem.style.backgroundColor="black";
+                    
+                        trail.appendChild(textElem);
+                        console.log(textElem);
+                    // Make the breadcrumb trail visible, if it's hidden.
 					}
 					// Take a 2-column CSV and transform it into a hierarchical structure suitable
 					// for a partition layout. The first column is a sequence of step names, from
