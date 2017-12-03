@@ -1,11 +1,7 @@
 global_url="";
 
 function wbm_url(url){
-    if(url.includes('web.archive.org')){
-        return true;
-    }else{
-        return false;
-    }
+    return url.includes('web.archive.org');
 }
 
 function remove_port(url){
@@ -28,19 +24,11 @@ function remove_wbm(url){
 }
 
 function alexa_url(url){
-    if(url.includes('www.alexa.com')){
-        return true;
-    }else{
-        return false;
-    }
+    return url.includes('www.alexa.com');
 }
 
 function whois_url(url){
-    if(url.includes('www.whois.com')){
-        return true;
-    }else{
-        return false;
-    }
+    return url.includes('www.whois.com');
 }
 
 function remove_alexa(url){
