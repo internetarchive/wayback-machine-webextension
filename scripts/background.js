@@ -1,4 +1,3 @@
-
 /*
 * LICENSE: AGPL-3
 * Copyright 2016, Internet Archive
@@ -8,7 +7,6 @@
   var archiveLinkWasClicked = false;
   var bannerWasShown = false;
   var bannerWasClosed = false;
-  
   /**
   * Brute force inline css style reset
   */
@@ -205,7 +203,6 @@ createEl("a", function(el) {
   };
   el.onclick = function(e) {
     archiveLinkWasClicked = true;
-    
     // Work-around for myspace which hijacks the link
     if (window.location.hostname.indexOf("myspace.com") >= 0) {
       e.preventDefault();
@@ -234,13 +231,10 @@ function checkIt(wayback_url) {
   enforceBannerInterval = setInterval(function() {
     createBanner(wayback_url);
   }, 500);
-  
 }
 
 
-
 })();
-
 
 /*
 * License: AGPL-3
@@ -249,7 +243,6 @@ function checkIt(wayback_url) {
 var VERSION = "2.9";
 Globalstatuscode="";
 var excluded_urls = [
-  
   "localhost",
   "0.0.0.0",
   "127.0.0.1"
@@ -287,7 +280,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 /**
  * Header callback
  */
-
 RTurl="";
 chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
@@ -298,11 +290,8 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         details.frameId === 0 &&
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
-          
-              
               Globalstatuscode=details.statusCode;
               wmAvailabilityCheck(details.url, function(wayback_url, url) {
-              
               if(details.statusCode==504){
                   //notify(wayback_url,'View an archived version courtesy of the Internet Archive WayBack Machine');
                   chrome.notifications.create(
@@ -323,13 +312,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     if (notifId === myNotID) {
         if (btnIdx === 0) {
-                
                 chrome.tabs.create({ url:wayback_url});
                 chrome.notifications.clear(myNotID);
                 myNotID=null;
-                
-            
-            
         }
     }
 });
@@ -343,24 +328,16 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               });
             });
               }
-            
           }, function() {
             
           });
-          
-              
-          
-        
-          
         }
       }
       if(details.tabId >0 ){
         chrome.tabs.get(details.tabId, function(tab) {
           tabIsReady(tab.incognito);
-        });  
+        });
       }
-      
-      
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 /**
  * Checks Wayback Machine API for url snapshot
@@ -389,7 +366,6 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @return {string or null}
  */
 function getWaybackUrlFromResponse(response) {
-    
   if (response.results &&
       response.results[0] &&
       response.results[0].archived_snapshots &&
@@ -421,8 +397,6 @@ function isValidSnapshotUrl(url) {
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
-    
-      
       var page_url = message.page_url;
       var wayback_url = message.wayback_url;
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
@@ -439,7 +413,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       } else {
         chrome.tabs.create({ url:  open_url});
       }
-    
   }else if(message.message=='makemodal'){
             RTurl=message.rturl;
             console.log(RTurl);
@@ -460,11 +433,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   file:"scripts/sequences.js"
                 });
                 }
-                
             });
-                
-            
-                
         }else if(message.message=='sendurl'){
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var url=tabs[0].url;
@@ -495,10 +464,8 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
       if(details.tabId >0 ){
         chrome.tabs.get(details.tabId, function(tab) {
           tabIsReady(tab.incognito);
-        });  
+        });
       }
-      
-      
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
 //function auto_save(tabId){
@@ -577,4 +544,3 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 //          }
 // });
 // });
-
