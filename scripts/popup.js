@@ -1,9 +1,5 @@
 global_url="";
 
-function wbm_url(url){
-    return url.includes('web.archive.org');
-}
-
 function remove_port(url){
     if(url.substr(-4)==':80/'){
         url=url.substring(0,url.length-4);
@@ -22,14 +18,6 @@ function remove_wbm(url){
     return remove_port(new_url);
 }
 
-function alexa_url(url){
-    return url.includes('www.alexa.com');
-}
-
-function whois_url(url){
-    return url.includes('www.whois.com');
-}
-
 function remove_alexa(url){
     var pos=url.indexOf('/siteinfo/');
     var new_url=url.substring(pos+10);
@@ -42,44 +30,49 @@ function remove_whois(url){
     return remove_port(new_url);
 }
 /* Common method used everywhere to retrieve cleaned up URL */
-function get_clean_url(url) {
-    if(search_term()==""){
+function get_clean_url() {
+    var search_term = document.getElementById('search_input').value;
+    if(search_term == ""){
         var url=global_url;
     }else{
-        var url=search_term();
+        var url=search_term;
     }
-    if(wbm_url(url)){
+    if (url.includes('web.archive.org')) {
         url=remove_wbm(url);
-    }else if(alexa_url(url)){
+    } else if (url.includes('www.alexa.com')) {
         url=remove_alexa(url);
-    }else if(whois_url(url)){
+    } else if (url.includes('www.whois.com')) {
         url=remove_whois(url);
     }
     return url;
 }
 
-function save_now_function(){
-    var url = get_clean_url(url);
-	  var wb_url = "https://web.archive.org/save/";
-	  chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url, page_url:url , method:'save' }).then(handleResponse, handleError);
+function save_now(){
+	  chrome.runtime.sendMessage({message: "openurl",
+                                wayback_url: "https://web.archive.org/save/",
+                                page_url: get_clean_url(),
+                                method:'save' }).then(handleResponse, handleError);
 }
 
-function recent_capture_function(){
-    var url = get_clean_url(url);
-	  var wb_url = "https://web.archive.org/web/2/";
-	  chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url,page_url:url, method:'recent' }, function(response) { });
+function recent_capture(){
+	  chrome.runtime.sendMessage({message: "openurl",
+                                wayback_url: "https://web.archive.org/web/2/",
+                                page_url: get_clean_url(),
+                                method:'recent'});
 }
 
-function first_capture_function(){
-    var url = get_clean_url(url);
-	  var wb_url = "https://web.archive.org/web/0/";
-	  chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url,page_url:url, method:'first' }, function(response) { });
+function first_capture(){
+	  chrome.runtime.sendMessage({message: "openurl",
+                                wayback_url: "https://web.archive.org/web/0/",
+                                page_url: get_clean_url(),
+                                method:'first'});
 }
 
-function view_all_function(){
-    var url = get_clean_url(url);
-	  var wb_url = "https://web.archive.org/web/*/";
-	  chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url,page_url:url, method:'viewall' }, function(response) { });
+function view_all(){
+	  chrome.runtime.sendMessage({message: "openurl",
+                                wayback_url: "https://web.archive.org/web/*/",
+                                page_url: get_clean_url(),
+                                method:'viewall'});
 }
 
 function get_url(){
@@ -88,14 +81,10 @@ function get_url(){
     });
 }
 
-function search_term(){
-    return document.getElementById('search_input').value;
-}
-
 function social_share(eventObj){
     var parent=eventObj.target.parentNode;
     var id=parent.getAttribute('id');
-    var url = get_clean_url(url);
+    var url = get_clean_url();
     var open_url="";
     if(id.includes('fb')){
         open_url="https://www.facebook.com/sharer/sharer.php?u="+url;
@@ -109,20 +98,18 @@ function social_share(eventObj){
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
 }
 
-function alexa_statistics_function(eventObj){
-    var url = get_clean_url(url);
-    var open_url="http://www.alexa.com/siteinfo/"+url;
+function alexa_statistics(eventObj){
+    var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
-function whois_statistics_function(eventObj){
-    var url = get_clean_url(url);
-    var open_url="https://www.whois.com/whois/"+url;
+function whois_statistics(eventObj){
+    var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
-function search_tweet_function(eventObj){
-    var url = get_clean_url(url);
+function search_tweet(eventObj){
+    var url = get_clean_url();
     if(url.includes('http://')){
         url=url.substring(7);
     }else if(url.includes('https://')){
@@ -130,7 +117,7 @@ function search_tweet_function(eventObj){
     }
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');    
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function display_list(key_word){
@@ -183,13 +170,17 @@ function about_support(){
     window.open("about.html", "", "width=1000, height=1000").focus();
 }
 
+function makeModal(){
+    var url = get_clean_url();
+    console.log("Making RT for "+url);
+    chrome.runtime.sendMessage({message: "makemodal",rturl:url});
+}
+
+/** Disabled code for the autosave feature **/
 //function restoreSettings() {
-//  
 //  chrome.storage.sync.get({
-//    
 //    as:false
 //  }, function(items) {
-//    
 //    document.getElementById('as').checked = items.as;  
 //      if(items.as){
 //          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
@@ -203,14 +194,6 @@ function about_support(){
 //      as: as
 //  });
 //}
-
-function makeModal(){
-    var url = get_clean_url(url);
-    console.log("Making RT for "+url);
-    chrome.runtime.sendMessage({message: "makemodal",rturl:url}, function(response) {
-	});
-}
-
 //function showSettings(eventObj){
 //    var target=eventObj.target;
 //    if(target.getAttribute('toggle')=='off'){
@@ -220,27 +203,25 @@ function makeModal(){
 //        document.getElementById('settings_btn').setAttribute('toggle','off');
 //        document.getElementById('settings_div').style.display="none";
 //    }
-//    
 //}
-
-window.onload=get_url;
 //restoreSettings();
-
 //document.getElementById('settings_div').style.display="none";
 
-document.getElementById('save_now').onclick = save_now_function;
-document.getElementById('recent_capture').onclick = recent_capture_function;
-document.getElementById('first_capture').onclick = first_capture_function;
+window.onload=get_url;
+
+document.getElementById('save_now').onclick = save_now;
+document.getElementById('recent_capture').onclick = recent_capture;
+document.getElementById('first_capture').onclick = first_capture;
 document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
-document.getElementById('whois_statistics').onclick =whois_statistics_function;
-document.getElementById('search_tweet').onclick =search_tweet_function;
+document.getElementById('alexa_statistics').onclick =alexa_statistics;
+document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 
-document.getElementById('overview').onclick = view_all_function;
+document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
 //document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
