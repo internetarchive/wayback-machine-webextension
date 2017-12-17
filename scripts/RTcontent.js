@@ -5,7 +5,8 @@ if(document.getElementById('myModal') !== null) {
   count++;
   document.getElementById('myModal').setAttribute('count',count);
 } else {
-  var styles = ['css/googlestyle.css', 'css/RTstyle.css', 'css/sequences.css'];
+  var styles = ['css/googlestyle.css', 'css/RTstyle.css', 'css/sequences.css',
+                'css/radial-tree.min.css'];
   for (var i in styles) {
     var el = document.createElement('link');
     el.rel = 'stylesheet';
@@ -17,17 +18,20 @@ if(document.getElementById('myModal') !== null) {
   modal.setAttribute('id','myModal');
   modal.setAttribute('class','RTmodal');
   modal.setAttribute('count','1');
+  /**
   var modalContent=document.createElement('div');
   modalContent.setAttribute('class','modal-content');
-  var span=document.createElement('button');
   var divBtn=document.createElement('div');
   divBtn.setAttribute('id','divBtn');
   var message=document.createElement('div');
   message.setAttribute('id','message');
-
+  **/
+  var span=document.createElement('button');
   span.innerHTML='&times';
   span.setAttribute('class','RTclose');
-  var main=document.createElement('div');
+  modal.appendChild(span);
+  /**
+   * var main=document.createElement('div');
   var sequence=document.createElement('p');
   var chart=document.createElement('div');
   sequence.setAttribute('id','sequence');
@@ -35,13 +39,13 @@ if(document.getElementById('myModal') !== null) {
   main.setAttribute('id','main');
 
   modal.appendChild(divBtn);
-  modal.appendChild(span);
   modal.appendChild(sequence);
   modal.appendChild(chart);
   modal.appendChild(message);
+  **/
   document.body.appendChild(modal);
-
   modal.style.display = "block";
+
   span.onclick = function() {
     modal.style.display = "none";
   };

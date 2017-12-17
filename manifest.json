@@ -31,12 +31,14 @@
     "images/logo.gif",
     "images/logo-animate.svg",
     "scripts/client.js",
-      "scripts/RTcontent.js",
-"scripts/sequences.js",
-"scripts/d3.js",
-"css/RTstyle.css",
-"css/sequences.css",
-      "css/googlestyle.css"
+    "scripts/RTcontent.js",
+    "scripts/sequences.js",
+    "scripts/d3.js",
+    "scripts/radial-tree.min.js",
+    "css/RTstyle.css",
+    "css/sequences.css",
+    "css/googlestyle.css",
+    "css/radial-tree.min.css"
   ],
   "browser_action": {
     "default_icon": "images/icon.png",

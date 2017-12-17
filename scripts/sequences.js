@@ -35,6 +35,7 @@ if (url.includes(',')) {
 return url;
 }
 GlobYear = 0;
+/**
 if (document.getElementById('myModal').getAttribute('count') == 1) {
 	var animate = document.createElement('img');
 	var fullURL = chrome.runtime.getURL('images/logo-animate.svg');
@@ -42,6 +43,7 @@ if (document.getElementById('myModal').getAttribute('count') == 1) {
 	animate.setAttribute('id', 'animated-logo');
 	document.getElementById('chart').appendChild(animate);
 }
+**/
 chrome.runtime.sendMessage({ message: 'sendurlforrt' });
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	if (message.RTurl != "") {
@@ -51,6 +53,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		} else {
 			url = url.replace('http://', '');
 		}
+
+    var target = document.getElementById('myModal');
+    console.log(target);
+    RadialTree(target, {url: url});
+    console.log("telos");
+    return;
+
 		var pos = url.indexOf('/');
 		if (pos != -1) url = url.substring(0, pos);
 		var base_url = url;
