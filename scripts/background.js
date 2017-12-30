@@ -516,6 +516,12 @@ var contextMenuItemRecent={
     "title":"Recent Version",
     "contexts":["all"]
 };
+var contextMenuItemAll={
+    "id":"all",
+    "title":"All Versions",
+    "contexts":["all"]
+};
+
 var contextMenuItemSave={
     "id":"save",
     "title":"Save Page Now",
@@ -523,6 +529,7 @@ var contextMenuItemSave={
 };
 chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);
+chrome.contextMenus.create(contextMenuItemAll);
 chrome.contextMenus.create(contextMenuItemSave);
 chrome.contextMenus.onClicked.addListener(function(clickedData){
     if(clickedData.menuItemId=='first'){
@@ -546,7 +553,16 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
     }else if(clickedData.menuItemId=='save'){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             var page_url = tabs[0].url;
-            var wayback_url ="https://web.archive.org/save/"
+            var wayback_url ="https://web.archive.org/save/";
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            chrome.tabs.create({ url:  open_url});
+        });
+    }else if(clickedData.menuItemId=='all'){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var page_url = tabs[0].url;
+            var wayback_url ="https://web.archive.org/web/*/";
             var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
             var url = page_url.replace(pattern, "");
             var open_url = wayback_url+encodeURI(url);
