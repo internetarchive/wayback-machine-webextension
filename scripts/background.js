@@ -427,7 +427,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       file:"scripts/d3.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/radial-tree.min.js"
+                      file:"scripts/radial-tree.umd.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/RTcontent.js"

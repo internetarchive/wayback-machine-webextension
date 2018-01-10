@@ -6,7 +6,7 @@ if(document.getElementById('myModal') !== null) {
   document.getElementById('myModal').setAttribute('count',count);
 } else {
   var styles = ['css/googlestyle.css', 'css/RTstyle.css', 'css/sequences.css',
-                'css/radial-tree.min.css'];
+                'css/radial-tree.css'];
   for (var i in styles) {
     var el = document.createElement('link');
     el.rel = 'stylesheet';
