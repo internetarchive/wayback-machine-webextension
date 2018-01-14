@@ -424,14 +424,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     alert("Structure as radial tree not available on archive.org pages");
                 }else{
                     chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/d3.js"
-                });
-                chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/RTcontent.js"
-                });
-                chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/sequences.js"
-                });
+                      file:"scripts/d3.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/radial-tree.umd.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/RTcontent.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/sequences.js"
+                    });
                 }
             });
         }else if(message.message=='sendurl'){
