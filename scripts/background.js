@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.10";
+var VERSION = "2.11";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -394,28 +394,33 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
-
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.message=='openurl'){
-      var page_url = message.page_url;
-      var wayback_url = message.wayback_url;
-      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-      var url = page_url.replace(pattern, "");
-      var open_url = wayback_url+encodeURI(url);
-      console.log(open_url);
-      if (message.method!='save') {
-        wmAvailabilityCheck(url,function(){
+function URLopener(open_url,url){
+    wmAvailabilityCheck(url,function(){
           chrome.tabs.create({ url:  open_url});
         },function(){
-          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
-          });
+            alert("URL not found");
+//          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
+//          });
         })
-      } else {
-        chrome.tabs.create({ url:  open_url});
-      }
-  }else if(message.message=='makemodal'){
+}
+
+
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+        if(message.message=='openurl'){
+            var page_url = message.page_url;
+            var wayback_url = message.wayback_url;
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            //console.log(open_url);
+            if (message.method!='save') {
+                URLopener(open_url,url);
+            } else {
+                chrome.tabs.create({ url:  open_url});
+            }
+        }else if(message.message=='makemodal'){
             RTurl=message.rturl;
-            console.log(RTurl);
+            //console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
                 var url=RTurl;
@@ -424,16 +429,13 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     alert("Structure as radial tree not available on archive.org pages");
                 }else{
                     chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/d3.js"
+                            file:"scripts/d3.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/radial-tree.umd.js"
+                            file:"scripts/RTcontent.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/RTcontent.js"
-                    });
-                    chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/sequences.js"
+                            file:"scripts/sequences.js"
                     });
                 }
             });
@@ -443,15 +445,15 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {url:url});
             });
         }else if(message.message=='sendurlforrt'){
-            console.log(RTurl);
+            //console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 //var url=tabs[0].url;
-                console.log(RTurl);
+                //console.log(RTurl);
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
-                console.log(RTurl);
+                //console.log(RTurl);
             });
         }
-});
+    });
 
 chrome.webRequest.onErrorOccurred.addListener(function(details) {
       function tabIsReady(isIncognito) {
@@ -470,6 +472,72 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
         });
       }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
+var contextMenuItemFirst={
+    "id":"first",
+    "title":"First Version",
+    "contexts":["all"]
+};
+
+var contextMenuItemRecent={
+    "id":"recent",
+    "title":"Recent Version",
+    "contexts":["all"]
+};
+var contextMenuItemAll={
+    "id":"all",
+    "title":"All Versions",
+    "contexts":["all"]
+};
+
+var contextMenuItemSave={
+    "id":"save",
+    "title":"Save Page Now",
+    "contexts":["all"]
+};
+chrome.contextMenus.create(contextMenuItemFirst);
+chrome.contextMenus.create(contextMenuItemRecent);
+chrome.contextMenus.create(contextMenuItemAll);
+chrome.contextMenus.create(contextMenuItemSave);
+chrome.contextMenus.onClicked.addListener(function(clickedData){
+    if(clickedData.menuItemId=='first'){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var page_url = tabs[0].url;
+            var wayback_url ="https://web.archive.org/web/0/"
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            URLopener(open_url,url);
+        });
+    }else if(clickedData.menuItemId=='recent'){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var page_url = tabs[0].url;
+            var wayback_url ="https://web.archive.org/web/2/"
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            URLopener(open_url,url);
+        });
+    }else if(clickedData.menuItemId=='save'){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var page_url = tabs[0].url;
+            var wayback_url ="https://web.archive.org/save/";
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            chrome.tabs.create({ url:  open_url});
+        });
+    }else if(clickedData.menuItemId=='all'){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var page_url = tabs[0].url;
+            var wayback_url ="https://web.archive.org/web/*/";
+            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+            var url = page_url.replace(pattern, "");
+            var open_url = wayback_url+encodeURI(url);
+            chrome.tabs.create({ url:  open_url});
+        });
+    }
+    
+});
 
 //function auto_save(tabId){
 //
