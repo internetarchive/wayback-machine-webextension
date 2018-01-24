@@ -404,63 +404,6 @@ function URLopener(open_url,url){
         })
 }
 
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.message=='openurl'){
-      var page_url = message.page_url;
-      var wayback_url = message.wayback_url;
-      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-      var url = page_url.replace(pattern, "");
-      var open_url = wayback_url+encodeURI(url);
-      console.log(open_url);
-      if (message.method!='save') {
-        wmAvailabilityCheck(url,function(){
-          chrome.tabs.create({ url:  open_url});
-        },function(){
-          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
-          });
-        })
-      } else {
-        chrome.tabs.create({ url:  open_url});
-      }
-  }else if(message.message=='makemodal'){
-            RTurl=message.rturl;
-            console.log(RTurl);
-            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                var tab=tabs[0];
-                var url=RTurl;
-                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
-                    //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
-                    alert("Structure as radial tree not available on archive.org pages");
-                }else{
-                    chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/d3.js"
-                    });
-                    chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/radial-tree.umd.js"
-                    });
-                    chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/RTcontent.js"
-                    });
-                    chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/sequences.js"
-                    });
-                }
-            });
-        }else if(message.message=='sendurl'){
-            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                var url=tabs[0].url;
-                chrome.tabs.sendMessage(tabs[0].id, {url:url});
-            });
-        }else if(message.message=='sendurlforrt'){
-            console.log(RTurl);
-            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                //var url=tabs[0].url;
-                console.log(RTurl);
-                chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
-                console.log(RTurl);
-            });
-        }
-});
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         if(message.message=='openurl'){
