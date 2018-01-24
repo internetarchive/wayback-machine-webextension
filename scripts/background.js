@@ -406,21 +406,21 @@ function URLopener(open_url,url){
 
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-        if(message.message=='openurl'){
-            var page_url = message.page_url;
-            var wayback_url = message.wayback_url;
-            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            var url = page_url.replace(pattern, "");
-            var open_url = wayback_url+encodeURI(url);
-            //console.log(open_url);
-            if (message.method!='save') {
-                URLopener(open_url,url);
-            } else {
-                chrome.tabs.create({ url:  open_url});
-            }
-        }else if(message.message=='makemodal'){
+  if(message.message=='openurl'){
+      var page_url = message.page_url;
+      var wayback_url = message.wayback_url;
+      var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+      var url = page_url.replace(pattern, "");
+      var open_url = wayback_url+encodeURI(url);
+      console.log(open_url);
+      if (message.method!='save') {
+        URLopener(open_url,url);
+      } else {
+        chrome.tabs.create({ url:  open_url});
+      }
+  }else if(message.message=='makemodal'){
             RTurl=message.rturl;
-            //console.log(RTurl);
+            console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
                 var url=RTurl;
@@ -429,13 +429,16 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     alert("Structure as radial tree not available on archive.org pages");
                 }else{
                     chrome.tabs.executeScript(tab.id, {
-                            file:"scripts/d3.js"
+                      file:"scripts/d3.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
-                            file:"scripts/RTcontent.js"
+                      file:"scripts/radial-tree.umd.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
-                            file:"scripts/sequences.js"
+                      file:"scripts/RTcontent.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/sequences.js"
                     });
                 }
             });
@@ -445,15 +448,15 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {url:url});
             });
         }else if(message.message=='sendurlforrt'){
-            //console.log(RTurl);
+            console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 //var url=tabs[0].url;
-                //console.log(RTurl);
+                console.log(RTurl);
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
-                //console.log(RTurl);
+                console.log(RTurl);
             });
         }
-    });
+});
 
 chrome.webRequest.onErrorOccurred.addListener(function(details) {
       function tabIsReady(isIncognito) {
