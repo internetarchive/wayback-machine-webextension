@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.11";
+var VERSION = "2.12";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -394,14 +394,16 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
-function URLopener(open_url,url){
-    wmAvailabilityCheck(url,function(){
+function URLopener(open_url,url,wmAvailabilitycheck){
+    if(wmAvailabilitycheck==true){
+        wmAvailabilityCheck(url,function(){
           chrome.tabs.create({ url:  open_url});
-        },function(){
-            alert("URL not found");
-//          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
-//          });
-        })
+    },function(){
+          alert("URL not found");
+      });
+    }else{
+        chrome.tabs.create({ url:  open_url});
+    }
 }
 
 
@@ -414,7 +416,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var open_url = wayback_url+encodeURI(url);
       console.log(open_url);
       if (message.method!='save') {
-        URLopener(open_url,url);
+        URLopener(open_url,url,true);
       } else {
         chrome.tabs.create({ url:  open_url});
       }
@@ -501,46 +503,37 @@ chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);
 chrome.contextMenus.create(contextMenuItemAll);
 chrome.contextMenus.create(contextMenuItemSave);
-chrome.contextMenus.onClicked.addListener(function(clickedData){
-    if(clickedData.menuItemId=='first'){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            var page_url = tabs[0].url;
-            var wayback_url ="https://web.archive.org/web/0/"
-            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            var url = page_url.replace(pattern, "");
-            var open_url = wayback_url+encodeURI(url);
-            URLopener(open_url,url);
-        });
-    }else if(clickedData.menuItemId=='recent'){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            var page_url = tabs[0].url;
-            var wayback_url ="https://web.archive.org/web/2/"
-            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            var url = page_url.replace(pattern, "");
-            var open_url = wayback_url+encodeURI(url);
-            URLopener(open_url,url);
-        });
-    }else if(clickedData.menuItemId=='save'){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            var page_url = tabs[0].url;
-            var wayback_url ="https://web.archive.org/save/";
-            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            var url = page_url.replace(pattern, "");
-            var open_url = wayback_url+encodeURI(url);
-            chrome.tabs.create({ url:  open_url});
-        });
-    }else if(clickedData.menuItemId=='all'){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            var page_url = tabs[0].url;
-            var wayback_url ="https://web.archive.org/web/*/";
-            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            var url = page_url.replace(pattern, "");
-            var open_url = wayback_url+encodeURI(url);
-            chrome.tabs.create({ url:  open_url});
-        });
+
+function contextMenuOpener(type,page_url){
+    var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+    if(typeof type ==='number'){
+        var wmAvailabilitycheck=true;
+        var wayback_url ="https://web.archive.org/web/"+type+"/";
+    }else{
+        var wmAvailabilitycheck=false;
+        var wayback_url ="https://web.archive.org/"+type;
     }
-    
+    var url = page_url.replace(pattern, "");
+    var open_url = wayback_url+encodeURI(url);
+    URLopener(open_url,url,wmAvailabilitycheck);
+}
+
+chrome.contextMenus.onClicked.addListener(function(clickedData){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var page_url=tabs[0].url;
+        if(clickedData.menuItemId=='first'){
+            contextMenuOpener(0,page_url);
+        }else if(clickedData.menuItemId=='recent'){
+            contextMenuOpener(2,page_url);
+        }else if(clickedData.menuItemId=='save'){
+            contextMenuOpener('save/',page_url);
+        }else if(clickedData.menuItemId=='all'){
+            contextMenuOpener('web/*/',page_url);
+        }
+    });
 });
+
+
 
 //function auto_save(tabId){
 //
