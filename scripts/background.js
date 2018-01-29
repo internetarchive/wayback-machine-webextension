@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.10";
+var VERSION = "2.12";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -394,6 +394,18 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
+function URLopener(open_url,url,wmAvailabilitycheck){
+    if(wmAvailabilitycheck==true){
+        wmAvailabilityCheck(url,function(){
+          chrome.tabs.create({ url:  open_url});
+    },function(){
+          alert("URL not found");
+      });
+    }else{
+        chrome.tabs.create({ url:  open_url});
+    }
+}
+
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
@@ -404,12 +416,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var open_url = wayback_url+encodeURI(url);
       console.log(open_url);
       if (message.method!='save') {
-        wmAvailabilityCheck(url,function(){
-          chrome.tabs.create({ url:  open_url});
-        },function(){
-          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
-          });
-        })
+        URLopener(open_url,url,true);
       } else {
         chrome.tabs.create({ url:  open_url});
       }
@@ -470,6 +477,63 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
         });
       }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
+var contextMenuItemFirst={
+    "id":"first",
+    "title":"First Version",
+    "contexts":["all"]
+};
+
+var contextMenuItemRecent={
+    "id":"recent",
+    "title":"Recent Version",
+    "contexts":["all"]
+};
+var contextMenuItemAll={
+    "id":"all",
+    "title":"All Versions",
+    "contexts":["all"]
+};
+
+var contextMenuItemSave={
+    "id":"save",
+    "title":"Save Page Now",
+    "contexts":["all"]
+};
+chrome.contextMenus.create(contextMenuItemFirst);
+chrome.contextMenus.create(contextMenuItemRecent);
+chrome.contextMenus.create(contextMenuItemAll);
+chrome.contextMenus.create(contextMenuItemSave);
+
+function contextMenuOpener(type,page_url){
+    var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+    if(typeof type ==='number'){
+        var wmAvailabilitycheck=true;
+        var wayback_url ="https://web.archive.org/web/"+type+"/";
+    }else{
+        var wmAvailabilitycheck=false;
+        var wayback_url ="https://web.archive.org/"+type;
+    }
+    var url = page_url.replace(pattern, "");
+    var open_url = wayback_url+encodeURI(url);
+    URLopener(open_url,url,wmAvailabilitycheck);
+}
+
+chrome.contextMenus.onClicked.addListener(function(clickedData){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var page_url=tabs[0].url;
+        if(clickedData.menuItemId=='first'){
+            contextMenuOpener(0,page_url);
+        }else if(clickedData.menuItemId=='recent'){
+            contextMenuOpener(2,page_url);
+        }else if(clickedData.menuItemId=='save'){
+            contextMenuOpener('save/',page_url);
+        }else if(clickedData.menuItemId=='all'){
+            contextMenuOpener('web/*/',page_url);
+        }
+    });
+});
+
+
 
 //function auto_save(tabId){
 //
