@@ -1,53 +1,62 @@
 <!doctype html>
 <html>
-  <head>
+
+<head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
+    <meta content="utf-8" http-equiv="encoding">
     <title>Wayback Machine</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-  </head>
-  <body style="min-width: 200px;max-width: 200px;">
-    <table width="100%" style="min-width: 120px; ">
-      <tr class="spaceUnder">
-        <td>
-            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-                <div class='container'>
-                    <img class='resize_fit_center'
-                      src='images/logo.gif' />
-                </div>
-            <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <form class="search-toolbar-input-container"><div class="bootstrap-typeahead clearfix open" style="position: relative;"><div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;"><input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
-              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
-              </div><ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
-<!--              <li class=""><a role="button">scontent.cdninstagram.com</a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent.xx.fbcdn.net</span></span></a></li><li class=""><a role="button"><span><span>www.</span><strong class="bootstrap-typeahead-highlight">sco</strong><span>op.it</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-a.cdninstagram.com</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-b.cdninstagram.com</span></span></a></li>-->
-              </ul></div><input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></form>
-          <BR>
-        </td>
-      </tr>
+</head>
 
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1'>Save Page Now</button>
-          <BR>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1'>Recent Version</button>
-          <BR>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
-        </td>
-      </tr>
-<!--
+<body style="min-width: 200px;max-width: 200px;" id="body">
+    <table width="100%" style="min-width: 120px; ">
+        <tr class="spaceUnder">
+            <td>
+                <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+                <div class='container'>
+                    <img class='resize_fit_center' src='images/logo.gif' />
+                </div>
+                <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <form class="search-toolbar-input-container">
+                    <div class="bootstrap-typeahead clearfix open" style="position: relative;">
+                        <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
+                            <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
+                                style="background-color: transparent; display: block; position: relative; z-index: 1;">
+                            <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+                        </div>
+                        <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+                            <!--              <li class=""><a role="button">scontent.cdninstagram.com</a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent.xx.fbcdn.net</span></span></a></li><li class=""><a role="button"><span><span>www.</span><strong class="bootstrap-typeahead-highlight">sco</strong><span>op.it</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-a.cdninstagram.com</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-b.cdninstagram.com</span></span></a></li>-->
+                        </ul>
+                    </div>
+                    <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+                </form>
+                <BR>
+            </td>
+        </tr>
+
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1'>Save Page Now</button>
+                <BR>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1'>Recent Version</button>
+                <BR>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
+            </td>
+        </tr>
+        <!--
         <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-default btn-sm" id="settings_btn" toggle="off">
@@ -58,44 +67,61 @@
 -->
 
 
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1'>Overview</button>
-        </td>
-      </tr>
-            <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-info btn-sm" id="alexa_statistics" tabindex='-1'>Alexa</button>
-<!--
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1'>Overview</button>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-info btn-sm" id="alexa_statistics" tabindex='-1'>Alexa</button>
+                <!--
             </tr>
             <tr class="spaceUnder" align="center">
 -->
-                <button type="button" class="btn btn-info btn-sm" id="whois_statistics" tabindex='-1'>Whois</button></td>
+                <button type="button" class="btn btn-info btn-sm" id="whois_statistics" tabindex='-1'>Whois</button>
+            </td>
         </tr>
-               <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
-            </tr>
         <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1'>Site Map</button>
-        </td>
-    	</tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-           <a id="fb_share" class="btn-social btn-sm btn-facebook" ><i class="fa fa-facebook"></i></a>
-            <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
-            <a id="gplus_share" class="btn-social btn-sm btn-google-plus"><i class="fa fa-google-plus"></i></a>
-            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
-         </td>
-    	</tr>
-                    <tr class="spaceUnder" align="center">
-                <td>                   
-                    <button type="button" class="btn btn-danger btn-sm formfineleft" id="about_support_button" >About</button>
-<!--
+            <td>
+                <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff">
+                    <b>
+                        <i class="fa fa-twitter"></i> Tweets</b>
+                </button>
+                <BR>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1'>Site Map</button>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <a id="fb_share" class="btn-social btn-sm btn-facebook">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a id="twit_share" class="btn-social btn-sm btn-twitter">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a id="gplus_share" class="btn-social btn-sm btn-google-plus">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                <a id="linkedin_share" class="btn-social btn-sm btn-linkedin">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+            </td>
+        </tr>
+        <tr class="spaceUnder" align="center">
+            <td>
+                <button type="button" class="btn btn-danger btn-sm formfineleft" id="about_support_button">About</button>
+                <button type="button" class="btn btn-dark btn-sm formfineleft" id="switch_theme">Change Theme</button>
+                <!--
                     <button type="button" class="btn btn-default btn-sm" id="settings_btn" toggle="off">
-                    <span class="glyphicon glyphicon-cog"></span> Settings
+                    <span class="glyphicon glyphicon-cog"></span> Settings-->
                 </td>                
                 </tr>
-        <tr class="spaceUnder" align="center">
+        <!-- <tr class="spaceUnder" align="center">
         <td>
             <div id="settings_div">
                 <form>
@@ -105,152 +131,157 @@
                 </form>
             </div>
         </td>
-    	</tr>
+    	</tr> -->
 -->
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-  </body>
+</body>
+
 </html>
 <script src="scripts/jquery.js"></script>
 <script src="scripts/popup.js"></script>
 <script src="scripts/bootstrap.min.js"></script>
 <style>
-/*
+    /*
   ul li { list-style-type: none;
         list-style-position:inside;
         margin:0;
         padding:0; }
 */
-    li{
-        margin:0px 0px 0px -18px;
+
+    li {
+        margin: 0px 0px 0px -18px;
         padding: 0px;
-    }  
-  
-  tr.spaceUnder > td
-  {
-    padding-bottom: 0.5em;
-  }
-  .container {
-    margin: 2px;
-    width: auto;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-  }
-  .resize_fit_center {
-      max-width:100%;
-      max-height:100%;
-      vertical-align: middle;
-  }
-    
-  a.btn-social,
-.btn-social
-{
-    border-radius: 50%;
-    color: #ffffff !important;
-    display: inline-block;
-    height: 54px;
-    line-height: 54px;
-    margin: 8px 4px;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color .3s;
-    webkit-transition: background-color .3s;
-    width: 54px;
-}
+    }
 
-.fa{
-  margin-top:6px;
-}
-.btn-social .fa,.btn-social i
-{
-    backface-visibility: hidden;
-    moz-backface-visibility: hidden;
-    ms-transform: scale(1);
-    o-transform: scale(1);
-    transform: scale(1);
-    transition: all .25s;
-    webkit-backface-visibility: hidden;
-    webkit-transform: scale(1);
-    webkit-transition: all .25s;
-}
-.btn-social:hover,.btn-social:focus
-{
-    color: #fff;
-    outline: none;
-    text-decoration: none;
-}
-.btn-social:hover .fa,.btn-social:focus .fa,.btn-social:hover i,.btn-social:focus i
-{
-    ms-transform: scale(1.3);
-    o-transform: scale(1.3);
-    transform: scale(1.3);
-    webkit-transform: scale(1.3);
-}
-.btn-social.btn-xs
-{
-    font-size: 9px;
-    height: 24px;
-    line-height: 13px;
-    margin: 6px 2px;
-    width: 24px;
-}
-.btn-social.btn-sm
-{
-    font-size: 13px;
-    height: 36px;
-    line-height: 18px;
-    margin: 6px 2px;
-    width: 36px;
-}
-.btn-social.btn-lg
-{
-    font-size: 22px;
-    height: 72px;
-    line-height: 4px;
-    margin: 10px 6px;
-    width: 72px;
-}
+    tr.spaceUnder>td {
+        padding-bottom: 0.5em;
+    }
 
-.btn-behance
-{
-    background-color: #1769ff;
-}
-.btn-behance:hover
-{
-    background-color: #4a8aff;
-}
-.btn-facebook
-{
-    background-color: #3b5998;
-}
-.btn-facebook:hover
-{
-    background-color: #4c70ba;
-}
-.btn-google-plus
-{
-    background-color: #dd4b39;
-}
-.btn-google-plus:hover
-{
-    background-color: #e47365;
-}
-.btn-twitter
-{
-    background-color: #55acee;
-}
-.btn-twitter:hover
-{
-    background-color: #83c3f3;
-}
-    
-.btn-linkedin
-{
-    background-color: #1E88E5;
-}
-.btn-linkedin:hover
-{
-    background-color: #4a8aff;
-}
+    .container {
+        margin: 2px;
+        width: auto;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+    }
+
+    .resize_fit_center {
+        max-width: 100%;
+        max-height: 100%;
+        vertical-align: middle;
+    }
+
+    a.btn-social,
+    .btn-social {
+        border-radius: 50%;
+        color: #ffffff !important;
+        display: inline-block;
+        height: 54px;
+        line-height: 54px;
+        margin: 8px 4px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color .3s;
+        webkit-transition: background-color .3s;
+        width: 54px;
+    }
+
+    .fa {
+        margin-top: 6px;
+    }
+
+    .btn-social .fa,
+    .btn-social i {
+        backface-visibility: hidden;
+        moz-backface-visibility: hidden;
+        ms-transform: scale(1);
+        o-transform: scale(1);
+        transform: scale(1);
+        transition: all .25s;
+        webkit-backface-visibility: hidden;
+        webkit-transform: scale(1);
+        webkit-transition: all .25s;
+    }
+
+    .btn-social:hover,
+    .btn-social:focus {
+        color: #fff;
+        outline: none;
+        text-decoration: none;
+    }
+
+    .btn-social:hover .fa,
+    .btn-social:focus .fa,
+    .btn-social:hover i,
+    .btn-social:focus i {
+        ms-transform: scale(1.3);
+        o-transform: scale(1.3);
+        transform: scale(1.3);
+        webkit-transform: scale(1.3);
+    }
+
+    .btn-social.btn-xs {
+        font-size: 9px;
+        height: 24px;
+        line-height: 13px;
+        margin: 6px 2px;
+        width: 24px;
+    }
+
+    .btn-social.btn-sm {
+        font-size: 13px;
+        height: 36px;
+        line-height: 18px;
+        margin: 6px 2px;
+        width: 36px;
+    }
+
+    .btn-social.btn-lg {
+        font-size: 22px;
+        height: 72px;
+        line-height: 4px;
+        margin: 10px 6px;
+        width: 72px;
+    }
+
+    .btn-behance {
+        background-color: #1769ff;
+    }
+
+    .btn-behance:hover {
+        background-color: #4a8aff;
+    }
+
+    .btn-facebook {
+        background-color: #3b5998;
+    }
+
+    .btn-facebook:hover {
+        background-color: #4c70ba;
+    }
+
+    .btn-google-plus {
+        background-color: #dd4b39;
+    }
+
+    .btn-google-plus:hover {
+        background-color: #e47365;
+    }
+
+    .btn-twitter {
+        background-color: #55acee;
+    }
+
+    .btn-twitter:hover {
+        background-color: #83c3f3;
+    }
+
+    .btn-linkedin {
+        background-color: #1E88E5;
+    }
+
+    .btn-linkedin:hover {
+        background-color: #4a8aff;
+    }
 </style>
