@@ -3,28 +3,25 @@
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
-    <title>Wayback Machine</title>
+    <title>Wayback Machine</title> 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   </head>
   <body style="min-width: 200px;max-width: 200px;">
-    <table width="100%" style="min-width: 120px; ">
-      <tr class="spaceUnder">
-        <td>
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
                 <div class='container'>
                     <img class='resize_fit_center'
                       src='images/logo.gif' />
                 </div>
             <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
-        </td>
-      </tr>
+<div id="main_page">	
+<Center><img src="https://media.giphy.com/media/UNSPPHPKg6G08/giphy.gif" id="progress_gif" style="display:none;"></center>
+    <table width="100%" style="min-width: 120px; " id="main_page_under"> 
       <tr class="spaceUnder" align="center">
         <td>
           <form class="search-toolbar-input-container"><div class="bootstrap-typeahead clearfix open" style="position: relative;"><div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;"><input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
               <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
               </div><ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
-<!--              <li class=""><a role="button">scontent.cdninstagram.com</a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent.xx.fbcdn.net</span></span></a></li><li class=""><a role="button"><span><span>www.</span><strong class="bootstrap-typeahead-highlight">sco</strong><span>op.it</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-a.cdninstagram.com</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-b.cdninstagram.com</span></span></a></li>-->
               </ul></div><input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></form>
           <BR>
         </td>
@@ -60,7 +57,7 @@
 
       <tr class="spaceUnder" align="center">
         <td>
-          <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1'>Overview</button>
+          <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1'>Overview</button> 
         </td>
       </tr>
             <tr class="spaceUnder" align="center">
@@ -69,7 +66,7 @@
             </tr>
             <tr class="spaceUnder" align="center">
 -->
-                <button type="button" class="btn btn-info btn-sm" id="whois_statistics" tabindex='-1'>Whois</button></td>
+                <button type="button" class="btn btn-info btn-sm" id="whois_data" tabindex='-1'>Whois</button></td>
         </tr>
                <tr class="spaceUnder" align="center">
                 <td><button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
@@ -111,10 +108,38 @@
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
   </body>
 </html>
+</div>
+<div id="whois_html_data" style="display:none;">
+</div>
 <script src="scripts/jquery.js"></script>
 <script src="scripts/popup.js"></script>
 <script src="scripts/bootstrap.min.js"></script>
 <style>
+.df-heading {
+    font-size: 15px;
+    font-weight: bold;
+	color:blue;
+    text-transform: uppercase;
+    padding: 5px 8px;
+}.df-block {
+    margin-bottom: 15px;
+    background-color: #eef7fe;
+    font-size: 13px;
+    padding: 8px;
+    border: 1px solid #a4d4fa;
+    border-radius: 8px;
+}.df-row {
+    padding: 3px 8px;
+}.df-label {
+    float: left;
+    font-weight: bold;
+    width: 116px;
+}.df-value {
+    float: left;
+    width: 560px;
+}.clear {
+    clear: both;
+}
 /*
   ul li { list-style-type: none;
         list-style-position:inside;
