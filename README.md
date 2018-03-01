@@ -43,3 +43,12 @@ AGPL-3
 - Abhishek Das, @abhidas
 - Vangelis Banos, @vbanos
 - Rodden Kerry, @kerryrodden
+
+## Updates
+ - Updated popup.js and index.html file
+ - Removed Whois Popup
+ - Added JSON Api Based result filteration rather than opening popups
+ - No third party Whois data API (You can host it yourself created using html_dom_parser.php) 
+ - Own Hosted Whois API -> https://rohitcoder.cf/research/whois_api/?site=github.com
+ 
+ ## A Step Towards GsoC2018 ;) 
