@@ -107,7 +107,24 @@ function whois_statistics(eventObj){
     var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
-
+function whois_data(eventObj){
+    $('#progress_gif').show();$('#main_page_under').hide();
+    var open_url="https://rohitcoder.cf/research/whois_api/";
+    $.get(open_url,
+    {
+        site: get_clean_url()
+    },
+    function(data, status){
+       $('#progress_gif').hide();
+	   var whois_header = "<br><div class='col-md-12 col-xs-12 col-sm-12 btn-primary'><div class='col-sm-1 col-xs-1 col-md-1 btn-primary' id='gomain' style='cursor:pointer;'><b><</b></div><div class='col-sm-9 col-xs-9 col-md-9 btn-primary'><center><b>Whois</b></center></div></div>";
+       $('#main_page').hide();$('#whois_html_data').html(whois_header+data.domain_info+data.registrant_contact+data.admin_contact+data.technical_contact);$('#whois_html_data').show(); 
+       document.getElementById('gomain').onclick =gomain;
+    });
+}
+function gomain(){ 
+$('#main_page_under').show();
+$('#main_page').show();$('#whois_html_data').hide();
+}
 function search_tweet(eventObj){
     var url = get_clean_url();
     if(url.includes('http://')){
@@ -217,8 +234,9 @@ document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics;
-document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('whois_data').onclick =whois_data;
 document.getElementById('search_tweet').onclick =search_tweet;
+document.getElementById('gomain').onclick =gomain;
 document.getElementById('about_support_button').onclick = about_support;
 
 document.getElementById('overview').onclick = view_all;
