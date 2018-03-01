@@ -411,11 +411,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
       var page_url = message.page_url;
       var wayback_url = message.wayback_url;
+      var optionUrl = message.optionUrl;
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       var url = page_url.replace(pattern, "");
-      var open_url = wayback_url+encodeURI(url);
+      if (optionUrl) {
+          var open_url = optionUrl;
+      }
+      else {
+          var open_url = wayback_url+encodeURI(url);
+      }
       console.log(open_url);
-      if (message.method!='save') {
+      if (message.method!='save' && !optionUrl) {
         URLopener(open_url,url,true);
       } else {
         chrome.tabs.create({ url:  open_url});

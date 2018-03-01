@@ -1,0 +1,31 @@
+.content-table {
+    background: #263238;
+    border: 2px solid black;
+}
+
+.content-table tr:first-child {
+    background-color: white;
+}
+
+#search_input {
+    display: block;
+    position: relative;
+    border-radius: 0;
+    z-index: 1;
+    outline: none !important;
+    color: white;
+    background-color: #212121 !important;
+}
+
+#search_input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: white;
+}
+#search_input::-moz-placeholder { /* Firefox 19+ */
+    color: white;
+}
+#search_input:-ms-input-placeholder { /* IE 10+ */
+    color: white;
+}
+#search_input:-moz-placeholder { /* Firefox 18- */
+    color: white;
+}

@@ -1,5 +1,34 @@
 global_url="";
 
+function restoreOptions() {
+    $ = jQuery;
+    chrome.storage.sync.get({
+        favoriteColor: 'white'
+    }, function(items) {
+        if (items.favoriteColor === 'black') {
+            $('head').append('<link rel="stylesheet" id="extension-theme" href="css/dark.css">');
+        }
+        else if (items.favoriteColor === 'white') {
+            if ($('#extension-theme').length) {
+                $('#extension-theme').remove();
+            }
+        }
+        else {
+            if ($('#extension-theme').length) {
+                $('#extension-theme').remove();
+            }
+            $('head').append('<link rel="stylesheet" href="css/colorful.css">');
+        }
+    });
+}
+
+function openOptionsPage() {
+    chrome.runtime.sendMessage({message: "openurl",
+        optionUrl: "chrome-extension://omdmbefcaepjlmjolanmnijbpkjjcoop/options.html",
+        page_url: get_clean_url(),
+        method:'viewall'});
+}
+$('#show-options').click(openOptionsPage);
 function remove_port(url){
     if(url.substr(-4)==':80/'){
         url=url.substring(0,url.length-4);
@@ -208,7 +237,7 @@ function makeModal(){
 //document.getElementById('settings_div').style.display="none";
 
 window.onload=get_url;
-
+document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;

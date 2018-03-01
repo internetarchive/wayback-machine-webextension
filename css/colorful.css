@@ -1,0 +1,31 @@
+.content-table {
+    background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    border: 2px solid white;
+}
+
+.content-table tr:first-child {
+    background-color: white;
+}
+
+#search_input {
+    display: block;
+    position: relative;
+    border-radius: 0;
+    z-index: 1;
+    outline: none !important;
+    color: white;
+    background: linear-gradient(to left, #da22ff, #9733ee) !important;
+}
+
+#search_input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: white;
+}
+#search_input::-moz-placeholder { /* Firefox 19+ */
+    color: white;
+}
+#search_input:-ms-input-placeholder { /* IE 10+ */
+    color: white;
+}
+#search_input:-moz-placeholder { /* Firefox 18- */
+    color: white;
+}
