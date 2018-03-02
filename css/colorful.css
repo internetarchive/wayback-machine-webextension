@@ -29,3 +29,7 @@
 #search_input:-moz-placeholder { /* Firefox 18- */
     color: white;
 }
+#recent-archive {
+    color: white;
+    font-size: 13px;
+}

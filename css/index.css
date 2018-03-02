@@ -145,3 +145,8 @@ a.btn-social,
     background: indianred;
     border-radius: 4px;
 }
+
+#recent-archive {
+    color: black;
+    font-size: 13px;
+}

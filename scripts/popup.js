@@ -1,5 +1,38 @@
 global_url="";
 
+function parseDateString(date) {
+    var dateObj = {};
+    console.log(date);
+    var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    dateObj.year = date.substring(0,4);
+    dateObj.day = date.substring(6,8);
+    dateObj.month = monthList[parseInt(date.substring(4,6)) - 1];
+    dateObj.time = date.substring(8,date.length + 1).match(/.{1,2}/g).join(":");
+    return dateObj;
+}
+
+function showRecentArchive(dateObj) {
+    $("#recent-archive").html("Last Archived: " + dateObj.month + " " + dateObj.day + " , " + dateObj.year + "<br>" + dateObj.time);
+}
+
+function getRecentArchive(url) {
+    var xhttp = new XMLHttpRequest();
+    var dateObj, data, timestamp;
+    var api = "http://archive.org/wayback/available?url=" + url;
+    console.log(api);
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // Typical action to be performed when the document is ready:
+           data = JSON.parse(this.responseText);
+           timestamp = data.archived_snapshots.closest.timestamp;
+           dateObj = parseDateString(timestamp);
+           showRecentArchive(dateObj);
+        }
+    };
+    xhttp.open("GET", api, true);
+    xhttp.send();
+}
+
 function restoreOptions() {
     $ = jQuery;
     chrome.storage.sync.get({
@@ -104,9 +137,14 @@ function view_all(){
                                 method:'viewall'});
 }
 
-function get_url(){
+function get_url(archiveFlag){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-        global_url=tabs[0].url;
+        if (archiveFlag) {
+            getRecentArchive(tabs[0].url);
+        }
+        else {
+            global_url = tabs[0].url;
+        }
     });
 }
 
@@ -235,9 +273,12 @@ function makeModal(){
 //}
 //restoreSettings();
 //document.getElementById('settings_div').style.display="none";
-
+function _init() {
+    restoreOptions();
+    get_url(true);
+}
 window.onload=get_url;
-document.addEventListener('DOMContentLoaded', restoreOptions);
+document.addEventListener('DOMContentLoaded', _init);
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;
