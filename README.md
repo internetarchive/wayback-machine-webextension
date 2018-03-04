@@ -51,6 +51,7 @@ AGPL-3
  - No third party Whois data API (You can host it yourself created using html_dom_parser.php) 
  - Own Hosted Whois API -> https://rohitcoder.cf/research/whois_api/?site=github.com
  
+ I also uploaded my whois data API code and used lib simple_html_dom in "host" folder these files should be uploaded on your server and this will act like a API for your extension. After setting up this api don't forget to change API Link from popup.js file
  ## A Step Towards GsoC2018 ;) 
  
 ![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/1.PNG)
