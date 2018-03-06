@@ -54,8 +54,10 @@ AGPL-3
  - Smoothness in Whois & Alexa tab
  
  I also uploaded my whois data API code and used lib simple_html_dom in "host" folder these files should be uploaded on your server and this will act like a API for your extension. After setting up this api don't forget to change API Link from popup.js file
- ## A Step Towards GsoC2018 ;) 
  
 ![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/1.PNG)
 ![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/5.png)
+
+ ## A Step Towards GsoC2018 ;) 
+ 
 For more check snap_shots directory of this project.
