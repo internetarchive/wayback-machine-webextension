@@ -61,7 +61,7 @@
         </td>
       </tr>
             <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-info btn-sm" id="alexa_statistics" tabindex='-1'>Alexa</button>
+                <td><button type="button" class="btn btn-info btn-sm" id="alexa_data" tabindex='-1'>Site Metrics</button>
 <!--
             </tr>
             <tr class="spaceUnder" align="center">
@@ -109,12 +109,44 @@
   </body>
 </html>
 </div>
-<div id="whois_html_data" style="display:none;">
+<div id="whois_html_data" style="display:none;padding:5px;">
+</div>
+<div id="alexa_html_data" style="display:none;padding:5px;">
 </div>
 <script src="scripts/jquery.js"></script>
 <script src="scripts/popup.js"></script>
 <script src="scripts/bootstrap.min.js"></script>
-<style>
+<style> 
+.metrics-title, h5.font-1{
+    font-size: 14px;
+	font-weight:bold;
+	color:blue;
+}strong.metrics-data{
+font-weight:regular;
+font-size:16px;
+}
+a[rel=nofollow]{
+display:none;
+}
+table.subdo_table>tbody>td, table.subdo_table>thead>th{width:50%;}
+.global_stats a,.word-wrap a, .upstream_sites a,.similar_sites a {
+  pointer-events: none;
+  cursor: default;
+}.spark-bar{
+display:none;
+}.change-down {
+    padding:2px;border-radius:2px;
+    background: #E41F26 no-repeat 5px 50%;
+    color: #fff;
+}.metrics-data, .metrics-pending {
+    font-size: 24px;
+    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+    color: #333;
+}.change-up {
+    padding:2px;border-radius:2px;
+    background: #2bbb0f no-repeat 5px 50%;
+    color: #fff;
+}
 .df-heading {
     font-size: 15px;
     font-weight: bold;
