@@ -57,5 +57,5 @@ AGPL-3
  ## A Step Towards GsoC2018 ;) 
  
 ![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/1.PNG)
-![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/5.PNG)
+![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/5.png)
 For more check snap_shots directory of this project.
