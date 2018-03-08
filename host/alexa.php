@@ -23,11 +23,13 @@ foreach($tempa->find("a") as $ht) {
 $tempa = $data;
 $valc = $html->find('.metrics-data', 1)->innertext;
 $tempb = $html->find('.countryRank',0)->innertext;
+if(!empty($tempb)){
 $tempb = str_get_html($tempb);
 foreach($tempb->find("img") as $ht) {
    $datac = $ht->attr['src'];
 }
 $tempb = $datac;
+}
 $array['country']['name'] = $tempa;
 $array['country']['rank'] = $valc; 
 $array['country']['flag'] = "https://www.alexa.com/".$datac; 
