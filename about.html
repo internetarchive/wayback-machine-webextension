@@ -1,13 +1,157 @@
-<html>
+<!Doctype html>
     <head>
         <title>About</title>
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            html, body{
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                  'Open Sans', 'Helvetica Neue', sans-serif;
+                font-size: 16px;
+                background-color: #f1f2f6;
+            }
+            .container{
+                width: 100%;
+                background-color: #ffffff;
+                box-shadow: grey 2px 2px 20px ; 
+                padding: 3%;
+            }
+            .head {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: center;
+                color: grey; 
+            }
+            .head h2 {
+                font-size: 35px;
+                font-weight: normal;
+                margin: 2%;
+            }
+            .head h2 span {
+                font-weight: 600;
+            }
+            .para1 {
+                width: 100%;
+                height: auto;
+            }
+            .para1 p{
+                width: 75%;
+                margin-left: 10%;
+                line-height: 1.6;
+                font-size: 18px;
+                text-align: justify;
+            }
+            .sub-head{
+                width: 100%;
+                padding: 2% 2% 2% 10%;
+                font-size: 30px;
+                font-weight: 500;
+                font-family: inherit;
+                color: darkcyan;
+            }
+            .lists {
+                width: 100%;
+                font-size: 18px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around; 
+            }
+            .lists .li{ 
+                width: 40%;
+                font-size: 16px;
+                text-align: justify;
+                background-color: #d1ccc0;
+                margin: 0 0 3% 0;
+                color: darkslategrey;
+                padding: 2%;
+            }
+            .lists .li p{width: 80%;line-height: 1.5; }
+            .lists .li h3{ margin: 0;}
+            footer {
+                background-color: #222f3e;
+                color: #ffffff;
+                display: flex;
+                justify-content: space-around;
+                padding: 2%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .credit{ width: 60%;}
+            .support{width: 30%;}
+            .ver{margin: 20% 0;}
+            .license { 
+                margin: 3% 0 0 0 ;
+                width: 100%;
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
-        <h2><strong>The Official Wayback Machine Extension:</strong></h2>
-        <p>In cooperation with Google Summer of Code, The Internet Archive presents The Official WayBack Machine Extension. With the power of the WayBack&nbsp;Machine, we let you go in time to see how a URL has changed and evolved through the history of the Web!</p>
-        <p><strong> Features</strong></p>
-        <ul><li><strong>Save Page Now</strong></li><ul>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</ul><li><strong>Recent Version &amp; First Version</strong></li><ul>View the most recent, and the first version of a page, in the WayBack Machine.</ul><li><strong>Alexa &amp; Whois</strong></li><ul>gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.</ul><li><strong>Tweets</strong></li><ul>Searches Twitter For information Regarding your current page.</ul></ul><br>
-        <strong>Version</strong><span>&nbsp;2.12</span><br><br>
-        <strong>License</strong><p>Copyright Internet Archive, 2017 AGPL-3&nbsp;<br><strong>Credit</strong></p><p>Caceres Richard<a href="https://github.com/rchrd2">&nbsp;@rchrd2<br /></a>Chinta Rakesh N&nbsp;<a href="https://github.com/rakesh-chinta">@rakesh-chinta</a><br />Das&nbsp;Abhishek <a href="http://github.com/abhidas17695">@abhidas17695</a><br />Mark Graham J.&nbsp;<a href="https://github.com/markjgraham">@markgraham</a><br />Mandel Benjamin&nbsp;<a href="http://github.com/BenjaminMandel">@BenjaminMandel<br /></a>Shiryaev Anton&nbsp;<a href="https://github.com/Eagle19243">@Eagle19243<br /></a>Yogesh&nbsp;Kumar <a href="https://github.com/kumarjyogesh">@kumarjyogesh&nbsp;</a><br/>Banos&nbsp;Vangelis <a href="https://github.com/vbanos">@vbanos&nbsp;</a><br/>Rodden Kerry&nbsp;<a href="http://www.rodden.org/kerry">@kerryrodden</a> for sunburst code (used in the Site Map)<br /></p><p><strong>Support</strong></p><p>info@archive.org</p>
+        <div class="container">
+            <div class="head">
+                <h2>The Official <span>Wayback Machine Extension</span></h2>
+            </div>
+            <div class="para1">
+                <p>In cooperation with Google Summer of Code, 
+                    The Internet Archive presents The Official WayBack Machine Extension. 
+                    With the power of the WayBack&nbsp;Machine, 
+                    we let you go in time to see how a URL has changed and evolved through the history of the Web!
+                </p>
+            </div>
+        </div>
+        <div class="sub-head">Features</div>
+        <div class="lists">
+            <div class="li">
+                <h3>Save Page Now</h3>
+                <p>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</p>
+            </div>
+            <div class="li">
+                <h3>Recent Version &amp; First Version</h3>
+                <p>View the most recent, and the first version of a page, in the WayBack Machine.</p>
+            </div>
+            <div class="li">
+                <h3>Alexa &amp; Whois</h3>
+                <p>Gives analytical information about the page you are currently viewing, 
+                    along with interesting facts, such as who owns it and how popular it is.</p>
+            </div>
+            <div class="li">
+                <h3>Tweets</h3>
+                <p>Searches Twitter For information Regarding your current page.</p>
+            </div>
+            
+        </div>
+        <footer>
+             <div class="credit">
+                <span>Credits</span>
+                    <p>Caceres Richard<a href="https://github.com/rchrd2">&nbsp;@rchrd2<br />
+                    </a>Chinta Rakesh N&nbsp;
+                    <a href="https://github.com/rakesh-chinta">@rakesh-chinta</a><br />
+                        Das&nbsp;Abhishek <a href="http://github.com/abhidas17695">@abhidas17695</a>
+                    <br />Mark Graham J.&nbsp;<a href="https://github.com/markjgraham">@markgraham</a>
+                    <br />Mandel Benjamin&nbsp;<a href="http://github.com/BenjaminMandel">@BenjaminMandel<br />
+                    </a>Shiryaev Anton&nbsp;<a href="https://github.com/Eagle19243">@Eagle19243<br />
+                    </a>Yogesh&nbsp;Kumar <a href="https://github.com/kumarjyogesh">@kumarjyogesh&nbsp;</a>
+                    <br/>Banos&nbsp;Vangelis <a href="https://github.com/vbanos">@vbanos&nbsp;</a><br/>Rodden Kerry&nbsp;
+                    <a href="http://www.rodden.org/kerry">@kerryrodden</a> for sunburst code (used in the Site Map)<br /></p>
+            </div>
+            <div class="support">
+                <p>Support</p>
+                <p>info@archive.org</p>
+                <div class="ver">
+                    <span>Current Version</span>
+                    <span>&nbsp;2.12</span>
+                </div>
+            </div>
+            <div class="license"> 
+                    <div>License</div>
+                    <p>Copyright Internet Archive, 2017 AGPL-3&nbsp;</p>
+                 </div>      
+        </footer> 
     </body>
 </html>
