@@ -365,6 +365,10 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @param response {object}
  * @return {string or null}
  */
+
+
+
+
 function getWaybackUrlFromResponse(response) {
   if (response.results &&
       response.results[0] &&
@@ -393,6 +397,29 @@ function isValidSnapshotUrl(url) {
   return ((typeof url) === "string" &&
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
+
+chrome.tabs.onUpdated.addListener(function(tabId , info) {
+    if (info.status == "complete") {
+      chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[100,100,100, 255]});
+      chrome.browserAction.setBadgeText({tabId: tabId, text:"⌛"});
+      chrome.tabs.get(tabId, function(tab) {
+        var page_url = tab.url;
+        var wayback_url = "https://web.archive.org/save/";
+        var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+        url = page_url.replace(pattern, "");
+        request_url = wayback_url+encodeURI(url);
+
+        wmAvailabilityCheck(page_url,function(){
+          chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[52, 200, 74, 255]});
+          chrome.browserAction.setBadgeText({tabId: tab.id, text:"✔"});
+        },function(){
+          chrome.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[208, 58, 50, 255]});
+          chrome.browserAction.setBadgeText({tabId: tab.id, text:"✘"});
+          
+        })
+      });
+    }
+});
 
 function URLopener(open_url,url,wmAvailabilitycheck){
     if(wmAvailabilitycheck==true){
