@@ -139,12 +139,14 @@ function view_all(){
 
 function get_url(archiveFlag){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        console.log("flag ", archiveFlag);
         if (archiveFlag) {
             getRecentArchive(tabs[0].url);
         }
         else {
             global_url = tabs[0].url;
         }
+        console.log(global_url);
     });
 }
 
@@ -276,6 +278,7 @@ function makeModal(){
 function _init() {
     restoreOptions();
     get_url(true);
+    get_url(false);
 }
 window.onload=get_url;
 document.addEventListener('DOMContentLoaded', _init);
