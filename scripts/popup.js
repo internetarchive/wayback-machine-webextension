@@ -41,12 +41,14 @@ function get_url_domain(){
     var search_term = document.getElementById('search_input').value;
     if(search_term == ""){
         var url=global_url;
+        var node = document.createElement('a');
+        node.href=url;
+        url = node.hostname;
     }else{
         var url=search_term;
+        alert(search_term);
     }
-    var node = document.createElement('a');
-    node.href=url;
-    url = node.hostname;
+    alert(url);
     return url;
 }
 
