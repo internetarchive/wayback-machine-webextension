@@ -46,9 +46,7 @@ function get_url_domain(){
         url = node.hostname;
     }else{
         var url=search_term;
-        alert(search_term);
     }
-    alert(url);
     return url;
 }
 
