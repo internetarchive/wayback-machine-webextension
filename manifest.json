@@ -8,7 +8,7 @@
     "48": "images/icon.png",
     "96": "images/icon@2x.png"
   },
-  
+
   "permissions": [
       "notifications",
       "tabs",
@@ -36,6 +36,9 @@
     "scripts/sequences.js",
     "scripts/d3.js",
     "scripts/radial-tree.umd.js",
+    "scripts/wbm.js",
+    "scripts/jquery.js",
+    "css/wbm.css",
     "css/RTstyle.css",
     "css/sequences.css",
     "css/googlestyle.css",

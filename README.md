@@ -5,21 +5,23 @@ The Official WayBack Machine Extension. With the power of the WayBack Machine,
 we let you go in time to see how a URL has changed and evolved through the
 history of the Web!
 
-## Features
+Original repo can be found at https://github.com/internetarchive/wayback-machine-chrome
 
-- Save Page Now: Allows you to instantly save the page you are currently viewing
-  in The WayBack Machine.
-- Recent Version & First Version: Presents the most recent, and the first version
-  of a page, in the WayBack Machine.
-- Alexa & Whois: gives analytical information about the page you are currently
-  viewing, along with interesting facts, such as who owns it and how popular
-  it is.
-- Tweets: Searches Twitter For information Regarding your current page.
-- Sitemap: Presents a sunburst diagram for the domain you are currently viewing.
 
-## Developing
+## Recent Changes
 
-This is a "WebExtension". See https://developer.chrome.com/extensions
+- Added welcome page on installation (in order to analyze actual installations); currently set to http://archive.org/
+- Added uninstallation page (to analyze uninstallations); currently set to https://blog.archive.org/2017/01/13/wayback-machine-chrome-extension-now-available/
+- Cleaned URL sanitizer for current page's URL in JS (had some issues with Who-Is and Alexa window pop-ups).
+- Added `wbm.js` and `wbm.css` for GUI cleaning.
+
+
+## Future Plans
+
+- Need to work on Alexa API for quick results
+- Who-Is API for quick results
+- Working on Archive.org themed UI.
+- JavaScript optimization for quick pop-ups
 
 
 ## Places to update the version
@@ -27,19 +29,7 @@ This is a "WebExtension". See https://developer.chrome.com/extensions
 - manifest.json - update version
 - scripts/background.js - update header
 
-
 ## License
 
 Copyright Internet Archive, 2017
 AGPL-3
-
-
-## Credits
-
-- Richard Caceres, @rchrd2
-- Mark Graham, @markjohngraham
-- Benjamin Mandel, @BenjaminMandel
-- Kumar Yogesh, @kumarjyogesh
-- Abhishek Das, @abhidas
-- Vangelis Banos, @vbanos
-- Rodden Kerry, @kerryrodden

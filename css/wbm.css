@@ -1,0 +1,54 @@
+a{
+    cursor:pointer;
+}
+
+.tab_pull{
+    cursor:pointer;
+    background:#222;
+    font-weight:bold;
+    color:#fff;
+    padding: 10px;
+    text-align: center;
+    margin-top:2px;
+}
+
+.tab_content{
+    background:#444;
+    padding: 20px;
+}
+
+.tab_content button, .tab_content input[type=submit]{
+    width:85%;
+    font-weight:bold;
+    font-size:15px;
+    padding:8px !important;
+    margin-top:10px;
+}
+
+#option_panel .spaceUnder a{
+    cursor:pointer;
+}
+
+#option_panel #social_link{
+    padding-top:30px;
+}
+
+#search_panel, #site_panel{
+    display:none;
+}
+
+.bottom_button{
+    margin:20px;
+    background:transparent;
+    border:none;
+    text-decoration:underline;
+    color:#555;
+}
+
+.bottom_button:focus{
+    outline:none;
+}
+
+#footer{
+    padding:10px 0 0 0;
+}

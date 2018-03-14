@@ -30,6 +30,26 @@ function remove_whois(url){
     return remove_port(new_url);
 }
 /* Common method used everywhere to retrieve cleaned up URL */
+
+
+/*
+
+    get_url_domain() FOR WHO-IS AND ALEXA
+
+*/
+function get_url_domain(){
+    var search_term = document.getElementById('search_input').value;
+    if(search_term == ""){
+        var url=global_url;
+    }else{
+        var url=search_term;
+    }
+    var node = document.createElement('a');
+    node.href=url;
+    url = node.hostname;
+    return url;
+}
+
 function get_clean_url() {
     var search_term = document.getElementById('search_input').value;
     if(search_term == ""){
@@ -99,12 +119,12 @@ function social_share(eventObj){
 }
 
 function alexa_statistics(eventObj){
-    var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
+    var open_url="http://www.alexa.com/siteinfo/" + get_url_domain();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function whois_statistics(eventObj){
-    var open_url="https://www.whois.com/whois/" + get_clean_url();
+    var open_url="https://www.whois.com/whois/" + get_url_domain();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
@@ -181,7 +201,7 @@ function makeModal(){
 //  chrome.storage.sync.get({
 //    as:false
 //  }, function(items) {
-//    document.getElementById('as').checked = items.as;  
+//    document.getElementById('as').checked = items.as;
 //      if(items.as){
 //          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
 //      }
