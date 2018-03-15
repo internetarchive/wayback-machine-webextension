@@ -8,194 +8,70 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
-  <body style="min-width: 200px;max-width: 200px;">
-    <table width="100%" style="min-width: 120px; ">
-      <tr class="spaceUnder">
-        <td>
-            <div class="blue-line"></div>
-                <div class='container'>
-                    <img class='resize_fit_center'
-                      src='images/logo.gif' />
-                </div>
-            <div class="blue-line"></div>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <form class="search-toolbar-input-container">
-            <div class="bootstrap-typeahead clearfix open" style="position: relative;">
-              <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-                <input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" class="search-bar">
-              </div>
-              <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
-               <!-- <li class="">
-                 <a role="button">
-                   scontent.cdninstagram.com
-                 </a>
-               </li>
-               <li class="">
-                 <a role="button">
-                   <span>
-                     <strong class="bootstrap-typeahead-highlight">
-                       sco
-                     </strong>
-                     <span>
-                       ntent.xx.fbcdn.net
-                     </span>
-                   </span>
-                 </a>
-               </li>
-               <li class="">
-                 <a role="button">
-                   <span>
-                     <span>
-                       www.
-                     </span>
-                     <strong class="bootstrap-typeahead-highlight">
-                       sco
-                     </strong>
-                     <span>
-                       op.it
-                     </span>
-                   </span>
-                 </a>
-               </li>
-               <li class="">
-                 <a role="button">
-                   <span>
-                     <strong class="bootstrap-typeahead-highlight">
-                       sco
-                     </strong>
-                     <span>
-                       ntent-a.cdninstagram.com
-                     </span>
-                   </span></a>
-                 </li>
-                 <li class="">
-                   <a role="button">
-                     <span>
-                       <strong class="bootstrap-typeahead-highlight">
-                         sco
-                       </strong>
-                       <span>
-                         ntent-b.cdninstagram.com
-                       </span>
-                     </span>
-                   </a>
-                 </li> -->
-              </ul>
-            </div>
-            <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
-          </form>
-          <BR>
-        </td>
-      </tr>
-
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1'>
-            Save Page Now
-          </button>
-          <BR>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1'>
-            Recent Version
-          </button>
-          <BR>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>
-            First Version
-          </button>
-        </td>
-      </tr>
-<!--
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-default btn-sm" id="settings_btn" toggle="off">
-          <span class="glyphicon glyphicon-cog"></span>
-            Settings
-          </button>
-        </td>
-    	</tr>
--->
-
-
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1'>
-            Overview
-          </button>
-        </td>
-      </tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-info btn-sm" id="alexa_statistics" tabindex='-1'>
-            Alexa
-          </button>
-        <!--
-            </tr>
-            <tr class="spaceUnder" align="center">
-        -->
-        <button type="button" class="btn btn-info btn-sm" id="whois_statistics" tabindex='-1'>
+  <body style="min-width: 400px;max-width: 400px;font-family:fantasy;">
+    <header class='container' style="background-color:#0E1125;min-height:50px;margin:0;">
+      <a href="http://archive.org/web/" target="_blank">
+      <img class='resize_fit_center pull-left'
+        src='./logo.png'
+        style="border-style: solid;border-width:2px;border-color:#0E1125;border-radius:45%"
+      />
+    </a>
+      <form class="search-toolbar-input-container pull-right">
+        <div class="bootstrap-typeahead clearfix open" style="position: relative;">
+          <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
+            <input style="min-width:280px; margin-top:7px;" id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" class="search-bar">
+          </div>
+          <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+          </ul>
+        </div>
+      </form>
+    </header>
+    <!-- <hr style="margin:2px;"/> -->
+    <div style="background-color:#BADA55;padding-top:5px;" align="center">
+      <div style="margin-left:5px;">
+        <h4><u><strong>Page Actions</strong></u></h4>
+        <button type="button" class="btn btn-primary btn-sm" id="save_now" >
+          Save Page Now
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" id="recent_capture" >
+          Recent Version
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" id="first_capture" >
+          First Version
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" id="overview" >
+          Overview
+        </button>
+        <h4><u><strong>Page Information</strong></u></h4>
+        <button type="button" class="btn btn-info btn-sm" id="alexa_statistics" >
+          Alexa
+        </button>
+        <button type="button" class="btn btn-info btn-sm" id="whois_statistics" >
           Whois
         </button>
-        </td>
-      </tr>
-     <tr class="spaceUnder" align="center">
-      <td>
-        <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff">
+        <button type="button" class="btn btn-info btn-sm" id="make_modal" >
+          Site Map
+        </button>
+        <h4><u><strong>Find this page on Twitter!</strong></u></h4>
+        <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" style="color:#ffffff;margin-bottom:5px;">
           <b>
             <i class="fa fa-twitter"></i>
             Tweets
           </b>
         </button>
-        <BR>
-      </td>
-    </tr>
-        <tr class="spaceUnder" align="center">
-        <td>
-          <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1'>Site Map</button>
-        </td>
-    	</tr>
-      <tr class="spaceUnder" align="center">
-        <td>
-           <a id="fb_share" class="btn-social btn-sm btn-facebook" ><i class="fa fa-facebook"></i></a>
-            <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
-            <a id="gplus_share" class="btn-social btn-sm btn-google-plus"><i class="fa fa-google-plus"></i></a>
-            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
-         </td>
-    	</tr>
-      <tr class="spaceUnder" align="center">
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm formfineleft" id="about_support_button" >
-                      About
-                    </button>
-                </td>
-<!--
-                    <button type="button" class="btn btn-default btn-sm" id="settings_btn" toggle="off">
-                    <span class="glyphicon glyphicon-cog"></span> Settings
-                </td>
-                </tr>
-        <tr class="spaceUnder" align="center">
-        <td>
-            <div id="settings_div">
-                <form>
-                <input type="checkbox" id="as">Auto-save<br>
-                <button id="settings_save_btn">Save</button>
-
-                </form>
-            </div>
-        </td>
-    	</tr>
--->
-    </table>
-    <div class="blue-line"></div>
+        <h4 style="margin-bottom:0px !important;"><u><strong>Share this page!<strong></u></h4>
+        <div style="margin-top:0px !important;">
+          <a id="fb_share" class="btn-social btn-sm btn-facebook" ><i class="fa fa-facebook"></i></a>
+          <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
+          <a id="gplus_share" class="btn-social btn-sm btn-google-plus"><i class="fa fa-google-plus"></i></a>
+          <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+    <!-- <hr style="margin:2px;"/> -->
+    <footer align="center" style="padding-top:20px;background-color:#0E1125;min-height:50px;">
+      <p style="margin-bottom:0;color:white;">Made with ♥ by these <a href="about.html" target="_blank" style="color:white">contributors.</a></p>
+    </footer>
   </body>
 </html>
 <script src="scripts/jquery.js"></script>
