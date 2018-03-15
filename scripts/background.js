@@ -525,45 +525,43 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
       console.log(RTurl);
     });
-  } else if (message.message == "checkurl") {
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        var url = message.page_url;
-        chrome.browserAction.setBadgeText({ tabId: tab.id, text: ".." });
-        if (isValidUrl(url) && isValidSnapshotUrl(url)) {
-          wmAvailabilityCheck(
-            url,
-            function() {
-              //On-success callback
-              chrome.browserAction.setBadgeText({ tabId: tab.id, text: "Y" });
-            },
-            function() {
-              //On-failure callback
-              chrome.browserAction.setBadgeText({ tabId: tab.id, text: "N" });
-              var http = new XMLHttpRequest();
-              var new_url = "https://web.archive.org/save/" + url;
-              http.open("GET", new_url, true);
-              http.send(null);
-              http.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                  console.log("not found before");
-                  chrome.browserAction.setBadgeText({
-                    tabId: tab.id,
-                    text: "A"
-                  });
-                  // notify(
-                  //   "The page had not been archived before. We have automatically archived it .Thank you"
-                  // );''l
-                }
-              };
-            }
-          );
-        }
-      });
-    });
   }
 });
-
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    var url = tabs[0].url;
+    chrome.browserAction.setBadgeText({ tabId: tab.id, text: ".." });
+    if (isValidUrl(url) && isValidSnapshotUrl(url)) {
+      wmAvailabilityCheck(
+        url,
+        function() {
+          //On-success callback
+          chrome.browserAction.setBadgeText({ tabId: tab.id, text: "Y" });
+        },
+        function() {
+          //On-failure callback
+          chrome.browserAction.setBadgeText({ tabId: tab.id, text: "N" });
+          var http = new XMLHttpRequest();
+          var new_url = "https://web.archive.org/save/" + url;
+          http.open("GET", new_url, true);
+          http.send(null);
+          http.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              console.log("not found before");
+              chrome.browserAction.setBadgeText({
+                tabId: tab.id,
+                text: "A"
+              });
+              // notify(
+              //   "The page had not been archived before. We have automatically archived it .Thank you"
+              // );''l
+            }
+          };
+        }
+      );
+    }
+  });
+});
 chrome.webRequest.onErrorOccurred.addListener(
   function(details) {
     function tabIsReady(isIncognito) {

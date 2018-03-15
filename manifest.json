@@ -45,11 +45,5 @@
   "browser_action": {
     "default_icon": "images/icon.png",
     "default_popup": "index.html"
-  },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["scripts/contentScript.js"]
-    }
-  ]
+  }
 }
