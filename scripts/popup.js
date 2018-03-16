@@ -86,7 +86,7 @@ function view_all() {
 }
 
 function get_url() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     global_url = tabs[0].url;
   });
 }
@@ -140,7 +140,7 @@ function display_list(key_word) {
     "https://web.archive.org/__wb/search/host?q=" + key_word,
     true
   );
-  xhr.onload = function() {
+  xhr.onload = function () {
     $sbox.style.display = "none";
     $sbox.innerHTML = "";
     var data = JSON.parse(xhr.response);
@@ -149,7 +149,7 @@ function display_list(key_word) {
       $sbox.style.display = "block";
       for (var i = 0; i < n; i++) {
         var a = document.createElement("a");
-        a.onclick = function(event) {
+        a.onclick = function (event) {
           document.getElementById("search_input").value =
             event.target.innerHTML;
           $sbox.style.display = "none";
@@ -170,7 +170,7 @@ function display_suggestions(e) {
   document.getElementById("suggestion-box").style.display = "none";
   document.getElementById("suggestion-box").innerHTML = "";
   //setTimeout is used to get the text in the text field after key has been pressed
-  window.setTimeout(function() {
+  window.setTimeout(function () {
     var len = document.getElementById("search_input").value.length;
     if (len >= 3) {
       display_list(document.getElementById("search_input").value);
@@ -243,7 +243,7 @@ document.getElementById("make_modal").onclick = makeModal;
 document
   .getElementById("search_input")
   .addEventListener("keydown", display_suggestions);
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message == "urlnotfound") {
     alert("URL not found in wayback archives!");
   }
