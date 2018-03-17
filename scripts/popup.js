@@ -116,6 +116,12 @@ function whois_statistics(eventObj){
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
+function whois_ing1(eventObj){
+    var t_url="https://www.whois.com/whois/" + get_clean_url();
+    //window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    document.getElementById("wImg").src = t_url;
+}
+
 function search_tweet(eventObj){
     var url = get_clean_url();
     if(url.includes('http://')){
@@ -227,6 +233,7 @@ document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics;
 document.getElementById('alexa_ing1').onclick =alexa_ing1;
 document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('whois_ing1').onclick =whois_ing1;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 

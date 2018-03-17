@@ -65,12 +65,12 @@
         </td>
       </tr>
             <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-info1 btn-sm" id="alexa_ing1" tabindex='-1' data-toggle="modal" data-target="#myModal" >Alexa</button>
+                <td><button type="button" class="btn btn-info1 btn-sm" id="alexa_ing1" tabindex='-1' data-toggle="modal" data-target="#alexaModal" >Alexa</button>
 <!--
             </tr>
             <tr class="spaceUnder" align="center">
 -->
-                <button type="button" class="btn btn-info1 btn-sm" id="whois_statistics" tabindex='-1'>Whois</button></td>
+                <button type="button" class="btn btn-info1 btn-sm" id="whois_ing1" tabindex='-1' data-toggle="modal" data-target="#whoisModal">Whois</button></td>
         </tr>
                <tr class="spaceUnder" align="center">
                 <td><button type="button" class="btn btn-default btn-twitter1 btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
@@ -113,7 +113,7 @@
 
     
   <!-- Modal -->
-  <div class="modal fade modal-fullscreen" id="myModal" role="dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100">
+  <div class="modal fade modal-fullscreen" id="alexaModal" role="dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100">
     <div class="modal-dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100%;" >
         <div class="modal-content" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%;height: 80%;">
           <div class="modal-header">
@@ -129,6 +129,25 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-info btn-sm" id="alexa_statistics">more</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade modal-fullscreen" id="whoisModal" role="dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100">
+    <div class="modal-dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100%;" >
+        <div class="modal-content" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%;height: 80%;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Whois</h4>
+          </div>            
+          <div class="modal-body" style="margin-top:10px; width:100%;height:60%; overflow : hidden;">
+            <iframe id="wImg" scrolling="no" ></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info btn-sm" id="whois_statistics">more</button>
         </div>
       </div>
       
@@ -305,5 +324,15 @@
 .btn-linkedin:hover
 {
     background-color: #4a8aff;
+}
+
+#wImg
+{
+    position : absolute;
+    top      : -180px;
+    left     : -33px;
+    width    : 260px;
+    height   : 500px; 
+    transform: scale(0.8); 
 }
 </style>
