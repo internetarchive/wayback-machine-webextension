@@ -38,7 +38,7 @@ a.btn-social,
 .btn-good {
     font-weight: 400;
     font-size: 1.2em;
-    color: rgba(255, 255, 255, 0);
+    color: rgba(11, 7, 252, 0);
     display: inline-block;
     cursor: pointer;
     text-decoration: none;
@@ -49,12 +49,12 @@ a.btn-social,
     padding-top: 3px;
     padding-bottom: 3px;
     border-style: solid;
-    border-width: 1px;
+    border-width: 3px;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
-    -o-border-image: linear-gradient(155deg, #fb83fa 0%, #31bcb8 100%) 1 round;
-       border-image: linear-gradient(155deg, #fb83fa 0%, #31bcb8 100%) 1 round;
-    background: linear-gradient(155deg, #fb83fa 0%, #31bcb8 100%);
+    -o-border-image: linear-gradient(155deg, #1adae7f8 0%, #31bcb8 100%) 1 round;
+       border-image: linear-gradient(155deg, #1adae7f8 0%, #31bcb8 100%) 1 round;
+    background: linear-gradient(155deg, #1adae7f8 0%, #31bcb8 100%);
     background-clip: text;
     -webkit-background-clip: text;
     height: 40px;
