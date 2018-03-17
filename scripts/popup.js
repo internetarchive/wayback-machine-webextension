@@ -103,6 +103,14 @@ function alexa_statistics(eventObj){
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
+function alexa_ing1(eventObj){
+    var t_url="https://traffic.alexa.com/graph?u=" + get_clean_url();
+    var s_url="https://traffic.alexa.com/graph?y=q&u=" + get_clean_url();
+    //window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    document.getElementById("tImg").src = t_url;
+    document.getElementById("sImg").src = s_url;
+}
+
 function whois_statistics(eventObj){
     var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
@@ -217,6 +225,7 @@ document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics;
+document.getElementById('alexa_ing1').onclick =alexa_ing1;
 document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
