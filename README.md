@@ -50,9 +50,14 @@ AGPL-3
  - Added JSON Api Based result filteration rather than opening popups
  - No third party Whois data API (You can host it yourself created using html_dom_parser.php) 
  - Own Hosted Whois API -> https://rohitcoder.cf/research/whois_api/?site=github.com
+ - Own Hosted Alexa API -> https://rohitcoder.cf/research/whois_api/alexa.php?site=github.com
+ - Smoothness in Whois & Alexa tab
  
  I also uploaded my whois data API code and used lib simple_html_dom in "host" folder these files should be uploaded on your server and this will act like a API for your extension. After setting up this api don't forget to change API Link from popup.js file
+ 
+![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/1.PNG)
+![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/5.png)
+
  ## A Step Towards GsoC2018 ;) 
  
-![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/1.PNG)
-![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/2.PNG)
+For more check snap_shots directory of this project.
