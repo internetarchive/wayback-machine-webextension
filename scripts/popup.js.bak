@@ -297,8 +297,8 @@ document.getElementById('whois_data').onclick =whois_data;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('gomain').onclick = gomain;
 document.getElementById('about_support_button').onclick = about_support;
-//document.getElementById('settings_btn').onclick = local_settings_btn;
-//document.getElementById('save_settings').onclick = saveLocalSettings;
+document.getElementById('settings_btn').onclick = local_settings_btn;
+document.getElementById('save_settings').onclick = saveLocalSettings;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;

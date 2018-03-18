@@ -90,10 +90,10 @@
                 <td>                   
                     <button type="button" class="buttonA button-fancy hvr-float-shadow" id="about_support_button" >About</button>
 				</td></tr>
-				<!--<tr><td>
+				<tr><td>
                     <center><a id="settings_btn"> <span class="glyphicon glyphicon-cog"></span> Settings</a>   </center>              
-                </td>               
-                </tr>  -->
+                </td>                
+                </tr>  
     </table> 
 </div>
 <div id="whois_html_data" style="display:none;padding:5px;">
