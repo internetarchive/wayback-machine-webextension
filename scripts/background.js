@@ -526,10 +526,50 @@ var contextMenuItemSave={
     "title":"Save Page Now",
     "contexts":["all"]
 };
+
+var contextMenuItemAlexa={
+    "id":"alexa",
+    "title":"Alexa",
+    "contexts":["all"]
+};
+var contextMenuItemWhois={
+    "id":"whois",
+    "title":"Whois",
+    "contexts":["all"]
+};
+var contextMenuItemFb={
+    "id":"fb",
+    "title":"Share on Facebook",
+    "contexts":["all"]
+};
+var contextMenuItemTw={
+    "id":"tw",
+    "title":"Share on Tweeter",
+    "contexts":["all"]
+};
+var contextMenuItemGp={
+    "id":"gp",
+    "title":"Share on Google+",
+    "contexts":["all"]
+};
+var contextMenuItemLn={
+    "id":"ln",
+    "title":"Share on Linkedin",
+    "contexts":["all"]
+};
+
 chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);
 chrome.contextMenus.create(contextMenuItemAll);
 chrome.contextMenus.create(contextMenuItemSave);
+chrome.contextMenus.create({type:'separator'});
+chrome.contextMenus.create(contextMenuItemAlexa);
+chrome.contextMenus.create(contextMenuItemWhois);
+chrome.contextMenus.create({type:'separator'});
+chrome.contextMenus.create(contextMenuItemFb);
+chrome.contextMenus.create(contextMenuItemTw);
+chrome.contextMenus.create(contextMenuItemGp);
+chrome.contextMenus.create(contextMenuItemLn);
 
 function contextMenuOpener(type,page_url){
     var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
@@ -556,7 +596,25 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
             contextMenuOpener('save/',page_url);
         }else if(clickedData.menuItemId=='all'){
             contextMenuOpener('web/*/',page_url);
-        }
+        }else if(clickedData.menuItemId=='alexa'){
+            var open_url="http://www.alexa.com/siteinfo/" + page_url;
+            window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+        }else if(clickedData.menuItemId=='whois'){
+            var open_url="https://www.whois.com/whois/" + page_url;
+            window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+        }else if(clickedData.menuItemId=='fb'){
+            var open_url="https://www.facebook.com/sharer/sharer.php?u=" + page_url;
+            window.open(open_url, 'newwindow', 'width=600, height=350,left=0');
+        }else if(clickedData.menuItemId=='tw'){
+            var open_url="https://twitter.com/home?status=" + page_url;
+            window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+        }else if(clickedData.menuItemId=='gp'){
+            var open_url="https://plus.google.com/share?url=" + page_url;
+            window.open(open_url, 'newwindow', 'width=400, height=380,left=0');
+        }else if(clickedData.menuItemId=='ln'){
+            var open_url="https://www.linkedin.com/shareArticle?url=" + page_url;
+            window.open(open_url, 'newwindow', 'width=800, height=600,left=0');
+        }    
     });
 });
 

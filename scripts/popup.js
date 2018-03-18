@@ -88,12 +88,16 @@ function social_share(eventObj){
     var open_url="";
     if(id.includes('fb')){
         open_url="https://www.facebook.com/sharer/sharer.php?u="+url;
+        window.open(open_url, 'newwindow', 'width=600, height=350,left=0');
     }else if(id.includes('twit')){
         open_url="https://twitter.com/home?status="+url;
+        window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
     }else if(id.includes('gplus')){
         open_url="https://plus.google.com/share?url="+url;
+        window.open(open_url, 'newwindow', 'width=400, height=380,left=0');
     }else if(id.includes('linkedin')){
         open_url="https://www.linkedin.com/shareArticle?url="+url;
+        window.open(open_url, 'newwindow', 'width=800, height=600,left=0');
     }
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
 }
