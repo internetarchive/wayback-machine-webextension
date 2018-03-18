@@ -55,8 +55,10 @@ AGPL-3
  
  I also uploaded my whois data API code and used lib simple_html_dom in "host" folder these files should be uploaded on your server and this will act like a API for your extension. After setting up this api don't forget to change API Link from popup.js file
  
-![Snapshot 1](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/1.PNG)
-![Snapshot 2](https://raw.githubusercontent.com/rohitcoder/wayback-machine-chrome/master/snap_shots/5.png)
+![Snapshot 1](https://i.imgur.com/nkuFIWT.png)
+![Snapshot 2](https://i.imgur.com/jLnON9U.png)
+![Snapshot 3](https://i.imgur.com/BkObDFU.png)
+![Snapshot 4](https://i.imgur.com/chp8CHw.png)
 
  ## A Step Towards GsoC2018 ;) 
  
