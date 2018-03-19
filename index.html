@@ -21,7 +21,7 @@
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
-          <form class="search-toolbar-input-container"><div class="bootstrap-typeahead clearfix open" style="position: relative;"><div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;"><input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
+          <form class="search-toolbar-input-container"><div class="bootstrap-typeahead clearfix open" style="position: relative;width: 171px !important;"><div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;"><input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
               <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
               </div><ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
 <!--              <li class=""><a role="button">scontent.cdninstagram.com</a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent.xx.fbcdn.net</span></span></a></li><li class=""><a role="button"><span><span>www.</span><strong class="bootstrap-typeahead-highlight">sco</strong><span>op.it</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-a.cdninstagram.com</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-b.cdninstagram.com</span></span></a></li>-->
@@ -33,18 +33,19 @@
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1'>Save Page Now</button>
-          <BR>
+          
         </td>
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1'>Recent Version</button>
-          <BR>
+          
         </td>
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
           <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
+
         </td>
       </tr>
 <!--
@@ -64,19 +65,19 @@
         </td>
       </tr>
             <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-info btn-sm" id="alexa_statistics" tabindex='-1'>Alexa</button>
+                <td><button type="button" class="btn btn-info1 btn-sm" id="alexa_ing1" tabindex='-1' data-toggle="modal" data-target="#alexaModal" >Alexa</button>
 <!--
             </tr>
             <tr class="spaceUnder" align="center">
 -->
-                <button type="button" class="btn btn-info btn-sm" id="whois_statistics" tabindex='-1'>Whois</button></td>
+                <button type="button" class="btn btn-info1 btn-sm" id="whois_ing1" tabindex='-1' data-toggle="modal" data-target="#whoisModal">Whois</button></td>
         </tr>
                <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
+                <td><button type="button" class="btn btn-default btn-twitter1 btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
             </tr>
         <tr class="spaceUnder" align="center">
         <td>
-          <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1'>Site Map</button>
+          <button type="button" class="btn btn-sitemap btn-sm" id="make_modal" tabindex='-1'>Site Map</button>
         </td>
     	</tr>
       <tr class="spaceUnder" align="center">
@@ -109,11 +110,66 @@
 -->
     </table>
     <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div>
+
+    
+  <!-- Modal -->
+  <div class="modal fade modal-fullscreen" id="alexaModal" role="dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100">
+    <div class="modal-dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100%;" >
+        <div class="modal-content" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%;height: 80%;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Alexa</h4>
+          </div>            
+        <div class="modal-body" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%;">
+          <p></p>
+          <p>Traffic Rank</p>
+          <img  id="tImg" style="margin: 0px; padding: 0px; border: 0px;width: 190px;height: 100px;">
+          <p>Search Traffic</p>
+          <img  id="sImg" style="margin: 0px; padding: 0px; border: 0px;width: 190px;height: 100px;">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info btn-sm" id="alexa_statistics">more</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade modal-fullscreen" id="whoisModal" role="dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100">
+    <div class="modal-dialog" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%; height: 100%;" >
+        <div class="modal-content" style="margin: 0px; padding: 0px; border: 0px;   margin: auto; width:100%;height: 80%;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Whois</h4>
+          </div>            
+          <div class="modal-body" style="margin-top:10px; width:100%;height:60%; overflow : hidden;">
+            <iframe id="wImg" scrolling="no" ></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info btn-sm" id="whois_statistics">more</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
   </body>
 </html>
 <script src="scripts/jquery.js"></script>
-<script src="scripts/popup.js"></script>
+<script src="scripts/popup.js">
+
+</script>
 <script src="scripts/bootstrap.min.js"></script>
+<script type="text/javascript">
+/*  window.onload = function() {myFunction()};
+
+  function myFunction() {
+      var open_url="https://traffic.alexa.com/graph?u=" + get_clean_url();
+      document.getElementById("myImg").src = open_url;
+    }
+*/</script>
 <style>
 /*
   ul li { list-style-type: none;
@@ -244,6 +300,22 @@
 {
     background-color: #83c3f3;
 }
+.btn-twitter1
+{
+    background-color: #55acee;width: 170px !important;
+}
+.btn-twitter1:hover
+{
+    background-color: #83c3f3;
+}
+.btn-sitemap
+{
+    background-color: #fff;border-color:#000;width: 170px !important;
+}
+.btn-sitemap:hover
+{
+    background-color: #D3D3D3;
+}
     
 .btn-linkedin
 {
@@ -252,5 +324,15 @@
 .btn-linkedin:hover
 {
     background-color: #4a8aff;
+}
+
+#wImg
+{
+    position : absolute;
+    top      : -180px;
+    left     : -33px;
+    width    : 260px;
+    height   : 500px; 
+    transform: scale(0.8); 
 }
 </style>
