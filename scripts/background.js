@@ -431,6 +431,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     alert("Structure as radial tree not available on archive.org pages");
                 }else{
                     chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/lodash.min.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
                       file:"scripts/d3.js"
                     });
                     chrome.tabs.executeScript(tab.id, {
