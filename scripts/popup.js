@@ -95,17 +95,17 @@ function social_share(eventObj){
     }else if(id.includes('linkedin')){
         open_url="https://www.linkedin.com/shareArticle?url="+url;
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    window.open(open_url, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
 }
 
 function alexa_statistics(eventObj){
     var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    window.open(open_url, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
 }
 
 function whois_statistics(eventObj){
     var open_url="https://www.whois.com/whois/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    window.open(open_url, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
 }
 
 function search_tweet(eventObj){
@@ -117,7 +117,7 @@ function search_tweet(eventObj){
     }
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    window.open(open_url, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
 }
 
 function display_list(key_word){
@@ -166,9 +166,9 @@ function display_suggestions(e){
     },0.1);
 }
 
-function about_support(){
-    window.open("about.html", "", "width=1000, height=1000").focus();
-}
+// function about_support(eventObj){
+//     window.open("about.html", "", "width=1000, height=1000").focus();
+// }
 
 function makeModal(){
     var url = get_clean_url();
@@ -181,7 +181,7 @@ function makeModal(){
 //  chrome.storage.sync.get({
 //    as:false
 //  }, function(items) {
-//    document.getElementById('as').checked = items.as;  
+//    document.getElementById('as').checked = items.as;
 //      if(items.as){
 //          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
 //      }
@@ -219,7 +219,7 @@ document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics;
 document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
-document.getElementById('about_support_button').onclick = about_support;
+//document.getElementById('about_support_button').onclick = about_support;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
