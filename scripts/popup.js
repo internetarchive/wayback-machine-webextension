@@ -102,12 +102,61 @@ function alexa_statistics(eventObj){
     var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
-
+function alexa_data(eventObj){
+    $('#progress_gif').show();$('#main_page_under').hide();
+    var open_url="https://rohitcoder.cf/research/whois_api/alexa.php";
+    $.get(open_url,
+    {
+        site: get_clean_url()
+    },
+    function(data, status){
+       $('#progress_gif').hide();
+	   var alexa_header = "<br><div class='col-md-12 col-xs-12 col-sm-12 btn-primary'><div class='col-sm-1 col-xs-1 col-md-1 btn-primary' id='gomain' style='cursor:pointer;'><b><</b></div><div class='col-sm-9 col-xs-9 col-md-9 btn-primary'><center><b>Metrics</b></center></div></div>";
+       $('#main_page').hide();
+	   var global_rank = '<font color=blue><b>Global Rank: </b></font><br><img src="https://www.alexa.com/images/icons/globe-sm.jpg"></img>'+data.global_rank+"<br>";
+	   var global_graph = '<font color=blue><b>Global Graph: </b></font><br><img src="'+data.global_graph+'" width="100%"></img>';
+	   var global_data = global_graph+global_rank;
+	   var country_rank = "<font color=blue><b>Rank In "+data.country.name+": </b></font><br><img src="+data.country.flag+"> "+data.country.rank;
+	   var search_graph = '<font color=blue><b>Search Graph:</b></font></font><Br><img src="'+data.search_graph+'" width="100%"></img><Br>'+data.search_data;
+	   var top_keywords = '<br><font color=blue><b>Best keywords:</b></font></font><Br>'+data.top_search_keywords;
+	   var demographics_country_table = "<br><font color=blue><b>Top 5 traffic origin countries: </b></font><br>"+data.demographics_country_table;
+	   var engage_data = data.engage_content;
+	   var upstream_sites = "<br>Which sites did people visit immediately before this site?<br>"+data.upstream_sites;
+	   var count_linkin_sites = "<br>"+data.count_linkin_sites;
+	   var linkin_sites = "<br>"+data.linkin_sites;
+	   var similar_sites = "<Br>"+data.similar_sites;
+	   var sub_domains = "<font color=blue><b>Subdomains</b></font><br>"+data.subdomains;
+	   var load_speed = data.load_speed;
+	   var copyright_to = "<center>Data by <b>Alexa</b></center>";
+	   $('#alexa_html_data').html(alexa_header+global_data+country_rank+demographics_country_table+search_graph+top_keywords+engage_data+upstream_sites+count_linkin_sites+linkin_sites+similar_sites+sub_domains+load_speed+copyright_to);
+	   $('#alexa_html_data').show(); 
+       document.getElementById('gomain').onclick =gomain;
+    });
+}
 function whois_statistics(eventObj){
     var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
-
+function whois_data(eventObj){
+    $('#progress_gif').show();$('#main_page_under').hide();
+    var open_url="https://rohitcoder.cf/research/whois_api/";
+    $.get(open_url,
+    {
+        site: get_clean_url()
+    },
+    function(data, status){
+       $('#progress_gif').hide();
+	   var whois_header = "<br><div class='col-md-12 col-xs-12 col-sm-12 btn-primary'><div class='col-sm-1 col-xs-1 col-md-1 btn-primary' id='gomain' style='cursor:pointer;'><b><</b></div><div class='col-sm-9 col-xs-9 col-md-9 btn-primary'><center><b>Whois</b></center></div></div>";
+       $('#main_page').hide();$('#whois_html_data').html(whois_header+data.domain_info+data.registrant_contact+data.admin_contact+data.technical_contact);$('#whois_html_data').show(); 
+       document.getElementById('gomain').onclick =gomain;
+    });
+}
+function gomain(){ 
+$('#main_page_under').show();
+$('#main_page').show();
+$('#whois_html_data').hide();
+$('#alexa_html_data').hide();
+}
 function search_tweet(eventObj){
     var url = get_clean_url();
     if(url.includes('http://')){
@@ -216,9 +265,10 @@ document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =alexa_statistics;
-document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('alexa_data').onclick =alexa_data;
+document.getElementById('whois_data').onclick =whois_data;
 document.getElementById('search_tweet').onclick =search_tweet;
+document.getElementById('gomain').onclick =gomain;
 document.getElementById('about_support_button').onclick = about_support;
 
 document.getElementById('overview').onclick = view_all;
