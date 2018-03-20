@@ -37,6 +37,7 @@
     "scripts/d3.js",
     "scripts/lodash.min.js",
     "scripts/radial-tree.umd.js",
+    "css/index.css",
     "css/RTstyle.css",
     "css/sequences.css",
     "css/googlestyle.css",
