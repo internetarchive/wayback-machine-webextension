@@ -1,3 +1,7 @@
+$(function () {
+        $.material.init();
+    });
+
 global_url="";
 
 function remove_port(url){
