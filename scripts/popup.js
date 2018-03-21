@@ -1,28 +1,28 @@
 $(function () {
-        $.material.init();
-    });
+    $.material.init();
+});
 
-global_url="";
+global_url = "";
 
-function remove_port(url){
-    if(url.substr(-4)==':80/'){
-        url=url.substring(0,url.length-4);
+function remove_port(url) {
+    if(url.substr(-4)==':80/') {
+        url=url.substring(0,url.length - 4);
     }
     return url;
 }
 
-function remove_wbm(url){
+function remove_wbm(url) {
     var pos=url.indexOf('/http');
-    if(pos!=-1){
-        var new_url=url.substring(pos+1);
-    }else{
+    if(pos!=-1) {
+        var new_url=url.substring(pos + 1);
+    } else {
         var pos=url.indexOf('/www');
-        var new_url=url.substring(pos+1);
+        var new_url=url.substring(pos + 1);
     }
     return remove_port(new_url);
 }
 
-function remove_alexa(url){
+function remove_alexa(url) {
     var pos=url.indexOf('/siteinfo/');
     var new_url=url.substring(pos+10);
     return remove_port(new_url);
@@ -52,71 +52,83 @@ function get_clean_url() {
 }
 
 function save_now(){
-	  chrome.runtime.sendMessage({message: "openurl",
-                                wayback_url: "https://web.archive.org/save/",
-                                page_url: get_clean_url(),
-                                method:'save' }).then(handleResponse, handleError);
+	chrome.runtime.sendMessage({
+        message: "openurl",
+        wayback_url: "https://web.archive.org/save/",
+        page_url: get_clean_url(),
+        method:'save' 
+    })
+    .then(handleResponse, handleError);
 }
 
 function recent_capture(){
-	  chrome.runtime.sendMessage({message: "openurl",
-                                wayback_url: "https://web.archive.org/web/2/",
-                                page_url: get_clean_url(),
-                                method:'recent'});
-}
-
-function first_capture(){
-	  chrome.runtime.sendMessage({message: "openurl",
-                                wayback_url: "https://web.archive.org/web/0/",
-                                page_url: get_clean_url(),
-                                method:'first'});
-}
-
-function view_all(){
-	  chrome.runtime.sendMessage({message: "openurl",
-                                wayback_url: "https://web.archive.org/web/*/",
-                                page_url: get_clean_url(),
-                                method:'viewall'});
-}
-
-function get_url(){
-    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-        global_url=tabs[0].url;
+	chrome.runtime.sendMessage({
+        message: "openurl",
+        wayback_url: "https://web.archive.org/web/2/",
+        page_url: get_clean_url(),
+        method:'recent'
     });
 }
 
-function social_share(eventObj){
-    var parent=eventObj.target.parentNode;
-    var id=parent.getAttribute('id');
+function first_capture(){
+	chrome.runtime.sendMessage({
+        message: "openurl",
+        wayback_url: "https://web.archive.org/web/0/",
+        page_url: get_clean_url(),
+        method:'first'
+    });
+}
+
+function view_all(){
+	chrome.runtime.sendMessage({
+        message: "openurl",
+        wayback_url: "https://web.archive.org/web/*/",
+        page_url: get_clean_url(),
+        method:'viewall'
+    });
+}
+
+function get_url(){
+    chrome.tabs.query({
+        active: true, 
+        currentWindow: true
+    }, function(tabs) {
+        global_url = tabs[0].url;
+    });
+}
+
+function social_share(eventObj) {
+    var parent = eventObj.target.parentNode;
+    var id = parent.getAttribute('id');
     var url = get_clean_url();
-    var open_url="";
-    if(id.includes('fb')){
-        open_url="https://www.facebook.com/sharer/sharer.php?u="+url;
-    }else if(id.includes('twit')){
-        open_url="https://twitter.com/home?status="+url;
-    }else if(id.includes('gplus')){
-        open_url="https://plus.google.com/share?url="+url;
-    }else if(id.includes('linkedin')){
-        open_url="https://www.linkedin.com/shareArticle?url="+url;
+    var open_url = "";
+    if(id.includes('fb')) {
+        open_url = "https://www.facebook.com/sharer/sharer.php?u="+url;
+    } else if(id.includes('twit')) {
+        open_url = "https://twitter.com/home?status="+url;
+    } else if(id.includes('gplus')) {
+        open_url = "https://plus.google.com/share?url="+url;
+    } else if(id.includes('linkedin')) {
+        open_url = "https://www.linkedin.com/shareArticle?url="+url;
     }
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
 }
 
-function alexa_statistics(eventObj){
+function alexa_statistics(eventObj) {
     var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
-function whois_statistics(eventObj){
+function whois_statistics(eventObj) {
     var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
-function search_tweet(eventObj){
+function search_tweet(eventObj) {
     var url = get_clean_url();
     if(url.includes('http://')){
         url=url.substring(7);
-    }else if(url.includes('https://')){
+    } else if(url.includes('https://')) {
         url=url.substring(8);
     }
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
@@ -155,29 +167,32 @@ function display_list(key_word){
     xhr.send(null);
 }
 
-function display_suggestions(e){
-    document.getElementById('suggestion-box').style.display='none';
-    document.getElementById('suggestion-box').innerHTML="";
+function display_suggestions(e) {
+    document.getElementById('suggestion-box').style.display = 'none';
+    document.getElementById('suggestion-box').innerHTML = "";
     //setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(function(){
-        var len=document.getElementById('search_input').value.length;
-        if((len)>=3){
+    window.setTimeout(function() {
+        var len = document.getElementById('search_input').value.length;
+        if((len) >= 3) {
             display_list(document.getElementById('search_input').value);
-        }else{
-            document.getElementById('suggestion-box').style.display='none';
-            document.getElementById('suggestion-box').innerHTML="";
+        } else {
+            document.getElementById('suggestion-box').style.display = 'none';
+            document.getElementById('suggestion-box').innerHTML = "";
         }
     },0.1);
 }
 
-function about_support(){
+function about_support() {
     window.open("about.html", "", "width=1000, height=1000").focus();
 }
 
-function makeModal(){
+function makeModal() {
     var url = get_clean_url();
-    console.log("Making RT for "+url);
-    chrome.runtime.sendMessage({message: "makemodal",rturl:url});
+    console.log("Making RT for " + url);
+    chrome.runtime.sendMessage({
+        message: "makemodal",
+        rturl: url
+    });
 }
 
 /** Disabled code for the autosave feature **/
@@ -211,27 +226,26 @@ function makeModal(){
 //restoreSettings();
 //document.getElementById('settings_div').style.display="none";
 
-window.onload=get_url;
+window.onload = get_url;
 
-document.getElementById('save_now').onclick = save_now;
-document.getElementById('recent_capture').onclick = recent_capture;
-document.getElementById('first_capture').onclick = first_capture;
-document.getElementById('fb_share').onclick =social_share;
-document.getElementById('twit_share').onclick =social_share;
-document.getElementById('gplus_share').onclick =social_share;
-document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =alexa_statistics;
-document.getElementById('whois_statistics').onclick =whois_statistics;
-document.getElementById('search_tweet').onclick =search_tweet;
+document.getElementById('save_now').onclick             = save_now;
+document.getElementById('recent_capture').onclick       = recent_capture;
+document.getElementById('first_capture').onclick        = first_capture;
+document.getElementById('fb_share').onclick             = social_share;
+document.getElementById('twit_share').onclick           = social_share;
+document.getElementById('gplus_share').onclick          = social_share;
+document.getElementById('linkedin_share').onclick       = social_share;
+document.getElementById('alexa_statistics').onclick     = alexa_statistics;
+document.getElementById('whois_statistics').onclick     = whois_statistics;
+document.getElementById('search_tweet').onclick         = search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
-
-document.getElementById('overview').onclick = view_all;
+document.getElementById('overview').onclick             = view_all;
+document.getElementById('make_modal').onclick           = makeModal;
 //document.getElementById('settings_btn').onclick=showSettings;
 //document.getElementById('settings_save_btn').onclick=saveSettings;
-document.getElementById('make_modal').onclick=makeModal;
-document.getElementById('search_input').addEventListener('keydown',display_suggestions);
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.message=='urlnotfound'){
+document.getElementById('search_input').addEventListener('keydown', display_suggestions);
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if(message.message == 'urlnotfound') {
   	alert("URL not found in wayback archives!");
   }
 });
