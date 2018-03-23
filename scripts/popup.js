@@ -1,3 +1,18 @@
+function search_url()
+{
+    document.getElementById('search').addEventListener("keyup",function(event){
+    	var url_to_search=document.getElementById('search').value;
+    		if (event.keyCode == 13){
+       		var url_to_search=document.getElementById('search').value;
+     	 		if(url_to_search){
+	            	var main_url="https://web-beta.archive.org/web/*/";
+	           		chrome.tabs.create({url:main_url+url_to_search});
+       	 		}
+   		}
+	});
+}
+
+
 global_url="";
 
 function remove_port(url){
@@ -208,6 +223,7 @@ function makeModal(){
 //document.getElementById('settings_div').style.display="none";
 
 window.onload=get_url;
+window.onload=search_url();
 
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
