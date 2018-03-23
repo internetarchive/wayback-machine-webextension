@@ -1,5 +1,8 @@
 global_url="";
 
+// used to switch theme between light and dark
+CURRENT_THEME = 'white';
+
 function remove_port(url){
     if(url.substr(-4)==':80/'){
         url=url.substring(0,url.length-4);
@@ -170,6 +173,16 @@ function about_support(){
     window.open("about.html", "", "width=1000, height=1000").focus();
 }
 
+function switch_theme() {
+    // get body reference
+    var bodyRef = document.getElementsByTagName('body')[0];
+    // switch current theme
+    CURRENT_THEME = CURRENT_THEME == 'white' ? 'black' : 'white';
+    // apply current theme to background style property of the body
+    bodyRef.style.background = CURRENT_THEME;
+    document.getElementById('switch_theme').innerHTML = (CURRENT_THEME == 'white' ? 'Dark Theme' : 'Light Theme');
+}
+
 function makeModal(){
     var url = get_clean_url();
     console.log("Making RT for "+url);
@@ -220,6 +233,8 @@ document.getElementById('alexa_statistics').onclick =alexa_statistics;
 document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
+document.getElementById('switch_theme').onclick = switch_theme;
+
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
@@ -231,3 +246,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   	alert("URL not found in wayback archives!");
   }
 });
+
+// set switch theme text to 'Dark Theme' by default.
+document.getElementById('switch_theme').innerHTML = 'Dark Theme';
