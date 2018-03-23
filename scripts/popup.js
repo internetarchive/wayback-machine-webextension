@@ -102,37 +102,124 @@ function alexa_statistics(eventObj){
     var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
+function extractHostname(url) {
+    var hostname; 
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    } 
+    hostname = hostname.split(':')[0]; 
+    hostname = hostname.split('?')[0]; 
+    return hostname;
+}
+function AppendInLocalData(key){
+       console.log('Appending data for key-'+key);
+       chrome.storage.local.get(key, function(result) { 
+	   var output = JSON.parse(result[key] || null);    
+	   if(output!=null && JSON.parse(result[key]).val.length>10){
+	   console.warn("Appending data for key-"+key);
+	   $('#alexa_html_data').append(JSON.parse(result[key]).val); 
+	   }
+	   }); 
+}
+function catchCachedData(site_key){
+/*var alexa_header = site_key+'_alexa_header'; 
+AppendInLocalData(alexa_header);*/
+var global_rank = site_key+'_global_rank';
+AppendInLocalData(global_rank);
+var global_data = site_key+'_global_data';
+AppendInLocalData(global_data);
+var country_rank = site_key+'_country_rank';
+AppendInLocalData(country_rank);
+var search_graph = search_graph+'_search_graph';
+AppendInLocalData(search_graph);
+var top_keywords = site_key+'_top_keywords';
+AppendInLocalData(top_keywords);
+var demographics_country_table = site_key+'_demographics_country_table';
+AppendInLocalData(demographics_country_table);
+var engage_data = site_key+'_engage_data';
+AppendInLocalData(engage_data);
+var upstream_sites = site_key+'_upstream_sites';
+AppendInLocalData(upstream_sites);
+var count_linkin_sites = site_key+'_count_linkin_sites';
+AppendInLocalData(count_linkin_sites);
+var linkin_sites = site_key+'_linkin_sites';
+AppendInLocalData(linkin_sites);
+var similar_sites = site_key+'_similar_sites';
+AppendInLocalData(similar_sites);
+var sub_domains = site_key+'_sub_domains';
+AppendInLocalData(sub_domains);
+var load_speed = site_key+'_load_speed';
+AppendInLocalData(load_speed);
+var copyright_to = site_key+'_copyright_to';
+AppendInLocalData(copyright_to);  
+$('#alexa_html_data').show(); 
+document.getElementById('gomain').onclick =gomain;
+}
 function alexa_data(eventObj){
-    $('#progress_gif').show();$('#main_page_under').hide();
-    var open_url="https://rohitcoder.cf/research/whois_api/alexa.php";
-    $.get(open_url,
-    {
-        site: get_clean_url()
-    },
-    function(data, status){
-       $('#progress_gif').hide();
-	   $('#gomain').show();
-	   var alexa_header = "<br><h2>Metrics</h2>";
-       $('#main_page').hide();
-	   var global_rank = '<font color=blue><b>Global Rank: </b></font><br><img src="https://www.alexa.com/images/icons/globe-sm.jpg"></img>'+data.global_rank+"<br>";
-	   var global_graph = '<font color=blue><b>Global Graph: </b></font><br><img src="'+data.global_graph+'" width="100%"></img>';
-	   var global_data = global_graph+global_rank;
-	   var country_rank = "<font color=blue><b>Rank In "+data.country.name+": </b></font><br><img src="+data.country.flag+"> "+data.country.rank;
-	   var search_graph = '<font color=blue><b>Search Graph:</b></font></font><Br><img src="'+data.search_graph+'" width="100%"></img><Br>'+data.search_data;
-	   var top_keywords = '<br><font color=blue><b>Best keywords:</b></font></font><Br>'+data.top_search_keywords;
-	   var demographics_country_table = "<br><font color=blue><b>Top 5 traffic origin countries: </b></font><br>"+data.demographics_country_table;
-	   var engage_data = data.engage_content;
-	   var upstream_sites = "<br>Which sites did people visit immediately before this site?<br>"+data.upstream_sites;
-	   var count_linkin_sites = "<br>"+data.count_linkin_sites;
-	   var linkin_sites = "<br>"+data.linkin_sites;
-	   var similar_sites = "<Br>"+data.similar_sites;
-	   var sub_domains = "<font color=blue><b>Subdomains</b></font><br>"+data.subdomains;
-	   var load_speed = data.load_speed;
-	   var copyright_to = "<center>Data by <b>Alexa</b></center>";
-	   $('#alexa_html_data').html(alexa_header+global_data+country_rank+demographics_country_table+search_graph+top_keywords+engage_data+upstream_sites+count_linkin_sites+linkin_sites+similar_sites+sub_domains+load_speed+copyright_to);
-	   $('#alexa_html_data').show(); 
-       document.getElementById('gomain').onclick =gomain;
-    });
+       var host = extractHostname(get_clean_url());
+	   var key = host+'_search_graph';
+       chrome.storage.local.get(key, function(result) {   
+	   var output = JSON.parse(result[key] || null);    
+	   if(output!=null && JSON.parse(result[key]).val.length>10){
+	   console.info("Am having cache");
+	    catchCachedData(host);
+		$('#main_page').hide(); 
+		$('#gomain').show();
+	   }else{   
+	   console.info("I don't have cache");
+		$('#progress_gif').show();
+		$('#main_page_under').hide();
+		var open_url="https://rohitcoder.cf/research/whois_api/alexa.php";
+		$.get(open_url,
+		{
+			site: get_clean_url()
+		},
+		function(data, status){  
+		   $('#progress_gif').hide();
+		   $('#gomain').show();
+		   host = host+'_';
+		   var alexa_header = "<br><h2>Metrics</h2>";
+		   setLocalSettings(host+"alexa_header",alexa_header); 
+		   $('#main_page').hide();
+		   var global_rank = '<font color=blue><b>Global Rank: </b></font><br><img src="https://www.alexa.com/images/icons/globe-sm.jpg"></img>'+data.global_rank+"<br>";
+		   setLocalSettings(host+"global_rank",global_rank); 
+		   var global_graph = '<font color=blue><b>Global Graph: </b></font><br><img src="'+data.global_graph+'" width="100%"></img>';
+		   var global_data = global_graph+global_rank;
+		   setLocalSettings(host+"global_data",global_data); 
+		   var country_rank = "<font color=blue><b>Rank In "+data.country.name+": </b></font><br><img src="+data.country.flag+"> "+data.country.rank;
+		   setLocalSettings(host+"country_rank",country_rank); 
+		   var search_graph = '<font color=blue><b>Search Graph:</b></font></font><Br><img src="'+data.search_graph+'" width="100%"></img><Br>'+data.search_data;
+		   setLocalSettings(host+"search_graph",search_graph); 
+		   var top_keywords = '<br><font color=blue><b>Best keywords:</b></font></font><Br>'+data.top_search_keywords;
+		   setLocalSettings(host+"top_keywords",top_keywords); 
+		   var demographics_country_table = "<br><font color=blue><b>Top 5 traffic origin countries: </b></font><br>"+data.demographics_country_table;
+		   setLocalSettings(host+"demographics_country_table",demographics_country_table); 
+		   var engage_data = data.engage_content;
+		   setLocalSettings(host+"engage_data",engage_data); 
+		   var upstream_sites = "<br>Which sites did people visit immediately before this site?<br>"+data.upstream_sites;
+		   setLocalSettings(host+"upstream_sites",upstream_sites); 
+		   var count_linkin_sites = "<br>"+data.count_linkin_sites;
+		   setLocalSettings(host+"count_linkin_sites",count_linkin_sites); 
+		   var linkin_sites = "<br>"+data.linkin_sites;
+		   setLocalSettings(host+"linkin_sites",linkin_sites); 
+		   var similar_sites = "<Br>"+data.similar_sites;
+		   setLocalSettings(host+"similar_sites",similar_sites); 
+		   var sub_domains = "<font color=blue><b>Subdomains</b></font><br>"+data.subdomains;
+		   setLocalSettings(host+"subdomains",sub_domains); 
+		   var load_speed = data.load_speed;
+		   setLocalSettings(host+"load_speed",load_speed); 
+		   var copyright_to = "<center>Data by <b>Alexa</b></center>";
+		   setLocalSettings(host+"copyright_to",copyright_to); 
+		   var final_data = alexa_header+global_data+country_rank+demographics_country_table+search_graph+top_keywords+engage_data+upstream_sites+count_linkin_sites+linkin_sites+similar_sites+sub_domains+load_speed+copyright_to;  
+		   $('#alexa_html_data').html(final_data);
+		   $('#alexa_html_data').show();
+		   document.getElementById('gomain').onclick =gomain;
+		});
+	}
+}); 
 }
 function whois_statistics(eventObj){
     var open_url="https://www.whois.com/whois/" + get_clean_url();
@@ -235,15 +322,22 @@ setLocalSettings('btn_bg',btn_bg);
 //getLocalSettings('btn_bg');
 } 
 
-function setLocalSettings(key,value){
-chrome.storage.sync.set({key: value}, function() {
-          console.log('Value is set to ' + value);
+function setLocalSettings(akey,value){ 
+      var key = akey,
+        testPrefs = JSON.stringify({
+            'val': value
         });
+      var jsonfile = {};
+      jsonfile[key] = testPrefs;
+	  chrome.storage.local.set(jsonfile, function() { 
+	   console.info("Data synced With key -"+key+" and now ready to rock on.");
+	   });
 }
 
-function getLocalSettings(key){
-     chrome.storage.sync.get('btn_bg', function(result) {
-          alert('Value currently is ' + result.key);
+function getLocalSettings(key){ 
+     chrome.storage.local.get(key, function(result) {
+          alert('Value currently is ' + JSON.parse(jsonfile['als']).val);
+		  
         });
 }
 function makeModal(){
