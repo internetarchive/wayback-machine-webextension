@@ -610,7 +610,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
             window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
         }else if(clickedData.menuItemId=='gp'){
             var open_url="https://plus.google.com/share?url=" + page_url;
-            window.open(open_url, 'newwindow', 'width=400, height=380,left=0');
+            window.open(open_url, 'newwindow', 'width=500, height=480,left=0');
         }else if(clickedData.menuItemId=='ln'){
             var open_url="https://www.linkedin.com/shareArticle?url=" + page_url;
             window.open(open_url, 'newwindow', 'width=800, height=600,left=0');

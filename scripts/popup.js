@@ -48,28 +48,51 @@ function get_clean_url() {
 }
 
 function save_now(){
-	  chrome.runtime.sendMessage({message: "openurl",
+	        //window.open("http://shouryashashank.epizy.com/wayback/savenow.php", 'newwindow', 'width=1000, height=1000,left=0');
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/savenow.php", true);
+    oReq.send();    
+    chrome.runtime.sendMessage({message: "openurl",
                                 wayback_url: "https://web.archive.org/save/",
                                 page_url: get_clean_url(),
                                 method:'save' }).then(handleResponse, handleError);
 }
 
 function recent_capture(){
-	  chrome.runtime.sendMessage({message: "openurl",
+
+	var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/resentversion.php", true);
+    oReq.send();
+    chrome.runtime.sendMessage({message: "openurl",
                                 wayback_url: "https://web.archive.org/web/2/",
                                 page_url: get_clean_url(),
                                 method:'recent'});
 }
 
 function first_capture(){
-	  chrome.runtime.sendMessage({message: "openurl",
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/firstversion.php", true);
+    oReq.send(); 
+	chrome.runtime.sendMessage({message: "openurl",
                                 wayback_url: "https://web.archive.org/web/0/",
                                 page_url: get_clean_url(),
                                 method:'first'});
 }
 
+function upload(){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/uploadfiles.php", true);
+    oReq.send(); 
+    urlup="https://archive.org/upload/"
+    window.open(urlup, '_blank');
+    window.focus();
+}
+
 function view_all(){
-	  chrome.runtime.sendMessage({message: "openurl",
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/overview.php", true);
+    oReq.send();     
+	chrome.runtime.sendMessage({message: "openurl",
                                 wayback_url: "https://web.archive.org/web/*/",
                                 page_url: get_clean_url(),
                                 method:'viewall'});
@@ -87,27 +110,45 @@ function social_share(eventObj){
     var url = get_clean_url();
     var open_url="";
     if(id.includes('fb')){
+        var oReq = new XMLHttpRequest();
+        oReq.open("get", "http://shouryashashank.epizy.com/wayback/fb.php", true);
+        oReq.send(); 
         open_url="https://www.facebook.com/sharer/sharer.php?u="+url;
         window.open(open_url, 'newwindow', 'width=600, height=350,left=0');
     }else if(id.includes('twit')){
+        var oReq = new XMLHttpRequest();
+        oReq.open("get", "http://shouryashashank.epizy.com/wayback/tw.php", true);
+        oReq.send(); 
         open_url="https://twitter.com/home?status="+url;
         window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
     }else if(id.includes('gplus')){
+        var oReq = new XMLHttpRequest();
+        oReq.open("get", "http://shouryashashank.epizy.com/wayback/gp.php", true);
+        oReq.send(); 
         open_url="https://plus.google.com/share?url="+url;
         window.open(open_url, 'newwindow', 'width=400, height=380,left=0');
     }else if(id.includes('linkedin')){
+        var oReq = new XMLHttpRequest();
+        oReq.open("get", "http://shouryashashank.epizy.com/wayback/ln.php", true);
+        oReq.send(); 
         open_url="https://www.linkedin.com/shareArticle?url="+url;
         window.open(open_url, 'newwindow', 'width=800, height=600,left=0');
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    
 }
 
 function alexa_statistics(eventObj){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/alexamore.php", true);
+    oReq.send(); 
     var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function alexa_ing1(eventObj){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/alexa.php", true);
+    oReq.send(); 
     var t_url="https://traffic.alexa.com/graph?u=" + get_clean_url();
     var s_url="https://traffic.alexa.com/graph?y=q&u=" + get_clean_url();
     //window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
@@ -116,17 +157,26 @@ function alexa_ing1(eventObj){
 }
 
 function whois_statistics(eventObj){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/whoismore.php", true);
+    oReq.send(); 
     var open_url="https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function whois_ing1(eventObj){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/whois.php", true);
+    oReq.send(); 
     var t_url="https://www.whois.com/whois/" + get_clean_url();
     //window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
     document.getElementById("wImg").src = t_url;
 }
 
 function search_tweet(eventObj){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/tweets.php", true);
+    oReq.send(); 
     var url = get_clean_url();
     if(url.includes('http://')){
         url=url.substring(7);
@@ -185,10 +235,16 @@ function display_suggestions(e){
 }
 
 function about_support(){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/about.php", true);
+    oReq.send(); 
     window.open("about.html", "", "width=1000, height=1000").focus();
 }
 
 function makeModal(){
+    var oReq = new XMLHttpRequest();
+    oReq.open("get", "http://shouryashashank.epizy.com/wayback/sitemap.php", true);
+    oReq.send(); 
     var url = get_clean_url();
     console.log("Making RT for "+url);
     chrome.runtime.sendMessage({message: "makemodal",rturl:url});
@@ -230,6 +286,7 @@ window.onload=get_url;
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;
+document.getElementById('upload').onclick = upload;
 document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
