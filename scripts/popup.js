@@ -195,6 +195,12 @@ function makeModal() {
     });
 }
 
+function transform_urls() {
+    chrome.runtime.sendMessage({
+        message: "tranformUrls"
+    });
+}
+
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
 //  chrome.storage.sync.get({
@@ -237,6 +243,7 @@ document.getElementById('gplus_share').onclick          = social_share;
 document.getElementById('linkedin_share').onclick       = social_share;
 document.getElementById('alexa_statistics').onclick     = alexa_statistics;
 document.getElementById('whois_statistics').onclick     = whois_statistics;
+document.getElementById('transform_urls').onclick       = transform_urls;
 document.getElementById('search_tweet').onclick         = search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('overview').onclick             = view_all;

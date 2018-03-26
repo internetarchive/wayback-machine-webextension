@@ -420,7 +420,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       } else {
         chrome.tabs.create({ url:  open_url});
       }
-  }else if(message.message=='makemodal'){
+  }
+  else if(message.message=='makemodal'){
             RTurl=message.rturl;
             console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -460,6 +461,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
                 console.log(RTurl);
             });
+        }
+        else if (message.message == 'tranformUrls') {
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var tab = tabs[0];
+            chrome.tabs.executeScript(tab.id, {
+              file:"scripts/transformUrls.js"
+            });
+          });
         }
 });
 
