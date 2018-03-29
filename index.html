@@ -89,17 +89,32 @@
                 <td>                   
                     <button type="button" class="buttonA button-fancy hvr-float-shadow" id="about_support_button" >About</button>
 				</td></tr>
-				<!--<tr><td>
-                    <center><a id="settings_btn"> <span class="glyphicon glyphicon-cog"></span> Settings</a>   </center>              
+				<tr><td>
+                    <center><a id="settings_btn"> <span class="glyphicon glyphicon-cog"></span> Settings</a></center>              
                 </td>               
-                </tr>  -->
+                </tr> 
     </table> 
 </div>
 <div id="whois_html_data" style="display:none;padding:5px;">
 </div>
-<div id="local_settings_html_data" style="display:none;padding:5px;">
-<label>Button Background:</label> <input type="color" id="btn_bg_input">
-<button type="button" id="save_settings">Save</button>
+<div id="local_settings_html_data" class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="display:none;padding:5px;">
+<br>
+<fieldset>
+<div class="alert alert-success" id="status_msg" style="display:none;">
+</div>
+<strong>Button Properties</strong>
+<table width="100%"><tr><td>
+Background:</td><td><input type="color" id="btn_bg_input"></td><tr>
+<td>Text Color:</td><td><input type="color" id="btn_text_input"></td><tr>
+<td>Hover Background:</td><td><input type="color" id="btn_hvr_bg"></td><tr>
+<td>Hover Text:</td><td><input type="color" id="btn_hvr_txt"></td></table>
+</fieldset>
+<fieldset>
+<strong>Reset Options</strong>
+<table width="100%"><tr><td><a id="reset_data" title="Click here to reset and clean all cached data.">Reset Everything</a></td><tr> 
+<td><a id="reset_customizations">Reset Customizations</a></td><tr>
+</fieldset>
+<table width="100%"><tr><Td colspan="2"><br><button type="button" id="save_settings" class="col-md-12 col-sm-12 col-xs-12 col-lg-12 btn btn-success">Save</button></td></table>
 </div>
 <div id="alexa_html_data" style="display:none;padding:5px;">
 </div>
@@ -166,6 +181,5 @@
 			font-size:18;
 		}
 	</style>
-	
 </body>
 </html>
