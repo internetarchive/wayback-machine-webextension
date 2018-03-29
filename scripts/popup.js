@@ -244,6 +244,7 @@ function whois_data(eventObj){
 
 function local_settings_btn(){ 
 $('#main_page').hide();
+$('#gomain').show();
 $('#local_settings_html_data').show();
 }
 function gomain(){ 
@@ -315,13 +316,84 @@ function display_suggestions(e){
 function about_support(){
     window.open("about.html", "", "width=1000, height=1000").focus();
 }
-
+function resetCustomizations(){
+chrome.storage.sync.remove(["btn_bg","btn_text_input","btn_hvr_bg","btn_hvr_txt"],function(){
+ var error = chrome.runtime.lastError;
+    if (error) {
+        console.error(error);
+    }
+});
+window.close();
+}
 function saveLocalSettings(){
 var btn_bg = document.getElementById('btn_bg_input').value;
-setLocalSettings('btn_bg',btn_bg);
-//getLocalSettings('btn_bg');
-} 
-
+syncLocalSettings('btn_bg',btn_bg);
+var btn_bg = document.getElementById('btn_text_input').value;
+syncLocalSettings('btn_text_input',btn_bg);
+var btn_bg = document.getElementById('btn_hvr_bg').value;
+syncLocalSettings('btn_hvr_bg',btn_bg);
+var btn_bg = document.getElementById('btn_hvr_txt').value;
+syncLocalSettings('btn_hvr_txt',btn_bg);
+window.close();
+}   
+/* Launch save configs */
+chrome.storage.sync.get('btn_bg', function(result) {var output = JSON.parse(result['btn_bg'] || null);$('#btn_bg_input').val(output.val);$(".button-simple").css("background",output.val);});
+chrome.storage.sync.get('btn_text_input', function(result) {var output = JSON.parse(result['btn_text_input'] || null);$('#btn_text_input').val(output.val);$(".button-simple").css("color",output.val);});
+chrome.storage.sync.get('btn_hvr_bg', function(result) {
+var output = JSON.parse(result['btn_hvr_bg'] || null); 
+if(output.val!=null){
+$('#btn_hvr_bg').val(output.val);
+var css = '.button-simple:hover{ background-color: '+output.val+' !important }';
+var style = document.createElement('style');
+if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+} else {
+    style.appendChild(document.createTextNode(css));
+}
+document.getElementsByTagName('head')[0].appendChild(style);
+}
+});
+chrome.storage.sync.get('btn_hvr_txt', function(result) {
+var output = JSON.parse(result['btn_hvr_txt'] || null); 
+if(output.val!=null){
+$('#btn_hvr_txt').val(output.val);
+var css = '.button-simple:hover{ color: '+output.val+' !important }';
+var style = document.createElement('style');
+if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+} else {
+    style.appendChild(document.createTextNode(css));
+}
+document.getElementsByTagName('head')[0].appendChild(style);
+}
+});
+/* Customized Configuration settings end here */
+function syncLocalSettings(akey,value){ 
+      var key = akey,
+        testPrefs = JSON.stringify({
+            'val': value
+        });
+      var jsonfile = {};
+      jsonfile[key] = testPrefs;
+	  chrome.storage.sync.set(jsonfile, function() { 
+	   console.info("Data synced With key -"+key+" and now ready to rock on.");
+	   });
+}
+function resetChromeData(){
+chrome.storage.local.clear(function() {
+    var error = chrome.runtime.lastError;
+    if (error) {
+        console.error(error);
+    } 
+});
+chrome.storage.sync.clear(function() {
+    var error = chrome.runtime.lastError;
+    if (error) {
+        console.error(error);
+    }
+}); 
+window.close();
+}
 function setLocalSettings(akey,value){ 
       var key = akey,
         testPrefs = JSON.stringify({
@@ -332,13 +404,6 @@ function setLocalSettings(akey,value){
 	  chrome.storage.local.set(jsonfile, function() { 
 	   console.info("Data synced With key -"+key+" and now ready to rock on.");
 	   });
-}
-
-function getLocalSettings(key){ 
-     chrome.storage.local.get(key, function(result) {
-          alert('Value currently is ' + JSON.parse(jsonfile['als']).val);
-		  
-        });
 }
 function makeModal(){
     var url = get_clean_url();
@@ -391,8 +456,10 @@ document.getElementById('whois_data').onclick =whois_data;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('gomain').onclick = gomain;
 document.getElementById('about_support_button').onclick = about_support;
-//document.getElementById('settings_btn').onclick = local_settings_btn;
-//document.getElementById('save_settings').onclick = saveLocalSettings;
+document.getElementById('settings_btn').onclick = local_settings_btn;
+document.getElementById('save_settings').onclick = saveLocalSettings;
+document.getElementById('reset_data').onclick = resetChromeData;
+document.getElementById('reset_customizations').onclick = resetCustomizations;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
