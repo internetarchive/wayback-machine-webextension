@@ -5,48 +5,48 @@ $(function () {
 global_url = "";
 
 function remove_port(url) {
-    if(url.substr(-4)==':80/') {
+    if(url.substr(-4) == ':80/') {
         url=url.substring(0,url.length - 4);
     }
     return url;
 }
 
 function remove_wbm(url) {
-    var pos=url.indexOf('/http');
-    if(pos!=-1) {
-        var new_url=url.substring(pos + 1);
+    var pos = url.indexOf('/http');
+    if(pos != 1) {
+        var new_url = url.substring(pos + 1);
     } else {
-        var pos=url.indexOf('/www');
-        var new_url=url.substring(pos + 1);
+        var pos = url.indexOf('/www');
+        var new_url = url.substring(pos + 1);
     }
     return remove_port(new_url);
 }
 
 function remove_alexa(url) {
-    var pos=url.indexOf('/siteinfo/');
-    var new_url=url.substring(pos+10);
+    var pos = url.indexOf('/siteinfo/');
+    var new_url = url.substring(pos + 10);
     return remove_port(new_url);
 }
 
 function remove_whois(url){
-    var pos=url.indexOf('/whois/');
-    var new_url=url.substring(pos+7);
+    var pos = url.indexOf('/whois/');
+    var new_url = url.substring(pos + 7);
     return remove_port(new_url);
 }
 /* Common method used everywhere to retrieve cleaned up URL */
 function get_clean_url() {
     var search_term = document.getElementById('search_input').value;
     if(search_term == ""){
-        var url=global_url;
+        var url = global_url;
     }else{
-        var url=search_term;
+        var url = search_term;
     }
     if (url.includes('web.archive.org')) {
-        url=remove_wbm(url);
+        url = remove_wbm(url);
     } else if (url.includes('www.alexa.com')) {
-        url=remove_alexa(url);
+        url = remove_alexa(url);
     } else if (url.includes('www.whois.com')) {
-        url=remove_whois(url);
+        url = remove_whois(url);
     }
     return url;
 }
