@@ -114,7 +114,8 @@ function extractHostname(url) {
     hostname = hostname.split('?')[0]; 
     return hostname;
 }
-function AppendInLocalData(key){
+function AppendInLocalData(key,mode){
+if(mode=='alexa'){
        console.log('Appending data for key-'+key);
        chrome.storage.local.get(key, function(result) { 
 	   var output = JSON.parse(result[key] || null);    
@@ -123,39 +124,60 @@ function AppendInLocalData(key){
 	   $('#alexa_html_data').append(JSON.parse(result[key]).val); 
 	   }
 	   }); 
+}else if(mode=='whois'){
+ console.log('Appending data for key-'+key); 
+ $('#main_page').hide();
+ chrome.storage.local.get(key, function(result) { 
+	   var output = JSON.parse(result[key] || null);    
+	   if(output!=null && JSON.parse(result[key]).val.length>10){
+	   console.warn("Appending data for key-"+key); 
+	   $('#whois_html_data').append(JSON.parse(result[key]).val); 
+       $('#whois_html_data').show(); 
+	   }
+	   });
 }
-function catchCachedData(site_key){
-/*var alexa_header = site_key+'_alexa_header'; 
-AppendInLocalData(alexa_header);*/
+}
+function catchAlexaCachedData(site_key){
+var alexa_header = site_key+'_alexa_header'; 
+AppendInLocalData(alexa_header,'alexa');
 var global_rank = site_key+'_global_rank';
-AppendInLocalData(global_rank);
+AppendInLocalData(global_rank,'alexa');
 var global_data = site_key+'_global_data';
-AppendInLocalData(global_data);
+AppendInLocalData(global_data,'alexa');
 var country_rank = site_key+'_country_rank';
-AppendInLocalData(country_rank);
+AppendInLocalData(country_rank,'alexa');
 var search_graph = search_graph+'_search_graph';
-AppendInLocalData(search_graph);
+AppendInLocalData(search_graph,'alexa');
 var top_keywords = site_key+'_top_keywords';
-AppendInLocalData(top_keywords);
+AppendInLocalData(top_keywords,'alexa');
 var demographics_country_table = site_key+'_demographics_country_table';
-AppendInLocalData(demographics_country_table);
+AppendInLocalData(demographics_country_table,'alexa');
 var engage_data = site_key+'_engage_data';
-AppendInLocalData(engage_data);
+AppendInLocalData(engage_data,'alexa');
 var upstream_sites = site_key+'_upstream_sites';
-AppendInLocalData(upstream_sites);
+AppendInLocalData(upstream_sites,'alexa');
 var count_linkin_sites = site_key+'_count_linkin_sites';
-AppendInLocalData(count_linkin_sites);
+AppendInLocalData(count_linkin_sites,'alexa');
 var linkin_sites = site_key+'_linkin_sites';
-AppendInLocalData(linkin_sites);
+AppendInLocalData(linkin_sites,'alexa');
 var similar_sites = site_key+'_similar_sites';
-AppendInLocalData(similar_sites);
+AppendInLocalData(similar_sites,'alexa');
 var sub_domains = site_key+'_sub_domains';
-AppendInLocalData(sub_domains);
+AppendInLocalData(sub_domains,'alexa');
 var load_speed = site_key+'_load_speed';
-AppendInLocalData(load_speed);
+AppendInLocalData(load_speed,'alexa');
 var copyright_to = site_key+'_copyright_to';
-AppendInLocalData(copyright_to);  
+AppendInLocalData(copyright_to,'alexa');  
 $('#alexa_html_data').show(); 
+document.getElementById('gomain').onclick =gomain;
+}
+
+function catchWhoisCachedData(site_key){  
+AppendInLocalData(site_key+"_whois_header",'whois'); 
+AppendInLocalData(site_key+"_domain_info",'whois'); 
+AppendInLocalData(site_key+"_registrant_contact",'whois'); 
+AppendInLocalData(site_key+"_admin_contact",'whois'); 
+AppendInLocalData(site_key+"_technical_contact",'whois');  
 document.getElementById('gomain').onclick =gomain;
 }
 function alexa_data(eventObj){
@@ -165,7 +187,7 @@ function alexa_data(eventObj){
 	   var output = JSON.parse(result[key] || null);    
 	   if(output!=null && JSON.parse(result[key]).val.length>10){
 	   console.info("Am having cache");
-	    catchCachedData(host);
+	    catchAlexaCachedData(host);
 		$('#main_page').hide(); 
 		$('#gomain').show();
 	   }else{   
@@ -226,20 +248,40 @@ function whois_statistics(eventObj){
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 function whois_data(eventObj){
-    $('#progress_gif').show();
-	$('#main_page_under').hide();
-    var open_url="https://rohitcoder.cf/research/whois_api/";
-    $.get(open_url,
-    {
-        site: get_clean_url()
-    },
-    function(data, status){
-       $('#progress_gif').hide();
-	   $('#gomain').show();
-	   var whois_header = "<br><h2>Whois info</h2>";
-       $('#main_page').hide();$('#whois_html_data').html(whois_header+data.domain_info+data.registrant_contact+data.admin_contact+data.technical_contact);$('#whois_html_data').show(); 
-       document.getElementById('gomain').onclick =gomain;
-    });
+       var host = extractHostname(get_clean_url());
+	   var key = host+'_domain_info';
+       chrome.storage.local.get(key, function(result) {   
+	   var output = JSON.parse(result[key] || null);    
+	   if(output!=null && JSON.parse(result[key]).val.length>10){
+	   console.info("Am having Whois cache");
+	   catchWhoisCachedData(host); //dimple
+	   $('#main_page').hide(); 
+		$('#gomain').show();
+	   }else{   
+	    console.info("I don't have cache");
+		$('#progress_gif').show();
+		$('#main_page_under').hide();
+		var open_url="https://rohitcoder.cf/research/whois_api/";
+		$.get(open_url,
+		{
+			site: get_clean_url()
+		},
+		function(data, status){
+		   $('#progress_gif').hide();
+		   $('#gomain').show();
+		   var whois_header = "<br><h2>Whois info</h2>";
+		   var host = extractHostname(get_clean_url());
+		   setLocalSettings(host+"_whois_header",whois_header); 
+		   setLocalSettings(host+"_domain_info",data.domain_info); 
+		   setLocalSettings(host+"_registrant_contact",data.registrant_contact); 
+		   setLocalSettings(host+"_admin_contact",data.admin_contact); 
+		   setLocalSettings(host+"_technical_contact",data.technical_contact);  
+		   $('#main_page').hide();$('#whois_html_data').html(whois_header+data.domain_info+data.registrant_contact+data.admin_contact+data.technical_contact);
+		   $('#whois_html_data').show(); 
+		   document.getElementById('gomain').onclick =gomain;
+		});
+	}
+}); 
 }
 
 function local_settings_btn(){ 
@@ -401,7 +443,7 @@ function setLocalSettings(akey,value){
         });
       var jsonfile = {};
       jsonfile[key] = testPrefs;
-	  chrome.storage.local.set(jsonfile, function() { 
+	  chrome.storage.local.set(jsonfile, function() {  
 	   console.info("Data synced With key -"+key+" and now ready to rock on.");
 	   });
 }
