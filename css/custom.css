@@ -1,4 +1,71 @@
-.metrics-title, h5.font-1{
+
+	a,a:hover{text-decoration:none;cursor:pointer;}
+		.button,.buttonA,.button-tweet{
+			width:90%;
+			outline:none;
+			font-family:arial;
+		}
+		.button-fancy{
+			background-color:tomato;
+			color:white;
+			font-size:17px;
+			padding:3px;
+			border-radius:20px;
+			border:2px solid tomato;;
+			transition:background-color,.4s;
+			border-radius:20px;			
+		}
+		.button-simple{
+			color:#605d5d;
+			background-color:white;
+			font-size:17px;font-weight: 200;
+			border-radius:10px;
+			padding:3px;
+			border:2px solid #605d5d;
+			transition:background-color,.4s;
+			transition:border,.4s
+		}
+		.button-fancy:hover{
+			color:black;
+			background-color:white;
+		}
+		.button:hover{
+			
+			color:white;
+			background-color:#9575CD;
+			border:2px solid #9575CD;
+		}
+		.button-tweet,.button-tweet:hover{
+			color:white;
+			border-radius: 10px;
+			background-color:#448AFF;
+			border:2px solid #448AFF;
+			
+		}
+		.search-bar{
+			padding:6px;
+			width:90%;
+			border:2px solid #3F51B5;	
+			color:black;
+			border-radius:3px;
+			transition:background-color,.6s;			
+		}
+		.search-bar:focus{
+			outline:none;
+			background-color:black;
+			color:black;
+			border:2px solid black;
+			font-size:18;
+		}.dropdown-menu>li>a {
+    display: block;
+    padding: 3px 32px;
+    border-bottom: 1px solid black;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}.metrics-title, h5.font-1{
     font-size: 14px;
 	font-weight:bold;
 	color:blue;
