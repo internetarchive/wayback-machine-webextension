@@ -115,12 +115,16 @@ function social_share(eventObj) {
 }
 
 function alexa_statistics(eventObj) {
-    var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
+    var open_url ="http://www.alexa.com/siteinfo/" + get_clean_url();
+    var no_query = open_url.indexOf('?');
+    if (no_query != -1) {
+        open_url = open_url.substring(0, no_query);
+    }
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function whois_statistics(eventObj) {
-    var open_url="https://www.whois.com/whois/" + get_clean_url();
+    var open_url = "https://www.whois.com/whois/" + get_clean_url();
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
