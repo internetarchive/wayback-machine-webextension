@@ -1,0 +1,93 @@
+/*!
+ * =============================================================
+ * wayback-links v1.0.0 - Wayback Links
+ * https://github.com/internetarchive/wayback-links#readme
+ *
+ * (c) 2017 - Eagle19243
+ * =============================================================
+ */
+[aria-label^=WLOuter] li,
+ul.WLMenu {
+    list-style: none !important;
+}
+
+[aria-label^=WLElement] ul {
+    list-style: none !important;
+    display: inline-block !important;
+    position: relative !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.WLIcon {
+    border-radius: 0 !important;
+    width: 12px !important;
+    height: 12px !important;
+    background-image: linear-gradient(transparent, transparent), url('data:image/svg+xml,%3C%3Fxml version=%221.0%22 encoding=%22UTF-8%22%3F%3E%0A%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22%3E%0A%09%3Cpath fill=%22%23fff%22 stroke=%22%2336c%22 d=%22M1.5 4.518h5.982V10.5H1.5z%22/%3E%0A%09%3Cpath fill=%22%2336c%22 d=%22M5.765 1H11v5.39L9.427 7.937l-1.31-1.31L5.393 9.35l-2.69-2.688 2.81-2.808L4.2 2.544z%22/%3E%0A%09%3Cpath fill=%22%23fff%22 d=%22M9.995 2.004l.022 4.885L8.2 5.07 5.32 7.95 4.09 6.723l2.882-2.88-1.85-1.852z%22/%3E%0A%3C/svg%3E%0A') !important;
+    position: relative !important;
+    display: inline-block !important;
+    left: 2px !important;
+}
+
+[aria-label^=WLOuter] a.WLArrow {
+    color: #000 !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: 5px solid transparent !important;
+    border-top-color: #000 !important;
+    top: 4px !important;
+    position: relative !important;
+    margin-right: 8px !important;
+}
+
+ul.WLMenu {
+    position: absolute !important;
+    top: 20px !important;
+    left: -50px !important;
+    background: #fff !important;
+    border: 1px solid #d3d3d3 !important;
+    z-index: 99999 !important;
+    width: 320px !important;
+}
+
+[aria-label^=WLOuter] a.WLItem:hover,
+footer.WLFooter {
+    background-color: #d3d3d3 !important;
+}
+
+[aria-label^=WLOuter] a.WLItem {
+    color: #000 !important;
+    text-decoration: none !important; 
+    display: block !important;
+    padding: 5px !important;
+}
+
+[aria-label^=WLOuter] .WLTitle {
+    color: #000 !important;
+    text-decoration: none !important;
+    display: block !important;
+    padding: 5px !important;
+    font-size: 18px !important;
+    text-align: center !important;
+}
+
+[aria-haspopup=true] {
+    position: relative !important;
+}
+
+ul[aria-hidden=true] {
+    display: none !important;
+}
+
+ul[aria-hidden=false] {
+    display: inline-block !important;
+}
+
+footer.WLFooter {
+    display: block !important;
+    font-family: Helvetica !important;
+    text-align: center !important;
+    font-size: 1em !important;
+}

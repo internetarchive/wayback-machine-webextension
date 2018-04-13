@@ -420,7 +420,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       } else {
         chrome.tabs.create({ url:  open_url});
       }
-  }else if(message.message=='makemodal'){
+  }
+  else if(message.message=='makemodal'){
             RTurl=message.rturl;
             console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -461,6 +462,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 console.log(RTurl);
             });
         }
+        else if (message.message == 'tranformUrls') {
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var tab = tabs[0];
+            console.log(tab);
+            chrome.tabs.insertCSS(tab.id, {
+              file: "scripts/wayback-links.css"
+            });
+            chrome.tabs.executeScript(tab.id, {
+              file: "scripts/transformUrls.js"
+            });
+            chrome.tabs.executeScript(tab.id, {
+              file: "scripts/wayback-links.js"
+            });
+          });
+        }
 });
 
 chrome.webRequest.onErrorOccurred.addListener(function(details) {
@@ -474,7 +490,7 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
           });
         }
       }
-      if(details.tabId >0 ){
+      if(details.tabId > 0){
         chrome.tabs.get(details.tabId, function(tab) {
           tabIsReady(tab.incognito);
         });
