@@ -12,6 +12,10 @@ if ($container.getAttribute("count") == 1) {
 chrome.runtime.sendMessage({ message: "sendurlforrt" });
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 19a46936a586f900e04094bb043910664840b7bc
   if (message.RTurl != "") {
     var url = message.RTurl;
     if (url.includes("https")) {
@@ -50,7 +54,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     };
     xhr.send();
   }
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 19a46936a586f900e04094bb043910664840b7bc
 	if (message.RTurl != "") {
 		var url = message.RTurl;
 		if (url.includes('https')) {
@@ -81,5 +89,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		};
 		xhr.send();
 	}
+<<<<<<< HEAD
 >>>>>>> 31ba298e2c266130716c61b899ef75dd00dbc9e2
+=======
+
+>>>>>>> 19a46936a586f900e04094bb043910664840b7bc
 });

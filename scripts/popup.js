@@ -86,7 +86,11 @@ function view_all() {
 }
 
 function mail_to_internetarchive() {
+<<<<<<< HEAD
   window.open("feedback.html", "", "width=1000, height=1000");
+=======
+  chrome.tabs.create({ url: "mailto:info@archive.org" });
+>>>>>>> 19a46936a586f900e04094bb043910664840b7bc
 }
 
 function get_url() {

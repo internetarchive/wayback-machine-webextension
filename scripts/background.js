@@ -511,8 +511,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           file: "scripts/sequences.js"
         });
       }
+
     });
-  }else if(message.message=='makemodal'){
+  } else if (message.message == "sendurl") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      var url = tabs[0].url;
+      chrome.tabs.sendMessage(tabs[0].id, { url: url });
+    });
+  } else if (message.message == "sendurlforrt") {
+    console.log(RTurl);
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      //var url=tabs[0].url;
+      console.log(RTurl);
+      chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
+      console.log(RTurl);
+    });
+  } else if(message.message=='makemodal'){
             RTurl=message.rturl;
             console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
