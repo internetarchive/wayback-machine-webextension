@@ -85,6 +85,11 @@ function view_all() {
   });
 }
 
+function mail_to_internetarchive() {
+  chrome.tabs.create({ url: "mailto:info@archive.org" });
+  chrome.tabs.discard();
+}
+
 function get_url() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     global_url = tabs[0].url;
@@ -235,7 +240,7 @@ document.getElementById("alexa_statistics").onclick = alexa_statistics;
 document.getElementById("whois_statistics").onclick = whois_statistics;
 document.getElementById("search_tweet").onclick = search_tweet;
 document.getElementById("about_support_button").onclick = about_support;
-
+document.getElementById("mail").onclick= mail_to_internetarchive;
 document.getElementById("overview").onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
 //document.getElementById('settings_save_btn').onclick=saveSettings;

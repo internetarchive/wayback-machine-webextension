@@ -58,7 +58,8 @@ a.btn-social,
     background-clip: text;
     -webkit-background-clip: text;
     height: 40px;
-    min-width:87%;
+    min-width:89%;
+    min-height: 21px;
 }
 .btn-good:hover {
     -webkit-box-shadow: 0 0 0px 1px rgba(255, 255, 255, 0.5), 2px 2px 6px rgba(49, 188, 184, 0.4), -2px -2px 6px rgba(251, 131, 250, 0.4);
@@ -72,12 +73,16 @@ a.btn-social,
     padding-left: 15px;
     padding-right: 15px;
     min-width: 40%;
+    min-height: 21px;
 }
 .fa {
     margin-top: 6px;
 }
 
-
+.bigger{
+    min-width: 89%;
+    min-height: 21px;
+}
 .btn-social .fa,
 .btn-social i {
     backface-visibility: hidden;
