@@ -512,20 +512,47 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         });
       }
     });
-  } else if (message.message == "sendurl") {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      var url = tabs[0].url;
-      chrome.tabs.sendMessage(tabs[0].id, { url: url });
-    });
-  } else if (message.message == "sendurlforrt") {
-    console.log(RTurl);
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      //var url=tabs[0].url;
-      console.log(RTurl);
-      chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
-      console.log(RTurl);
-    });
-  }
+  }else if(message.message=='makemodal'){
+            RTurl=message.rturl;
+            console.log(RTurl);
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                var tab=tabs[0];
+                var url=RTurl;
+                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
+                    //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
+                    alert("Structure as radial tree not available on archive.org pages");
+                }else{
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/lodash.min.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/d3.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/radial-tree.umd.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/RTcontent.js"
+                    });
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/sequences.js"
+                    });
+                }
+            });
+        }else if(message.message=='sendurl'){
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                var url=tabs[0].url;
+                chrome.tabs.sendMessage(tabs[0].id, {url:url});
+            });
+        }else if(message.message=='sendurlforrt'){
+            console.log(RTurl);
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                //var url=tabs[0].url;
+                console.log(RTurl);
+                chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
+                console.log(RTurl);
+            });
+        }
 });
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
