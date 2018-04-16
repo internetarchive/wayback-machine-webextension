@@ -87,7 +87,6 @@ function view_all() {
 
 function mail_to_internetarchive() {
   chrome.tabs.create({ url: "mailto:info@archive.org" });
-  chrome.tabs.discard();
 }
 
 function get_url() {
