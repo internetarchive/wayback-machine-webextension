@@ -50,7 +50,7 @@ if (document.getElementById("myModal") !== null) {
   document.body.appendChild(modal);
   modal.style.display = "block";
 
-  span.onclick = function() {
+  span.onclick = function () {
     modal.style.display = "none";
   };
 }

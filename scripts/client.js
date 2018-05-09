@@ -2,7 +2,7 @@
  * LICENSE: AGPL-3
  * Copyright 2016, Internet Archive
  */
-(function() {
+(function () {
   console.log("Client injected");
   var enforceBannerInterval;
   var archiveLinkWasClicked = false;
@@ -65,7 +65,7 @@
     document.body.appendChild(
       createEl(
         "div",
-        function(el) {
+        function (el) {
           el.id = "no-more-404s-message";
           el.style.background = "rgba(0,0,0,.6)";
           el.style.position = "fixed";
@@ -80,7 +80,7 @@
         },
         createEl(
           "div",
-          function(el) {
+          function (el) {
             el.id = "no-more-404s-message-inner";
             el.style.flex = "0 0 420px";
             el.style.position = "relative";
@@ -97,7 +97,7 @@
           },
           createEl(
             "div",
-            function(el) {
+            function (el) {
               el.id = "no-more-404s-header";
               el.style.alignItems = "center";
               el.style.backgroundColor = "#0996f8";
@@ -113,7 +113,7 @@
             },
             createEl(
               "button",
-              function(el) {
+              function (el) {
                 el.style.position = "absolute";
                 el.style.display = "flex";
                 el.style.alignItems = "center";
@@ -127,32 +127,32 @@
                 el.style.boxSizing = "border-box";
                 el.style.padding = "0";
                 el.style.border = "none";
-                el.onclick = function() {
+                el.onclick = function () {
                   clearInterval(enforceBannerInterval);
                   document.getElementById(
-                    "no-more-404s-message"
-                  ).style.display =
+                      "no-more-404s-message"
+                    ).style.display =
                     "none";
                   bannerWasClosed = true;
                 };
-                el.onmouseenter = function() {
+                el.onmouseenter = function () {
                   el.style.backgroundColor = "rgba(0,0,0,.1)";
                   el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.1) inset";
                 };
-                el.onmousedown = function() {
+                el.onmousedown = function () {
                   el.style.backgroundColor = "rgba(0,0,0,.2)";
                   el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.15) inset";
                 };
-                el.onmouseup = function() {
+                el.onmouseup = function () {
                   el.style.backgroundColor = "rgba(0,0,0,.1)";
                   el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.1) inset";
                 };
-                el.onmouseleave = function() {
+                el.onmouseleave = function () {
                   el.style.backgroundColor = "transparent";
                   el.style.boxShadow = "";
                 };
               },
-              createEl("img", function(el) {
+              createEl("img", function (el) {
                 el.src = chrome.extension.getURL("images/close.svg");
                 el.alt = "close";
                 el.style.height = "16px";
@@ -162,7 +162,7 @@
               })
             )
           ),
-          createEl("p", function(el) {
+          createEl("p", function (el) {
             el.appendChild(
               document.createTextNode("View a saved version courtesy of the")
             );
@@ -170,7 +170,7 @@
             el.style.margin = "20px 0 4px 0";
             el.style.textAlign = "center";
           }),
-          createEl("img", function(el) {
+          createEl("img", function (el) {
             el.id = "no-more-404s-image";
             el.src = chrome.extension.getURL("images/logo.gif");
             el.style.height = "auto";
@@ -179,7 +179,7 @@
             el.style.boxSizing = "border-box";
             el.style.padding = "10px 22px";
           }),
-          createEl("a", function(el) {
+          createEl("a", function (el) {
             el.id = "no-more-404s-message-link";
             el.href = wayback_url;
             el.style.alignItems = "center";
@@ -196,31 +196,30 @@
             el.appendChild(
               document.createTextNode("Click here to see archived version")
             );
-            el.onmouseenter = function() {
+            el.onmouseenter = function () {
               el.style.backgroundColor = "#0675d3";
               el.style.border = "1px solid #0568ba";
             };
-            el.onmousedown = function() {
+            el.onmousedown = function () {
               el.style.backgroundColor = "#0568ba";
               el.style.border = "1px solid #0568ba";
             };
-            el.onmouseup = function() {
+            el.onmouseup = function () {
               el.style.backgroundColor = "#0675d3";
               el.style.border = "1px solid #0568ba";
             };
-            el.onmouseleave = function() {
+            el.onmouseleave = function () {
               el.style.backgroundColor = "#0996f8";
               el.style.border = "1px solid #0675d3";
             };
-            el.onclick = function(e) {
+            el.onclick = function (e) {
               archiveLinkWasClicked = true;
 
               // Work-around for myspace which hijacks the link
               if (window.location.hostname.indexOf("myspace.com") >= 0) {
                 e.preventDefault();
                 return false;
-              } else {
-              }
+              } else {}
             };
           })
         )
@@ -230,7 +229,7 @@
     document.getElementById("no-more-404s-message-link").focus();
 
     // Transition element in from top of page
-    setTimeout(function() {
+    setTimeout(function () {
       document.getElementById("no-more-404s-message").style.transform =
         "translate(0, 0%)";
     }, 100);
@@ -241,13 +240,13 @@
   function checkIt(wayback_url) {
     // Some pages use javascript to update the dom so poll to ensure
     // the banner gets recreated if it is deleted.
-    enforceBannerInterval = setInterval(function() {
+    enforceBannerInterval = setInterval(function () {
       createBanner(wayback_url);
     }, 500);
   }
 
   // Listen to message from background.js
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type === "SHOW_BANNER") {
       if (request.wayback_url) {
         checkIt(request.wayback_url);
