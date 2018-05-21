@@ -87,16 +87,18 @@ function social_share(eventObj){
     var url = get_clean_url();
     var overview_url="https://web.archive.org/web/*/";
     var open_url="";
-    if(id.includes('fb')){
-        open_url="https://www.facebook.com/sharer/sharer.php?u="+overview_url+url;
-    }else if(id.includes('twit')){
-        open_url="https://twitter.com/home?status="+overview_url+url;
-    }else if(id.includes('gplus')){
-        open_url="https://plus.google.com/share?url="+overview_url+url;
-    }else if(id.includes('linkedin')){
-        open_url="https://www.linkedin.com/shareArticle?url="+overview_url+url;
+    if(!(url.includes('chrome://') || url.includes('chrome-extension://'))){ //Prevents sharing some unnecessary page 
+        if(id.includes('fb')){
+            open_url="https://www.facebook.com/sharer/sharer.php?u="+overview_url+url; //Share the wayback machine's overview of the URL
+        }else if(id.includes('twit')){
+            open_url="https://twitter.com/home?status="+overview_url+url;
+        }else if(id.includes('gplus')){
+            open_url="https://plus.google.com/share?url="+overview_url+url;
+        }else if(id.includes('linkedin')){
+            open_url="https://www.linkedin.com/shareArticle?url="+overview_url+url;
+        }
+        window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
 }
 
 function alexa_statistics(eventObj){
