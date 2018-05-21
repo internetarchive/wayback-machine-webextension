@@ -154,16 +154,20 @@ function display_list(key_word){
 function display_suggestions(e){
     document.getElementById('suggestion-box').style.display='none';
     document.getElementById('suggestion-box').innerHTML="";
-    //setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(function(){
-        var len=document.getElementById('search_input').value.length;
-        if((len)>=3){
-            display_list(document.getElementById('search_input').value);
-        }else{
-            document.getElementById('suggestion-box').style.display='none';
-            document.getElementById('suggestion-box').innerHTML="";
-        }
-    },0.1);
+    if(e.keyCode==13){
+        e.preventDefault();
+    }else {
+        //setTimeout is used to get the text in the text field after key has been pressed
+        window.setTimeout(function(){
+            var len=document.getElementById('search_input').value.length;
+            if((len)>=3){
+                display_list(document.getElementById('search_input').value);
+            }else{
+                document.getElementById('suggestion-box').style.display='none';
+                document.getElementById('suggestion-box').innerHTML="";
+            }
+        },0.1);
+    }
 }
 
 function about_support(){
