@@ -426,9 +426,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
                 var url=RTurl;
-                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
+                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){ //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
-                    alert("Structure as radial tree not available on archive.org pages");
+                    alert("Structure as radial tree not available on this page");
                 }else{
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/lodash.min.js"
