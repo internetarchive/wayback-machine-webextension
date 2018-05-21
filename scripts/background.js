@@ -415,10 +415,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var url = page_url.replace(pattern, "");
       var open_url = wayback_url+encodeURI(url);
       console.log(open_url);
-      if (message.method!='save') {
-        URLopener(open_url,url,true);
-      } else {
-        chrome.tabs.create({ url:  open_url});
+      if(!page_url.includes('chrome://')){
+        if (message.method!='save') {
+          URLopener(open_url,url,true);
+        } else {
+          chrome.tabs.create({ url:  open_url});
+        }
       }
   }else if(message.message=='makemodal'){
             RTurl=message.rturl;
