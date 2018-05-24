@@ -30,13 +30,18 @@ function remove_whois(url){
     return remove_port(new_url);
 }
 /* Common method used everywhere to retrieve cleaned up URL */
-function get_clean_url() {
+function retrieve_url(){
     var search_term = document.getElementById('search_input').value;
     if(search_term == ""){
         var url=global_url;
     }else{
         var url=search_term;
     }
+    return url;
+}
+
+function get_clean_url() {
+    var url=retrieve_url();
     if (url.includes('web.archive.org')) {
         url=remove_wbm(url);
     } else if (url.includes('www.alexa.com')) {
@@ -84,18 +89,25 @@ function get_url(){
 function social_share(eventObj){
     var parent=eventObj.target.parentNode;
     var id=parent.getAttribute('id');
-    var url = get_clean_url();
+    var sharing_url="";
+    var url=retrieve_url();
     var overview_url="https://web.archive.org/web/*/";
+    if (url.includes('web.archive.org')){
+        sharing_url=url; //If the user is already at a playback page,share that URL
+    }
+    else{
+        sharing_url=overview_url+get_clean_url(); //When not on a playback page,share the overview version of that URL
+    }
     var open_url="";
     if(!(url.includes('chrome://') || url.includes('chrome-extension://'))){ //Prevents sharing some unnecessary page 
         if(id.includes('fb')){
-            open_url="https://www.facebook.com/sharer/sharer.php?u="+overview_url+url; //Share the wayback machine's overview of the URL
+            open_url="https://www.facebook.com/sharer/sharer.php?u="+sharing_url; //Share the wayback machine's overview of the URL
         }else if(id.includes('twit')){
-            open_url="https://twitter.com/home?status="+overview_url+url;
+            open_url="https://twitter.com/home?status="+sharing_url;
         }else if(id.includes('gplus')){
-            open_url="https://plus.google.com/share?url="+overview_url+url;
+            open_url="https://plus.google.com/share?url="+sharing_url;
         }else if(id.includes('linkedin')){
-            open_url="https://www.linkedin.com/shareArticle?url="+overview_url+url;
+            open_url="https://www.linkedin.com/shareArticle?url="+sharing_url;
         }
         window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
     }
