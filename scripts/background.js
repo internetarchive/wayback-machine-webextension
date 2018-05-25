@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.14";
+var VERSION = "2.15";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -616,3 +616,52 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //          }
 // });
 // });
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  chrome.storage.sync.get(['auto_archive'],function(event){
+    if(event.auto_archive==true){
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        var tab = tabs[0];
+        var page_url = tab.url;
+        console.log(page_url);
+        if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+          wmAvailabilityCheck( page_url,
+            function() {
+              console.log("Available already");
+            }, 
+            function() {
+              console.log("Not Available");
+              notify("Hey this URL is not in WBM,If you would like us to archive it for you,please click on this notification",page_url);
+          });
+        }
+      });
+    }
+    else{
+      console.log("Not auto archived");
+    }
+  });
+});
+
+function notify(msg,url){
+  chrome.notifications.create(
+                'wayback-notification',{   
+                type: 'basic', 
+                iconUrl: '/images/icon.png', 
+                title: "Message", 
+                message: msg
+                },
+                function(){} 
+  );
+  chrome.notifications.onClicked.addListener(function(){
+    var http=new XMLHttpRequest();
+    var page_url=url;
+    var new_url="https://web.archive.org/save/"+page_url;
+    http.open("GET",new_url,true);
+    http.send(null);
+    http.onreadystatechange = function() {
+      if (this.readyState==4 && this.status==200) {
+        console.log("Archived");
+      }
+    }
+  });
+}

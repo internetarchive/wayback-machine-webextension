@@ -195,6 +195,10 @@ function makeModal(){
     chrome.runtime.sendMessage({message: "makemodal",rturl:url});
 }
 
+function settings(){
+    window.open("settings.html","","width=1000, height=1000");
+}
+
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
 //  chrome.storage.sync.get({
@@ -239,6 +243,7 @@ document.getElementById('alexa_statistics').onclick =alexa_statistics;
 document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
+document.getElementById('settings_button').onclick =settings;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
@@ -250,3 +255,4 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   	alert("URL not found in wayback archives!");
   }
 });
+chrome.tabs
