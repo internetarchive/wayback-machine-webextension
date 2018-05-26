@@ -84,6 +84,7 @@ function get_url(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         global_url=tabs[0].url;
     });
+    autoArchiveUrl();
 }
 
 function social_share(eventObj){
@@ -198,6 +199,15 @@ function makeModal(){
 function settings(){
     window.open("settings.html","","width=1000, height=1000");
 }
+function autoArchiveUrl(){
+    var tab_url=""
+    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        tab_url=get_clean_url();
+        console.log(tab_url);
+        chrome.runtime.sendMessage({message:"checkurl",url:tab_url});
+        console.log("Message Sent 1");
+    });
+}
 
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
@@ -231,7 +241,6 @@ function settings(){
 //document.getElementById('settings_div').style.display="none";
 
 window.onload=get_url;
-
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;
@@ -254,5 +263,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){
   	alert("URL not found in wayback archives!");
   }
+  else if(message.message='showbutton'){
+    var url=message.url;
+    document.getElementById("display_").style.display="block";
+    document.getElementById("display_").onclick= function(){
+        chrome.runtime.sendMessage({message: "openurl",
+                                wayback_url: "https://web.archive.org/save/",
+                                page_url: url,
+                                method:'save' }).then(handleResponse, handleError);
+    }
+  }
 });
-chrome.tabs

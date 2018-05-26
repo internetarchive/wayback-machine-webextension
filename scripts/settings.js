@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click',save_options);
 function restore_options() {
-  chrome.storage.sync.get({
-    auto_archive: true
-  }, function(items) {
+  chrome.storage.sync.get(['auto_archive'], function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
   });
 }
