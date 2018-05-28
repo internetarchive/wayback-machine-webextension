@@ -187,7 +187,7 @@ function display_suggestions(e){
 }
 
 function about_support(){
-    window.open("about.html", "", "width=1000, height=1000").focus();
+    window.open('about.html', 'newwindow', 'width=1000, height=700,left=0').focus();
 }
 
 function makeModal(){
@@ -197,8 +197,9 @@ function makeModal(){
 }
 
 function settings(){
-    window.open("settings.html","","width=1000, height=1000");
+    window.open('settings.html','newwindow', 'width=500, height=500,left=0');
 }
+
 function autoArchiveUrl(){
     var tab_url=""
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
