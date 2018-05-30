@@ -84,7 +84,6 @@ function get_url(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         global_url=tabs[0].url;
     });
-    autoArchiveUrl();
 }
 
 function social_share(eventObj){
@@ -185,11 +184,10 @@ function display_suggestions(e){
         },0.1);
     }
 }
-
-// function open_feedback_page(){
-//     var feedback_url="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en";
-//     chrome.tabs.create({ url: feedback_url });
-// }
+function open_feedback_page(){
+    var feedback_url="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en";
+    chrome.tabs.create({ url: feedback_url });
+}
 
 function about_support(){
     window.open('about.html', 'newwindow', 'width=1000, height=700,left=0').focus();
@@ -205,14 +203,38 @@ function settings(){
     window.open('settings.html','newwindow', 'width=500, height=500,left=0');
 }
 
-function autoArchiveUrl(){
+function auto_archive_url(){
     var tab_url=""
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         tab_url=get_clean_url();
+        var wayback_url = "https://web.archive.org/save/";
+        tab_url = wayback_url+tab_url;
         console.log(tab_url);
-        chrome.runtime.sendMessage({message:"checkurl",url:tab_url});
-        console.log("Message Sent 1");
+        wmAsyncSaveURL(tab_url, function(){
+            var tabId=tabs[0].id;
+            chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+        });
     });
+}
+
+function wmAsyncSaveURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    var requestUrl = url;
+    xhr.open("POST", requestUrl, true);
+    xhr.onload = function(){
+        console.log(xhr.status);
+        if(xhr.status==200){
+        callback();
+        console.error(page_url+'is saved now');
+        }else if(xhr.status==403){
+            console.error(page_url+' save is forbidden');
+        }else if(xhr.status==503){
+            console.error(page_url+' service unavailable');
+        }else if(xhr.status==504){
+            console.error(page_url+' gateway timeout');
+        } 
+        xhr.send();
+    }
 }
 
 /** Disabled code for the autosave feature **/
@@ -246,7 +268,13 @@ function autoArchiveUrl(){
 //restoreSettings();
 //document.getElementById('settings_div').style.display="none";
 
-window.onload=get_url;
+// window.onload=get_url;
+window.onloadFuncs = [get_url,auto_archive_url];
+window.onload = function(){
+ for(var i in this.onloadFuncs){
+  this.onloadFuncs[i]();
+ }
+}
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;
@@ -270,18 +298,18 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){
   	alert("URL not found in wayback archives!");
   }
-  else if(message.message='showbutton'){
-    var url=message.url;
-    if(url){
-        console.log("Message Received");
-        console.log(url);
-        document.getElementById("display_").style.display="block";
-        document.getElementById("display_").onclick= function(){
-            chrome.runtime.sendMessage({message: "openurl",
-                                    wayback_url: "https://web.archive.org/save/",
-                                    page_url: url,
-                                    method:'save' }).then(handleResponse, handleError);
-        }
-    }
+  else if(message.greeting="hello"){
+    
   }
 });
+// document.addEventListener("DOMContentLoaded", function () {
+//     var tab_url=""
+//     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+//         tab_url=get_clean_url();
+//         console.log(tab_url);
+//         // chrome.runtime.sendMessage({message: "openurl",
+//         //                             wayback_url: "https://web.archive.org/save/",
+//         //                             page_url: tab_url,
+//         //                             method:'save' });
+//     });
+// });

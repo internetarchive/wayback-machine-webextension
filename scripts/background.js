@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.5";
+var VERSION = "2.15.6";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -462,11 +462,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
                 console.log(RTurl);
             });
-        }else if(message.message=='checkurl'){
-            console.log("Message Received");
-            page_url=message.url;
-            console.log(page_url);
-            handleIt(page_url);
+        }else if(message.message='changeBadge'){
+          var tabId=message.tabId;
+          chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
         }
 });
 
@@ -621,23 +619,53 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //          }
 // });
 // });
+// /*---------Auto-archival Feature added--------*/
+// function handleIt(url){
+//   var page_url=url;
+// chrome.storage.sync.get(['auto_archive'],function(event){
+//   if(event.auto_archive==true){
+//     if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+//       wmAvailabilityCheck(page_url,
+//         function() {
+//           console.log("Available already");
+//         }, 
+//         function() {
+//           console.log("Not Available");
+//           chrome.runtime.sendMessage({message:"showbutton",url:page_url});
+//       });
+//     }
+//   }else{
+//     console.log("Cant be Archived");
+//   }
+// });
+// }
 
-function handleIt(url){
-  var page_url=url;
-  chrome.storage.sync.get(['auto_archive'],function(event){
-    if(event.auto_archive==true){
-      if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    //var page_url = tab.url;
+    chrome.storage.sync.get(['auto_archive'],function(event){
+      if(event.auto_archive==true){
+        auto_save(tab.id);
+      }else{
+        console.log("Cant be Archived");
+      }
+    });
+  });
+});
+
+function auto_save(tabId){
+  chrome.tabs.get(tabId, function(tab) {
+      var page_url = tab.url;
+      if(isValidUrl(page_url)){
         wmAvailabilityCheck(page_url,
           function() {
             console.log("Available already");
           }, 
           function() {
+            console.log(page_url);
             console.log("Not Available");
-            chrome.runtime.sendMessage({message:"showbutton",url:page_url});
-        });
+            chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
+          });
       }
-    }else{
-      console.log("Cant be Archived");
-    }
   });
 }
