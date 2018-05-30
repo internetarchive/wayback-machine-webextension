@@ -186,6 +186,11 @@ function display_suggestions(e){
     }
 }
 
+// function open_feedback_page(){
+//     var feedback_url="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en";
+//     chrome.tabs.create({ url: feedback_url });
+// }
+
 function about_support(){
     window.open('about.html', 'newwindow', 'width=1000, height=700,left=0').focus();
 }
@@ -254,6 +259,7 @@ document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('settings_button').onclick =settings;
+// document.getElementById('feedback').onclick=open_feedback_page;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
@@ -266,12 +272,16 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   }
   else if(message.message='showbutton'){
     var url=message.url;
-    document.getElementById("display_").style.display="block";
-    document.getElementById("display_").onclick= function(){
-        chrome.runtime.sendMessage({message: "openurl",
-                                wayback_url: "https://web.archive.org/save/",
-                                page_url: url,
-                                method:'save' }).then(handleResponse, handleError);
+    if(url){
+        console.log("Message Received");
+        console.log(url);
+        document.getElementById("display_").style.display="block";
+        document.getElementById("display_").onclick= function(){
+            chrome.runtime.sendMessage({message: "openurl",
+                                    wayback_url: "https://web.archive.org/save/",
+                                    page_url: url,
+                                    method:'save' }).then(handleResponse, handleError);
+        }
     }
   }
 });

@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.4";
+var VERSION = "2.15.5";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -463,7 +463,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 console.log(RTurl);
             });
         }else if(message.message=='checkurl'){
-          console.log("Message Received");
+            console.log("Message Received");
             page_url=message.url;
             console.log(page_url);
             handleIt(page_url);

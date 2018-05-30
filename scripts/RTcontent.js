@@ -47,6 +47,8 @@ if(document.getElementById('myModal') !== null) {
   modal.style.display = "block";
 
   span.onclick = function() {
-    modal.style.display = "none";
+    //modal.style.display = "none";
+    var Modal=document.getElementById("myModal");
+    document.body.removeChild(Modal);
   };
 }
