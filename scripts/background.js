@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.6";
+var VERSION = "2.15.7";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -464,6 +464,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             });
         }else if(message.message='changeBadge'){
           var tabId=message.tabId;
+          console.log(tabId);
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
         }
 });
@@ -640,31 +641,38 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 // });
 // }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+chrome.tabs.onUpdated.addListener(function(tabId, info) {
+  if (info.status == "complete") {
+    chrome.tabs.get(tabId, function(tab) {
     //var page_url = tab.url;
-    chrome.storage.sync.get(['auto_archive'],function(event){
-      if(event.auto_archive==true){
-        auto_save(tab.id);
-      }else{
-        console.log("Cant be Archived");
-      }
+      chrome.storage.sync.get(['auto_archive'],function(event){
+        if(event.auto_archive==true){
+          auto_save(tab.id);
+        }else{
+          console.log("Cant be Archived");
+        }
+      });
     });
-  });
+  }
 });
 
 function auto_save(tabId){
   chrome.tabs.get(tabId, function(tab) {
       var page_url = tab.url;
-      if(isValidUrl(page_url)){
+      chrome.browserAction.setBadgeText({tabId: tabId, text:""});
+      console.log(page_url);
+      if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
         wmAvailabilityCheck(page_url,
           function() {
             console.log("Available already");
           }, 
           function() {
-            console.log(page_url);
             console.log("Not Available");
             chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
+            // console.log(tabId);
+            // chrome.runtime.sendMessage({message: "checkProper",tabId:tabId},function(response) {
+            //   console.log(response.message);
+            // });
           });
       }
   });

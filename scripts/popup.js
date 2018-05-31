@@ -190,7 +190,7 @@ function open_feedback_page(){
 }
 
 function about_support(){
-    window.open('about.html', 'newwindow', 'width=1000, height=700,left=0').focus();
+    window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus();
 }
 
 function makeModal(){
@@ -204,36 +204,54 @@ function settings(){
 }
 
 function auto_archive_url(){
-    var tab_url=""
+    var tab_url="";
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-        tab_url=get_clean_url();
-        var wayback_url = "https://web.archive.org/save/";
-        tab_url = wayback_url+tab_url;
+        tab_url=tabs[0].url;
         console.log(tab_url);
-        wmAsyncSaveURL(tab_url, function(){
-            var tabId=tabs[0].id;
-            chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+        chrome.storage.sync.get(['auto_archive'],function(event){
+            if(event.auto_archive==true){
+                check_url(tab_url,function(){
+                    var wayback_url = "https://web.archive.org/save/";
+                    tab_url = wayback_url+tab_url;
+                    console.log(tab_url);
+                    wm_save_URL(tab_url, function(){
+                        var tabId=tabs[0].id;
+                        console.log(tabId);
+                        chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+                    });
+                });
+            }
         });
     });
 }
 
-function wmAsyncSaveURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    var requestUrl = url;
-    xhr.open("POST", requestUrl, true);
-    xhr.onload = function(){
-        console.log(xhr.status);
-        if(xhr.status==200){
-        callback();
-        console.error(page_url+'is saved now');
-        }else if(xhr.status==403){
-            console.error(page_url+' save is forbidden');
-        }else if(xhr.status==503){
-            console.error(page_url+' service unavailable');
-        }else if(xhr.status==504){
-            console.error(page_url+' gateway timeout');
-        } 
-        xhr.send();
+function wm_save_URL(url, callback) {
+    var http=new XMLHttpRequest();
+    var new_url=url;
+    http.open("GET",new_url,true);
+    http.send(null);
+    http.onreadystatechange = function() {
+        if (this.readyState==4 && this.status==200) {
+            console.log("Archived");
+        }
+    }
+    callback();
+}
+
+function check_url(url,callback){
+    var xhr=new XMLHttpRequest();
+    var new_url="http://archive.org/wayback/available?url="+url;
+    xhr.open("GET",new_url,true);
+    xhr.send(null);
+    xhr.onload = function() {
+        var response = JSON.parse(xhr.response);
+        console.log(response);
+        if(response.archived_snapshots.closest){
+            console.log("available");
+        }else{
+            console.log("not available");
+            callback();
+        }
     }
 }
 
@@ -298,18 +316,4 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){
   	alert("URL not found in wayback archives!");
   }
-  else if(message.greeting="hello"){
-    
-  }
 });
-// document.addEventListener("DOMContentLoaded", function () {
-//     var tab_url=""
-//     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-//         tab_url=get_clean_url();
-//         console.log(tab_url);
-//         // chrome.runtime.sendMessage({message: "openurl",
-//         //                             wayback_url: "https://web.archive.org/save/",
-//         //                             page_url: tab_url,
-//         //                             method:'save' });
-//     });
-// });
