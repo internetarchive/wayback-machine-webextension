@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.7";
+var VERSION = "2.15.8";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -462,10 +462,26 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
                 console.log(RTurl);
             });
-        }else if(message.message='changeBadge'){
+        }else if(message.message=='changeBadge'){
           var tabId=message.tabId;
           console.log(tabId);
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
+        }else if(message.message=='showall'){
+          var url=message.url;
+          var alexa_url="http://www.alexa.com/siteinfo/" + url;
+          chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function(){
+            var whois_url="https://www.whois.com/whois/" +url;
+            chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function(){
+              if(url.includes('http://')){
+                url=url.substring(7);
+              }else if(url.includes('https://')){
+                url=url.substring(8);
+              }
+              if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+              });
+              var open_url="https://twitter.com/search?q="+url;
+              chrome.windows.create({url:open_url, width:500, height:500, top:0, left:500, focused:false});
+          });
         }
 });
 

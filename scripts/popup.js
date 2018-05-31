@@ -254,6 +254,10 @@ function check_url(url,callback){
         }
     }
 }
+function show_all_screens(){
+    var url=get_clean_url();
+    chrome.runtime.sendMessage({message:"showall",url:url});
+}
 
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
@@ -305,7 +309,8 @@ document.getElementById('whois_statistics').onclick =whois_statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('settings_button').onclick =settings;
-// document.getElementById('feedback').onclick=open_feedback_page;
+document.getElementById('context-screen').onclick=show_all_screens;
+document.getElementById('feedback').onclick=open_feedback_page;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
