@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.8";
+var VERSION = "2.15.9";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -324,7 +324,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             }, function() {
               chrome.tabs.sendMessage(details.tabId, {
                 type: "SHOW_BANNER",
-                wayback_url: wayback_url
+                wayback_url: wayback_url,
+                page_url: details.url,
+                status_code: details.statusCode
               });
             });
               }

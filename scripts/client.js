@@ -58,7 +58,7 @@
     return el;
   }
 
-  function createBanner(wayback_url) {
+  function createBanner(wayback_url,page_url,status_code) {
     if (document.getElementById("no-more-404s-message") !== null) {
       return;
     }
@@ -104,10 +104,53 @@
                 el.style.display = "flex";
                 el.style.fontSize = "24px";
                 el.style.fontWeight = "700";
-                el.style.height = "54px";
+                el.style.height = "64px";
                 el.style.justifyContent = "center";
-                el.appendChild(document.createTextNode("Page not available?"));
               },
+              createEl("div",
+                function(el){
+                  el.id="status-code";
+                  el.style.position="absolute";
+                  el.style.display = "flex";
+                  el.style.left=0;
+                  el.style.top="7px";
+                  el.style.left="0px";
+                  el.style.width="auto";
+                  el.style.fontSize = "18px";
+                  el.style.fontFamily="'Courier New', Courier, monospace";                  
+                  el.style.color="rgb(0, 0, 0)";
+                  var text_node=document.createTextNode("STATUS : "+status_code);
+                  el.appendChild(text_node);
+                }
+              ),
+              createEl("div",
+                function(el){
+                  el.id="url-show";
+                  el.style.position="absolute";
+                  el.style.left="0px";
+                  el.style.top="27px";
+                  el.style.fontSize = "18px";
+                  el.style.fontFamily="'Courier New', Courier, monospace";
+                  el.style.color="rgb(0, 0, 0)";
+                  var text_node=document.createTextNode("URL : ");
+                  el.appendChild(text_node);
+                }
+              ),
+              createEl("div",
+              function(el){
+                el.id="url-show";
+                el.style.position="absolute";
+                el.style.wordWrap="break-word";
+                el.style.left="60px";
+                el.style.top="27px";
+                el.style.fontSize = "18px";
+                el.style.height="40px";
+                el.style.width="360px";
+                el.style.fontFamily="'Courier New', Courier, monospace";
+                el.style.color="rgb(0, 0, 0)";
+                el.innerHTML=page_url;
+              }
+            ),
               createEl("button",
                 function(el) {
                   el.style.position = "absolute";
@@ -115,8 +158,8 @@
                   el.style.alignItems = "center";
                   el.style.justifyContent = "center";
                   el.style.transition = "background-color 150ms";
-                  el.style.top = "12px";
-                  el.style.right = "16px";
+                  el.style.top = "0px";
+                  el.style.right = "0px";
                   el.style.width = "22px";
                   el.style.height = "22px";
                   el.style.borderRadius = "3px";
@@ -160,8 +203,10 @@
             createEl("p", function(el) {
               el.appendChild(document.createTextNode("View a saved version courtesy of the"));
               el.style.fontSize = "16px";
-              el.style.margin = "20px 0 4px 0";
+              el.style.margin = "13px 0 9px 0";
+              el.style.fontFamily="Impact";
               el.style.textAlign = "center";
+              el.style.fontSize = "23px";
             }),
             createEl("img", function(el) {
               el.id = "no-more-404s-image";
@@ -228,11 +273,11 @@
     bannerWasShown = true;
   }
 
-  function checkIt(wayback_url) {
+  function checkIt(wayback_url,page_url,status_code) {
     // Some pages use javascript to update the dom so poll to ensure
     // the banner gets recreated if it is deleted.
     enforceBannerInterval = setInterval(function() {
-      createBanner(wayback_url);
+      createBanner(wayback_url,page_url,status_code);
     }, 500);
 
   }
@@ -242,7 +287,7 @@
     function(request, sender, sendResponse) {
       if (request.type === "SHOW_BANNER") {
         if (request.wayback_url) {
-          checkIt(request.wayback_url);
+          checkIt(request.wayback_url,request.page_url,request.status_code);
         }
       }
   });
