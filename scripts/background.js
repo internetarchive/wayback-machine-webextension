@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.15.9";
+var VERSION = "2.16.0";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -492,7 +492,7 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
         if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
         || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
           wmAvailabilityCheck(details.url, function(wayback_url, url) {
-            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
+            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
           }, function() {
             
           });

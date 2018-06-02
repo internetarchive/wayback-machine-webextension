@@ -112,7 +112,6 @@
                   el.id="status-code";
                   el.style.position="absolute";
                   el.style.display = "flex";
-                  el.style.left=0;
                   el.style.top="7px";
                   el.style.left="0px";
                   el.style.width="auto";
@@ -125,7 +124,7 @@
               ),
               createEl("div",
                 function(el){
-                  el.id="url-show";
+                  el.id="url";
                   el.style.position="absolute";
                   el.style.left="0px";
                   el.style.top="27px";

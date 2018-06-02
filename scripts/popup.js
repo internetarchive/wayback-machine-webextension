@@ -317,8 +317,3 @@ document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.message=='urlnotfound'){
-  	alert("URL not found in wayback archives!");
-  }
-});
