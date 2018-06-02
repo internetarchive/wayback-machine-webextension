@@ -201,7 +201,6 @@
             ),
             createEl("p", function(el) {
               el.appendChild(document.createTextNode("View a saved version courtesy of the"));
-              el.style.fontSize = "16px";
               el.style.margin = "13px 0 9px 0";
               el.style.fontFamily="Impact";
               el.style.textAlign = "center";
