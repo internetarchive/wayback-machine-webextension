@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.1";
+var VERSION = "2.16.2";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -248,6 +248,7 @@ var excluded_urls = [
   "127.0.0.1"
 ];
 
+var previous_RTurl="";
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
@@ -433,7 +434,25 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){ //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
                     alert("Structure as radial tree not available on this page");
-                }else{
+                }else if((previous_RTurl!=url && url==tab.url) || (previous_RTurl!=url && url!=tab.url)){
+                        chrome.tabs.sendMessage(tab.id,{message:"deletenode"});
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/lodash.min.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/d3.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/radial-tree.umd.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/RTcontent.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/sequences.js"
+                            });
+                            previous_RTurl=url; 
+                }else if(previous_RTurl==url){
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/lodash.min.js"
                     });
@@ -449,6 +468,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/sequences.js"
                     });
+                    previous_RTurl=url;
                 }
             });
         }else if(message.message=='sendurl'){

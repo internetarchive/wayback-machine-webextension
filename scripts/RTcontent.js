@@ -47,8 +47,15 @@ if(document.getElementById('myModal') !== null) {
   modal.style.display = "block";
 
   span.onclick = function() {
-    //modal.style.display = "none";
-    var Modal=document.getElementById("myModal");
-    document.body.removeChild(Modal);
+    modal.style.display = "none";
+    // var Modal=document.getElementById("myModal");
+    // document.body.removeChild(Modal);
   };
 }
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+  if(message.message=="deletenode"){
+    console.log("Message received for deleting node");
+  	var Modal=document.getElementById("myModal");
+    document.body.removeChild(Modal);
+  }
+});
