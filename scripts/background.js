@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.2";
+var VERSION = "2.16.3";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -489,20 +489,55 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           console.log(tabId);
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
         }else if(message.message=='showall'){
-          var url=message.url;
-          var alexa_url="http://www.alexa.com/siteinfo/" + url;
-          chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function(){
-            var whois_url="https://www.whois.com/whois/" +url;
-            chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function(){
-              if(url.includes('http://')){
-                url=url.substring(7);
-              }else if(url.includes('https://')){
-                url=url.substring(8);
-              }
-              if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+          chrome.storage.sync.get(['show_context'],function(event){
+            if(event.show_context=="tab"){
+              var url=message.url;
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.tabs.create({'url':alexa_url }, function() {
+                var whois_url="https://www.whois.com/whois/" +url;
+                chrome.tabs.create({'url': whois_url}, function() {
+                  if(url.includes('http://')){
+                    url=url.substring(7);
+                  }else if(url.includes('https://')){
+                    url=url.substring(8);
+                  }
+                  if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+                  var open_url="https://twitter.com/search?q="+url;
+                  chrome.tabs.create({'url': open_url});
+                });
               });
-              var open_url="https://twitter.com/search?q="+url;
-              chrome.windows.create({url:open_url, width:500, height:500, top:0, left:500, focused:false});
+            }else if(event.show_context=="window"){
+              var url=message.url;
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function(){
+                var whois_url="https://www.whois.com/whois/" +url;
+                chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function(){
+                  if(url.includes('http://')){
+                    url=url.substring(7);
+                  }else if(url.includes('https://')){
+                    url=url.substring(8);
+                  }
+                  if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+                  var open_url="https://twitter.com/search?q="+url;
+                  chrome.windows.create({url:open_url, width:500, height:500, top:0, left:500, focused:false});
+                });
+              });
+            }else if(event.show_context=="browser"){
+              var url=message.url;
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.windows.create({url:alexa_url,focused:true},function(){
+                var whois_url="https://www.whois.com/whois/" +url;
+                chrome.tabs.create({'url': whois_url});
+                  if(url.includes('http://')){
+                    url=url.substring(7);
+                  }else if(url.includes('https://')){
+                    url=url.substring(8);
+                  }
+                  if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+                  var open_url="https://twitter.com/search?q="+url;
+                  chrome.tabs.create({'url': open_url});
+              });
+            }
           });
         }
 });
