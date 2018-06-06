@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.3";
+var VERSION = "2.16.4";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -525,9 +525,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             }else if(event.show_context=="browser"){
               var url=message.url;
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
-              chrome.windows.create({url:alexa_url,focused:true},function(){
+              chrome.windows.create({url:alexa_url},function(){
                 var whois_url="https://www.whois.com/whois/" +url;
-                chrome.tabs.create({'url': whois_url});
+                chrome.windows.create({'url': whois_url});
                   if(url.includes('http://')){
                     url=url.substring(7);
                   }else if(url.includes('https://')){
@@ -535,7 +535,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   }
                   if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
                   var open_url="https://twitter.com/search?q="+url;
-                  chrome.tabs.create({'url': open_url});
+                  chrome.windows.create({'url': open_url});
               });
             }
           });

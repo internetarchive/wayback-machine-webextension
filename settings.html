@@ -18,7 +18,7 @@
         </td>
     	</tr>
     </table>
-    <h1><b>Wayback Notification Settings</b></h1>
+    <h1 style="text-align: center;"><b>Settings</b></h1>
     <div id="wrap">
       <div class="show_option">
         <label for="auto-archive">
@@ -28,16 +28,18 @@
         <h3>This will allow to auto-archive.</h3>
         <br>
         <select id="show_context">
-            <option value="tab">Show in Tab</option>
-            <option value="window">Show in Window</option>
-            <option value="browser">Show in Browser</option>        
+            <option value="tab">Show Context in Tabs</option>
+            <option value="window">Show Context in Windows</option>
+            <option value="browser">Show Context in Browsers</option>        
         </select>   
-        <h3>This will allow to change settings for Context Feature</h3>
+        <h3>Select How content should be presented</h3>
       </div>
     </div>
     <br>
-    <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;" id="save">Save</button>
-    <div id="status"></div>
+    <div style="text-align: center;">
+        <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Save Settings</button>
+        <div id="status" style="margin-top: 10px"></div>
+    </div>
     <script src="scripts/settings.js"></script>
 	</body>
 </html>

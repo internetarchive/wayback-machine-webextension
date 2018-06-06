@@ -200,7 +200,7 @@ function makeModal(){
 }
 
 function settings(){
-    window.open('settings.html','newwindow', 'width=500, height=500,left=0');
+    window.open('settings.html','newwindow', 'width=350, height=430,left=0');
 }
 
 function auto_archive_url(){
