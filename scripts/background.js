@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.4";
+var VERSION = "2.16.5";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -490,6 +490,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
         }else if(message.message=='showall'){
           chrome.storage.sync.get(['show_context'],function(event){
+            if(!event.show_context){
+              event.show_context="tab";
+            }
             if(event.show_context=="tab"){
               var url=message.url;
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
