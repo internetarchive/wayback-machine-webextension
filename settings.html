@@ -18,32 +18,50 @@
         </td>
     	</tr>
     </table>
-    <h1 style="text-align: center;"><b>Settings</b></h1>
-    <div id="wrap">
-      <div class="show_option">
-        <label for="auto-archive">
-            <input type="checkbox" id="auto-archive">
-            <span class="enable"><b>Enable auto-archive</b></span> 
-        </label>
-        <h3>This will allow to auto-archive.</h3>
+    <h1 style="text-align: center;font-family: Bebas Neue"><strong>Settings</strong></h1>
+    <div>
+        <div id="wrap">
+            <div id="show_option">
+                <div class="auto-archive" style="padding-top: 5px;">
+                    <h2 style="font-family: Gill Sans Light">Auto-archive Feature Settings</h2>
+                    <h3>This will allow to auto-archive.</h3>
+                    <label for="auto-archive">
+                        <input type="checkbox" id="auto-archive">
+                        <span class="enable"><b>Enable auto-archive</b></span> 
+                    </label>
+                </div>
+            </div>
+            <div class="vl"></div>
+            <div id="show_option-2">
+                <div class="context">
+                    <h2 style="font-family: Gill Sans Light">Context Feature Settings</h2>
+                    <h3>Select How Context should be presented</h3>
+                    <select id="show_context" style="padding-top: 5px;">
+                        <option value="tab">Show Context in Tabs</option>
+                        <option value="window">Show Context in Windows</option>
+                        <option value="browser">Show Context in Browsers</option>        
+                    </select>   
+                </div>
+            </div>
+        </div>
         <br>
-        <select id="show_context">
-            <option value="tab">Show Context in Tabs</option>
-            <option value="window">Show Context in Windows</option>
-            <option value="browser">Show Context in Browsers</option>        
-        </select>   
-        <h3>Select How content should be presented</h3>
-      </div>
-    </div>
-    <br>
-    <div style="text-align: center;">
-        <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Save Settings</button>
-        <div id="status" style="margin-top: 10px"></div>
+        <div style="text-align: center;">
+            <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Save Settings</button>
+            <div id="status" style="margin-top: 5px"></div>
+        </div>
     </div>
     <script src="scripts/settings.js"></script>
 	</body>
 </html>
 <style>
+    @font-face {
+        font-family: Bebas Neue;
+        src: url("../fonts/BebasNeue.otf");
+    }
+    @font-face {
+    font-family: Gill Sans Light;
+    src: url("../fonts/GillSans-Light.ttf");
+}
 	tr.spaceUnder > td
 	{
     	padding-bottom: 1em;
@@ -63,14 +81,31 @@
 		vertical-align: middle;
   }
     #wrap {
-        position:relative;
+        position: relative;
         width: 100%;
-        height:auto;
+        height:100px;
         border-style:groove;
         border-color:rgba(121, 197, 165, 0.24);
+        border-radius: 20px;
+        padding-bottom: 60px;
     }
-    .show_option{
-        padding-left: 30px;
-        padding-top: 50px;
+    #show_option{
+        float:left;
+        padding-left: 25px;
+        padding-top: 15px;
+        width: 270px;
+    }
+    #show_option-2{
+        float: right;
+        top: 0px;
+        width: 230px;
+        padding-top: 15px;
+        margin-right: 30px;
+    }
+    .vl {
+        border-left: 6px solid #dff1ea;
+        height: 160px;
+        float: left;
+        margin-left: 15px;
     }
 </style>
