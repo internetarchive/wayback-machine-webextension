@@ -3,7 +3,10 @@
 	<head>
 		<title>
 			Settings-Wayback Machine Chrome Extension
-		</title>
+        </title>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	</head>
 	<body>
 	  <table width="100%" style="min-width: 120px; ">
@@ -19,24 +22,23 @@
     	</tr>
     </table>
     <h1 style="text-align: center;font-family: Bebas Neue"><strong>Settings</strong></h1>
-    <div>
-        <div id="wrap">
-            <div id="show_option">
+    <div class="container">
+        <div class="row" id="wrap">
+            <div id="show_option"  class="col-sm-6">
                 <div class="auto-archive" style="padding-top: 5px;">
                     <h2 style="font-family: Gill Sans Light">Auto-archive Feature Settings</h2>
-                    <h3>This will allow to auto-archive.</h3>
-                    <label for="auto-archive">
+                    <h4>This will allow to auto-archive.</h4>
+                    <label for="auto-archive" style="font-size: 16px;">
                         <input type="checkbox" id="auto-archive">
                         <span class="enable"><b>Enable auto-archive</b></span> 
                     </label>
                 </div>
             </div>
-            <div class="vl"></div>
-            <div id="show_option-2">
+            <div id="show_option-2"  class="col-sm-6">
                 <div class="context">
                     <h2 style="font-family: Gill Sans Light">Context Feature Settings</h2>
-                    <h3>Select How Context should be presented</h3>
-                    <select id="show_context" style="padding-top: 5px;">
+                    <h4>Select How Context should be presented</h4>
+                    <select id="show_context" style="padding-top: 5px;font-size: 17px">
                         <option value="tab">Show Context in Tabs</option>
                         <option value="window">Show Context in Windows</option>
                         <option value="browser">Show Context in Browsers</option>        
@@ -44,10 +46,9 @@
                 </div>
             </div>
         </div>
-        <br>
         <div style="text-align: center;">
-            <button type="button" class="btn btn-secondary"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Save Settings</button>
-            <div id="status" style="margin-top: 5px"></div>
+            <button type="button" class="btn btn-success btn-sm"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Save Settings</button>
+            <div id="status" style="margin-top: 1px"></div>
         </div>
     </div>
     <script src="scripts/settings.js"></script>
@@ -81,31 +82,14 @@
 		vertical-align: middle;
   }
     #wrap {
-        position: relative;
         width: 100%;
-        height:100px;
+        height:auto;
         border-style:groove;
         border-color:rgba(121, 197, 165, 0.24);
         border-radius: 20px;
-        padding-bottom: 60px;
+        padding-bottom: 30px;
+        padding-left: 0px;
+        margin-left: 0px;
     }
-    #show_option{
-        float:left;
-        padding-left: 25px;
-        padding-top: 15px;
-        width: 270px;
-    }
-    #show_option-2{
-        float: right;
-        top: 0px;
-        width: 230px;
-        padding-top: 15px;
-        margin-right: 30px;
-    }
-    .vl {
-        border-left: 6px solid #dff1ea;
-        height: 160px;
-        float: left;
-        margin-left: 15px;
-    }
+
 </style>
