@@ -113,14 +113,31 @@ function social_share(eventObj){
     }
 }
 
-function alexa_statistics(eventObj){
-    var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
-}
-
-function whois_statistics(eventObj){
-    var open_url="https://www.whois.com/whois/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+function statistics(eventObj) {  //Common Function for alexa and whois statistics
+    var target=eventObj.target;
+    var id=target.getAttribute('id');
+    var url=get_clean_url();
+    var length=url.length;
+    var start_index="";
+    if(url.includes('https://')){
+        start_index=8;
+    }else if(url.includes('http://')){
+        start_index=7;
+    }
+    for(var i=start_index;i<length;i++){
+        if(url[i]=='/'){
+            last_index=i;
+            break;
+        }
+    }
+    url=url.slice(0,last_index);
+    if(id.includes("alexa")){
+        var open_url="http://www.alexa.com/siteinfo/" + url;
+        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    }else if(id.includes("whois")){
+        var open_url="https://www.whois.com/whois/" + url;
+        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    }
 }
 
 function search_tweet(eventObj){
@@ -254,6 +271,7 @@ function check_url(url,callback){
         }
     }
 }
+
 function show_all_screens(){
     var url=get_clean_url();
     chrome.runtime.sendMessage({message:"showall",url:url});
@@ -304,8 +322,8 @@ document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =alexa_statistics;
-document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('alexa_statistics').onclick =statistics;
+document.getElementById('whois_statistics').onclick =statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('settings_button').onclick =settings;

@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.6";
+var VERSION = "2.16.7";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -491,50 +491,50 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         }else if(message.message=='showall'){
           chrome.storage.sync.get(['show_context'],function(event){
             if(!event.show_context){
-              event.show_context="tab";
+              event.show_context="tab"; //By-default the context-window open in tabs
             }
+            var received_url=message.url; //URL which is received by message-parsing
+            var length=received_url.length; 
+            var start_index="";
+            if(received_url.includes('https://')){
+              start_index=8;
+            }else if(received_url.includes('http://')){
+              start_index=7;
+            }
+            for(var i=start_index;i<length;i++){
+                if(received_url[i]=='/'){
+                    last_index=i;
+                    break;
+                }
+            }
+            url=received_url.slice(0,last_index); //URL which will be using for alexa and whois 
+            if(received_url.includes('http://')){
+              open_url=received_url.substring(7);
+            }else if(url.includes('https://')){
+              open_url=received_url.substring(8);
+            }
+            if(open_url.slice(-1)=='/') open_url=open_url.substring(0,open_url.length-1); //URL which will be needed for finding tweets
             if(event.show_context=="tab"){
-              var url=message.url;
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
-              chrome.tabs.create({'url':alexa_url });
-              var whois_url="https://www.whois.com/whois/" +url;
-              chrome.tabs.create({'url': whois_url});
-              if(url.includes('http://')){
-                url=url.substring(7);
-              }else if(url.includes('https://')){
-                url=url.substring(8);
-              }
-              if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
-              var open_url="https://twitter.com/search?q="+url;
-              chrome.tabs.create({'url': open_url});
+              chrome.tabs.create({'url':alexa_url,'active':false});
+              var whois_url="https://www.whois.com/whois/" + url;
+              chrome.tabs.create({'url': whois_url,'active':false});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.tabs.create({'url': tweet_url,'active':false});
             }else if(event.show_context=="window"){
-              var url=message.url;
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
               chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false});
-                var whois_url="https://www.whois.com/whois/" +url;
-                chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false});
-                  if(url.includes('http://')){
-                    url=url.substring(7);
-                  }else if(url.includes('https://')){
-                    url=url.substring(8);
-                  }
-                  if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
-                  var open_url="https://twitter.com/search?q="+url;
-                  chrome.windows.create({url:open_url, width:500, height:500, top:0, left:500, focused:false});
-            }else if(event.show_context=="browser"){
-              var url=message.url;
-              var alexa_url="http://www.alexa.com/siteinfo/" + url;
-              chrome.windows.create({url:alexa_url});
               var whois_url="https://www.whois.com/whois/" +url;
-              chrome.windows.create({'url': whois_url});
-              if(url.includes('http://')){
-                url=url.substring(7);
-              }else if(url.includes('https://')){
-                url=url.substring(8);
-              }
-              if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
-              var open_url="https://twitter.com/search?q="+url;
-              chrome.windows.create({'url': open_url});
+              chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false});
+            }else if(event.show_context=="browser"){
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.windows.create({url:alexa_url,state:"maximized"});
+              var whois_url="https://www.whois.com/whois/" +url;
+              chrome.windows.create({'url': whois_url,state:"maximized"});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.windows.create({'url': tweet_url,state:"maximized"});
             }
           });
         }
