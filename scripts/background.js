@@ -493,27 +493,18 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             if(!event.show_context){
               event.show_context="tab"; //By-default the context-window open in tabs
             }
-            var received_url=message.url; //URL which is received by message-parsing
+            var received_url=message.url; //URL which is received by message-parsing_url
+            received_url = received_url.replace(/^https?:\/\//,'');
             var length=received_url.length; 
-            var start_index="";
-            if(received_url.includes('https://')){
-              start_index=8;
-            }else if(received_url.includes('http://')){
-              start_index=7;
+            for(var i=0;i<length;i++){
+              if(received_url[i]=='/'){
+                  last_index=i;
+                  break;
+              }
             }
-            for(var i=start_index;i<length;i++){
-                if(received_url[i]=='/'){
-                    last_index=i;
-                    break;
-                }
-            }
-            url=received_url.slice(0,last_index); //URL which will be using for alexa and whois 
-            if(received_url.includes('http://')){
-              open_url=received_url.substring(7);
-            }else if(url.includes('https://')){
-              open_url=received_url.substring(8);
-            }
-            if(open_url.slice(-1)=='/') open_url=open_url.substring(0,open_url.length-1); //URL which will be needed for finding tweets
+            var url=received_url.slice(0,last_index);    //URL which will be using for alexa and whois
+            var open_url=received_url;          //URL which will be needed for finding tweets
+            if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 
             if(event.show_context=="tab"){
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
               chrome.tabs.create({'url':alexa_url,'active':false});

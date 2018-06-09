@@ -117,14 +117,9 @@ function statistics(eventObj) {  //Common Function for alexa and whois statistic
     var target=eventObj.target;
     var id=target.getAttribute('id');
     var url=get_clean_url();
+    url = url.replace(/^https?:\/\//,'');
     var length=url.length;
-    var start_index="";
-    if(url.includes('https://')){
-        start_index=8;
-    }else if(url.includes('http://')){
-        start_index=7;
-    }
-    for(var i=start_index;i<length;i++){
+    for(var i=0;i<length;i++){
         if(url[i]=='/'){
             last_index=i;
             break;
@@ -142,11 +137,7 @@ function statistics(eventObj) {  //Common Function for alexa and whois statistic
 
 function search_tweet(eventObj){
     var url = get_clean_url();
-    if(url.includes('http://')){
-        url=url.substring(7);
-    }else if(url.includes('https://')){
-        url=url.substring(8);
-    }
+    url = url.replace(/^https?:\/\//,'');
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
