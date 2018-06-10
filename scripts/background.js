@@ -546,24 +546,28 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 var contextMenuItemFirst={
     "id":"first",
     "title":"First Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemRecent={
     "id":"recent",
     "title":"Recent Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 var contextMenuItemAll={
     "id":"all",
     "title":"All Versions",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemSave={
     "id":"save",
     "title":"Save Page Now",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);
