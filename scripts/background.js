@@ -496,12 +496,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             var received_url=message.url; //URL which is received by message-parsing_url
             received_url = received_url.replace(/^https?:\/\//,'');
             var length=received_url.length; 
-            for(var i=0;i<length;i++){
-              if(received_url[i]=='/'){
-                  last_index=i;
-                  break;
-              }
-            }
+            var last_index=received_url.indexOf('/');
             var url=received_url.slice(0,last_index);    //URL which will be using for alexa and whois
             var open_url=received_url;          //URL which will be needed for finding tweets
             if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 

@@ -119,12 +119,7 @@ function statistics(eventObj) {  //Common Function for alexa and whois statistic
     var url=get_clean_url();
     url = url.replace(/^https?:\/\//,'');
     var length=url.length;
-    for(var i=0;i<length;i++){
-        if(url[i]=='/'){
-            last_index=i;
-            break;
-        }
-    }
+    var last_index=url.indexOf('/');
     url=url.slice(0,last_index);
     if(id.includes("alexa")){
         var open_url="http://www.alexa.com/siteinfo/" + url;
