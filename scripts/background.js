@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.7";
+var VERSION = "2.16.8";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -507,6 +507,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               chrome.tabs.create({'url': whois_url,'active':false});
               var tweet_url="https://twitter.com/search?q="+open_url;
               chrome.tabs.create({'url': tweet_url,'active':false});
+              chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false});
             }else if(event.show_context=="window"){
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
               chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false});
@@ -514,6 +515,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false});
               var tweet_url="https://twitter.com/search?q="+open_url;
               chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false});
+              chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url, width:500, height:500, top:500, left:500, focused:false});
             }else if(event.show_context=="browser"){
               var alexa_url="http://www.alexa.com/siteinfo/" + url;
               chrome.windows.create({url:alexa_url,state:"maximized"});
@@ -521,6 +523,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               chrome.windows.create({'url': whois_url,state:"maximized"});
               var tweet_url="https://twitter.com/search?q="+open_url;
               chrome.windows.create({'url': tweet_url,state:"maximized"});
+              chrome.windows.create({url: chrome.runtime.getURL("overview.html")+"?url="+message.url,state:"maximized"});
             }
           });
         }
