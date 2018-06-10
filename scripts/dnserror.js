@@ -1,12 +1,18 @@
-function getParameterByName(name, url) {
-    if (!url) {
-      url = window.location.href;
+/*----New way of getParameterByName-----*/
+function getParameterByName(name){
+    var url=window.location.href;
+    var index=url.indexOf(name);
+    var length=name.length;
+    var indexOfEnd;
+    for(var i=index;i<url.length;i++){
+        if(url[i]=='?'){
+            indexOfEnd=i;
+            break;
+        }
     }
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    return url.slice(index+length+1,indexOfEnd);
 }
-document.getElementById('no-more-404s-dnserror-link').href = getParameterByName('url');
+
+document.getElementById('no-more-404s-dnserror-link').href = getParameterByName('wayback_url');
+document.getElementById('status-code').innerHTML="STATUS : "+getParameterByName('status_code');
+document.getElementById('url-show').innerHTML=getParameterByName('page_url');

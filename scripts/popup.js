@@ -30,13 +30,18 @@ function remove_whois(url){
     return remove_port(new_url);
 }
 /* Common method used everywhere to retrieve cleaned up URL */
-function get_clean_url() {
+function retrieve_url(){
     var search_term = document.getElementById('search_input').value;
     if(search_term == ""){
         var url=global_url;
     }else{
         var url=search_term;
     }
+    return url;
+}
+
+function get_clean_url() {
+    var url=retrieve_url();
     if (url.includes('web.archive.org')) {
         url=remove_wbm(url);
     } else if (url.includes('www.alexa.com')) {
@@ -84,37 +89,50 @@ function get_url(){
 function social_share(eventObj){
     var parent=eventObj.target.parentNode;
     var id=parent.getAttribute('id');
-    var url = get_clean_url();
-    var open_url="";
-    if(id.includes('fb')){
-        open_url="https://www.facebook.com/sharer/sharer.php?u="+url;
-    }else if(id.includes('twit')){
-        open_url="https://twitter.com/home?status="+url;
-    }else if(id.includes('gplus')){
-        open_url="https://plus.google.com/share?url="+url;
-    }else if(id.includes('linkedin')){
-        open_url="https://www.linkedin.com/shareArticle?url="+url;
+    var sharing_url="";
+    var url=retrieve_url();
+    var overview_url="https://web.archive.org/web/*/";
+    if (url.includes('web.archive.org')){
+        sharing_url=url; //If the user is already at a playback page,share that URL
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    else{
+        sharing_url=overview_url+get_clean_url(); //When not on a playback page,share the overview version of that URL
+    }
+    var open_url="";
+    if(!(url.includes('chrome://') || url.includes('chrome-extension://'))){ //Prevents sharing some unnecessary page 
+        if(id.includes('fb')){
+            open_url="https://www.facebook.com/sharer/sharer.php?u="+sharing_url; //Share the wayback machine's overview of the URL
+        }else if(id.includes('twit')){
+            open_url="https://twitter.com/home?status="+sharing_url;
+        }else if(id.includes('gplus')){
+            open_url="https://plus.google.com/share?url="+sharing_url;
+        }else if(id.includes('linkedin')){
+            open_url="https://www.linkedin.com/shareArticle?url="+sharing_url;
+        }
+        window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    }
 }
 
-function alexa_statistics(eventObj){
-    var open_url="http://www.alexa.com/siteinfo/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
-}
-
-function whois_statistics(eventObj){
-    var open_url="https://www.whois.com/whois/" + get_clean_url();
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+function statistics(eventObj) {  //Common Function for alexa and whois statistics
+    var target=eventObj.target;
+    var id=target.getAttribute('id');
+    var url=get_clean_url();
+    url = url.replace(/^https?:\/\//,'');
+    var length=url.length;
+    var last_index=url.indexOf('/');
+    url=url.slice(0,last_index);
+    if(id.includes("alexa")){
+        var open_url="http://www.alexa.com/siteinfo/" + url;
+        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    }else if(id.includes("whois")){
+        var open_url="https://www.whois.com/whois/" + url;
+        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    }
 }
 
 function search_tweet(eventObj){
     var url = get_clean_url();
-    if(url.includes('http://')){
-        url=url.substring(7);
-    }else if(url.includes('https://')){
-        url=url.substring(8);
-    }
+    url = url.replace(/^https?:\/\//,'');
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
     window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
@@ -154,26 +172,95 @@ function display_list(key_word){
 function display_suggestions(e){
     document.getElementById('suggestion-box').style.display='none';
     document.getElementById('suggestion-box').innerHTML="";
-    //setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(function(){
-        var len=document.getElementById('search_input').value.length;
-        if((len)>=3){
-            display_list(document.getElementById('search_input').value);
-        }else{
-            document.getElementById('suggestion-box').style.display='none';
-            document.getElementById('suggestion-box').innerHTML="";
-        }
-    },0.1);
+    if(e.keyCode==13){
+        e.preventDefault();
+    }else {
+        //setTimeout is used to get the text in the text field after key has been pressed
+        window.setTimeout(function(){
+            var len=document.getElementById('search_input').value.length;
+            if((len)>=3){
+                display_list(document.getElementById('search_input').value);
+            }else{
+                document.getElementById('suggestion-box').style.display='none';
+                document.getElementById('suggestion-box').innerHTML="";
+            }
+        },0.1);
+    }
+}
+function open_feedback_page(){
+    var feedback_url="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en";
+    chrome.tabs.create({ url: feedback_url });
 }
 
 function about_support(){
-    window.open("about.html", "", "width=1000, height=1000").focus();
+    window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus();
 }
 
 function makeModal(){
     var url = get_clean_url();
     console.log("Making RT for "+url);
     chrome.runtime.sendMessage({message: "makemodal",rturl:url});
+}
+
+function settings(){
+    window.open('settings.html','newwindow', 'width=500, height=560,left=0');
+}
+
+function auto_archive_url(){
+    var tab_url="";
+    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        tab_url=tabs[0].url;
+        console.log(tab_url);
+        chrome.storage.sync.get(['auto_archive'],function(event){
+            if(event.auto_archive==true){
+                check_url(tab_url,function(){
+                    var wayback_url = "https://web.archive.org/save/";
+                    tab_url = wayback_url+tab_url;
+                    console.log(tab_url);
+                    wm_save_URL(tab_url, function(){
+                        var tabId=tabs[0].id;
+                        console.log(tabId);
+                        chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+                    });
+                });
+            }
+        });
+    });
+}
+
+function wm_save_URL(url, callback) {
+    var http=new XMLHttpRequest();
+    var new_url=url;
+    http.open("GET",new_url,true);
+    http.send(null);
+    http.onreadystatechange = function() {
+        if (this.readyState==4 && this.status==200) {
+            console.log("Archived");
+        }
+    }
+    callback();
+}
+
+function check_url(url,callback){
+    var xhr=new XMLHttpRequest();
+    var new_url="http://archive.org/wayback/available?url="+url;
+    xhr.open("GET",new_url,true);
+    xhr.send(null);
+    xhr.onload = function() {
+        var response = JSON.parse(xhr.response);
+        console.log(response);
+        if(response.archived_snapshots.closest){
+            console.log("available");
+        }else{
+            console.log("not available");
+            callback();
+        }
+    }
+}
+
+function show_all_screens(){
+    var url=get_clean_url();
+    chrome.runtime.sendMessage({message:"showall",url:url});
 }
 
 /** Disabled code for the autosave feature **/
@@ -207,8 +294,13 @@ function makeModal(){
 //restoreSettings();
 //document.getElementById('settings_div').style.display="none";
 
-window.onload=get_url;
-
+// window.onload=get_url;
+window.onloadFuncs = [get_url,auto_archive_url];
+window.onload = function(){
+ for(var i in this.onloadFuncs){
+  this.onloadFuncs[i]();
+ }
+}
 document.getElementById('save_now').onclick = save_now;
 document.getElementById('recent_capture').onclick = recent_capture;
 document.getElementById('first_capture').onclick = first_capture;
@@ -216,18 +308,16 @@ document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =alexa_statistics;
-document.getElementById('whois_statistics').onclick =whois_statistics;
+document.getElementById('alexa_statistics').onclick =statistics;
+document.getElementById('whois_statistics').onclick =statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
+document.getElementById('settings_button').onclick =settings;
+document.getElementById('context-screen').onclick=show_all_screens;
+document.getElementById('feedback').onclick=open_feedback_page;
 
 document.getElementById('overview').onclick = view_all;
 //document.getElementById('settings_btn').onclick=showSettings;
 //document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.message=='urlnotfound'){
-  	alert("URL not found in wayback archives!");
-  }
-});
