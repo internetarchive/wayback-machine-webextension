@@ -27,7 +27,7 @@ if(document.getElementById('myModal') !== null) {
   message.setAttribute('id','message');
   **/
   var span=document.createElement('button');
-  span.innerHTML='&times';
+  span.innerHTML='&times;';
   span.setAttribute('class','RTclose');
   modal.appendChild(span);
   /**
