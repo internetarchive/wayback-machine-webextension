@@ -71,7 +71,8 @@ function recent_archive_details(){
 function get_thumbnail(){
     var url=getUrlByParameter('url');
     url = url.replace(/^https?:\/\//,'');
-    if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
+    var index=url.indexOf('/');
+    url=url.substring(0,index);
     var xhr=new XMLHttpRequest();
     var new_url="https://web.archive.org/thumb/"+url;
     xhr.open("GET",new_url,true);
@@ -86,6 +87,12 @@ function get_thumbnail(){
         else{
             document.getElementById("show_thumbnail").innerHTML="Thumbnail not found";
         }
+    }
+    xhr.onerror=function(){
+        document.getElementById("show_thumbnail").innerHTML="Thumbnail not found";
+    };
+    xhr.ontimeout = function() {
+        document.getElementById("show_thumbnail").innerHTML="Please refresh the page...Time out!!";
     }
     xhr.responseType = 'blob';
     xhr.send(null);
