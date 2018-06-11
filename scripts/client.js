@@ -96,60 +96,54 @@
             createEl("div",
               function(el) {
                 el.id = "no-more-404s-header";
-                el.style.alignItems = "center";
                 el.style.backgroundColor = "#0996f8";
                 el.style.borderBottom = "1px solid #0675d3";
                 el.style.borderRadius = "4px 4px 0 0";
                 el.style.color = "#fff";
-                el.style.display = "flex";
-                el.style.fontSize = "24px";
-                el.style.fontWeight = "700";
-                el.style.height = "64px";
-                el.style.justifyContent = "center";
+                el.style.fontSize = "20px";
+                el.style.fontWeight = "600";
+                el.style.display="block";
               },
               createEl("div",
                 function(el){
-                  el.id="status-code";
-                  el.style.position="absolute";
-                  el.style.display = "flex";
-                  el.style.top="7px";
-                  el.style.left="0px";
-                  el.style.width="auto";
-                  el.style.fontSize = "18px";
-                  el.style.fontFamily="'Courier New', Courier, monospace";                  
-                  el.style.color="rgb(0, 0, 0)";
-                  var text_node=document.createTextNode("STATUS : "+status_code);
-                  el.appendChild(text_node);
-                }
+                  el.id="show-status";
+                  el.style.display="inline-block";
+                  el.style.padding="10px 0px 8px 7px";
+                },
+                createEl("span",
+                  function(el){
+                    el.id="status-show";
+                    el.style.fontFamily="'Courier New', Courier, monospace";                  
+                    el.style.color="rgb(0, 0, 0)";
+                    el.innerHTML="Status Code:";
+                  }
+                ),
+                createEl("span",
+                  function(el){
+                    el.id="status-code-show";
+                    el.style.fontFamily="'Courier New', Courier, monospace";                  
+                    el.style.color="rgb(0, 0, 0)";
+                    el.appendChild(document.createTextNode(status_code));
+                  }
+                )
               ),
               createEl("div",
                 function(el){
                   el.id="url";
-                  el.style.position="absolute";
-                  el.style.left="0px";
-                  el.style.top="27px";
-                  el.style.fontSize = "18px";
-                  el.style.fontFamily="'Courier New', Courier, monospace";
-                  el.style.color="rgb(0, 0, 0)";
-                  var text_node=document.createTextNode("URL : ");
-                  el.appendChild(text_node);
-                }
+                  el.style.padding="0px 0px 0px 7px";
+                },
+                createEl("span",
+                  function(el){
+                    el.id="url-show";
+                    el.style.display="inline-block";
+                    el.style.fontFamily="'Courier New', Courier, monospace";                  
+                    el.style.color="rgb(0, 0, 0)";
+                    el.style.wordWrap="break-word"
+                    el.style.padding="0px 0px 5px 0px";
+                    el.appendChild(document.createTextNode(page_url));
+                  }
+                ),
               ),
-              createEl("div",
-              function(el){
-                el.id="url-show";
-                el.style.position="absolute";
-                el.style.wordWrap="break-word";
-                el.style.left="60px";
-                el.style.top="27px";
-                el.style.fontSize = "18px";
-                el.style.height="40px";
-                el.style.width="360px";
-                el.style.fontFamily="'Courier New', Courier, monospace";
-                el.style.color="rgb(0, 0, 0)";
-                el.innerHTML=page_url;
-              }
-            ),
               createEl("button",
                 function(el) {
                   el.style.position = "absolute";

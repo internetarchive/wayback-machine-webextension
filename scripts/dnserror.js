@@ -14,5 +14,5 @@ function getParameterByName(name){
 }
 
 document.getElementById('no-more-404s-dnserror-link').href = getParameterByName('wayback_url');
-document.getElementById('status-code').innerHTML="STATUS : "+getParameterByName('status_code');
+document.getElementById('status-code-show').innerHTML=getParameterByName('status_code');
 document.getElementById('url-show').innerHTML=getParameterByName('page_url');
