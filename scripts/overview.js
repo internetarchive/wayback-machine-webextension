@@ -8,7 +8,6 @@ function getUrlByParameter(name){
 }
 
 var url=getUrlByParameter('url');
-console.log(url);
 
 function get_details(){
     var url=getUrlByParameter('url');
@@ -41,17 +40,17 @@ function first_archive_details(){
     xhr.onload=function(){
         var data=JSON.parse(xhr.response);
         if(data.length==0){
-            document.getElementById("first_archive_date").innerHTML="Data is not available -Not archived before";
-            document.getElementById("first_archive_date_2").innerHTML="Data is not available -Not archived before";
-            document.getElementById("first_archive_time").innerHTML="Data is not available-Not archived before )";
+            document.getElementById("first_archive_date").innerHTML="( Data is not available -Not archived before )";
+            document.getElementById("first_archive_date_2").innerHTML="( Data is not available -Not archived before )";
+            document.getElementById("first_archive_time").innerHTML="( Data is not available-Not archived before )";
             document.getElementById("link_first").href="https://web.archive.org/web/0/"+url;
         }else {
             var timestamp=data[1][1];
             var date=timestamp.substring(0,4)+'/'+timestamp.substring(4,6)+'/'+timestamp.substring(6,8);
             var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
-            document.getElementById("first_archive_date").innerHTML=date;
-            document.getElementById("first_archive_date_2").innerHTML=date;
-            document.getElementById("first_archive_time").innerHTML=time+") according to Universal Time Coordinated (UTC)";
+            document.getElementById("first_archive_date").innerHTML="( "+date+" )";
+            document.getElementById("first_archive_date_2").innerHTML="( "+date+" )";
+            document.getElementById("first_archive_time").innerHTML="( "+time+" ) according to Universal Time Coordinated (UTC)";
             document.getElementById("link_first").href="https://web.archive.org/web/0/"+url;
         }
     }
@@ -66,15 +65,15 @@ function recent_archive_details(){
     xhr.onload=function(){
         var data=JSON.parse(xhr.response);
         if(data.length==0){
-            document.getElementById("recent_archive_date").innerHTML="Data is not available -Not archived before";
-            document.getElementById("recent_archive_time").innerHTML="Data is not available-Not archived before )";
+            document.getElementById("recent_archive_date").innerHTML="( Data is not available -Not archived before )";
+            document.getElementById("recent_archive_time").innerHTML="( Data is not available-Not archived before )";
             document.getElementById("link_recent").href="https://web.archive.org/web/2/"+url;
         }else {
             var timestamp=data[1][1];
             var date=timestamp.substring(0,4)+'/'+timestamp.substring(4,6)+'/'+timestamp.substring(6,8);
             var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
-            document.getElementById("recent_archive_date").innerHTML=date;
-            document.getElementById("recent_archive_time").innerHTML=time+") according to Universal Time Coordinated (UTC)";
+            document.getElementById("recent_archive_date").innerHTML="( "+date+" )";
+            document.getElementById("recent_archive_time").innerHTML="( "+time+") according to Universal Time Coordinated (UTC)";
             document.getElementById("link_recent").href="https://web.archive.org/web/2/"+url;
         }
     }
@@ -89,7 +88,7 @@ function get_thumbnail(){
     var new_url="https://web.archive.org/thumb/"+url;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
-        if(this.response){
+        if(this.response.size!=233){
             var img = document.createElement('img');
             var url = window.URL || window.webkitURL;
             img.src = url.createObjectURL(this.response);
