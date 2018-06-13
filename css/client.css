@@ -16,9 +16,8 @@
     background-color:transparent;
     color: #333;
     text-align: left;
-
 }
-.no-more-404s-message-class{
+.no-more-404s-messages{
     background :rgba(0,0,0,.6);
     position :fixed;
     top :0;
@@ -29,9 +28,8 @@
     display:flex;
     align-items:center;
     justify-content:center;
-
 }
-.no-more-404s-message-inner-class{
+.no-more-404s-messages-inner{
     flex :0 0 420px;
     position: relative;
     top:0;
@@ -44,9 +42,8 @@
     align-items: stretch;
     justify-content: center;
     box-shadow: 0 4px 20px rgba(0,0,0,.5);
-
 } 
-.no-more-404s-header-class{
+.no-more-404s-header-content{
     background-color: #0996f8;
     border-bottom: 1px solid #0675d3;
     border-radius: 4px 4px 0 0;
@@ -54,37 +51,32 @@
     font-size: 20px;
     font-weight: 600;
     display: block;
-
 }
-.status-class{ 
+.status-code-content{ 
     display:inline-block;
     padding:10px 0px 8px 7px;
     line-height: 20px;
-
 }
-.status-show-class{
+.status-show{
     font-family:'Courier New', Courier, monospace;                  
     color:rgb(0, 0, 0);
 }
-.status-code-show-class{
+.status-code-show{
     font-family:'Courier New', Courier, monospace;                  
     color:rgb(0, 0, 0);
-
 }
-.url-class{
+.url-show-content{
     padding: 0px 0px 0px 7px;
-
 }
-.url-show-class{
+.url-show{
     padding: 0px 0px 5px 0px;
     font-family:'Courier New', Courier, monospace;                  
     color:rgb(0, 0, 0);
     display: inline-block;
     word-wrap: break-word;
     line-height: 20px;
-
 }
-.button-cross-class{
+.button-cross{
     position: absolute;
     display: flex;
     align-items: center;
@@ -99,32 +91,28 @@
     box-sizing: border-box;
     padding: 0;
     border: none;
-
 }
-.imgae-class{
+.imgae-button{
     height: 16px;
     transition: "background-color 100ms";
     width: 16px;
     margin: 0 auto;
-
 }
-.p-class{
+.paragraph{
     margin :13px 0 9px 0;
     font-family:Impact;
     text-align: center;
     color: rgb(0, 0, 0);
     font-size: 23px;
-
 }
-.no-more-404s-image-class{
+.no-more-404s-image{
     height:auto;
     position :relative;
     width :100%;
     box-sizing:border-box;
     padding :10px 22px;
-
 }
-.no-more-404s-message-link-class{
+.no-more-404s-messages-link{
     align-items: center;
     background-color:#0996f8 ;
     border:1px solid #0675d3;
@@ -136,15 +124,12 @@
     justify-content: center;
     margin: 20px;
     text-decoration: none;
-
 }
-.no-more-404s-message-link-class :hover{
+.no-more-404s-messages-link:hover{
     background-color:#0996f8 ;
     border: 1px solid #0568ba;
-
 }
-.no-more-404s-message-link-class :active{
+.no-more-404s-messages-link:active{
     background-color:#0675d3 ;
     border: 1px solid #0568ba;
-
 }

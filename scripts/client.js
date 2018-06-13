@@ -52,50 +52,50 @@
     document.body.appendChild(
     createEl("div",
         function(el) {
-          el.className="no-more-404s-message-class";
+          el.className="no-more-404s-messages";
           el.id = "no-more-404s-message";
           },
           createEl("div",
             function(el) {
-              el.className="no-more-404s-message-inner-class"
+              el.className="no-more-404s-messages-inner"
               el.id = "no-more-404s-message-inner";
             },
             createEl("div",
               function(el) {
-                el.className="no-more-404s-header-class"
+                el.className="no-more-404s-header-content"
                 el.id = "no-more-404s-header";
               },
               createEl("div",
                 function(el){
-                  el.className="status-class"
+                  el.className="status-code-content"
                 },
                 createEl("span",
                   function(el){
-                    el.className="status-show-class"
+                    el.className="status-show"
                     el.innerHTML="Status Code:";
                   }
                 ),
                 createEl("span",
                   function(el){
-                    el.className="status-code-show-class"
+                    el.className="status-code-show"
                     el.appendChild(document.createTextNode(status_code));
                   }
                 )
               ),
               createEl("div",
                 function(el){
-                  el.className="url-class";
+                  el.className="url-show-content";
                 },
                 createEl("span",
                   function(el){
-                    el.className="url-show-class"
+                    el.className="url-show"
                     el.appendChild(document.createTextNode(page_url));
                   }
                 ),
               ),
               createEl("button",
                 function(el) {
-                  el.className="button-cross-class";
+                  el.className="button-cross";
                   el.onclick = function() {
                     clearInterval(enforceBannerInterval);
                     document.getElementById("no-more-404s-message").style.display = "none";
@@ -104,7 +104,7 @@
                 },
                 createEl("img",
                   function(el) {
-                    el.className="imgae-class";
+                    el.className="imgae-button";
                     el.src = chrome.extension.getURL("images/close.svg");
                     el.alt = "close";
                   }
@@ -112,16 +112,15 @@
               )
             ),
             createEl("p", function(el) {
-              el.className="p-class";
+              el.className="paragraph";
               el.appendChild(document.createTextNode("View a saved version courtesy of the"));
             }),
             createEl("img", function(el) {
-              el.className = "no-more-404s-image-class"
-              el.id = "no-more-404s-image";
+              el.className = "no-more-404s-image"
               el.src = chrome.extension.getURL("images/logo.gif");
             }),
             createEl("a", function(el) {
-              el.className="no-more-404s-message-link-class";
+              el.className="no-more-404s-messages-link";
               el.id = "no-more-404s-message-link";
               el.href = wayback_url;
               el.appendChild(document.createTextNode("Click here to see archived version"));
