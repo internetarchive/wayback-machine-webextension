@@ -508,59 +508,94 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             var url=received_url.slice(0,last_index);    //URL which will be using for alexa and whois
             var open_url=received_url;          //URL which will be needed for finding tweets
             if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 
-
             chrome.storage.sync.get(['auto_update_context'],function(event1){
               if(event1.auto_update_context==false){
                 if(event.show_context=="tab"){
                   var alexa_url="http://www.alexa.com/siteinfo/" + url;
                   chrome.tabs.create({'url':alexa_url,'active':false},function(tab){
                     tabId1=tab.id;
+                    chrome.tabs.onRemoved.addListener(function (tab1) {
+                      tabId1=0;
+                    });
                   });
                   var whois_url="https://www.whois.com/whois/" + url;
                   chrome.tabs.create({'url': whois_url,'active':false},function(tab){
                     tabId2=tab.id;
+                    chrome.tabs.onRemoved.addListener(function (tab1) {
+                      tabId2=0;
+                    });
                   });
                   var tweet_url="https://twitter.com/search?q="+open_url;
                   chrome.tabs.create({'url': tweet_url,'active':false},function(tab){
                     tabId3=tab.id;
+                    chrome.tabs.onRemoved.addListener(function (tab1) {
+                      tabId3=0;
+                    });
                   });
                   chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
                     tabId4=tab.id;
+                    chrome.tabs.onRemoved.addListener(function (tab1) {
+                      tabId4=0;
+                    });
                   });
                 }else if(event.show_context=="window"){
                   var alexa_url="http://www.alexa.com/siteinfo/" + url;
                   chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                     windowId1 = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      windowId1=0;
+                    });
                   });
                   var whois_url="https://www.whois.com/whois/" +url;
                   chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
                     windowId2 = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      windowId2=0;
+                    });
                   });
                   var tweet_url="https://twitter.com/search?q="+open_url;
                   chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false},function (win) {
                     windowId3 = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      windowId3=0;
+                    });
                   });
                   chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,width:500, height:500, top:500, left:500, focused:false},function (win) {
                     windowId4 = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      windowId4=0;
+                    });
                   });
                 }
               }else{
                 if(event.show_context=="tab"){
-                  if(tabId1==0 ||tabId2==0||tabId3==0||tabId4==0){
+                  if(tabId1==0 || tabId2==0 || tabId3==0 || tabId4==0){
                     var alexa_url="http://www.alexa.com/siteinfo/" + url;
                     chrome.tabs.create({'url':alexa_url,'active':false},function(tab){
                       tabId1=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tab1) {
+                        tabId1=0;
+                      });
                     });
                     var whois_url="https://www.whois.com/whois/" + url;
                     chrome.tabs.create({'url': whois_url,'active':false},function(tab){
                       tabId2=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tab1) {
+                        tabId2=0;
+                      });
                     });
                     var tweet_url="https://twitter.com/search?q="+open_url;
                     chrome.tabs.create({'url': tweet_url,'active':false},function(tab){
                       tabId3=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tab1) {
+                        tabId3=0;
+                      });
                     });
                     chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
                       tabId4=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tab1) {
+                        tabId4=0;
+                      });
                     });
                   }else{
                     var alexa_url="http://www.alexa.com/siteinfo/" + url;
@@ -576,17 +611,29 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     var alexa_url="http://www.alexa.com/siteinfo/" + url;
                     chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                       windowId1 = win.id;
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        windowId1=0;
+                      });
                     });
                     var whois_url="https://www.whois.com/whois/" +url;
                     chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
                       windowId2 = win.id;
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        windowId2=0;
+                      });
                     });
                     var tweet_url="https://twitter.com/search?q="+open_url;
                     chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false},function (win) {
                       windowId3 = win.id;
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        windowId3=0;
+                      });
                     });
                     chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,width:500, height:500, top:500, left:500, focused:false},function (win) {
                       windowId4 = win.id;
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        windowId4=0;
+                      });
                     });
                   }else{
                     chrome.tabs.query({
@@ -799,11 +846,94 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
-    //var page_url = tab.url;
+      var received_url = tab.url;
+      if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com"))){
+        received_url = received_url.replace(/^https?:\/\//,'');
+        var length=received_url.length; 
+        var last_index=received_url.indexOf('/');
+        var url=received_url.slice(0,last_index);  
+        var open_url=received_url;
+        if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
+        chrome.storage.sync.get(['auto_update_context'],function(event){
+          if(event.auto_update_context==true){
+            chrome.storage.sync.get(['show_context'],function(event1){
+              if(event1.show_context=="tab"){
+                if((tabId1!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)){
+                  if((tab.id!=tabId1)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)){
+                    var alexa_url="http://www.alexa.com/siteinfo/" + url;
+                    chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
+                    var whois_url="https://www.whois.com/whois/" + url;
+                    chrome.tabs.update(parseInt(tabId2), {url:whois_url});
+                    var tweet_url="https://twitter.com/search?q="+open_url;
+                    chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
+                    chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                  }
+                }
+              }else{
+                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)){
+                  chrome.tabs.query({
+                    windowId: windowId1
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdAlexa=tab1.id;
+                  });  
+                  chrome.tabs.query({
+                    windowId: windowId2
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdWhois=tab1.id;
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId3
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdtwit=tab1.id;
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId4
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdoverview=tab1.id;
+                  });
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)){
+                    chrome.tabs.query({
+                      windowId: windowId1
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      var alexa_url="http://www.alexa.com/siteinfo/" + url;
+                      chrome.tabs.update(tab1.id, {url:alexa_url});
+                    });  
+                    chrome.tabs.query({
+                      windowId: windowId2
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      var whois_url="https://www.whois.com/whois/" +url;
+                      chrome.tabs.update(tab1.id, {url:whois_url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId3
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      var tweet_url="https://twitter.com/search?q="+open_url;
+                      chrome.tabs.update(tab1.id, {url:tweet_url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId4
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                    });
+                  }
+                }   
+              }
+            });
+          }
+        });
+      }
       chrome.storage.sync.get(['auto_archive'],function(event){
         if(event.auto_archive==true){
           auto_save(tab.id);
