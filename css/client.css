@@ -91,6 +91,7 @@
     box-sizing: border-box;
     padding: 0;
     border: none;
+    cursor: pointer;
 }
 .imgae-button{
     height: 16px;
