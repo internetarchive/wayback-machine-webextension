@@ -210,19 +210,26 @@ function auto_archive_url(){
     var tab_url="";
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         tab_url=tabs[0].url;
+        tabId=tabs[0].id;
         console.log(tab_url);
         chrome.storage.sync.get(['auto_archive'],function(event){
             if(event.auto_archive==true){
-                check_url(tab_url,function(){
-                    var wayback_url = "https://web.archive.org/save/";
-                    tab_url = wayback_url+tab_url;
-                    console.log(tab_url);
-                    wm_save_URL(tab_url, function(){
-                        var tabId=tabs[0].id;
-                        console.log(tabId);
-                        chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+                if(!((tab_url.includes("https://web.archive.org/web/")) || (tab_url.includes("chrome://newtab")))){
+                    check_url(tab_url,function(){
+                        var wayback_url = "https://web.archive.org/save/";
+                        chrome.browserAction.getBadgeText({tabId:tabId}, function (result){
+                            if((result=="S")){
+                                tab_url = wayback_url+tab_url;
+                                console.log(tab_url);
+                                wm_save_URL(tab_url, function(){
+                                    var tabId=tabs[0].id;
+                                    console.log(tabId);
+                                    chrome.runtime.sendMessage({message:"changeBadge",tabId:tabId});
+                                });
+                            }
+                        });
                     });
-                });
+                }
             }
         });
     });
@@ -251,6 +258,14 @@ function check_url(url,callback){
         console.log(response);
         if(response.archived_snapshots.closest){
             console.log("available");
+            chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+                var tab_id=tabs[0].id;
+                chrome.browserAction.getBadgeText({tabId:tab_id}, function (result){
+                    if(result=="S"){
+                        chrome.runtime.sendMessage({message:"changeBadge",tabId:tab_id});
+                    }
+                });
+            });
         }else{
             console.log("not available");
             callback();

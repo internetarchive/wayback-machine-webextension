@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.17.3";
+var VERSION = "2.17.4";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -294,7 +294,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
       509, 520, 521, 523, 524, 525, 526];
-      
       if (isIncognito === false &&
         details.frameId === 0 &&
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
@@ -496,6 +495,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           var tabId=message.tabId;
           console.log(tabId);
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
+          console.log("Badge Changed");
         }else if(message.message=='showall'){
           chrome.storage.sync.get(['show_context'],function(event){
             if(!event.show_context){
@@ -945,13 +945,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
   }
 });
 
+
 function auto_save(tabId){
   chrome.tabs.get(tabId, function(tab) {
-      var page_url = tab.url;
-      chrome.browserAction.setBadgeText({tabId: tabId, text:""});
-      console.log(page_url);
-      if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
-        wmAvailabilityCheck(page_url,
+    var page_url = tab.url;
+    chrome.browserAction.setBadgeText({tabId: tabId, text:""});
+    console.log(page_url);
+    if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+      if(!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))){
+        check_url(page_url,
           function() {
             console.log("Available already");
           }, 
@@ -962,7 +964,23 @@ function auto_save(tabId){
             // chrome.runtime.sendMessage({message: "checkProper",tabId:tabId},function(response) {
             //   console.log(response.message);
             // });
-          });
+        });
       }
+    }
   });
+}
+
+function check_url(url,onfound,onnotfound){
+  var xhr=new XMLHttpRequest();
+  var new_url="http://archive.org/wayback/available?url="+url;
+  xhr.open("GET",new_url,true);
+  xhr.send(null);
+  xhr.onload = function() {
+      var response = JSON.parse(xhr.response);
+      if(response.archived_snapshots.closest){
+        onfound();
+      }else{
+        onnotfound();
+      }
+  }
 }
