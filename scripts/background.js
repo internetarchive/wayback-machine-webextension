@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.16.7";
+var VERSION = "2.16.8";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -341,6 +341,11 @@ chrome.webRequest.onCompleted.addListener(function(details) {
           tabIsReady(tab.incognito);
         });
       }
+
+    if(!details.url.startsWith("chrome://")){
+        console.log("Please inject");
+        chrome.tabs.executeScript(details.tabId, {file:"scripts/links.js"});    
+    }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 /**
  * Checks Wayback Machine API for url snapshot
