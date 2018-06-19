@@ -11,14 +11,16 @@ function get_annotations(){
     var url=getUrlByParameter('url');
     var xhr= new XMLHttpRequest();
     var test_url=url.replace(/^https?:\/\//,'');
+    if(test_url.includes('iskme.org')){
+        test_url=test_url.replace(/^www\./,'');
+    }
     test_url=test_url.replace('/','.')
     var url=test_url.split(".");
-    var main_url=url[0];
-    for(var i=1;i<url.length-1;i++){
+    var main_url="";
+    for(var i=0;i<url.length-1;i++){
         main_url+="&uri.parts="+url[i];
     }
-    console.log(main_url);
-    var new_url="https://hypothes.is/api/search?uri.parts="+main_url;
+    var new_url="https://hypothes.is/api/search?"+main_url;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
         var data=JSON.parse(xhr.response);

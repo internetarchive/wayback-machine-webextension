@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.17.5";
+var VERSION = "2.17.6";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
