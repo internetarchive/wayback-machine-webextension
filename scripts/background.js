@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.17.4";
+var VERSION = "2.17.5";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -253,10 +253,12 @@ var windowId1 =0;
 var windowId2 =0;
 var windowId3 =0;
 var windowId4 =0;
+var windowId5=0;
 var tabId1=0;
 var tabId2=0;
 var tabId3=0;
 var tabId4=0;
+var tabId5=0;
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
@@ -538,6 +540,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       tabId4=0;
                     });
                   });
+                  chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
+                    tabId5=tab.id;
+                    chrome.tabs.onRemoved.addListener(function (tab1) {
+                      tabId5=0;
+                    });
+                  });                 
                 }else if(event.show_context=="window"){
                   var alexa_url="http://www.alexa.com/siteinfo/" + url;
                   chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
@@ -564,6 +572,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     windowId4 = win.id;
                     chrome.windows.onRemoved.addListener(function (win1) {
                       windowId4=0;
+                    });
+                  });
+                  chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
+                    windowId5 = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      windowId5=0;
                     });
                   });
                 }
@@ -597,6 +611,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         tabId4=0;
                       });
                     });
+                    chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
+                      tabId5=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tab1) {
+                        tabId5=0;
+                      });
+                    });
                   }else{
                     var alexa_url="http://www.alexa.com/siteinfo/" + url;
                     chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
@@ -605,6 +625,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     var tweet_url="https://twitter.com/search?q="+open_url;
                     chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                     chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});  
+                    chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
                   }
                 }else if(event.show_context=="window"){
                   if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0){
@@ -635,6 +656,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         windowId4=0;
                       });
                     });
+                    chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
+                      windowId5 = win.id;
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        windowId5 = 0;
+                      });
+                    });
                   }else{
                     chrome.tabs.query({
                       windowId: windowId1
@@ -662,7 +689,13 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }, function(tabs) {
                       var tab=tabs[0];
                       chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-                    });   
+                    }); 
+                    chrome.tabs.query({
+                      windowId: windowId5
+                    }, function(tabs) {
+                      var tab=tabs[0];
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+                    });  
                   }                               
                 }
               }
@@ -846,7 +879,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview;
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
@@ -863,7 +896,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
             chrome.storage.sync.get(['show_context'],function(event1){
               if(event1.show_context=="tab"){
                 if((tabId1!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)){
-                  if((tab.id!=tabId1)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)){
+                  if((tab.id!=tabId1)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)){
                     var alexa_url="http://www.alexa.com/siteinfo/" + url;
                     chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
                     var whois_url="https://www.whois.com/whois/" + url;
@@ -871,10 +904,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     var tweet_url="https://twitter.com/search?q="+open_url;
                     chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                     chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                    chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
                   }
                 }
               }else{
-                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)){
+                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)){
                   chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
@@ -899,7 +933,14 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     var tab1=tabs[0];
                     tabIdoverview=tab1.id;
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)){
+                  chrome.tabs.query({
+                    windowId: windowId5
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdannotation=tab1.id;
+                  });
+
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)){
                     chrome.tabs.query({
                       windowId: windowId1
                     }, function(tabs) {
@@ -926,6 +967,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     }, function(tabs) {
                       var tab1=tabs[0];
                       chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId5
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
                     });
                   }
                 }   
