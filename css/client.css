@@ -75,6 +75,7 @@
     display: inline-block;
     word-wrap: break-word;
     line-height: 20px;
+    width: 420px;
 }
 .button-cross{
     position: absolute;
