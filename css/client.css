@@ -51,6 +51,7 @@
     font-size: 20px;
     font-weight: 600;
     display: block;
+    text-align: left;
 }
 .status-code-content{ 
     display:inline-block;
@@ -129,9 +130,5 @@
 }
 .no-more-404s-messages-link:hover{
     background-color:#0996f8 ;
-    border: 1px solid #0568ba;
-}
-.no-more-404s-messages-link:active{
-    background-color:#0675d3 ;
     border: 1px solid #0568ba;
 }

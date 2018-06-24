@@ -66,7 +66,7 @@ function get_annotations(){
             }
             document.getElementById("row-contain").style.display="none";
         }else{
-            document.getElementById("row-contain").innerHTML="Annotaions for the given URL doesnot exist";
+            document.getElementById("row-contain").innerHTML="There are no Annotations for the current URL";
         }
     }
     xhr.send(null);
