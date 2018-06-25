@@ -56,32 +56,39 @@
             </div>
             <div id="show_option_4"  class="col-sm-3">
                 <div class="auto-archive" style="padding-top: 5px;">
-                    <h2 style="font-family: Gill Sans Light">Context Settings</h2>
-                    <h4>Select which context you want to see</h4>
-                    <label for="alexa" style="font-size: 14px;">
-                        <input type="checkbox" name="context" id="alexa" class="only">
-                        <span class="enable"><b>Alexa Context (Only)</b></span> 
-                    </label>
-                    <label for="whois" style="font-size: 14px;">
-                        <input type="checkbox" name="context" id="whois" class="only">
-                        <span class="enable"><b>Whois Context (Only)</b></span> 
-                    </label>
-                    <label for="tweets" style="font-size: 14px;">
-                        <input type="checkbox" name="context" id="tweets" class="only">
-                        <span class="enable"><b>Tweets of the URL Context (Only)</b></span> 
-                    </label>
-                    <label for="wbmsummary" style="font-size: 14px;">
-                        <input type="checkbox" name="context" id="wbmsummary" class="only">
-                        <span class="enable"><b>Wayback Machine Summary Context (Only)</b></span> 
-                    </label> 
-                    <label for="annotations" style="font-size: 14px;">
-                        <input type="checkbox" name="context" id="annotations" class="only">
-                        <span class="enable"><b>Annotations Context (Only)</b></span> 
-                    </label>
-                    <label for="showall" style="font-size: 14px;">
-                        <input type="checkbox" id="showall">
-                        <span class="enable"><b>Show All Context Screens</b></span> 
-                    </label>
+                    <h2 style="font-family: Gill Sans Light">Context Feature Settings</h2>
+                    <h4>Select which Context Screen you want to see</h4>
+                    <div id="adjust" style="text-align: left">
+                        <label for="alexa" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="alexa" class="only">
+                            <span class="enable"><b>Alexa Context (Only)</b></span> 
+                        </label>
+                        <br>
+                        <label for="whois" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="whois" class="only">
+                            <span class="enable"><b>Whois Context (Only)</b></span> 
+                        </label>
+                        <br>
+                        <label for="tweets" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="tweets" class="only">
+                            <span class="enable"><b>Tweets of the URL Context (Only)</b></span> 
+                        </label>
+                        <br>
+                        <label for="wbmsummary" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="wbmsummary" class="only">
+                            <span class="enable"><b>Wayback Machine Summary Context (Only)</b></span> 
+                        </label> 
+                        <br>
+                        <label for="annotations" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="annotations" class="only">
+                            <span class="enable"><b>Annotations Context (Only)</b></span> 
+                        </label>
+                        <br>
+                        <label for="showall" style="font-size: 14px;">
+                            <input type="checkbox" id="showall">
+                            <span class="enable"><b>Show All Context Screens</b></span> 
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,5 +137,9 @@
         padding-left: 0px;
         margin-left: 0px;
     }
-
+    @media only screen and (max-width: 600px) {
+        #adjust{
+            margin-left: 137px;
+        }
+    }
 </style>
