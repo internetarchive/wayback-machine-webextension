@@ -9,25 +9,22 @@ function getUrlByParameter(name){
 
 function get_annotations(){
     var url=getUrlByParameter('url');
-    console.log(url);
     var xhr= new XMLHttpRequest();
-    var test_url=url.replace(/^https?:\/\//,'');
-    if(test_url.includes('iskme.org')){
-        test_url=test_url.replace(/^www\./,'');
+    var test_url="";
+    console.log(url);
+    if(url.includes('iskme.org')){
+        test_url=url.replace(/^https?:\/\//,'');
+        test_url=url.replace(/^www\./,'');
     }
-    console.log(test_url);
-    test_url=test_url.replace('/','.')
-    var url=test_url.split(".");
-    var main_url="";
-    for(var i=0;i<url.length-1;i++){
-        main_url+="&uri.parts="+url[i];
+    if(test_url){
+        url=test_url;
     }
-    var new_url="https://hypothes.is/api/search?"+main_url;
+    var new_url="https://hypothes.is/api/search?uri="+url;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
         var data=JSON.parse(xhr.response);
-        var length=data.rows.length;
         console.log(data);
+        var length=data.rows.length;
         if(length>0){
             for(var i=0;i<length;i++){
                 var rowData=data.rows[i];

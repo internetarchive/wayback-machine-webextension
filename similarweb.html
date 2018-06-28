@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/annotation.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <title>
+            Overview of an URL as per SimilarWeb
+        </title>
+    </head>
+    <body>
+        <table width="100%" style="max-height: 200px; ">
+            <tr class="spaceUnder">
+                <td style="text-align: center;">
+                    <div id ="horizontal_line" style="margin-bottom: 5px"></div>
+                        <div class='container' style="background: white">
+                            <img class='resize_fit_center'
+                            src='images/logo.gif' />
+                        </div>
+                    <div id="horizontal_line" style="margin-top:3px"></div>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <h2 style="text-align: center;"><strong>Overview of Current URL</strong><br><span style="font-size: 50%;font-family:sans-serif"> From <a style="cursor: pointer;" href="https://www.similarweb.com/">SimilarWeb</a></span></h2>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Total traffic (Visits)</strong>
+                    <p>This is the total visit to the current URL you are at,in last three months</p>
+                    <ul style="font-size: 30px">
+                        <li>
+                            Date: <span id="date-1-1"></span><br>
+                            Traffic: <span id="traffic-1"></span>
+                        </li>
+                        <li>
+                            Date: <span id="date-1-2"></span><br>
+                            Traffic: <span id="traffic-2"></span>
+                        </li>
+                        <li>
+                            Date: <span id="date-1-3"></span><br>
+                            Traffic: <span id="traffic-3"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-12 col-md-6 right-side">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Global Rank in last three months</strong>
+                    <p>This is the rank description of the current URL you are at, in last three months</p>
+                    <ul style="font-size: 30px">
+                        <li>
+                            Date: <span id="date-1"></span><br>
+                            Rank: <span id="rank-1"></span>
+                        </li>
+                        <li>
+                            Date: <span id="date-2"></span><br>
+                            Rank: <span id="rank-2"></span>
+                        </li>
+                        <li>
+                            Date: <span id="date-3"></span><br>
+                            Rank: <span id="rank-3"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Total Engagement in the Last Month</strong>
+                    <p>This is the total Engagement of the current URL in different Forms</p>
+                    <ul style="font-size: 30px">
+                        <li>
+                            <span style="color: greenyellow">Page Views: </span><span id="page-views"></span>
+                        </li>
+                        <li>
+                            <span style="color:black">Bounce Rate: </span><span id="bounce-rate"></span>
+                        </li>
+                        <li>
+                            <span style="color:steelblue">Time On Site: </span><span id="time_on_site"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-12 col-md-6 right-side">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Similar Websites</strong>
+                    <p>This is the list of similar Websites</p>
+                    <ul style="font-size: 30px">
+                        <li>
+                            <a id="a-1"></a>
+                        </li>
+                        <li>
+                            <a id="a-2"></a>
+                        </li>
+                        <li>
+                            <a id="a-3"></a>
+                        </li>
+                        <li>
+                            <a id="a-4"></a>  
+                        </li>
+                        <li>
+                            <a id="a-5"></a> 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 test" id="hide">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Social Network Sources</strong>
+                    <h3 id="social-1"></h3>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" id="progress-1" role="progressbar" aria-valuemin="0" aria-valuemax="100" >
+                        </div>
+                    </div>
+                    <h3 id="social-2"></h3>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" id="progress-2" role="progressbar" aria-valuemin="0" aria-valuemax="100" >
+                        </div>
+                    </div>
+                    <h3 id="social-3"></h3>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" id="progress-3" role="progressbar" aria-valuemin="0" aria-valuemax="100" >
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="scripts/similarweb.js"></script>
+<style>
+body{
+    max-height: 100%;
+}
+@font-face {
+    font-family: Bebas Neue;
+    src: url("../fonts/BebasNeue.otf");
+}
+
+@font-face {
+    font-family: Gill Sans Light;
+    src: url("../fonts/GillSans-Light.ttf");
+}
+#horizontal_line{
+    margin: 0px; 
+    padding: 0px; 
+    border: 0px solid rgb(6, 117, 211); 
+    font-size: 19px; font-style: inherit;
+    font-variant: inherit; 
+    font-weight: inherit; 
+    font-stretch: inherit; 
+    line-height: 1; 
+    font-family: sans-serif; 
+    vertical-align: baseline; 
+    box-sizing: content-box; 
+    overflow: unset; 
+    height: 1px; 
+    position: relative; 
+    width: auto; 
+    display: flex; 
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
+    text-align: left; 
+    align-items: center; 
+    border-radius: 3px; 
+    justify-content: center; 
+    text-decoration: none;
+}
+
+.resize_fit_center {
+    max-width:100%;
+    max-height:100px;
+}
+
+h2{
+    font-family: Bebas Neue;
+    font-size: 50px;
+}
+
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+p{
+    font-family:Gill Sans Light;
+    font-size: 20px;
+}
+@media screen and (min-width: 400px) {
+    .test {
+        text-align: center;
+    }
+
+}
+@media screen and (min-width: 1000px) {
+
+    .right-side{
+        padding-left: 100px; 
+    }
+}
+</style>
+

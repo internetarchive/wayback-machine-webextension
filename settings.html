@@ -24,7 +24,7 @@
     <h1 style="text-align: center;font-family: Bebas Neue"><strong>Settings</strong></h1>
     <div class="container">
         <div class="row" id="wrap">
-            <div id="show_option"  class="col-sm-3">
+            <div id="show_option"  class="col-sm-2">
                 <div class="auto-archive" style="padding-top: 5px;">
                     <h2 style="font-family: Gill Sans Light">Auto-archive Feature Settings</h2>
                     <h4>This will allow to auto-archive.</h4>
@@ -34,7 +34,7 @@
                     </label>
                 </div>
             </div>
-            <div id="show_option-2"  class="col-sm-3">
+            <div id="show_option-2"  class="col-sm-2">
                 <div class="context">
                     <h2 style="font-family: Gill Sans Light">Context Feature Settings</h2>
                     <h4>Select How Context should be presented</h4>
@@ -44,7 +44,7 @@
                     </select>   
                 </div>
             </div>
-            <div id="show_option-3"  class="col-sm-3">
+            <div id="show_option-3"  class="col-sm-2">
                 <div class="auto-update" style="padding-top: 5px;">
                     <h2 style="font-family: Gill Sans Light">Auto-update Context Settings</h2>
                     <h4>This automatically update the Context Tabs or Windows (Without opeing new Tabs/Windows)</h4>
@@ -54,11 +54,21 @@
                     </label>
                 </div>
             </div>
-            <div id="show_option_4"  class="col-sm-3">
+            <div id="show_option-5"  class="col-sm-2">
+                <div class="annotation-context" style="padding-top: 5px;">
+                    <h2 style="font-family: Gill Sans Light">Annotation Window Settings</h2>
+                    <h4>Select which Annotation window you want to see</h4>
+                    <select id="currentORdomain" style="padding-top: 5px;font-size: 17px">
+                        <option value="current">Show Annotation for Current URL</option>
+                        <option value="domain">Show Annotation for Current Domain</option>   
+                    </select>
+                </div>
+            </div>
+            <div id="show_option_4"  class="col-sm-2">
                 <div class="auto-archive" style="padding-top: 5px;">
                     <h2 style="font-family: Gill Sans Light">Context Feature Settings</h2>
                     <h4>Select which Context Screen you want to see</h4>
-                    <div id="adjust" style="text-align: left">
+                    <div id="adjust" style="text-align: left;line-height: 20px">
                         <label for="alexa" style="font-size: 14px;">
                             <input type="checkbox" name="context" id="alexa" class="only">
                             <span class="enable"><b>Alexa Context (Only)</b></span> 
@@ -82,6 +92,10 @@
                         <label for="annotations" style="font-size: 14px;">
                             <input type="checkbox" name="context" id="annotations" class="only">
                             <span class="enable"><b>Annotations Context (Only)</b></span> 
+                        </label>
+                        <label for="similarweb" style="font-size: 14px;">
+                            <input type="checkbox" name="context" id="similarweb" class="only">
+                            <span class="enable"><b>SimilarWeb Context (Only)</b></span> 
                         </label>
                         <br>
                         <label for="showall" style="font-size: 14px;">

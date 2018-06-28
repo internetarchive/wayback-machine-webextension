@@ -7,8 +7,6 @@ function getUrlByParameter(name){
     return url.slice(index+length+1,indexOfEnd);
 }
 
-var url=getUrlByParameter('url');
-
 function get_details(){
     var url=getUrlByParameter('url');
     var xhr=new XMLHttpRequest();
@@ -25,6 +23,7 @@ function get_details(){
                 total=parseInt(total+(data['text/html']));
             }
         }
+        total=total.toLocaleString();
         document.getElementById("total_archives").innerHTML=total;
         document.getElementById("save_now").href="https://web.archive.org/save/"+url;
     }
@@ -46,7 +45,7 @@ function first_archive_details(){
             document.getElementById("link_first").href="https://web.archive.org/web/0/"+url;
         }else {
             var timestamp=data[1][1];
-            var date=timestamp.substring(0,4)+'/'+timestamp.substring(4,6)+'/'+timestamp.substring(6,8);
+            var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
             var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
             document.getElementById("first_archive_date").innerHTML="( "+date+" )";
             document.getElementById("first_archive_date_2").innerHTML="( "+date+" )";
@@ -70,7 +69,7 @@ function recent_archive_details(){
             document.getElementById("link_recent").href="https://web.archive.org/web/2/"+url;
         }else {
             var timestamp=data[1][1];
-            var date=timestamp.substring(0,4)+'/'+timestamp.substring(4,6)+'/'+timestamp.substring(6,8);
+            var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
             var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
             document.getElementById("recent_archive_date").innerHTML="( "+date+" )";
             document.getElementById("recent_archive_time").innerHTML="( "+time+") according to Universal Time Coordinated (UTC)";
