@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.0";
+var VERSION = "2.18.1";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -255,6 +255,7 @@ var windowId3 =0;
 var windowId4 =0;
 var windowId5=0;
 var windowId6=0;
+var windowId7=0;
 var windowIdtest=0;
 var tabId1=0;
 var tabId2=0;
@@ -262,6 +263,7 @@ var tabId3=0;
 var tabId4=0;
 var tabId5=0;
 var tabId6=0;
+var tabId7=0;
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
@@ -523,12 +525,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 event1.auto_update_context=false;
               }
               if(event1.auto_update_context==false){
+                console.log("auto update false");
                 chrome.storage.sync.get(['showall'],function(event2){
                   if(event2.showall==undefined){
                     event2.showall=true;
                   }
                   if(event2.showall==true){
                     if(event.show_context=="tab"){
+                      console.log("autoupdate false and showall true and tab");
                       chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                         windowIdtest = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
@@ -591,8 +595,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId6=0;
                           }
                         });
-                      });             
+                      });         
+                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
+                        tabId7=tab.id;
+                        chrome.tabs.onRemoved.addListener(function (tabtest) {
+                          if(tabtest==tabId7){
+                            tabId7=0;
+                          }
+                        });
+                      });         
                     }else if(event.show_context=="window"){
+                      console.log("autoupdate false and showall true and window");
                       chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
@@ -656,9 +669,18 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
+                      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:700, left:1200, focused:false},function (win) {
+                        windowId7 = win.id;
+                        chrome.windows.onRemoved.addListener(function (win1) {
+                          if(win1==windowId7){
+                            windowId7=0;
+                          }
+                        });
+                      });
                     }
                   }
                   else{
+                    console.log("autoupdate false and showall false");
                     chrome.storage.sync.get(function(event4){
                       if(event4.alexa==true){
                         console.log("checking 1");
@@ -684,11 +706,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                         console.log("checking 5");
                                         openThatContext("annotations",message.url,event.show_context);
                                       }
-                                        chrome.storage.sync.get(function(event4){
-                                          if(event4.similarweb==true){
+                                        chrome.storage.sync.get(function(event9){
+                                          if(event9.similarweb==true){
                                             console.log("checking 6");
                                             openThatContext("similarweb",url,event.show_context);
                                           }
+                                          chrome.storage.sync.get(function(event10){
+                                            if(event10.tagcloud==true){
+                                              console.log("checking 6");
+                                              openThatContext("tagcloud",url,event.show_context);
+                                            }
+                                          });
                                         });
                                     });
                                 });
@@ -705,6 +733,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         event2.showall=true;
                       }
                       if(event2.showall==true){
+                        console.log("autoupdate true and showall true and tab");
                         chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                           windowIdtest = win.id;
                           chrome.windows.onRemoved.addListener(function (win1) {
@@ -761,15 +790,24 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             });   
                           }
                         });
-                      chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
-                        tabId6=tab.id;
+                        chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
+                          tabId6=tab.id;
+                          chrome.tabs.onRemoved.addListener(function (tabtest) {
+                            if(tabtest==tabId6){
+                              tabId6=0;
+                            }
+                          });
+                        });
+                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
+                        tabId7=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId6){
-                            tabId6=0;
+                          if(tabtest==tabId7){
+                            tabId7=0;
                           }
                         });
                       });  
                       }else{
+                        console.log("autoupdate true and showall false and tab");
                         chrome.storage.sync.get(function(event4){
                           if(event4.alexa==true){
                             console.log("checking 1");
@@ -795,11 +833,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                             console.log("checking 5");
                                             openThatContext("annotations",message.url,event.show_context);
                                           }
-                                            chrome.storage.sync.get(function(event4){
-                                              if(event4.similarweb==true){
+                                            chrome.storage.sync.get(function(event9){
+                                              if(event9.similarweb==true){
                                                 console.log("checking 6");
                                                 openThatContext("similarweb",url,event.show_context);
                                               }
+                                              chrome.storage.sync.get(function(event10){
+                                                if(event10.tagcloud==true){
+                                                  console.log("checking 6");
+                                                  openThatContext("tagcloud",url,event.show_context);
+                                                }
+                                              });
                                             });
                                         });
                                     });
@@ -823,6 +867,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       }
                     });
                     chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                    chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                   }
                 }else if(event.show_context=="window"){
                   if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0){
@@ -894,6 +939,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             }
                           });
                         });
+                        chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
+                          windowId7 = win.id;
+                          chrome.windows.onRemoved.addListener(function (win1) {
+                            if(win1==windowId7){
+                              windowId7=0;
+                            }
+                          });
+                        });
                       }else{
                         chrome.storage.sync.get(function(event4){
                           if(event4.alexa==true){
@@ -920,11 +973,17 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                             console.log("checking 5");
                                             openThatContext("annotations",message.url,event.show_context);
                                           }
-                                            chrome.storage.sync.get(function(event4){
-                                              if(event4.similarweb==true){
+                                            chrome.storage.sync.get(function(event9){
+                                              if(event9.similarweb==true){
                                                 console.log("checking 6");
                                                 openThatContext("similarweb",url,event.show_context);
                                               }
+                                              chrome.storage.sync.get(function(event10){
+                                                if(event10.similarweb==true){
+                                                  console.log("checking 6");
+                                                  openThatContext("tagcloud",url,event.show_context);
+                                                }
+                                              });
                                             });
                                         });
                                     });
@@ -983,6 +1042,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       var tab=tabs[0];
                       chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                     });  
+                    chrome.tabs.query({
+                      windowId: windowId7
+                    }, function(tabs) {
+                      var tab=tabs[0];
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                    });
                   }                               
                 }
               }
@@ -1166,19 +1231,18 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb;
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
       var received_url = tab.url;
       if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com"))){
         received_url = received_url.replace(/^https?:\/\//,'');
-        var length=received_url.length; 
+        var length =received_url.length; 
         var last_index=received_url.indexOf('/');
         var url=received_url.slice(0,last_index);  
         var open_url=received_url;
         if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
-        console.log("here");
         chrome.storage.sync.get(['auto_update_context'],function(event){
           if(event.auto_update_context==true){
             console.log("here");
@@ -1212,6 +1276,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                         });
                       }else if((tab1.url).includes("similarweb")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                      }else if((tab1.url).includes("tagcloud")){
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                       }
                       var whois_url="https://www.whois.com/whois/" + url;
                       chrome.tabs.update(parseInt(tabId2), {url:whois_url});
@@ -1227,11 +1293,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                         }
                       });
                       chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                      chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                     }
                   }); 
                 }
               }else{
-                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)){
+                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)||(windowId7!=0)){
                   chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
@@ -1268,7 +1335,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     var tab1=tabs[0];
                     tabIdsimilarweb=tab1.id;
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)){
+                  chrome.tabs.query({
+                    windowId: windowId7
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdtagcloud=tab1.id;
+                  });
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)){
                     chrome.tabs.query({
                       windowId: windowId1
                     }, function(tabs) {
@@ -1317,6 +1390,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     }, function(tabs) {
                       var tab1=tabs[0];
                       chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId7
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                     });
                   }
                 }   
@@ -1445,6 +1524,15 @@ function openThatContext(temp,url,methodOfShowing){
             }
           });
         });
+      }else if(temp=='tagcloud'){
+        chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+          windowIdtest = win.id;
+          chrome.windows.onRemoved.addListener(function (win1) {
+            if(win1==windowIdtest){
+              windowIdtest=0;
+            }
+          });
+        });
       }
     }else{
       chrome.tabs.query({
@@ -1513,8 +1601,17 @@ function openThatContext(temp,url,methodOfShowing){
           chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
             tabId6=tab.id;
             chrome.tabs.onRemoved.addListener(function (tabtest) {
-              if(tabtest==tabId5){
+              if(tabtest==tabId6){
                 tabId6=0;
+              }
+            });
+          });
+        }else if(temp=='tagcloud'){
+          chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
+            tabId7=tab.id;
+            chrome.tabs.onRemoved.addListener(function (tabtest) {
+              if(tabtest==tabId7){
+                tabId7=0;
               }
             });
           });
@@ -1583,11 +1680,20 @@ function openThatContext(temp,url,methodOfShowing){
         }
       });
     }else if (temp=='similarweb'){
-      chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
+      chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
         windowId6 = win.id;
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId6){
             windowId6=0;
+          }
+        });
+      });
+    }else if (temp=='tagcloud'){
+      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
+        windowId7 = win.id;
+        chrome.windows.onRemoved.addListener(function (win1) {
+          if(win1==windowId7){
+            windowId7=0;
           }
         });
       });

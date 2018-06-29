@@ -12,6 +12,7 @@ function restore_options() {
     wbmsummary:false,
     annotations:false,
     similarweb:false,
+    tagcloud:false,
     showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
@@ -24,6 +25,7 @@ function restore_options() {
     document.getElementById('wbmsummary').checked = items.wbmsummary;
     document.getElementById('annotations').checked = items.annotations;
     document.getElementById('similarweb').checked = items.similarweb;
+    document.getElementById('tagcloud').checked = items.tagcloud;
     document.getElementById('showall').checked = items.showall;
   });
 }
@@ -38,6 +40,7 @@ function save_options() {
   var wbmsummary= document.getElementById('wbmsummary').checked;
   var annotations= document.getElementById('annotations').checked;
   var similarweb= document.getElementById('similarweb').checked;
+  var tagcloud = document.getElementById('tagcloud').checked;
   var showall= document.getElementById('showall').checked;
   chrome.storage.sync.set({
     show_context:show_context,
@@ -50,6 +53,7 @@ function save_options() {
     wbmsummary:wbmsummary,
     annotations:annotations,
     similarweb:similarweb,
+    tagcloud:tagcloud,
     showall:showall
   }, function() {
     var status = document.getElementById('status');
