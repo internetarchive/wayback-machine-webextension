@@ -3,7 +3,6 @@ document.getElementById('save').addEventListener('click',save_options);
 function restore_options() {
   chrome.storage.sync.get({
     show_context:'tab',
-    annotation_context:'domain',
     auto_archive: false,
     auto_update_context:false,
     alexa:false,
@@ -11,19 +10,20 @@ function restore_options() {
     tweets:false,
     wbmsummary:false,
     annotations:false,
+    annotationsurl:false,
     similarweb:false,
     tagcloud:false,
     showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
     document.getElementById('show_context').value = items.show_context;
-    document.getElementById('currentORdomain').value = items.annotation_context;
     document.getElementById('auto-update-context').checked=items.auto_update_context;
     document.getElementById('alexa').checked = items.alexa;
     document.getElementById('whois').checked = items.whois;
     document.getElementById('tweets').checked = items.tweets;
     document.getElementById('wbmsummary').checked = items.wbmsummary;
     document.getElementById('annotations').checked = items.annotations;
+    document.getElementById('annotationsurl').checked = items.annotationsurl;
     document.getElementById('similarweb').checked = items.similarweb;
     document.getElementById('tagcloud').checked = items.tagcloud;
     document.getElementById('showall').checked = items.showall;
@@ -31,7 +31,6 @@ function restore_options() {
 }
 function save_options() {
   var show_context = document.getElementById('show_context').value;
-  var annotation_context=document.getElementById('currentORdomain').value;
   var auto_archive= document.getElementById('auto-archive').checked;
   var auto_update_context=document.getElementById('auto-update-context').checked;
   var alexa= document.getElementById('alexa').checked;
@@ -39,12 +38,12 @@ function save_options() {
   var tweets= document.getElementById('tweets').checked;
   var wbmsummary= document.getElementById('wbmsummary').checked;
   var annotations= document.getElementById('annotations').checked;
+  var annotationsurl=document.getElementById('annotationsurl').checked;
   var similarweb= document.getElementById('similarweb').checked;
   var tagcloud = document.getElementById('tagcloud').checked;
   var showall= document.getElementById('showall').checked;
   chrome.storage.sync.set({
     show_context:show_context,
-    annotation_context:annotation_context,
     auto_archive: auto_archive,
     auto_update_context:auto_update_context,
     alexa:alexa,
@@ -52,6 +51,7 @@ function save_options() {
     tweets:tweets,
     wbmsummary:wbmsummary,
     annotations:annotations,
+    annotationsurl:annotationsurl,
     similarweb:similarweb,
     tagcloud:tagcloud,
     showall:showall
@@ -70,7 +70,6 @@ function validate(eventObj) {
   for(var i=0, n=checkboxes.length;i<n;i++) {
     if(checkboxes[i].checked==true){
       document.getElementById('showall').checked=false;
-      console.log(document.getElementById('showall').checked);
     }
   }
 }

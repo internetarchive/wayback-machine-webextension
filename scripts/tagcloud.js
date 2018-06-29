@@ -16,17 +16,15 @@ function get_details(){
         console.log(JSON.parse(xhr.response));
         data=JSON.parse(xhr.response);
         console.log(data.length);
+        var mynewTags=new Array();
         for(var i=0;i<data.length;i++){
-            var create = document.createElement('a');
-            create.setAttribute('rel', (data[i][1]*2));
-            var createAText = document.createTextNode(data[i][0]+"  ");
-            create.appendChild(createAText);
-            document.getElementById("tags").appendChild(create);
+            var b=new Object();
+            b.text=data[i][0];
+            b.weight=(data[i][1]*4);
+            mynewTags.push(b);
         }
-        $("#tags a").tagcloud({
-            size: {start: 30, end:50, unit: "px"},
-            color: {start: '#3498DB', end: '#46CFB0'}
-        });
+        console.log(mynewTags);
+        $("#hey").jQCloud(mynewTags);
     }
     xhr.send(null);
 }

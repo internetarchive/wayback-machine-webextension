@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.1";
+var VERSION = "2.18.2";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -256,6 +256,7 @@ var windowId4 =0;
 var windowId5=0;
 var windowId6=0;
 var windowId7=0;
+var windowId8=0;
 var windowIdtest=0;
 var tabId1=0;
 var tabId2=0;
@@ -264,6 +265,7 @@ var tabId4=0;
 var tabId5=0;
 var tabId6=0;
 var tabId7=0;
+var tabId8=0;
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
@@ -567,26 +569,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      chrome.storage.sync.get(['annotation_context'],function(event){
-                        if(event.annotation_context=="domain"){
-                          chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
-                            tabId5=tab.id;
-                            chrome.tabs.onRemoved.addListener(function (tabtest) {
-                              if(tabtest==tabId5){
-                                tabId5=0;
-                              }
-                            });
-                          }); 
-                        }else{
-                          chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
-                            tabId5=tab.id;
-                            chrome.tabs.onRemoved.addListener(function (tabtest) {
-                              if(tabtest==tabId5){
-                                tabId5=0;
-                              }
-                            });
-                          });
-                        }
+                      chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
+                        tabId5=tab.id;
+                        chrome.tabs.onRemoved.addListener(function (tabtest) {
+                          if(tabtest==tabId5){
+                            tabId5=0;
+                          }
+                        });
+                      }); 
+                      chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
+                        tabId8=tab.id;
+                        chrome.tabs.onRemoved.addListener(function (tabtest) {
+                          if(tabtest==tabId8){
+                            tabId8=0;
+                          }
+                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                         tabId6=tab.id;
@@ -640,26 +637,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }            
                         });
                       });
-                      chrome.storage.sync.get(['annotation_context'],function(event){
-                        if(event.annotation_context=="domain"){
-                          chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                            windowId5 = win.id;
-                            chrome.windows.onRemoved.addListener(function (win1) {
-                              if(win1==windowId5){
-                                windowId5=0;
-                              }
-                            });
-                          });
-                        }else{
-                          chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                            windowId5 = win.id;
-                            chrome.windows.onRemoved.addListener(function (win1) {
-                              if(win1==windowId5){
-                                windowId5=0;
-                              }
-                            });
-                          });
-                        }
+                      chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
+                        windowId5 = win.id;
+                        chrome.windows.onRemoved.addListener(function (win1) {
+                          if(win1==windowId5){
+                            windowId5=0;
+                          }
+                        });
+                      });
+                      chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
+                        windowId8 = win.id;
+                        chrome.windows.onRemoved.addListener(function (win1) {
+                          if(win1==windowId8){
+                            windowId8=0;
+                          }
+                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:500, left:1000, focused:false},function (win) {
                         windowId6 = win.id;
@@ -716,6 +708,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                               console.log("checking 6");
                                               openThatContext("tagcloud",url,event.show_context);
                                             }
+                                            chrome.storage.sync.get(function(event10){
+                                              if(event11.annotationsurl==true){
+                                                console.log("checking 6");
+                                                openThatContext("annotationsurl",message.url,event.show_context);
+                                              }
+                                            });
                                           });
                                         });
                                     });
@@ -754,7 +752,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         var tweet_url="https://twitter.com/search?q="+open_url;
                         chrome.tabs.create({'url': tweet_url,'active':false},function(tab){
                           tabId3=tab.id;
-                          tabtest=tab.id;
                           chrome.tabs.onRemoved.addListener(function (tabtest) {
                             if(tabtest==tabId3){
                               tabId3=0;
@@ -769,27 +766,22 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             }
                           });
                         });
-                        chrome.storage.sync.get(['annotation_context'],function(event){
-                          if(event.annotation_context=="domain"){
-                            chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
-                              tabId5=tab.id;
-                              chrome.tabs.onRemoved.addListener(function (tabtest) {
-                                if(tabtest==tabId5){
-                                  tabId5=0;
-                                }
-                              });
-                            });   
-                          }else{
-                            chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
-                              tabId5=tab.id;
-                              chrome.tabs.onRemoved.addListener(function (tabtest) {
-                                if(tabtest==tabId5){
-                                  tabId5=0;
-                                }
-                              });
-                            });   
-                          }
-                        });
+                        chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
+                          tabId5=tab.id;
+                          chrome.tabs.onRemoved.addListener(function (tabtest) {
+                            if(tabtest==tabId5){
+                              tabId5=0;
+                            }
+                          });
+                        });   
+                        chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
+                          tabId8=tab.id;
+                          chrome.tabs.onRemoved.addListener(function (tabtest) {
+                            if(tabtest==tabId8){
+                              tabId8=0;
+                            }
+                          });
+                        });   
                         chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                           tabId6=tab.id;
                           chrome.tabs.onRemoved.addListener(function (tabtest) {
@@ -843,6 +835,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                                   console.log("checking 6");
                                                   openThatContext("tagcloud",url,event.show_context);
                                                 }
+                                                chrome.storage.sync.get(function(event11){
+                                                  if(event11.annotationsurl==true){
+                                                    console.log("checking 6");
+                                                    openThatContext("annotationsurl",url,event.show_context);
+                                                  }
+                                                });
                                               });
                                             });
                                         });
@@ -859,13 +857,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     var tweet_url="https://twitter.com/search?q="+open_url;
                     chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                     chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-                    chrome.storage.sync.get(['annotation_context'],function(event){
-                      if(event.annotation_context=="domain"){
-                        chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-                      }else{
-                        chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-                      }
-                    });
+                    chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+                    chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
                     chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                     chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                   }
@@ -910,26 +903,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             }            
                           });
                         });
-                        chrome.storage.sync.get(['annotation_context'],function(event){
-                          if(event.annotation_context=="domain"){
-                            chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                              windowId5 = win.id;
-                              chrome.windows.onRemoved.addListener(function (win1) {
-                                if(win1==windowId5){
-                                  windowId5=0;
-                                }
-                              });
-                            });
-                          }else{
-                            chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                              windowId5 = win.id;
-                              chrome.windows.onRemoved.addListener(function (win1) {
-                                if(win1==windowId5){
-                                  windowId5=0;
-                                }
-                              });
-                            });
-                          }
+                        chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
+                          windowId5 = win.id;
+                          chrome.windows.onRemoved.addListener(function (win1) {
+                            if(win1==windowId5){
+                              windowId5=0;
+                            }
+                          });
+                        });
+                        chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
+                          windowId8 = win.id;
+                          chrome.windows.onRemoved.addListener(function (win1) {
+                            if(win1==windowId8){
+                              windowId8=0;
+                            }
+                          });
                         });
                         chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:500, left:1000, focused:false},function (win) {
                           windowId6 = win.id;
@@ -983,6 +971,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                                   console.log("checking 6");
                                                   openThatContext("tagcloud",url,event.show_context);
                                                 }
+                                                chrome.storage.sync.get(function(event10){
+                                                  if(event10.annotationsurl==true){
+                                                    console.log("checking 6");
+                                                    openThatContext("annotationsurl",url,event.show_context);
+                                                  }
+                                                });
                                               });
                                             });
                                         });
@@ -1019,23 +1013,18 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       var tab=tabs[0];
                       chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
                     });
-                    chrome.storage.sync.get(['annotation_context'],function(event){
-                      if(event.annotation_context=="domain"){
-                        chrome.tabs.query({
-                          windowId: windowId5
-                        }, function(tabs) {
-                          var tab=tabs[0];
-                          chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-                        });
-                      }else{
-                        chrome.tabs.query({
-                          windowId: windowId5
-                        }, function(tabs) {
-                          var tab=tabs[0];
-                          chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-                        });
-                      }
-                    });  
+                    chrome.tabs.query({
+                      windowId: windowId5
+                    }, function(tabs) {
+                      var tab=tabs[0];
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId8
+                    }, function(tabs) {
+                      var tab=tabs[0];
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
+                    });
                     chrome.tabs.query({
                       windowId: windowId6
                     }, function(tabs) {
@@ -1231,7 +1220,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud;
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
@@ -1267,13 +1256,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       }else if((tab1.url).includes("overview")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                       }else if((tab1.url).includes("annotation")){
-                        chrome.storage.sync.get(['annotation_context'],function(eventtest){
-                          if(eventtest.annotation_context=="domain"){
-                            chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                          }else{
-                            chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-                          }
-                        });
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
+                      }else if((tab1.url).includes("annotationURL")){
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                       }else if((tab1.url).includes("similarweb")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                       }else if((tab1.url).includes("tagcloud")){
@@ -1284,14 +1269,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       var tweet_url="https://twitter.com/search?q="+open_url;
                       chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                       chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
-                      chrome.storage.sync.get(['annotation_context'],function(event){
-                        if(event.annotation_context=="domain"){
-                          chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                        }else{
-                          chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-
-                        }
-                      });
+                      chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
+                      chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                       chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
                     }
@@ -1341,7 +1320,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     var tab1=tabs[0];
                     tabIdtagcloud=tab1.id;
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)){
+                  chrome.tabs.query({
+                    windowId: windowId8
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdannotationurl=tab1.id;
+                  });
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)){
                     chrome.tabs.query({
                       windowId: windowId1
                     }, function(tabs) {
@@ -1368,23 +1353,18 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       var tab1=tabs[0];
                       chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                     });
-                    chrome.storage.sync.get(['annotation_context'],function(event){
-                      if(event.annotation_context=="domain"){
-                        chrome.tabs.query({
-                          windowId: windowId5
-                        }, function(tabs) {
-                          var tab1=tabs[0];
-                          chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                        });
-                      }else{
-                        chrome.tabs.query({
-                          windowId: windowId5
-                        }, function(tabs) {
-                          var tab1=tabs[0];
-                          chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-                        });
-                      }
-                    });  
+                    chrome.tabs.query({
+                      windowId: windowId5
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId8
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
+                    });
                     chrome.tabs.query({
                       windowId: windowId6
                     }, function(tabs) {
@@ -1494,26 +1474,22 @@ function openThatContext(temp,url,methodOfShowing){
           });
         });
       }else if(temp=='annotations'){
-        chrome.storage.sync.get(['annotation_context'],function(event){
-          if(event.annotation_context=="domain"){
-            chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-              windowIdtest = win.id;
-              chrome.windows.onRemoved.addListener(function (win1) {
-                if(win1==windowIdtest){
-                  windowIdtest=0;
-                }
-              });
-            });
-          }else{
-            chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-              windowIdtest = win.id;
-              chrome.windows.onRemoved.addListener(function (win1) {
-                if(win1==windowIdtest){
-                  windowIdtest=0;
-                }
-              });
-            });
-          }
+        chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+          windowIdtest = win.id;
+          chrome.windows.onRemoved.addListener(function (win1) {
+            if(win1==windowIdtest){
+              windowIdtest=0;
+            }
+          });
+        });
+      }else if(temp=='annotationsurl'){
+        chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+          windowIdtest = win.id;
+          chrome.windows.onRemoved.addListener(function (win1) {
+            if(win1==windowIdtest){
+              windowIdtest=0;
+            }
+          });
         });
       }else if(temp=='similarweb'){
         chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
@@ -1575,28 +1551,23 @@ function openThatContext(temp,url,methodOfShowing){
             });
           });
         }else if(temp=='annotations'){
-          chrome.storage.sync.get(['annotation_context'],function(event){
-            if(event.annotation_context=="domain"){
-              chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,'active':false},function(tab){
-                tabId5=tab.id;
-                chrome.tabs.onRemoved.addListener(function (tabtest) {
-                  if(tabtest==tabId5){
-                    tabId5=0;
-                  }
-                });
-              });  
-            }else{
-              chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
-                tabId5=tab.id;
-                chrome.tabs.onRemoved.addListener(function (tabtest) {
-                  if(tabtest==tabId5){
-                    tabId5=0;
-                  }
-                });
-              });  
-            }
-          });
-          
+          chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,'active':false},function(tab){
+            tabId5=tab.id;
+            chrome.tabs.onRemoved.addListener(function (tabtest) {
+              if(tabtest==tabId5){
+                tabId5=0;
+              }
+            });
+          });  
+        }else if(temp=='annotationsurl'){
+          chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
+            tabId8=tab.id;
+            chrome.tabs.onRemoved.addListener(function (tabtest) {
+              if(tabtest==tabId8){
+                tabId8=0;
+              }
+            });
+          });  
         }else if(temp=='similarweb'){
           chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
             tabId6=tab.id;
@@ -1658,26 +1629,22 @@ function openThatContext(temp,url,methodOfShowing){
         });
       });
     }else if(temp=='annotations'){
-      chrome.storage.sync.get(['annotation_context'],function(event){
-        if(event.annotation_context=="domain"){
-          chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
-            windowId5 = win.id;
-            chrome.windows.onRemoved.addListener(function (win1) {
-              if(win1==windowId5){
-                windowId5=0;
-              }
-            });
-          });
-        }else{
-          chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
-            windowId5 = win.id;
-            chrome.windows.onRemoved.addListener(function (win1) {
-              if(win1==windowId5){
-                windowId5=0;
-              }
-            });
-          });
-        }
+      chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
+        windowId5 = win.id;
+        chrome.windows.onRemoved.addListener(function (win1) {
+          if(win1==windowId5){
+            windowId5=0;
+          }
+        });
+      });
+    }else if(temp=='annotationsurl'){
+      chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
+        windowId8 = win.id;
+        chrome.windows.onRemoved.addListener(function (win1) {
+          if(win1==windowId8){
+            windowId8=0;
+          }
+        });
       });
     }else if (temp=='similarweb'){
       chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
