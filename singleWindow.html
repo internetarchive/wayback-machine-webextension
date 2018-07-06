@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/annotation.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/jqcloud.css">
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/jqcloud-1.0.4.min.js"></script>
+        <title>
+            All Context Screen
+        </title>
+    </head>
+    <body>
+        <table width="100%" style="max-height: 200px; ">
+            <tr class="spaceUnder">
+                <td style="text-align: center;">
+                    <div id ="horizontal_line" style="margin-bottom: 5px"></div>
+                        <div class='container' style="background: white">
+                            <img class='resize_fit_center'
+                            src='images/logo.gif' />
+                        </div>
+                    <div id="horizontal_line" style="margin-top:3px"></div>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <h2 style="text-align: center;"><strong>Alexa, Whois overview of Current URL</strong><br></h2>
+        </div>
+        <div class="container" id="container-whole">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4></h4> 
+                    <pre id="show_alexa_data" style="font-size: 20px">  
+                    </pre>
+                </div>
+                <div class="col-sm-6">
+                    <h4></h4> 
+                    <pre id="show_whois_data" style="font-size: 20px">
+                    </pre>
+                </div>
+            </div>
+            <div></div>
+        </div>
+        <div>
+                <h2 style="text-align: center;"><strong>Wayback Machine overview of Current URL</strong></h2>
+        </div>
+        <BR>
+        <BR>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of First Archive</strong>
+                    <p>
+                        The URL, where you were was first archived on  
+                        <span id="first_archive_date">
+                        </span> at time  
+                        <span id="first_archive_time">
+                        </span> . And you can view that 
+                        <a id="link_first">HERE</a> .
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of Recent Archive</strong>
+                    <p>
+                        The URL, where you were was recently archived on
+                        <span id="recent_archive_date">
+                        </span>  at time 
+                        <span id="recent_archive_time">
+                        </span> .And you can view that 
+                        <a id="link_recent">HERE</a> .
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6" >
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Thumbnail of the Current URL</strong>
+                    <br>
+                    <div id="show_thumbnail" style="text-align: left">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Total Number of archives</strong>
+                    <div id="message" style="display:none"></div>
+                    <p>
+                        URLs for this domain have been captured <span id="total_archives"></span>
+                        times since <span id="first_archive_date_2"></span>. You can also archive this page now 
+                        by clicking on <a id="save_now">HERE</a> .
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="container" style="padding-left: 0px;padding-right: 0px">
+            <div class="col-sm-12 test">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Information about the Current URL</strong>
+                <p>
+                    The URL,where you had been recently is a <strong style="font-style: italic"><span id="details"></span> </strong>
+                </p>
+            </div>
+        </div>
+        <div>
+                <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
+        </div>
+        <BR>
+        <BR>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="box-twitter" style="height: 500px;">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div id="box-annotation" style="height: 500px;overflow: scroll">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h2 style="text-align: center;"><strong>Tag-Cloud</strong><br></h2>
+        </div>
+        <div class="container" style="width: 100%;text-align: center;">
+            <div id="hey" style="width: 60%; height: 50%; border: 1px solid #ccc; background-color:#fafafa; font-family:'Roboto';display: inline-block;">
+                
+            </div>            
+        </div>
+        <div id="row-twitter" style="background-color: lightblue;">
+            <img src="" alt="" id="profile-image">
+            <span id="profile-name"></span>
+            <br>
+            <a id="link" href="">
+                <span id="tweets" ></span>
+            </a>
+            <br>
+        </div>
+        <div class="" id="row-contain">
+            <div class="top-div" id="top-div-contain">
+                <strong>
+                    <span id="userinfo">
+
+                    </span>
+                    <br>
+                    <span id="date-"></span>
+                </strong>
+            </div>
+            <div class="source" id="source-">
+                <span class="glyphicon glyphicon-globe" id="public"></span>
+                <span style="font-weight: 150%;color: #818181">Public on</span>
+                <span class="title" id="title-contain" style="color: red">
+
+                </span>
+                <span id="source-contain" style="word-wrap: break-word"> 
+                </span>
+            </div>
+            <div class="target-selector-exact" id="target-selector-exact-contain">
+            </div>
+            <div class="text" id="text-contain">
+            </div>
+            <div id="links">
+            </div>
+        </div>
+    </body>
+</html>
+<script src="scripts/sha.js"></script>
+<script src="scripts/levenshtein.js"></script>
+<script src="scripts/singleWindow.js"></script>
+<!-- <script src="scripts/twitter.js"></script> -->
+<style>
+.color_code
+{
+  color:#22c399;
+}
+.color_code_whois{
+    color: #ffcc66;
+}
+body{
+    max-height: 100%;
+}
+@font-face {
+    font-family: Bebas Neue;
+    src: url("../fonts/BebasNeue.otf");
+}
+
+@font-face {
+    font-family: Gill Sans Light;
+    src: url("../fonts/GillSans-Light.ttf");
+}
+#horizontal_line{
+    margin: 0px; 
+    padding: 0px; 
+    border: 0px solid rgb(6, 117, 211); 
+    font-size: 19px; font-style: inherit;
+    font-variant: inherit; 
+    font-weight: inherit; 
+    font-stretch: inherit; 
+    line-height: 1; 
+    font-family: sans-serif; 
+    vertical-align: baseline; 
+    box-sizing: content-box; 
+    overflow: unset; 
+    height: 1px; 
+    position: relative; 
+    width: auto; 
+    display: flex; 
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
+    text-align: left; 
+    align-items: center; 
+    border-radius: 3px; 
+    justify-content: center; 
+    text-decoration: none;
+}
+
+.resize_fit_center {
+    max-width:100%;
+    max-height:100px;
+}
+
+h2{
+    font-family: Bebas Neue;
+    font-size: 50px;
+}
+
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+p{
+    font-family:Gill Sans Light;
+    font-size: 20px;
+}
+#box-twitter{
+    margin-bottom: 12px;
+    padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: scroll;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
+}
+#box-annotation{
+    margin-bottom: 12px;
+    padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: scroll;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}
+.box-annotation{
+    margin-bottom: 12px;
+    flex :0 0 420px;
+    padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
+}
+.target-selector-exact{
+    word-wrap: break-word;
+    font-family:'Courier New', Courier, monospace;
+}
+#link-incontext{
+    margin-left:40px; 
+}
+#link-html{
+    margin-left: 70px;
+}
+#date{
+    position: absolute;
+    right: 20px;
+}
+.source{
+    padding: 5px;
+}
+#text-contain{
+    padding: 5px;
+}
+#target-selector-exact-contain{
+    padding: 5px;
+    border-left: 3px solid #d3d3d3;
+    color: #7A7A7A;
+}
+#target-selector-exact-contain:hover{
+    border-left: 3px solid #58CEF4;
+}
+#links{
+    padding: 10px;
+}
+
+@media screen and (max-width: 500px) {
+    #link-incontext {
+      margin-left: 5px;
+    }
+    #link-html{
+        margin-left: 10px;
+    }
+  }
+</style>

@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.2";
+var VERSION = "2.18.3";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -258,6 +258,7 @@ var windowId6=0;
 var windowId7=0;
 var windowId8=0;
 var windowIdtest=0;
+var windowIdSingle=0;
 var tabId1=0;
 var tabId2=0;
 var tabId3=0;
@@ -561,7 +562,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+open_url,'active':false},function(tab){
                         tabId4=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId4){
@@ -593,14 +594,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });         
-                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+open_url,'active':false},function(tab){
                         tabId7=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId7){
                             tabId7=0;
                           }
                         });
-                      });         
+                      });
                     }else if(event.show_context=="window"){
                       console.log("autoupdate false and showall true and window");
                       chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
@@ -1040,6 +1041,41 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   }                               
                 }
               }
+              if(event1.auto_update_context==false){
+                if(event.show_context=="singlewindow"){
+                  console.log(message.url);
+                  chrome.windows.create({url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url, width:1000, height:1000, top:0, left:0, focused:false},function (win) {
+                    windowIdSingle = win.id;
+                    chrome.windows.onRemoved.addListener(function (win1) {
+                      if(win1==windowIdSingle){
+                        windowIdSingle=0;
+                      }
+                    });
+                  });
+                }
+              }else if(event1.auto_update_context==true){
+                if(event.show_context=="singlewindow"){
+                  if(windowIdSingle!=0){
+                    console.log(message.url);
+                    chrome.tabs.query({
+                      windowId: windowIdSingle
+                    }, function(tabs) {
+                      var tab=tabs[0];
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url});
+                    });
+                  }else{
+                    chrome.windows.create({url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url, width:1000, height:1000, top:0, left:0, focused:false},function (win) {
+                      windowIdSingle = win.id;
+                      console.log(message.url);
+                      chrome.windows.onRemoved.addListener(function (win1) {
+                        if(win1==windowIdSingle){
+                          windowIdSingle=0;
+                        }
+                      });
+                    });
+                  }
+                }
+              }
             });
           });
         }
@@ -1226,6 +1262,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
     chrome.tabs.get(tabId, function(tab) {
       var received_url = tab.url;
       if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com"))){
+        singlewindowurl=received_url;
         received_url = received_url.replace(/^https?:\/\//,'');
         var length =received_url.length; 
         var last_index=received_url.indexOf('/');
@@ -1276,6 +1313,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     }
                   }); 
                 }
+              }else if(event1.show_context=="singlewindow"){
+                  chrome.tabs.query({
+                    windowId: windowIdSingle
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+singlewindowurl});
+                  });
               }else{
                 if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)||(windowId7!=0)){
                   chrome.tabs.query({
