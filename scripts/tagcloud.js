@@ -30,7 +30,7 @@ function get_details(){
             if(!decodeURIComponent(data[i][0]).includes(host||"view page"||"open"||"read more")){
                 mynewTags[i]=decodeURIComponent(data[i][0]);
                 b.text=decodeURIComponent(data[i][0]);
-                b.weight=(data[i][1]*400);
+                b.weight=(data[i][1]);
                 mynewTags.push(b);
             }
         }
@@ -61,7 +61,7 @@ function get_details(){
         console.log(result);
         for(var i=0;i<result.length;i++){
             var span=document.createElement("span");
-            span.setAttribute("data-weight",result[i].weight*4);
+            span.setAttribute("data-weight",result[i].weight);
             span.appendChild(document.createTextNode(result[i].text));
             document.getElementById("hey").appendChild(span);
         }
@@ -110,7 +110,15 @@ function findWeightOf(x,result,data){
         if(x==data[i][0]){
             var obj = {};
             obj["text"] = data[i][0];
-            obj["weight"] = data[i][1]*4;
+            if(data[i][1]==1){
+                obj["weight"] = data[i][1]*10;
+            }else if(data[i][1]==2){
+                obj["weight"] = data[i][1]*50;
+            }else if(data[i][1]==3){
+                obj["weight"] = data[i][1]*70;
+            }else{
+                obj["weight"] = data[i][1]*100;
+            }
             result.push(obj);
         }
     }
