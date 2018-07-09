@@ -8,26 +8,32 @@ function getUrlByParameter(name){
 var mynewTags=new Array();
 function get_details(){
     var url=getUrlByParameter('url');
-    url = url.replace(/^https?:\/\//,'');
-    url=url.replace(/^www./, "");
     console.log(url);
-    if(url.indexOf('/')!=-1){
-        var index=url.indexOf('/');
-        console.log(index);
-        url=url.slice(0,index);
+    var hostname=new URL(url).hostname;
+    toBeUsedAsURL=hostname.replace(/^www./, "");
+    console.log(url);
+    var y=hostname.split('.');
+    var not_display4=y.join(' ');
+    var not_display1=y.join(' ');
+    if(url.includes("https")){
+        not_display1="https "+not_display1;
+    }else{
+        not_display1="http "+not_display1;
     }
-    console.log(url);
-    var host=url.slice(0,url.indexOf('.'));
+    var not_display2=not_display1+" extension";
+    var not_display3=not_display4+" extension"
+    var dontarray=["view page","open","read more",not_display1,not_display2,not_display3,not_display4]
     var xhr=new XMLHttpRequest();
-    var new_url="http://vbanos-dev.us.archive.org:8092/__wb/search/tagcloud?n="+url+"&counters=1";
-    console.log(new_url)
+    var new_url="http://vbanos-dev.us.archive.org:8092/__wb/search/tagcloud?n="+toBeUsedAsURL+"&counters=1";
+    console.log(new_url);
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
         console.log(JSON.parse(xhr.response));
         var data=JSON.parse(xhr.response);
         for(var i=0;i<data.length;i++){
             var b=new Object();
-            if(!decodeURIComponent(data[i][0]).includes(host||"view page"||"open"||"read more")){
+            if(dontarray.indexOf(decodeURIComponent(data[i][0]))<=0){
+                console.log
                 mynewTags[i]=decodeURIComponent(data[i][0]);
                 b.text=decodeURIComponent(data[i][0]);
                 b.weight=(data[i][1]);
@@ -53,7 +59,6 @@ function get_details(){
             }
             return acc;
         }, []).sort();
-        console.log(arr);
         var result=new Array();
         for(var i=0;i<arr.length;i++){
             findWeightOf(arr[i],result,data);
@@ -79,7 +84,7 @@ function get_details(){
         $("#hey").awesomeCloud({
             "size" : {
                 "grid" : 1,
-                "factor" : 3
+                "factor" : 4
             },
             "color" : {
                 "background" : "#036"
@@ -90,7 +95,7 @@ function get_details(){
                 "printMultiplier" : 3
             },
             "font" : "'Times New Roman', Times, serif",
-            "shape" : "star"
+            "shape" : "square"
         });
         
     }
@@ -113,11 +118,11 @@ function findWeightOf(x,result,data){
             if(data[i][1]==1){
                 obj["weight"] = data[i][1]*10;
             }else if(data[i][1]==2){
-                obj["weight"] = data[i][1]*50;
+                obj["weight"] = data[i][1]*40;
             }else if(data[i][1]==3){
-                obj["weight"] = data[i][1]*70;
+                obj["weight"] = data[i][1]*60;
             }else{
-                obj["weight"] = data[i][1]*100;
+                obj["weight"] = data[i][1]*90;
             }
             result.push(obj);
         }

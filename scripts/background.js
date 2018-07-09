@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.5";
+var VERSION = "2.18.6";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -594,7 +594,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });         
-                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+open_url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
                         tabId7=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId7){
@@ -662,7 +662,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:700, left:1200, focused:false},function (win) {
+                      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:700, left:1200, focused:false},function (win) {
                         windowId7 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId7){
@@ -707,7 +707,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                           chrome.storage.sync.get(function(event10){
                                             if(event10.tagcloud==true){
                                               console.log("checking 6");
-                                              openThatContext("tagcloud",url,event.show_context);
+                                              openThatContext("tagcloud",message.url,event.show_context);
                                             }
                                             chrome.storage.sync.get(function(event10){
                                               if(event11.annotationsurl==true){
@@ -791,7 +791,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             }
                           });
                         });
-                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
                         tabId7=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId7){
@@ -834,7 +834,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                               chrome.storage.sync.get(function(event10){
                                                 if(event10.tagcloud==true){
                                                   console.log("checking 6");
-                                                  openThatContext("tagcloud",url,event.show_context);
+                                                  openThatContext("tagcloud",message.url,event.show_context);
                                                 }
                                                 chrome.storage.sync.get(function(event11){
                                                   if(event11.annotationsurl==true){
@@ -861,7 +861,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
                     chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
                     chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                    chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                    chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
                   }
                 }else if(event.show_context=="window"){
                   if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0){
@@ -928,7 +928,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             }
                           });
                         });
-                        chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
+                        chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
                           windowId7 = win.id;
                           chrome.windows.onRemoved.addListener(function (win1) {
                             if(win1==windowId7){
@@ -970,7 +970,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                               chrome.storage.sync.get(function(event10){
                                                 if(event10.similarweb==true){
                                                   console.log("checking 6");
-                                                  openThatContext("tagcloud",url,event.show_context);
+                                                  openThatContext("tagcloud",message.url,event.show_context);
                                                 }
                                                 chrome.storage.sync.get(function(event10){
                                                   if(event10.annotationsurl==true){
@@ -1036,7 +1036,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       windowId: windowId7
                     }, function(tabs) {
                       var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
                     });
                   }                               
                 }
@@ -1263,6 +1263,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
       var received_url = tab.url;
       if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com"))){
         singlewindowurl=received_url;
+        tagcloudurl=new URL(singlewindowurl);
+        console.log(tagcloudurl.href);
         received_url = received_url.replace(/^https?:\/\//,'');
         var length =received_url.length; 
         var last_index=received_url.indexOf('/');
@@ -1299,7 +1301,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       }else if((tab1.url).includes("similarweb")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                       }else if((tab1.url).includes("tagcloud")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                       }
                       var whois_url="https://www.whois.com/whois/" + url;
                       chrome.tabs.update(parseInt(tabId2), {url:whois_url});
@@ -1309,7 +1311,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                      chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                      chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                     }
                   }); 
                 }
@@ -1419,7 +1421,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       windowId: windowId7
                     }, function(tabs) {
                       var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+url});
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                     });
                   }
                 }   
