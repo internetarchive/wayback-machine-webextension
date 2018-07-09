@@ -13,7 +13,7 @@ function restore_options() {
     annotationsurl:false,
     similarweb:false,
     tagcloud:false,
-    showall:true
+    showall:false
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
     document.getElementById('show_context').value = items.show_context;

@@ -65,19 +65,13 @@ function get_whois(url){
             else {
                 html += "N/A";
             }
-            if(xmldata.getElementsByTagName("registrarName")){
+            if(xmldata.getElementsByTagName("registrarName")[0]){
                 html += '<br/>'+'<b>Registrar: </b>' +"<span class='color_code_whois'>"+
                     xmldata.getElementsByTagName('registrarName')[0].innerHTML;
-            }
-            else{
-                html+="N/A";
             }
             if(xmldata.getElementsByTagName("rawText")){
                 html += '<br/><br/>'+"<span style='color:black'>"+
                     xmldata.getElementsByTagName('rawText')[0].innerHTML;
-            }
-            else{
-                html+="N/A";
             }
             if(xmldata.getElementsByTagName("createdDateNormalized")){
                 html += '<br/><b>Registration Date: </b><br/>'+"<span style='color:black'>"+
@@ -242,7 +236,7 @@ function get_tweets(){
 
 function get_annotaions_url(){
     var url1=getUrlByParameter('url');
-    console.log(url1);
+    url1=decodeURI(url1);
     var xhr= new XMLHttpRequest();
     var test_url="";    
     if(url1.includes('iskme.org')){
@@ -252,7 +246,7 @@ function get_annotaions_url(){
         url1=test_url;
     }
     length=url1.length;
-    url1=url1.slice(0,length-1);
+    url1=(url1.slice(0,length-1));
     console.log(url1);
     var new_url="https://hypothes.is/api/search?uri="+url1;
     xhr.open("GET",new_url,true);
@@ -450,17 +444,39 @@ function get_tags(){
         for(var i=0;i<arr.length;i++){
             findWeightOf(arr[i],result,data);
         }
-        $("#hey").jQCloud(result,{
-            classPattern: null,
-            width: 600,
-            height: 600,
-            colors: ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976", "#ffeda0", "#ffffcc"],
-            removeOverflowing:true,autoResize: true,
-            fontSize: {
-                from: 0.1,
-                to: 0.02
-              }
-          });
+        for(var i=0;i<result.length;i++){
+            var span=document.createElement("span");
+            span.setAttribute("data-weight",result[i].weight*4);
+            span.appendChild(document.createTextNode(result[i].text));
+            document.getElementById("hey").appendChild(span);
+        }
+        // $("#hey").jQCloud(result,{
+        //     classPattern: null,
+        //     width: 600,
+        //     height: 600,
+        //     colors: ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976", "#ffeda0", "#ffffcc"],
+        //     removeOverflowing:true,autoResize: true,
+        //     fontSize: {
+        //         from: 0.1,
+        //         to: 0.02
+        //       }
+        //   });
+        $("#hey").awesomeCloud({
+            "size" : {
+                "grid" : 1,
+                "factor" : 3
+            },
+            "color" : {
+                "background" : "#036"
+            },
+            "options" : {
+                "color" : "random-light",
+                "rotationRatio" : 0.5,
+                "printMultiplier" : 3
+            },
+            "font" : "'Times New Roman', Times, serif",
+            "shape" : "star"
+        });
         
         
     }

@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="css/jqcloud.css">
         <script src="scripts/jquery.js"></script>
-        <script src="scripts/jqcloud-1.0.4.min.js"></script>
+        <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
         <title>
             Tag-Cloud
         </title>
@@ -31,7 +31,7 @@
         </div>
         <div class="container" style="width: 100%;
         text-align: center;">
-            <div id="hey" style="width: 60%; height: 50%; border: 1px solid #ccc; background-color:#fafafa; font-family:'Roboto';display: inline-block;">
+            <div id="hey" class="wordcloud">
                 
             </div>            
         </div>
@@ -39,3 +39,15 @@
 </html>
 <script src="scripts/levenshtein.js"></script>
 <script src="scripts/tagcloud.js"></script>
+<style>
+.wordcloud {
+border: 1px solid #036;
+height: 7in;
+margin: 0.5in auto;
+padding: 0;
+page-break-after: always;
+page-break-inside: avoid;
+display: inline-block;
+width: 7in;
+}
+</style>

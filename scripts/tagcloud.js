@@ -30,7 +30,7 @@ function get_details(){
             if(!decodeURIComponent(data[i][0]).includes(host||"view page"||"open"||"read more")){
                 mynewTags[i]=decodeURIComponent(data[i][0]);
                 b.text=decodeURIComponent(data[i][0]);
-                b.weight=(data[i][1]*4);
+                b.weight=(data[i][1]*400);
                 mynewTags.push(b);
             }
         }
@@ -59,18 +59,39 @@ function get_details(){
             findWeightOf(arr[i],result,data);
         }
         console.log(result);
-        $("#hey").jQCloud(result,{
-            classPattern: null,
-            width: 600,
-            height: 600,
-            colors: ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976", "#ffeda0", "#ffffcc"],
-            removeOverflowing:true,autoResize: true,
-            fontSize: {
-                from: 0.1,
-                to: 0.02
-              }
-          });
-        
+        for(var i=0;i<result.length;i++){
+            var span=document.createElement("span");
+            span.setAttribute("data-weight",result[i].weight*4);
+            span.appendChild(document.createTextNode(result[i].text));
+            document.getElementById("hey").appendChild(span);
+        }
+        // $("#hey").jQCloud(result,{
+        //     classPattern: null,
+        //     width: 600,
+        //     height: 600,
+        //     colors: ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976", "#ffeda0", "#ffffcc"],
+        //     removeOverflowing:true,autoResize: true,
+        //     fontSize: {
+        //         from: 0.1,
+        //         to: 0.02
+        //       }
+        //   });
+        $("#hey").awesomeCloud({
+            "size" : {
+                "grid" : 1,
+                "factor" : 3
+            },
+            "color" : {
+                "background" : "#036"
+            },
+            "options" : {
+                "color" : "random-light",
+                "rotationRatio" : 0.5,
+                "printMultiplier" : 3
+            },
+            "font" : "'Times New Roman', Times, serif",
+            "shape" : "star"
+        });
         
     }
     xhr.send(null);
