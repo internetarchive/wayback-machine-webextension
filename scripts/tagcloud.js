@@ -24,7 +24,7 @@ function get_details(){
     var not_display3=not_display4+" extension"
     var dontarray=["view page","open","read more",not_display1,not_display2,not_display3,not_display4]
     var xhr=new XMLHttpRequest();
-    var new_url="http://vbanos-dev.us.archive.org:8092/__wb/search/tagcloud?n="+toBeUsedAsURL+"&counters=1";
+    var new_url="http://web.archive.org/__wb/search/tagcloud?n="+toBeUsedAsURL+"&counters=1";
     console.log(new_url);
     xhr.open("GET",new_url,true);
     xhr.onload=function(){

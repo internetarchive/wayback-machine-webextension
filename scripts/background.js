@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.6";
+var VERSION = "2.18.7";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -527,15 +527,15 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               if(event1.auto_update_context==undefined){
                 event1.auto_update_context=false;
               }
-              if(event1.auto_update_context==false){
-                console.log("auto update false");
-                chrome.storage.sync.get(['showall'],function(event2){
-                  if(event2.showall==undefined){
-                    event2.showall=true;
-                  }
-                  if(event2.showall==true){
-                    if(event.show_context=="tab"){
-                      console.log("autoupdate false and showall true and tab");
+              console.log("here");
+              if(event.show_context=="tab"){
+                if(tabId2==0 || tabId3==0 || tabId4==0 ||tabId5==0){
+                  chrome.storage.sync.get(['showall'],function(event2){
+                    if(event2.showall==undefined){
+                      event2.showall=true;
+                    }
+                    if(event2.showall==true){
+                      console.log("autoupdate true and showall true and tab");
                       chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                         windowIdtest = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
@@ -562,7 +562,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+open_url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
                         tabId4=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId4){
@@ -577,7 +577,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId5=0;
                           }
                         });
-                      }); 
+                      });   
                       chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
                         tabId8=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
@@ -585,7 +585,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId8=0;
                           }
                         });
-                      });
+                      });   
                       chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                         tabId6=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
@@ -593,17 +593,91 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId6=0;
                           }
                         });
-                      });         
-                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
-                        tabId7=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId7){
-                            tabId7=0;
-                          }
-                        });
                       });
-                    }else if(event.show_context=="window"){
-                      console.log("autoupdate false and showall true and window");
+                    chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
+                      tabId7=tab.id;
+                      chrome.tabs.onRemoved.addListener(function (tabtest) {
+                        if(tabtest==tabId7){
+                          tabId7=0;
+                        }
+                      });
+                    });  
+                    }else{
+                      console.log("autoupdate true and showall false and tab");
+                      chrome.storage.sync.get(function(event4){
+                        if(event4.alexa==true){
+                          console.log("checking 1");
+                          openThatContext("alexa",url,event.show_context);
+                        }
+                          chrome.storage.sync.get(function(event5){
+                            if(event5.whois==true){
+                              console.log("checking 2");
+                              openThatContext("whois",url,event.show_context);
+                            }
+                              chrome.storage.sync.get(function(event6){
+                                if(event6.tweets==true){
+                                  console.log("checking 3");
+                                  openThatContext("tweets",open_url,event.show_context);
+                                }
+                                  chrome.storage.sync.get(function(event7){
+                                    if(event7.wbmsummary==true){
+                                      console.log("checking 4");
+                                      openThatContext("wbmsummary",message.url,event.show_context);
+                                    }
+                                      chrome.storage.sync.get(function(event8){
+                                        if(event8.annotations==true){
+                                          console.log("checking 5");
+                                          openThatContext("annotations",message.url,event.show_context);
+                                        }
+                                          chrome.storage.sync.get(function(event9){
+                                            if(event9.similarweb==true){
+                                              console.log("checking 6");
+                                              openThatContext("similarweb",url,event.show_context);
+                                            }
+                                            chrome.storage.sync.get(function(event10){
+                                              if(event10.tagcloud==true){
+                                                console.log("checking 6");
+                                                openThatContext("tagcloud",message.url,event.show_context);
+                                              }
+                                              chrome.storage.sync.get(function(event11){
+                                                if(event11.annotationsurl==true){
+                                                  console.log("checking 6");
+                                                  openThatContext("annotationsurl",url,event.show_context);
+                                                }
+                                              });
+                                            });
+                                          });
+                                      });
+                                  });
+                              });
+                          });
+                      });
+                    }
+                  });
+                }else{
+                  chrome.tabs.query({
+                    windowId: windowIdtest
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                  });
+                  var whois_url="https://www.whois.com/whois/" + url;
+                  chrome.tabs.update(parseInt(tabId2), {url:whois_url});
+                  var tweet_url="https://twitter.com/search?q="+open_url;
+                  chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
+                  chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
+                  chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+                  chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
+                  chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                  chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
+                }
+              }else if(event.show_context=="window"){
+                if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0){
+                  chrome.storage.sync.get(['showall'],function(event2){
+                    if(event2.showall==undefined){
+                      event2.showall=true;
+                    }
+                    if(event2.showall==true){
                       chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
@@ -662,7 +736,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:700, left:1200, focused:false},function (win) {
+                      chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
                         windowId7 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId7){
@@ -670,391 +744,111 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                    }
-                  }
-                  else{
-                    console.log("autoupdate false and showall false");
-                    chrome.storage.sync.get(function(event4){
-                      if(event4.alexa==true){
-                        console.log("checking 1");
-                        openThatContext("alexa",url,event.show_context);
-                      }
-                        chrome.storage.sync.get(function(event5){
-                          if(event5.whois==true){
-                            console.log("checking 2");
-                            openThatContext("whois",url,event.show_context);
-                          }
-                            chrome.storage.sync.get(function(event6){
-                              if(event6.tweets==true){
-                                console.log("checking 3");
-                                openThatContext("tweets",open_url,event.show_context);
-                              }
-                                chrome.storage.sync.get(function(event7){
-                                  if(event7.wbmsummary==true){
-                                    console.log("checking 4");
-                                    openThatContext("wbmsummary",message.url,event.show_context);
-                                  }
-                                    chrome.storage.sync.get(function(event8){
-                                      if(event8.annotations==true){
-                                        console.log("checking 5");
-                                        openThatContext("annotations",message.url,event.show_context);
-                                      }
-                                        chrome.storage.sync.get(function(event9){
-                                          if(event9.similarweb==true){
-                                            console.log("checking 6");
-                                            openThatContext("similarweb",url,event.show_context);
-                                          }
-                                          chrome.storage.sync.get(function(event10){
-                                            if(event10.tagcloud==true){
+                    }else{
+                      chrome.storage.sync.get(function(event4){
+                        if(event4.alexa==true){
+                          console.log("checking 1");
+                          openThatContext("alexa",url,event.show_context);
+                        }
+                          chrome.storage.sync.get(function(event5){
+                            if(event5.whois==true){
+                              console.log("checking 2");
+                              openThatContext("whois",url,event.show_context);
+                            }
+                              chrome.storage.sync.get(function(event6){
+                                if(event6.tweets==true){
+                                  console.log("checking 3");
+                                  openThatContext("tweets",open_url,event.show_context);
+                                }
+                                  chrome.storage.sync.get(function(event7){
+                                    if(event7.wbmsummary==true){
+                                      console.log("checking 4");
+                                      openThatContext("wbmsummary",message.url,event.show_context);
+                                    }
+                                      chrome.storage.sync.get(function(event8){
+                                        if(event8.annotations==true){
+                                          console.log("checking 5");
+                                          openThatContext("annotations",message.url,event.show_context);
+                                        }
+                                          chrome.storage.sync.get(function(event9){
+                                            if(event9.similarweb==true){
                                               console.log("checking 6");
-                                              openThatContext("tagcloud",message.url,event.show_context);
+                                              openThatContext("similarweb",url,event.show_context);
                                             }
                                             chrome.storage.sync.get(function(event10){
-                                              if(event11.annotationsurl==true){
+                                              if(event10.similarweb==true){
                                                 console.log("checking 6");
-                                                openThatContext("annotationsurl",message.url,event.show_context);
+                                                openThatContext("tagcloud",message.url,event.show_context);
                                               }
+                                              chrome.storage.sync.get(function(event10){
+                                                if(event10.annotationsurl==true){
+                                                  console.log("checking 6");
+                                                  openThatContext("annotationsurl",url,event.show_context);
+                                                }
+                                              });
                                             });
                                           });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                  }
-                });
-              }else{
-                if(event.show_context=="tab"){
-                  if(tabId2==0 || tabId3==0 || tabId4==0 ||tabId5==0){
-                    chrome.storage.sync.get(['showall'],function(event2){
-                      if(event2.showall==undefined){
-                        event2.showall=true;
-                      }
-                      if(event2.showall==true){
-                        console.log("autoupdate true and showall true and tab");
-                        chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-                          windowIdtest = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowIdtest){
-                              windowIdtest=0;
-                            }
+                                      });
+                                  });
+                              });
                           });
-                        });
-                        var whois_url="https://www.whois.com/whois/" + url;
-                        chrome.tabs.create({'url': whois_url,'active':false},function(tab){
-                          tabId2=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId2){
-                              tabId2=0;
-                            }
-                          });
-                        });
-                        var tweet_url="https://twitter.com/search?q="+open_url;
-                        chrome.tabs.create({'url': tweet_url,'active':false},function(tab){
-                          tabId3=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId3){
-                              tabId3=0;
-                            }
-                          });
-                        });
-                        chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
-                          tabId4=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId4){
-                              tabId4=0;
-                            }
-                          });
-                        });
-                        chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
-                          tabId5=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId5){
-                              tabId5=0;
-                            }
-                          });
-                        });   
-                        chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
-                          tabId8=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId8){
-                              tabId8=0;
-                            }
-                          });
-                        });   
-                        chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
-                          tabId6=tab.id;
-                          chrome.tabs.onRemoved.addListener(function (tabtest) {
-                            if(tabtest==tabId6){
-                              tabId6=0;
-                            }
-                          });
-                        });
-                      chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
-                        tabId7=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId7){
-                            tabId7=0;
-                          }
-                        });
-                      });  
-                      }else{
-                        console.log("autoupdate true and showall false and tab");
-                        chrome.storage.sync.get(function(event4){
-                          if(event4.alexa==true){
-                            console.log("checking 1");
-                            openThatContext("alexa",url,event.show_context);
-                          }
-                            chrome.storage.sync.get(function(event5){
-                              if(event5.whois==true){
-                                console.log("checking 2");
-                                openThatContext("whois",url,event.show_context);
-                              }
-                                chrome.storage.sync.get(function(event6){
-                                  if(event6.tweets==true){
-                                    console.log("checking 3");
-                                    openThatContext("tweets",open_url,event.show_context);
-                                  }
-                                    chrome.storage.sync.get(function(event7){
-                                      if(event7.wbmsummary==true){
-                                        console.log("checking 4");
-                                        openThatContext("wbmsummary",message.url,event.show_context);
-                                      }
-                                        chrome.storage.sync.get(function(event8){
-                                          if(event8.annotations==true){
-                                            console.log("checking 5");
-                                            openThatContext("annotations",message.url,event.show_context);
-                                          }
-                                            chrome.storage.sync.get(function(event9){
-                                              if(event9.similarweb==true){
-                                                console.log("checking 6");
-                                                openThatContext("similarweb",url,event.show_context);
-                                              }
-                                              chrome.storage.sync.get(function(event10){
-                                                if(event10.tagcloud==true){
-                                                  console.log("checking 6");
-                                                  openThatContext("tagcloud",message.url,event.show_context);
-                                                }
-                                                chrome.storage.sync.get(function(event11){
-                                                  if(event11.annotationsurl==true){
-                                                    console.log("checking 6");
-                                                    openThatContext("annotationsurl",url,event.show_context);
-                                                  }
-                                                });
-                                              });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                      }
-                    });
-                  }else{
-                    chrome.tabs.update(parseInt(tabId1), {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
-                    var whois_url="https://www.whois.com/whois/" + url;
-                    chrome.tabs.update(parseInt(tabId2), {url:whois_url});
-                    var tweet_url="https://twitter.com/search?q="+open_url;
-                    chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
-                    chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-                    chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-                    chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-                    chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                    chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
-                  }
-                }else if(event.show_context=="window"){
-                  if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0){
-                    chrome.storage.sync.get(['showall'],function(event2){
-                      if(event2.showall==undefined){
-                        event2.showall=true;
-                      }
-                      if(event2.showall==true){
-                        chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-                          windowId1 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId1){
-                              windowId1=0;
-                            }
-                          });
-                        });
-                        var whois_url="https://www.whois.com/whois/" +url;
-                        chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
-                          windowId2 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId2){
-                              windowId2=0;
-                            }                    
-                          });
-                        });
-                        var tweet_url="https://twitter.com/search?q="+open_url;
-                        chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false},function (win) {
-                          windowId3 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId3){
-                              windowId3=0;
-                            }                    
-                          });
-                        });
-                        chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,width:500, height:500, top:500, left:500, focused:false},function (win) {
-                          windowId4 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId4){
-                              windowId4=0;
-                            }            
-                          });
-                        });
-                        chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                          windowId5 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId5){
-                              windowId5=0;
-                            }
-                          });
-                        });
-                        chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
-                          windowId8 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId8){
-                              windowId8=0;
-                            }
-                          });
-                        });
-                        chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:500, left:1000, focused:false},function (win) {
-                          windowId6 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId6){
-                              windowId6=0;
-                            }
-                          });
-                        });
-                        chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
-                          windowId7 = win.id;
-                          chrome.windows.onRemoved.addListener(function (win1) {
-                            if(win1==windowId7){
-                              windowId7=0;
-                            }
-                          });
-                        });
-                      }else{
-                        chrome.storage.sync.get(function(event4){
-                          if(event4.alexa==true){
-                            console.log("checking 1");
-                            openThatContext("alexa",url,event.show_context);
-                          }
-                            chrome.storage.sync.get(function(event5){
-                              if(event5.whois==true){
-                                console.log("checking 2");
-                                openThatContext("whois",url,event.show_context);
-                              }
-                                chrome.storage.sync.get(function(event6){
-                                  if(event6.tweets==true){
-                                    console.log("checking 3");
-                                    openThatContext("tweets",open_url,event.show_context);
-                                  }
-                                    chrome.storage.sync.get(function(event7){
-                                      if(event7.wbmsummary==true){
-                                        console.log("checking 4");
-                                        openThatContext("wbmsummary",message.url,event.show_context);
-                                      }
-                                        chrome.storage.sync.get(function(event8){
-                                          if(event8.annotations==true){
-                                            console.log("checking 5");
-                                            openThatContext("annotations",message.url,event.show_context);
-                                          }
-                                            chrome.storage.sync.get(function(event9){
-                                              if(event9.similarweb==true){
-                                                console.log("checking 6");
-                                                openThatContext("similarweb",url,event.show_context);
-                                              }
-                                              chrome.storage.sync.get(function(event10){
-                                                if(event10.similarweb==true){
-                                                  console.log("checking 6");
-                                                  openThatContext("tagcloud",message.url,event.show_context);
-                                                }
-                                                chrome.storage.sync.get(function(event10){
-                                                  if(event10.annotationsurl==true){
-                                                    console.log("checking 6");
-                                                    openThatContext("annotationsurl",url,event.show_context);
-                                                  }
-                                                });
-                                              });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                      }
-                    });
-                  }else{
-                    chrome.tabs.query({
-                      windowId: windowId1
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
-                    });  
-                    chrome.tabs.query({
-                      windowId: windowId2
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      var whois_url="https://www.whois.com/whois/" +url;
-                      chrome.tabs.update(tab.id, {url:whois_url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId3
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      var tweet_url="https://twitter.com/search?q="+open_url;
-                      chrome.tabs.update(tab.id, {url:tweet_url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId4
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId5
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId8
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId6
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                    });  
-                    chrome.tabs.query({
-                      windowId: windowId7
-                    }, function(tabs) {
-                      var tab=tabs[0];
-                      chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
-                    });
-                  }                               
-                }
-              }
-              if(event1.auto_update_context==false){
-                if(event.show_context=="singlewindow"){
-                  console.log(message.url);
-                  chrome.windows.create({url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url, width:1000, height:1000, top:0, left:0, focused:false},function (win) {
-                    windowIdSingle = win.id;
-                    chrome.windows.onRemoved.addListener(function (win1) {
-                      if(win1==windowIdSingle){
-                        windowIdSingle=0;
-                      }
-                    });
+                      });
+                    }
                   });
-                }
-              }else if(event1.auto_update_context==true){
-                if(event.show_context=="singlewindow"){
+                }else{
+                  chrome.tabs.query({
+                    windowId: windowId1
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                  });  
+                  chrome.tabs.query({
+                    windowId: windowId2
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    var whois_url="https://www.whois.com/whois/" +url;
+                    chrome.tabs.update(tab.id, {url:whois_url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId3
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    var tweet_url="https://twitter.com/search?q="+open_url;
+                    chrome.tabs.update(tab.id, {url:tweet_url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId4
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId5
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId8
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId6
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                  });  
+                  chrome.tabs.query({
+                    windowId: windowId7
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
+                  });
+                }                               
+              }
+              else if(event.show_context=="singlewindow"){
                   if(windowIdSingle!=0){
                     console.log(message.url);
                     chrome.tabs.query({
@@ -1074,7 +868,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       });
                     });
                   }
-                }
               }
             });
           });
