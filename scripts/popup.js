@@ -278,6 +278,46 @@ function show_all_screens(){
     chrome.runtime.sendMessage({message:"showall",url:url});
 }
 
+function borrow_books(){
+    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        url=tabs[0].url;
+        tabId=tabs[0].id;
+        chrome.browserAction.getBadgeText({tabId:tabId}, function (result){
+            if(result=="B"){
+                if(url.includes("www.amazon") && url.includes('/dp/')){
+                    var index_of_dp=url.indexOf('/dp/');
+                    var length=url.length;
+                    var new_test_url=url.substring(index_of_dp+4,length);
+                    var ASIN_index=new_test_url.indexOf('/')
+                    console.log(ASIN_index);
+                    if(ASIN_index>0){
+                        var ASIN=new_test_url.substring(0,new_test_url.indexOf('/'));
+                    }else{
+                        var ASIN=new_test_url.substring(0,new_test_url.length);
+                    }
+                    var xhr=new XMLHttpRequest();
+                    var new_url="https://openlibrary.org/api/books?bibkeys=ISBN:"+ASIN+"&format=json&jscmd=data";
+                    xhr.open("GET",new_url,true);
+                    xhr.send(null);
+                    xhr.onload=function(){
+                        var response = JSON.parse(xhr.response);
+                        var key="ISBN:"+ASIN;
+                        console.log(response);
+                        console.log(response[key].url);
+                        if(response[key].url!=undefined||null){
+                        document.getElementById('borrow_books_tr').style.display="block";
+                        }
+                        document.getElementById('borrow_books_tr').onclick=function(){
+                            chrome.tabs.create({url:response[key].url});
+                        }
+                    }
+                }   
+            }
+        });
+        
+    });
+}
+
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
 //  chrome.storage.sync.get({
@@ -310,7 +350,7 @@ function show_all_screens(){
 //document.getElementById('settings_div').style.display="none";
 
 // window.onload=get_url;
-window.onloadFuncs = [get_url,auto_archive_url];
+window.onloadFuncs = [get_url,auto_archive_url,borrow_books];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();

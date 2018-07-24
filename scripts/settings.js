@@ -4,6 +4,7 @@ function restore_options() {
   chrome.storage.sync.get({
     show_context:'tab',
     auto_archive: false,
+    books:false,
     auto_update_context:false,
     alexa:false,
     whois:false,
@@ -16,6 +17,7 @@ function restore_options() {
     showall:false
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
+    document.getElementById('books').checked = item.books;
     document.getElementById('show_context').value = items.show_context;
     document.getElementById('auto-update-context').checked=items.auto_update_context;
     document.getElementById('alexa').checked = items.alexa;
@@ -32,6 +34,7 @@ function restore_options() {
 function save_options() {
   var show_context = document.getElementById('show_context').value;
   var auto_archive= document.getElementById('auto-archive').checked;
+  var books = document.getElementById('books').checked;
   var auto_update_context=document.getElementById('auto-update-context').checked;
   var alexa= document.getElementById('alexa').checked;
   var whois= document.getElementById('whois').checked;
@@ -45,6 +48,7 @@ function save_options() {
   chrome.storage.sync.set({
     show_context:show_context,
     auto_archive: auto_archive,
+    books:books,
     auto_update_context:auto_update_context,
     alexa:alexa,
     whois:whois,
