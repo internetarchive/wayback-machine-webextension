@@ -2,7 +2,7 @@
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.8";
+var VERSION = "2.18.9";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -1008,6 +1008,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
             }
             var xhr=new XMLHttpRequest();
             var new_url="https://openlibrary.org/api/books?bibkeys=ISBN:"+ASIN+"&format=json&jscmd=data";
+            console.log(new_url);
             xhr.open("GET",new_url,true);
             xhr.send(null);
             xhr.onload=function(){
@@ -1015,7 +1016,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                 var key="ISBN:"+ASIN;
                 console.log(response);
                 console.log(response[key].url);
-                if(response[key].url!=undefined||null){
+                if(response[key].ebooks['0'].preview_url!=undefined||null){
                   chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
                   chrome.runtime.sendMessage({message:"showbutton",url:response[key].url});
                 }

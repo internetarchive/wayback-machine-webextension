@@ -304,11 +304,11 @@ function borrow_books(){
                         var key="ISBN:"+ASIN;
                         console.log(response);
                         console.log(response[key].url);
-                        if(response[key].url!=undefined||null){
+                        if(response[key].ebooks['0'].preview_url!=undefined||null){
                         document.getElementById('borrow_books_tr').style.display="block";
                         }
                         document.getElementById('borrow_books_tr').onclick=function(){
-                            chrome.tabs.create({url:response[key].url});
+                            chrome.tabs.create({url:response[key].ebooks['0'].preview_url});
                         }
                     }
                 }   
