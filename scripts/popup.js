@@ -296,19 +296,17 @@ function borrow_books(){
                         var ASIN=new_test_url.substring(0,new_test_url.length);
                     }
                     var xhr=new XMLHttpRequest();
-                    var new_url="https://openlibrary.org/api/books?bibkeys=ISBN:"+ASIN+"&format=json&jscmd=data";
+                    var new_url="https://openlibrary.org/isbn/"+ASIN+".json";
                     xhr.open("GET",new_url,true);
                     xhr.send(null);
                     xhr.onload=function(){
                         var response = JSON.parse(xhr.response);
-                        var key="ISBN:"+ASIN;
                         console.log(response);
-                        console.log(response[key].url);
-                        if(response[key].ebooks['0'].preview_url!=undefined||null){
+                        if(response.ocaid!=undefined||null){
                         document.getElementById('borrow_books_tr').style.display="block";
                         }
                         document.getElementById('borrow_books_tr').onclick=function(){
-                            chrome.tabs.create({url:response[key].ebooks['0'].preview_url});
+                            chrome.tabs.create({url:"https://archive.org/details/"+response.ocaid});
                         }
                     }
                 }   

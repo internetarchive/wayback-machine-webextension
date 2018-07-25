@@ -2,7 +2,7 @@
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.18.9";
+var VERSION = "2.19.0";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -992,14 +992,18 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
           console.log("Cant be Archived");
         }
       });
-      chrome.storage.sync.get(['books'],function(event){
-        if(event.books==true){
-          url=received_url;
+    });
+  }else if(info.status == "loading"){
+    chrome.storage.sync.get(['books'],function(event){
+      if(event.books==true){
+        chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+          url=tabs[0].url;
+          tabId=tabs[0].id;
           if(url.includes("www.amazon") && url.includes('/dp/')){
             var index_of_dp=url.indexOf('/dp/');
             var length=url.length;
             var new_test_url=url.substring(index_of_dp+4,length);
-            var ASIN_index=new_test_url.indexOf('/')
+            var ASIN_index=new_test_url.indexOf('/');
             console.log(ASIN_index);
             if(ASIN_index>0){
                 var ASIN=new_test_url.substring(0,new_test_url.indexOf('/'));
@@ -1007,23 +1011,22 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                 var ASIN=new_test_url.substring(0,new_test_url.length);
             }
             var xhr=new XMLHttpRequest();
-            var new_url="https://openlibrary.org/api/books?bibkeys=ISBN:"+ASIN+"&format=json&jscmd=data";
+            var new_url="https://openlibrary.org/isbn/"+ASIN+".json";
             console.log(new_url);
             xhr.open("GET",new_url,true);
             xhr.send(null);
             xhr.onload=function(){
-                var response = JSON.parse(xhr.response);
-                var key="ISBN:"+ASIN;
-                console.log(response);
-                console.log(response[key].url);
-                if(response[key].ebooks['0'].preview_url!=undefined||null){
-                  chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
-                  chrome.runtime.sendMessage({message:"showbutton",url:response[key].url});
-                }
+              var response = JSON.parse(xhr.response);
+              var key="ISBN:"+ASIN;
+              console.log(response);
+              console.log(response.ocaid);
+              if(response.ocaid!=undefined||null){
+                chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
+              }
             }
           }
-        }
-      });
+        });
+      }
     });
   }
 });
