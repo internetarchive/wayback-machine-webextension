@@ -337,9 +337,16 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         }
       }
       if(details.tabId >0 ){
-        chrome.tabs.get(details.tabId, function(tab) {
-          tabIsReady(tab.incognito);
-        });
+        chrome.tabs.query({currentWindow:true},function(tabs){
+            var tabsArr=tabs.map(tab => tab.id);
+            if(tabsArr.indexOf(details.tabId)>=0){
+                chrome.tabs.get(details.tabId, function(tab) {
+                    tabIsReady(tab.incognito);  
+                
+                });
+            }
+        })
+        
       }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 /**
