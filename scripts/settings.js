@@ -17,7 +17,7 @@ function restore_options() {
     showall:false
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
-    document.getElementById('books').checked = item.books;
+    document.getElementById('books').checked = items.books;
     document.getElementById('show_context').value = items.show_context;
     document.getElementById('auto-update-context').checked=items.auto_update_context;
     document.getElementById('alexa').checked = items.alexa;
