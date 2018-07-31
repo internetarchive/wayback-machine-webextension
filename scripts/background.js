@@ -2,7 +2,7 @@
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.19.1";
+var VERSION = "2.19.2";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -1004,24 +1004,29 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
             var length=url.length;
             var new_test_url=url.substring(index_of_dp+4,length);
             var ASIN_index=new_test_url.indexOf('/');
-            console.log(ASIN_index);
             if(ASIN_index>0){
                 var ASIN=new_test_url.substring(0,new_test_url.indexOf('/'));
             }else{
                 var ASIN=new_test_url.substring(0,new_test_url.length);
             }
             var xhr=new XMLHttpRequest();
-            var new_url="https://openlibrary.org/isbn/"+ASIN+".json";
-            console.log(new_url);
+            var new_url="http://vbanos-dev.us.archive.org:5002/book/"+ASIN;
             xhr.open("GET",new_url,true);
             xhr.send(null);
             xhr.onload=function(){
               var response = JSON.parse(xhr.response);
-              var key="ISBN:"+ASIN;
               console.log(response);
-              console.log(response.ocaid);
-              if(response.ocaid!=undefined||null){
-                chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
+              if(response.success==true && response.error==undefined){
+                var responses=response.responses;
+                for(var propName in responses) {
+                  if(responses.hasOwnProperty(propName)) {
+                    var propValue = responses[propName];
+                  }
+                }
+                var identifier=propValue.identifier;
+                if(identifier!=undefined||null){
+                  chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
+                }
               }
             }
           }

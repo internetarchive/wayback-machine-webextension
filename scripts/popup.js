@@ -296,17 +296,25 @@ function borrow_books(){
                         var ASIN=new_test_url.substring(0,new_test_url.length);
                     }
                     var xhr=new XMLHttpRequest();
-                    var new_url="https://openlibrary.org/isbn/"+ASIN+".json";
+                    var new_url="http://vbanos-dev.us.archive.org:5002/book/"+ASIN;
                     xhr.open("GET",new_url,true);
                     xhr.send(null);
                     xhr.onload=function(){
                         var response = JSON.parse(xhr.response);
-                        console.log(response);
-                        if(response.ocaid!=undefined||null){
+                        if(response.success==true && response.error==undefined){
+                          var responses=response.responses;
+                          for(var propName in responses) {
+                            if(responses.hasOwnProperty(propName)) {
+                              var propValue = responses[propName];
+                            }
+                          }
+                          var identifier=propValue.identifier;
+                        }
+                        if(identifier!=undefined||null){
                         document.getElementById('borrow_books_tr').style.display="block";
                         }
                         document.getElementById('borrow_books_tr').onclick=function(){
-                            chrome.tabs.create({url:"https://archive.org/details/"+response.ocaid});
+                            chrome.tabs.create({url:"https://archive.org/details/"+identifier});
                         }
                     }
                 }   
