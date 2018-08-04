@@ -240,7 +240,7 @@ function checkIt(wayback_url) {
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
-var VERSION = "2.12";
+var VERSION = "2.16.7";
 Globalstatuscode="";
 var excluded_urls = [
   "localhost",
@@ -248,6 +248,7 @@ var excluded_urls = [
   "127.0.0.1"
 ];
 
+var previous_RTurl="";
 var WB_API_URL = "https://archive.org/wayback/available";
 
 function isValidUrl(url) {
@@ -324,7 +325,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             }, function() {
               chrome.tabs.sendMessage(details.tabId, {
                 type: "SHOW_BANNER",
-                wayback_url: wayback_url
+                wayback_url: wayback_url,
+                page_url: details.url,
+                status_code: details.statusCode
               });
             });
               }
@@ -334,9 +337,16 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         }
       }
       if(details.tabId >0 ){
-        chrome.tabs.get(details.tabId, function(tab) {
-          tabIsReady(tab.incognito);
-        });
+        chrome.tabs.query({currentWindow:true},function(tabs){
+            var tabsArr=tabs.map(tab => tab.id);
+            if(tabsArr.indexOf(details.tabId)>=0){
+                chrome.tabs.get(details.tabId, function(tab) {
+                    tabIsReady(tab.incognito);  
+                
+                });
+            }
+        })
+        
       }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 /**
@@ -415,10 +425,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var url = page_url.replace(pattern, "");
       var open_url = wayback_url+encodeURI(url);
       console.log(open_url);
-      if (message.method!='save') {
-        URLopener(open_url,url,true);
-      } else {
-        chrome.tabs.create({ url:  open_url});
+      if(!page_url.includes('chrome://')){
+        if (message.method!='save') {
+          URLopener(open_url,url,true);
+        } else {
+          chrome.tabs.create({ url:  open_url});
+        }
       }
   }else if(message.message=='makemodal'){
             RTurl=message.rturl;
@@ -426,10 +438,31 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
                 var url=RTurl;
-                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
+                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){ //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
-                    alert("Structure as radial tree not available on archive.org pages");
-                }else{
+                    alert("Structure as radial tree not available on this page");
+                }else if((previous_RTurl!=url && url==tab.url) || (previous_RTurl!=url && url!=tab.url)){
+                        chrome.tabs.sendMessage(tab.id,{message:"deletenode"});
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/lodash.min.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/d3.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/radial-tree.umd.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/RTcontent.js"
+                            });
+                            chrome.tabs.executeScript(tab.id, {
+                              file:"scripts/sequences.js"
+                            });
+                            previous_RTurl=url; 
+                }else if(previous_RTurl==url){
+                    chrome.tabs.executeScript(tab.id, {
+                      file:"scripts/lodash.min.js"
+                    });
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/d3.js"
                     });
@@ -442,6 +475,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/sequences.js"
                     });
+                    previous_RTurl=url;
                 }
             });
         }else if(message.message=='sendurl'){
@@ -457,6 +491,45 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
                 console.log(RTurl);
             });
+        }else if(message.message=='changeBadge'){
+          var tabId=message.tabId;
+          console.log(tabId);
+          chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
+        }else if(message.message=='showall'){
+          chrome.storage.sync.get(['show_context'],function(event){
+            if(!event.show_context){
+              event.show_context="tab"; //By-default the context-window open in tabs
+            }
+            var received_url=message.url; //URL which is received by message-parsing_url
+            received_url = received_url.replace(/^https?:\/\//,'');
+            var length=received_url.length; 
+            var last_index=received_url.indexOf('/');
+            var url=received_url.slice(0,last_index);    //URL which will be using for alexa and whois
+            var open_url=received_url;          //URL which will be needed for finding tweets
+            if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 
+            if(event.show_context=="tab"){
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.tabs.create({'url':alexa_url,'active':false});
+              var whois_url="https://www.whois.com/whois/" + url;
+              chrome.tabs.create({'url': whois_url,'active':false});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.tabs.create({'url': tweet_url,'active':false});
+            }else if(event.show_context=="window"){
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false});
+              var whois_url="https://www.whois.com/whois/" +url;
+              chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.windows.create({url:tweet_url, width:500, height:500, top:0, left:500, focused:false});
+            }else if(event.show_context=="browser"){
+              var alexa_url="http://www.alexa.com/siteinfo/" + url;
+              chrome.windows.create({url:alexa_url,state:"maximized"});
+              var whois_url="https://www.whois.com/whois/" +url;
+              chrome.windows.create({'url': whois_url,state:"maximized"});
+              var tweet_url="https://twitter.com/search?q="+open_url;
+              chrome.windows.create({'url': tweet_url,state:"maximized"});
+            }
+          });
         }
 });
 
@@ -465,7 +538,7 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
         if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
         || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
           wmAvailabilityCheck(details.url, function(wayback_url, url) {
-            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
+            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
           }, function() {
             
           });
@@ -480,24 +553,28 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 var contextMenuItemFirst={
     "id":"first",
     "title":"First Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemRecent={
     "id":"recent",
     "title":"Recent Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 var contextMenuItemAll={
     "id":"all",
     "title":"All Versions",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemSave={
     "id":"save",
     "title":"Save Page Now",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);
@@ -611,3 +688,60 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //          }
 // });
 // });
+// /*---------Auto-archival Feature added--------*/
+// function handleIt(url){
+//   var page_url=url;
+// chrome.storage.sync.get(['auto_archive'],function(event){
+//   if(event.auto_archive==true){
+//     if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+//       wmAvailabilityCheck(page_url,
+//         function() {
+//           console.log("Available already");
+//         }, 
+//         function() {
+//           console.log("Not Available");
+//           chrome.runtime.sendMessage({message:"showbutton",url:page_url});
+//       });
+//     }
+//   }else{
+//     console.log("Cant be Archived");
+//   }
+// });
+// }
+
+chrome.tabs.onUpdated.addListener(function(tabId, info) {
+  if (info.status == "complete") {
+    chrome.tabs.get(tabId, function(tab) {
+    //var page_url = tab.url;
+      chrome.storage.sync.get(['auto_archive'],function(event){
+        if(event.auto_archive==true){
+          auto_save(tab.id);
+        }else{
+          console.log("Cant be Archived");
+        }
+      });
+    });
+  }
+});
+
+function auto_save(tabId){
+  chrome.tabs.get(tabId, function(tab) {
+      var page_url = tab.url;
+      chrome.browserAction.setBadgeText({tabId: tabId, text:""});
+      console.log(page_url);
+      if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
+        wmAvailabilityCheck(page_url,
+          function() {
+            console.log("Available already");
+          }, 
+          function() {
+            console.log("Not Available");
+            chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
+            // console.log(tabId);
+            // chrome.runtime.sendMessage({message: "checkProper",tabId:tabId},function(response) {
+            //   console.log(response.message);
+            // });
+          });
+      }
+  });
+}
