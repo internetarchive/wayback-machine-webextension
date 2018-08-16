@@ -26,6 +26,12 @@
     "scripts": ["scripts/background.js"],
     "persistent": true
   },
+  "content_scripts": [
+    {
+      "matches": ["http://hoaxy.iuni.iu.edu/*"],
+      "js": ["scripts/contentScript.js"]
+    }
+  ],
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
