@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <title>
+            Overview page of the Current URL
+        </title>
+    </head>
+    <body>
+        <table width="100%" style="max-height: 200px; ">
+            <tr class="spaceUnder">
+                <td style="text-align: center;">
+                    <div id ="horizontal_line" style="margin-bottom: 5px"></div>
+                        <div class='container'>
+                            <img class='resize_fit_center'
+                            src='images/logo.gif' />
+                        </div>
+                    <div id="horizontal_line" style="margin-top:3px"></div>
+                </td>
+            </tr>
+        </table>
+        <div>
+                <h2 style="text-align: center;"><strong>Overview Page of Current URL</strong></h2>
+        </div>
+        <BR>
+        <BR>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of First Archive</strong>
+                    <p>
+                        The URL, where you were was first archived on  
+                        <span id="first_archive_date">
+                        </span> at time  
+                        <span id="first_archive_time">
+                        </span> . And you can view that 
+                        <a id="link_first">HERE</a> .
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of Recent Archive</strong>
+                    <p>
+                        The URL, where you were was recently archived on
+                        <span id="recent_archive_date">
+                        </span>  at time 
+                        <span id="recent_archive_time">
+                        </span> .And you can view that 
+                        <a id="link_recent">HERE</a> .
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6" >
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Thumbnail of the Current URL</strong>
+                    <br>
+                    <div id="show_thumbnail" style="text-align: left">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <strong style="font-family: Bebas Neue;font-size: 30px;">Total Number of archives</strong>
+                    <div id="message" style="display:none"></div>
+                    <p>
+                        URLs for this domain have been captured <span id="total_archives"></span>
+                        times since <span id="first_archive_date_2"></span>. You can also archive this page now 
+                        by clicking on <a id="save_now">HERE</a> .
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="container" style="padding-left: 0px;padding-right: 0px">
+            <div class="col-sm-12 test">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Information about the Current URL</strong>
+                <p>
+                    The URL,where you had been recently is a <strong style="font-style: italic"><span id="details"></span> </strong>
+                </p>
+            </div>
+        </div>
+        <div id="details">
+
+        </div>
+        <br>
+        <br>
+    </body>
+</html>
+<script src="scripts/overview.js"></script>
+<style>
+body{
+    max-height: 100%;
+}
+@font-face {
+    font-family: Bebas Neue;
+    src: url("../fonts/BebasNeue.otf");
+}
+
+@font-face {
+    font-family: Gill Sans Light;
+    src: url("../fonts/GillSans-Light.ttf");
+}
+#horizontal_line{
+    margin: 0px; 
+    padding: 0px; 
+    border: 0px solid rgb(6, 117, 211); 
+    font-size: 19px; font-style: inherit;
+    font-variant: inherit; 
+    font-weight: inherit; 
+    font-stretch: inherit; 
+    line-height: 1; 
+    font-family: sans-serif; 
+    vertical-align: baseline; 
+    box-sizing: content-box; 
+    overflow: unset; 
+    height: 1px; 
+    position: relative; 
+    width: auto; 
+    display: flex; 
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
+    text-align: left; 
+    align-items: center; 
+    border-radius: 3px; 
+    justify-content: center; 
+    text-decoration: none;
+}
+
+.resize_fit_center {
+  max-width:100%;
+  max-height:100px;
+}
+
+h2{
+    font-family: Bebas Neue;
+    font-size: 50px;
+}
+
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+p{
+    font-family:Gill Sans Light;
+    font-size: 20px;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}
+</style>

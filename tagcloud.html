@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/annotation.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/jqcloud.css">
+        <link rel="stylesheet" type="text/css" href="css/tagcloud.css">
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
+        <title>
+            Tag-Cloud
+        </title>
+    </head>
+    <body>
+        <table width="100%" style="max-height: 200px;">
+            <tr class="spaceUnder">
+                <td style="text-align: center;">
+                    <div id ="horizontal_line" class="lower_margin"></div>
+                        <div class='container' id="tag_background">
+                            <img class='resize_fit_center'
+                            src='images/logo.gif' />
+                        </div>
+                    <div id="horizontal_line" class="extra_margin"></div>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <h2 style="text-align: center;"><strong>Tag-Cloud</strong><br></h2>
+        </div>
+        <div class="container" style="width: 100%;text-align: center;">
+            <div id="hey" class="wordcloud"></div>         
+        </div>
+    </body>
+</html>
+<script src="scripts/levenshtein.js"></script>
+<script src="scripts/tagcloud.js"></script>

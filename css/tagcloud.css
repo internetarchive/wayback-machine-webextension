@@ -1,0 +1,53 @@
+.wordcloud {
+    border: 1px solid #036;
+    display: inline-block;
+    height: 7in;
+    margin: 0.5in auto;
+    padding: 0;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width:7in;
+}
+#tag_background{
+    background: white;
+}
+#horizontal_line{
+    align-items: center; 
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
+    border: 0px solid rgb(6, 117, 211); 
+    border-radius: 3px; 
+    box-sizing: content-box; 
+    display: flex; 
+    font-family: sans-serif; 
+    font-size: 19px; font-style: inherit;
+    font-stretch: inherit; 
+    font-variant: inherit; 
+    font-weight: inherit; 
+    height: 1px; 
+    justify-content: center; 
+    line-height: 1; 
+    margin: 0px;    
+    overflow: unset; 
+    padding: 0px; 
+    position: relative; 
+    text-align: left; 
+    text-decoration: none;
+    vertical-align: baseline; 
+    width: auto; 
+}
+.extra_margin{
+    margin-top:3px
+}
+.lower_margin{
+    margin-bottom: 5px;
+}
+h2{
+    font-family: Bebas Neue;
+    font-size: 50px;
+    text-align: center;
+}
+.container{
+    background: white;
+    padding-left: 15px;
+    padding-right: 15px;
+}
