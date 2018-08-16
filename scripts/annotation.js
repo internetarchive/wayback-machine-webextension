@@ -35,7 +35,7 @@ function get_annotations(){
                 var source=rowData.target[0].source;
                 var exactData=rowData.text;
                 var user=rowData.user.substring(5,rowData.user.indexOf('@'));
-                var row=document.getElementById('row-contain');
+                var row=document.getElementById('row_contain');
                 var item=row.cloneNode(true);
                 var topDivDate=item.querySelectorAll('[id="date"]')[0].appendChild(document.createTextNode("Dated on :"+date));
                 var topDivUserInfo=item.querySelectorAll('[id="userinfo"]')[0].appendChild(document.createTextNode(user));
@@ -66,9 +66,9 @@ function get_annotations(){
                 item.id = "row-"+i;
                 document.getElementById("container-whole").appendChild(item);
             }
-            document.getElementById("row-contain").style.display="none";
+            document.getElementById("row_contain").style.display="none";
         }else{
-            document.getElementById("row-contain").innerHTML="There are no Annotations for the current URL";
+            document.getElementById("row_contain").innerHTML="There are no Annotations for the current URL";
         }
     }
     xhr.send(null);

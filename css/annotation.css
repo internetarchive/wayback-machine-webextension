@@ -51,6 +51,8 @@ h2{
     background: white;
     padding-left: 15px;
     padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
 }
 p{
     font-family:Gill Sans Light;
@@ -107,7 +109,7 @@ p{
 .lower_margin{
     margin-bottom: 5px;
 }
-#row_contain{
+.row_main{
     align-items: stretch;
     display: flex;
     justify-content: center;
