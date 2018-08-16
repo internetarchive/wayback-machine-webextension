@@ -7,120 +7,47 @@
         <link rel="stylesheet" type="text/css" href="css/annotation.css">
         <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
         <title>
-            Annotation of an URL if any. 
+            Annotation of current URL if any. 
         </title>
     </head>
     <body>
         <table width="100%" style="max-height: 200px; ">
             <tr class="spaceUnder">
                 <td style="text-align: center;">
-                    <div id ="horizontal_line" style="margin-bottom: 5px"></div>
-                        <div class='container' style="background: white">
+                    <div id ="horizontal_line" class="lower_margin"></div>
+                        <div class="container">
                             <img class='resize_fit_center'
                             src='images/logo.gif' />
                         </div>
-                    <div id="horizontal_line" style="margin-top:3px"></div>
+                    <div id="horizontal_line" class="extra_margin"></div>
                 </td>
             </tr>
         </table>
         <div>
-            <h2 style="text-align: center;"><strong>Annotations of Current URL</strong><br><span style="font-size: 50%;font-family:sans-serif"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span></h2>
+            <h2 style="text-align: center;"><strong>Annotations of Current URL</strong><br><span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span></h2>
         </div>
-        <div class="container" id="container-whole">
-
-        </div>
-        <div class="row" id="row-contain" style="    display: flex;
-        align-items: stretch;
-        justify-content: center;" >
-            <div class="col-sm-6" style="width: 600px">
+        <div class="container" id="container-whole"></div>
+        <div class="row" id="row_contain">
+            <div class="col-sm-6" id="half">
                 <div class="box">
                     <div class="top-div" id="top-div-contain">
                         <strong>
-                            <span id="userinfo">
-
-                            </span>
+                            <span id="userinfo"></span>
                         </strong>
-                        <span id="date">
-
-                        </span>
+                        <span id="date"></span>
                     </div>
                     <div class="source" id="source-">
                         <span class="glyphicon glyphicon-globe" id="public"></span>
-                        <span style="font-weight: 150%;color: #818181">Public on</span>
-                        <span class="title" id="title-contain" style="color: red">
-
-                        </span>
-                        <span id="source-contain" style="word-wrap: break-word"> 
-                        </span>
+                        <span class="public_on">Public on</span>
+                        <span class="title" id="title-contain"></span>
+                        <span id="source-contain"> </span>
                     </div>
-                    <div class="target-selector-exact" id="target-selector-exact-contain">
-                    </div>
-                    <div class="text" id="text-contain">
-                    </div>
-                    <div id="links">
-                    </div>
+                    <div class="target-selector-exact" id="target-selector-exact-contain"></div>
+                    <div class="text" id="text-contain"></div>
+                    <div id="links"></div>
                 </div>
             </div>
         </div>
     </body>
 </html>
 <script src="scripts/annotationURL.js"></script>
-<style>
-body{
-    max-height: 100%;
-}
-@font-face {
-    font-family: Bebas Neue;
-    src: url("../fonts/BebasNeue.otf");
-}
-
-@font-face {
-    font-family: Gill Sans Light;
-    src: url("../fonts/GillSans-Light.ttf");
-}
-#horizontal_line{
-    margin: 0px; 
-    padding: 0px; 
-    border: 0px solid rgb(6, 117, 211); 
-    font-size: 19px; font-style: inherit;
-    font-variant: inherit; 
-    font-weight: inherit; 
-    font-stretch: inherit; 
-    line-height: 1; 
-    font-family: sans-serif; 
-    vertical-align: baseline; 
-    box-sizing: content-box; 
-    overflow: unset; 
-    height: 1px; 
-    position: relative; 
-    width: auto; 
-    display: flex; 
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
-    text-align: left; 
-    align-items: center; 
-    border-radius: 3px; 
-    justify-content: center; 
-    text-decoration: none;
-}
-
-.resize_fit_center {
-    max-width:100%;
-    max-height:100px;
-}
-
-h2{
-    font-family: Bebas Neue;
-    font-size: 50px;
-}
-
-.container{
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-p{
-    font-family:Gill Sans Light;
-    font-size: 20px;
-}
-
-</style>

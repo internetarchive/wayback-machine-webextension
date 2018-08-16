@@ -25,8 +25,6 @@ This is a "WebExtension". See https://developer.chrome.com/extensions
 ## Places to update the version
 
 - manifest.json - update version
-- scripts/background.js - update header
-
 
 ## License
 
@@ -43,3 +41,4 @@ AGPL-3
 - Abhishek Das, @abhidas
 - Vangelis Banos, @vbanos
 - Rodden Kerry, @kerryrodden
+- Anish Kumar Sarangi, @anishsarangi

@@ -1,3 +1,10 @@
+.color_code
+{
+  color:#22c399;
+}
+.color_code_whois{
+    color: #ffcc66;
+}
 body{
     max-height: 100%;
 }
@@ -9,10 +16,6 @@ body{
 @font-face {
     font-family: Gill Sans Light;
     src: url("../fonts/GillSans-Light.ttf");
-}
-.annot_title{
-    font-size: 50%;
-    font-family:sans-serif;
 }
 #horizontal_line{
     align-items: center; 
@@ -39,16 +42,14 @@ body{
     width: auto; 
 }
 .resize_fit_center {
-    max-height:100px;
     max-width:100%;
+    max-height:100px;
 }
 h2{
     font-family: Bebas Neue;
     font-size: 50px;
-    text-align: center;
 }
 .container{
-    background: white;
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -56,23 +57,46 @@ p{
     font-family:Gill Sans Light;
     font-size: 20px;
 }
-.box{
-    align-items: stretch;
-    background-color: #fff;
-    border:1px solid black;
-    border-radius: 5px;
-    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
-    display: flex;
-    flex :0 0 420px;
-    flex-direction: column;
-    justify-content: center;
+#box-twitter{
     margin-bottom: 12px;
-    overflow: hidden;
     padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: scroll;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
+}
+#box-annotation{
+    margin-bottom: 12px;
+    padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: scroll;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}
+.box-annotation{
+    margin-bottom: 12px;
+    flex :0 0 420px;
+    padding: 5px 5px 5px 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    border:1px solid black;
 }
 .target-selector-exact{
-    font-family:'Courier New', Courier, monospace;
     word-wrap: break-word;
+    font-family:'Courier New', Courier, monospace;
 }
 #link-incontext{
     margin-left:40px; 
@@ -91,9 +115,9 @@ p{
     padding: 5px;
 }
 #target-selector-exact-contain{
+    padding: 5px;
     border-left: 3px solid #d3d3d3;
     color: #7A7A7A;
-    padding: 5px;
 }
 #target-selector-exact-contain:hover{
     border-left: 3px solid #58CEF4;
@@ -101,30 +125,7 @@ p{
 #links{
     padding: 10px;
 }
-.extra_margin{
-    margin-top:3px
-}
-.lower_margin{
-    margin-bottom: 5px;
-}
-#row_contain{
-    align-items: stretch;
-    display: flex;
-    justify-content: center;
-}
-#half{
-    width: 600px;
-}
-#source-contain{
-    word-wrap: break-word;
-}
-#title-contain{
-    color: red;
-}
-.public_on{
-    color: #818181;
-    font-weight: 150%;
-}
+
 @media screen and (max-width: 500px) {
     #link-incontext {
       margin-left: 5px;
@@ -132,4 +133,24 @@ p{
     #link-html{
         margin-left: 10px;
     }
+}
+.wordcloud {
+    border: 1px solid #036;
+    height: 7in;
+    margin: 0.5in auto;
+    padding: 0;
+    page-break-after: always;
+    page-break-inside: avoid;
+    display: inline-block;
+    width: 7in;
+}
+#public_on{
+    font-weight: 150%;
+    color: #818181;
+}
+.extra_margin{
+    margin-top:3px
+}
+.lower_margin{
+    margin-bottom: 5px;
 }

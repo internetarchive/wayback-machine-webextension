@@ -14,6 +14,7 @@ function restore_options() {
     annotationsurl:false,
     similarweb:false,
     tagcloud:false,
+    hoaxy:false,
     showall:false
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
@@ -28,6 +29,7 @@ function restore_options() {
     document.getElementById('annotationsurl').checked = items.annotationsurl;
     document.getElementById('similarweb').checked = items.similarweb;
     document.getElementById('tagcloud').checked = items.tagcloud;
+    document.getElementById('hoaxy').checked = items.hoaxy;
     document.getElementById('showall').checked = items.showall;
   });
 }
@@ -44,6 +46,7 @@ function save_options() {
   var annotationsurl=document.getElementById('annotationsurl').checked;
   var similarweb= document.getElementById('similarweb').checked;
   var tagcloud = document.getElementById('tagcloud').checked;
+  var hoaxy = document.getElementById('hoaxy').checked;
   var showall= document.getElementById('showall').checked;
   chrome.storage.sync.set({
     show_context:show_context,
@@ -58,6 +61,7 @@ function save_options() {
     annotationsurl:annotationsurl,
     similarweb:similarweb,
     tagcloud:tagcloud,
+    hoaxy:hoaxy,
     showall:showall
   }, function() {
     var status = document.getElementById('status');

@@ -285,18 +285,9 @@ function borrow_books(){
         chrome.browserAction.getBadgeText({tabId:tabId}, function (result){
             if(result=="B"){
                 if(url.includes("www.amazon") && url.includes('/dp/')){
-                    var index_of_dp=url.indexOf('/dp/');
-                    var length=url.length;
-                    var new_test_url=url.substring(index_of_dp+4,length);
-                    var ASIN_index=new_test_url.indexOf('/')
-                    console.log(ASIN_index);
-                    if(ASIN_index>0){
-                        var ASIN=new_test_url.substring(0,new_test_url.indexOf('/'));
-                    }else{
-                        var ASIN=new_test_url.substring(0,new_test_url.length);
-                    }
                     var xhr=new XMLHttpRequest();
-                    var new_url="http://vbanos-dev.us.archive.org:5002/book/"+ASIN;
+                    var new_url="https://wwwb-api.archive.org/services/context/book?url="+url;
+                    console.log(new_url);
                     xhr.open("GET",new_url,true);
                     xhr.send(null);
                     xhr.onload=function(){
