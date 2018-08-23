@@ -24,13 +24,10 @@ function url_getter(url) {
             else {
                 html += "N/A";
             }
-            if(xmldata.getElementsByTagName("COUNTRY"))
+            if(xmldata.getElementsByTagName("COUNTRY")[0])
             {
                 html += '<br/>'+'<b>Country:</b>' +"<span class='color_code'>"+
                         xmldata.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
-            }
-            else{
-                html+="N/A";
             }
             var rl = xmldata.getElementsByTagName('RL');
             if (rl.length > 0) {
