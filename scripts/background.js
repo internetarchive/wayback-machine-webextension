@@ -308,7 +308,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                     if(event2.showall==true){
                       console.log("autoupdate true and showall true and tab");
-                      chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                         windowIdtest = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowIdtest){
@@ -446,7 +447,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     windowId: windowIdtest
                   }, function(tabs) {
                     var tab=tabs[0];
-                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                    var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                    chrome.tabs.update(tab.id, {url:alexa_url});
                   });
                   var whois_url="https://archive.org/services/context/whois?url=" + url;
                   chrome.tabs.update(parseInt(tabId2), {url:whois_url});
@@ -467,7 +469,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       event2.showall=true;
                     }
                     if(event2.showall==true){
-                      chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId1){
@@ -604,7 +607,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     windowId: windowId1
                   }, function(tabs) {
                     var tab=tabs[0];
-                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                    var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                    chrome.tabs.update(tab.id, {url:alexa_url});
                   });  
                   chrome.tabs.query({
                     windowId: windowId2
@@ -899,7 +903,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     tabIdtest=tab1.id;
                     if((tab.id!=tabIdtest)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)&&(tab.id!=tabId6)&&(tab.id!=tabId7)&&(tab.id!=tabId8)&&(tab.id!=tabId9)){
                       if((tab1.url).includes("alexa")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                        var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                        chrome.tabs.update(parseInt(tabIdtest), {url:alexa_url});
                       }else if ((tab1.url).includes("whois")){
                         var whois_url="https://archive.org/services/context/whois?url=" + url;
                         chrome.tabs.update(parseInt(tabIdtest), {url:whois_url});
@@ -1002,7 +1007,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       windowId: windowId1
                     }, function(tabs) {
                       var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("alexa.html")+"?url="+url});
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.tabs.update(tab1.id, {url:alexa_url});
                     });  
                     chrome.tabs.query({
                       windowId: windowId2
@@ -1140,13 +1146,14 @@ function check_url(url,onfound,onnotfound){
 
 //function for opeing a particular context
 function openThatContext(temp,url,methodOfShowing){
+  var alexa_url="https://archive.org/services/context/alexa?url="+url;
   var whois_url="https://archive.org/services/context/whois?url=" + url;
   var tweet_url="https://archive.org/services/context/twitter?url="+url;
   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+url+"&sort=mixed&type=Twitter";
   if(methodOfShowing=='tab'){
     if(windowIdtest==0){
       if(temp=='alexa'){
-        chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+        chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
           //to add onremoved event listener
         });
@@ -1228,7 +1235,7 @@ function openThatContext(temp,url,methodOfShowing){
         windowId: windowIdtest
       }, function(tabs) {
         if(temp=='alexa'){
-          chrome.tabs.create({'url':chrome.runtime.getURL("alexa.html")+"?url="+url,'active':false},function(tab){
+          chrome.tabs.create({'url': alexa_url,'active':false},function(tab){
             tabId1=tab.id;
             chrome.tabs.onRemoved.addListener(function (tabtest) {
               if(tabtest==tabId1){
@@ -1313,7 +1320,7 @@ function openThatContext(temp,url,methodOfShowing){
     }
   }else if(methodOfShowing=='window'){
     if(temp=='alexa'){
-      chrome.windows.create({url:chrome.runtime.getURL("alexa.html")+"?url="+url, width:500, height:500, top:0, left:0, focused:false},function (win) {
+      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
         windowId1 = win.id;
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId1){
