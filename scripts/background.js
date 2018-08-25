@@ -1222,7 +1222,7 @@ function openThatContext(temp,url,methodOfShowing){
           });
         });
       }
-    }else{ 
+    }else{
       chrome.tabs.query({
         windowId: windowIdtest
       }, function(tabs) {
