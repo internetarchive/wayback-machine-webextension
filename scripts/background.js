@@ -3,15 +3,18 @@
 * Copyright 2016, Internet Archive
 */
 var manifest=chrome.runtime.getManifest();
+//Load version from Manifest.json file
 var VERSION = manifest.version;
-Globalstatuscode="";
+//Used to store the statuscode of the if it is a httpFailCodes
+var Globalstatuscode="";
+//List of exluded URLs
 var excluded_urls = [
   "localhost",
   "0.0.0.0",
   "127.0.0.1"
 ];
-
 var previous_RTurl="";
+//Window ID of the Context-Windows
 var windowId1 =0;
 var windowId2 =0;
 var windowId3 =0;
@@ -22,8 +25,8 @@ var windowId7=0;
 var windowId8=0;
 var windowId9=0;
 var windowIdtest=0;
-var windowIdSingle=0;
 var tabId1=0;
+//Tab Id of the Context-tabs
 var tabId2=0;
 var tabId3=0;
 var tabId4=0;
@@ -32,8 +35,10 @@ var tabId6=0;
 var tabId7=0;
 var tabId8=0;
 var tabId9=0;
+var windowIdSingle=0;
 var WB_API_URL = "https://archive.org/wayback/available";
 
+// Function to check whether it is a valid URL or not
 function isValidUrl(url) {
   for (var i = 0; i < excluded_urls.length; i++) {
     if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
@@ -216,14 +221,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       }
   }else if(message.message=='makemodal'){
             RTurl=message.rturl;
-            console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
                 var url=RTurl;
-                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){ //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
-                    //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
+                //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
+                if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){
                     alert("Structure as radial tree not available on this page");
                 }else if((previous_RTurl!=url && url==tab.url) || (previous_RTurl!=url && url!=tab.url)){
+                      //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
                         chrome.tabs.sendMessage(tab.id,{message:"deletenode"});
                             chrome.tabs.executeScript(tab.id, {
                               file:"scripts/lodash.min.js"
@@ -269,45 +274,40 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 //var url=tabs[0].url;
-                console.log(RTurl);
                 chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
-                console.log(RTurl);
             });
         }else if(message.message=='changeBadge'){
+          //Used to change bage for auto-archive feature
           var tabId=message.tabId;
-          console.log(tabId);
           chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
-          console.log("Badge Changed");
         }else if(message.message=='showall'){
           chrome.storage.sync.get(['show_context'],function(event){
             if(!event.show_context){
-              event.show_context="tab"; //By-default the context-window open in tabs
+              //By-default the context-window open in tabs
+              event.show_context="tab";
             }
-            chrome.storage.sync.get(['annotation_context'],function(event){
-              if(event.annotation_context==undefined){
-                event.annotation_context="domain"; 
-              }
-            });
-            var received_url=message.url; //URL which is received by message-parsing_url
+            var received_url=message.url;
             received_url = received_url.replace(/^https?:\/\//,'');
-            var length=received_url.length; 
             var last_index=received_url.indexOf('/');
-            var url=received_url.slice(0,last_index);    //URL which will be using for alexa and whois
-            var open_url=received_url;          //URL which will be needed for finding tweets
+            //URL which will be using for alexa and whois
+            var url=received_url.slice(0,last_index);
+            //URL which will be needed for finding tweets
+            var open_url=received_url;
             if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 
             chrome.storage.sync.get(['auto_update_context'],function(event1){
               if(event1.auto_update_context==undefined){
+                //By default auto-update context is off
                 event1.auto_update_context=false;
               }
-              console.log("here");
+              //If the Context is to be showed in tabs 
               if(event.show_context=="tab"){
-                if(tabId2==0 || tabId3==0 || tabId4==0 ||tabId5==0){
+                if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
                     if(event2.showall==undefined){
                       event2.showall=true;
                     }
+                    //If show-all Context is true, Create a window which is focussed and create tabs in it
                     if(event2.showall==true){
-                      console.log("autoupdate true and showall true and tab");
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                         windowIdtest = win.id;
@@ -385,7 +385,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         });
                       });
                     }else{
-                      console.log("autoupdate true and showall false and tab");
+                      //If not selected show-all option ,then check and open indivisually
                       chrome.storage.sync.get(function(event4){
                         if(event4.alexa==true){
                           console.log("checking alexa");
@@ -443,6 +443,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                   });
                 }else{
+                  //If context screens(tabs) are already opened and user again click on the Context button then update them 
                   chrome.tabs.query({
                     windowId: windowIdtest
                   }, function(tabs) {
@@ -462,13 +463,16 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                   chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
                 }
-              }else if(event.show_context=="window"){
-                if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0){
+              }else if(event.show_context=="window"){  
+                //If the Context is to be showed in Windows 
+                if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0){
+                  //Checking if Windows are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
                     if(event2.showall==undefined){
                       event2.showall=true;
                     }
                     if(event2.showall==true){
+                      //If show-all Context is true, create a context windows 
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;
@@ -546,49 +550,41 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         });
                       });
                     }else{
+                      //If not selected show-all option ,then check and open indivisually 
                       chrome.storage.sync.get(function(event4){
                         if(event4.alexa==true){
-                          console.log("checking alexa");
                           openThatContext("alexa",url,event.show_context);
                         }
                           chrome.storage.sync.get(function(event5){
                             if(event5.whois==true){
-                              console.log("checking whois");
                               openThatContext("whois",url,event.show_context);
                             }
                               chrome.storage.sync.get(function(event6){
                                 if(event6.tweets==true){
-                                  console.log("checking tweets");
                                   openThatContext("tweets",open_url,event.show_context);
                                 }
                                   chrome.storage.sync.get(function(event7){
                                     if(event7.wbmsummary==true){
-                                      console.log("checking wbmsummary");
                                       openThatContext("wbmsummary",message.url,event.show_context);
                                     }
                                       chrome.storage.sync.get(function(event8){
                                         if(event8.annotations==true){
-                                          console.log("checking annotations");
                                           openThatContext("annotations",message.url,event.show_context);
                                         }
                                           chrome.storage.sync.get(function(event9){
                                             if(event9.similarweb==true){
-                                              console.log("checking similarweb");
                                               openThatContext("similarweb",url,event.show_context);
                                             }
                                             chrome.storage.sync.get(function(event10){
-                                              if(event10.similarweb==true){
-                                                console.log("checking tagcloud");
+                                              if(event10.tagcloud==true){
                                                 openThatContext("tagcloud",message.url,event.show_context);
                                               }
                                               chrome.storage.sync.get(function(event11){
                                                 if(event11.annotationsurl==true){
-                                                  console.log("checking annotationurl");
                                                   openThatContext("annotationsurl",url,event.show_context);
                                                 }
                                                   chrome.storage.sync.get(function(event12){
                                                     if(event12.hoaxy==true){
-                                                      console.log("checking hoaxy");
                                                       openThatContext("hoaxy",open_url,event.show_context);
                                                     }
                                                   });
@@ -603,6 +599,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                   });
                 }else{
+                  //If context screens(windows) are already opened and user again click on the Context button then update them 
                   chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
@@ -664,8 +661,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 }                               
               }
               else if(event.show_context=="singlewindow"){
+                  //If the Context is to be showed in singleWindow 
                   if(windowIdSingle!=0){
-                    console.log(message.url);
+                    //Checking if SingleWindow context is not open already
                     chrome.tabs.query({
                       windowId: windowIdSingle
                     }, function(tabs) {
@@ -864,9 +862,9 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy;
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy; 
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
-  if (info.status == "complete") {
+  if (info.status == "complete") { 
     chrome.tabs.get(tabId, function(tab) {
       chrome.storage.sync.get(['auto_archive'],function(event){
         if(event.auto_archive==true){
@@ -891,10 +889,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
         chrome.storage.sync.get(['auto_update_context'],function(event){
           if(event.auto_update_context==true){
-            console.log("here");
             chrome.storage.sync.get(['show_context'],function(event1){
               if(event1.show_context=="tab"){
-                console.log("here");
                 if((tabId5!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)||(windowIdtest!=0)){
                   chrome.tabs.query({
                     windowId: windowIdtest
@@ -1119,10 +1115,6 @@ function auto_save(tabId){
           function() {
             console.log("Not Available");
             chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
-            // console.log(tabId);
-            // chrome.runtime.sendMessage({message: "checkProper",tabId:tabId},function(response) {
-            //   console.log(response.message);
-            // });
         });
       }
     }
@@ -1318,7 +1310,8 @@ function openThatContext(temp,url,methodOfShowing){
         }
       });
     }
-  }else if(methodOfShowing=='window'){
+  }else if(methodOfShowing=='window'){ 
+    //If context is to be shown in window
     if(temp=='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
         windowId1 = win.id;
