@@ -80,47 +80,21 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         isValidUrl(details.url)) {
               Globalstatuscode=details.statusCode;
               wmAvailabilityCheck(details.url, function(wayback_url, url) {
-              if(details.statusCode==504){
-                  //notify(wayback_url,'View an archived version courtesy of the Internet Archive WayBack Machine');
-                  chrome.notifications.create(
-                'wayback-notification',{   
-                type: 'basic', 
-                requireInteraction:true,
-                iconUrl: '/images/logo.gif', 
-                title: "Page not available ?", 
-                message:"View an archived version courtesy of the WayBack Machine",
-                buttons:[{
-                    title: "Click here to see archived version"
-                }]
-                },
-                function(id){
-                    myNotID=id;
-                } 
-              );
-              chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-    if (notifId === myNotID) {
-        if (btnIdx === 0) {
-                chrome.tabs.create({ url:wayback_url});
-                chrome.notifications.clear(myNotID);
-                myNotID=null;
-        }
-    }
-});
-              }else{
-                  chrome.tabs.executeScript(details.tabId, {
-              file: "scripts/client.js"
-            }, function() {
-              chrome.tabs.sendMessage(details.tabId, {
-                type: "SHOW_BANNER",
-                wayback_url: wayback_url,
-                page_url: details.url,
-                status_code: details.statusCode
-              });
-            });
-              }
-          }, function() {
-            
-          });
+                    chrome.tabs.executeScript(details.tabId, {
+                    file: "scripts/client.js"
+                    },function() {
+                        if(chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
+                            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
+                        }else{
+                            chrome.tabs.sendMessage(details.tabId, {
+                            type: "SHOW_BANNER",
+                            wayback_url: wayback_url,
+                            page_url: details.url,
+                            status_code: details.statusCode
+                            });
+                        }
+                    });
+            }, function() {});            
         }
       }
       if(details.tabId >0 ){
@@ -129,7 +103,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             if(tabsArr.indexOf(details.tabId)>=0){
                 chrome.tabs.get(details.tabId, function(tab) {
                     tabIsReady(tab.incognito);  
-                
                 });
             }
         })
