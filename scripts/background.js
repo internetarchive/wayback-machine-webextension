@@ -83,7 +83,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                     chrome.tabs.executeScript(details.tabId, {
                     file: "scripts/client.js"
                     },function() {
-                        if(chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
+                        if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
                             chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
                         }else{
                             chrome.tabs.sendMessage(details.tabId, {
