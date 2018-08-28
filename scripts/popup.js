@@ -319,14 +319,16 @@ function show_news(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         url=tabs[0].url;
         tabId=tabs[0].id;
-        console.log("hey");
-        if(url.includes("https://www.huffingtonpost"||"https://www.nytimes"||"https://www.forbes"||"https://www.washingtonpost")){
-            console.log("also here");
-            document.getElementById('news_recommend_tr').style.display="block";
-            document.getElementById('news_recommend_tr').onclick=function(){
-                chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+        chrome.storage.sync.get(['news'],function(event){
+            if(event.news==true){
+                if(url.includes("https://www.huffingtonpost"||"https://www.nytimes"||"https://www.forbes"||"https://www.washingtonpost")){
+                    document.getElementById('news_recommend_tr').style.display="block";
+                    document.getElementById('news_recommend_tr').onclick=function(){
+                        chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+                    }
+                }
             }
-        }
+        });
     });
 }
 
