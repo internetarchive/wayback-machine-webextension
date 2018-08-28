@@ -315,6 +315,21 @@ function borrow_books(){
     });
 }
 
+function show_news(){
+    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        url=tabs[0].url;
+        tabId=tabs[0].id;
+        console.log("hey");
+        if(url.includes("https://www.huffingtonpost"||"https://www.nytimes"||"https://www.forbes"||"https://www.washingtonpost")){
+            console.log("also here");
+            document.getElementById('news_recommend_tr').style.display="block";
+            document.getElementById('news_recommend_tr').onclick=function(){
+                chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+            }
+        }
+    });
+}
+
 /** Disabled code for the autosave feature **/
 //function restoreSettings() {
 //  chrome.storage.sync.get({
@@ -347,7 +362,7 @@ function borrow_books(){
 //document.getElementById('settings_div').style.display="none";
 
 // window.onload=get_url;
-window.onloadFuncs = [get_url,auto_archive_url,borrow_books];
+window.onloadFuncs = [get_url,auto_archive_url,borrow_books,show_news];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
