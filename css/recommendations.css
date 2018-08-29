@@ -1,24 +1,36 @@
-.wrapper {
+/* #RecommendationTray {
   display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+} */
+
+#RecommendationTray {
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.wrapper > div{
+#RecommendationTray > div{
   padding:5px;
-  margin:10px;
-  border-radius: 25px;
-  border: 2px solid white;
-  align-items: center;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #eee;
+  text-align: center;
 }
 
-.wrapper > div > p{
+#RecommendationTray > div > p{
   width: max-content;
   display:block;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
-.wrapper > div > a{
+#RecommendationTray > div > a{
   text-align: center;
 }
 a > img{
@@ -77,10 +89,11 @@ h2{
     padding-right: 15px;
 }
 .rec_results{
-  border-radius: 25px;
-  border: 2px solid #eee;
-  padding: 20px;
-  background-color: #eee
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 p{
     font-family:Gill Sans Light;
