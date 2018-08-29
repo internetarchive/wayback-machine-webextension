@@ -324,7 +324,16 @@ function show_news(){
                 if(url.includes("https://www.huffingtonpost"||"https://www.nytimes"||"https://www.forbes"||"https://www.washingtonpost")){
                     document.getElementById('news_recommend_tr').style.display="block";
                     document.getElementById('news_recommend_tr').onclick=function(){
-                        chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+                        chrome.storage.sync.get(['show_context'],function(event1){
+                            if(event1.show_context==undefined){
+                                event1.show_context=="tab";
+                            }
+                            if(event1.show_context=="tab"){
+                                chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+                            }else{
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                            }
+                        });
                     }
                 }
             }
