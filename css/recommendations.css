@@ -1,103 +1,48 @@
-/* #RecommendationTray {
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
-} */
-
 #RecommendationTray {
   background-color: white;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 0 auto;
+  padding: 0 15px 0 15px;
 }
 
 #RecommendationTray > div{
-  padding:5px;
-  width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  border-radius: 5px;
-  border: 1px solid black;
   background-color: #eee;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 0 auto 5px auto;
+  padding:5px;
   text-align: center;
+  width: 300px;
 }
 
 #RecommendationTray > div > p{
-  width: max-content;
   display:block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 0 auto;
   text-align: center;
+  width: max-content;
 }
 #RecommendationTray > div > a{
   text-align: center;
 }
 a > img{
-  display:block;
-  margin-left:auto;
-  margin-right: auto;
-  margin-top: 4px;
   align-self: center;
+  display:block;
+  margin: 4px auto 0 auto;
 }
 
 body{
-    max-height: 100%;
-}
-@font-face {
-    font-family: Bebas Neue;
-    src: url("../fonts/BebasNeue.otf");
-}
-@font-face {
-    font-family: Gill Sans Light;
-    src: url("../fonts/GillSans-Light.ttf");
-}
-#horizontal_line{
-    margin: 0px;
-    padding: 0px;
-    border: 0px solid rgb(6, 117, 211);
-    font-size: 19px; font-style: inherit;
-    font-variant: inherit;
-    font-weight: inherit;
-    font-stretch: inherit;
-    line-height: 1;
-    font-family: sans-serif;
-    vertical-align: baseline;
-    box-sizing: content-box;
-    overflow: unset;
-    height: 1px;
-    position: relative;
-    width: auto;
-    display: flex;
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
-    text-align: left;
-    align-items: center;
-    border-radius: 3px;
-    justify-content: center;
-    text-decoration: none;
-}
-.resize_fit_center {
-  max-width:100%;
-  max-height:100px;
-}
-h2{
-    font-family: Bebas Neue;
-    font-size: 50px;
+  max-height: 100%;
 }
 .container{
-    padding-left: 15px;
-    padding-right: 15px;
+  padding: 0 15px 0 15px;
 }
 .rec_results{
   background-color: white;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 0 auto;
+  padding: 0 15px 0 15px;
 }
 p{
-    font-family:Gill Sans Light;
-    font-size: 20px;
+  font-family:Gill Sans Light;
+  font-size: 20px;
 }
 strong{
   font-family:  bebas Neue;
