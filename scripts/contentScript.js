@@ -1,5 +1,4 @@
 window.onload=function(){
-  console.log("Hi");
   setTimeout(
     function() {
       let ids = ["dashboard","form", "secondary_form", "timeline", "zoom_buttons"];
