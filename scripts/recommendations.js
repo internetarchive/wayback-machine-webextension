@@ -53,7 +53,7 @@ window.onload = function(){
 function get_details(){
   var article = null;
   article = getUrlByParameter('url');
-  var apiURL = "http://maxreinisch-newsrecommender.crawl.archivelab.org/recommend/" + article
+  var apiURL = "https://archive.org/services/context/tvnews?url="+article;
   var request = new XMLHttpRequest();
   request.open("GET", apiURL, true);
   request.onreadystatechange = function() {
