@@ -8,7 +8,7 @@
     "48": "images/icon.png",
     "96": "images/icon@2x.png"
   },
-  
+
   "permissions": [
       "notifications",
       "tabs",
@@ -28,7 +28,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://hoaxy.iuni.iu.edu/*"],
+      "matches": ["http://hoaxy.iuni.iu.edu/*", "https://hoaxy.iuni.iu.edu/*"],
       "js": ["scripts/contentScript.js"]
     }
   ],
