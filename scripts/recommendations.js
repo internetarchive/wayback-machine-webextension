@@ -8,7 +8,7 @@ function constructArticles(clips){
     return -1;
   }
   for (let entry of clips){
-    let clip = entry['TV Clip'];
+    let clip = entry[0];
     let div = document.createElement('div');
     let img = document.createElement('img');
     let anchor = document.createElement('a');
