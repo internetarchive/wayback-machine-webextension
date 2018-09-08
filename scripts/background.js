@@ -1047,7 +1047,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
             tabId=tabs[0].id;
             if(url.includes("www.amazon")){
               var xhr=new XMLHttpRequest();
-              var new_url="https://wwwb-api.archive.org/services/context/book?url="+url;
+              var new_url="https://archive.org/services/context/amazonbooks?url="+url;
               xhr.open("GET",new_url,true);
               xhr.send(null);
               xhr.onload=function(){

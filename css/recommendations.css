@@ -1,0 +1,54 @@
+#RecommendationTray {
+  background-color: white;
+  margin: 0 auto 0 auto;
+  padding: 0 15px 0 15px;
+}
+
+#RecommendationTray > div{
+  background-color: #eee;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 0 auto 5px auto;
+  padding:5px;
+  text-align: center;
+  width: 300px;
+}
+
+#RecommendationTray > div > p{
+  display:block;
+  margin: 0 auto 0 auto;
+  text-align: center;
+  width: max-content;
+}
+#RecommendationTray > div > a{
+  text-align: center;
+}
+a > img{
+  align-self: center;
+  display:block;
+  margin: 4px auto 0 auto;
+}
+
+body{
+  max-height: 100%;
+}
+.container{
+  padding: 0 15px 0 15px;
+}
+.rec_results{
+  background-color: white;
+  margin: 0 auto 0 auto;
+  padding: 0 15px 0 15px;
+}
+p{
+  font-family:Gill Sans Light;
+  font-size: 20px;
+}
+strong{
+  font-family:  bebas Neue;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}

@@ -286,7 +286,7 @@ function borrow_books(){
             if(result=="B"){
                 if(url.includes("www.amazon") && url.includes('/dp/')){
                     var xhr=new XMLHttpRequest();
-                    var new_url="https://wwwb-api.archive.org/services/context/book?url="+url;
+                    var new_url="https://archive.org/services/context/amazonbooks?url="+url;
                     console.log(new_url);
                     xhr.open("GET",new_url,true);
                     xhr.send(null);
@@ -312,6 +312,37 @@ function borrow_books(){
             }
         });
         
+    });
+}
+
+function show_news(){
+    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+        url=tabs[0].url;
+        var to_check_url=url.replace(/^https?:\/\//,'');
+        var final_url=to_check_url.slice(0,to_check_url.indexOf('/'));
+        tabId=tabs[0].id;
+        var list_of_sites=["www.huffingtonpost.in","www.nytimes.com","www.forbes.com","www.washingtonpost.com"];
+        chrome.storage.sync.get(['news'],function(event){
+            if(event.news==true){
+                console.log(final_url);
+                if(list_of_sites.indexOf(final_url)>=0){
+                    console.log(final_url);
+                    document.getElementById('news_recommend_tr').style.display="block";
+                    document.getElementById('news_recommend_tr').onclick=function(){
+                        chrome.storage.sync.get(['show_context'],function(event1){
+                            if(event1.show_context==undefined){
+                                event1.show_context=="tab";
+                            }
+                            if(event1.show_context=="tab"){
+                                chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
+                            }else{
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                            }
+                        });
+                    }
+                }
+            }
+        });
     });
 }
 
@@ -347,7 +378,7 @@ function borrow_books(){
 //document.getElementById('settings_div').style.display="none";
 
 // window.onload=get_url;
-window.onloadFuncs = [get_url,auto_archive_url,borrow_books];
+window.onloadFuncs = [get_url,auto_archive_url,borrow_books,show_news];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
