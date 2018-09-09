@@ -59,7 +59,12 @@ function get_details(){
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       var clips = JSON.parse(request.responseText);
-      constructArticles(clips);
+      if(clips.status!="error"){
+        constructArticles(clips);
+      }else{
+        tray.setAttribute("style", "font-size: 20px;text-align: center;");
+        tray.appendChild(document.createTextNode(clips.message));
+      }
     }
   }
   request.send();
