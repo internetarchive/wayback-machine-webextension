@@ -319,14 +319,12 @@ function show_news(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         url=tabs[0].url;
         var to_check_url=url.replace(/^https?:\/\//,'');
-        var final_url=to_check_url.slice(0,to_check_url.indexOf('/'));
+        var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
         tabId=tabs[0].id;
-        var list_of_sites=["www.huffingtonpost.in","www.nytimes.com","www.forbes.com","www.washingtonpost.com"];
+        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost."];
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
-                console.log(final_url);
                 if(list_of_sites.indexOf(final_url)>=0){
-                    console.log(final_url);
                     document.getElementById('news_recommend_tr').style.display="block";
                     document.getElementById('news_recommend_tr').onclick=function(){
                         chrome.storage.sync.get(['show_context'],function(event1){
