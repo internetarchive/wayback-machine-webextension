@@ -99,7 +99,7 @@ function social_share(eventObj){
         sharing_url=overview_url+get_clean_url(); //When not on a playback page,share the overview version of that URL
     }
     var open_url="";
-    if(!(url.includes('chrome://') || url.includes('chrome-extension://'))){ //Prevents sharing some unnecessary page 
+    if(!(url.includes('chrome://') || url.includes('chrome-extension://'))){ //Prevents sharing some unnecessary page
         if(id.includes('fb')){
             open_url="https://www.facebook.com/sharer/sharer.php?u="+sharing_url; //Share the wayback machine's overview of the URL
         }else if(id.includes('twit')){
@@ -308,10 +308,10 @@ function borrow_books(){
                             chrome.tabs.create({url:"https://archive.org/details/"+identifier});
                         }
                     }
-                }   
+                }
             }
         });
-        
+
     });
 }
 
@@ -321,7 +321,7 @@ function show_news(){
         var to_check_url=url.replace(/^https?:\/\//,'');
         var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
         tabId=tabs[0].id;
-        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost."];
+        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost.", "www.theverge."];
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
                 if(list_of_sites.indexOf(final_url)>=0){
@@ -349,7 +349,7 @@ function show_news(){
 //  chrome.storage.sync.get({
 //    as:false
 //  }, function(items) {
-//    document.getElementById('as').checked = items.as;  
+//    document.getElementById('as').checked = items.as;
 //      if(items.as){
 //          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
 //      }
