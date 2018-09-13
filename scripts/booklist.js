@@ -10,7 +10,6 @@ function getUrlByParameter(name){
     return url.slice(index+length+1,indexOfEnd);
 }
 
-
 function getBooked(url){
   var xhr=new XMLHttpRequest();
   var new_url="https://archive.org/services/context/books?url=" + url;
@@ -20,7 +19,6 @@ function getBooked(url){
     if(data instanceof Array){ //checks if any ISBNs found
       for(let book of data){  // Iterate over each book to get data
         let isbn = Object.keys(book)[0];
-        // console.log(isbn);
         if(book[isbn]){
           let OLID = Object.keys(book[isbn].responses)[0];
           let archiveIdentifier = book[isbn].responses[OLID]['identifier'];
@@ -38,28 +36,20 @@ function getBooked(url){
   xhr.send();
 }
 
-
-
 window.onload = function(){
-
   var url = getUrlByParameter('url');
   getBooked(url);
-  // populateList(response);
-
 };
 
 function getMetadataFromArchive(id){
-
   var xhr=new XMLHttpRequest();
   xhr.responseType = "json";
   var qurl="https://archive.org/metadata/" + id;
   xhr.open("GET",qurl,true);
   xhr.onload=function(){
     addBookFromArchive(xhr.response.metadata);
-
   }
   xhr.send();
-
 }
 
 function getMetadataFromOpenLibrary(olid){
@@ -70,7 +60,6 @@ function getMetadataFromOpenLibrary(olid){
   xhr.open("GET",qurl,true);
   xhr.onload=function(){
     addBookFromOpenLibrary(xhr.response);
-
   }
   xhr.send();
 }
@@ -88,7 +77,6 @@ function addBookFromArchive(metadata){
   button.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   details.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   img.setAttribute("src", "https://archive.org/services/img/" + metadata.identifier);
-  // book.setAttribute("class", "book_container");
 
   details.appendChild(img);
   strong.appendChild(document.createTextNode(metadata.title));
@@ -107,6 +95,7 @@ function addBookFromArchive(metadata){
   }
 }
 
+// TODO: add support for author in metadata
 function addBookFromOpenLibrary(metadata){
   let book = document.createElement('div');
   let title = document.createElement('p');
@@ -126,8 +115,6 @@ function addBookFromOpenLibrary(metadata){
     img.appendChild(document.createTextNode("Book details"))
   }
 
-  // book.setAttribute("class", "book_container");
-
   details.appendChild(img);
   strong.appendChild(document.createTextNode(metadata.title));
   // author.appendChild(document.createTextNode(getAuthorFromOpenLibrary(metadata.authors)));
@@ -138,13 +125,5 @@ function addBookFromOpenLibrary(metadata){
   book.appendChild(details);
   book.appendChild(button);
 
-
   resultsTray.appendChild(book);
 }
-
-// function getAuthorFromOpenLibrary(authors){
-//   ret = ""
-//   for(let i = 0; i < Math.min(2, len(authors)); i++){
-//
-//   }
-// }
