@@ -1,0 +1,115 @@
+/* #resultsTray {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+} */
+
+#resultsTray {
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#resultsTray > div{
+  padding:5px;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #eee;
+  text-align: center;
+}
+
+#resultsTray > div > p{
+  width: 250px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+}
+#resultsTray > div > a{
+  text-align: center;
+}
+a > img{
+  align-self: center;
+  display:block;
+  height:250px;
+  margin-left:auto;
+  margin-right: auto;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  width: 180px;
+
+}
+
+body{
+    max-height: 100%;
+}
+@font-face {
+    font-family: Bebas Neue;
+    src: url("../fonts/BebasNeue.otf");
+}
+@font-face {
+    font-family: Gill Sans Light;
+    src: url("../fonts/GillSans-Light.ttf");
+}
+#horizontal_line{
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid rgb(6, 117, 211);
+    font-size: 19px; font-style: inherit;
+    font-variant: inherit;
+    font-weight: inherit;
+    font-stretch: inherit;
+    line-height: 1;
+    font-family: sans-serif;
+    vertical-align: baseline;
+    box-sizing: content-box;
+    overflow: unset;
+    height: 1px;
+    position: relative;
+    width: auto;
+    display: flex;
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
+    text-align: left;
+    align-items: center;
+    border-radius: 3px;
+    justify-content: center;
+    text-decoration: none;
+}
+.resize_fit_center {
+  max-width:100%;
+  max-height:100px;
+}
+h2{
+    font-family: Bebas Neue;
+    font-size: 50px;
+}
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.rec_results{
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+p{
+    font-family:Gill Sans Light;
+    font-size: 20px;
+}
+strong{
+  font-family:  bebas Neue;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}

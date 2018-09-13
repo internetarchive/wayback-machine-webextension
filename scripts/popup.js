@@ -329,7 +329,7 @@ function show_news(){
                     document.getElementById('news_recommend_tr').onclick=function(){
                         chrome.storage.sync.get(['show_context'],function(event1){
                             if(event1.show_context==undefined){
-                                event1.show_context=="tab";
+                                event1.show_context="tab";
                             }
                             if(event1.show_context=="tab"){
                                 chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
@@ -342,6 +342,36 @@ function show_news(){
             }
         });
     });
+}
+
+function show_wikibooks(){
+  chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+      url=tabs[0].url;
+      var to_check_url=url.replace(/^https?:\/\//,'');
+      var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
+      console.log(final_url);
+      tabId=tabs[0].id;
+      var list_of_sites=["en.wikipedia."];
+      chrome.storage.sync.get(['wikibooks'],function(event){
+          if(event.wikibooks==true){
+              if(list_of_sites.indexOf(final_url)>=0){
+                  document.getElementById('wikibooks_tr').style.display="block";
+                  document.getElementById('wikibooks_tr').onclick=function(){
+                      chrome.storage.sync.get(['show_context'],function(event1){
+                          if(event1.show_context==undefined){
+                              event1.show_context="tab";
+                          }
+                          if(event1.show_context=="tab"){
+                              chrome.tabs.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url});
+                          }else{
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                          }
+                      });
+                  }
+              }
+          }
+      });
+  });
 }
 
 /** Disabled code for the autosave feature **/
@@ -376,7 +406,7 @@ function show_news(){
 //document.getElementById('settings_div').style.display="none";
 
 // window.onload=get_url;
-window.onloadFuncs = [get_url,auto_archive_url,borrow_books,show_news];
+window.onloadFuncs = [get_url,auto_archive_url,borrow_books,show_news,show_wikibooks];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
