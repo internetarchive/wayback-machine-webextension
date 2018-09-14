@@ -24,6 +24,7 @@ var windowId6=0;
 var windowId7=0;
 var windowId8=0;
 var windowId9=0;
+var windowId10=0;
 var windowIdtest=0;
 var tabId1=0;
 //Tab Id of the Context-tabs
@@ -35,6 +36,7 @@ var tabId6=0;
 var tabId7=0;
 var tabId8=0;
 var tabId9=0;
+var tabId10=0;
 var windowIdSingle=0;
 var WB_API_URL = "https://archive.org/wayback/available";
 
@@ -281,12 +283,20 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                     //If show-all Context is true, Create a window which is focussed and create tabs in it
                     if(event2.showall==true){
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-                        windowIdtest = win.id;
+                      chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+message.url, width:800, height:800, top:0, left:0, focused:true},function(win){
+                        windowIdtest=win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowIdtest){
-                            windowIdtest=0;
+                            if(win1==windowIdtest){
+                                windowIdtest=0;
+                            }
+                        });
+                      });
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.tabs.create({url:alexa_url, 'active':false},function (tab) {
+                        tabId10 = tab.id;
+                        chrome.tabs.onRemoved.addListener(function (tabtest) {
+                          if(tabtest==tabId10){
+                            tabId10=0;
                           }
                         });
                       });
@@ -359,6 +369,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       });
                     }else{
                       //If not selected show-all option ,then check and open indivisually
+                    chrome.storage.sync.get(function(event13){
+                      if(event13.doi==true){
+                        console.log("Checking doi");
+                        console.log(message.url);
+                        openThatContext("doi",message.url,event.show_context);
+                      }
                       chrome.storage.sync.get(function(event4){
                         if(event4.alexa==true){
                           console.log("checking alexa");
@@ -413,6 +429,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                               });
                           });
                       });
+                    });
                     }
                   });
                 }else{
@@ -421,9 +438,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     windowId: windowIdtest
                   }, function(tabs) {
                     var tab=tabs[0];
-                    var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                     chrome.tabs.update(tab.id, {url:alexa_url});
                   });
+                  var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                  chrome.tabs.update(parseInt(tabId10), {url:alexa_url});
                   var whois_url="https://archive.org/services/context/whois?url=" + url;
                   chrome.tabs.update(parseInt(tabId2), {url:whois_url});
                   var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
@@ -438,7 +457,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 }
               }else if(event.show_context=="window"){  
                 //If the Context is to be showed in Windows 
-                if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0){
+                if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0 || windowId10==0){
                   //Checking if Windows are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
                     if(event2.showall==undefined){
@@ -446,12 +465,20 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                     if(event2.showall==true){
                       //If show-all Context is true, create a context windows 
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
+                      chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+message.url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
                         windowId1 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId1){
                             windowId1=0;
+                          }
+                        });
+                      });
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
+                        windowId10 = win.id;
+                        chrome.windows.onRemoved.addListener(function (win1) {
+                          if(win1==windowId10){
+                            windowId10=0;
                           }
                         });
                       });
@@ -524,6 +551,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       });
                     }else{
                       //If not selected show-all option ,then check and open indivisually 
+                     chrome.storage.sync.get(function(event13){
+                        if(event13.doi==true){
+                            openThatContext("doi",message.url,event.show_context);
+                        }
                       chrome.storage.sync.get(function(event4){
                         if(event4.alexa==true){
                           openThatContext("alexa",url,event.show_context);
@@ -560,6 +591,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                                     if(event12.hoaxy==true){
                                                       openThatContext("hoaxy",open_url,event.show_context);
                                                     }
+                                                  });
                                                   });
                                               });
                                             });
@@ -630,6 +662,12 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     var tab=tabs[0];
                     var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                     chrome.tabs.update(tab.id, {url:hoaxy_url});
+                  });
+                  chrome.tabs.query({
+                    windowId: windowId10
+                  }, function(tabs) {
+                    var tab=tabs[0];
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                   });
                 }                               
               }
@@ -835,7 +873,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy; 
+var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi; 
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") { 
     chrome.tabs.get(tabId, function(tab) {
@@ -870,7 +908,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                   }, function(tabs) {
                     var tab1=tabs[0];
                     tabIdtest=tab1.id;
-                    if((tab.id!=tabIdtest)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)&&(tab.id!=tabId6)&&(tab.id!=tabId7)&&(tab.id!=tabId8)&&(tab.id!=tabId9)){
+                    if((tab.id!=tabIdtest)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)&&(tab.id!=tabId6)&&(tab.id!=tabId7)&&(tab.id!=tabId8)&&(tab.id!=tabId9)&&(tab.id!=tabId10)){
                       if((tab1.url).includes("alexa")){
                         var alexa_url="https://archive.org/services/context/alexa?url="+url;
                         chrome.tabs.update(parseInt(tabIdtest), {url:alexa_url});
@@ -893,6 +931,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       }else if((tab1.url).includes("hoaxy")){
                         var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                         chrome.tabs.update(parseInt(tabIdtest), {url:hoaxy_url});
+                      }else if((tab1.url).includes("doi")){
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                       }
                       var whois_url="https://archive.org/services/context/whois?url=" + url;
                       chrome.tabs.update(parseInt(tabId2), {url:whois_url});
@@ -905,6 +945,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                       var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                       chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                     }
                   }); 
                 }
@@ -918,10 +959,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
               }else{
                 if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)||(windowId7!=0)){
                   chrome.tabs.query({
-                    windowId: windowId1
+                    windowId: windowId10
                   }, function(tabs) {
                     var tab1=tabs[0];
-                    tabIdAlexa=tab1.id;
+                    tabIddoi=tab1.id;
                   });  
                   chrome.tabs.query({
                     windowId: windowId2
@@ -971,9 +1012,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     var tab1=tabs[0];
                     tabIdhoaxy=tab1.id;
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIdhoaxy)){
+                  chrome.tabs.query({
+                    windowId: windowId1
+                  }, function(tabs) {
+                    var tab1=tabs[0];
+                    tabIdalexa=tab1.id;
+                  });
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIdhoaxy)&&(tab.id!=tabIddoi)){
                     chrome.tabs.query({
-                      windowId: windowId1
+                      windowId: windowId10
                     }, function(tabs) {
                       var tab1=tabs[0];
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
@@ -1029,6 +1076,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       var tab1=tabs[0];
                       var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                       chrome.tabs.update(tab1.id, {url:hoaxy_url});
+                    });
+                    chrome.tabs.query({
+                      windowId: windowId1
+                    }, function(tabs) {
+                      var tab1=tabs[0];
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                     });
                   }
                 }   
@@ -1117,8 +1170,8 @@ function openThatContext(temp,url,methodOfShowing){
   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+url+"&sort=mixed&type=Twitter";
   if(methodOfShowing=='tab'){
     if(windowIdtest==0){
-      if(temp=='alexa'){
-        chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+      if(temp=='doi'){
+        chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
           //to add onremoved event listener
         });
@@ -1194,6 +1247,15 @@ function openThatContext(temp,url,methodOfShowing){
             }
           });
         });
+      }else if(temp=='alexa'){
+        chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+          windowIdtest = win.id;
+          chrome.windows.onRemoved.addListener(function (win1) {
+            if(win1==windowIdtest){
+              windowIdtest=0;
+            }
+          });
+        });
       }
     }else{
       chrome.tabs.query({
@@ -1201,10 +1263,10 @@ function openThatContext(temp,url,methodOfShowing){
       }, function(tabs) {
         if(temp=='alexa'){
           chrome.tabs.create({'url': alexa_url,'active':false},function(tab){
-            tabId1=tab.id;
+            tabId10=tab.id;
             chrome.tabs.onRemoved.addListener(function (tabtest) {
-              if(tabtest==tabId1){
-                tabId1=0;
+              if(tabtest==tabId10){
+                tabId10=0;
               }
             });
           });
@@ -1280,6 +1342,15 @@ function openThatContext(temp,url,methodOfShowing){
               }
             });
           });
+        }else if(temp=='doi'){
+          chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,'active':false},function(tab){
+            tabId1=tab.id;
+            chrome.tabs.onRemoved.addListener(function (tabtest) {
+              if(tabtest==tabId1){
+                tabId1=0;
+              }
+            });
+          });
         }
       });
     }
@@ -1287,10 +1358,10 @@ function openThatContext(temp,url,methodOfShowing){
     //If context is to be shown in window
     if(temp=='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-        windowId1 = win.id;
+        windowId10 = win.id;
         chrome.windows.onRemoved.addListener(function (win1) {
-          if(win1==windowId1){
-            windowId1=0;
+          if(win1==windowId10){
+            windowId10=0;
           }
         });
       });
@@ -1363,6 +1434,15 @@ function openThatContext(temp,url,methodOfShowing){
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId9){
             windowId9=0;
+          }
+        });
+      });
+    }else if (temp=='doi'){
+      chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
+        windowId1 = win.id;
+        chrome.windows.onRemoved.addListener(function (win1) {
+          if(win1==windowId1){
+            windowId1=0;
           }
         });
       });
