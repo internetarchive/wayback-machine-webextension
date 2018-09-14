@@ -347,14 +347,11 @@ function show_news(){
 function show_wikibooks(){
   chrome.tabs.query({active: true,currentWindow:true},function(tabs){
       url=tabs[0].url;
-      var to_check_url=url.replace(/^https?:\/\//,'');
-      var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
-      console.log(final_url);
+      var found = url.match(/^https?:\/\/[\w\.]*wikipedia.org/)
       tabId=tabs[0].id;
-      var list_of_sites=["en.wikipedia."];
       chrome.storage.sync.get(['wikibooks'],function(event){
           if(event.wikibooks==true){
-              if(list_of_sites.indexOf(final_url)>=0){
+              if(found.length>=0){
                   document.getElementById('wikibooks_tr').style.display="block";
                   document.getElementById('wikibooks_tr').onclick=function(){
                       chrome.storage.sync.get(['show_context'],function(event1){
