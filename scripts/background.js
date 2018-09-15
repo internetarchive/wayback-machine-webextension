@@ -439,14 +439,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                     chrome.tabs.update(tab.id, {url:alexa_url});
                   });
-<<<<<<< HEAD
                   chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
-=======
-                  var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                  chrome.tabs.update(parseInt(tabId10), {url:alexa_url});
-                  var whois_url="https://archive.org/services/context/whois?url=" + url;
-                  chrome.tabs.update(parseInt(tabId2), {url:whois_url});
->>>>>>> 2bec738a136952c24fc49dddb39d10037ad1a971
                   var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
                   chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                   chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
@@ -475,21 +468,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-<<<<<<< HEAD
                       chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url, width:500, height:500, top:500, left:0, focused:false},function (win) {
-=======
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-                        windowId10 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId10){
-                            windowId10=0;
-                          }
-                        });
-                      });
-                      var whois_url="https://archive.org/services/context/whois?url="+url;
-                      chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
->>>>>>> 2bec738a136952c24fc49dddb39d10037ad1a971
                         windowId2 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId2){
