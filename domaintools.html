@@ -6,9 +6,9 @@
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="css/common.css">
-        <link rel="stylesheet" type="text/css" href="css/alexa.css">
+        <link rel="stylesheet" type="text/css" href="css/domaintools.css">
         <title>
-            Alexa overview of an URL 
+            Domaintools overview of an URL 
         </title>
     </head>
     <body>
@@ -24,18 +24,24 @@
                 </td>
             </tr>
         </table>
-        <div>
-            <h2><strong>Alexa overview of Current URL</strong><br></h2>
+        <div style="text-align: center">
+            <h2><strong>Domaintools overview of Current URL</strong><br></h2>
         </div>
-        <div class="container" id="container-whole">
+        <div class="container" id="container-whole" style="text-align:left;">
             <div class="row">
-                <div class="col-sm-12">
-                    <h4>Summary</h4> 
-                    <pre id="show_alexa_data">  
+                <div class="col-sm-12" style="text-align:left;">
+                    <pre id="show_domaintools_data" class="title">
+                            <span class="color_code" id="domain"></span>
+                            <span class="color_code" id="alexa"></span>
+                            <span class="color_code" id="website_response"></span>
+                            <span class="color_code" id="create_date"></span>
+                            <span class="color_code" id="expiration_date"></span>
+                            <span class="color_code" id="registrant_org"></span>
+                            <a id="whois"></a>
                     </pre>
                 </div>
             </div>
         </div>
     </body>
 </html>
-<script src="scripts/alexa.js"></script>
+<script src="scripts/domaintools.js"></script>
