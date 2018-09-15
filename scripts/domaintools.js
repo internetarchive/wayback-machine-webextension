@@ -14,7 +14,7 @@ function url_getter(url) {
     http.onload = function() {
         var data=JSON.parse(http.response);
         console.log(data);
-        console.log(data.response.results[0].domain);
+        console.log(data.response.results_count);
         if(data.response.results_count!=0){
             document.getElementById("domain").innerHTML="Domain: "+data.response.results[0].domain;
             document.getElementById("alexa").innerHTML="Alexa Rank: "+data.response.results[0].alexa;
@@ -23,8 +23,9 @@ function url_getter(url) {
             document.getElementById("website_response").innerHTML="Website Response: "+data.response.results[0].website_response;
             document.getElementById("create_date").innerHTML="Created Date: "+data.response.results[0].create_date.value;
             document.getElementById("expiration_date").innerHTML="Expire Date: "+data.response.results[0].expiration_date.value;
-            document.getElementById("registrant_org").innerHTML="Registrant Org: "+data.response.results[0].registrant_org.value;
-            
+            document.getElementById("registrant_org").innerHTML="Registrant Org: "+data.response.results[0].registrant_org.value;   
+        }else{
+            document.getElementById("show_domaintools_data").innerHTML="No data found!!";
         }
     };
     http.send(null);
