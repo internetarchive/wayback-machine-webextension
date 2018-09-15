@@ -39,6 +39,20 @@ p{
         text-align: center;
     }
 }
+.box{
+    border:1px solid black;
+    border-radius: 5px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+/*
+    display: flex;
+    flex :0 0 420px;
+    flex-direction: column;
+    justify-content: center;
+*/
+    margin-bottom: 12px;
+    overflow: hidden;
+    padding: 5px 5px 5px 5px;
+}
 .box-annotation{
     margin-bottom: 12px;
     flex :0 0 420px;
@@ -84,7 +98,17 @@ p{
 #links{
     padding: 10px;
 }
-
+.row_main{
+    align-items: stretch;
+    display: flex;
+    justify-content: center;
+}
+.half{
+    width: 600px;
+}
+#doi-heading{
+    display: none;
+}
 @media screen and (max-width: 500px) {
     #link-incontext {
       margin-left: 5px;
