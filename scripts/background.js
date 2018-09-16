@@ -264,7 +264,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             var received_url=message.url;
             received_url = received_url.replace(/^https?:\/\//,'');
             var last_index=received_url.indexOf('/');
-            //URL which will be using for alexa and whois
+            //URL which will be using for alexa
             var url=received_url.slice(0,last_index);
             //URL which will be needed for finding tweets
             var open_url=received_url;
@@ -545,7 +545,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           openThatContext("alexa",url,event.show_context);
                         }
                           chrome.storage.sync.get(function(event5){
-                            if(event5.whois==true){
+                            if(event5.domaintools==true){
                               openThatContext("domaintools",message.url,event.show_context);
                             }
                               chrome.storage.sync.get(function(event6){
