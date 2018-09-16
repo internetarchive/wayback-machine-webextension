@@ -3,21 +3,21 @@ document.getElementById('save').addEventListener('click',save_options);
 function restore_options() {
   chrome.storage.sync.get({
     show_context:'tab',
-    auto_archive: false,
-    books:false,
-    auto_update_context:false,
-    alexa:false,
-    whois:false,
-    tweets:false,
-    wbmsummary:false,
-    annotations:false,
-    annotationsurl:false,
-    similarweb:false,
-    tagcloud:false,
-    hoaxy:false,
-    doi:false,
-    news:false,
-    showall:false
+    auto_archive: true,
+    books:true,
+    auto_update_context:true,
+    alexa:true,
+    whois:true,
+    tweets:true,
+    wbmsummary:true,
+    annotations:true,
+    annotationsurl:true,
+    similarweb:true,
+    tagcloud:true,
+    hoaxy:true,
+    doi:true,
+    news:true,
+    showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
     document.getElementById('books').checked = items.books;
