@@ -3,9 +3,9 @@ document.getElementById('save').addEventListener('click',save_options);
 function restore_options() {
   chrome.storage.sync.get({
     show_context:'tab',
-    auto_archive: true,
-    books:true,
-    auto_update_context:true,
+    auto_archive: false,
+    books:false,
+    auto_update_context:false,
     alexa:true,
     domaintools:true,
     tweets:true,
