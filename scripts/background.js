@@ -300,8 +300,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      var whois_url="https://archive.org/services/context/whois?url="+url;
-                      chrome.tabs.create({'url': whois_url,'active':false},function(tab){
+                      chrome.tabs.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url,'active':false},function(tab){
                         tabId2=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
                           if(tabtest==tabId2){
@@ -381,9 +380,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           openThatContext("alexa",url,event.show_context);
                         }
                           chrome.storage.sync.get(function(event5){
-                            if(event5.whois==true){
-                              console.log("checking whois");
-                              openThatContext("whois",url,event.show_context);
+                            if(event5.domaintools==true){
+                              openThatContext("domaintools",message.url,event.show_context);
                             }
                               chrome.storage.sync.get(function(event6){
                                 if(event6.tweets==true){
@@ -441,10 +439,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                     chrome.tabs.update(tab.id, {url:alexa_url});
                   });
-                  var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                  chrome.tabs.update(parseInt(tabId10), {url:alexa_url});
-                  var whois_url="https://archive.org/services/context/whois?url=" + url;
-                  chrome.tabs.update(parseInt(tabId2), {url:whois_url});
+                  chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
                   var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
                   chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                   chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
@@ -473,17 +468,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                           }
                         });
                       });
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-                        windowId10 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId10){
-                            windowId10=0;
-                          }
-                        });
-                      });
-                      var whois_url="https://archive.org/services/context/whois?url="+url;
-                      chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
+                      chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url, width:500, height:500, top:500, left:0, focused:false},function (win) {
                         windowId2 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId2){
@@ -561,7 +546,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         }
                           chrome.storage.sync.get(function(event5){
                             if(event5.whois==true){
-                              openThatContext("whois",url,event.show_context);
+                              openThatContext("domaintools",message.url,event.show_context);
                             }
                               chrome.storage.sync.get(function(event6){
                                 if(event6.tweets==true){
@@ -616,8 +601,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     windowId: windowId2
                   }, function(tabs) {
                     var tab=tabs[0];
-                    var whois_url="https://archive.org/services/context/whois?url=" +url;
-                    chrome.tabs.update(tab.id, {url:whois_url});
+                    chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
                   });
                   chrome.tabs.query({
                     windowId: windowId3
@@ -873,7 +857,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdWhois,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi; 
+var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy; 
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") { 
     chrome.tabs.get(tabId, function(tab) {
@@ -912,9 +896,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       if((tab1.url).includes("alexa")){
                         var alexa_url="https://archive.org/services/context/alexa?url="+url;
                         chrome.tabs.update(parseInt(tabIdtest), {url:alexa_url});
-                      }else if ((tab1.url).includes("whois")){
-                        var whois_url="https://archive.org/services/context/whois?url=" + url;
-                        chrome.tabs.update(parseInt(tabIdtest), {url:whois_url});
+                      }else if ((tab1.url).includes("domaintools")){
+                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                       }else if((tab1.url).includes("twitter.com")){
                         var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
                         chrome.tabs.update(parseInt(tabIdtest), {url:tweet_url});
@@ -934,8 +917,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       }else if((tab1.url).includes("doi")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                       }
-                      var whois_url="https://archive.org/services/context/whois?url=" + url;
-                      chrome.tabs.update(parseInt(tabId2), {url:whois_url});
+                      chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                       var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
                       chrome.tabs.update(parseInt(tabId3), {url:tweet_url});
                       chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
@@ -968,7 +950,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     windowId: windowId2
                   }, function(tabs) {
                     var tab1=tabs[0];
-                    tabIdWhois=tab1.id;
+                    tabIdDomaintools=tab1.id;
                   });
                   chrome.tabs.query({
                     windowId: windowId3
@@ -1030,8 +1012,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       windowId: windowId2
                     }, function(tabs) {
                       var tab1=tabs[0];
-                      var whois_url="https://archive.org/services/context/whois?url=" +url;
-                      chrome.tabs.update(tab1.id, {url:whois_url});
+                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                     });
                     chrome.tabs.query({
                       windowId: windowId3
@@ -1165,7 +1146,6 @@ function check_url(url,onfound,onnotfound){
 //function for opeing a particular context
 function openThatContext(temp,url,methodOfShowing){
   var alexa_url="https://archive.org/services/context/alexa?url="+url;
-  var whois_url="https://archive.org/services/context/whois?url=" + url;
   var tweet_url="https://archive.org/services/context/twitter?url="+url;
   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+url+"&sort=mixed&type=Twitter";
   if(methodOfShowing=='tab'){
@@ -1175,8 +1155,8 @@ function openThatContext(temp,url,methodOfShowing){
           windowIdtest = win.id;
           //to add onremoved event listener
         });
-      }else if(temp=='whois'){
-        chrome.windows.create({url:whois_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+      }else if(temp=='domaintools'){
+        chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
           chrome.windows.onRemoved.addListener(function (win1) {
             if(win1==windowIdtest){
@@ -1270,8 +1250,8 @@ function openThatContext(temp,url,methodOfShowing){
               }
             });
           });
-        }else if(temp=='whois'){
-          chrome.tabs.create({'url': whois_url,'active':false},function(tab){
+        }else if(temp=='domaintools'){
+          chrome.tabs.create({'url': chrome.runtime.getURL("domaintools.html")+"?url="+url,'active':false},function(tab){
             tabId2=tab.id;
             chrome.tabs.onRemoved.addListener(function (tabtest) {
               if(tabtest==tabId2){
@@ -1365,8 +1345,8 @@ function openThatContext(temp,url,methodOfShowing){
           }
         });
       });
-    }else if(temp=='whois'){
-      chrome.windows.create({url:whois_url, width:500, height:500, top:500, left:0, focused:false},function (win) {
+    }else if(temp=='domaintools'){
+      chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:500, height:500, top:500, left:0, focused:false},function (win) {
         windowId2 = win.id;
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId2){
