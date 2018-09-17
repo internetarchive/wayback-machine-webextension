@@ -6,25 +6,25 @@ function restore_options() {
     auto_archive: false,
     books:false,
     auto_update_context:false,
-    alexa:false,
-    whois:false,
-    tweets:false,
-    wbmsummary:false,
-    annotations:false,
-    annotationsurl:false,
-    similarweb:false,
-    tagcloud:false,
-    hoaxy:false,
-    doi:false,
-    news:false,
-    showall:false
+    alexa:true,
+    domaintools:true,
+    tweets:true,
+    wbmsummary:true,
+    annotations:true,
+    annotationsurl:true,
+    similarweb:true,
+    tagcloud:true,
+    hoaxy:true,
+    doi:true,
+    news:true,
+    showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
     document.getElementById('books').checked = items.books;
     document.getElementById('show_context').value = items.show_context;
     document.getElementById('auto-update-context').checked=items.auto_update_context;
     document.getElementById('alexa').checked = items.alexa;
-    document.getElementById('whois').checked = items.whois;
+    document.getElementById('domaintools').checked = items.domaintools;
     document.getElementById('tweets').checked = items.tweets;
     document.getElementById('wbmsummary').checked = items.wbmsummary;
     document.getElementById('annotations').checked = items.annotations;
@@ -43,7 +43,7 @@ function save_options() {
   var books = document.getElementById('books').checked;
   var auto_update_context=document.getElementById('auto-update-context').checked;
   var alexa= document.getElementById('alexa').checked;
-  var whois= document.getElementById('whois').checked;
+  var domaintools= document.getElementById('domaintools').checked;
   var tweets= document.getElementById('tweets').checked;
   var wbmsummary= document.getElementById('wbmsummary').checked;
   var annotations= document.getElementById('annotations').checked;
@@ -60,7 +60,7 @@ function save_options() {
     books:books,
     auto_update_context:auto_update_context,
     alexa:alexa,
-    whois:whois,
+    domaintools:domaintools,
     tweets:tweets,
     wbmsummary:wbmsummary,
     annotations:annotations,
