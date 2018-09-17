@@ -2,8 +2,16 @@
 {
   color:#22c399;
 }
-.color_code_whois{
-    color: #ffcc66;
+.color_code_domaintools{
+    color:#22c399;
+    padding-bottom: 7px;
+    width: 100%;
+}
+.title .color_code_domaintools {
+    float:left;
+}
+#show_domaintools_data{
+    font-size: 20px;
 }
 body{
     max-height: 100%;
