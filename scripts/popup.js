@@ -319,9 +319,11 @@ function show_news(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         url=tabs[0].url;
         var to_check_url=url.replace(/^https?:\/\//,'');
+        to_check_url = to_check_url.replace(/\.html$/, "");
         var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
         tabId=tabs[0].id;
-        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost.", "www.theverge."];
+        var list_of_sites=[
+          "www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost.", "www.theverge.", "www.nytimes."];
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
                 if(list_of_sites.indexOf(final_url)>=0){
