@@ -1,0 +1,67 @@
+#resultsTray {
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#resultsTray > div{
+  background-color: #eee;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  padding:5px;
+  text-align: center;
+  width: 300px;
+}
+#resultsTray > div > p{
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  text-align: center;
+  white-space: normal;
+  width: 250px;
+}
+#resultsTray > div > a{
+  text-align: center;
+}
+a > img{
+  align-self: center;
+  display:block;
+  height:250px;
+  margin-left:auto;
+  margin-right: auto;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  width: 180px;
+
+}
+body{
+    max-height: 100%;
+}
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.rec_results{
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+p{
+    font-family:Gill Sans Light;
+    font-size: 20px;
+}
+strong{
+  font-family:  bebas Neue;
+}
+@media screen and (min-width: 700px) {
+    .test {
+        text-align: center;
+    }
+}

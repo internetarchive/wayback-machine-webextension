@@ -17,6 +17,7 @@ function restore_options() {
     hoaxy:true,
     doi:true,
     news:true,
+    wikibooks:true,
     showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
@@ -34,6 +35,7 @@ function restore_options() {
     document.getElementById('hoaxy').checked = items.hoaxy;
     document.getElementById('showall').checked = items.showall;
     document.getElementById('news').checked = items.news;
+    document.getElementById('wikibooks').checked = items.wikibooks;
     document.getElementById('doi').checked = items.doi;
   });
 }
@@ -53,6 +55,7 @@ function save_options() {
   var hoaxy = document.getElementById('hoaxy').checked;
   var showall= document.getElementById('showall').checked;
   var news = document.getElementById('news').checked;
+  var wikibooks = document.getElementById('wikibooks').checked;
   var doi = document.getElementById('doi').checked;
   chrome.storage.sync.set({
     show_context:show_context,
@@ -70,6 +73,7 @@ function save_options() {
     hoaxy:hoaxy,
     showall:showall,
     news:news,
+    wikibooks:wikibooks,
     doi:doi
   }, function() {
     var status = document.getElementById('status');
