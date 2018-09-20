@@ -346,8 +346,8 @@ function show_news(){
 }
 function show_wikibooks(){
   chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-      url=tabs[0].url;
-      var found = url.match(/^https?:\/\/[\w\.]*wikipedia.org/);
+      let url=tabs[0].url;
+      let found = url.match(/^https?:\/\/[\w\.]*wikipedia.org/);
       tabId=tabs[0].id;
       chrome.storage.sync.get(['wikibooks'],function(event){
           if(event.wikibooks==true){
