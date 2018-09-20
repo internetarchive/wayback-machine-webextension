@@ -96,7 +96,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                             });
                         }
                     });
-            }, function() {});            
+            }, function() {});
         }
       }
       if(details.tabId >0 ){
@@ -104,11 +104,11 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             var tabsArr=tabs.map(tab => tab.id);
             if(tabsArr.indexOf(details.tabId)>=0){
                 chrome.tabs.get(details.tabId, function(tab) {
-                    tabIsReady(tab.incognito);  
+                    tabIsReady(tab.incognito);
                 });
             }
         })
-        
+
       }
     }, {urls: ["<all_urls>"], types: ["main_frame"]});
 /**
@@ -220,7 +220,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             chrome.tabs.executeScript(tab.id, {
                               file:"scripts/sequences.js"
                             });
-                            previous_RTurl=url; 
+                            previous_RTurl=url;
                 }else if(previous_RTurl==url){
                     chrome.tabs.executeScript(tab.id, {
                       file:"scripts/lodash.min.js"
@@ -262,19 +262,21 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
               event.show_context="tab";
             }
             var received_url=message.url;
+            console.log(received_url);
             received_url = received_url.replace(/^https?:\/\//,'');
             var last_index=received_url.indexOf('/');
             //URL which will be using for alexa
             var url=received_url.slice(0,last_index);
             //URL which will be needed for finding tweets
             var open_url=received_url;
-            if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1); 
+            if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
+            console.log(open_url);
             chrome.storage.sync.get(['auto_update_context'],function(event1){
               if(event1.auto_update_context==undefined){
                 //By default auto-update context is off
                 event1.auto_update_context=false;
               }
-              //If the Context is to be showed in tabs 
+              //If the Context is to be showed in tabs
               if(event.show_context=="tab"){
                 if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
@@ -332,7 +334,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId5=0;
                           }
                         });
-                      });   
+                      });
                       chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
                         tabId8=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
@@ -340,7 +342,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                             tabId8=0;
                           }
                         });
-                      });   
+                      });
                       chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                         tabId6=tab.id;
                         chrome.tabs.onRemoved.addListener(function (tabtest) {
@@ -416,7 +418,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                                                       chrome.storage.sync.get(function(event12){
                                                         if(event12.hoaxy==true){
                                                           console.log("Checking Hoaxy");
-                                                          openThatContext("hoaxy",url,event.show_context);
+                                                          openThatContext("hoaxy",open_url,event.show_context);
                                                         }
                                                       });
                                                   });
@@ -431,7 +433,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                   });
                 }else{
-                  //If context screens(tabs) are already opened and user again click on the Context button then update them 
+                  //If context screens(tabs) are already opened and user again click on the Context button then update them
                   chrome.tabs.query({
                     windowId: windowIdtest
                   }, function(tabs) {
@@ -450,8 +452,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                   chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
                 }
-              }else if(event.show_context=="window"){  
-                //If the Context is to be showed in Windows 
+              }else if(event.show_context=="window"){
+                //If the Context is to be showed in Windows
                 if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0 || windowId10==0){
                   //Checking if Windows are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
@@ -459,7 +461,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       event2.showall=true;
                     }
                     if(event2.showall==true){
-                      //If show-all Context is true, create a context windows 
+                      //If show-all Context is true, create a context windows
                       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+message.url,width:600, height:500, top:600, left:1100, focused:false},function (win) {
                         windowId1 = win.id;
                         chrome.windows.onRemoved.addListener(function (win1) {
@@ -473,7 +475,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId2){
                             windowId2=0;
-                          }                    
+                          }
                         });
                       });
                       var tweet_url="https://archive.org/services/context/twitter?url="+open_url;
@@ -482,7 +484,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId3){
                             windowId3=0;
-                          }                    
+                          }
                         });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,width:500, height:500, top:500, left:500, focused:false},function (win) {
@@ -490,7 +492,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         chrome.windows.onRemoved.addListener(function (win1) {
                           if(win1==windowId4){
                             windowId4=0;
-                          }            
+                          }
                         });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:700, height:500, top:0, left:1000, focused:false},function (win) {
@@ -535,7 +537,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                         });
                       });
                     }else{
-                      //If not selected show-all option ,then check and open indivisually 
+                      //If not selected show-all option ,then check and open indivisually
                      chrome.storage.sync.get(function(event13){
                         if(event13.doi==true){
                             openThatContext("doi",message.url,event.show_context);
@@ -589,14 +591,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     }
                   });
                 }else{
-                  //If context screens(windows) are already opened and user again click on the Context button then update them 
+                  //If context screens(windows) are already opened and user again click on the Context button then update them
                   chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
                     var tab=tabs[0];
                     var alexa_url="https://archive.org/services/context/alexa?url="+url;
                     chrome.tabs.update(tab.id, {url:alexa_url});
-                  });  
+                  });
                   chrome.tabs.query({
                     windowId: windowId2
                   }, function(tabs) {
@@ -633,7 +635,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                   }, function(tabs) {
                     var tab=tabs[0];
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                  });  
+                  });
                   chrome.tabs.query({
                     windowId: windowId7
                   }, function(tabs) {
@@ -653,10 +655,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     var tab=tabs[0];
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                   });
-                }                               
+                }
               }
               else if(event.show_context=="singlewindow"){
-                  //If the Context is to be showed in singleWindow 
+                  //If the Context is to be showed in singleWindow
                   if(windowIdSingle!=0){
                     //Checking if SingleWindow context is not open already
                     chrome.tabs.query({
@@ -689,7 +691,7 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
           wmAvailabilityCheck(details.url, function(wayback_url, url) {
             chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
           }, function() {
-            
+
           });
         }
       }
@@ -820,19 +822,19 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //                }
 //            });
 //}
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 //    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-//        
+//
 //                  if (changeInfo.status == "complete" && !(tab.url.startsWith("http://web.archive.org/web") || tab.url.startsWith("https://web.archive.org/web") || tab.url.startsWith("https://web-beta.archive.org/web") || tab.url.startsWith("chrome://") )) {
 //              chrome.storage.sync.get(['as'], function(items) {
-//                
+//
 //              if(items.as){
 //                auto_save(tab.id);
 //              }
 //            });
-//            
+//
 //          }else{
-//                    
+//
 //                    chrome.browserAction.setBadgeText({tabId: tabId, text:""});
 //          }
 // });
@@ -846,7 +848,7 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //       wmAvailabilityCheck(page_url,
 //         function() {
 //           console.log("Available already");
-//         }, 
+//         },
 //         function() {
 //           console.log("Not Available");
 //           chrome.runtime.sendMessage({message:"showbutton",url:page_url});
@@ -857,9 +859,9 @@ chrome.contextMenus.onClicked.addListener(function(clickedData){
 //   }
 // });
 // }
-var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy; 
+var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
-  if (info.status == "complete") { 
+  if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
       chrome.storage.sync.get(['auto_archive'],function(event){
         if(event.auto_archive==true){
@@ -877,9 +879,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         tagcloudurl=new URL(singlewindowurl);
         console.log(tagcloudurl.href);
         received_url = received_url.replace(/^https?:\/\//,'');
-        var length =received_url.length; 
+        var length =received_url.length;
         var last_index=received_url.indexOf('/');
-        var url=received_url.slice(0,last_index);  
+        var url=received_url.slice(0,last_index);
         var open_url=received_url;
         if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
         chrome.storage.sync.get(['auto_update_context'],function(event){
@@ -929,7 +931,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
                       chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                     }
-                  }); 
+                  });
                 }
               }else if(event1.show_context=="singlewindow"){
                   chrome.tabs.query({
@@ -945,7 +947,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                   }, function(tabs) {
                     var tab1=tabs[0];
                     tabIddoi=tab1.id;
-                  });  
+                  });
                   chrome.tabs.query({
                     windowId: windowId2
                   }, function(tabs) {
@@ -1007,7 +1009,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       var tab1=tabs[0];
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.tabs.update(tab1.id, {url:alexa_url});
-                    });  
+                    });
                     chrome.tabs.query({
                       windowId: windowId2
                     }, function(tabs) {
@@ -1065,7 +1067,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                     });
                   }
-                }   
+                }
               }
             });
           }
@@ -1118,7 +1120,7 @@ function auto_save(tabId){
         check_url(page_url,
           function() {
             console.log("Available already");
-          }, 
+          },
           function() {
             console.log("Not Available");
             chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
@@ -1285,7 +1287,7 @@ function openThatContext(temp,url,methodOfShowing){
                 tabId5=0;
               }
             });
-          });  
+          });
         }else if(temp=='annotationsurl'){
           chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
             tabId8=tab.id;
@@ -1294,7 +1296,7 @@ function openThatContext(temp,url,methodOfShowing){
                 tabId8=0;
               }
             });
-          });  
+          });
         }else if(temp=='similarweb'){
           chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
             tabId6=tab.id;
@@ -1334,7 +1336,7 @@ function openThatContext(temp,url,methodOfShowing){
         }
       });
     }
-  }else if(methodOfShowing=='window'){ 
+  }else if(methodOfShowing=='window'){
     //If context is to be shown in window
     if(temp=='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
@@ -1351,7 +1353,7 @@ function openThatContext(temp,url,methodOfShowing){
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId2){
             windowId2=0;
-          }                    
+          }
         });
       });
     }else if(temp=='tweets'){
@@ -1360,7 +1362,7 @@ function openThatContext(temp,url,methodOfShowing){
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId3){
             windowId3=0;
-          }                    
+          }
         });
       });
     }else if(temp=='wbmsummary'){
@@ -1369,7 +1371,7 @@ function openThatContext(temp,url,methodOfShowing){
         chrome.windows.onRemoved.addListener(function (win1) {
           if(win1==windowId4){
             windowId4=0;
-          }            
+          }
         });
       });
     }else if(temp=='annotations'){
