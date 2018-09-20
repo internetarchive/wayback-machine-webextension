@@ -1,37 +1,32 @@
-#resultsTray {
+#donationTray {
   background-color: white;
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
   margin-left: auto;
   margin-right: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
-#resultsTray > div{
+#donationTray > div{
   background-color: #eee;
   border-radius: 5px;
   border: 1px solid black;
   margin-bottom: 10px;
   margin-left: auto;
   margin-right: auto;
-  padding:5px;
+  padding-bottom: 20px;
   text-align: center;
   width: 300px;
 }
-#resultsTray > div > p{
-  display:block;
+#donationTray > div > input{
+  /* display:block; */
+  margin-bottom: 5px;
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
-  text-align: center;
+  /* text-align: center; */
   white-space: normal;
-  width: 250px;
+  /* width: 250px; */
 }
-#resultsTray > div > a{
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+
 a > img{
   align-self: center;
   display:block;
