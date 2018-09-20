@@ -335,7 +335,7 @@ function show_news(){
                             if(event1.show_context=="tab"){
                                 chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
                             }else{
-                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:1000, top:20, left:250, focused:false});
                             }
                         });
                     }
@@ -361,7 +361,7 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:1000, top:20, left:250, focused:false});
                           }
                       });
                   }

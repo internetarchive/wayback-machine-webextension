@@ -63,6 +63,9 @@ p{
 strong{
   font-family:  bebas Neue;
 }
+h2 strong{
+  font-family: 'Oswald', sans-serif;
+}
 @media screen and (min-width: 700px) {
     .test {
         text-align: center;
