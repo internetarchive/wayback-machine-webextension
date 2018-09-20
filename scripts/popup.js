@@ -351,7 +351,7 @@ function show_wikibooks(){
       tabId=tabs[0].id;
       chrome.storage.sync.get(['wikibooks'],function(event){
           if(event.wikibooks==true){
-              if(found.length>=0){
+              if(found){
                   document.getElementById('wikibooks_tr').style.display="block";
                   document.getElementById('wikibooks_tr').onclick=function(){
                       chrome.storage.sync.get(['show_context'],function(event1){
