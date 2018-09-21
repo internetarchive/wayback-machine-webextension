@@ -1,5 +1,21 @@
 
 let resultsTray = document.getElementById("resultsTray");
+let spinner = document.getElementsByClassName("loader")[0];
+let donationWindow = {
+  url:chrome.runtime.getURL("donatebook.html"),
+  width:500,
+  height:500,
+  top:500,
+  left:500,
+  focused:true
+}
+let readWindow = {
+  width:500,
+  height:500,
+  top:0,
+  left:500,
+  focused:true
+}
 
 //Used to extact the current URL
 function getUrlByParameter(name){
@@ -25,7 +41,7 @@ function getBooked(url){
           if(archiveIdentifier){
             getMetadataFromArchive(archiveIdentifier);
           }else{
-            getMetadataFromOpenLibrary(OLID);
+            getMetadataFromOpenLibrary(OLID, isbn);
           }
         }
       }
@@ -52,10 +68,11 @@ function getMetadataFromArchive(id){
   xhr.send();
 }
 
-function getMetadataFromOpenLibrary(olid){
+function getMetadataFromOpenLibrary(olid, isbn){
   var xhr=new XMLHttpRequest();
   xhr.responseType = "json";
-  var qurl= "http://openlibrary.org/works/"+olid+".json";
+  isbn = isbn.replace(/\-/g, "");
+  var qurl= "http://openlibrary.org/isbn/"+isbn+".json";
   // console.log(qurl);
   xhr.open("GET",qurl,true);
   xhr.onload=function(){
@@ -74,7 +91,11 @@ function addBookFromArchive(metadata){
   let button = document.createElement("a");
 
   button.setAttribute("class", "btn btn-success resize_fit_center");
-  button.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
+  button.setAttribute("href", "#");
+  button.addEventListener("click", function(){
+    readWindow['url'] = "https://archive.org/details/" + metadata.identifier;
+    chrome.windows.create(readWindow);
+  });
   details.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   img.setAttribute("src", "https://archive.org/services/img/" + metadata.identifier);
 
@@ -87,7 +108,7 @@ function addBookFromArchive(metadata){
   book.appendChild(author)
   book.appendChild(details);
   book.appendChild(button);
-
+  spinner.setAttribute("style", "display:none;");
   if(resultsTray.childNodes.length >0){
     resultsTray.insertBefore(book, resultsTray.childNodes[0]);
   }else{
@@ -108,9 +129,9 @@ function addBookFromOpenLibrary(metadata){
   button.setAttribute("class", "btn btn-warning resize_fit_center");
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
-    chrome.tabs.create({url:chrome.runtime.getURL("donatebook.html")});
-  })
-  details.setAttribute("href", "http://openlibrary.org" + metadata.key);
+    chrome.windows.create(donationWindow);
+  });
+  // details.setAttribute("href", "http://openlibrary.org" + metadata.key);
   if(metadata.covers){
     img.setAttribute("src", "http://covers.openlibrary.org/w/id/"+metadata.covers[0]+"-M.jpg");
   }else{
@@ -127,6 +148,7 @@ function addBookFromOpenLibrary(metadata){
   // book.appendChild(author);
   book.appendChild(details);
   book.appendChild(button);
+  spinner.setAttribute("style", "display:none;");
 
   resultsTray.appendChild(book);
 }
