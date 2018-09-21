@@ -107,6 +107,9 @@ function addBookFromOpenLibrary(metadata){
 
   button.setAttribute("class", "btn btn-warning resize_fit_center");
   button.setAttribute("href", "#");
+  button.addEventListener("click", function(){
+    chrome.tabs.create({url:chrome.runtime.getURL("donatebook.html")});
+  })
   details.setAttribute("href", "http://openlibrary.org" + metadata.key);
   if(metadata.covers){
     img.setAttribute("src", "http://covers.openlibrary.org/w/id/"+metadata.covers[0]+"-M.jpg");
