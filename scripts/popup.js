@@ -322,7 +322,7 @@ function show_news(){
         to_check_url = to_check_url.replace(/\.html$/, "");
         var final_url=to_check_url.slice(0,to_check_url.lastIndexOf(".")+1);
         tabId=tabs[0].id;
-        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.washingtonpost.", "www.theverge."];
+        var list_of_sites=["www.huffingtonpost.","www.nytimes.","www.forbes.","www.usatoday.","www.washingtonpost.", "www.vox.", "www.theverge."];
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
                 if(list_of_sites.indexOf(final_url)>=0){
@@ -347,7 +347,7 @@ function show_news(){
 function show_wikibooks(){
   chrome.tabs.query({active: true,currentWindow:true},function(tabs){
       url=tabs[0].url;
-      var found = url.match(/^https?:\/\/[\w\.]*wikipedia.org/)
+      var found = url.match(/^https?:\/\/[\w\.]*wikipedia.org/);
       tabId=tabs[0].id;
       chrome.storage.sync.get(['wikibooks'],function(event){
           if(event.wikibooks==true){
