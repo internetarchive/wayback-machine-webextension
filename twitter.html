@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/common.css">
+        <link rel="stylesheet" type="text/css" href="css/twitter.css">
+        <title>
+            Tweets of the Current URL
+        </title>
+    </head>
+    <body>
+        <table width="100%" style="max-height: 200px; ">
+            <tr class="spaceUnder">
+                <td style="text-align: center;">
+                    <div id ="horizontal_line" class="lower_margin"></div>
+                        <div class='container'>
+                            <img class='resize_fit_center'
+                            src='images/logo.gif' />
+                        </div>
+                    <div id="horizontal_line" class="extra_margin"></div>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center">
+            <h2><strong>Tweets containing of Current URL</strong><br></h2>
+        </div>
+        <div class="container">
+            <div class="row row_main" id="row-twit">
+                <div class="col-sm-6" id="half"></div>
+            </div>
+        </div>
+        <div id="box-twitter" class="box-tweet">
+            <div id="row-twitter">
+                <img src="" alt="" id="profile-image">
+                <a id="profile-url">
+                    <span id="profile-name"></span>
+                </a>
+                <br>
+                <a id="link" href="">
+                    <span id="tweets" ></span>
+                </a>
+                <br>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="scripts/twitter.js"></script>
