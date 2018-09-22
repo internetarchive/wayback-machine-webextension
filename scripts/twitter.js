@@ -22,12 +22,12 @@ function get_tweets(){
                 var item=row.cloneNode(true);
                 var tweet_text=dataRow.text;
                 var name=dataRow.user.name;
-                if(dataRow.entities.urls.length>0){
-                    var url="https://twitter.com/"+dataRow.user.screen_name+'/status/'+dataRow.id_str;
-                }
+                var url="https://twitter.com/"+dataRow.user.screen_name+'/status/'+dataRow.id_str;
                 var tweet_div=item.querySelectorAll('[id="tweets"]')[0].appendChild(document.createTextNode(tweet_text));
                 var profile_name=item.querySelectorAll('[id="profile-name"]')[0].appendChild(document.createTextNode(name));
                 var profile_url=item.querySelectorAll('[id="profile-url"]')[0];
+                var date=item.querySelectorAll('[id="date"]')[0];
+                date.appendChild(document.createTextNode("Created on: "+dataRow.created_at.slice(0,10)));
                 profile_url.setAttribute('href',"www.twitter.com/"+dataRow.user.screen_name);
                 var img=item.querySelectorAll('[id="profile-image"]')[0];
                 img.setAttribute('src',dataRow.user.profile_image_url);
