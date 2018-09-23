@@ -16,8 +16,8 @@ function restore_options() {
     tagcloud:true,
     hoaxy:true,
     doi:true,
-    news:true,
-    wikibooks:true,
+    news:false,
+    wikibooks:false,
     showall:true
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
