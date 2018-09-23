@@ -281,7 +281,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                 if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
                   chrome.storage.sync.get(['showall'],function(event2){
                     if(event2.showall==undefined){
-                      event2.showall=true;
+                      event2.showall=false;
                     }
                     //If show-all Context is true, Create a window which is focussed and create tabs in it
                     if(event2.showall==true){
