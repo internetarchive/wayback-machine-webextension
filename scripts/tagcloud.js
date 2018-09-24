@@ -8,10 +8,8 @@ function getUrlByParameter(name){
 var mynewTags=new Array();
 function get_details(){
     var url=getUrlByParameter('url');
-    console.log(url);
     var hostname=new URL(url).hostname;
     toBeUsedAsURL=hostname.replace(/^www./, "");
-    console.log(url);
     var y=hostname.split('.');
     var not_display4=y.join(' ');
     var not_display1=y.join(' ');
@@ -24,16 +22,13 @@ function get_details(){
     var not_display3=not_display4+" extension"
     var dontarray=["view page","open","read more",not_display1,not_display2,not_display3,not_display4]
     var xhr=new XMLHttpRequest();
-    var new_url="http://web.archive.org/__wb/search/tagcloud?n="+toBeUsedAsURL+"&counters=1";
-    console.log(new_url);
+    var new_url="https://archive.org/services/context/tagcloud?url="+toBeUsedAsURL;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
-        console.log(JSON.parse(xhr.response));
         var data=JSON.parse(xhr.response);
         for(var i=0;i<data.length;i++){
             var b=new Object();
             if(dontarray.indexOf(decodeURIComponent(data[i][0]))<=0){
-                console.log
                 mynewTags[i]=decodeURIComponent(data[i][0]);
                 b.text=decodeURIComponent(data[i][0]);
                 b.weight=(data[i][1]);
@@ -63,7 +58,6 @@ function get_details(){
         for(var i=0;i<arr.length;i++){
             findWeightOf(arr[i],result,data);
         }
-        console.log(result);
         for(var i=0;i<result.length;i++){
             var span=document.createElement("span");
             span.setAttribute("data-weight",result[i].weight);
@@ -97,7 +91,6 @@ function get_details(){
             "font" : "'Times New Roman', Times, serif",
             "shape" : "square"
         });
-        
     }
     xhr.send(null);
 }
