@@ -33,13 +33,36 @@ function createList(entry, mainContainer){
   authorElement.appendChild(document.createTextNode(author));
   journalElement.appendChild(document.createTextNode(journal));
   if(url != "#"){
+    let displayPaperWindow = {
+      url:url,
+      width:500,
+      height:500,
+      top:500,
+      left:500,
+      focused:true
+      };
     linkElement.appendChild(document.createTextNode("Read Paper"));
-    linkElement.setAttribute("href", url);
+    linkElement.setAttribute("href", "#");
     linkElement.setAttribute("class", "btn btn-success");
+    linkElement.addEventListener("click", function(){
+      chrome.windows.create(displayPaperWindow);
+    });
+
   }else{
+    let donationWindow = {
+      url:chrome.runtime.getURL("donatebook.html"),
+      width:500,
+      height:500,
+      top:500,
+      left:500,
+      focused:true
+      };
     linkElement.appendChild(document.createTextNode("Donate"));
     linkElement.setAttribute("href", url);
     linkElement.setAttribute("class", "btn btn-warning");
+    linkElement.addEventListener("click", function(){
+      chrome.windows.create(donationWindow);
+    });
   }
 
   // add elements to container
