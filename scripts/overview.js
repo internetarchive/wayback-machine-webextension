@@ -10,7 +10,7 @@ function getUrlByParameter(name){
 function get_details(){
     var url=getUrlByParameter('url');
     var xhr=new XMLHttpRequest();
-    var new_url="http://web.archive.org/__wb/search/metadata?q="+url;
+    var new_url="https://archive.org/services/context/metadata?url="+url;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
         var type=JSON.parse(xhr.response).type;
