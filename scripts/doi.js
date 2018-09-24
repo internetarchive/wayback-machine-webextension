@@ -1,68 +1,84 @@
+
 function getUrlByParameter(name){
-    console.log(window.location.href)
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
+  console.log(window.location.href)
+  var url=window.location.href;
+  var indexOfEnd=url.length;
+  var index=url.indexOf(name);
+  var length=name.length;
+  return url.slice(index+length+1,indexOfEnd);
 }
-function createList(mainContainer,listEl){
-    var mainRow=document.createElement('div');
-    mainRow.className='row row_main';
-    mainContainer.appendChild(mainRow);
-    var half = document.createElement('div');
-    half.className='col-xs-6 half';
-    mainRow.appendChild(half);
-    var subRow=document.createElement('div');
-    subRow.className = 'row box';
-    half.appendChild(subRow);
-    var title = document.createElement('div');
-    var link = document.createElement('div');
-    title.className = 'col-xs-9';
-    link.className = 'col-xs-3';
-    subRow.appendChild(title);
-    subRow.appendChild(link);
-    title.innerHTML = listEl.title;
-    if(listEl.url == null){
-        link.innerHTML = "Not available";
-        link.style.color = "red";
-    }else{
-        var btn = document.createElement('button');
-        btn.setAttribute('type','button');
-        btn.className = "btn btn-lg btn-success";
-        link.appendChild(btn);
-        btn.innerHTML = "Read";
-        btn.addEventListener('click',function(event){
-            window.open(listEl.url);
-        });
-    }
+function createList(entry, mainContainer){
+  // extract data from json
+  let title = entry.paper.title;
+  let author = entry.paper.authors[0];
+  if(entry.paper.authors.length > 1){
+    author = author + " et al.";
+  }
+  let journal = entry.paper.journal;
+  let url="#";
+  if(entry.count_files>0 && entry.files.length>0 && entry.files[0].links.length>0 && entry.files[0].links[0].url){
+    url = entry.files[0].links[0].url;
+  }
+
+  //create html elements
+  let paperContainer = document.createElement("div");
+  let titleElement = document.createElement("p");
+  let authorElement = document.createElement("p");
+  let journalElement = document.createElement("p");
+  let linkElement = document.createElement("a");
+
+  // add data to html elements
+  let strong = document.createElement("strong");
+  strong.appendChild(document.createTextNode(title));
+  titleElement.appendChild(strong);
+  authorElement.appendChild(document.createTextNode(author));
+  journalElement.appendChild(document.createTextNode(journal));
+  if(url != "#"){
+    linkElement.appendChild(document.createTextNode("Read Paper"));
+    linkElement.setAttribute("href", url);
+    linkElement.setAttribute("class", "btn btn-success");
+  }else{
+    linkElement.appendChild(document.createTextNode("Donate"));
+    linkElement.setAttribute("href", url);
+    linkElement.setAttribute("class", "btn btn-warning");
+  }
+
+  // add elements to container
+  paperContainer.appendChild(titleElement);
+  paperContainer.appendChild(authorElement);
+  paperContainer.appendChild(linkElement);
+  // paperContainer.appendChild(journalElement);
+
+  // add to list
+  let spinner = document.getElementsByClassName("loader")[0];
+  spinner.setAttribute("style", "display:none;");
+  if(url!="#" && mainContainer.childNodes.length > 0){
+    mainContainer.insertBefore(paperContainer, mainContainer.childNodes[0]);
+  }else{
+    mainContainer.appendChild(paperContainer);
+  }
 }
 function createPage(){
-    var url=getUrlByParameter('url');
-    console.log(url);
-    var xhr=new XMLHttpRequest();
-    xhr.open('GET','https://archive.org/services/context/papers?url='+url,true);
-    xhr.onload=function(){
-        var responseArray = JSON.parse(xhr.responseText);
-        console.log(responseArray);
-        var result = [];
-        for(var i=0;i<responseArray.length;i++){
-            if(responseArray[i].count_files==0 && responseArray[i].paper && responseArray[i].paper.title){
-                result.push({url:null,title:responseArray[i].paper.title});
-            }else if(responseArray[i].count_files>0 && responseArray[i].files.length>0 && responseArray[i].files[0].links.length>0 && responseArray[i].files[0].links[0].url && responseArray[i].paper && responseArray[i].paper.title){
-                result.push({url:responseArray[i].files[0].links[0].url,title:responseArray[i].paper.title});
-            }
-        }
-        var mainContainer = document.getElementById('container-whole');
-        mainContainer.innerHTML = "";
-        console.log(result);
-        for(var i=0;i<result.length;i++){
-            createList(mainContainer,result[i]);
-        }
-        if(result.length==0){
-            document.getElementById('doi-heading').innerHTML="No papers found";
-        }
-    };
-    xhr.send();
+  let mainContainer = document.getElementById('container-whole');
+
+  var url=getUrlByParameter('url');
+  // console.log(url);
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET','https://archive.org/services/context/papers?url='+url,true);
+  xhr.onload=function(){
+    var responseArray = JSON.parse(xhr.responseText);
+    for(var i=0;i<responseArray.length;i++){
+      if(responseArray[i].paper){
+        createList(responseArray[i], mainContainer);
+      }
+
+    }
+    if(mainContainer.children.length ==0){
+      let spinner = document.getElementsByClassName("loader")[0];
+      spinner.setAttribute("style", "display:none;");
+      document.getElementById('doi-heading').innerHTML="No papers found";
+    }
+  };
+  xhr.send();
 }
 window.onload = createPage;
