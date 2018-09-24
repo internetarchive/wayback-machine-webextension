@@ -1,6 +1,5 @@
 
 function getUrlByParameter(name){
-  console.log(window.location.href)
   var url=window.location.href;
   var indexOfEnd=url.length;
   var index=url.indexOf(name);
@@ -62,7 +61,6 @@ function createPage(){
   let mainContainer = document.getElementById('container-whole');
 
   var url=getUrlByParameter('url');
-  // console.log(url);
   var xhr=new XMLHttpRequest();
   xhr.open('GET','https://archive.org/services/context/papers?url='+url,true);
   xhr.onload=function(){
