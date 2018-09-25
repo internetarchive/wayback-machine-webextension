@@ -27,6 +27,7 @@ function getUrlByParameter(name){
 }
 
 function getBooked(url){
+  // Gets the data for each book on the wikipedia url
   var xhr=new XMLHttpRequest();
   var new_url="https://archive.org/services/context/books?url=" + url;
   xhr.open("GET",new_url,true);
@@ -36,8 +37,8 @@ function getBooked(url){
       for(let book of data){  // Iterate over each book to get data
         let isbn = Object.keys(book)[0];
         if(book[isbn]){
-          let OLID = Object.keys(book[isbn].responses)[0];
-          let archiveIdentifier = book[isbn].responses[OLID]['identifier'];
+          let OLID = Object.keys(book[isbn][isbn].responses)[0];
+          let archiveIdentifier = book[isbn][isbn].responses[OLID]['identifier'];
           if(archiveIdentifier){
             getMetadataFromArchive(archiveIdentifier);
           }else{
@@ -46,7 +47,19 @@ function getBooked(url){
         }
       }
     }else{
-      resultsTray.appendChild(document.createTextNode(data.message));
+      for(let isbn of Object.keys(data)){  // Iterate over each book to get data
+        if(data[isbn]){
+          let OLID = Object.keys(data[isbn][isbn].responses)[0];
+          let archiveIdentifier = data[isbn][isbn].responses[OLID]['identifier'];
+          if(archiveIdentifier){
+            getMetadataFromArchive(archiveIdentifier);
+          }else{
+            getMetadataFromOpenLibrary(OLID, isbn);
+          }
+        }
+      }
+      // spinner.setAttribute("style", "display:none;")
+      // resultsTray.appendChild(document.createTextNode(data.message));
     }
   }
   xhr.send();

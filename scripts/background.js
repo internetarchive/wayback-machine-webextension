@@ -459,7 +459,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                       event2.showall=true;
                     }
                     if(event2.showall==true){
-                      //If show-all Context is true, create a context windows 
+                      //If show-all Context is true, create a context windows
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.windows.create({url:alexa_url, width:600, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;

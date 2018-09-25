@@ -368,6 +368,25 @@ function show_wikibooks(){
               }
           }
       });
+      chrome.storage.sync.get(['doi'],function(event){
+          if(event.doi==true){
+              if(found){
+                  document.getElementById('doi_tr').style.display="block";
+                  document.getElementById('doi_tr').onclick=function(){
+                      chrome.storage.sync.get(['show_context'],function(event1){
+                          if(event1.show_context==undefined){
+                              event1.show_context="tab";
+                          }
+                          if(event1.show_context=="tab"){
+                              chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url});
+                          }else{
+                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:false});
+                          }
+                      });
+                  }
+              }
+          }
+      });
   });
 }
 

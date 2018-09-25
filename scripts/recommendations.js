@@ -1,11 +1,13 @@
 let tray = document.getElementById('RecommendationTray');
+let spinner = document.getElementsByClassName("loader")[0];
 
 function constructArticles(clips){
   if(clips.length == 0){
     let p = document.createElement('p');
     p.appendChild(document.createTextNode("No Related Clips Found..."));
+    spinner.setAttribute("style", "display:none;");
     tray.append(p);
-    return -1;
+    // return -1;
   }
   for (let entry of clips){
     let clip = entry;
@@ -32,6 +34,7 @@ function constructArticles(clips){
     div.appendChild(show);
     div.appendChild(p);
     div.appendChild(showdate);
+    spinner.setAttribute("style", "display:none;");
     tray.appendChild(div);
   }
 }
@@ -62,12 +65,14 @@ function get_details(){
       if(clips.status!="error"){
         constructArticles(clips);
       }else{
-        tray.setAttribute("style", "font-size: 20px;text-align: center;");
-        tray.appendChild(document.createTextNode(clips.message));
+        spinner.setAttribute("style", "display:none;");
+        let p = document.createElement("p");
+        p.setAttribute("style", "width:300; margin-left:auto;margin-right:auto;");
+        p.appendChild(document.createTextNode(clips.message));
+        tray.setAttribute("style", "grid-template-columns:none;")
+        tray.appendChild(p);
       }
     }
   }
   request.send();
 }
-
-
