@@ -49,20 +49,9 @@ function createList(entry, mainContainer){
     });
 
   }else{
-    let donationWindow = {
-      url:chrome.runtime.getURL("donatebook.html"),
-      width:500,
-      height:500,
-      top:500,
-      left:500,
-      focused:true
-      };
-    linkElement.appendChild(document.createTextNode("Donate"));
-    linkElement.setAttribute("href", url);
-    linkElement.setAttribute("class", "btn btn-warning");
-    linkElement.addEventListener("click", function(){
-      chrome.windows.create(donationWindow);
-    });
+    linkElement = document.createElement('p');
+    linkElement.appendChild(document.createTextNode("Paper Unavailable"));
+    linkElement.setAttribute("style", "color:red;")
   }
 
   // add elements to container
