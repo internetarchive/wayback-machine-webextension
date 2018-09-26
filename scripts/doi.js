@@ -33,14 +33,6 @@ function createList(entry, mainContainer){
   authorElement.appendChild(document.createTextNode(author));
   journalElement.appendChild(document.createTextNode(journal));
   if(url != "#"){
-    let displayPaperWindow = {
-      url:url,
-      width:500,
-      height:500,
-      top:500,
-      left:500,
-      focused:true
-      };
     linkElement.appendChild(document.createTextNode("Read Paper"));
     linkElement.setAttribute("href", "#");
     linkElement.setAttribute("class", "btn btn-success");
@@ -52,7 +44,11 @@ function createList(entry, mainContainer){
           if(event1.show_context=="tab"){
               chrome.tabs.create({url:url});
           }else{
-              chrome.windows.create(displayPaperWindow);
+            chrome.system.display.getInfo(function(displayInfo){
+              let height = displayInfo[0].bounds.height;
+              let width = displayInfo[0].bounds.width;
+              chrome.windows.create({url:url, width:width/2, height:height/2, top:0, left:0, focused:true});
+            });
           }
       });
     });

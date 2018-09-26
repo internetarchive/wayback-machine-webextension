@@ -29,15 +29,11 @@ function constructArticles(clips){
           if(event1.show_context=="tab"){
               chrome.tabs.create({url:clip.preview_url});
           }else{
-              let clipWindow = {
-                url:clip.preview_url,
-                width:500,
-                height:500,
-                top:0,
-                left:500,
-                focused:true
-              }
-              chrome.windows.create(clipWindow);
+            chrome.system.display.getInfo(function(displayInfo){
+              let height = displayInfo[0].bounds.height;
+              let width = displayInfo[0].bounds.width;
+              chrome.windows.create({url:clip.preview_url, width:width/2, height:height/2, top:0, left:0, focused:true});
+            });
           }
       });
     });

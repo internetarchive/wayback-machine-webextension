@@ -335,7 +335,11 @@ function show_news(){
                             if(event1.show_context=="tab"){
                                 chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
                             }else{
-                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:1000, top:20, left:250, focused:true});
+                              chrome.system.display.getInfo(function(displayInfo){
+                                let height = displayInfo[0].bounds.height;
+                                let width = displayInfo[0].bounds.width;
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                              });
                             }
                         });
                     }
@@ -361,7 +365,11 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:true});
+                            chrome.system.display.getInfo(function(displayInfo){
+                              let height = displayInfo[0].bounds.height;
+                              let width = displayInfo[0].bounds.width;
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                            });
                           }
                       });
                   }
@@ -380,7 +388,11 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:true});
+                            chrome.system.display.getInfo(function(displayInfo){
+                              let height = displayInfo[0].bounds.height;
+                              let width = displayInfo[0].bounds.width;
+                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                            });
                           }
                       });
                   }
