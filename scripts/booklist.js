@@ -46,6 +46,12 @@ function getBooked(url){
           }
         }
       }
+    }else if(data['status'] == "error"){
+      spinner.setAttribute("style", "display:none;");
+      let p = document.createElement("p");
+      p.appendChild((document.createTextNode(data.message)));
+      resultsTray.setAttribute("style", "grid-template-columns:none;");
+      resultsTray.appendChild(p);
     }else{
       for(let isbn of Object.keys(data)){  // Iterate over each book to get data
         if(data[isbn]){
@@ -58,8 +64,6 @@ function getBooked(url){
           }
         }
       }
-      // spinner.setAttribute("style", "display:none;")
-      // resultsTray.appendChild(document.createTextNode(data.message));
     }
   }
   xhr.send();
