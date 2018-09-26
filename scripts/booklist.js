@@ -111,7 +111,16 @@ function addBookFromArchive(metadata){
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
     readWindow['url'] = "https://archive.org/details/" + metadata.identifier;
-    chrome.windows.create(readWindow);
+    chrome.storage.sync.get(['show_context'],function(event1){
+        if(event1.show_context==undefined){
+            event1.show_context="tab";
+        }
+        if(event1.show_context=="tab"){
+            chrome.tabs.create({url:"https://archive.org/details/" + metadata.identifier});
+        }else{
+            chrome.windows.create(readWindow);
+        }
+    });
   });
   details.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   img.setAttribute("src", "https://archive.org/services/img/" + metadata.identifier);

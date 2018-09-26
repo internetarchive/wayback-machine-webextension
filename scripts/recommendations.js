@@ -9,8 +9,7 @@ function constructArticles(clips){
     tray.append(p);
     // return -1;
   }
-  for (let entry of clips){
-    let clip = entry;
+  for (let clip of clips){
     let div = document.createElement('div');
     let img = document.createElement('img');
     let anchor = document.createElement('a');
@@ -21,7 +20,27 @@ function constructArticles(clips){
 
     img.classList.add("resize_fit_center");
     img.src = clip.preview_thumb;
-    anchor.href = clip.preview_url;
+    anchor.href = "#";
+    anchor.addEventListener("click", function(){
+      chrome.storage.sync.get(['show_context'],function(event1){
+          if(event1.show_context==undefined){
+              event1.show_context="tab";
+          }
+          if(event1.show_context=="tab"){
+              chrome.tabs.create({url:clip.preview_url});
+          }else{
+              let clipWindow = {
+                url:clip.preview_url,
+                width:500,
+                height:500,
+                top:0,
+                left:500,
+                focused:true
+              }
+              chrome.windows.create(clipWindow);
+          }
+      });
+    });
 
     anchor.appendChild(img);
     p.appendChild(anchor);

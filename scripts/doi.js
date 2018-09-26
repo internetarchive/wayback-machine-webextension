@@ -45,7 +45,16 @@ function createList(entry, mainContainer){
     linkElement.setAttribute("href", "#");
     linkElement.setAttribute("class", "btn btn-success");
     linkElement.addEventListener("click", function(){
-      chrome.windows.create(displayPaperWindow);
+      chrome.storage.sync.get(['show_context'],function(event1){
+          if(event1.show_context==undefined){
+              event1.show_context="tab";
+          }
+          if(event1.show_context=="tab"){
+              chrome.tabs.create({url:url});
+          }else{
+              chrome.windows.create(displayPaperWindow);
+          }
+      });
     });
 
   }else{

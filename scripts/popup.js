@@ -335,7 +335,7 @@ function show_news(){
                             if(event1.show_context=="tab"){
                                 chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
                             }else{
-                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:1000, top:20, left:250, focused:false});
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:1000, top:20, left:250, focused:true});
                             }
                         });
                     }
@@ -361,7 +361,7 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:false});
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:true});
                           }
                       });
                   }
@@ -380,7 +380,7 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:false});
+                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:500, height:500, top:0, left:0, focused:true});
                           }
                       });
                   }
