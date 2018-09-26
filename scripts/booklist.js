@@ -2,7 +2,7 @@
 let resultsTray = document.getElementById("resultsTray");
 let spinner = document.getElementsByClassName("loader")[0];
 let donationWindow = {
-  url:chrome.runtime.getURL("donatebook.html"),
+  url:"https://archive.org/donate/",
   width:500,
   height:500,
   top:500,
@@ -155,7 +155,16 @@ function addBookFromOpenLibrary(metadata){
   button.setAttribute("class", "btn btn-warning resize_fit_center");
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
-    chrome.windows.create(donationWindow);
+    chrome.storage.sync.get(['show_context'],function(event1){
+        if(event1.show_context==undefined){
+            event1.show_context="tab";
+        }
+        if(event1.show_context=="tab"){
+            chrome.tabs.create({url:"https://archive.org/donate/"});
+        }else{
+            chrome.windows.create(donationWindow);
+        }
+    });
   });
   // details.setAttribute("href", "http://openlibrary.org" + metadata.key);
   if(metadata.covers){
