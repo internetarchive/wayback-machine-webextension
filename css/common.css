@@ -10,28 +10,28 @@
     src: url("../fonts/GillSans-Light.ttf");
 }
 #horizontal_line{
-    align-items: center; 
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
-    border: 0px solid rgb(6, 117, 211); 
-    border-radius: 3px; 
-    box-sizing: content-box; 
-    display: flex; 
-    font-family: sans-serif; 
+    align-items: center;
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
+    border: 0px solid rgb(6, 117, 211);
+    border-radius: 3px;
+    box-sizing: content-box;
+    display: flex;
+    font-family: sans-serif;
     font-size: 19px; font-style: inherit;
-    font-stretch: inherit; 
-    font-variant: inherit; 
-    font-weight: inherit; 
-    height: 1px; 
-    justify-content: center; 
-    line-height: 1; 
+    font-stretch: inherit;
+    font-variant: inherit;
+    font-weight: inherit;
+    height: 1px;
+    justify-content: center;
+    line-height: 1;
     margin: 0px;
-    overflow: unset; 
-    padding: 0px; 
-    position: relative; 
-    text-align: left; 
+    overflow: unset;
+    padding: 0px;
+    position: relative;
+    text-align: left;
     text-decoration: none;
-    vertical-align: baseline; 
-    width: auto; 
+    vertical-align: baseline;
+    width: auto;
 }
 .resize_fit_center {
     max-width:100%;
@@ -41,3 +41,6 @@ h2{
     font-family: Bebas Neue;
     font-size: 50px;
   }
+h2 strong{
+  font-family: 'Oswald', sans-serif;
+}

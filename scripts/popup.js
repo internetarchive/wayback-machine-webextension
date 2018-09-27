@@ -335,7 +335,11 @@ function show_news(){
                             if(event1.show_context=="tab"){
                                 chrome.tabs.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url});
                             }else{
-                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                              chrome.system.display.getInfo(function(displayInfo){
+                                let height = displayInfo[0].bounds.height;
+                                let width = displayInfo[0].bounds.width;
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
+                              });
                             }
                         });
                     }
@@ -361,7 +365,34 @@ function show_wikibooks(){
                           if(event1.show_context=="tab"){
                               chrome.tabs.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url});
                           }else{
-                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false});
+                            chrome.system.display.getInfo(function(displayInfo){
+                              let height = displayInfo[0].bounds.height;
+                              let width = displayInfo[0].bounds.width;
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
+                            });
+                          }
+                      });
+                  }
+              }
+          }
+      });
+      chrome.storage.sync.get(['doi'],function(event){
+          if(event.doi==true){
+              if(found){
+                  document.getElementById('doi_tr').style.display="block";
+                  document.getElementById('doi_tr').onclick=function(){
+                      chrome.storage.sync.get(['show_context'],function(event1){
+                          if(event1.show_context==undefined){
+                              event1.show_context="tab";
+                          }
+                          if(event1.show_context=="tab"){
+                              chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url});
+                          }else{
+                            chrome.system.display.getInfo(function(displayInfo){
+                              let height = displayInfo[0].bounds.height;
+                              let width = displayInfo[0].bounds.width;
+                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
+                            });
                           }
                       });
                   }
@@ -416,8 +447,8 @@ document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-document.getElementById('alexa_statistics').onclick =statistics;
-document.getElementById('whois_statistics').onclick =statistics;
+// document.getElementById('alexa_statistics').onclick =statistics;
+// document.getElementById('whois_statistics').onclick =statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('settings_button').onclick =settings;

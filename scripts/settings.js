@@ -6,19 +6,19 @@ function restore_options() {
     auto_archive: false,
     books:false,
     auto_update_context:false,
-    alexa:true,
-    domaintools:true,
-    tweets:true,
-    wbmsummary:true,
-    annotations:true,
-    annotationsurl:true,
-    similarweb:true,
-    tagcloud:true,
-    hoaxy:true,
-    doi:true,
-    news:true,
-    wikibooks:true,
-    showall:true
+    alexa:false,
+    domaintools:false,
+    tweets:false,
+    wbmsummary:false,
+    annotations:false,
+    annotationsurl:false,
+    similarweb:false,
+    tagcloud:false,
+    hoaxy:false,
+    doi:false,
+    news:false,
+    wikibooks:false,
+    showall:false
   }, function(items) {
     document.getElementById('auto-archive').checked = items.auto_archive;
     document.getElementById('books').checked = items.books;
