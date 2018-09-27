@@ -1,21 +1,7 @@
 
 let resultsTray = document.getElementById("resultsTray");
 let spinner = document.getElementsByClassName("loader")[0];
-let donationWindow = {
-  url:chrome.runtime.getURL("donatebook.html"),
-  width:500,
-  height:500,
-  top:500,
-  left:500,
-  focused:true
-}
-let readWindow = {
-  width:500,
-  height:500,
-  top:0,
-  left:500,
-  focused:true
-}
+
 
 //Used to extact the current URL
 function getUrlByParameter(name){
@@ -110,8 +96,20 @@ function addBookFromArchive(metadata){
   button.setAttribute("class", "btn btn-success resize_fit_center");
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
-    readWindow['url'] = "https://archive.org/details/" + metadata.identifier;
-    chrome.windows.create(readWindow);
+    chrome.storage.sync.get(['show_context'],function(event1){
+        if(event1.show_context==undefined){
+            event1.show_context="tab";
+        }
+        if(event1.show_context=="tab"){
+            chrome.tabs.create({url:"https://archive.org/details/" + metadata.identifier});
+        }else{
+          chrome.system.display.getInfo(function(displayInfo){
+            let height = displayInfo[0].bounds.height;
+            let width = displayInfo[0].bounds.width;
+            chrome.windows.create({url:"https://archive.org/details/" + metadata.identifier, width:width/2, height:height, top:0, left:0, focused:true});
+          });
+        }
+    });
   });
   details.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   img.setAttribute("src", "https://archive.org/services/img/" + metadata.identifier);
@@ -146,7 +144,20 @@ function addBookFromOpenLibrary(metadata){
   button.setAttribute("class", "btn btn-warning resize_fit_center");
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
-    chrome.windows.create(donationWindow);
+    chrome.storage.sync.get(['show_context'],function(event1){
+        if(event1.show_context==undefined){
+            event1.show_context="tab";
+        }
+        if(event1.show_context=="tab"){
+            chrome.tabs.create({url:"https://archive.org/donate/"});
+        }else{
+          chrome.system.display.getInfo(function(displayInfo){
+            let height = displayInfo[0].bounds.height;
+            let width = displayInfo[0].bounds.width;
+            chrome.windows.create({url:"https://archive.org/donate/", width:width/2, height:height, top:0, left:0, focused:true});
+          });
+        }
+    });
   });
   // details.setAttribute("href", "http://openlibrary.org" + metadata.key);
   if(metadata.covers){
