@@ -134,8 +134,20 @@ function search_tweet(eventObj){
     var url = get_clean_url();
     url = url.replace(/^https?:\/\//,'');
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
-    var open_url="https://twitter.com/search?q="+url;
-    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
+    chrome.storage.sync.get(['show_context'],function(event1){
+        if(event1.show_context==undefined){
+            event1.show_context="tab";
+        }
+        if(event1.show_context=="tab"){
+            chrome.tabs.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url});
+        }else{
+          chrome.system.display.getInfo(function(displayInfo){
+            let height = displayInfo[0].bounds.height;
+            let width = displayInfo[0].bounds.width;
+            chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
+          });
+        }
+    });
 }
 
 function display_list(key_word){
