@@ -32,7 +32,7 @@ function constructArticles(clips){
             chrome.system.display.getInfo(function(displayInfo){
               let height = displayInfo[0].bounds.height;
               let width = displayInfo[0].bounds.width;
-              chrome.windows.create({url:clip.preview_url, width:width/2, height:height/2, top:0, left:0, focused:true});
+              chrome.windows.create({url:clip.preview_url, width:width/2, height:height, top:0, left:0, focused:true});
             });
           }
       });
