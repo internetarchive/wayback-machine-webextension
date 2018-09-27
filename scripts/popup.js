@@ -338,7 +338,7 @@ function show_news(){
                               chrome.system.display.getInfo(function(displayInfo){
                                 let height = displayInfo[0].bounds.height;
                                 let width = displayInfo[0].bounds.width;
-                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                                chrome.windows.create({url:chrome.runtime.getURL("recommendations.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
                               });
                             }
                         });
@@ -368,7 +368,7 @@ function show_wikibooks(){
                             chrome.system.display.getInfo(function(displayInfo){
                               let height = displayInfo[0].bounds.height;
                               let width = displayInfo[0].bounds.width;
-                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                              chrome.windows.create({url:chrome.runtime.getURL("booklist.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
                             });
                           }
                       });
@@ -391,7 +391,7 @@ function show_wikibooks(){
                             chrome.system.display.getInfo(function(displayInfo){
                               let height = displayInfo[0].bounds.height;
                               let width = displayInfo[0].bounds.width;
-                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:width/2, height:height/2, top:0, left:width/2, focused:true});
+                              chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:width/2, height:height, top:0, left:width/2, focused:true});
                             });
                           }
                       });
