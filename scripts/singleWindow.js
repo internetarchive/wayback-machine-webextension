@@ -49,37 +49,72 @@ function get_alexa() {
     http.send(null);
 }
 
-function get_whois(url){
+function get_domaintools(url){
     var url=getUrlByParameter('url');
-    var host_url = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
-    var whois_url="https://www.whoisxmlapi.com/whoisserver/WhoisService?domainName="+host_url+"&username=anishkumarsarangi&password=archiveit";
+    var domaintools_api = 'https://archive.org/services/context/domaintools?url='+url;
     var http = new XMLHttpRequest();
-    http.open("GET", whois_url, true);
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var html = "<b>"+"<span class='color_code_whois'>"+ host_url +'</span>'+"</b><br/><b>Domain-Name: </b>";
-            var xmldata = http.responseXML.documentElement;
-            if (xmldata.getElementsByTagName("domainName")){
-                html +="<span class='color_code_whois'>"+xmldata.getElementsByTagName("domainName")[0].innerHTML+"</span>";
-            } 
-            else {
-                html += "N/A";
+    http.open("GET", domaintools_api, true);
+    http.onload = function() {
+        var data=JSON.parse(http.response);
+        var parent=document.getElementById("show_domaintools_data");
+        if(data.response.results_count!=0){
+            if(data.response.results[0].domain){
+                var child= document.getElementById("domain");
+                child.innerHTML="Domain: "+data.response.results[0].domain;
+                parent.appendChild(child);
             }
-            if(xmldata.getElementsByTagName("registrarName")[0]){
-                html += '<br/>'+'<b>Registrar: </b>' +"<span class='color_code_whois'>"+
-                    xmldata.getElementsByTagName('registrarName')[0].innerHTML;
+            if(data.response.results[0].alexa){
+                var child= document.getElementById("alexa");
+                child.innerHTML="Alexa Rank: "+data.response.results[0].alexa;
+                parent.appendChild(child);
             }
-            if(xmldata.getElementsByTagName("rawText")){
-                html += '<br/><br/>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('rawText')[0].innerHTML;
+            if(data.response.results[0].admin_contact.country.value){
+                var child=document.getElementById("admin_contact_country");
+                child.innerHTML="Country: "+data.response.results[0].admin_contact.country.value;
+                parent.appendChild(child);
             }
-            if(xmldata.getElementsByTagName("createdDateNormalized")){
-                html += '<br/><b>Registration Date: </b><br/>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('createdDateNormalized')[0].innerHTML;
-                html += '<br/><b>Updated Date: </b>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('updatedDateNormalized')[0].innerHTML;
+            if(data.response.results[0].create_date.value){
+                var child=document.getElementById("create_date");
+                child.innerHTML="Created Date: "+data.response.results[0].create_date.value;
+                parent.appendChild(child);
             }
-            document.getElementById("show_whois_data").innerHTML = html;
+            if(data.response.results[0].email_domain[0].value){
+                var child=document.getElementById("email_domain");
+                child.innerHTML="Email Domain: "+data.response.results[0].email_domain[0].value;
+                parent.appendChild(child);
+            }
+            if(data.response.results[0].expiration_date.value){
+                var child=document.getElementById("expiration_date");
+                child.innerHTML="Expire Date: "+data.response.results[0].expiration_date.value;
+                parent.appendChild(child);
+            }
+            if(data.response.results[0].admin_contact.state.value){
+                var child=document.getElementById("admin_contact_state");
+                child.innerHTML="State: "+data.response.results[0].admin_contact.state.value;
+                parent.appendChild(child);
+            }
+            if(data.response.results[0].registrant_org.value){
+                var child=document.getElementById("registrant_org");
+                child.innerHTML="Registrant Org: "+data.response.results[0].registrant_org.value;
+                parent.appendChild(child);
+            }
+            if(data.response.results[0].website_response){
+                var child=document.getElementById("website_response");
+                if(data.response.results[0].website_response==200){
+                    child.innerHTML="Website Response Status Code: "+data.response.results[0].website_response+" OK";
+                }else if(data.response.results[0].website_response==404){
+                    child.innerHTML="Website Response Status Code: "+data.response.results[0].website_response+" Not Found";
+                }
+                parent.appendChild(child);
+            }
+            if(data.response.results[0].whois_url){
+                var child=document.getElementById("whois");
+                child.href=data.response.results[0].whois_url;
+                child.innerHTML="Click to see the Whois URL";
+                parent.appendChild(child);
+            }
+        }else{
+            document.getElementById("show_domaintools_data").innerHTML="No data found!!";
         }
     };
     http.send(null);
@@ -440,7 +475,7 @@ function get_doi(){
     };
     xhr.send();
 }
-window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotaions_url,get_tags,get_doi];
+window.onloadFuncs = [get_alexa,get_domaintools,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotaions_url,get_tags,get_doi];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
