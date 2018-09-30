@@ -7,39 +7,61 @@ function getUrlByParameter(name){
 }
 
 function get_tweets(){
+    let spinner = document.getElementsByClassName("loader")[0];
     var url=getUrlByParameter('url');
     console.log(url);
     var xhr=new XMLHttpRequest();
     var new_url="http://gext-api.archive.org/services/context/twitter?url="+url;
     xhr.open("GET",new_url,true);
     xhr.onload=function(){
-        data=JSON.parse(xhr.response);
-        console.log(data);
-        if(data.length>0){
-            for(var i=0;i<data.length;i++){
-                dataRow=data[i];
-                var row=document.getElementById('box-twitter');
-                var item=row.cloneNode(true);
-                var tweet_text=dataRow.text;
-                var name=dataRow.user.name;
-                var url="https://twitter.com/"+dataRow.user.screen_name+'/status/'+dataRow.id_str;
-                var tweet_div=item.querySelectorAll('[id="tweets"]')[0].appendChild(document.createTextNode(tweet_text));
-                var profile_name=item.querySelectorAll('[id="profile-name"]')[0].appendChild(document.createTextNode(name));
-                var profile_url=item.querySelectorAll('[id="profile-url"]')[0];
-                var date=item.querySelectorAll('[id="date"]')[0];
-                date.appendChild(document.createTextNode("Created on: "+dataRow.created_at.slice(0,10)));
-                profile_url.setAttribute('href',"www.twitter.com/"+dataRow.user.screen_name);
-                var img=item.querySelectorAll('[id="profile-image"]')[0];
-                img.setAttribute('src',dataRow.user.profile_image_url);
-                item.id = "box-twitter"+i;
-                var link=item.querySelectorAll('[id="links"]')[0];
-                link.setAttribute('href',url);
-                document.getElementById("half").appendChild(item);
+        let tweets = JSON.parse(xhr.response);
+        if(tweets.length>0){
+            for(let tweet of tweets){
+                var encodedStr= tweet.text;
+                var parser = new DOMParser; //https://stackoverflow.com/questions/3700326/decode-amp-back-to-in-javascript
+                var dom = parser.parseFromString(
+                    '<!doctype html><body>' + encodedStr,
+                    'text/html');
+                var tweet_text = dom.body.textContent;
+
+                var name=tweet.user.name;
+                var url="https://twitter.com/"+tweet.user.screen_name+'/status/'+tweet.id_str;
+                var date = tweet.created_at.slice(0,10) + "," + tweet.created_at.slice(10, 19); // Not sure if this logic is correct
+                console.log(tweet.created_at);
+
+                var p_tweet_text = document.createElement("p");
+                p_tweet_text.setAttribute("class", "tweet");
+                p_tweet_text.appendChild(document.createTextNode(tweet_text));
+                var a_profile_name = document.createElement("a");
+                a_profile_name.setAttribute("href", "https://twitter.com/"+tweet.user.screen_name);
+                a_profile_name.appendChild(document.createTextNode(name));
+                var span_date = document.createElement("span");
+                span_date.setAttribute("class", "mention_date");
+                span_date.appendChild(document.createTextNode("Created on: "+date));
+
+                var img = document.createElement("img");
+                img.setAttribute("class", "profile_image");
+                img.setAttribute("src", tweet.user.profile_image_url);
+
+                var link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.appendChild(document.createTextNode("Click here to see the tweet"));
+                var tweet_container = document.createElement("blockquote");
+                tweet_container.setAttribute("class", "twitter-tweet box-twitter");
+
+                tweet_container.appendChild(img);
+                tweet_container.appendChild(a_profile_name);
+                tweet_container.appendChild(document.createElement("br"))
+                tweet_container.appendChild(span_date);
+                tweet_container.appendChild(p_tweet_text);
+                tweet_container.appendChild(link);
+                spinner.setAttribute("style", "display:none;");
+
+                document.getElementById("half").appendChild(tweet_container);
             }
-            document.getElementById("box-twitter").style.display="none";
         }else{
-            document.getElementById("half").innerHTML="There are no Tweets for the current URL";
-            document.getElementById("box-twitter").style.display="none";
+            spinner.setAttribute("style", "display:none;");
+            document.getElementById("half").appendChild(document.createTextNode("There are no Tweets for the current URL"));
         }
     }
     xhr.send(null);
