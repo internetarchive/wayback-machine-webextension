@@ -89,10 +89,13 @@ function addBookFromArchive(metadata){
   let title = document.createElement('p');
   let strong = document.createElement('strong');
   let author = document.createElement('p');
-  let details = document.createElement('a');
+  let details = document.createElement('div');
+  let text_elements = document.createElement('div');
   let img = document.createElement("img");
   let button = document.createElement("a");
 
+  details.setAttribute("class", "bottom_details");
+  text_elements.setAttribute("class", "text_elements");
   button.setAttribute("class", "btn btn-success resize_fit_center");
   button.setAttribute("href", "#");
   button.addEventListener("click", function(){
@@ -111,18 +114,18 @@ function addBookFromArchive(metadata){
         }
     });
   });
-  details.setAttribute("href", "https://archive.org/details/" + metadata.identifier);
   img.setAttribute("src", "https://archive.org/services/img/" + metadata.identifier);
-
+  img.setAttribute("class", "cover-img");
+  button.appendChild(document.createTextNode("Read Now"));
   details.appendChild(img);
+  details.appendChild(button);
   strong.appendChild(document.createTextNode(metadata.title));
   author.appendChild(document.createTextNode(metadata.creator));
-  button.appendChild(document.createTextNode("Read Now"));
   title.appendChild(strong);
-  book.appendChild(title);
-  book.appendChild(author)
+  text_elements.appendChild(title);
+  text_elements.appendChild(author);
+  book.appendChild(text_elements);
   book.appendChild(details);
-  book.appendChild(button);
   spinner.setAttribute("style", "display:none;");
   if(resultsTray.childNodes.length >0){
     resultsTray.insertBefore(book, resultsTray.childNodes[0]);
@@ -137,12 +140,17 @@ function addBookFromOpenLibrary(metadata){
   let title = document.createElement('p');
   let strong = document.createElement('strong');
   let author = document.createElement('p');
-  let details = document.createElement('a');
+  let details = document.createElement('div');
+  let text_elements = document.createElement('div');
   let img = document.createElement("img");
   let button = document.createElement("a");
 
+  text_elements.setAttribute("class", "text_elements");
+  img.setAttribute("class", "cover-img");
+  details.setAttribute("class", "bottom_details");
   button.setAttribute("class", "btn btn-warning resize_fit_center");
   button.setAttribute("href", "#");
+
   button.addEventListener("click", function(){
     chrome.storage.sync.get(['show_context'],function(event1){
         if(event1.show_context==undefined){
@@ -159,23 +167,26 @@ function addBookFromOpenLibrary(metadata){
         }
     });
   });
-  // details.setAttribute("href", "http://openlibrary.org" + metadata.key);
+
   if(metadata.covers){
     img.setAttribute("src", "http://covers.openlibrary.org/w/id/"+metadata.covers[0]+"-M.jpg");
   }else{
     img = document.createElement("p");
-    img.appendChild(document.createTextNode("Book details"))
+    img.appendChild(document.createTextNode("No cover available"));
+    img.setAttribute("class", "cover-img");
+
   }
 
-  details.appendChild(img);
-  strong.appendChild(document.createTextNode(metadata.title));
-  // author.appendChild(document.createTextNode(getAuthorFromOpenLibrary(metadata.authors)));
   button.appendChild(document.createTextNode("Donate"));
+  details.appendChild(img);
+  details.appendChild(button);
+
+  strong.appendChild(document.createTextNode(metadata.title));
+
   title.appendChild(strong);
-  book.appendChild(title);
-  // book.appendChild(author);
+  text_elements.appendChild(title);
+  book.appendChild(text_elements);
   book.appendChild(details);
-  book.appendChild(button);
   spinner.setAttribute("style", "display:none;");
 
   resultsTray.appendChild(book);
