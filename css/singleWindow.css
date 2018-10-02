@@ -25,7 +25,7 @@ p{
     box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
     border:1px solid black;
 }
-#box-annotation{
+#container-whole{
     margin-bottom: 12px;
     padding: 5px 5px 5px 5px;
     background-color: #fff;
@@ -76,10 +76,6 @@ p{
 }
 #link-html{
     margin-left: 70px;
-}
-#date{
-    position: absolute;
-    right: 20px;
 }
 .source{
     padding: 5px;
