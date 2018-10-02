@@ -25,7 +25,7 @@ function createList(entry, mainContainer){
   let authorElement = document.createElement("p");
   let journalElement = document.createElement("p");
   let linkElement = document.createElement("a");
-
+  let text_elements = document.createElement("div");
   // add data to html elements
   let strong = document.createElement("strong");
   strong.appendChild(document.createTextNode(title));
@@ -56,12 +56,14 @@ function createList(entry, mainContainer){
   }else{
     linkElement = document.createElement('p');
     linkElement.appendChild(document.createTextNode("Paper Unavailable"));
-    linkElement.setAttribute("style", "color:red;")
+    linkElement.setAttribute("class", "not_found");
   }
 
   // add elements to container
-  paperContainer.appendChild(titleElement);
-  paperContainer.appendChild(authorElement);
+  text_elements.setAttribute("class", "text_elements");
+  text_elements.appendChild(titleElement);
+  text_elements.appendChild(authorElement);
+  paperContainer.appendChild(text_elements);
   paperContainer.appendChild(linkElement);
   // paperContainer.appendChild(journalElement);
 
