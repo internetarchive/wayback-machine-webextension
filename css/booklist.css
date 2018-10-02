@@ -15,6 +15,7 @@
   margin-left: auto;
   margin-right: auto;
   padding:5px;
+  position: relative;
   text-align: center;
   width: 300px;
 }
@@ -27,7 +28,12 @@
   white-space: normal;
   width: 250px;
 }
-#resultsTray > div > p{
+.text_elements{
+  height: 115px;
+  overflow: hidden;
+
+}
+.text_elements > p{
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -36,12 +42,12 @@
   white-space: normal;
   width: 250px;
 }
-#resultsTray > div > a{
+.btn{
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
 }
-a > img{
+.cover-img{
   align-self: center;
   display:block;
   height:250px;
@@ -50,8 +56,11 @@ a > img{
   margin-top: 4px;
   margin-bottom: 4px;
   width: 180px;
-
 }
+.bottom_details{
+  margin-bottom: 10px;
+}
+
 body{
     max-height: 100%;
 }
