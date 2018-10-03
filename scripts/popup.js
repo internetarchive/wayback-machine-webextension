@@ -333,13 +333,26 @@ function show_news(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         url=tabs[0].url;
         var to_check_url=url.replace(/^https?:\/\/(www\.)?/,'');
-        to_check_url = to_check_url.replace(/\.html/, "");
-        var final_url=to_check_url.split(".")[0]
+        // to_check_url = to_check_url.replace(/\.html/, "");
+        var news_host=to_check_url.split(".")[0]
         tabId=tabs[0].id;
-        var list_of_sites=["huffingtonpost","nytimes","forbes","usatoday","washingtonpost", "vox", "theverge", "politifact", "factcheck", "snopes", "apnews"];
+        var set_of_sites = new Set([
+          "apnews",
+          "factcheck",
+          "forbes",
+          "huffingtonpost",
+          "nytimes",
+          "politifact",
+          "snopes",
+          "theverge",
+          "usatoday",
+          "vox", 
+          "washingtonpost",
+        ]);
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
-                if(list_of_sites.indexOf(final_url)>=0){
+              console.log(set_of_sites.has(news_host));
+                if(set_of_sites.has(news_host)){
                     document.getElementById('news_recommend_tr').style.display="block";
                     document.getElementById('news_recommend_tr').onclick=function(){
                         chrome.storage.sync.get(['show_context'],function(event1){
