@@ -29,7 +29,9 @@
   width: 250px;
 }
 .text_elements{
-  height: 100px;
+  height: 115px;
+  overflow: hidden;
+
 }
 .text_elements > p{
   display:block;

@@ -151,6 +151,7 @@ function search_tweet(eventObj){
     });
 }
 
+
 function display_list(key_word){
     $sbox = document.getElementById('suggestion-box');
     $sbox.style.display='none';
