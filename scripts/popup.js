@@ -333,8 +333,7 @@ function show_news(){
     chrome.tabs.query({active: true,currentWindow:true},function(tabs){
         url=tabs[0].url;
         var to_check_url=url.replace(/^https?:\/\/(www\.)?/,'');
-        // to_check_url = to_check_url.replace(/\.html/, "");
-        var news_host=to_check_url.split(".")[0]
+        var news_host=to_check_url.split(".")[0];
         tabId=tabs[0].id;
         var set_of_sites = new Set([
           "apnews",
@@ -346,12 +345,11 @@ function show_news(){
           "snopes",
           "theverge",
           "usatoday",
-          "vox", 
+          "vox",
           "washingtonpost",
         ]);
         chrome.storage.sync.get(['news'],function(event){
             if(event.news==true){
-              console.log(set_of_sites.has(news_host));
                 if(set_of_sites.has(news_host)){
                     document.getElementById('news_recommend_tr').style.display="block";
                     document.getElementById('news_recommend_tr').onclick=function(){
