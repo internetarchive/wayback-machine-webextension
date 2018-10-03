@@ -864,7 +864,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
       //   }
       // });
       // }
-      var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi;
+      var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy;
       chrome.tabs.onUpdated.addListener(function(tabId, info) {
         if (info.status == "complete") {
           chrome.tabs.get(tabId, function(tab) {
@@ -923,8 +923,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                             }else if((tab1.url).includes("doi")){
                               chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                             }
-                            var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                            chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
                             chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                             chrome.tabs.update(parseInt(tabId3), {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
                             chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
@@ -1007,7 +1005,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                           var tab1=tabs[0];
                           tabIdalexa=tab1.id;
                         });
-                        if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIdhoaxy)&&(tab.id!=tabIddoi)){
+                        if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdWhois)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIdhoaxy)&&(tab.id!=tabIddoi)){
                           chrome.tabs.query({
                             windowId: windowId1
                           }, function(tabs) {
