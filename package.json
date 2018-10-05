@@ -1,0 +1,28 @@
+{
+  "name": "wayback-machine-chrome",
+  "version": "1.0.0",
+  "description": "In cooperation with Google Summer of Code, The Internet Archive presents\r The Official WayBack Machine Extension. With the power of the WayBack Machine,\r we let you go in time to see how a URL has changed and evolved through the\r history of the Web!",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "jsdom": "^12.1.0",
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxReinisch/wayback-machine-chrome.git"
+  },
+  "author": "Max Reinisch",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/MaxReinisch/wayback-machine-chrome/issues"
+  },
+  "homepage": "https://github.com/MaxReinisch/wayback-machine-chrome#readme"
+}
