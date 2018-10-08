@@ -21,6 +21,15 @@ history of the Web!
 
 This is a "WebExtension". See https://developer.chrome.com/extensions
 
+## Testing
+
+To install testing packages, first run `npm init`, which will create a "node_modules" directory.
+
+Next, run `npm install --save-dev mocha chai jsdom`.  This should install 3 packages to be used  in our unit testing, and place the packages in the node_modules directory.
+There should already be an existing package.json file and a test directory in this github repository.  
+
+When writing a test for `example.js`, create a new file in the test directory named `example.spec.js`.  [This](test/booklist.spec.js) is an example for how a test file should look.
+
 
 ## Places to update the version
 
@@ -42,3 +51,4 @@ AGPL-3
 - Vangelis Banos, @vbanos
 - Rodden Kerry, @kerryrodden
 - Anish Kumar Sarangi, @anishsarangi
+- Max Reinisch, @Max
