@@ -55,11 +55,6 @@ function getBooked(url){
   xhr.send();
 }
 
-window.onload = function(){
-  var url = getUrlByParameter('url');
-  getBooked(url);
-};
-
 function getMetadataFromArchive(id){
   var xhr=new XMLHttpRequest();
   xhr.responseType = "json";
@@ -191,3 +186,5 @@ function addBookFromOpenLibrary(metadata){
 
   resultsTray.appendChild(book);
 }
+
+if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
