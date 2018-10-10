@@ -98,5 +98,4 @@ function createPage(){
   };
   xhr.send();
 }
-// window.onload = createPage;
 if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
