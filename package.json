@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "build": "webpack",
     "test": "mocha"
   },
   "repository": {
@@ -20,8 +21,12 @@
   },
   "homepage": "https://github.com/internetarchive/wayback-machine-chrome#readme",
   "devDependencies": {
+    "bootstrap": "3.3.7",
     "chai": "^4.2.0",
+    "jquery": "^3.3.1",
     "jsdom": "^12.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   }
 }

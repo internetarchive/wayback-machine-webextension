@@ -38,6 +38,7 @@
     "images/close.svg",
     "images/logo.gif",
     "images/logo-animate.svg",
+    "scripts/build.js",
     "scripts/client.js",
     "scripts/RTcontent.js",
     "scripts/sequences.js",
