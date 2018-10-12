@@ -1,3 +1,1 @@
-window.onload = function(){
-  createPage();
-};
+window.onload = createPage;
