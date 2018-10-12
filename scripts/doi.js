@@ -19,6 +19,41 @@ function createList(entry, mainContainer){
     url = entry.files[0].links[0].url;
   }
 
+  let paper = $('<div>').append(
+    $('<p class="text_elements">').append(
+      $("<p><strong>").append(title),
+      $("<p>").append(author),
+      // Journal was also commented out in the previous version.
+      // $("<p>").append(journal)
+    )
+  );
+  if(url != "#") {
+    paper.append(
+      $("<a>").attr({"href":"#", "class":"btn btn-success"})
+              .text("Read Paper")
+              .click(function() {
+                chrome.storage.sync.get(['show_context'],function(event1){
+                    if(event1.show_context==undefined){
+                      event1.show_context="tab";
+                    }
+                    if(event1.show_context=="tab") {
+                      chrome.tabs.create({url:url});
+                    } else {
+                      chrome.system.display.getInfo(function(displayInfo){
+                        let height = displayInfo[0].bounds.height;
+                        let width = displayInfo[0].bounds.width;
+                        chrome.windows.create({url: url, width: width/2,
+                                               height: height, top: 0, left: 0,
+                                               focused: true});
+                      });
+                    }
+                  });
+                })
+    );
+  } else {
+    paper.append($("<p>").text("Paper Unavailable").addClass("not_found"));
+  }
+  /**
   //create html elements
   let paperContainer = document.createElement("div");
   let titleElement = document.createElement("p");
@@ -66,36 +101,31 @@ function createList(entry, mainContainer){
   paperContainer.appendChild(text_elements);
   paperContainer.appendChild(linkElement);
   // paperContainer.appendChild(journalElement);
+  **/
 
   // add to list
   let spinner = document.getElementsByClassName("loader")[0];
   spinner.setAttribute("style", "display:none;");
-  if(url!="#" && mainContainer.childNodes.length > 0){
-    mainContainer.insertBefore(paperContainer, mainContainer.childNodes[0]);
+  let container = $('#container-whole');
+  if(url!="#" && container.children().length > 0){
+    container.prepend(paper);
   }else{
-    mainContainer.appendChild(paperContainer);
+    container.append(paper);
   }
 }
 function createPage(){
   let mainContainer = document.getElementById('container-whole');
-
-  var url=getUrlByParameter('url');
-  var xhr=new XMLHttpRequest();
-  xhr.open('GET','https://archive.org/services/context/papers?url='+url,true);
-  xhr.onload=function(){
-    var responseArray = JSON.parse(xhr.responseText);
-    for(var i=0;i<responseArray.length;i++){
-      if(responseArray[i].paper){
-        createList(responseArray[i], mainContainer);
+  const url=getUrlByParameter('url');
+  $.getJSON('https://archive.org/services/context/papers?url='+url, function(data) {
+    for(var i=0;i<data.length;i++){
+      if(data[i].paper){
+        createList(data[i]);
       }
-
     }
-    if(mainContainer.children.length ==0){
-      let spinner = document.getElementsByClassName("loader")[0];
-      spinner.setAttribute("style", "display:none;");
-      document.getElementById('doi-heading').innerHTML="No papers found";
+    if(mainContainer.children.length == 0){
+      $('.loader').hide();
+      $('#doi-heading').html("No papers found");
     }
-  };
-  xhr.send();
+  });
 }
 if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
