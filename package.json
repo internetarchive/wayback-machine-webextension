@@ -1,6 +1,6 @@
 {
   "name": "wayback-machine-chrome",
-  "version": "3.0.7",
+  "version": "3.1.0",
   "description": "A browser extension that interfaces with the internet archive",
   "main": "index.js",
   "directories": {
