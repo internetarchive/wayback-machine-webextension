@@ -61,6 +61,6 @@ if(typeof module !=="undefined") {module.exports = {
   getISBNFromCitation:getISBNFromCitation,
   getIdentifierFromISBN:getIdentifierFromISBN
 };}
-
-
-getJSON();
+else{
+  getJSON();
+}
