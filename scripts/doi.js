@@ -4,15 +4,23 @@ function getUrlByParameter (name) {
   return url.searchParams.get(name);
 }
 function createList (entry, mainContainer) {
-  let title = entry.paper.title;
-  let author = entry.paper.authors[0];
-  if (entry.paper.authors.length > 1) {
-    author = author + ' et al.';
+  let title = entry.title;
+  let author = '';
+  if (entry.authors) {
+    author = entry.authors[0];
+    if (entry.authors.length > 1) {
+      author = author + ' et al.';
+    }
+  } else if (entry.contribs) {
+    author = entry.contribs[0].raw_name;
+    if (entry.contribs.length > 1) {
+      author = author + ' et al.';
+    }
   }
-  let journal = entry.paper.journal;
+  let journal = entry.journal;
   let url = '#';
-  if (entry.count_files > 0 && entry.files.length > 0 && entry.files[0].links.length > 0 && entry.files[0].links[0].url) {
-    url = entry.files[0].links[0].url;
+  if (entry.url) {
+    url = entry.url;
   }
   let paper = $('<div>').append(
     $('<p class="text_elements">').append(
@@ -59,10 +67,10 @@ function createList (entry, mainContainer) {
 }
 function createPage () {
   let mainContainer = document.getElementById('container-whole');
-  const url=getUrlByParameter('url');
+  const url = getUrlByParameter('url');
   $.getJSON('https://archive.org/services/context/papers?url='+url, function(data) {
     for (var i=0; i<data.length; i++){
-      if (data[i].paper) {
+      if (data[i]) {
         createList(data[i]);
       }
     }
