@@ -1,15 +1,5 @@
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
-}
-
-function get_tweets(){
+function get_tweets(url){
     let spinner = document.getElementsByClassName("loader")[0];
-    var url=getUrlByParameter('url');
-    console.log(url);
     var xhr=new XMLHttpRequest();
     var new_url="http://gext-api.archive.org/services/context/twitter?url="+url;
     xhr.open("GET",new_url,true);
@@ -66,5 +56,3 @@ function get_tweets(){
     }
     xhr.send(null);
 }
-
-if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
