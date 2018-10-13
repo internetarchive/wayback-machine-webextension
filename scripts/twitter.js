@@ -67,9 +67,4 @@ function get_tweets(){
     xhr.send(null);
 }
 
-window.onloadFuncs = [get_tweets];
-window.onload = function(){
- for(var i in this.onloadFuncs){
-  this.onloadFuncs[i]();
- }
-}
+if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
