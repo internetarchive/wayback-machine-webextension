@@ -48,7 +48,7 @@ function getISBNFromCitation(citation){
   let html = citation.outerHTML;
   let hasTextISBN_pattern = /<a href="\/wiki\/International_Standard_Book_Number" title="International Standard Book Number">ISBN<\/a>/;
   if (hasTextISBN_pattern.test(html)){
-    let extractISBNNumber_pattern = /title="Special:BookSources\/.*"/;
+    let extractISBNNumber_pattern = /title="Special:BookSources\/[^"]*"/;
     let isbnRaw = extractISBNNumber_pattern.exec(html)[0];
     let isbn = isbnRaw.replace(/title="Special:BookSources\//, "").replace(/-/g, "").replace(/"/g, "");
     return isbn;

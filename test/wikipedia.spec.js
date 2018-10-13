@@ -10,19 +10,28 @@ describe('getISBNFromCitation', () =>{
     template.innerHTML = html;
     return template.content.firstChild;
   }
+  let html_snippets = [
+    {
+      "html":'<cite class="citation book">Dos Passos, John, (2011). <a rel="nofollow" class="external text" href="https://www.worldcat.org/oclc/773372948"><i>Easter Island&nbsp;: island of enigmas</i></a>. Doubleday. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;<a href="/wiki/Special:BookSources/9780307787057" title="Special:BookSources/9780307787057">9780307787057</a>. <a href="/wiki/OCLC" title="OCLC">OCLC</a>&nbsp;<a rel="nofollow" class="external text" href="//www.worldcat.org/oclc/773372948">773372948</a>.</cite>',
+      "isbn": "9780307787057"
+    },
+    {
+      "html" : '<cite class="citation book">Franklin, Jane (1997). <a rel="nofollow" class="external text" href="http://andromeda.rutgers.edu/~hbf/missile.htm"><i>Cuba and the United States: A Chronological History</i></a>. Melbourne: Ocean Press. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;<a href="/wiki/Special:BookSources/1-875284-92-3" title="Special:BookSources/1-875284-92-3">1-875284-92-3</a>.</cite>',
+      "isbn" :   "1875284923"
+    },
+    {
+      "html" :'<cite class="citation book">Stern, Sheldon M. (2012). <i>The Cuban Missile Crisis in American Memory: Myths versus Reality</i>. Stanford nuclear age series. Stanford, Calif: Stanford University Press.</cite>',
+      "isbn" : null
+    }
+  ];
 
-  it('should extract an ISBN number when citation references ISBN', () =>{
-    let html = '<cite class="citation book">Franklin, Jane (1997). <a rel="nofollow" class="external text" href="http://andromeda.rutgers.edu/~hbf/missile.htm"><i>Cuba and the United States: A Chronological History</i></a>. Melbourne: Ocean Press. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;<a href="/wiki/Special:BookSources/1-875284-92-3" title="Special:BookSources/1-875284-92-3">1-875284-92-3</a>.</cite>';
-    let citation = htmlToElement(html);
-    let result = getISBNFromCitation(citation);
-    expect(result).to.equal("1875284923");
-  });
-
-  it('should return null when no ISBN number is found', ()=>{
-    let html = '<cite class="citation book">Stern, Sheldon M. (2012). <i>The Cuban Missile Crisis in American Memory: Myths versus Reality</i>. Stanford nuclear age series. Stanford, Calif: Stanford University Press.</cite>';
-    let citation = htmlToElement(html);
-    let result = getISBNFromCitation(citation);
-    expect(result).to.be.null;
+  it('should extract an ISBN number when citation references ISBN, or return null if no isbn found.', () =>{
+    for(let i = 0; i < html_snippets.length; i++){
+      let html = html_snippets[i]['html'];
+      let citation = htmlToElement(html);
+      let result = getISBNFromCitation(citation);
+      expect(result).to.equal(html_snippets[i]['isbn']);
+    }
   });
 });
 
