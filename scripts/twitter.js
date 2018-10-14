@@ -17,7 +17,6 @@ function get_tweets(url){
                 var name=tweet.user.name;
                 var url="https://twitter.com/"+tweet.user.screen_name+'/status/'+tweet.id_str;
                 var date = tweet.created_at.slice(0,10) + "," + tweet.created_at.slice(10, 19); // Not sure if this logic is correct
-                console.log(tweet.created_at);
 
                 var p_tweet_text = document.createElement("p");
                 p_tweet_text.setAttribute("class", "tweet");
