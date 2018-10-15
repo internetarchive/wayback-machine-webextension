@@ -1,7 +1,4 @@
-
 let resultsTray = document.getElementById("resultsTray");
-let spinner = document.getElementsByClassName("loader")[0];
-
 
 //Used to extact the current URL
 function getUrlByParameter(name){
@@ -14,69 +11,55 @@ function getUrlByParameter(name){
 
 function getBooked(url){
   // Gets the data for each book on the wikipedia url
-  var xhr=new XMLHttpRequest();
-  var new_url="https://archive.org/services/context/books?url=" + url;
-  xhr.open("GET",new_url,true);
-  xhr.onload=function(){
-    let data=JSON.parse(xhr.response);
-    if(data instanceof Array){ //checks if any ISBNs found
-      for(let book of data){  // Iterate over each book to get data
+  // Check if any books are found
+  // Iterate over each book to get data
+  $.getJSON('https://archive.org/services/context/books?url=' + url, function (data) {
+    $('.loader').hide();
+    if (data instanceof Array) {
+      for (let book of data) {
         let isbn = Object.keys(book)[0];
-        if(book[isbn]){
-          let OLID = Object.keys(book[isbn][isbn].responses)[0];
-          let archiveIdentifier = book[isbn][isbn].responses[OLID]['identifier'];
-          if(archiveIdentifier){
+        if (book[isbn]) {
+          const OLID = Object.keys(book[isbn][isbn].responses)[0];
+          const archiveIdentifier = book[isbn][isbn].responses[OLID]['identifier'];
+          if (archiveIdentifier) {
             getMetadataFromArchive(archiveIdentifier);
-          }else{
+          } else {
             getMetadataFromOpenLibrary(OLID, isbn);
           }
         }
       }
-    }else if(data['status'] == "error"){
-      spinner.setAttribute("style", "display:none;");
+    } else if (data['status'] === 'error') {
       let p = document.createElement("p");
       p.appendChild((document.createTextNode(data.message)));
       resultsTray.setAttribute("style", "grid-template-columns:none;");
       resultsTray.appendChild(p);
-    }else{
-      for(let isbn of Object.keys(data)){  // Iterate over each book to get data
-        if(data[isbn]){
-          let OLID = Object.keys(data[isbn][isbn].responses)[0];
-          let archiveIdentifier = data[isbn][isbn].responses[OLID]['identifier'];
-          if(archiveIdentifier){
+    } else {
+      for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
+        if (data[isbn]) {
+          const OLID = Object.keys(data[isbn][isbn].responses)[0];
+          const archiveIdentifier = data[isbn][isbn].responses[OLID]['identifier'];
+          if (archiveIdentifier) {
             getMetadataFromArchive(archiveIdentifier);
-          }else{
+          } else {
             getMetadataFromOpenLibrary(OLID, isbn);
           }
         }
       }
     }
-  }
-  xhr.send();
+  });
 }
 
-function getMetadataFromArchive(id){
-  var xhr=new XMLHttpRequest();
-  xhr.responseType = "json";
-  var qurl="https://archive.org/metadata/" + id;
-  xhr.open("GET",qurl,true);
-  xhr.onload=function(){
-    addBookFromArchive(xhr.response.metadata);
-  }
-  xhr.send();
+function getMetadataFromArchive (id) {
+  $.getJSON('https://archive.org/metadata/' + id, function (data) {
+    addBookFromArchive(data.metadata);
+  });
 }
 
-function getMetadataFromOpenLibrary(olid, isbn){
-  var xhr=new XMLHttpRequest();
-  xhr.responseType = "json";
-  isbn = isbn.replace(/\-/g, "");
-  var qurl= "http://openlibrary.org/isbn/"+isbn+".json";
-  // console.log(qurl);
-  xhr.open("GET",qurl,true);
-  xhr.onload=function(){
-    addBookFromOpenLibrary(xhr.response);
-  }
-  xhr.send();
+function getMetadataFromOpenLibrary (olid, isbn) {
+  isbn = isbn.replace(/\-/g, '');
+  $.getJSON('http://openlibrary.org/isbn/' + isbn + '.json', function (data) {
+    addBookFromOpenLibrary(data);
+  });
 }
 
 function addBookFromArchive(metadata){
@@ -121,7 +104,6 @@ function addBookFromArchive(metadata){
   text_elements.appendChild(author);
   book.appendChild(text_elements);
   book.appendChild(details);
-  spinner.setAttribute("style", "display:none;");
   if(resultsTray.childNodes.length >0){
     resultsTray.insertBefore(book, resultsTray.childNodes[0]);
   }else{
@@ -169,21 +151,15 @@ function addBookFromOpenLibrary(metadata){
     img = document.createElement("p");
     img.appendChild(document.createTextNode("No cover available"));
     img.setAttribute("class", "cover-img");
-
   }
-
   button.appendChild(document.createTextNode("Donate"));
   details.appendChild(img);
   details.appendChild(button);
-
   strong.appendChild(document.createTextNode(metadata.title));
-
   title.appendChild(strong);
   text_elements.appendChild(title);
   book.appendChild(text_elements);
   book.appendChild(details);
-  spinner.setAttribute("style", "display:none;");
-
   resultsTray.appendChild(book);
 }
 
