@@ -14,11 +14,7 @@ function getUrlByParameter(name){
 
 function getBooked(url){
   // Gets the data for each book on the wikipedia url
-  var xhr=new XMLHttpRequest();
-  var new_url="https://archive.org/services/context/books?url=" + url;
-  xhr.open("GET",new_url,true);
-  xhr.onload=function(){
-    let data=JSON.parse(xhr.response);
+  get_ia_books(url).then((data)=>{
     if(data instanceof Array){ //checks if any ISBNs found
       for(let book of data){  // Iterate over each book to get data
         let isbn = Object.keys(book)[0];
@@ -51,8 +47,7 @@ function getBooked(url){
         }
       }
     }
-  }
-  xhr.send();
+  });
 }
 
 function getMetadataFromArchive(id){

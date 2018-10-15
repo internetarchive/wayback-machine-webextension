@@ -2,31 +2,36 @@
 // the user to a readable digital copy of the referenced book.
 
 
-//Get all books on wikipedia page through https://archive.org/services/context/books?url=...
-function getJSON(){
-  let url = "https://archive.org/services/context/books?url=" + location.href;
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      let books = document.getElementsByClassName('citation book');
-      for(let book of books){
-        let isbn = getISBNFromCitation(book);
-        let id = getIdentifierFromISBN(isbn, data);
-        if(id){
-          let link = createLinkToArchive(id);
-          book.appendChild(link);
-        }
+//main method
+function addCitations(){
+  get_ia_books(location.href).then(data => {
+    let books = $('.citation.book');
+    for(let book of books){
+      let isbn = getISBNFromCitation(book);
+      let id = getIdentifierFromISBN(isbn, data);
+      if(id){
+        let link = createLinkToArchive(id);
+        book.append(link);
       }
-    })
-    .catch(err=> console.log(err));
+    }
+  });
+}
+
+//Get all books on wikipedia page through https://archive.org/services/context/books?url=...
+function get_ia_books(url){
+  let api = "https://archive.org/services/context/books?url=" + url;
+  return fetch(api)
+    .then(res => res.json())
+    .catch(err => console.log(err));
 }
 
 function createLinkToArchive(id){
-  let a = document.createElement('a');
-  a.className = "btn btn-primary";
-  a.href = "https://archive.org/details/" + id;
-  a.innerHTML = "Read Now";
-  return a;
+  let img = $('<img>')
+    .attr({"alt": "Read", "src": chrome.extension.getURL("images/icon.png"), "style": "max-height:50%; max-width:50%;"})[0];
+  let a = $('<a>')
+    .attr({'href':"https://archive.org/details/" + id, 'class': 'btn btn-success btn-sm'})
+    .text("Read").prepend(img);
+  return a[0];
 }
 
 function getIdentifierFromISBN(isbn, json){
@@ -34,21 +39,17 @@ function getIdentifierFromISBN(isbn, json){
     let id = Object.values(json[isbn][isbn]['responses'])[0]['identifier']
     if(id){
       return id;
-    }else{
-      return null;
     }
   }
-  else{
-    return null;
-  }
+  return null;
 }
 
 function getISBNFromCitation(citation){
   //Takes in HTMLElement and returns isbn number or null if isbn not found
   let html = citation.outerHTML;
-  let hasTextISBN_pattern = /<a href="\/wiki\/International_Standard_Book_Number" title="International Standard Book Number">ISBN<\/a>/;
+  const hasTextISBN_pattern = /<a href="\/wiki\/International_Standard_Book_Number" title="International Standard Book Number">ISBN<\/a>/;
   if (hasTextISBN_pattern.test(html)){
-    let extractISBNNumber_pattern = /title="Special:BookSources\/[^"]*"/;
+    const extractISBNNumber_pattern = /title="Special:BookSources\/[^"]*"/;
     let isbnRaw = extractISBNNumber_pattern.exec(html)[0];
     let isbn = isbnRaw.replace(/title="Special:BookSources\//, "").replace(/-/g, "").replace(/"/g, "");
     return isbn;
@@ -57,10 +58,9 @@ function getISBNFromCitation(citation){
   }
 }
 
-if(typeof module !=="undefined") {module.exports = {
-  getISBNFromCitation:getISBNFromCitation,
-  getIdentifierFromISBN:getIdentifierFromISBN
-};}
-else{
-  getJSON();
+if(typeof module !=="undefined") {
+  module.exports = {
+    getISBNFromCitation:getISBNFromCitation,
+    getIdentifierFromISBN:getIdentifierFromISBN
+  };
 }
