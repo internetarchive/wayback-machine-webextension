@@ -11,12 +11,10 @@ function getUrlByParameter(name){
 
 function getBooked(url){
   // Gets the data for each book on the wikipedia url
-  // Check if any books are found
-  // Iterate over each book to get data
-  $.getJSON('https://archive.org/services/context/books?url=' + url, function (data) {
-    $('.loader').hide();
-    if (data instanceof Array) {
-      for (let book of data) {
+  get_ia_books(url).then((data)=>{
+    $(".loader").hide();
+    if(data instanceof Array){ //checks if any ISBNs found
+      for(let book of data){  // Iterate over each book to get data
         let isbn = Object.keys(book)[0];
         if (book[isbn]) {
           const OLID = Object.keys(book[isbn][isbn].responses)[0];
