@@ -27,11 +27,19 @@ function get_ia_books(url){
 
 function createLinkToArchive(id){
   let img = $('<img>')
-    .attr({"alt": "Read", "src": chrome.extension.getURL("images/icon.png"), "style": "max-height:50%; max-width:50%;"})[0];
-  let a = $('<a>')
-    .attr({'href':"https://archive.org/details/" + id, 'class': 'btn btn-success btn-sm'})
-    .text("Read").prepend(img);
-  return a[0];
+    .attr({"alt": "Read", "src": chrome.extension.getURL("images/icon.png")})[0];
+  let a = $("<a>")
+    .attr({"href": "https://archive.org/details/" + id, "class":"btn-archive"})
+    .prepend(img)
+    .hover(
+      function() {
+        $(this).text(" Read Now! ").prepend(img);
+      },
+      function() {
+        $(this).text("").prepend(img);
+      })[0];
+
+  return a;
 }
 
 function getIdentifierFromISBN(isbn, json){
