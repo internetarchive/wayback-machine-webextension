@@ -15,7 +15,9 @@
   margin-left: auto;
   margin-right: auto;
   padding:5px;
-  position: relative;
+  justify-content: space-between;
+  display: flex;
+  flex-flow: column wrap;
   text-align: center;
   width: 300px;
 }
@@ -29,8 +31,8 @@
   width: 250px;
 }
 .text_elements{
-  height: 115px;
-  overflow: hidden;
+  /* display:table-cell;
+  vertical-align: top; */
 
 }
 .text_elements > p{
@@ -41,6 +43,13 @@
   text-align: center;
   white-space: normal;
   width: 250px;
+}
+.bottom_details{
+  justify-content: flex-end;
+  width: 180px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
 }
 .btn{
   text-align: center;
@@ -57,9 +66,7 @@
   margin-bottom: 4px;
   width: 180px;
 }
-.bottom_details{
-  margin-bottom: 10px;
-}
+
 
 body{
     max-height: 100%;
