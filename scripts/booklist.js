@@ -111,7 +111,6 @@ function addBookFromArchive(metadata){
   }
 }
 
-// TODO: add support for author in metadata
 function addBookFromOpenLibrary(metadata){
   let book = document.createElement('div');
   let title = document.createElement('p');
@@ -147,7 +146,7 @@ function addBookFromOpenLibrary(metadata){
 
   if(metadata.covers){
     img.setAttribute("src", "http://covers.openlibrary.org/w/id/"+metadata.covers[0]+"-M.jpg");
-  }else{
+  }else{ //TODO: find cover
     img = document.createElement("p");
     img.appendChild(document.createTextNode("No cover available"));
     img.setAttribute("class", "cover-img");
@@ -157,10 +156,25 @@ function addBookFromOpenLibrary(metadata){
   details.appendChild(button);
   strong.appendChild(document.createTextNode(metadata.title));
   title.appendChild(strong);
+  if(metadata.authors){
+    getAuthorFromOpenLibrary(metadata.authors[0].key)
+      .then(author_name=>{
+        author.appendChild(document.createTextNode(author_name));
+      });
+  }
   text_elements.appendChild(title);
+  text_elements.appendChild(author);
   book.appendChild(text_elements);
   book.appendChild(details);
   resultsTray.appendChild(book);
+}
+
+function getAuthorFromOpenLibrary(key){
+  let url = "http://openlibrary.org"+ key + ".json";
+  return fetch(url)
+    .then(res=>res.json())
+    .then(json => json.name)
+    .catch(err => console.log(err));
 }
 
 if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter};}
