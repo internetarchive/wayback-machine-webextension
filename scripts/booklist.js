@@ -13,20 +13,7 @@ function getBooked(url){
   // Gets the data for each book on the wikipedia url
   get_ia_books(url).then((data)=>{
     $(".loader").hide();
-    if(data instanceof Array){ //checks if any ISBNs found
-      for(let book of data){  // Iterate over each book to get data
-        let isbn = Object.keys(book)[0];
-        if (book[isbn]) {
-          const OLID = Object.keys(book[isbn][isbn].responses)[0];
-          const archiveIdentifier = book[isbn][isbn].responses[OLID]['identifier'];
-          if (archiveIdentifier) {
-            getMetadataFromArchive(archiveIdentifier);
-          } else {
-            getMetadataFromOpenLibrary(OLID, isbn);
-          }
-        }
-      }
-    } else if (data['status'] === 'error') {
+    if (data['status'] === 'error') {
       let p = document.createElement("p");
       p.appendChild((document.createTextNode(data.message)));
       resultsTray.setAttribute("style", "grid-template-columns:none;");
@@ -34,12 +21,16 @@ function getBooked(url){
     } else {
       for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
         if (data[isbn]) {
-          const OLID = Object.keys(data[isbn][isbn].responses)[0];
-          const archiveIdentifier = data[isbn][isbn].responses[OLID]['identifier'];
-          if (archiveIdentifier) {
-            getMetadataFromArchive(archiveIdentifier);
-          } else {
-            getMetadataFromOpenLibrary(OLID, isbn);
+          //if book has field: metadata, addBookFromArchive
+          if(data[isbn].metadata){
+            addBookFromArchive(data[isbn].metadata);
+          }//else if book has id, addBookFromArchive using getMetadataFromArchive
+          else if(getIdentifier(data[isbn])){
+            getMetadataFromArchive(getIdentifier(data[isbn]));
+            //TODO add this identifier to OL perhaps
+          }//else add book from OL
+          else{
+              addBookFromOpenLibrary(data[isbn]);
           }
         }
       }
@@ -154,11 +145,8 @@ function addBookFromOpenLibrary(metadata){
   details.appendChild(button);
   strong.appendChild(document.createTextNode(metadata.title));
   title.appendChild(strong);
-  if(metadata.authors){
-    getAuthorFromOpenLibrary(metadata.authors[0].key)
-      .then(author_name=>{
-        author.appendChild(document.createTextNode(author_name));
-      });
+  if(metadata.authors_metadata){
+    author.appendChild(document.createTextNode(metadata.authors_metadata.name));
   }
   text_elements.appendChild(title);
   text_elements.appendChild(author);
