@@ -31,6 +31,11 @@
     {
       "matches": ["http://hoaxy.iuni.iu.edu/*", "https://hoaxy.iuni.iu.edu/*"],
       "js": ["scripts/contentScript.js"]
+    },
+    {
+      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
+      "js": ["scripts/build.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
+      "css": ["css/bootstrap.min.css", "css/wikipedia.css"]
     }
   ],
   "web_accessible_resources": [
@@ -38,6 +43,7 @@
     "images/close.svg",
     "images/logo.gif",
     "images/logo-animate.svg",
+    "images/icon.png",
     "scripts/build.js",
     "scripts/client.js",
     "scripts/RTcontent.js",
