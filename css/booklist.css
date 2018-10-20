@@ -2,8 +2,7 @@
   background-color: white;
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-  margin-left: auto;
-  margin-right: auto;
+  margin:auto;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -11,72 +10,64 @@
   background-color: #eee;
   border-radius: 5px;
   border: 1px solid black;
-  margin-bottom: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10px auto;
   padding:5px;
-  position: relative;
+  justify-content: space-between;
+  display: flex;
+  flex-flow: column wrap;
   text-align: center;
   width: 300px;
 }
 #resultsTray > p{
   display:block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   overflow: hidden;
   text-align: center;
   white-space: normal;
   width: 250px;
 }
-.text_elements{
-  height: 115px;
-  overflow: hidden;
 
-}
 .text_elements > p{
   display:block;
-  margin-left: auto;
-  margin-right: auto;
+  margin:auto;
   overflow: hidden;
   text-align: center;
   white-space: normal;
   width: 250px;
+}
+.bottom_details{
+  justify-content: flex-end;
+  width: 180px;
+  margin: 10px auto;
 }
 .btn{
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin 20px auto;
 }
 .cover-img{
   align-self: center;
   display:block;
   height:250px;
-  margin-left:auto;
-  margin-right: auto;
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin:10px auto;
   width: 180px;
 }
-.bottom_details{
-  margin-bottom: 10px;
-}
+
 
 body{
-    max-height: 100%;
+  max-height: 100%;
 }
 .container{
-    padding: 15px;
+  padding: 15px;
 }
 .rec_results{
   background-color: white;
   padding-left: 15px;
   padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  margin:auto;
 }
 p{
-    font-family:Gill Sans Light;
-    font-size: 20px;
+  font-family:Gill Sans Light;
+  font-size: 20px;
 }
 strong{
   font-family:  bebas Neue;
@@ -85,22 +76,21 @@ h2 strong{
   font-family: 'Oswald', sans-serif;
 }
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    width: 120px;
-    height: 120px;
-    animation: spin 1s linear infinite;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  margin:auto;
+  width: 120px;
+  height: 120px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 @media screen and (min-width: 700px) {
-    .test {
-        text-align: center;
-    }
+  .test {
+    text-align: center;
+  }
 }
