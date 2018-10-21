@@ -28,12 +28,12 @@ function get_annotations() {
         let row = $('#row_contain');
         let item = row.clone();
         item.attr('id', 'row-' + i);
-        item.find('#date').html('Dated on ' + date);
-        item.find('#userinfo').html(user);
+        item.find('.date').html('Dated on ' + date);
+        item.find('.userinfo').html(user);
         item.find('#source-contain').html('(' + source + ')');
         item.find('#text-contain').html(exactData);
-        item.find('#title-contain').html(title);
-        item.find('#links').append(
+        item.find('.title').html(title);
+        item.find('.links').append(
           $('<a>').attr({'href': rowData.links.incontext, 'id': 'link-incontext'})
                   .html('Click to see the in-context'),
           $('<a>').attr({'href': rowData.links.html, 'id': 'link-html'})
@@ -42,12 +42,13 @@ function get_annotations() {
         if(rowData.target[0].hasOwnProperty('selector')){
           var selector_length = rowData.target[0].selector.length;
           var exact = rowData.target[0].selector[selector_length-1].exact;
-          item.find('#target-selector-exact-contain').append(exact);
+          item.find('.target-selector-exact').html(exact);
         } else {
-          item.find('#target-selector-exact-contain').hide();
+          item.find('.target-selector-exact').hide();
         }
         $('#container-whole').append(item);
       }
+      $('#row_contain').hide();
     } else {
       $('#row_contain').html("There are no Annotations for the current URL");
     }

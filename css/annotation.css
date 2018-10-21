@@ -1,24 +1,9 @@
-body{
-    max-height: 100%;
-}
-
 .annot_title{
     font-size: 50%;
     font-family:sans-serif;
 }
 h2{
     text-align: center;
-}
-.container{
-    background: white;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-left: auto;
-    margin-right: auto;
-}
-p{
-    font-family:Gill Sans Light;
-    font-size: 20px;
 }
 .box{
     align-items: stretch;
@@ -34,9 +19,15 @@ p{
     overflow: hidden;
     padding: 5px 5px 5px 5px;
 }
-.target-selector-exact{
+.target-selector-exact {
+    border-left: 3px solid #d3d3d3;
+    color: #7A7A7A;
     font-family:'Courier New', Courier, monospace;
+    padding: 5px;
     word-wrap: break-word;
+}
+.target-selector-exact:hover{
+    border-left: 3px solid #58CEF4;
 }
 #link-incontext{
     margin-left:40px; 
@@ -44,7 +35,7 @@ p{
 #link-html{
     margin-left: 70px;
 }
-#date{
+.date{
     position: absolute;
     right: 20px;
 }
@@ -54,15 +45,7 @@ p{
 #text-contain{
     padding: 5px;
 }
-#target-selector-exact-contain{
-    border-left: 3px solid #d3d3d3;
-    color: #7A7A7A;
-    padding: 5px;
-}
-#target-selector-exact-contain:hover{
-    border-left: 3px solid #58CEF4;
-}
-#links{
+.links{
     padding: 10px;
 }
 .extra_margin{
@@ -71,23 +54,8 @@ p{
 .lower_margin{
     margin-bottom: 5px;
 }
-.row_main{
-    align-items: stretch;
-    display: flex;
-    justify-content: center;
-}
-#half{
-    width: 600px;
-}
 #source-contain{
     word-wrap: break-word;
-}
-#title-contain{
-    color: red;
-}
-.public_on{
-    color: #818181;
-    font-weight: 150%;
 }
 @media screen and (max-width: 500px) {
     #link-incontext {

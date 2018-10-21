@@ -6,7 +6,6 @@
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/common.css">
         <link rel="stylesheet" type="text/css" href="css/annotation.css">
-        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
         <title>
             Annotation of an Domain if any
         </title>
@@ -25,27 +24,26 @@
             </tr>
         </table> -->
         <div>
-            <h2><strong>Annotations of Current Domain</strong><br><span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span></h2>
+            <h2><strong>Annotations of Current Domain</strong><br>
+                <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span></h2>
         </div>
         <div class="container" id="container-whole"></div>
-        <div class="row row_main" id="row_contain">
-            <div class="col-sm-6" id="half">
+        <div class="row" id="row_contain">
+            <div class="col-sm-6 col-sm-offset-3">
                 <div class="box">
-                    <div class="top-div" id="top-div-contain">
-                        <strong>
-                            <span id="userinfo"></span>
-                        </strong>
-                        <span id="date"></span>
+                    <div>
+                        <strong class="userinfo"></strong>
+                        <span class="date"></span>
                     </div>
                     <div class="source" id="source-">
-                        <span class="glyphicon glyphicon-globe" id="public"></span>
-                        <span class="public_on">Public on</span>
-                        <span class="title" id="title-contain"></span>
+                        <span class="glyphicon glyphicon-globe"></span>
+                        <span class="text-muted">Public on</span>
+                        <span class="title text-danger"></span>
                         <span id="source-contain"></span>
                     </div>
-                    <div class="target-selector-exact" id="target-selector-exact-contain"></div>
+                    <div class="target-selector-exact"></div>
                     <div class="text" id="text-contain"></div>
-                    <div id="links"></div>
+                    <div class="links"></div>
                 </div>
             </div>
         </div>
