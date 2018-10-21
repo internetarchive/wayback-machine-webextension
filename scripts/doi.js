@@ -51,7 +51,8 @@ function createList (entry, mainContainer) {
               });
             }
           });
-        })
+        }),
+      $('<div>').addClass('small text-muted').text('source: ' + entry.source)
     );
   } else {
     paper.append($('<p>').text('Paper Unavailable').addClass('not_found'));
