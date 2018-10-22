@@ -86,7 +86,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               file: "scripts/client.js"
             },function() {
               if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
-                chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
+                chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
               }else{
                 chrome.tabs.sendMessage(details.tabId, {
                   type: "SHOW_BANNER",
@@ -694,7 +694,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
           if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
           || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
             wmAvailabilityCheck(details.url, function(wayback_url, url) {
-              chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"?page_url="+url+"?status_code="+details.statusCode+"?"});
+              chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
             }, function() {
 
             });
