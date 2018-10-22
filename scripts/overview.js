@@ -1,81 +1,69 @@
-//Used to extact the current URL
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
+function getUrlByParameter (name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+  }
+function getTotal(captures){
+    var total=0;
+    var data;
+    for(var key in captures){
+        data=captures[key];
+        total=total+data['text/html'];
+    }
+    return total;
 }
-
 function get_details(){
     var url=getUrlByParameter('url');
-    var xhr=new XMLHttpRequest();
     var new_url="https://archive.org/services/context/metadata?url="+url;
-    xhr.open("GET",new_url,true);
-    xhr.onload=function(){
-        var type=JSON.parse(xhr.response).type;
-        document.getElementById("details").innerHTML=type;
-        var captures=JSON.parse(xhr.response).captures;
-        var total="";
-        for (var key in captures) {
-            if (captures.hasOwnProperty(key)) {
-                data=captures[key];
-                total=parseInt(total+(data['text/html']));
-            }
-        }
-        total=total.toLocaleString();
-        document.getElementById("total_archives").innerHTML=total;
-        document.getElementById("save_now").href="https://web.archive.org/save/"+url;
-    }
-    xhr.send(null);
+    $.getJSON(new_url,function(response){
+        var type=response.type;
+        $('#details').text(type);
+        var captures=response.captures;
+        var total=0;
+        total = getTotal(captures);
+        $('#total_archives').text(total.toString());
+        $('#save_now').attr('href',"https://web.archive.org/save/"+url);
+    });
 }
 
 function first_archive_details(){
     var url=getUrlByParameter('url');
-    var xhr=new XMLHttpRequest();
     var new_url="http://web.archive.org/cdx/search?url="+url+"&limit=1&output=json";
-    xhr.open("GET",new_url,true);
-    xhr.send(null);
-    xhr.onload=function(){
-        var data=JSON.parse(xhr.response);
+    $.getJSON(new_url,function(data){
         if(data.length==0){
-            document.getElementById("first_archive_date").innerHTML="( Data is not available -Not archived before )";
-            document.getElementById("first_archive_date_2").innerHTML="( Data is not available -Not archived before )";
-            document.getElementById("first_archive_time").innerHTML="( Data is not available-Not archived before )";
-            document.getElementById("link_first").href="https://web.archive.org/web/0/"+url;
-        }else {
+            var ids=['first_archive_date','first_archive_date_2','first_archive_time'];
+            for(var id of ids){
+                $('#'+id).text('( Data is not available -Not archived before )');
+            }
+        }else{
             var timestamp=data[1][1];
             var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
-            var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
-            document.getElementById("first_archive_date").innerHTML="( "+date+" )";
-            document.getElementById("first_archive_date_2").innerHTML="( "+date+" )";
-            document.getElementById("first_archive_time").innerHTML="( "+time+" ) according to Universal Time Coordinated (UTC)";
-            document.getElementById("link_first").href="https://web.archive.org/web/0/"+url;
+            var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14);
+            $("#first_archive_date").text("( "+date+" )");
+            $("#first_archive_date_2").text("( "+date+" )");
+            $("#first_archive_time").text("( "+time+" ) according to Universal Time Coordinated (UTC)");
         }
-    }
+        $('#link_first').attr("href", "https://web.archive.org/web/0/"+url);
+    });
 }
 
 function recent_archive_details(){
     var url=getUrlByParameter('url');
-    var xhr=new XMLHttpRequest();
     var new_url="http://web.archive.org/cdx/search?url="+url+"&limit=-1&output=json";
-    xhr.open("GET",new_url,true);
-    xhr.send(null);
-    xhr.onload=function(){
-        var data=JSON.parse(xhr.response);
+    $.getJSON(new_url,function(data){
         if(data.length==0){
-            document.getElementById("recent_archive_date").innerHTML="( Data is not available -Not archived before )";
-            document.getElementById("recent_archive_time").innerHTML="( Data is not available-Not archived before )";
-            document.getElementById("link_recent").href="https://web.archive.org/web/2/"+url;
-        }else {
+            var ids=['recent_archive_date','recent_archive_time'];
+            for(var id of ids){
+                $('#'+id).text('( Data is not available -Not archived before )');
+            }
+        }else{
             var timestamp=data[1][1];
             var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
-            var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14)
-            document.getElementById("recent_archive_date").innerHTML="( "+date+" )";
-            document.getElementById("recent_archive_time").innerHTML="( "+time+") according to Universal Time Coordinated (UTC)";
-            document.getElementById("link_recent").href="https://web.archive.org/web/2/"+url;
+            var time=timestamp.substring(8,10)+'.'+timestamp.substring(10,12)+'.'+timestamp.substring(12,14);
+            $("#recent_archive_date").text("( "+date+" )");
+            $("#recent_archive_time").text("( "+time+" ) according to Universal Time Coordinated (UTC)");
         }
-    }
+        $('#link_recent').attr('href',"https://web.archive.org/web/2/"+url);
+    });
 }
 
 function get_thumbnail(){
@@ -83,29 +71,14 @@ function get_thumbnail(){
     url = url.replace(/^https?:\/\//,'');
     var index=url.indexOf('/');
     url=url.substring(0,index);
-    var xhr=new XMLHttpRequest();
     var new_url="https://web.archive.org/thumb/"+url;
-    xhr.open("GET",new_url,true);
-    xhr.onload=function(){
-        if(this.response.size!=233){
-            var img = document.createElement('img');
-            var url = window.URL || window.webkitURL;
-            img.src = url.createObjectURL(this.response);
-            var show_thumbnail=document.getElementById("show_thumbnail");
-            show_thumbnail.appendChild(img);
+    $.ajax({url:new_url,success:function(response){
+        if(response.size!=233){
+            $('#show_thumbnail').append($('<img src="'+new_url+'" />'));
+        }else{
+            $('#show_thumbnail').text('Thumbnail not found');
         }
-        else{
-            document.getElementById("show_thumbnail").innerHTML="Thumbnail not found";
-        }
-    }
-    xhr.onerror=function(){
-        document.getElementById("show_thumbnail").innerHTML="Thumbnail not found";
-    };
-    xhr.ontimeout = function() {
-        document.getElementById("show_thumbnail").innerHTML="Please refresh the page...Time out!!";
-    }
-    xhr.responseType = 'blob';
-    xhr.send(null);
+    }});
 }
 
 window.onloadFuncs = [get_details,first_archive_details,recent_archive_details,get_thumbnail];
@@ -114,3 +87,5 @@ window.onload = function(){
   this.onloadFuncs[i]();
  }
 }
+if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter,getTotal:getTotal};}
+  
