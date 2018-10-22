@@ -1,7 +1,3 @@
-function getUrlByParameter (name) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(name);
-  }
 function getTotal(captures){
     var total=0;
     var data;
@@ -81,11 +77,6 @@ function get_thumbnail(){
     }});
 }
 
-window.onloadFuncs = [get_details,first_archive_details,recent_archive_details,get_thumbnail];
-window.onload = function(){
- for(var i in this.onloadFuncs){
-  this.onloadFuncs[i]();
- }
-}
-if(typeof module !=="undefined") {module.exports = {getUrlByParameter:getUrlByParameter,getTotal:getTotal};}
+
+if(typeof module !=="undefined") {module.exports = {getTotal:getTotal};}
   

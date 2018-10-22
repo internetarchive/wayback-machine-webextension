@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-//const getTotal = require("../scripts/overview").getTotal;
+const getTotal = require("../scripts/overview").getTotal;
 describe('overview', () => {
     it('should get total number of captures', () => {
         var captures = {
@@ -10,7 +10,7 @@ describe('overview', () => {
                 'text/html': 4
             }
         }
-        //expect(getTotal(captures)).to.equal(5);
+        expect(getTotal(captures)).to.equal(5);
         expect(5).to.equal(5);
     });
 });
