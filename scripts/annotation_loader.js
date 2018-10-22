@@ -1,1 +1,1 @@
-window.onload = get_annotations;
+window.onload = get_annotations('domain');
