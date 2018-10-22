@@ -11,6 +11,6 @@ describe('overview', () => {
             }
         }
         expect(getTotal(captures)).to.equal(5);
-        expect(5).to.equal(5);
+        //expect(5).to.equal(5);
     });
 });
