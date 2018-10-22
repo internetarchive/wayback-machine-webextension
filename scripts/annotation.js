@@ -1,20 +1,25 @@
-function get_annotations() {
-  var url = getUrlByParameter('url');
-  // TODO URL processing needs to be a separate function and also needs cleanup.
-  var test_url = url.replace(/^https?:\/\//,'');
-  if(test_url.includes('iskme.org')){
-    test_url=test_url.replace(/^www\./,'');
+/**
+ * Prepare hypothes.is URL to request API.
+ */
+function hypothesis_api_url(url, type) {
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'http://' + url;
   }
-  console.log(test_url);
-  test_url = test_url.replace('/','.')
-  var url = test_url.split(".");
-  var main_url = "";
-  for(var i=0;i<url.length-1;i++){
-    main_url += '&uri.parts=' + url[i];
+  if (type === 'domain') {
+    const url_obj = new URL(url);
+    const query = 'uri.parts=' + url_obj.host.split('.').join('&uri.parts=')
+    return 'https://hypothes.is/api/search?' + query;
+  } else if (type === 'url') {
+    return 'https://hypothes.is/api/search?uri=' + url;
   }
-  var new_url = 'https://hypothes.is/api/search?' + main_url;
-  // TODO
-  console.log(new_url);
+}
+
+/**
+ * Get hypothes.is data and render results.
+ */
+function get_annotations(type) {
+  const url = getUrlByParameter('url');
+  const new_url = hypothesis_api_url(url, type);
   $.getJSON(new_url, function(data) {
     const length = data.rows.length;
     if (length > 0) {
@@ -23,8 +28,11 @@ function get_annotations() {
         const date = rowData.created.substring(0,10);
         const source = rowData.target[0].source;
         const exactData = rowData.text;
-        const user = rowData.user.substring(5,rowData.user.indexOf('@'));
-        const title = rowData.document.title[0];
+        const user = rowData.user.substring(5, rowData.user.indexOf('@'));
+        let title = '';
+        if(rowData.document.title) {
+          title = rowData.document.title[0];
+        }
         let row = $('#row_contain');
         let item = row.clone();
         item.attr('id', 'row-' + i);
@@ -50,7 +58,20 @@ function get_annotations() {
       }
       $('#row_contain').hide();
     } else {
-      $('#row_contain').html("There are no Annotations for the current URL");
+      let error_msg;
+      if (type === 'domain') {
+        error_msg = 'There are no annotations for the current domain.';
+      } else {
+        error_msg = 'There are no annotations for the current URL.';
+      }
+      $('#row_contain').html(
+        $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
+                  .html(error_msg)
+      );
     }
   });
+}
+if (typeof module !== 'undefined') {
+  module.exports = {hypothesis_api_url: hypothesis_api_url,
+                    get_annotations: get_annotations}
 }
