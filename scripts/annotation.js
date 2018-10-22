@@ -37,7 +37,7 @@ function get_annotations(type) {
         let item = row.clone();
         item.attr('id', 'row-' + i);
         item.find('.date').html('Dated on ' + date);
-        item.find('.userinfo').html(user);
+        item.find('#userinfo').html(user);
         item.find('#source-contain').html('(' + source + ')');
         item.find('#text-contain').html(exactData);
         item.find('.title').html(title);
