@@ -64,17 +64,6 @@ function get_details(){
             span.appendChild(document.createTextNode(result[i].text));
             document.getElementById("hey").appendChild(span);
         }
-        // $("#hey").jQCloud(result,{
-        //     classPattern: null,
-        //     width: 600,
-        //     height: 600,
-        //     colors: ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976", "#ffeda0", "#ffffcc"],
-        //     removeOverflowing:true,autoResize: true,
-        //     fontSize: {
-        //         from: 0.1,
-        //         to: 0.02
-        //       }
-        //   });
         $("#hey").awesomeCloud({
             "size" : {
                 "grid" : 1,
