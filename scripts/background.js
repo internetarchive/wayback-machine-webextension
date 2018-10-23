@@ -62,6 +62,62 @@ function rewriteUserAgentHeader(e) {
 
 myNotID=null;
 
+/**
+ * Close window callback
+ */
+chrome.windows.onRemoved.addListener(function (id) {
+  if (id === windowIdSingle) {
+    windowIdSingle = 0;
+  } else if (id === windowId1) {
+    windowId1 = 0;
+  } else if (id === windowId2) {
+    windowId2 = 0;
+  } else if (id === windowId3) {
+    windowId3 = 0;
+  } else if (id === windowId4) {
+    windowId4 = 0;
+  } else if (id === windowId5) {
+    windowId5 = 0;
+  } else if (id === windowId6) {
+    windowId6 = 0;
+  } else if (id === windowId7) {
+    windowId7 = 0;
+  } else if (id === windowId8) {
+    windowId8 = 0;
+  } else if (id === windowId9) {
+    windowId9 = 0;
+  } else if (id === windowId10) {
+    windowId10 = 0;
+  }
+});
+
+/**
+ * Close tab callback
+ */
+chrome.tabs.onRemoved.addListener(function (id) {
+  if (id === tabId1) {
+    tabId1 = 0;
+  } else if (id === tabId2) {
+    tabId2 = 0;
+  } else if (id === tabId3) {
+    tabId3 = 0;
+  } else if (id === tabId4) {
+    tabId4 = 0;
+  } else if (id === tabId5) {
+    tabId5 = 0;
+  } else if (id === tabId6) {
+    tabId6 = 0;
+  } else if (id === tabId7) {
+    tabId7 = 0;
+  } else if (id === tabId8) {
+    tabId8 = 0;
+  } else if (id === tabId9) {
+    tabId9 = 0;
+  } else if (id === tabId10) {
+    tabId10 = 0;
+  }
+});
+
 chrome.webRequest.onBeforeSendHeaders.addListener(
   rewriteUserAgentHeader,
   {urls: [WB_API_URL]},
@@ -286,86 +342,36 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                     //If show-all Context is true, Create a window which is focussed and create tabs in it
                     if(event2.showall==true){
                       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+message.url, width:800, height:800, top:0, left:0, focused:true},function(win){
-                        windowIdtest=win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowIdtest){
-                            windowIdtest=0;
-                          }
-                        });
+                        windowIdtest = win.id;
                       });
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.tabs.create({url:alexa_url, 'active':false},function (tab) {
                         tabId1 = tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId1){
-                            tabId1=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url,'active':false},function(tab){
                         tabId2=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId2){
-                            tabId2=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("twitter.html")+"?url="+open_url,'active':false},function(tab){
                         tabId3=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId3){
-                            tabId3=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,'active':false},function(tab){
                         tabId4=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId4){
-                            tabId4=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,'active':false},function(tab){
                         tabId5=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId5){
-                            tabId5=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,'active':false},function(tab){
                         tabId8=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId8){
-                            tabId8=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                         tabId6=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId6){
-                            tabId6=0;
-                          }
-                        });
                       });
                       chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,'active':false},function(tab){
                         tabId7=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId7){
-                            tabId7=0;
-                          }
-                        });
                       });
                       var tweet_bot_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                       chrome.tabs.create({'url': tweet_bot_url,'active':false},function(tab){
                         tabId9=tab.id;
-                        chrome.tabs.onRemoved.addListener(function (tabtest) {
-                          if(tabtest==tabId9){
-                            tabId9=0;
-                          }
-                        });
                       });
                     }else{
                       //If not selected show-all option ,then check and open indivisually
@@ -463,84 +469,34 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.windows.create({url:alexa_url, width:600, height:500, top:0, left:0, focused:false},function (win) {
                         windowId1 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId1){
-                            windowId1=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+message.url,width:600, height:500, top:200, left:0, focused:false},function (win) {
                         windowId10 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId10){
-                            windowId10=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url, width:600, height:500, top:500, left:0, focused:false},function (win) {
                         windowId2 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId2){
-                            windowId2=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+open_url, width:600, height:500, top:0, left:350, focused:false},function (win) {
                         windowId3 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId3){
-                            windowId3=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+message.url,width:600, height:500, top:200, left:350, focused:false},function (win) {
                         windowId4 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId4){
-                            windowId4=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+message.url,width:600, height:500, top:500, left:350, focused:false},function (win) {
                         windowId5 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId5){
-                            windowId5=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url,width:600, height:500, top:0, left:700, focused:false},function (win) {
                         windowId8 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId8){
-                            windowId8=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:200, left:700, focused:false},function (win) {
                         windowId6 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId6){
-                            windowId6=0;
-                          }
-                        });
                       });
                       chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url,width:600, height:500, top:1000, left:700, focused:false},function (win) {
                         windowId7 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId7){
-                            windowId7=0;
-                          }
-                        });
                       });
                       var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                       chrome.windows.create({url:hoaxy_url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
                         windowId9 = win.id;
-                        chrome.windows.onRemoved.addListener(function (win1) {
-                          if(win1==windowId9){
-                            windowId9=0;
-                          }
-                        });
                       });
                     }else{
                       //If not selected show-all option ,then check and open indivisually
@@ -673,14 +629,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url});
                   });
                 }else{
-                  chrome.windows.create({url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url, width:1000, height:1000, top:0, left:0, focused:false},function (win) {
+                  chrome.windows.create({url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
+                                         width:1000, height:1000, top:0, left:0, focused:false}, function (win) {
                     windowIdSingle = win.id;
-                    console.log(message.url);
-                    chrome.windows.onRemoved.addListener(function (win1) {
-                      if(win1==windowIdSingle){
-                        windowIdSingle=0;
-                      }
-                    });
                   });
                 }
               }
@@ -1046,83 +997,38 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               }else if(temp=='domaintools'){
                 chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='tweets'){
                 chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='wbmsummary'){
                 chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='annotations'){
                 chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='annotationsurl'){
                 chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='similarweb'){
                 chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='tagcloud'){
                 chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='hoaxy'){
                 chrome.windows.create({url:hoaxy_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }else if(temp=='alexa'){
                 chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
                   windowIdtest = win.id;
-                  chrome.windows.onRemoved.addListener(function (win1) {
-                    if(win1==windowIdtest){
-                      windowIdtest=0;
-                    }
-                  });
                 });
               }
             }else{
@@ -1132,92 +1038,42 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                 if(temp=='alexa'){
                   chrome.tabs.create({'url': alexa_url,'active':false},function(tab){
                     tabId10=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId10){
-                        tabId10=0;
-                      }
-                    });
                   });
                 }else if(temp=='domaintools'){
                   chrome.tabs.create({'url': chrome.runtime.getURL("domaintools.html")+"?url="+url,'active':false},function(tab){
                     tabId2=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId2){
-                        tabId2=0;
-                      }
-                    });
                   });
                 }else if(temp=='tweets'){
                   chrome.tabs.create({'url': chrome.runtime.getURL("twitter.html")+"?url="+url,'active':false},function(tab){
                     tabId3=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId3){
-                        tabId3=0;
-                      }
-                    });
                   });
                 }else if(temp=='wbmsummary'){
                   chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+url,'active':false},function(tab){
                     tabId4=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId4){
-                        tabId4=0;
-                      }
-                    });
                   });
                 }else if(temp=='annotations'){
                   chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,'active':false},function(tab){
                     tabId5=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId5){
-                        tabId5=0;
-                      }
-                    });
                   });
                 }else if(temp=='annotationsurl'){
                   chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
                     tabId8=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId8){
-                        tabId8=0;
-                      }
-                    });
                   });
                 }else if(temp=='similarweb'){
                   chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
                     tabId6=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId6){
-                        tabId6=0;
-                      }
-                    });
                   });
                 }else if(temp=='tagcloud'){
                   chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
                     tabId7=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId7){
-                        tabId7=0;
-                      }
-                    });
                   });
                 }else if(temp=='hoaxy'){
                   chrome.tabs.create({url:hoaxy_url,'active':false},function(tab){
                     tabId9=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId9){
-                        tabId9=0;
-                      }
-                    });
                   });
                 }else if(temp=='doi'){
                   chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,'active':false},function(tab){
                     tabId1=tab.id;
-                    chrome.tabs.onRemoved.addListener(function (tabtest) {
-                      if(tabtest==tabId1){
-                        tabId1=0;
-                      }
-                    });
                   });
                 }
               });
@@ -1227,92 +1083,42 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             if(temp=='alexa'){
               chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
                 windowId10 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId10){
-                    windowId10=0;
-                  }
-                });
               });
             }else if(temp=='domaintools'){
               chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:500, height:500, top:500, left:0, focused:false},function (win) {
                 windowId2 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId2){
-                    windowId2=0;
-                  }
-                });
               });
             }else if(temp=='tweets'){
               chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url, width:500, height:500, top:0, left:500, focused:false},function (win) {
                 windowId3 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId3){
-                    windowId3=0;
-                  }
-                });
               });
             }else if(temp=='wbmsummary'){
               chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false},function (win) {
                 windowId4 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId4){
-                    windowId4=0;
-                  }
-                });
               });
             }else if(temp=='annotations'){
               chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
                 windowId5 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId5){
-                    windowId5=0;
-                  }
-                });
               });
             }else if(temp=='annotationsurl'){
               chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
                 windowId8 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId8){
-                    windowId8=0;
-                  }
-                });
               });
             }else if (temp=='similarweb'){
               chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
                 windowId6 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId6){
-                    windowId6=0;
-                  }
-                });
               });
             }else if (temp=='tagcloud'){
               chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
                 windowId7 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId7){
-                    windowId7=0;
-                  }
-                });
               });
             }else if (temp=='hoaxy'){
               chrome.windows.create({url:hoaxy_url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
                 windowId9 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId9){
-                    windowId9=0;
-                  }
-                });
               });
             }else if (temp=='doi'){
               chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
                 windowId1 = win.id;
-                chrome.windows.onRemoved.addListener(function (win1) {
-                  if(win1==windowId1){
-                    windowId1=0;
-                  }
-                });
               });
             }
           }
