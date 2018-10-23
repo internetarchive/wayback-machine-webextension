@@ -1,9 +1,7 @@
 function getTotal(captures){
     var total=0;
-    var data;
     for(var key in captures){
-        data=captures[key];
-        total=total+data['text/html'];
+        total += captures[key]['text/html']
     }
     return total;
 }
@@ -16,7 +14,7 @@ function get_details(){
         var captures=response.captures;
         var total=0;
         total = getTotal(captures);
-        $('#total_archives').text(total.toString());
+        $('#total_archives').text(total);
         $('#save_now').attr('href',"https://web.archive.org/save/"+url);
     });
 }
@@ -26,10 +24,7 @@ function first_archive_details(){
     var new_url="http://web.archive.org/cdx/search?url="+url+"&limit=1&output=json";
     $.getJSON(new_url,function(data){
         if(data.length==0){
-            var ids=['first_archive_date','first_archive_date_2','first_archive_time'];
-            for(var id of ids){
-                $('#'+id).text('( Data is not available -Not archived before )');
-            }
+            $('#first_archive_date, #first_archive_date_2, #first_archive_time').text('( Data is not available -Not archived before )')
         }else{
             var timestamp=data[1][1];
             var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
@@ -47,10 +42,7 @@ function recent_archive_details(){
     var new_url="http://web.archive.org/cdx/search?url="+url+"&limit=-1&output=json";
     $.getJSON(new_url,function(data){
         if(data.length==0){
-            var ids=['recent_archive_date','recent_archive_time'];
-            for(var id of ids){
-                $('#'+id).text('( Data is not available -Not archived before )');
-            }
+            $('#recent_archive_date, #recent_archive_date_2, #recent_archive_time').text('( Data is not available -Not archived before )');
         }else{
             var timestamp=data[1][1];
             var date=timestamp.substring(4,6)+'/'+timestamp.substring(6,8)+'/'+timestamp.substring(0,4);
@@ -70,7 +62,13 @@ function get_thumbnail(){
     var new_url="https://web.archive.org/thumb/"+url;
     $.ajax({url:new_url,success:function(response){
         if(response.size!=233){
-            $('#show_thumbnail').append($('<img src="'+new_url+'" />'));
+            $('#show_thumbnail').append($('<img>').attr('src', new_url));
+        }else{
+            $('#show_thumbnail').text('Thumbnail not found');
+        }
+    },error:function(jqXHR, exception){
+        if(exception === 'timeout'){
+            $('#show_thumbnail').text('Please refresh the page...Time out!!');
         }else{
             $('#show_thumbnail').text('Thumbnail not found');
         }
