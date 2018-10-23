@@ -4,8 +4,7 @@
   "description": "A browser extension that interfaces with the internet archive",
   "main": "index.js",
   "directories": {
-    "test": "test",
-    "lint": "eslint overview.js"
+    "test": "test"
   },
   "scripts": {
     "build": "webpack",
