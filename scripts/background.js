@@ -88,6 +88,8 @@ chrome.windows.onRemoved.addListener(function (id) {
     windowId9 = 0;
   } else if (id === windowId10) {
     windowId10 = 0;
+  } else if (id === windowIdtest) {
+    windowIdtest = 0;
   }
 });
 
@@ -445,7 +447,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                     var tab=tabs[0];
                     chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
                   });
-                  chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
+                  chrome.tabs.update(parseInt(tabId1), {url: 'https://archive.org/services/context/alexa?url=' + message.url});
                   chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
                   chrome.tabs.update(parseInt(tabId3), {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
                   chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
