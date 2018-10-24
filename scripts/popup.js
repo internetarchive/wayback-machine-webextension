@@ -300,20 +300,14 @@ function borrow_books(){
       if(result=="B"){
         if(url.includes("www.amazon") && url.includes('/dp/')){
           get_amazonbooks(url).then(response=>{
-            if(response.success==true && response.error==undefined){
-              var responses=response.responses;
-              for(var propName in responses) {
-                if(responses.hasOwnProperty(propName)) {
-                  var propValue = responses[propName];
+            if(response['metadata']){
+              if(response['metadata']["identifier-access"]){
+                let details_url = response['metadata']["identifier-access"];
+                document.getElementById('borrow_books_tr').style.display="block";
+                document.getElementById('borrow_books_tr').onclick=function(){
+                  chrome.tabs.create({url:details_url});
                 }
               }
-              var identifier=propValue.identifier;
-            }
-            if(identifier!=undefined||null){
-              document.getElementById('borrow_books_tr').style.display="block";
-            }
-            document.getElementById('borrow_books_tr').onclick=function(){
-              chrome.tabs.create({url:"https://archive.org/details/"+identifier});
             }
           });
         }
