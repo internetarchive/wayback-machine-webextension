@@ -24,11 +24,14 @@ function getBooked(url){
           //if book has field: metadata, addBookFromArchive
           if(data[isbn].metadata){
             addBookFromArchive(data[isbn].metadata);
-          }//else if book has id, addBookFromArchive using getMetadataFromArchive
-          else if(getIdentifier(data[isbn])){
-            getMetadataFromArchive(getIdentifier(data[isbn]));
-            //TODO add this identifier to OL perhaps
-          }//else add book from OL
+          }
+          // //else if book has id, addBookFromArchive using getMetadataFromArchive
+          // else if(getIdentifier(data[isbn])){
+          //   getMetadataFromArchive(getIdentifier(data[isbn]));
+          //   //TODO add this identifier to OL perhaps
+          // }
+          
+          //else add book from OL
           else{
               addBookFromOpenLibrary(data[isbn]);
           }
