@@ -241,9 +241,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
   if(message.message=='openurl'){
     var page_url = message.page_url;
     var wayback_url = message.wayback_url;
-    var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-    var url = page_url.replace(pattern, "");
-    var open_url = wayback_url+encodeURI(url);
+    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '');
+    var open_url = wayback_url + encodeURI(url);
     if(!page_url.includes('chrome://')){
       if (message.method!='save') {
         URLopener(open_url,url,true);
@@ -251,66 +250,52 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
         chrome.tabs.create({ url:  open_url});
       }
     }
-  }else if(message.message=='makemodal'){
-    RTurl=message.rturl;
+  } else if (message.message === 'makemodal'){
+    RTurl = message.rturl;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab=tabs[0];
-      var url=RTurl;
+      var tab = tabs[0];
+      var url = RTurl;
+      // utility function to run Radial Tree JS
+      function _run_modalbox_scripts() {
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/lodash.min.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/d3.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/radial-tree.umd.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/RTcontent.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/sequences.js"
+        });
+        previous_RTurl = url;
+      }
       //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
       if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){
         alert("Structure as radial tree not available on this page");
       }else if((previous_RTurl!=url && url==tab.url) || (previous_RTurl!=url && url!=tab.url)){
         //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
         chrome.tabs.sendMessage(tab.id,{message:"deletenode"});
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/lodash.min.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/d3.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/radial-tree.umd.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/RTcontent.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/sequences.js"
-        });
-        previous_RTurl=url;
+        _run_modalbox_scripts();
       }else if(previous_RTurl==url){
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/lodash.min.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/d3.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/radial-tree.umd.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/RTcontent.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/sequences.js"
-        });
-        previous_RTurl=url;
+        _run_modalbox_scripts();
       }
     });
   }else if(message.message=='sendurl'){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var url=tabs[0].url;
-      chrome.tabs.sendMessage(tabs[0].id, {url:url});
+      chrome.tabs.sendMessage(tabs[0].id, {url:tabs[0].url});
     });
   }else if(message.message=='sendurlforrt'){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      //var url=tabs[0].url;
       chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
     });
   }else if(message.message=='changeBadge'){
     //Used to change bage for auto-archive feature
-    var tabId=message.tabId;
-    chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
+    chrome.browserAction.setBadgeText({tabId: message.tabId, text:"\u2713"});
   }else if(message.message=='showall'){
     chrome.storage.sync.get(['show_context'],function(event){
       if(!event.show_context){
