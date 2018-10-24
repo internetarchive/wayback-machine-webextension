@@ -6,7 +6,7 @@ var manifest=chrome.runtime.getManifest();
 //Load version from Manifest.json file
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
-var Globalstatuscode="";
+var globalStatusCode = "";
 //List of exluded URLs
 var excluded_urls = [
   "localhost",
@@ -53,7 +53,7 @@ function isValidUrl(url) {
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === "user-agent") {
-      header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + Globalstatuscode;
+      header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + globalStatusCode;
     }
   }
   return {requestHeaders: e.requestHeaders};
@@ -92,14 +92,10 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
     isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-      return makeHttps(response.results[0].archived_snapshots.closest.url);
-    } else {
-      return null;
-    }
-}
-
-function makeHttps(url) {
-  return url.replace(/^http:/, "https:");
+    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -191,20 +187,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 );
 
 chrome.webRequest.onErrorOccurred.addListener(function(details) {
-  function tabIsReady(isIncognito) {
-    if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
-    || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
-      wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-      }, function() {
-
-      });
-    }
-  }
-  if(details.tabId >0 ){
-    chrome.tabs.get(details.tabId, function(tab) {
-      tabIsReady(tab.incognito);
-    });
+  if(['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
+      'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
+      details.tabId >0 ) {
+    wmAvailabilityCheck(details.url, function(wayback_url, url) {
+      chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+    }, function() { });
   }
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
@@ -214,30 +202,28 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 RTurl="";
 chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
-    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
-      509, 520, 521, 523, 524, 525, 526];
-      if (isIncognito === false &&
-        details.frameId === 0 &&
-        httpFailCodes.indexOf(details.statusCode) >= 0 &&
-        isValidUrl(details.url)) {
-          Globalstatuscode=details.statusCode;
-          wmAvailabilityCheck(details.url, function(wayback_url, url) {
-            chrome.tabs.executeScript(details.tabId, {
-              file: "scripts/client.js"
-            },function() {
-              if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
-                chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-              }else{
-                chrome.tabs.sendMessage(details.tabId, {
-                  type: "SHOW_BANNER",
-                  wayback_url: wayback_url,
-                  page_url: details.url,
-                  status_code: details.statusCode
-                });
-              }
+    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521,
+                         523, 524, 525, 526];
+    if (isIncognito === false && details.frameId === 0 &&
+        httpFailCodes.indexOf(details.statusCode) >= 0 && isValidUrl(details.url)) {
+      globalStatusCode = details.statusCode;
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.executeScript(details.tabId, {
+          file: "scripts/client.js"
+        },function() {
+          if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
+            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+          }else{
+            chrome.tabs.sendMessage(details.tabId, {
+              type: "SHOW_BANNER",
+              wayback_url: wayback_url,
+              page_url: details.url,
+              status_code: details.statusCode
             });
-          }, function() {});
-        }
+          }
+        });
+      }, function() {});
+    }
   }
   if(details.tabId >0 ){
     chrome.tabs.query({currentWindow:true},function(tabs){
@@ -255,9 +241,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
   if(message.message=='openurl'){
     var page_url = message.page_url;
     var wayback_url = message.wayback_url;
-    var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-    var url = page_url.replace(pattern, "");
-    var open_url = wayback_url+encodeURI(url);
+    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '');
+    var open_url = wayback_url + encodeURI(url);
     if(!page_url.includes('chrome://')){
       if (message.method!='save') {
         URLopener(open_url,url,true);
@@ -265,66 +250,52 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
         chrome.tabs.create({ url:  open_url});
       }
     }
-  }else if(message.message=='makemodal'){
-    RTurl=message.rturl;
+  } else if (message.message === 'makemodal'){
+    RTurl = message.rturl;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab=tabs[0];
-      var url=RTurl;
+      var tab = tabs[0];
+      var url = RTurl;
+      // utility function to run Radial Tree JS
+      function _run_modalbox_scripts() {
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/lodash.min.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/d3.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/radial-tree.umd.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/RTcontent.js"
+        });
+        chrome.tabs.executeScript(tab.id, {
+          file:"scripts/sequences.js"
+        });
+        previous_RTurl = url;
+      }
       //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
       if(url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')){
         alert("Structure as radial tree not available on this page");
       }else if((previous_RTurl!=url && url==tab.url) || (previous_RTurl!=url && url!=tab.url)){
         //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
         chrome.tabs.sendMessage(tab.id,{message:"deletenode"});
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/lodash.min.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/d3.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/radial-tree.umd.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/RTcontent.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/sequences.js"
-        });
-        previous_RTurl=url;
+        _run_modalbox_scripts();
       }else if(previous_RTurl==url){
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/lodash.min.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/d3.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/radial-tree.umd.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/RTcontent.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/sequences.js"
-        });
-        previous_RTurl=url;
+        _run_modalbox_scripts();
       }
     });
   }else if(message.message=='sendurl'){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var url=tabs[0].url;
-      chrome.tabs.sendMessage(tabs[0].id, {url:url});
+      chrome.tabs.sendMessage(tabs[0].id, {url:tabs[0].url});
     });
   }else if(message.message=='sendurlforrt'){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      //var url=tabs[0].url;
       chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
     });
   }else if(message.message=='changeBadge'){
     //Used to change bage for auto-archive feature
-    var tabId=message.tabId;
-    chrome.browserAction.setBadgeText({tabId: tabId, text:"\u2713"});
+    chrome.browserAction.setBadgeText({tabId: message.tabId, text:"\u2713"});
   }else if(message.message=='showall'){
     chrome.storage.sync.get(['show_context'],function(event){
       if(!event.show_context){
@@ -562,10 +533,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
       chrome.storage.sync.get(['auto_archive'],function(event){
-        if(event.auto_archive==true){
+        if (event.auto_archive === true) {
           auto_save(tab.id);
-        }else{
-          console.log("Cant be Archived");
         }
       });
     });
@@ -808,7 +777,7 @@ function auto_save(tabId){
     chrome.browserAction.setBadgeText({tabId: tabId, text:""});
     if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
       if(!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))){
-        check_url(page_url,
+        wmAvailabilityCheck(page_url,
           function() {
             console.log("Available already");
           },
@@ -818,21 +787,6 @@ function auto_save(tabId){
       }
     }
   });
-}
-
-function check_url(url,onfound,onnotfound){
-  var xhr=new XMLHttpRequest();
-  var new_url="http://archive.org/wayback/available?url="+url;
-  xhr.open("GET",new_url,true);
-  xhr.send(null);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.response);
-    if(response.archived_snapshots.closest){
-      onfound();
-    }else{
-      onnotfound();
-    }
-  }
 }
 
 //function for opeing a particular context
