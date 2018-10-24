@@ -6,7 +6,7 @@ var manifest=chrome.runtime.getManifest();
 //Load version from Manifest.json file
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
-var Globalstatuscode="";
+var globalStatusCode = "";
 //List of exluded URLs
 var excluded_urls = [
   "localhost",
@@ -53,7 +53,7 @@ function isValidUrl(url) {
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === "user-agent") {
-      header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + Globalstatuscode;
+      header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + globalStatusCode;
     }
   }
   return {requestHeaders: e.requestHeaders};
@@ -92,14 +92,10 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
     isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-      return makeHttps(response.results[0].archived_snapshots.closest.url);
-    } else {
-      return null;
-    }
-}
-
-function makeHttps(url) {
-  return url.replace(/^http:/, "https:");
+    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -191,20 +187,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 );
 
 chrome.webRequest.onErrorOccurred.addListener(function(details) {
-  function tabIsReady(isIncognito) {
-    if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
-    || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
-      wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-      }, function() {
-
-      });
-    }
-  }
-  if(details.tabId >0 ){
-    chrome.tabs.get(details.tabId, function(tab) {
-      tabIsReady(tab.incognito);
-    });
+  if(['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
+      'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
+      details.tabId >0 ) {
+    wmAvailabilityCheck(details.url, function(wayback_url, url) {
+      chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+    }, function() { });
   }
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
@@ -214,30 +202,28 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 RTurl="";
 chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
-    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
-      509, 520, 521, 523, 524, 525, 526];
-      if (isIncognito === false &&
-        details.frameId === 0 &&
-        httpFailCodes.indexOf(details.statusCode) >= 0 &&
-        isValidUrl(details.url)) {
-          Globalstatuscode=details.statusCode;
-          wmAvailabilityCheck(details.url, function(wayback_url, url) {
-            chrome.tabs.executeScript(details.tabId, {
-              file: "scripts/client.js"
-            },function() {
-              if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
-                chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-              }else{
-                chrome.tabs.sendMessage(details.tabId, {
-                  type: "SHOW_BANNER",
-                  wayback_url: wayback_url,
-                  page_url: details.url,
-                  status_code: details.statusCode
-                });
-              }
+    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521,
+                         523, 524, 525, 526];
+    if (isIncognito === false && details.frameId === 0 &&
+        httpFailCodes.indexOf(details.statusCode) >= 0 && isValidUrl(details.url)) {
+      globalStatusCode = details.statusCode;
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.executeScript(details.tabId, {
+          file: "scripts/client.js"
+        },function() {
+          if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
+            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+          }else{
+            chrome.tabs.sendMessage(details.tabId, {
+              type: "SHOW_BANNER",
+              wayback_url: wayback_url,
+              page_url: details.url,
+              status_code: details.statusCode
             });
-          }, function() {});
-        }
+          }
+        });
+      }, function() {});
+    }
   }
   if(details.tabId >0 ){
     chrome.tabs.query({currentWindow:true},function(tabs){
@@ -562,10 +548,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
       chrome.storage.sync.get(['auto_archive'],function(event){
-        if(event.auto_archive==true){
+        if (event.auto_archive === true) {
           auto_save(tab.id);
-        }else{
-          console.log("Cant be Archived");
         }
       });
     });
