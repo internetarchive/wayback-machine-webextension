@@ -58,6 +58,71 @@ function rewriteUserAgentHeader(e) {
   }
   return {requestHeaders: e.requestHeaders};
 }
+/**
+* Checks Wayback Machine API for url snapshot
+*/
+function wmAvailabilityCheck(url, onsuccess, onfail) {
+  var xhr = new XMLHttpRequest();
+  var requestUrl = "https://archive.org/wayback/available";
+  var requestParams = "url=" + encodeURI(url);
+  xhr.open("POST", requestUrl, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("Wayback-Api-Version", 2);
+  xhr.onload = function() {
+    var response = JSON.parse(xhr.responseText);
+    var wayback_url = getWaybackUrlFromResponse(response);
+    if (wayback_url !== null) {
+      onsuccess(wayback_url, url);
+    } else if (onfail) {
+      onfail();
+    }
+  };
+  xhr.send(requestParams);
+}
+/**
+* @param response {object}
+* @return {string or null}
+*/
+function getWaybackUrlFromResponse(response) {
+  if (response.results &&
+    response.results[0] &&
+    response.results[0].archived_snapshots &&
+    response.results[0].archived_snapshots.closest &&
+    response.results[0].archived_snapshots.closest.available &&
+    response.results[0].archived_snapshots.closest.available === true &&
+    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
+      return makeHttps(response.results[0].archived_snapshots.closest.url);
+    } else {
+      return null;
+    }
+}
+
+function makeHttps(url) {
+  return url.replace(/^http:/, "https:");
+}
+
+/**
+* Makes sure response is a valid URL to prevent code injection
+* @param url {string}
+* @return {bool}
+*/
+function isValidSnapshotUrl(url) {
+  return ((typeof url) === "string" &&
+  (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+}
+
+function URLopener(open_url,url,wmAvailabilitycheck){
+  if(wmAvailabilitycheck==true){
+    wmAvailabilityCheck(url,function(){
+      chrome.tabs.create({ url:  open_url});
+    },function(){
+      alert("URL not found");
+    });
+  }else{
+    chrome.tabs.create({ url:  open_url});
+  }
+}
 
 myNotID=null;
 
@@ -125,6 +190,24 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ["blocking", "requestHeaders"]
 );
 
+chrome.webRequest.onErrorOccurred.addListener(function(details) {
+  function tabIsReady(isIncognito) {
+    if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
+    || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+      }, function() {
+
+      });
+    }
+  }
+  if(details.tabId >0 ){
+    chrome.tabs.get(details.tabId, function(tab) {
+      tabIsReady(tab.incognito);
+    });
+  }
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
+
 /**
 * Header callback
 */
@@ -155,85 +238,18 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             });
           }, function() {});
         }
+  }
+  if(details.tabId >0 ){
+    chrome.tabs.query({currentWindow:true},function(tabs){
+      var tabsArr=tabs.map(tab => tab.id);
+      if(tabsArr.indexOf(details.tabId)>=0){
+        chrome.tabs.get(details.tabId, function(tab) {
+          tabIsReady(tab.incognito);
+        });
       }
-      if(details.tabId >0 ){
-        chrome.tabs.query({currentWindow:true},function(tabs){
-          var tabsArr=tabs.map(tab => tab.id);
-          if(tabsArr.indexOf(details.tabId)>=0){
-            chrome.tabs.get(details.tabId, function(tab) {
-              tabIsReady(tab.incognito);
-            });
-          }
-        })
-
-      }
-    }, {urls: ["<all_urls>"], types: ["main_frame"]});
-    /**
-    * Checks Wayback Machine API for url snapshot
-    */
-    function wmAvailabilityCheck(url, onsuccess, onfail) {
-      var xhr = new XMLHttpRequest();
-      var requestUrl = "https://archive.org/wayback/available";
-      var requestParams = "url=" + encodeURI(url);
-      xhr.open("POST", requestUrl, true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.setRequestHeader("Wayback-Api-Version", 2);
-      xhr.onload = function() {
-        var response = JSON.parse(xhr.responseText);
-        var wayback_url = getWaybackUrlFromResponse(response);
-        if (wayback_url !== null) {
-          onsuccess(wayback_url, url);
-        } else if (onfail) {
-          onfail();
-        }
-      };
-      xhr.send(requestParams);
-    }
-
-    /**
-    * @param response {object}
-    * @return {string or null}
-    */
-    function getWaybackUrlFromResponse(response) {
-      if (response.results &&
-        response.results[0] &&
-        response.results[0].archived_snapshots &&
-        response.results[0].archived_snapshots.closest &&
-        response.results[0].archived_snapshots.closest.available &&
-        response.results[0].archived_snapshots.closest.available === true &&
-        response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-        isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-          return makeHttps(response.results[0].archived_snapshots.closest.url);
-        } else {
-          return null;
-        }
-      }
-
-      function makeHttps(url) {
-        return url.replace(/^http:/, "https:");
-      }
-
-      /**
-      * Makes sure response is a valid URL to prevent code injection
-      * @param url {string}
-      * @return {bool}
-      */
-      function isValidSnapshotUrl(url) {
-        return ((typeof url) === "string" &&
-        (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
-      }
-
-      function URLopener(open_url,url,wmAvailabilitycheck){
-        if(wmAvailabilitycheck==true){
-          wmAvailabilityCheck(url,function(){
-            chrome.tabs.create({ url:  open_url});
-          },function(){
-            alert("URL not found");
-          });
-        }else{
-          chrome.tabs.create({ url:  open_url});
-        }
-      }
+    })
+  }
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
 
 
       chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
@@ -620,64 +636,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             });
           });
         }
-      });
-
-      chrome.webRequest.onErrorOccurred.addListener(function(details) {
-        function tabIsReady(isIncognito) {
-          if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
-          || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
-            wmAvailabilityCheck(details.url, function(wayback_url, url) {
-              chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-            }, function() {
-
-            });
-          }
-        }
-        if(details.tabId >0 ){
-          chrome.tabs.get(details.tabId, function(tab) {
-            tabIsReady(tab.incognito);
-          });
-        }
-      }, {urls: ["<all_urls>"], types: ["main_frame"]});
-
-      // Right-click context menu "Wayback Machine" inside the page.
-      chrome.contextMenus.create({'id': 'first',
-                                  'title': 'First Version',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'recent',
-                                  'title': 'Recent Version',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'all',
-                                  'title': 'All Versions',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'save',
-                                  'title': 'Save Page Now',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.onClicked.addListener(function(click){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-            const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            const page_url = tabs[0].url.replace(pattern, '');
-            let wayback_url;
-            let wmAvailabilitycheck = true;
-            if (click.menuItemId === 'first') {
-              wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'recent'){
-              wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'save') {
-              wmAvailabilitycheck = false;
-              wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'all') {
-              wmAvailabilitycheck = false;
-              wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
-            }
-            URLopener(wayback_url, page_url, wmAvailabilitycheck);
-          }
-        });
       });
 
       var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi;
@@ -1098,3 +1056,43 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             }
           }
         }
+
+// Right-click context menu "Wayback Machine" inside the page.
+chrome.contextMenus.create({'id': 'first',
+                            'title': 'First Version',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'recent',
+                            'title': 'Recent Version',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'all',
+                            'title': 'All Versions',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'save',
+                            'title': 'Save Page Now',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.onClicked.addListener(function(click){
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
+      const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+      const page_url = tabs[0].url.replace(pattern, '');
+      let wayback_url;
+      let wmAvailabilitycheck = true;
+      if (click.menuItemId === 'first') {
+        wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'recent'){
+        wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'save') {
+        wmAvailabilitycheck = false;
+        wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'all') {
+        wmAvailabilitycheck = false;
+        wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
+      }
+      URLopener(wayback_url, page_url, wmAvailabilitycheck);
+    }
+  });
+});
