@@ -11,7 +11,7 @@ function getUrlByParameter(name){
 
 function getBooked(url){
   // Gets the data for each book on the wikipedia url
-  get_ia_books(url).then((data)=>{
+  get_wikibooks(url).then((data)=>{
     $(".loader").hide();
     if(data instanceof Array){ //checks if any ISBNs found
       for(let book of data){  // Iterate over each book to get data
