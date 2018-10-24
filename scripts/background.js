@@ -59,6 +59,74 @@ function rewriteUserAgentHeader(e) {
   return {requestHeaders: e.requestHeaders};
 }
 
+/**
+ * Checks Wayback Machine API for url snapshot
+ */
+function wmAvailabilityCheck(url, onsuccess, onfail) {
+  var xhr = new XMLHttpRequest();
+  var requestUrl = "https://archive.org/wayback/available";
+  var requestParams = "url=" + encodeURI(url);
+  xhr.open("POST", requestUrl, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("Wayback-Api-Version", 2);
+  xhr.onload = function() {
+    var response = JSON.parse(xhr.responseText);
+    var wayback_url = getWaybackUrlFromResponse(response);
+    if (wayback_url !== null) {
+      onsuccess(wayback_url, url);
+    } else if (onfail) {
+      onfail();
+    }
+  };
+  xhr.send(requestParams);
+}
+
+/**
+ * @param response {object}
+ * @return {string or null}
+ */
+function getWaybackUrlFromResponse(response) {
+  if (response.results &&
+    response.results[0] &&
+    response.results[0].archived_snapshots &&
+    response.results[0].archived_snapshots.closest &&
+    response.results[0].archived_snapshots.closest.available &&
+    response.results[0].archived_snapshots.closest.available === true &&
+    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
+    return makeHttps(response.results[0].archived_snapshots.closest.url);
+  } else {
+    return null;
+  }
+}
+
+function makeHttps(url) {
+  return url.replace(/^http:/, "https:");
+}
+
+/**
+ * Makes sure response is a valid URL to prevent code injection
+ * @param url {string}
+ * @return {bool}
+ */
+function isValidSnapshotUrl(url) {
+  return ((typeof url) === "string" &&
+  (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+}
+
+function URLopener(open_url,url,wmAvailabilitycheck){
+  if(wmAvailabilitycheck === true){
+    wmAvailabilityCheck(url,function(){
+      chrome.tabs.create({ url:  open_url});
+    },function(){
+      alert("URL not found");
+    });
+  }else{
+    chrome.tabs.create({ url:  open_url});
+  }
+}
+
+
 myNotID=null;
 
 /**
@@ -125,6 +193,25 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ["blocking", "requestHeaders"]
 );
 
+chrome.webRequest.onErrorOccurred.addListener(function(details) {
+  function tabIsReady(isIncognito) {
+    if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
+    || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+      }, function() {
+
+      });
+    }
+  }
+  if(details.tabId >0 ){
+    chrome.tabs.get(details.tabId, function(tab) {
+      tabIsReady(tab.incognito);
+    });
+  }
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
+
+
 /**
 * Header callback
 */
@@ -133,107 +220,39 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
       509, 520, 521, 523, 524, 525, 526];
-      if (isIncognito === false &&
-        details.frameId === 0 &&
-        httpFailCodes.indexOf(details.statusCode) >= 0 &&
-        isValidUrl(details.url)) {
-          Globalstatuscode=details.statusCode;
-          wmAvailabilityCheck(details.url, function(wayback_url, url) {
-            chrome.tabs.executeScript(details.tabId, {
-              file: "scripts/client.js"
-            },function() {
-              if(chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
-                chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-              }else{
-                chrome.tabs.sendMessage(details.tabId, {
-                  type: "SHOW_BANNER",
-                  wayback_url: wayback_url,
-                  page_url: details.url,
-                  status_code: details.statusCode
-                });
-              }
-            });
-          }, function() {});
-        }
-      }
-      if(details.tabId >0 ){
-        chrome.tabs.query({currentWindow:true},function(tabs){
-          var tabsArr=tabs.map(tab => tab.id);
-          if(tabsArr.indexOf(details.tabId)>=0){
-            chrome.tabs.get(details.tabId, function(tab) {
-              tabIsReady(tab.incognito);
+    if (isIncognito === false && details.frameId === 0 &&
+        httpFailCodes.indexOf(details.statusCode) >= 0 && isValidUrl(details.url)) {
+      Globalstatuscode=details.statusCode;
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.executeScript(details.tabId, {
+          file: "scripts/client.js"
+        },function() {
+          if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')){
+            chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
+          } else {
+            chrome.tabs.sendMessage(details.tabId, {
+              type: "SHOW_BANNER",
+              wayback_url: wayback_url,
+              page_url: details.url,
+              status_code: details.statusCode
             });
           }
-        })
-
-      }
-    }, {urls: ["<all_urls>"], types: ["main_frame"]});
-    /**
-    * Checks Wayback Machine API for url snapshot
-    */
-    function wmAvailabilityCheck(url, onsuccess, onfail) {
-      var xhr = new XMLHttpRequest();
-      var requestUrl = "https://archive.org/wayback/available";
-      var requestParams = "url=" + encodeURI(url);
-      xhr.open("POST", requestUrl, true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.setRequestHeader("Wayback-Api-Version", 2);
-      xhr.onload = function() {
-        var response = JSON.parse(xhr.responseText);
-        var wayback_url = getWaybackUrlFromResponse(response);
-        if (wayback_url !== null) {
-          onsuccess(wayback_url, url);
-        } else if (onfail) {
-          onfail();
-        }
-      };
-      xhr.send(requestParams);
+        });
+      }, function() {});
     }
-
-    /**
-    * @param response {object}
-    * @return {string or null}
-    */
-    function getWaybackUrlFromResponse(response) {
-      if (response.results &&
-        response.results[0] &&
-        response.results[0].archived_snapshots &&
-        response.results[0].archived_snapshots.closest &&
-        response.results[0].archived_snapshots.closest.available &&
-        response.results[0].archived_snapshots.closest.available === true &&
-        response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-        isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-          return makeHttps(response.results[0].archived_snapshots.closest.url);
-        } else {
-          return null;
-        }
+  }
+  if(details.tabId >0 ){
+    chrome.tabs.query({currentWindow:true},function(tabs){
+      var tabsArr=tabs.map(tab => tab.id);
+      if(tabsArr.indexOf(details.tabId)>=0){
+        chrome.tabs.get(details.tabId, function(tab) {
+          tabIsReady(tab.incognito);
+        });
       }
+    })
+  }
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
 
-      function makeHttps(url) {
-        return url.replace(/^http:/, "https:");
-      }
-
-      /**
-      * Makes sure response is a valid URL to prevent code injection
-      * @param url {string}
-      * @return {bool}
-      */
-      function isValidSnapshotUrl(url) {
-        return ((typeof url) === "string" &&
-        (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
-      }
-
-      function URLopener(open_url,url,wmAvailabilitycheck){
-        if(wmAvailabilitycheck==true){
-          wmAvailabilityCheck(url,function(){
-            chrome.tabs.create({ url:  open_url});
-          },function(){
-            alert("URL not found");
-          });
-        }else{
-          chrome.tabs.create({ url:  open_url});
-        }
-      }
 
 
       chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
@@ -626,24 +645,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
           });
         }
       });
-
-      chrome.webRequest.onErrorOccurred.addListener(function(details) {
-        function tabIsReady(isIncognito) {
-          if(details.error == 'net::ERR_NAME_NOT_RESOLVED' || details.error == 'net::ERR_NAME_RESOLUTION_FAILED'
-          || details.error == 'net::ERR_CONNECTION_TIMED_OUT'  || details.error == 'net::ERR_NAME_NOT_RESOLVED' ){
-            wmAvailabilityCheck(details.url, function(wayback_url, url) {
-              chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?wayback_url="+wayback_url+"&page_url="+url+"&status_code="+details.statusCode});
-            }, function() {
-
-            });
-          }
-        }
-        if(details.tabId >0 ){
-          chrome.tabs.get(details.tabId, function(tab) {
-            tabIsReady(tab.incognito);
-          });
-        }
-      }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
       var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi;
       chrome.tabs.onUpdated.addListener(function(tabId, info) {
