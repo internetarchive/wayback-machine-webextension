@@ -645,46 +645,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         }
       }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
-      // Right-click context menu "Wayback Machine" inside the page.
-      chrome.contextMenus.create({'id': 'first',
-                                  'title': 'First Version',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'recent',
-                                  'title': 'Recent Version',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'all',
-                                  'title': 'All Versions',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.create({'id': 'save',
-                                  'title': 'Save Page Now',
-                                  'contexts': ['all'],
-                                  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
-      chrome.contextMenus.onClicked.addListener(function(click){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-            const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-            const page_url = tabs[0].url.replace(pattern, '');
-            let wayback_url;
-            let wmAvailabilitycheck = true;
-            if (click.menuItemId === 'first') {
-              wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'recent'){
-              wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'save') {
-              wmAvailabilitycheck = false;
-              wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
-            } else if (click.menuItemId === 'all') {
-              wmAvailabilitycheck = false;
-              wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
-            }
-            URLopener(wayback_url, page_url, wmAvailabilitycheck);
-          }
-        });
-      });
-
       var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi;
       chrome.tabs.onUpdated.addListener(function(tabId, info) {
         if (info.status == "complete") {
@@ -1103,3 +1063,43 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             }
           }
         }
+
+// Right-click context menu "Wayback Machine" inside the page.
+chrome.contextMenus.create({'id': 'first',
+                            'title': 'First Version',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'recent',
+                            'title': 'Recent Version',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'all',
+                            'title': 'All Versions',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.create({'id': 'save',
+                            'title': 'Save Page Now',
+                            'contexts': ['all'],
+                            'documentUrlPatterns': ['*://*/*', 'ftp://*/*']});
+chrome.contextMenus.onClicked.addListener(function(click){
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
+      const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+      const page_url = tabs[0].url.replace(pattern, '');
+      let wayback_url;
+      let wmAvailabilitycheck = true;
+      if (click.menuItemId === 'first') {
+        wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'recent'){
+        wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'save') {
+        wmAvailabilitycheck = false;
+        wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
+      } else if (click.menuItemId === 'all') {
+        wmAvailabilitycheck = false;
+        wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
+      }
+      URLopener(wayback_url, page_url, wmAvailabilitycheck);
+    }
+  });
+});
