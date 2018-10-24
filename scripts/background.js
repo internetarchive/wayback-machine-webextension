@@ -54,7 +54,6 @@ function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === "user-agent") {
       header.value = header.value  + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + Globalstatuscode;
-      console.log(header);
     }
   }
   return {requestHeaders: e.requestHeaders};
@@ -244,7 +243,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
           var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
           var url = page_url.replace(pattern, "");
           var open_url = wayback_url+encodeURI(url);
-          console.log(open_url);
           if(!page_url.includes('chrome://')){
             if (message.method!='save') {
               URLopener(open_url,url,true);
@@ -304,7 +302,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             chrome.tabs.sendMessage(tabs[0].id, {url:url});
           });
         }else if(message.message=='sendurlforrt'){
-          console.log(RTurl);
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             //var url=tabs[0].url;
             chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
@@ -320,7 +317,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               event.show_context="tab";
             }
             var received_url=message.url;
-            console.log(received_url);
             received_url = received_url.replace(/^https?:\/\//,'');
             var last_index=received_url.indexOf('/');
             //URL which will be using for alexa
@@ -328,7 +324,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             //URL which will be needed for finding tweets
             var open_url=received_url;
             if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
-            console.log(open_url);
             chrome.storage.sync.get(['auto_update_context'],function(event1){
               if(event1.auto_update_context==undefined){
                 //By default auto-update context is off
@@ -379,13 +374,10 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                       //If not selected show-all option ,then check and open indivisually
                       chrome.storage.sync.get(function(event13){
                         if(event13.doi==true){
-                          console.log("Checking doi");
-                          console.log(message.url);
                           openThatContext("doi",message.url,event.show_context);
                         }
                         chrome.storage.sync.get(function(event4){
                           if(event4.alexa==true){
-                            console.log("checking alexa");
                             openThatContext("alexa",url,event.show_context);
                           }
                           chrome.storage.sync.get(function(event5){
@@ -394,37 +386,30 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                             }
                             chrome.storage.sync.get(function(event6){
                               if(event6.tweets==true){
-                                console.log("checking tweets");
                                 openThatContext("tweets",open_url,event.show_context);
                               }
                               chrome.storage.sync.get(function(event7){
                                 if(event7.wbmsummary==true){
-                                  console.log("checking wbmsummary");
                                   openThatContext("wbmsummary",message.url,event.show_context);
                                 }
                                 chrome.storage.sync.get(function(event8){
                                   if(event8.annotations==true){
-                                    console.log("checking annotations");
                                     openThatContext("annotations",message.url,event.show_context);
                                   }
                                   chrome.storage.sync.get(function(event9){
                                     if(event9.similarweb==true){
-                                      console.log("checking similarweb");
                                       openThatContext("similarweb",url,event.show_context);
                                     }
                                     chrome.storage.sync.get(function(event10){
                                       if(event10.tagcloud==true){
-                                        console.log("checking tagcloud");
                                         openThatContext("tagcloud",message.url,event.show_context);
                                       }
                                       chrome.storage.sync.get(function(event11){
                                         if(event11.annotationsurl==true){
-                                          console.log("checking annotationURL");
                                           openThatContext("annotationsurl",url,event.show_context);
                                         }
                                         chrome.storage.sync.get(function(event12){
                                           if(event12.hoaxy==true){
-                                            console.log("Checking Hoaxy");
                                             openThatContext("hoaxy",open_url,event.show_context);
                                           }
                                         });
@@ -718,7 +703,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com")||received_url.includes("oauth")||received_url.includes("hoaxy"))){
               singlewindowurl=received_url;
               tagcloudurl=new URL(singlewindowurl);
-              console.log(tagcloudurl.href);
               received_url = received_url.replace(/^https?:\/\//,'');
               var length =received_url.length;
               var last_index=received_url.indexOf('/');
@@ -914,12 +898,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
               });
             }
             chrome.storage.sync.get(['books'],function(event){
-              console.log("here");
               if(event.books==true){
-                console.log("ok here");
                 chrome.tabs.query({active: true,currentWindow:true},function(tabs){
                   url=tabs[0].url;
-                  console.log(url);
                   tabId=tabs[0].id;
                   if(url.includes("www.amazon")){
                     var xhr=new XMLHttpRequest();
@@ -928,7 +909,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                     xhr.send(null);
                     xhr.onload=function(){
                       var response = JSON.parse(xhr.response);
-                      console.log(response);
                       if(response.success==true && response.error==undefined){
                         var responses=response.responses;
                         for(var propName in responses) {
@@ -954,7 +934,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         chrome.tabs.get(tabId, function(tab) {
           var page_url = tab.url;
           chrome.browserAction.setBadgeText({tabId: tabId, text:""});
-          console.log(page_url);
           if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
             if(!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))){
               check_url(page_url,
@@ -962,7 +941,6 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                   console.log("Available already");
                 },
                 function() {
-                  console.log("Not Available");
                   chrome.browserAction.setBadgeText({tabId: tabId, text:"S"});
                 });
               }
