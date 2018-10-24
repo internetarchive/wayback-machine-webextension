@@ -808,7 +808,7 @@ function auto_save(tabId){
     chrome.browserAction.setBadgeText({tabId: tabId, text:""});
     if(isValidUrl(page_url) && isValidSnapshotUrl(page_url)){
       if(!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))){
-        check_url(page_url,
+        wmAvailabilityCheck(page_url,
           function() {
             console.log("Available already");
           },
@@ -818,21 +818,6 @@ function auto_save(tabId){
       }
     }
   });
-}
-
-function check_url(url,onfound,onnotfound){
-  var xhr=new XMLHttpRequest();
-  var new_url="http://archive.org/wayback/available?url="+url;
-  xhr.open("GET",new_url,true);
-  xhr.send(null);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.response);
-    if(response.archived_snapshots.closest){
-      onfound();
-    }else{
-      onnotfound();
-    }
-  }
 }
 
 //function for opeing a particular context
