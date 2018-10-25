@@ -595,7 +595,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                       var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
                       chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
-                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                     }
                   });
                 }
@@ -843,7 +842,7 @@ function openThatContext(temp,url,methodOfShowing){
       }, function(tabs) {
         if(temp=='alexa'){
           chrome.tabs.create({'url': alexa_url,'active':false},function(tab){
-            tabId10=tab.id;
+            tabId1=tab.id;
           });
         }else if(temp=='domaintools'){
           chrome.tabs.create({'url': chrome.runtime.getURL("domaintools.html")+"?url="+url,'active':false},function(tab){
@@ -877,10 +876,6 @@ function openThatContext(temp,url,methodOfShowing){
           chrome.tabs.create({url:hoaxy_url,'active':false},function(tab){
             tabId9=tab.id;
           });
-        }else if(temp=='doi'){
-          chrome.tabs.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,'active':false},function(tab){
-            tabId1=tab.id;
-          });
         }
       });
     }
@@ -888,7 +883,7 @@ function openThatContext(temp,url,methodOfShowing){
     //If context is to be shown in window
     if(temp=='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-        windowId10 = win.id;
+        windowId1 = win.id;
       });
     }else if(temp=='domaintools'){
       chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:500, height:500, top:500, left:0, focused:false},function (win) {
@@ -924,7 +919,7 @@ function openThatContext(temp,url,methodOfShowing){
       });
     }else if (temp=='doi'){
       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
-          windowId1 = win.id;
+          windowId10 = win.id;
         });
     }
   }
