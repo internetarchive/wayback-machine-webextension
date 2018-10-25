@@ -1,4 +1,4 @@
-let resultsTray = document.getElementById("resultsTray");
+
 
 //Used to extact the current URL
 function getUrlByParameter(name){
@@ -14,26 +14,16 @@ function getBooked(url){
   get_ia_books(url).then((data)=>{
     $(".loader").hide();
     if (data['status'] === 'error') {
-      let p = document.createElement("p");
-      p.appendChild((document.createTextNode(data.message)));
-      resultsTray.setAttribute("style", "grid-template-columns:none;");
-      resultsTray.appendChild(p);
+      $("#resultsTray").css("grid-template-columns", "none").append(
+        $("<p></p>").text(data.message)
+      )
     } else {
       for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
         if (data[isbn]) {
-          //if book has field: metadata, addBookFromArchive
           if(data[isbn].metadata){
             addBookFromArchive(data[isbn].metadata);
-          }
-          // //else if book has id, addBookFromArchive using getMetadataFromArchive
-          // else if(getIdentifier(data[isbn])){
-          //   getMetadataFromArchive(getIdentifier(data[isbn]));
-          //   //TODO add this identifier to OL perhaps
-          // }
-          
-          //else add book from OL
-          else{
-              addBookFromOpenLibrary(data[isbn]);
+          }else{
+            addBookFromOpenLibrary(data[isbn]);
           }
         }
       }
@@ -55,6 +45,7 @@ function getMetadataFromOpenLibrary (olid, isbn) {
 }
 
 function addBookFromArchive(metadata){
+  let resultsTray = document.getElementById("resultsTray");
   let book = document.createElement('div');
   let title = document.createElement('p');
   let strong = document.createElement('strong');
@@ -104,6 +95,7 @@ function addBookFromArchive(metadata){
 }
 
 function addBookFromOpenLibrary(metadata){
+  let resultsTray = document.getElementById("resultsTray");
   let book = document.createElement('div');
   let title = document.createElement('p');
   let strong = document.createElement('strong');
