@@ -883,7 +883,7 @@ function openThatContext(temp,url,methodOfShowing){
     //If context is to be shown in window
     if(temp=='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
-        windowId10 = win.id;
+        windowId1 = win.id;
       });
     }else if(temp=='domaintools'){
       chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:500, height:500, top:500, left:0, focused:false},function (win) {
@@ -919,7 +919,7 @@ function openThatContext(temp,url,methodOfShowing){
       });
     }else if (temp=='doi'){
       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
-          windowId1 = win.id;
+          windowId10 = win.id;
         });
     }
   }
