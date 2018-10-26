@@ -1,4 +1,4 @@
 window.onload = function(){
   var url = getUrlByParameter('url');
-  getBooked(url);
+  populateBooks(url);
 };

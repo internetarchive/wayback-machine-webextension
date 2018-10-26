@@ -8,7 +8,7 @@ function addCitations(){
     let books = $('.citation.book');
     for(let book of books){
       let isbn = getISBNFromCitation(book);
-      let id = getIdentifierFromISBN(isbn, data);
+      let id = getIdentifier(data[isbn]);
       if(id){
         let link = createLinkToArchive(id);
         book.append(link);
@@ -19,7 +19,7 @@ function addCitations(){
 
 //Get all books on wikipedia page through https://archive.org/services/context/books?url=...
 function get_ia_books(url){
-  let api = "https://archive.org/services/context/books?url=" + url;
+  let api = "http://vbanos-dev.us.archive.org:5002/books?url=" + url;
   return fetch(api)
     .then(res => res.json())
     .catch(err => console.log(err));
@@ -42,9 +42,14 @@ function createLinkToArchive(id){
   return a;
 }
 
-function getIdentifierFromISBN(isbn, json){
-  if(json[isbn] && json[isbn][isbn]){
-    let id = Object.values(json[isbn][isbn]['responses'])[0]['identifier']
+function getIdentifier(book){
+  //identifier can be found as metadata.identifier or ocaid
+  if(book){
+    if(book.metadata){
+      var id = book.metadata.identifier
+    } else{
+      var id = book.ocaid;
+    }
     if(id){
       return id;
     }
@@ -69,6 +74,6 @@ function getISBNFromCitation(citation){
 if(typeof module !=="undefined") {
   module.exports = {
     getISBNFromCitation:getISBNFromCitation,
-    getIdentifierFromISBN:getIdentifierFromISBN
+    getIdentifier:getIdentifier
   };
 }
