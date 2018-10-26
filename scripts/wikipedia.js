@@ -4,7 +4,7 @@
 
 //main method
 function addCitations(){
-  get_ia_books(location.href).then(data => {
+  get_wikipedia_books(location.href).then(data => {
     let books = $('.citation.book');
     for(let book of books){
       let isbn = getISBNFromCitation(book);
@@ -18,7 +18,7 @@ function addCitations(){
 }
 
 //Get all books on wikipedia page through https://archive.org/services/context/books?url=...
-function get_ia_books(url){
+function get_wikipedia_books(url){
   let api = "http://vbanos-dev.us.archive.org:5002/books?url=" + url;
   return fetch(api)
     .then(res => res.json())
