@@ -67,7 +67,7 @@ function addBook(metadata){
   );
   let details = $("<div>").attr({"class": "bottom_details"}).append(
     metadata.image ? $("<img>").attr({"class": "cover-img", "src": metadata.image}) : $("<p>").attr({"class": "cover-img"}).text("No cover available"),
-    $("<a>").attr({"class": metadata.button_class, "href": "#"}).text(metadata.button_text).click(function(){
+    $("<button>").attr({"class": metadata.button_class}).text(metadata.button_text).click(function(){
       chrome.storage.sync.get(['show_context'],function(event1){
           if(event1.show_context==undefined){
               event1.show_context="tab";

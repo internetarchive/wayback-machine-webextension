@@ -35,7 +35,7 @@ function createList (entry, mainContainer) {
   let bottom_details = $("<div>").addClass("bottom_details");
   if (url !== '#') {
     bottom_details.append(
-      $('<button>').attr({'href':'#', 'class': 'btn btn-success'}).text('Read Paper')
+      $('<button>').attr({'class': 'btn btn-success'}).text('Read Paper')
         .click(function () {
           chrome.storage.sync.get(['show_context'], function (event1) {
             if (event1.show_context === undefined){
