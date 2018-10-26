@@ -113,23 +113,6 @@ function social_share(eventObj){
     }
 }
 
-function statistics(eventObj) {  //Common Function for alexa and whois statistics
-    var target=eventObj.target;
-    var id=target.getAttribute('id');
-    var url=get_clean_url();
-    url = url.replace(/^https?:\/\//,'');
-    var length=url.length;
-    var last_index=url.indexOf('/');
-    url=url.slice(0,last_index);
-    if(id.includes("alexa")){
-        var open_url="http://www.alexa.com/siteinfo/" + url;
-        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
-    }else if(id.includes("whois")){
-        var open_url="https://www.whois.com/whois/" + url;
-        window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
-    }
-}
-
 function search_tweet(eventObj){
     var url = get_clean_url();
     url = url.replace(/^https?:\/\//,'');
@@ -427,38 +410,6 @@ function show_wikibooks(){
   });
 }
 
-/** Disabled code for the autosave feature **/
-//function restoreSettings() {
-//  chrome.storage.sync.get({
-//    as:false
-//  }, function(items) {
-//    document.getElementById('as').checked = items.as;
-//      if(items.as){
-//          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
-//      }
-//     });
-//}
-//
-//function saveSettings(){
-//    var as = document.getElementById('as').checked;
-//      chrome.storage.sync.set({
-//      as: as
-//  });
-//}
-//function showSettings(eventObj){
-//    var target=eventObj.target;
-//    if(target.getAttribute('toggle')=='off'){
-//        document.getElementById('settings_btn').setAttribute('toggle','on');
-//    document.getElementById('settings_div').style.display="block";
-//    }else{
-//        document.getElementById('settings_btn').setAttribute('toggle','off');
-//        document.getElementById('settings_div').style.display="none";
-//    }
-//}
-//restoreSettings();
-//document.getElementById('settings_div').style.display="none";
-
-// window.onload=get_url;
 window.onloadFuncs = [get_url,auto_archive_url,borrow_books,show_news,show_wikibooks];
 window.onload = function(){
  for(var i in this.onloadFuncs){
@@ -472,8 +423,6 @@ document.getElementById('fb_share').onclick =social_share;
 document.getElementById('twit_share').onclick =social_share;
 document.getElementById('gplus_share').onclick =social_share;
 document.getElementById('linkedin_share').onclick =social_share;
-// document.getElementById('alexa_statistics').onclick =statistics;
-// document.getElementById('whois_statistics').onclick =statistics;
 document.getElementById('search_tweet').onclick =search_tweet;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('settings_button').onclick =settings;
@@ -481,7 +430,5 @@ document.getElementById('context-screen').onclick=show_all_screens;
 document.getElementById('feedback').onclick=open_feedback_page;
 
 document.getElementById('overview').onclick = view_all;
-//document.getElementById('settings_btn').onclick=showSettings;
-//document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
