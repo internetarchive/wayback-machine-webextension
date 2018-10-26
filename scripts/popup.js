@@ -276,40 +276,24 @@ function show_all_screens(){
 }
 
 function borrow_books(){
-    chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-        url=tabs[0].url;
-        tabId=tabs[0].id;
-        chrome.browserAction.getBadgeText({tabId:tabId}, function (result){
-            if(result=="B"){
-                if(url.includes("www.amazon") && url.includes('/dp/')){
-                    var xhr=new XMLHttpRequest();
-                    var new_url="https://archive.org/services/context/amazonbooks?url="+url;
-                    console.log(new_url);
-                    xhr.open("GET",new_url,true);
-                    xhr.send(null);
-                    xhr.onload=function(){
-                        var response = JSON.parse(xhr.response);
-                        if(response.success==true && response.error==undefined){
-                          var responses=response.responses;
-                          for(var propName in responses) {
-                            if(responses.hasOwnProperty(propName)) {
-                              var propValue = responses[propName];
-                            }
-                          }
-                          var identifier=propValue.identifier;
-                        }
-                        if(identifier!=undefined||null){
-                        document.getElementById('borrow_books_tr').style.display="block";
-                        }
-                        document.getElementById('borrow_books_tr').onclick=function(){
-                            chrome.tabs.create({url:"https://archive.org/details/"+identifier});
-                        }
-                    }
-                }
+  chrome.tabs.query({active: true,currentWindow:true},function(tabs){
+    url=tabs[0].url;
+    tabId=tabs[0].id;
+    chrome.browserAction.getBadgeText({tabId:tabId}, function (result){
+      if(result=="B"){
+        if(url.includes("www.amazon") && url.includes('/dp/')){
+          get_amazonbooks(url).then(response=>{
+            if(response['metadata'] && response['metadata']["identifier-access"]){
+              let details_url = response['metadata']["identifier-access"];
+              $('#borrow_books_tr').css({"display":"block"}).click(function(){
+                chrome.tabs.create({url:details_url})
+              });
             }
-        });
-
+          });
+        }
+      }
     });
+  });
 }
 
 function show_news(){
