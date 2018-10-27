@@ -32,9 +32,10 @@ function createList (entry, mainContainer) {
       // $('<p>').append(journal)
     )
   );
+  let bottom_details = $("<div>").addClass("bottom_details");
   if (url !== '#') {
-    paper.append(
-      $('<a>').attr({'href':'#', 'class': 'btn btn-success'}).text('Read Paper')
+    bottom_details.append(
+      $('<button>').attr({'class': 'btn btn-success'}).text('Read Paper')
         .click(function () {
           chrome.storage.sync.get(['show_context'], function (event1) {
             if (event1.show_context === undefined){
@@ -55,8 +56,9 @@ function createList (entry, mainContainer) {
       $('<div>').addClass('small text-muted').text('source: ' + entry.source)
     );
   } else {
-    paper.append($('<p>').text('Paper Unavailable').addClass('not_found'));
+    bottom_details.append($('<p>').text('Paper Unavailable').addClass('not_found'));
   }
+  paper.append(bottom_details);
   // add to list
   $('.loader').hide();
   let container = $('#container-whole');

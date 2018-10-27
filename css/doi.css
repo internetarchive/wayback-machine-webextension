@@ -11,10 +11,11 @@
   background-color: #eee;
   border-radius: 5px;
   border: 1px solid black;
-  margin-bottom: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10px auto;
   padding:5px;
+  justify-content: space-between;
+  display: flex;
+  flex-flow: column wrap;
   text-align: center;
   width: 300px;
 }
@@ -28,23 +29,29 @@
   width: 250px;
 }
 .text_elements{
-  height: 115px;
-  overflow: hidden;
-}
-
-.not_found{
-  color:red;
   display:block;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10px auto;
   overflow: hidden;
   text-align: center;
   white-space: normal;
   width: 250px;
 }
-#container-whole > div > a{
+
+.bottom_details{
+  justify-content: flex-end;
+  margin: 10px auto;
+}
+
+.not_found{
+  color:red;
+  display:block;
+  margin: 10px auto;
+  overflow: hidden;
+  text-align: center;
+  white-space: normal;
+  width: 250px;
+}
+#container-whole > div > div > button{
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
