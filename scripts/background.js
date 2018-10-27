@@ -738,28 +738,19 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         });
       }
       chrome.storage.sync.get(['books'],function(event){
-        if(event.books==true){
-          chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-            url=tabs[0].url;
-            tabId=tabs[0].id;
+        if (event.books === true) {
+          chrome.tabs.query({active: true, currentWindow:true}, function(tabs){
+            url = tabs[0].url;
+            tabId = tabs[0].id;
             if(url.includes("www.amazon")){
-              var xhr=new XMLHttpRequest();
-              var new_url="https://archive.org/services/context/amazonbooks?url="+url;
-              xhr.open("GET",new_url,true);
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', 'https://archive.org/services/context/amazonbooks?url=' + url, true);
               xhr.send(null);
-              xhr.onload=function(){
-                var response = JSON.parse(xhr.response);
-                if(response.success==true && response.error==undefined){
-                  var responses=response.responses;
-                  for(var propName in responses) {
-                    if(responses.hasOwnProperty(propName)) {
-                      var propValue = responses[propName];
-                    }
-                  }
-                  var identifier=propValue.identifier;
-                  if(identifier!=undefined||null){
-                    chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
-                  }
+              xhr.onload = function () {
+                const resp = JSON.parse(xhr.response);
+                if (('metadata' in resp && 'identifier' in resp['metadata']) ||
+                    'ocaid' in resp) {
+                  chrome.browserAction.setBadgeText({tabId: tabId, text: 'B'});
                 }
               }
             }
