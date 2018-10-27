@@ -1,17 +1,6 @@
-
-
-//Used to extact the current URL
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
-}
-
 function populateBooks(url){
   // Gets the data for each book on the wikipedia url
-  get_ia_books(url).then((data)=>{
+  get_wikipedia_books(url).then((data)=>{
     $(".loader").hide();
     if (data['status'] === 'error') {
       $("#resultsTray").css("grid-template-columns", "none").append(
@@ -89,7 +78,6 @@ function addBook(metadata){
 
 if(typeof module !=="undefined") {
   module.exports = {
-    getUrlByParameter:getUrlByParameter,
     getMetadata:getMetadata
   };
 }
