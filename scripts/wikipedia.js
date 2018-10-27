@@ -1,7 +1,6 @@
 // This script adds buttons next to isbns on wikipedia pages that will redirect
 // the user to a readable digital copy of the referenced book.
 
-
 //main method
 function addCitations(){
   get_wikipedia_books(location.href).then(data => {
@@ -17,12 +16,12 @@ function addCitations(){
   });
 }
 
-//Get all books on wikipedia page through https://archive.org/services/context/books?url=...
-function get_wikipedia_books(url){
-  let api = "http://vbanos-dev.us.archive.org:5002/books?url=" + url;
-  return fetch(api)
+// Get all books on wikipedia page through
+// https://archive.org/services/context/books?url=...
+function get_wikipedia_books (url) {
+  return fetch('https://archive.org/services/context/books?url=' + url)
     .then(res => res.json())
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
 }
 
 function createLinkToArchive(id){
