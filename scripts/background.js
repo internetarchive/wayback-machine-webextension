@@ -58,55 +58,6 @@ function rewriteUserAgentHeader(e) {
   }
   return {requestHeaders: e.requestHeaders};
 }
-/**
-* Checks Wayback Machine API for url snapshot
-*/
-function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var xhr = new XMLHttpRequest();
-  var requestUrl = "https://archive.org/wayback/available";
-  var requestParams = "url=" + encodeURI(url);
-  xhr.open("POST", requestUrl, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("Wayback-Api-Version", 2);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.responseText);
-    var wayback_url = getWaybackUrlFromResponse(response);
-    if (wayback_url !== null) {
-      onsuccess(wayback_url, url);
-    } else if (onfail) {
-      onfail();
-    }
-  };
-  xhr.send(requestParams);
-}
-/**
-* @param response {object}
-* @return {string or null}
-*/
-function getWaybackUrlFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
-  } else {
-    return null;
-  }
-}
-
-/**
-* Makes sure response is a valid URL to prevent code injection
-* @param url {string}
-* @return {bool}
-*/
-function isValidSnapshotUrl(url) {
-  return ((typeof url) === "string" &&
-  (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
-}
 
 function URLopener(open_url,url,wmAvailabilitycheck){
   if(wmAvailabilitycheck==true){

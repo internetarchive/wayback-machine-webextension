@@ -24,7 +24,8 @@
       "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"],
+    "scripts": ["scripts/utils.js",
+                "scripts/background.js"],
     "persistent": true
   },
   "content_scripts": [
