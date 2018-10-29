@@ -1,9 +1,5 @@
+function getMetadata(entry){
 
-function getUrlByParameter (name) {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(name);
-}
-function createList (entry, mainContainer) {
   let title = entry.title;
   let author = '';
   if (entry.authors) {
@@ -22,18 +18,28 @@ function createList (entry, mainContainer) {
   if (entry.url) {
     url = entry.url;
   }
+  return {
+    "title": title,
+    "author": author,
+    "journal": journal,
+    "url": url,
+    "source": entry.source
+  };
+}
+
+function makeEntry (data) {
   let paper = $('<div>').append(
     $('<p class="text_elements">').append(
       $('<p>').append(
-        $('<strong>').text(title)
+        $('<strong>').text(data.title)
       ),
-      $('<p>').append(author)
+      $('<p>').append(data.author)
       // Journal was also commented out in the previous version.
       // $('<p>').append(journal)
     )
   );
   let bottom_details = $("<div>").addClass("bottom_details");
-  if (url !== '#') {
+  if (data.url !== '#') {
     bottom_details.append(
       $('<button>').attr({'class': 'btn btn-success'}).text('Read Paper')
         .click(function () {
@@ -42,45 +48,53 @@ function createList (entry, mainContainer) {
               event1.show_context = 'tab';
             }
             if (event1.show_context === 'tab') {
-              chrome.tabs.create({url: url});
+              chrome.tabs.create({url: data.url});
             } else {
               chrome.system.display.getInfo(function (displayInfo) {
                 const height = displayInfo[0].bounds.height;
                 const width = displayInfo[0].bounds.width;
-                chrome.windows.create({url: url, width: width / 2, height: height,
+                chrome.windows.create({url: data.url, width: width / 2, height: height,
                                        top: 0, left: 0, focused: true});
               });
             }
           });
         }),
-      $('<div>').addClass('small text-muted').text('source: ' + entry.source)
+      $('<div>').addClass('small text-muted').text('source: ' + data.source)
     );
   } else {
     bottom_details.append($('<p>').text('Paper Unavailable').addClass('not_found'));
   }
   paper.append(bottom_details);
-  // add to list
-  $('.loader').hide();
-  let container = $('#container-whole');
-  if (url !== '#' && container.children().length > 0) {
-    container.prepend(paper);
-  } else {
-    container.append(paper);
-  }
+  return paper;
 }
+
 function createPage () {
-  let mainContainer = document.getElementById('container-whole');
+  let container = $('#container-whole');
   const url = getUrlByParameter('url');
-  $.getJSON('https://archive.org/services/context/papers?url='+url, function(data) {
-    for (var i=0; i<data.length; i++){
-      if (data[i]) {
-        createList(data[i]);
+  $.getJSON('https://archive.org/services/context/papers?url='+url, function(response) {
+    $('.loader').hide();
+    if(response.status && response.status === "error"){
+      $("#doi-heading").html(response.message);
+    }else{
+      for (var i=0; i<response.length; i++){
+        if (response[i]) {
+          let data = getMetadata(response[i]);
+          let paper = makeEntry(data);
+          // add to list
+          if (data.url !== '#') {
+            container.prepend(paper);
+          } else {
+            container.append(paper);
+          }
+        }
       }
-    }
-    if (mainContainer.children.length === 0) {
-      $('.loader').hide();
-      $('#doi-heading').html('No papers found.');
     }
   });
 }
-if (typeof module !== 'undefined') { module.exports = {getUrlByParameter: getUrlByParameter} }
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    getMetadata: getMetadata,
+    makeEntry: makeEntry
+  }
+}
