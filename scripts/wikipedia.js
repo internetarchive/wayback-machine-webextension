@@ -4,13 +4,13 @@
 //main method
 function addCitations(){
   get_wikipedia_books(location.href).then(data => {
-    let books = $('.citation.book');
+    let books = $("a[title^='Special:BookSources']");
     for(let book of books){
       let isbn = getISBNFromCitation(book);
       let id = getIdentifier(data[isbn]);
       if(id){
         let link = createLinkToArchive(id);
-        book.append(link);
+        book.parentElement.append(link);
       }
     }
   });
@@ -28,7 +28,11 @@ function createLinkToArchive(id){
   let img = $('<img>')
     .attr({"alt": "Read", "src": chrome.extension.getURL("images/icon.png")})[0];
   let a = $("<a>")
-    .attr({"href": "https://archive.org/details/" + id, "class":"btn-archive"})
+    .attr({
+      "href": "https://archive.org/details/" + id,
+      "class":"btn-archive",
+      "style" : "padding: 5px;"
+    })
     .prepend(img)
     .hover(
       function() {
@@ -58,16 +62,9 @@ function getIdentifier(book){
 
 function getISBNFromCitation(citation){
   //Takes in HTMLElement and returns isbn number or null if isbn not found
-  let html = citation.outerHTML;
-  const hasTextISBN_pattern = /<a href="\/wiki\/International_Standard_Book_Number" title="International Standard Book Number">ISBN<\/a>/;
-  if (hasTextISBN_pattern.test(html)){
-    const extractISBNNumber_pattern = /title="Special:BookSources\/[^"]*"/;
-    let isbnRaw = extractISBNNumber_pattern.exec(html)[0];
-    let isbn = isbnRaw.replace(/title="Special:BookSources\//, "").replace(/-/g, "").replace(/"/g, "");
-    return isbn;
-  }else{
-    return null;
-  }
+  let rawISBN = citation.text;
+  let isbn = rawISBN.replace(/\-/g, "");
+  return isbn;
 }
 
 if(typeof module !=="undefined") {
