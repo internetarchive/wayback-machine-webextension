@@ -54,20 +54,6 @@ function constructArticles(clips){
   }
 }
 
-function getUrlByParameter(name){
-  var url=window.location.href;
-  var indexOfEnd=url.length;
-  var index=url.indexOf(name);
-  var length=name.length;
-  return url.slice(index+length+1,indexOfEnd);
-}
-
-window.onloadFuncs = [get_details];
-window.onload = function(){
-  for(var i in this.onloadFuncs){
-   this.onloadFuncs[i]();
-  }
-}
 function get_details(){
   var article = null;
   article = getUrlByParameter('url');
