@@ -1,17 +1,6 @@
-
-
-//Used to extact the current URL
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
-}
-
 function populateBooks(url){
   // Gets the data for each book on the wikipedia url
-  get_ia_books(url).then((data)=>{
+  get_wikipedia_books(url).then((data)=>{
     $(".loader").hide();
     if (data['status'] === 'error') {
       $("#resultsTray").css("grid-template-columns", "none").append(
@@ -67,7 +56,7 @@ function addBook(metadata){
   );
   let details = $("<div>").attr({"class": "bottom_details"}).append(
     metadata.image ? $("<img>").attr({"class": "cover-img", "src": metadata.image}) : $("<p>").attr({"class": "cover-img"}).text("No cover available"),
-    $("<a>").attr({"class": metadata.button_class, "href": "#"}).text(metadata.button_text).click(function(){
+    $("<button>").attr({"class": metadata.button_class}).text(metadata.button_text).click(function(){
       chrome.storage.sync.get(['show_context'],function(event1){
           if(event1.show_context==undefined){
               event1.show_context="tab";
@@ -89,7 +78,6 @@ function addBook(metadata){
 
 if(typeof module !=="undefined") {
   module.exports = {
-    getUrlByParameter:getUrlByParameter,
     getMetadata:getMetadata
   };
 }

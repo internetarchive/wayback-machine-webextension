@@ -58,55 +58,6 @@ function rewriteUserAgentHeader(e) {
   }
   return {requestHeaders: e.requestHeaders};
 }
-/**
-* Checks Wayback Machine API for url snapshot
-*/
-function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var xhr = new XMLHttpRequest();
-  var requestUrl = "https://archive.org/wayback/available";
-  var requestParams = "url=" + encodeURI(url);
-  xhr.open("POST", requestUrl, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("Wayback-Api-Version", 2);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.responseText);
-    var wayback_url = getWaybackUrlFromResponse(response);
-    if (wayback_url !== null) {
-      onsuccess(wayback_url, url);
-    } else if (onfail) {
-      onfail();
-    }
-  };
-  xhr.send(requestParams);
-}
-/**
-* @param response {object}
-* @return {string or null}
-*/
-function getWaybackUrlFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
-  } else {
-    return null;
-  }
-}
-
-/**
-* Makes sure response is a valid URL to prevent code injection
-* @param url {string}
-* @return {bool}
-*/
-function isValidSnapshotUrl(url) {
-  return ((typeof url) === "string" &&
-  (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
-}
 
 function URLopener(open_url,url,wmAvailabilitycheck){
   if(wmAvailabilitycheck==true){
@@ -738,28 +689,19 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         });
       }
       chrome.storage.sync.get(['books'],function(event){
-        if(event.books==true){
-          chrome.tabs.query({active: true,currentWindow:true},function(tabs){
-            url=tabs[0].url;
-            tabId=tabs[0].id;
+        if (event.books === true) {
+          chrome.tabs.query({active: true, currentWindow:true}, function(tabs){
+            url = tabs[0].url;
+            tabId = tabs[0].id;
             if(url.includes("www.amazon")){
-              var xhr=new XMLHttpRequest();
-              var new_url="https://archive.org/services/context/amazonbooks?url="+url;
-              xhr.open("GET",new_url,true);
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', 'https://archive.org/services/context/amazonbooks?url=' + url, true);
               xhr.send(null);
-              xhr.onload=function(){
-                var response = JSON.parse(xhr.response);
-                if(response.success==true && response.error==undefined){
-                  var responses=response.responses;
-                  for(var propName in responses) {
-                    if(responses.hasOwnProperty(propName)) {
-                      var propValue = responses[propName];
-                    }
-                  }
-                  var identifier=propValue.identifier;
-                  if(identifier!=undefined||null){
-                    chrome.browserAction.setBadgeText({tabId: tabId, text:"B"});
-                  }
+              xhr.onload = function () {
+                const resp = JSON.parse(xhr.response);
+                if (('metadata' in resp && 'identifier' in resp['metadata']) ||
+                    'ocaid' in resp) {
+                  chrome.browserAction.setBadgeText({tabId: tabId, text: 'B'});
                 }
               }
             }

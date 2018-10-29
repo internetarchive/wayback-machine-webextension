@@ -38,9 +38,10 @@ function makeEntry (data) {
       // $('<p>').append(journal)
     )
   );
+  let bottom_details = $("<div>").addClass("bottom_details");
   if (data.url !== '#') {
-    paper.append(
-      $('<a>').attr({'href':'#', 'class': 'btn btn-success'}).text('Read Paper')
+    bottom_details.append(
+      $('<button>').attr({'class': 'btn btn-success'}).text('Read Paper')
         .click(function () {
           chrome.storage.sync.get(['show_context'], function (event1) {
             if (event1.show_context === undefined){
@@ -61,8 +62,9 @@ function makeEntry (data) {
       $('<div>').addClass('small text-muted').text('source: ' + data.source)
     );
   } else {
-    paper.append($('<p>').text('Paper Unavailable').addClass('not_found'));
+    bottom_details.append($('<p>').text('Paper Unavailable').addClass('not_found'));
   }
+  paper.append(bottom_details);
   return paper;
 }
 
@@ -71,23 +73,25 @@ function createPage () {
   const url = getUrlByParameter('url');
   $.getJSON('https://archive.org/services/context/papers?url='+url, function(response) {
     $('.loader').hide();
-    for (var i=0; i<response.length; i++){
-      if (response[i]) {
-        let data = getMetadata(response[i]);
-        let paper = makeEntry(data);
-        // add to list
-        if (data.url !== '#') {
-          container.prepend(paper);
-        } else {
-          container.append(paper);
+    if(response.status && response.status === "error"){
+      $("#doi-heading").html(response.message);
+    }else{
+      for (var i=0; i<response.length; i++){
+        if (response[i]) {
+          let data = getMetadata(response[i]);
+          let paper = makeEntry(data);
+          // add to list
+          if (data.url !== '#') {
+            container.prepend(paper);
+          } else {
+            container.append(paper);
+          }
         }
       }
     }
-    if (container.children.length === 0) {
-      $('#doi-heading').html('No papers found.');
-    }
   });
 }
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getMetadata: getMetadata,
