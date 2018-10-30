@@ -84,25 +84,22 @@ function save_options() {
   });
 }
 
-function validate(eventObj) {
-  var source=eventObj.target;
-  checkboxes = document.getElementsByName('context');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    if(checkboxes[i].checked==true){
-      document.getElementById('showall').checked=false;
+function validate() {
+  checkboxes = $('[name="context"]');
+  for(var i=0; i<checkboxes.length; i++) {
+    if(checkboxes[i].checked){
+      console.log($('#showall'));
+      $('#showall').prop('checked', false);
     }
   }
 }
-document.getElementById('showall').addEventListener('click',selectall);
-function selectall(eventObj){
-  var source=eventObj.target;
-  checkboxes = document.getElementsByName('context');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    checkboxes[i].checked = source.checked;
+
+function selectall(){
+  checkboxes = $('[name="context"]');
+  for(var i=0; i<checkboxes.length; i++) {
+    checkboxes[i].checked = $( this ).prop('checked');
   }
 }
 
-var el = document.getElementsByClassName('only');
-for (var i=0;i<el.length; i++) {
-    el[i].addEventListener('click',validate);
-}
+$('.only').click(validate);
+$('#showall').click(selectall);
