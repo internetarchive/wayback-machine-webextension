@@ -1,7 +1,12 @@
 function parseDate (date) {
-  let entryDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
-  let dateObject = new Date(entryDate)
-  return dateObject.toDateString()
+  if(typeof date === "string"){
+    const entryDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
+    const dateObject = new Date(entryDate)
+    if(dateObject.toDateString() !== 'Invalid Date'){
+      return dateObject.toDateString()
+    }
+  }
+  return ''
 }
 function constructArticles (clip) {
   let topElements = $('<div>').addClass('top_elements').append(
@@ -41,8 +46,7 @@ function getDetails () {
     if (clips.status !== 'error') {
       if (clips.length > 0) {
         for (let clip of clips) {
-          let entry = constructArticles(clip)
-          $('#RecommendationTray').append(entry)
+          $('#RecommendationTray').append(constructArticles(clip))
         }
       } else {
         $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
@@ -55,4 +59,10 @@ function getDetails () {
       )
     }
   })
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    parseDate : parseDate
+  }
 }
