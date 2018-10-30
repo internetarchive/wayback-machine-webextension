@@ -1,1 +1,1 @@
-get_details()
+getDetails()
