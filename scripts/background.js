@@ -209,7 +209,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
       // utility function to run Radial Tree JS
       function _run_modalbox_scripts() {
         chrome.tabs.executeScript(tab.id, {
-          file:"scripts/lodash.min.js"
+          file:"scripts/build.js"
         });
         chrome.tabs.executeScript(tab.id, {
           file:"scripts/d3.js"

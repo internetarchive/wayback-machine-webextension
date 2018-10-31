@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+
 module.exports = {
   entry: './scripts/index.js',
   output: {
@@ -8,8 +9,9 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
+      $: 'jquery',
+      jQuery: 'jquery',
+      _: 'lodash'
     })
   ],
   stats: {
