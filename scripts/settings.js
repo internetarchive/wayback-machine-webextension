@@ -44,41 +44,25 @@ function restore_options () {
 }
 
 function save_options () {
-  var show_context = $('#show_context').val()
-  var auto_archive = $('#auto-archive').prop('checked')
-  var books = $('#books').prop('checked')
-  var auto_update_context = $('#auto-update-context').prop('checked')
-  var alexa = $('#alexa').prop('checked')
-  var domaintools = $('#domaintools').prop('checked')
-  var tweets = $('#tweets').prop('checked')
-  var wbmsummary = $('#wbmsummary').prop('checked')
-  var annotations = $('#annotations').prop('checked')
-  var annotationsurl = $('#annotationsurl').prop('checked')
-  var similarweb = $('#similarweb').prop('checked')
-  var tagcloud = $('#tagcloud').prop('checked')
-  var hoaxy = $('#hoaxy').prop('checked')
-  var showall = $('#showall').prop('checked')
-  var news = $('#news').prop('checked')
-  var wikibooks = $('#wikibooks').prop('checked')
-  var doi = $('#doi').prop('checked')
+
   chrome.storage.sync.set({
-    show_context: show_context,
-    auto_archive: auto_archive,
-    books: books,
-    auto_update_context: auto_update_context,
-    alexa: alexa,
-    domaintools: domaintools,
-    tweets: tweets,
-    wbmsummary: wbmsummary,
-    annotations: annotations,
-    annotationsurl: annotationsurl,
-    similarweb: similarweb,
-    tagcloud: tagcloud,
-    hoaxy: hoaxy,
-    showall: showall,
-    news: news,
-    wikibooks: wikibooks,
-    doi: doi
+    show_context : $('#show_context').val(),
+    auto_archive : $('#auto-archive').prop('checked'),
+    books : $('#books').prop('checked'),
+    auto_update_context : $('#auto-update-context').prop('checked'),
+    alexa : $('#alexa').prop('checked'),
+    domaintools : $('#domaintools').prop('checked'),
+    tweets : $('#tweets').prop('checked'),
+    wbmsummary : $('#wbmsummary').prop('checked'),
+    annotations : $('#annotations').prop('checked'),
+    annotationsurl : $('#annotationsurl').prop('checked'),
+    similarweb : $('#similarweb').prop('checked'),
+    tagcloud : $('#tagcloud').prop('checked'),
+    hoaxy : $('#hoaxy').prop('checked'),
+    showall : $('#showall').prop('checked'),
+    news : $('#news').prop('checked'),
+    wikibooks : $('#wikibooks').prop('checked'),
+    doi : $('#doi').prop('checked')
   }, function () {
     $('#status').text('Options saved.')
     setTimeout(function () {
