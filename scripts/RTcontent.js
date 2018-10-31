@@ -18,38 +18,15 @@ if(document.getElementById('myModal') !== null) {
   modal.setAttribute('id','myModal');
   modal.setAttribute('class','RTmodal');
   modal.setAttribute('count','1');
-  /**
-  var modalContent=document.createElement('div');
-  modalContent.setAttribute('class','modal-content');
-  var divBtn=document.createElement('div');
-  divBtn.setAttribute('id','divBtn');
-  var message=document.createElement('div');
-  message.setAttribute('id','message');
-  **/
   var span=document.createElement('button');
   span.innerHTML='&times;';
   span.setAttribute('class','RTclose');
   modal.appendChild(span);
-  /**
-   * var main=document.createElement('div');
-  var sequence=document.createElement('p');
-  var chart=document.createElement('div');
-  sequence.setAttribute('id','sequence');
-  chart.setAttribute('id','chart');
-  main.setAttribute('id','main');
-
-  modal.appendChild(divBtn);
-  modal.appendChild(sequence);
-  modal.appendChild(chart);
-  modal.appendChild(message);
-  **/
   document.body.appendChild(modal);
   modal.style.display = "block";
 
   span.onclick = function() {
     modal.style.display = "none";
-    // var Modal=document.getElementById("myModal");
-    // document.body.removeChild(Modal);
   };
 }
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
@@ -58,4 +35,48 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   	var Modal=document.getElementById("myModal");
     document.body.removeChild(Modal);
   }
+});
+var $container = document.getElementById('myModal');
+if ($container.getAttribute('count') == 1) {
+  var loading = document.createElement('div');
+  loading.setAttribute('id', 'loading');
+  $container.appendChild(loading);
+  var animate = document.createElement('img');
+  var fullURL = chrome.runtime.getURL('images/logo-animate.svg');
+  animate.setAttribute('src', fullURL);
+  animate.setAttribute('id', 'animated-logo');
+  document.getElementById('loading').appendChild(animate);
+}
+chrome.runtime.sendMessage({ message: 'sendurlforrt' });
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+	if (message.RTurl != "") {
+		var url = message.RTurl;
+		if (url.includes('https')) {
+			url = url.replace('https://', '');
+		} else {
+			url = url.replace('http://', '');
+		}
+		var pos = url.indexOf('/');
+		if (pos != -1) url = url.substring(0, pos);
+		var base_url = url;
+		var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://web.archive.org/web/timemap/json?url="+url+"/&fl=timestamp:4,urlkey&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&collapse=urlkey&collapse=timestamp:4&limit=100000", true);
+		xhr.onerror = function() {
+			var animateSvg = document.getElementById('animated-logo');
+			document.getElementById('loading').removeChild(animateSvg);
+			alert("An error occured. Please refresh the page and try again");
+		};
+		xhr.ontimeout = function() {
+			var animateSvg = document.getElementById('animated-logo');
+			document.getElementById('loading').removeChild(animateSvg);
+			alert("Time out. Please refresh the page and try again");
+		}
+		xhr.onload = function() {
+			var response = JSON.parse(xhr.responseText);
+			var animateSvg = document.getElementById('animated-logo');
+			document.getElementById('loading').removeChild(animateSvg);
+      new wb.RadialTree(document.getElementById('loading'), response, {url: url});
+		};
+		xhr.send();
+	}
 });

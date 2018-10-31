@@ -217,9 +217,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
         chrome.tabs.executeScript(tab.id, {
           file:"scripts/RTcontent.js"
         });
-        chrome.tabs.executeScript(tab.id, {
-          file:"scripts/sequences.js"
-        });
         previous_RTurl = url;
       }
       //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
