@@ -49,7 +49,6 @@
     "scripts/client.js",
     "scripts/RTcontent.js",
     "scripts/sequences.js",
-    "scripts/d3.js",
     "scripts/radial-tree.umd.js",
     "css/RTstyle.css",
     "css/sequences.css",
