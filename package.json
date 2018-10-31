@@ -23,6 +23,7 @@
   "devDependencies": {
     "bootstrap": "3.3.7",
     "chai": "^4.2.0",
+    "d3": "4.12.0",
     "eslint": "^5.7.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
