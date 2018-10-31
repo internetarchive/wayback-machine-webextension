@@ -1,105 +1,104 @@
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',save_options);
-function restore_options() {
+$(restore_options)
+$('#save').click(save_options)
+$('.only').click(validate)
+$('#showall').click(selectall)
+
+function restore_options () {
   chrome.storage.sync.get({
-    show_context:'tab',
+    show_context: 'tab',
     auto_archive: false,
-    books:false,
-    auto_update_context:false,
-    alexa:false,
-    domaintools:false,
-    tweets:false,
-    wbmsummary:false,
-    annotations:false,
-    annotationsurl:false,
-    similarweb:false,
-    tagcloud:false,
-    hoaxy:false,
-    doi:false,
-    news:false,
-    wikibooks:false,
-    showall:false
-  }, function(items) {
-    document.getElementById('auto-archive').checked = items.auto_archive;
-    document.getElementById('books').checked = items.books;
-    document.getElementById('show_context').value = items.show_context;
-    document.getElementById('auto-update-context').checked=items.auto_update_context;
-    document.getElementById('alexa').checked = items.alexa;
-    document.getElementById('domaintools').checked = items.domaintools;
-    document.getElementById('tweets').checked = items.tweets;
-    document.getElementById('wbmsummary').checked = items.wbmsummary;
-    document.getElementById('annotations').checked = items.annotations;
-    document.getElementById('annotationsurl').checked = items.annotationsurl;
-    document.getElementById('similarweb').checked = items.similarweb;
-    document.getElementById('tagcloud').checked = items.tagcloud;
-    document.getElementById('hoaxy').checked = items.hoaxy;
-    document.getElementById('showall').checked = items.showall;
-    document.getElementById('news').checked = items.news;
-    document.getElementById('wikibooks').checked = items.wikibooks;
-    document.getElementById('doi').checked = items.doi;
-  });
-}
-function save_options() {
-  var show_context = document.getElementById('show_context').value;
-  var auto_archive= document.getElementById('auto-archive').checked;
-  var books = document.getElementById('books').checked;
-  var auto_update_context=document.getElementById('auto-update-context').checked;
-  var alexa= document.getElementById('alexa').checked;
-  var domaintools= document.getElementById('domaintools').checked;
-  var tweets= document.getElementById('tweets').checked;
-  var wbmsummary= document.getElementById('wbmsummary').checked;
-  var annotations= document.getElementById('annotations').checked;
-  var annotationsurl=document.getElementById('annotationsurl').checked;
-  var similarweb= document.getElementById('similarweb').checked;
-  var tagcloud = document.getElementById('tagcloud').checked;
-  var hoaxy = document.getElementById('hoaxy').checked;
-  var showall= document.getElementById('showall').checked;
-  var news = document.getElementById('news').checked;
-  var wikibooks = document.getElementById('wikibooks').checked;
-  var doi = document.getElementById('doi').checked;
-  chrome.storage.sync.set({
-    show_context:show_context,
-    auto_archive: auto_archive,
-    books:books,
-    auto_update_context:auto_update_context,
-    alexa:alexa,
-    domaintools:domaintools,
-    tweets:tweets,
-    wbmsummary:wbmsummary,
-    annotations:annotations,
-    annotationsurl:annotationsurl,
-    similarweb:similarweb,
-    tagcloud:tagcloud,
-    hoaxy:hoaxy,
-    showall:showall,
-    news:news,
-    wikibooks:wikibooks,
-    doi:doi
-  }, function() {
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
-    setTimeout(function() {
-      status.textContent = '';
-    }, 750);
-  });
+    books: false,
+    auto_update_context: false,
+    alexa: false,
+    domaintools: false,
+    tweets: false,
+    wbmsummary: false,
+    annotations: false,
+    annotationsurl: false,
+    similarweb: false,
+    tagcloud: false,
+    hoaxy: false,
+    doi: false,
+    news: false,
+    wikibooks: false,
+    showall: false
+  }, function (items) {
+    $('#auto-archive').prop('checked', items.auto_archive)
+    $('#books').prop('checked', items.books)
+    $('#show_context').val(items.show_context)
+    $('#auto-update-context').prop('checked', items.auto_update_context)
+    $('#alexa').prop('checked', items.alexa)
+    $('#domaintools').prop('checked', items.domaintools)
+    $('#tweets').prop('checked', items.tweets)
+    $('#wbmsummary').prop('checked', items.wbmsummary)
+    $('#annotations').prop('checked', items.annotations)
+    $('#annotationsurl').prop('checked', items.annotationsurl)
+    $('#similarweb').prop('checked', items.similarweb)
+    $('#tagcloud').prop('checked', items.tagcloud)
+    $('#hoaxy').prop('checked', items.hoaxy)
+    $('#showall').prop('checked', items.showall)
+    $('#news').prop('checked', items.news)
+    $('#wikibooks').prop('checked', items.wikibooks)
+    $('#doi').prop('checked', items.doi)
+  })
 }
 
-function validate() {
-  checkboxes = $('[name="context"]');
-  for(var i=0; i<checkboxes.length; i++) {
-    if(checkboxes[i].checked){
-      console.log($('#showall'));
-      $('#showall').prop('checked', false);
+function save_options () {
+  var show_context = $('#show_context').val()
+  var auto_archive = $('#auto-archive').prop('checked')
+  var books = $('#books').prop('checked')
+  var auto_update_context = $('#auto-update-context').prop('checked')
+  var alexa = $('#alexa').prop('checked')
+  var domaintools = $('#domaintools').prop('checked')
+  var tweets = $('#tweets').prop('checked')
+  var wbmsummary = $('#wbmsummary').prop('checked')
+  var annotations = $('#annotations').prop('checked')
+  var annotationsurl = $('#annotationsurl').prop('checked')
+  var similarweb = $('#similarweb').prop('checked')
+  var tagcloud = $('#tagcloud').prop('checked')
+  var hoaxy = $('#hoaxy').prop('checked')
+  var showall = $('#showall').prop('checked')
+  var news = $('#news').prop('checked')
+  var wikibooks = $('#wikibooks').prop('checked')
+  var doi = $('#doi').prop('checked')
+  chrome.storage.sync.set({
+    show_context: show_context,
+    auto_archive: auto_archive,
+    books: books,
+    auto_update_context: auto_update_context,
+    alexa: alexa,
+    domaintools: domaintools,
+    tweets: tweets,
+    wbmsummary: wbmsummary,
+    annotations: annotations,
+    annotationsurl: annotationsurl,
+    similarweb: similarweb,
+    tagcloud: tagcloud,
+    hoaxy: hoaxy,
+    showall: showall,
+    news: news,
+    wikibooks: wikibooks,
+    doi: doi
+  }, function () {
+    $('#status').text('Options saved.')
+    setTimeout(function () {
+      $('#status').text('')
+    }, 750)
+  })
+}
+
+function validate () {
+  let checkboxes = $('[name="context"]')
+  for (var i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      $('#showall').prop('checked', false)
     }
   }
 }
 
-function selectall(){
-  checkboxes = $('[name="context"]');
-  for(var i=0; i<checkboxes.length; i++) {
-    checkboxes[i].checked = $( this ).prop('checked');
+function selectall () {
+  let checkboxes = $('[name="context"]')
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = $(this).prop('checked')
   }
 }
-
-$('.only').click(validate);
-$('#showall').click(selectall);
