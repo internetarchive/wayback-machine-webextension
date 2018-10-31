@@ -30,6 +30,7 @@
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
+    "fast-levenshtein": "^2.0.6",
     "jquery": "^3.3.1",
     "jsdom": "^12.2.0",
     "jssha": "^2.3.1",
