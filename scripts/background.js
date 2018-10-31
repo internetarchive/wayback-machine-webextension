@@ -266,47 +266,42 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
         if(event.show_context=="tab"){
           if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
             //If not selected show-all option ,then check and open indivisually
-            chrome.storage.sync.get(function(event13){
-              if(event13.doi==true){
-                openThatContext("doi",message.url,event.show_context);
+            chrome.storage.sync.get(function(event4){
+              if(event4.alexa==true){
+                openThatContext("alexa",url,event.show_context);
               }
-              chrome.storage.sync.get(function(event4){
-                if(event4.alexa==true){
-                  openThatContext("alexa",url,event.show_context);
+              chrome.storage.sync.get(function(event5){
+                if(event5.domaintools==true){
+                  openThatContext("domaintools",message.url,event.show_context);
                 }
-                chrome.storage.sync.get(function(event5){
-                  if(event5.domaintools==true){
-                    openThatContext("domaintools",message.url,event.show_context);
+                chrome.storage.sync.get(function(event6){
+                  if(event6.tweets==true){
+                    openThatContext("tweets",open_url,event.show_context);
                   }
-                  chrome.storage.sync.get(function(event6){
-                    if(event6.tweets==true){
-                      openThatContext("tweets",open_url,event.show_context);
+                  chrome.storage.sync.get(function(event7){
+                    if(event7.wbmsummary==true){
+                      openThatContext("wbmsummary",message.url,event.show_context);
                     }
-                    chrome.storage.sync.get(function(event7){
-                      if(event7.wbmsummary==true){
-                        openThatContext("wbmsummary",message.url,event.show_context);
+                    chrome.storage.sync.get(function(event8){
+                      if(event8.annotations==true){
+                        openThatContext("annotations",message.url,event.show_context);
                       }
-                      chrome.storage.sync.get(function(event8){
-                        if(event8.annotations==true){
-                          openThatContext("annotations",message.url,event.show_context);
+                      chrome.storage.sync.get(function(event9){
+                        if(event9.similarweb==true){
+                          openThatContext("similarweb",url,event.show_context);
                         }
-                        chrome.storage.sync.get(function(event9){
-                          if(event9.similarweb==true){
-                            openThatContext("similarweb",url,event.show_context);
+                        chrome.storage.sync.get(function(event10){
+                          if(event10.tagcloud==true){
+                            openThatContext("tagcloud",message.url,event.show_context);
                           }
-                          chrome.storage.sync.get(function(event10){
-                            if(event10.tagcloud==true){
-                              openThatContext("tagcloud",message.url,event.show_context);
+                          chrome.storage.sync.get(function(event11){
+                            if(event11.annotationsurl==true){
+                              openThatContext("annotationsurl",url,event.show_context);
                             }
-                            chrome.storage.sync.get(function(event11){
-                              if(event11.annotationsurl==true){
-                                openThatContext("annotationsurl",url,event.show_context);
+                            chrome.storage.sync.get(function(event12){
+                              if(event12.hoaxy==true){
+                                openThatContext("hoaxy",open_url,event.show_context);
                               }
-                              chrome.storage.sync.get(function(event12){
-                                if(event12.hoaxy==true){
-                                  openThatContext("hoaxy",open_url,event.show_context);
-                                }
-                              });
                             });
                           });
                         });
