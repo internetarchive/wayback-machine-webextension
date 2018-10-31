@@ -18,38 +18,15 @@ if(document.getElementById('myModal') !== null) {
   modal.setAttribute('id','myModal');
   modal.setAttribute('class','RTmodal');
   modal.setAttribute('count','1');
-  /**
-  var modalContent=document.createElement('div');
-  modalContent.setAttribute('class','modal-content');
-  var divBtn=document.createElement('div');
-  divBtn.setAttribute('id','divBtn');
-  var message=document.createElement('div');
-  message.setAttribute('id','message');
-  **/
   var span=document.createElement('button');
   span.innerHTML='&times;';
   span.setAttribute('class','RTclose');
   modal.appendChild(span);
-  /**
-   * var main=document.createElement('div');
-  var sequence=document.createElement('p');
-  var chart=document.createElement('div');
-  sequence.setAttribute('id','sequence');
-  chart.setAttribute('id','chart');
-  main.setAttribute('id','main');
-
-  modal.appendChild(divBtn);
-  modal.appendChild(sequence);
-  modal.appendChild(chart);
-  modal.appendChild(message);
-  **/
   document.body.appendChild(modal);
   modal.style.display = "block";
 
   span.onclick = function() {
     modal.style.display = "none";
-    // var Modal=document.getElementById("myModal");
-    // document.body.removeChild(Modal);
   };
 }
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
