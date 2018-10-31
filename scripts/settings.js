@@ -64,10 +64,9 @@ function save_options () {
     wikibooks : $('#wikibooks').prop('checked'),
     doi : $('#doi').prop('checked')
   }, function () {
-    $('#status').text('Options saved.')
-    setTimeout(function () {
-      $('#status').text('')
-    }, 750)
+    $('#status').fadeIn(1000,function(){
+      $('#status').delay(750).fadeOut(1000)
+    })
   })
 }
 
