@@ -1,6 +1,6 @@
 function populateBooks(url){
   // Gets the data for each book on the wikipedia url
-  get_wikipedia_books(url).then((data)=>{
+  getWikipediaBooks(url).then((data)=>{
     $(".loader").hide();
     if (data['status'] === 'error') {
       $("#resultsTray").css("grid-template-columns", "none").append(

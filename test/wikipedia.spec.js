@@ -12,16 +12,16 @@ describe('getISBNFromCitation', () =>{
   }
   let html_snippets = [
     {
-      "html":'<cite class="citation book">Dos Passos, John, (2011). <a rel="nofollow" class="external text" href="https://www.worldcat.org/oclc/773372948"><i>Easter Island&nbsp;: island of enigmas</i></a>. Doubleday. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;<a href="/wiki/Special:BookSources/9780307787057" title="Special:BookSources/9780307787057">9780307787057</a>. <a href="/wiki/OCLC" title="OCLC">OCLC</a>&nbsp;<a rel="nofollow" class="external text" href="//www.worldcat.org/oclc/773372948">773372948</a>.</cite>',
+      "html":'<a href="/wiki/Special:BookSources/9780307787057" title="Special:BookSources/9780307787057">9780307787057</a>',
       "isbn": "9780307787057"
     },
     {
-      "html" : '<cite class="citation book">Franklin, Jane (1997). <a rel="nofollow" class="external text" href="http://andromeda.rutgers.edu/~hbf/missile.htm"><i>Cuba and the United States: A Chronological History</i></a>. Melbourne: Ocean Press. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;<a href="/wiki/Special:BookSources/1-875284-92-3" title="Special:BookSources/1-875284-92-3">1-875284-92-3</a>.</cite>',
+      "html": '<a href="/wiki/Special:BookSources/1-875284-92-3" title="Special:BookSources/1-875284-92-3">1-875284-92-3</a>',
       "isbn" :   "1875284923"
     },
     {
-      "html" :'<cite class="citation book">Stern, Sheldon M. (2012). <i>The Cuban Missile Crisis in American Memory: Myths versus Reality</i>. Stanford nuclear age series. Stanford, Calif: Stanford University Press.</cite>',
-      "isbn" : null
+      "html": '<a href="/wiki/Special:BookSources/978-954-9772-76-0" title="Special:BookSources/978-954-9772-76-0">978-954-9772-76-0</a>',
+      "isbn": "9789549772760"
     }
   ];
 
