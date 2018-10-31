@@ -12,20 +12,29 @@
   border-radius: 5px;
   margin: 0 auto 10px auto;
   padding:5px;
+  justify-content: space-between;
+  display: flex;
+  flex-flow: column wrap;
+  text-align: center;
   text-align: center;
   width: 300px;
 }
 
-#RecommendationTray > div > p{
+.topElements{
   display:block;
-  margin: 0 auto 0 auto;
+  margin: 10px auto;
+  overflow: hidden;
   text-align: center;
-  width: max-content;
+  white-space: normal;
+  width: 250px;
 }
-#RecommendationTray > div > a{
-  text-align: center;
+
+.bottomElements{
+  justify-content: flex-end;
+  margin: 10px auto;
 }
-a > img{
+
+.bottomElements > img{
   align-self: center;
   display:block;
   margin: 4px auto 0 auto;
@@ -37,11 +46,7 @@ body{
 .container{
   padding: 15px;
 }
-.rec_results{
-  background-color: white;
-  margin: 0 auto 0 auto;
-  padding: 0 15px 0 15px;
-}
+
 p{
   font-family:Gill Sans Light;
   font-size: 20px;
