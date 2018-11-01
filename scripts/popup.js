@@ -128,10 +128,7 @@ function search_tweet (eventObj) {
   if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
   var open_url = 'https://twitter.com/search?q=' + url
   chrome.storage.sync.get(['show_context'], function (event1) {
-    if (event1.show_context === undefined) {
-      event1.show_context = 'tab'
-    }
-    if (event1.show_context === 'tab') {
+    if (event1.show_context === 'tab' || event1.show_context === undefined) {
       chrome.tabs.create({ url: open_url })
     } else {
       chrome.system.display.getInfo(function (displayInfo) {
@@ -145,8 +142,6 @@ function search_tweet (eventObj) {
 
 function display_list (key_word) {
   $('#suggestion-box').text('').hide()
-  var xhr = new XMLHttpRequest()
-  xhr.open('GET', 'https://web.archive.org/__wb/search/host?q=' + key_word, true)
   $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search_input').val() !== '') {
@@ -189,7 +184,6 @@ function about_support () {
 
 function makeModal () {
   var url = get_clean_url()
-  console.log('Making RT for ' + url)
   chrome.runtime.sendMessage({ message: 'makemodal', rturl: url })
 }
 
@@ -232,17 +226,15 @@ function borrow_books () {
     url = tabs[0].url
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result === 'B') {
-        if (url.includes('www.amazon') && url.includes('/dp/')) {
-          get_amazonbooks(url).then(response => {
-            if (response['metadata'] && response['metadata']['identifier-access']) {
-              let details_url = response['metadata']['identifier-access']
-              $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-                chrome.tabs.create({ url: details_url })
-              })
-            }
-          })
-        }
+      if (result === 'B' && url.includes('www.amazon') && url.includes('/dp/')) {
+        get_amazonbooks(url).then(response => {
+          if (response['metadata'] && response['metadata']['identifier-access']) {
+            let details_url = response['metadata']['identifier-access']
+            $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
+              chrome.tabs.create({ url: details_url })
+            })
+          }
+        })
       }
     })
   })
@@ -267,26 +259,19 @@ function show_news () {
       'vox',
       'washingtonpost'
     ])
-    chrome.storage.sync.get(['news'], function (event) {
-      if (event.news) {
-        if (set_of_sites.has(news_host)) {
-          $('#news_recommend_tr').show().click(() => {
-            chrome.storage.sync.get(['show_context'], function (event1) {
-              if (event1.show_context === undefined) {
-                event1.show_context = 'tab'
-              }
-              if (event1.show_context === 'tab') {
-                chrome.tabs.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url })
-              } else {
-                chrome.system.display.getInfo(function (displayInfo) {
-                  let height = displayInfo[0].bounds.height
-                  let width = displayInfo[0].bounds.width
-                  chrome.windows.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url, width: width / 2, height: height, top: 0, left: width / 2, focused: true })
-                })
-              }
+    chrome.storage.sync.get(['news', 'show_context'], function (event) {
+      if (event.news && set_of_sites.has(news_host)) {
+        $('#news_recommend_tr').show().click(() => {
+          if (event.show_context === 'tab' || event.show_context === undefined) {
+            chrome.tabs.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url })
+          } else {
+            chrome.system.display.getInfo(function (displayInfo) {
+              const height = displayInfo[0].bounds.height
+              const width = displayInfo[0].bounds.width
+              chrome.windows.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url, width: width / 2, height: height, top: 0, left: width / 2, focused: true })
             })
-          })
-        }
+          }
+        })
       }
     })
   })
