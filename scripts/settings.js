@@ -44,7 +44,6 @@ function restore_options () {
 }
 
 function save_options () {
-
   chrome.storage.sync.set({
     show_context : $('#show_context').val(),
     auto_archive : $('#auto-archive').prop('checked'),
