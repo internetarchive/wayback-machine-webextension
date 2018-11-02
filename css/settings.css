@@ -1,0 +1,44 @@
+@font-face {
+  font-family: Bebas Neue;
+  src: url("../fonts/BebasNeue.otf");
+}
+@font-face {
+  font-family: Gill Sans Light;
+  src: url("../fonts/GillSans-Light.ttf");
+}
+tr.spaceUnder > td
+{
+  padding-bottom: 1em;
+}
+.container
+{
+  margin: 2px;
+  width: auto;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+}
+.resize_fit_center
+{
+  max-width:100%;
+  max-height:100%;
+  vertical-align: middle;
+}
+#status{
+  visibility: hidden;
+}
+#wrap {
+  width: 100%;
+  height:auto;
+  border-style:groove;
+  border-color:rgba(121, 197, 165, 0.24);
+  border-radius: 20px;
+  padding-bottom: 30px;
+  padding-left: 0px;
+  margin-left: 0px;
+}
+@media only screen and (max-width: 600px) {
+  #adjust{
+    margin-left: 137px;
+  }
+}

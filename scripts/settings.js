@@ -44,7 +44,6 @@ function restore_options () {
 }
 
 function save_options () {
-
   chrome.storage.sync.set({
     show_context : $('#show_context').val(),
     auto_archive : $('#auto-archive').prop('checked'),
@@ -64,9 +63,10 @@ function save_options () {
     wikibooks : $('#wikibooks').prop('checked'),
     doi : $('#doi').prop('checked')
   }, function () {
-    $('#status').fadeIn(1000,function(){
-      $('#status').delay(750).fadeOut(1000)
-    })
+    $('#status').css('visibility', 'visible').delay(500).fadeOut(300, function() {
+      window.close()
+    });
+    // window.close()
   })
 }
 
