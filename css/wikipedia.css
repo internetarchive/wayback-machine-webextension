@@ -4,3 +4,71 @@
   max-width:25px;
 
 }
+/* Modal content */
+
+.btn{
+  text-align: center;
+  display:block;
+  width:100%;
+}
+.cover-img{
+  align-self: center;
+  display:block;
+  height:250px;
+  margin:10px auto;
+  width: 180px;
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    bottom: 50px;
+    background-color: #fefefe;
+    width: 300px;
+
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    text-align: center;
+}
+.modal-header > h2 {
+  color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    color: white;
+}
