@@ -113,8 +113,6 @@ function social_share (eventObj) {
       open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
     } else if (id.includes('twit')) {
       open_url = 'https://twitter.com/home?status=' + sharing_url
-    } else if (id.includes('gplus')) {
-      open_url = 'https://plus.google.com/share?url=' + sharing_url
     } else if (id.includes('linkedin')) {
       open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
     }
@@ -337,7 +335,6 @@ $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
-$('#gplus_share').click(social_share)
 $('#linkedin_share').click(social_share)
 $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
