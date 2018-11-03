@@ -12,7 +12,8 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
       _: 'lodash',
-      d3: 'd3'
+      d3: 'd3',
+      wb: 'radial-tree'
     })
   ],
   stats: {
