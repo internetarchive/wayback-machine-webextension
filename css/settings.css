@@ -2,6 +2,12 @@ tr.spaceUnder > td
 {
   padding-bottom: 1em;
 }
+label{
+  margin-left: 18px;
+}
+input[type='checkbox']{
+  margin-left: -18px;
+}
 .container
 {
   margin: 2px;
@@ -19,18 +25,22 @@ tr.spaceUnder > td
 .settings{
   line-height: 20px;
   text-align: left;
-  width: 350px;
+  max-width: 400px;
   margin: auto;
 }
 .column{
   padding-top: 20px;
   padding-left: 20px;
 }
+
 .col-sm-6{
   padding-left: auto;
   padding-right: auto;
 }
-
+#show_context{
+  padding-top: 5px;
+  font-size: 17px;
+}
 #status{
   visibility: hidden;
 }
