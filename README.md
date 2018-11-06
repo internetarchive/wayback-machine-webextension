@@ -22,13 +22,19 @@ history of the Web!
   Archive.
 - TV news: Present archived TV news clips relevant to the current page.
 
+## Installing and Using Wayback Machine Chrome Extension
+
+- Click this [link](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
+- Click on "Add to Chrome" button.
+- It's done.
+
 ## Developing
 
 This is a "WebExtension". See https://developer.chrome.com/extensions
 
 ## Testing
 
-To setup the testing environment, run `npm init` to install required packages.
+To setup the testing environment, run `npm install` to install required packages.
 This should create directory `node_modules` and populate it with modules.
 
 To run tests, execute `npm test`.

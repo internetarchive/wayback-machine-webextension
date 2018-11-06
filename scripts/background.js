@@ -212,9 +212,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
           file:"scripts/build.js"
         });
         chrome.tabs.executeScript(tab.id, {
-          file:"scripts/radial-tree.umd.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
           file:"scripts/RTcontent.js"
         });
         previous_RTurl = url;
@@ -321,7 +318,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
             });
             chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
             chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId3), {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
+            chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
             chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
             chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
             chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
@@ -401,7 +398,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
               windowId: windowId3
             }, function(tabs) {
               var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
+              chrome.tabs.update(tab.id, {url:'https://twitter.com/search?q=' + open_url});
             });
             chrome.tabs.query({
               windowId: windowId4
@@ -507,7 +504,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       }else if ((tab1.url).includes("domaintools")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                       }else if((tab1.url).includes("twitter.com")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
+                        chrome.tabs.update(parseInt(tabIdtest), {url:'https://twitter.com/search?q=' + open_url});
                       }else if((tab1.url).includes("overview")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                       }else if((tab1.url).includes("annotation")){
@@ -527,7 +524,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       var alexa_url="https://archive.org/services/context/alexa?url="+url;
                       chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
                       chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
-                      chrome.tabs.update(parseInt(tabId3), {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
+                      chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
                       chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
@@ -625,7 +622,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       windowId: windowId3
                     }, function(tabs) {
                       var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("twitter.html")+"?url="+open_url});
+                      chrome.tabs.update(tab1.id, {url:'https://twitter.com/search?q=' + open_url});
                     });
                     chrome.tabs.query({
                       windowId: windowId4
@@ -723,46 +720,47 @@ function auto_save(tabId){
 function openThatContext(temp,url,methodOfShowing){
   var alexa_url="https://archive.org/services/context/alexa?url="+url;
   var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+url+"&sort=mixed&type=Twitter";
-  if(methodOfShowing=='tab'){
-    if(windowIdtest==0){
-      if(temp=='doi'){
+  var twitter_search_url = 'https://twitter.com/search?q=' + url;
+  if(methodOfShowing==='tab'){
+    if(windowIdtest===0){
+      if(temp==='doi'){
         chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
           //to add onremoved event listener
         });
-      }else if(temp=='domaintools'){
+      }else if(temp==='domaintools'){
         chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='tweets'){
-        chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+      }else if(temp==='tweets'){
+        chrome.windows.create({url:'https://twitter.com/search?q=' + url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='wbmsummary'){
-        chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
+      }else if(temp==='wbmsummary'){
+        chrome.windows.create({url: twitter_search_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='annotations'){
+      }else if(temp==='annotations'){
         chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='annotationsurl'){
+      }else if(temp==='annotationsurl'){
         chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='similarweb'){
+      }else if(temp==='similarweb'){
         chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='tagcloud'){
+      }else if(temp==='tagcloud'){
         chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='hoaxy'){
+      }else if(temp==='hoaxy'){
         chrome.windows.create({url:hoaxy_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp=='alexa'){
+      }else if(temp==='alexa'){
         chrome.windows.create({url:alexa_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
@@ -771,84 +769,84 @@ function openThatContext(temp,url,methodOfShowing){
       chrome.tabs.query({
         windowId: windowIdtest
       }, function(tabs) {
-        if(temp=='alexa'){
+        if(temp==='alexa'){
           chrome.tabs.create({'url': alexa_url,'active':false},function(tab){
             tabId1=tab.id;
           });
-        }else if(temp=='domaintools'){
+        }else if(temp==='domaintools'){
           chrome.tabs.create({'url': chrome.runtime.getURL("domaintools.html")+"?url="+url,'active':false},function(tab){
             tabId2=tab.id;
           });
-        }else if(temp=='tweets'){
-          chrome.tabs.create({'url': chrome.runtime.getURL("twitter.html")+"?url="+url,'active':false},function(tab){
+        }else if(temp==='tweets'){
+          chrome.tabs.create({'url': twitter_search_url,'active':false},function(tab){
             tabId3=tab.id;
           });
-        }else if(temp=='wbmsummary'){
+        }else if(temp==='wbmsummary'){
           chrome.tabs.create({url:chrome.runtime.getURL("overview.html")+"?url="+url,'active':false},function(tab){
             tabId4=tab.id;
           });
-        }else if(temp=='annotations'){
+        }else if(temp==='annotations'){
           chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,'active':false},function(tab){
             tabId5=tab.id;
           });
-        }else if(temp=='annotationsurl'){
+        }else if(temp==='annotationsurl'){
           chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
             tabId8=tab.id;
           });
-        }else if(temp=='similarweb'){
+        }else if(temp==='similarweb'){
           chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
             tabId6=tab.id;
           });
-        }else if(temp=='tagcloud'){
+        }else if(temp==='tagcloud'){
           chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
             tabId7=tab.id;
           });
-        }else if(temp=='hoaxy'){
+        }else if(temp==='hoaxy'){
           chrome.tabs.create({url:hoaxy_url,'active':false},function(tab){
             tabId9=tab.id;
           });
         }
       });
     }
-  }else if(methodOfShowing=='window'){
+  }else if(methodOfShowing==='window'){
     //If context is to be shown in window
-    if(temp=='alexa'){
+    if(temp==='alexa'){
       chrome.windows.create({url:alexa_url, width:500, height:500, top:0, left:0, focused:false},function (win) {
         windowId1 = win.id;
       });
-    }else if(temp=='domaintools'){
+    }else if(temp==='domaintools'){
       chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:500, height:500, top:500, left:0, focused:false},function (win) {
         windowId2 = win.id;
       });
-    }else if(temp=='tweets'){
-      chrome.windows.create({url:chrome.runtime.getURL("twitter.html")+"?url="+url, width:500, height:500, top:0, left:500, focused:false},function (win) {
+    }else if(temp==='tweets'){
+      chrome.windows.create({url:twitter_search_url, width:500, height:500, top:0, left:500, focused:false},function (win) {
         windowId3 = win.id;
       });
-    }else if(temp=='wbmsummary'){
+    }else if(temp==='wbmsummary'){
       chrome.windows.create({url:chrome.runtime.getURL("overview.html")+"?url="+url,width:500, height:500, top:500, left:500, focused:false},function (win) {
         windowId4 = win.id;
       });
-    }else if(temp=='annotations'){
+    }else if(temp==='annotations'){
       chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
         windowId5 = win.id;
       });
-    }else if(temp=='annotationsurl'){
+    }else if(temp==='annotationsurl'){
       chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
         windowId8 = win.id;
       });
-    }else if (temp=='similarweb'){
+    }else if (temp==='similarweb'){
       chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
         windowId6 = win.id;
       });
-    }else if (temp=='tagcloud'){
+    }else if (temp==='tagcloud'){
       chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
         windowId7 = win.id;
       });
-    }else if (temp=='hoaxy'){
+    }else if (temp==='hoaxy'){
       chrome.windows.create({url:hoaxy_url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
         windowId9 = win.id;
       });
-    }else if (temp=='doi'){
+    }else if (temp==='doi'){
       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
           windowId10 = win.id;
         });
