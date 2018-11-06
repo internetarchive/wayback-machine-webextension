@@ -19,7 +19,9 @@ function addCitations () {
       let metadata = getMetadata(data[isbn])
       if (id) {
         let link = createLinkToArchive(id, metadata)
-        book.parentElement.append(link)
+        link.attr('title', addBook(getMetadata(book[isbn]))[0].outerHTML)
+        console.log(addBook(getMetadata(book[isbn]))[0].outerHTML)
+        book.parentElement.append(link[0])
       }
     }
   })
@@ -40,11 +42,14 @@ function createLinkToArchive (id, metadata) {
   .attr({
     'href': 'https://archive.org/details/' + id,
     'class': 'btn-archive',
-    'style': 'padding: 5px;'
+    'style': 'padding: 5px;',
+    'data-toggle': 'tooltip',
+    'data-placement':'top',
+    'data-html': 'true'
   })
   .prepend(img)
-  .hover(() => openModal(metadata))
-  return a[0]
+  // .hover(() => openModal(metadata))
+  return a
 }
 function openModal(metadata){
 
