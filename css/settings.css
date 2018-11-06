@@ -28,15 +28,7 @@ input[type='checkbox']{
   max-width: 400px;
   margin: auto;
 }
-.column{
-  padding-top: 20px;
-  padding-left: 20px;
-}
 
-.col-sm-6{
-  padding-left: auto;
-  padding-right: auto;
-}
 #show_context{
   padding-top: 5px;
   font-size: 17px;
