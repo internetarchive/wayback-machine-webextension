@@ -17,7 +17,6 @@ function restore_options () {
     annotationsurl: false,
     similarweb: false,
     tagcloud: false,
-    hoaxy: false,
     doi: false,
     news: false,
     wikibooks: false,
@@ -35,7 +34,6 @@ function restore_options () {
     $('#annotationsurl').prop('checked', items.annotationsurl)
     $('#similarweb').prop('checked', items.similarweb)
     $('#tagcloud').prop('checked', items.tagcloud)
-    $('#hoaxy').prop('checked', items.hoaxy)
     $('#showall').prop('checked', items.showall)
     $('#news').prop('checked', items.news)
     $('#wikibooks').prop('checked', items.wikibooks)
@@ -57,7 +55,6 @@ function save_options () {
     annotationsurl : $('#annotationsurl').prop('checked'),
     similarweb : $('#similarweb').prop('checked'),
     tagcloud : $('#tagcloud').prop('checked'),
-    hoaxy : $('#hoaxy').prop('checked'),
     showall : $('#showall').prop('checked'),
     news : $('#news').prop('checked'),
     wikibooks : $('#wikibooks').prop('checked'),
