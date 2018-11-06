@@ -1,14 +1,12 @@
-@font-face {
-  font-family: Bebas Neue;
-  src: url("../fonts/BebasNeue.otf");
-}
-@font-face {
-  font-family: Gill Sans Light;
-  src: url("../fonts/GillSans-Light.ttf");
-}
 tr.spaceUnder > td
 {
   padding-bottom: 1em;
+}
+label{
+  margin-left: 18px;
+}
+input[type='checkbox']{
+  margin-left: -18px;
 }
 .container
 {
@@ -24,6 +22,17 @@ tr.spaceUnder > td
   max-height:100%;
   vertical-align: middle;
 }
+.settings{
+  line-height: 20px;
+  text-align: left;
+  max-width: 400px;
+  margin: auto;
+}
+
+#show_context{
+  padding-top: 5px;
+  font-size: 17px;
+}
 #status{
   visibility: hidden;
 }
@@ -37,8 +46,9 @@ tr.spaceUnder > td
   padding-left: 0px;
   margin-left: 0px;
 }
-@media only screen and (max-width: 600px) {
-  #adjust{
-    margin-left: 137px;
-  }
+label {
+  font-size: 14px;
+}
+#adjust{
+  margin-left: 137px;
 }
