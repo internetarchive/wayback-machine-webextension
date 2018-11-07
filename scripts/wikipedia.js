@@ -19,14 +19,26 @@ function addCitations () {
       let metadata = getMetadata(data[isbn])
       if (id) {
         let link = createLinkToArchive(id, metadata)
-        link.attr('title', addBook(getMetadata(book[isbn]))[0].outerHTML)
-        console.log(addBook(getMetadata(book[isbn]))[0].outerHTML)
-        book.parentElement.append(link[0])
+        // link.attr(addTooltip(metadata))
+        let icon = addTooltip(metadata).append(link)
+        console.log(icon)
+        book.parentElement.append(icon[0])
       }
     }
+    $('a[data-toggle="tooltip"]').tooltip({
+    animated: 'fade',
+    placement: 'bottom',
+    html: true,
+    delay:500
+});
   })
 }
-
+function addTooltip(metadata){
+  return $('<a>').attr({
+    'data-toggle': 'tooltip',
+    'title': addBook(metadata)[0].outerHTML
+  })
+}
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
@@ -42,10 +54,7 @@ function createLinkToArchive (id, metadata) {
   .attr({
     'href': 'https://archive.org/details/' + id,
     'class': 'btn-archive',
-    'style': 'padding: 5px;',
-    'data-toggle': 'tooltip',
-    'data-placement':'top',
-    'data-html': 'true'
+    'style': 'padding: 5px;'
   })
   .prepend(img)
   // .hover(() => openModal(metadata))
