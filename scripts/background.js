@@ -253,7 +253,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
       //URL which will be needed for finding tweets
       var open_url=received_url;
       if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
-      var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
       chrome.storage.sync.get(['auto_update_context'],function(event1){
         if(event1.auto_update_context==undefined){
           //By default auto-update context is off
@@ -295,11 +294,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                             if(event11.annotationsurl==true){
                               openThatContext("annotationsurl",url,event.show_context);
                             }
-                            chrome.storage.sync.get(function(event12){
-                              if(event12.hoaxy==true){
-                                openThatContext("hoaxy",open_url,event.show_context);
-                              }
-                            });
                           });
                         });
                       });
@@ -324,7 +318,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
             chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
             chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
             chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
           }
         }else if(event.show_context=="window"){
           //If the Context is to be showed in Windows
@@ -366,11 +359,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                               if(event11.annotationsurl==true){
                                 openThatContext("annotationsurl",url,event.show_context);
                               }
-                              chrome.storage.sync.get(function(event12){
-                                if(event12.hoaxy==true){
-                                  openThatContext("hoaxy",open_url,event.show_context);
-                                }
-                              });
                             });
                           });
                         });
@@ -431,12 +419,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
               chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
             });
             chrome.tabs.query({
-              windowId: windowId9
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:hoaxy_url});
-            });
-            chrome.tabs.query({
               windowId: windowId10
             }, function(tabs) {
               var tab=tabs[0];
@@ -465,7 +447,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
   }
 });
 
-var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIdhoaxy,tabIddoi;
+var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIddoi;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
@@ -478,7 +460,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
   }else if(info.status == "loading"){
     chrome.tabs.get(tabId, function(tab) {
       var received_url = tab.url;
-      if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com")||received_url.includes("oauth")||received_url.includes("hoaxy"))){
+      if(!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://")||received_url.includes("alexa.com")||received_url.includes("whois.com")||received_url.includes("twitter.com")||received_url.includes("oauth"))){
         singlewindowurl=received_url;
         tagcloudurl=new URL(singlewindowurl);
         received_url = received_url.replace(/^https?:\/\//,'');
@@ -515,9 +497,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                       }else if((tab1.url).includes("tagcloud")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
-                      }else if((tab1.url).includes("hoaxy")){
-                        var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
-                        chrome.tabs.update(parseInt(tabIdtest), {url:hoaxy_url});
                       }else if((tab1.url).includes("doi")){
                         chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
                       }
@@ -530,8 +509,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                       chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                       chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
-                      var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
-                      chrome.tabs.update(parseInt(tabId9), {url:hoaxy_url});
                     }
                   });
                 }
@@ -593,18 +570,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     tabIdannotationurl=tab1.id;
                   });
                   chrome.tabs.query({
-                    windowId: windowId9
-                  }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdhoaxy=tab1.id;
-                  });
-                  chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
                     var tab1=tabs[0];
                     tabIdalexa=tab1.id;
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIdhoaxy)&&(tab.id!=tabIddoi)){
+                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIddoi)){
                     chrome.tabs.query({
                       windowId: windowId1
                     }, function(tabs) {
@@ -653,13 +624,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     }, function(tabs) {
                       var tab1=tabs[0];
                       chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId9
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+open_url+"&sort=mixed&type=Twitter";
-                      chrome.tabs.update(tab1.id, {url:hoaxy_url});
                     });
                     chrome.tabs.query({
                       windowId: windowId10
@@ -719,7 +683,6 @@ function auto_save(tabId){
 //function for opeing a particular context
 function openThatContext(temp,url,methodOfShowing){
   var alexa_url="https://archive.org/services/context/alexa?url="+url;
-  var hoaxy_url="http://hoaxy.iuni.iu.edu/#query="+url+"&sort=mixed&type=Twitter";
   var twitter_search_url = 'https://twitter.com/search?q=' + url;
   if(methodOfShowing==='tab'){
     if(windowIdtest===0){
@@ -754,10 +717,6 @@ function openThatContext(temp,url,methodOfShowing){
         });
       }else if(temp==='tagcloud'){
         chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-          windowIdtest = win.id;
-        });
-      }else if(temp==='hoaxy'){
-        chrome.windows.create({url:hoaxy_url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
       }else if(temp==='alexa'){
@@ -801,10 +760,6 @@ function openThatContext(temp,url,methodOfShowing){
           chrome.tabs.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,'active':false},function(tab){
             tabId7=tab.id;
           });
-        }else if(temp==='hoaxy'){
-          chrome.tabs.create({url:hoaxy_url,'active':false},function(tab){
-            tabId9=tab.id;
-          });
         }
       });
     }
@@ -841,10 +796,6 @@ function openThatContext(temp,url,methodOfShowing){
     }else if (temp==='tagcloud'){
       chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
         windowId7 = win.id;
-      });
-    }else if (temp==='hoaxy'){
-      chrome.windows.create({url:hoaxy_url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
-        windowId9 = win.id;
       });
     }else if (temp==='doi'){
       chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
