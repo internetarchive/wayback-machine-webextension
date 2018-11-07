@@ -1,14 +1,6 @@
 // This script adds buttons next to isbns on wikipedia pages that will redirect
 // the user to a readable digital copy of the referenced book.
 
-function addModal(){
-  $('body').append(
-    $('<div>').addClass('modal').prop('id', 'myModal').append(
-      $('<div>').addClass('modal-content')
-    ).click(closeModal)
-  )
-}
-
 // main method
 function addCitations () {
   getWikipediaBooks(location.href).then(data => {
@@ -20,24 +12,33 @@ function addCitations () {
       if (id) {
         let link = createLinkToArchive(id, metadata)
         // link.attr(addTooltip(metadata))
-        let icon = addTooltip(metadata).append(link)
-        console.log(icon)
-        book.parentElement.append(icon[0])
+        let tooltip = addTooltip(metadata).append(link).tooltip({
+          animated: 'fade',
+          placement: 'auto top',
+          html: true,
+          delay:500
+        });
+        book.parentElement.append(tooltip[0])
       }
     }
-    $('a[data-toggle="tooltip"]').tooltip({
-    animated: 'fade',
-    placement: 'bottom',
-    html: true,
-    delay:500
-});
   })
 }
 function addTooltip(metadata){
   return $('<a>').attr({
     'data-toggle': 'tooltip',
-    'title': addBook(metadata)[0].outerHTML
+    'title': createTooltipWindow(metadata)[0].outerHTML
   })
+}
+function createTooltipWindow(metadata){
+  let text_elements = $("<div>").attr({"class": "text_elements"}).append(
+    $("<p>").append($("<strong>").text(metadata.title)),
+    $("<p>").css('color', '#c3c3c3').text(metadata.author)
+  );
+  let details = $("<div>").attr({"class": "bottom_details"}).append(
+    metadata.image ? $("<img>").attr({"class": "cover-img", "src": metadata.image}) : $("<p>").attr({"class": "cover-img"}).text("No cover available"),
+    $("<p>").text('Click to Read')
+  );
+  return $("<div>").append(text_elements, details);
 }
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
@@ -60,26 +61,7 @@ function createLinkToArchive (id, metadata) {
   // .hover(() => openModal(metadata))
   return a
 }
-function openModal(metadata){
 
-  $('.modal-content').empty().append(
-    $('<div>').addClass('modal-header').append(
-      $('<span>').addClass('close').text('x').click(closeModal),
-      $('<h2>').text(metadata.title)
-    ),
-    $('<div>').addClass('modal-body').append(
-      metadata.image ? $("<img>").attr({"class": "cover-img", "src": metadata.image}) : $("<p>").attr({"class": "cover-img"}).text("No cover available")
-    ),
-    $('<div>').addClass('modal-footer').append(
-      $('<a>').addClass(metadata.button_class).attr('href', metadata.link).text(metadata.button_text)
-    )
-  )
-  $('#myModal').show()
-}
-function closeModal(){
-  $('.modal-content').empty()
-  $('#myModal').hide()
-}
 function getIdentifier (book) {
   // identifier can be found as metadata.identifier or ocaid
   if (book) {

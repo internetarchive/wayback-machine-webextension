@@ -35,7 +35,7 @@
     },
     {
       "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
-      "js": ["scripts/popper.min.js", "scripts/build.js", "scripts/booklist.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
+      "js": ["scripts/build.js", "scripts/booklist.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
       "css": ["css/bootstrap.min.css", "css/wikipedia.css"]
     }
   ],

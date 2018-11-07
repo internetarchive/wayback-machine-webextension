@@ -28,7 +28,7 @@ function getMetadata(book){
       return {
         "title" : book.metadata.title,
         "author" : book.metadata.creator,
-        "image" : "http://archive.org/services/img/" + book.metadata.identifier,
+        "image" : "https://archive.org/services/img/" + book.metadata.identifier,
         "link" : book.metadata["identifier-access"],
         "button_text": "Read Now",
         "button_class": "btn btn-success resize_fit_center",
@@ -38,7 +38,7 @@ function getMetadata(book){
       return {
         "title" : book.title,
         "author" : book.authors_metadata ? book.authors_metadata.personal_name : "",
-        "image" : book.covers ? "http://covers.openlibrary.org/w/id/"+ book.covers[0]+"-M.jpg" : undefined,
+        "image" : book.covers ? "https://covers.openlibrary.org/w/id/"+ book.covers[0]+"-M.jpg" : undefined,
         "link" : "https://archive.org/donate/",
         "button_text": "Donate",
         "button_class": "btn btn-warning resize_fit_center",
