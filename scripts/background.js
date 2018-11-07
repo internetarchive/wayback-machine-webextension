@@ -291,7 +291,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                             openThatContext("tagcloud",message.url,event.show_context);
                           }
                           chrome.storage.sync.get(function(event11){
-                            if(event11.annotationsurl==true){
+                            if(event11.annotations==true){
                               openThatContext("annotationsurl",url,event.show_context);
                             }
                           });
@@ -356,7 +356,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                               openThatContext("tagcloud",message.url,event.show_context);
                             }
                             chrome.storage.sync.get(function(event11){
-                              if(event11.annotationsurl==true){
+                              if(event11.annotations==true){
                                 openThatContext("annotationsurl",url,event.show_context);
                               }
                             });
