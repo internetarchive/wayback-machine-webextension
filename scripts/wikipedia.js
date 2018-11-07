@@ -16,56 +16,55 @@ function addCitations () {
           animated: 'fade',
           placement: 'auto top',
           html: true,
-          delay:500
-        });
+          delay: 500
+        })
         book.parentElement.append(tooltip[0])
       }
     }
   })
 }
-function addTooltip(metadata){
+function addTooltip (metadata) {
   return $('<a>').attr({
     'data-toggle': 'tooltip',
     'title': createTooltipWindow(metadata)[0].outerHTML
   })
 }
-function createTooltipWindow(metadata){
-  let text_elements = $("<div>").attr({"class": "text_elements"}).append(
-    $("<p>").append($("<strong>").text(metadata.title)),
-    $("<p>").css('color', '#c3c3c3').text(metadata.author)
-  );
-  let details = $("<div>").attr({"class": "bottom_details"}).append(
-    metadata.image ? $("<img>").attr({"class": "cover-img", "src": metadata.image}) : $("<p>").attr({"class": "cover-img"}).text("No cover available"),
-    $("<p>").text('Click to Read')
-  );
-  return $("<div>").append(text_elements, details);
+function createTooltipWindow (metadata) {
+  let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
+    $('<p>').append($('<strong>').text(metadata.title)),
+    $('<p>').css('color', '#c3c3c3').text(metadata.author)
+  )
+  let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
+    metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : $('<p>').attr({ 'class': 'cover-img' }).text('No cover available'),
+    $('<p>').text('Click to Read')
+  )
+  return $('<div>').append(text_elements, details)
 }
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
   return fetch('https://archive.org/services/context/books?url=' + url)
-  .then(res => res.json())
-  .catch(err => console.log(err))
+    .then(res => res.json())
+    .catch(err => console.log(err))
 }
 
 function createLinkToArchive (id, metadata) {
   let img = $('<img>')
-  .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
+    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
   let a = $('<a>')
-  .attr({
-    'href': 'https://archive.org/details/' + id,
-    'class': 'btn-archive',
-    'style': 'padding: 5px;'
-  })
-  .prepend(img)
-  // .hover(() => openModal(metadata))
+    .attr({
+      'href': 'https://archive.org/details/' + id,
+      'class': 'btn-archive',
+      'style': 'padding: 5px;'
+    })
+    .prepend(img)
   return a
 }
 
 function getIdentifier (book) {
   // identifier can be found as metadata.identifier or ocaid
   if (book) {
-    var id = '';
+    var id = ''
     if (book.metadata) {
       id = book.metadata.identifier
     } else {
