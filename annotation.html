@@ -1,53 +1,85 @@
 <!doctype html>
 <html>
-    <head>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/common.css">
-        <link rel="stylesheet" type="text/css" href="css/annotation.css">
-        <title>
-            Annotation of an Domain if any
-        </title>
-    </head>
-    <body>
-        <!-- <table width="100%" style="max-height: 200px;">
-            <tr class="spaceUnder">
-                <td style="text-align: center;">
-                    <div id ="horizontal_line" class="lower_margin"></div>
-                        <div class='container'>
-                            <img class='resize_fit_center'
-                            src='images/logo.gif' />
-                        </div>
-                    <div id="horizontal_line" class="extra_margin"></div>
-                </td>
-            </tr>
-        </table> -->
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/annotation.css">
+  <title>
+    Annotations
+  </title>
+</head>
+<body>
+  <!-- <table width="100%" style="max-height: 200px;">
+  <tr class="spaceUnder">
+  <td style="text-align: center;">
+  <div id ="horizontal_line" class="lower_margin"></div>
+  <div class='container'>
+  <img class='resize_fit_center'
+  src='images/logo.gif' />
+</div>
+<div id="horizontal_line" class="extra_margin"></div>
+</td>
+</tr>
+</table> -->
+<div id="domainTab" class="tabcontent">
+  <div>
+    <h2>
+      <strong>Annotations of Current Domain</strong><br>
+      <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span>
+    </h2>
+  </div>
+  <div class="container" id="container-whole"></div>
+  <div class="row" id="row_contain">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="box">
         <div>
-            <h2><strong>Annotations of Current Domain</strong><br>
-                <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span></h2>
+          <strong class="userinfo"></strong>
+          <span class="date"></span>
         </div>
-        <div class="container" id="container-whole"></div>
-        <div class="row" id="row_contain">
-            <div class="col-sm-6 col-sm-offset-3">
-                <div class="box">
-                    <div>
-                        <strong class="userinfo"></strong>
-                        <span class="date"></span>
-                    </div>
-                    <div class="source" id="source-">
-                        <span class="glyphicon glyphicon-globe"></span>
-                        <span class="text-muted">Public on</span>
-                        <span class="title text-danger"></span>
-                        <span id="source-contain"></span>
-                    </div>
-                    <div class="target-selector-exact"></div>
-                    <div class="text" id="text-contain"></div>
-                    <div class="links"></div>
-                </div>
-            </div>
+        <div class="source" id="source-">
+          <span class="glyphicon glyphicon-globe"></span>
+          <span class="text-muted">Public on</span>
+          <span class="title text-danger"></span>
+          <span id="source-contain"></span>
         </div>
-    </body>
+        <div class="target-selector-exact"></div>
+        <div class="text" id="text-contain"></div>
+        <div class="links"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="urlTab" class="tabcontent">
+  <div>
+    <h2 style="text-align: center;">
+      <strong>Annotations of Current URL</strong><br>
+      <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span>
+    </h2>
+  </div>
+  <div class="container" id="container-whole"></div>
+  <div class="row" id="row_contain">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="box">
+        <div>
+          <strong class="userinfo"></strong>
+          <span class="date"></span>
+        </div>
+        <div class="source" id="source-">
+          <span class="glyphicon glyphicon-globe"></span>
+          <span class="public_on">Public on</span>
+          <span class="title text-danger"></span>
+          <span id="source-contain"> </span>
+        </div>
+        <div class="target-selector-exact"></div>
+        <div class="text" id="text-contain"></div>
+        <div class="links"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
 </html>
 <script src="scripts/build.js"></script>
 <script src="scripts/utils.js"></script>

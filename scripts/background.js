@@ -290,11 +290,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                           if(event10.tagcloud==true){
                             openThatContext("tagcloud",message.url,event.show_context);
                           }
-                          chrome.storage.sync.get(function(event11){
-                            if(event11.annotations==true){
-                              openThatContext("annotationsurl",url,event.show_context);
-                            }
-                          });
                         });
                       });
                     });
@@ -355,11 +350,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                             if(event10.tagcloud==true){
                               openThatContext("tagcloud",message.url,event.show_context);
                             }
-                            chrome.storage.sync.get(function(event11){
-                              if(event11.annotations==true){
-                                openThatContext("annotationsurl",url,event.show_context);
-                              }
-                            });
                           });
                         });
                       });
@@ -707,10 +697,6 @@ function openThatContext(temp,url,methodOfShowing){
         chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
-      }else if(temp==='annotationsurl'){
-        chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-          windowIdtest = win.id;
-        });
       }else if(temp==='similarweb'){
         chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
@@ -748,10 +734,6 @@ function openThatContext(temp,url,methodOfShowing){
           chrome.tabs.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,'active':false},function(tab){
             tabId5=tab.id;
           });
-        }else if(temp==='annotationsurl'){
-          chrome.tabs.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,'active':false},function(tab){
-            tabId8=tab.id;
-          });
         }else if(temp==='similarweb'){
           chrome.tabs.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,'active':false},function(tab){
             tabId6=tab.id;
@@ -784,10 +766,6 @@ function openThatContext(temp,url,methodOfShowing){
     }else if(temp==='annotations'){
       chrome.windows.create({url:chrome.runtime.getURL("annotation.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
         windowId5 = win.id;
-      });
-    }else if(temp==='annotationsurl'){
-      chrome.windows.create({url:chrome.runtime.getURL("annotationURL.html")+"?url="+url,width:600, height:500, top:0, left:1000, focused:false},function (win) {
-        windowId8 = win.id;
       });
     }else if (temp==='similarweb'){
       chrome.windows.create({url:chrome.runtime.getURL("similarweb.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
