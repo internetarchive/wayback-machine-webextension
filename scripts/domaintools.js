@@ -6,7 +6,6 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
       parent.append($(id).text(text_before + text_after));
     }
   }
-  return $(id);
 }
 function url_getter () {
   var url = getUrlByParameter('url')
@@ -22,14 +21,9 @@ function url_getter () {
       appendToParent('#expiration_date', data.response.results[0].expiration_date.value, 'Expire Date: ', parent, true, '')
       appendToParent('#admin_contact_state', data.response.results[0].admin_contact.state.value, 'State: ', parent, true, '')
       appendToParent('#registrant_org', data.response.results[0].registrant_org.value, 'Registrant Org: ', parent, true, '')
-      if (data.response.results[0].website_response) {
-        if (data.response.results[0].website_response == 200) {
-          appendToParent('#website_response', data.response.results[0].website_response, 'Website Response Status Code: ', parent, true, ' OK')
-        } else if (data.response.results[0].website_response == 404) {
-          appendToParent('#website_response', data.response.results[0].website_response, 'Website Response Status Code: ', parent, true, ' Not Found')
-        }
-      }
-      appendToParent('#whois', data.response.results[0].whois_url, 'Click to see the Whois URL', parent, false, '').attr('href', data.response.results[0].whois_url)
+      appendToParent('#website_response', data.response.results[0].website_response, 'Website Response Status Code: ', parent, true, '')
+      appendToParent('#whois', data.response.results[0].whois_url, 'Click to see the Whois URL', parent, false, '');
+      $('#whois').attr('href', data.response.results[0].whois_url);
     } else {
       parent.text('No data found!!')
     }
