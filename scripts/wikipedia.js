@@ -19,54 +19,55 @@ function addCitations () {
 }
 
 function addArchiveIcon(id, metadata){
-  // let link = createLinkToArchive(id, metadata)
-  return addTooltip(id, metadata).tooltip({
+  let toolTip = createTooltipWindow(metadata, id)
+  let anchor = attachTooltip(createArchiveAnchor(id, metadata), toolTip)
+  return anchor
+}
+function attachTooltip (anchor, tooltip) {
+  // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
+  return anchor.attr({
+    'data-toggle': 'tooltip',
+    'title': tooltip
+  })
+  .tooltip({
     animated: false,
-    placement: 'top',
+    placement: 'right auto',
     html: true,
     trigger: 'manual'
   })
+  //Handles staying open
   .on("mouseenter", function () {
-    var _this = this;
-    $(this).tooltip("show");
+
+    $(anchor).tooltip("show");
     $(".popup_box").on("mouseleave", function () {
-      $(_this).tooltip('hide');
+      setTimeout(function() {
+        if(!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length){
+          $(anchor).tooltip('hide');
+        }
+      }, 200);
     });
-  }).on("mouseleave", function () {
-    var _this = this;
+  })
+  .on("mouseleave", function () {
     setTimeout(function () {
       if (!$(".popup_box:hover").length) {
-        $(_this).tooltip("hide");
+        $(anchor).tooltip("hide");
       }
-    }, 300);
+    },200);
   })
 }
-function addTooltip (id, metadata) {
-  return createLinkToArchive(id, metadata).attr({
-    'data-toggle': 'tooltip',
-    'title': createTooltipWindow(metadata).attr('href', 'https://archive.org/details/' + id)[0].outerHTML
-  })
-}
-function createTooltipWindow (metadata) {
+function createTooltipWindow (metadata, id) {
   let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
-    $('<p>').append($('<strong>').text(metadata.title)),
+    $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
     $('<p>').addClass('text-muted').text(metadata.author)
   )
   let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
     metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
-    $('<p>').text('Click To Read Now')
+    $('<p>').text('Click To Read Now').addClass('text-muted')
   )
-  return $('<a>').append(text_elements, details).addClass('popup_box')
-}
-// Get all books on wikipedia page through
-// https://archive.org/services/context/books?url=...
-function getWikipediaBooks (url) {
-  return fetch('https://archive.org/services/context/books?url=' + url)
-    .then(res => res.json())
-    .catch(err => console.log(err))
+  return $('<a>').append(text_elements, details).addClass('popup_box').attr('href', 'https://archive.org/details/' + id)[0].outerHTML
 }
 
-function createLinkToArchive (id, metadata) {
+function createArchiveAnchor (id, metadata) {
   let img = $('<img>')
     .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
   let a = $('<a>')
@@ -100,6 +101,14 @@ function getISBNFromCitation (citation) {
   let rawISBN = citation.text
   let isbn = rawISBN.replace(/-/g, '')
   return isbn
+}
+
+// Get all books on wikipedia page through
+// https://archive.org/services/context/books?url=...
+function getWikipediaBooks (url) {
+  return fetch('https://archive.org/services/context/books?url=' + url)
+    .then(res => res.json())
+    .catch(err => console.log(err))
 }
 
 if (typeof module !== 'undefined') {
