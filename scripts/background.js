@@ -449,7 +449,23 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         if (open_url.slice(-1) ==='/') {
           open_url=received_url.substring(0,open_url.length-1);
         }
-        chrome.storage.sync.get(['auto_update_context', 'show_context'],function(event1){
+        chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function(event1) {
+          if (event1.books === true) {
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+              url = tabs[0].url;
+              tabId = tabs[0].id;
+              if (url.includes('www.amazon')) {
+                fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+                  .then(resp => resp.json())
+                  .then(resp => {
+                    if (('metadata' in resp && 'identifier' in resp['metadata']) ||
+                        'ocaid' in resp) {
+                      chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
+                    }
+                  })
+                }
+            })
+          }
           if (event1.auto_update_context === true) {
             if(event1.show_context=="tab"){
               if((tabId5!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)||(windowIdtest!=0)){
@@ -584,28 +600,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
               }
             }
           }
-        }); // closing chrome.storage.sync.get(['auto_update_context', 'show_context'],function(event){
+        }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
       }
-      chrome.storage.sync.get(['books'],function(event){
-        if (event.books === true) {
-          chrome.tabs.query({active: true, currentWindow:true}, function(tabs){
-            url = tabs[0].url;
-            tabId = tabs[0].id;
-            if(url.includes("www.amazon")){
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', 'https://archive.org/services/context/amazonbooks?url=' + url, true);
-              xhr.send(null);
-              xhr.onload = function () {
-                const resp = JSON.parse(xhr.response);
-                if (('metadata' in resp && 'identifier' in resp['metadata']) ||
-                    'ocaid' in resp) {
-                  chrome.browserAction.setBadgeText({tabId: tabId, text: 'B'});
-                }
-              }
-            }
-          });
-        }
-      });
     }); // closing chrome.tabs.get(tabId, function(tab) {
   } // closing if info.status ==="loading"
 });
