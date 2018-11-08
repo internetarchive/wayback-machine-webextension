@@ -10,35 +10,53 @@ function addCitations () {
       let id = getIdentifier(data[isbn])
       let metadata = getMetadata(data[isbn])
       if (id) {
-        let link = createLinkToArchive(id, metadata)
-        // link.attr(addTooltip(metadata))
-        let tooltip = addTooltip(metadata).append(link).tooltip({
-          animated: 'fade',
-          placement: 'auto top',
-          html: true,
-          delay: 500
-        })
-        book.parentElement.append(tooltip[0])
+
+        let icon = addArchiveIcon(id, metadata)
+        book.parentElement.append(icon[0])
       }
     }
   })
 }
-function addTooltip (metadata) {
-  return $('<a>').attr({
+
+function addArchiveIcon(id, metadata){
+  // let link = createLinkToArchive(id, metadata)
+  return addTooltip(id, metadata).tooltip({
+    animated: false,
+    placement: 'top',
+    html: true,
+    trigger: 'manual'
+  })
+  .on("mouseenter", function () {
+    var _this = this;
+    $(this).tooltip("show");
+    $(".popup_box").on("mouseleave", function () {
+      $(_this).tooltip('hide');
+    });
+  }).on("mouseleave", function () {
+    var _this = this;
+    setTimeout(function () {
+      if (!$(".popup_box:hover").length) {
+        $(_this).tooltip("hide");
+      }
+    }, 300);
+  })
+}
+function addTooltip (id, metadata) {
+  return createLinkToArchive(id, metadata).attr({
     'data-toggle': 'tooltip',
-    'title': createTooltipWindow(metadata)[0].outerHTML
+    'title': createTooltipWindow(metadata).attr('href', 'https://archive.org/details/' + id)[0].outerHTML
   })
 }
 function createTooltipWindow (metadata) {
   let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
     $('<p>').append($('<strong>').text(metadata.title)),
-    $('<p>').css('color', '#c3c3c3').text(metadata.author)
+    $('<p>').addClass('text-muted').text(metadata.author)
   )
   let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
-    metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : $('<p>').attr({ 'class': 'cover-img' }).text('No cover available'),
-    $('<p>').text('Click to Read')
+    metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
+    $('<p>').text('Click To Read Now')
   )
-  return $('<div>').append(text_elements, details)
+  return $('<a>').append(text_elements, details).addClass('popup_box')
 }
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
