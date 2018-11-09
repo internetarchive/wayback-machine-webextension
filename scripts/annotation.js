@@ -33,7 +33,7 @@ function get_annotations(type) {
         if(rowData.document.title) {
           title = rowData.document.title[0];
         }
-        let row = $('#row_contain');
+        let row = $('#row_contain-' + type);
         let item = row.clone();
         item.attr('id', 'row-' + i);
         item.find('.date').html('Dated on ' + date);
@@ -54,9 +54,9 @@ function get_annotations(type) {
         } else {
           item.find('.target-selector-exact').hide();
         }
-        $('#container-whole').append(item);
+        $('#container-whole-' + type).append(item);
       }
-      $('#row_contain').hide();
+      $('#row_contain-' + type).hide();
     } else {
       let error_msg;
       if (type === 'domain') {
@@ -64,10 +64,14 @@ function get_annotations(type) {
       } else {
         error_msg = 'There are no annotations for the current URL.';
       }
-      $('#row_contain').html(
+      let row = $('#row_contain-' + type);
+      let item = row.clone();
+      item.html(
         $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
                   .html(error_msg)
       );
+      $('#container-whole-' + type).append(item);
+      row.hide();
     }
   });
 }
