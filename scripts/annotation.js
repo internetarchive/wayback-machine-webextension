@@ -75,6 +75,18 @@ function get_annotations(type) {
     }
   });
 }
+
+
+function showAnnotations(type){
+  $('.tabcontent').hide()
+  $('#' + type).show()
+}
+
+$('.tablink').click(function(){
+  showAnnotations(this.value)
+})
+
+
 if (typeof module !== 'undefined') {
   module.exports = {hypothesis_api_url: hypothesis_api_url,
                     get_annotations: get_annotations}
