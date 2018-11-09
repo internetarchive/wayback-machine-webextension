@@ -79,11 +79,13 @@ function get_annotations(type) {
 
 function showAnnotations(type){
   $('.tabcontent').hide()
+  $('.tablink').removeClass('active')
+  $('.tablink[value="' + type + '"]').addClass('active')
   $('#' + type).show()
 }
 
 $('.tablink').click(function(){
-  showAnnotations(this.value)
+  showAnnotations($(this).attr('value'))
 })
 
 

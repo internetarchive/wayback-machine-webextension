@@ -57,25 +57,8 @@ h2{
 #source-contain{
     word-wrap: break-word;
 }
-/* Style tab links */
-#tab-holder{
-  display:block;
-  margin:10px auto;
-  text-align: center;
-}
-.tablink {
-  background-color: #555;
-  color: white;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  font-size: 17px;
-  width: 25%;
-}
-
-.tablink:hover {
-  background-color: #777;
+.active{
+  text-decoration: underline;
 }
 @media screen and (max-width: 500px) {
     #link-incontext {

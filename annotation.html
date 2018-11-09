@@ -23,19 +23,20 @@
 </td>
 </tr>
 </table> -->
-<div id="tab-holder">
-  <button class="tablink" value='domainTab'>Domain</button>
-  <button class="tablink" id="defaultOpen" value='urlTab'>URL</button>
+
+<div>
+  <h2>
+    <strong>Annotations</strong><br>
+    <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span>
+  </h2>
 </div>
+<ul class="nav nav-tabs nav-justified">
+  <li class="tablink active" role="presentation" value="domainTab"><a>Annotations of Current Domain</a></li>
+  <li class="tablink" role="presentation" value="urlTab"><a>Annotations of Current URL</a></li>
+</ul>
 
-
+<br>
 <div id="domainTab" class="tabcontent">
-  <div>
-    <h2>
-      <strong>Annotations of Current Domain</strong><br>
-      <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span>
-    </h2>
-  </div>
   <div class="container" id="container-whole-domain"></div>
   <div class="row" id="row_contain-domain">
     <div class="col-sm-6 col-sm-offset-3">
@@ -59,12 +60,6 @@
 </div>
 
 <div id="urlTab" class="tabcontent">
-  <div>
-    <h2 style="text-align: center;">
-      <strong>Annotations of Current URL</strong><br>
-      <span class="annot_title"> From <a style="cursor: pointer;" href="http://hypothes.is/">Hypothes.is</a></span>
-    </h2>
-  </div>
   <div class="container" id="container-whole-url"></div>
   <div class="row" id="row_contain-url">
     <div class="col-sm-6 col-sm-offset-3">
