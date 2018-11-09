@@ -43,7 +43,7 @@ function get_annotations(type) {
         item.find('.title').html(title);
         item.find('.links').append(
           $('<a>').attr({'href': rowData.links.incontext, 'id': 'link-incontext'})
-                  .html('Click to see the in-context'),
+                  .html('Click to see in context'),
           $('<a>').attr({'href': rowData.links.html, 'id': 'link-html'})
                   .html('Click to see the HTML')
         )
