@@ -239,7 +239,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({tabId: message.tabId, text:"\u2713"});
   }else if(message.message=='showall'){
-    chrome.storage.sync.get(['show_context'],function(event){
+    chrome.storage.sync.get(['show_context', 'auto_update_context'], function(event) {
       if(!event.show_context){
         //By-default the context-window open in tabs
         event.show_context="tab";
@@ -252,43 +252,48 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
       var alexa_url="https://archive.org/services/context/alexa?url="+url;
       //URL which will be needed for finding tweets
       var open_url=received_url;
-      if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
-      chrome.storage.sync.get(['auto_update_context'],function(event1){
-        if(event1.auto_update_context==undefined){
-          //By default auto-update context is off
-          event1.auto_update_context=false;
-        }
-        //If the Context is to be showed in tabs
-        if(event.show_context=="tab"){
-          if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
-            //If not selected show-all option ,then check and open indivisually
-            chrome.storage.sync.get(function(event4){
-              if(event4.alexa==true){
-                openThatContext("alexa",url,event.show_context);
+      if(open_url.slice(-1) === '/') {
+        open_url=received_url.substring(0,open_url.length-1);
+      }
+      if (event.auto_update_context === undefined) {
+        //By default auto-update context is off
+        event.auto_update_context=false;
+      }
+      //If the Context is to be showed in tabs
+      if(event.show_context=="tab"){
+        if(tabId2==0 || tabId3==0 || tabId4==0 || tabId5==0 || tabId6==0 || tabId7==0 || tabId8==0 || tabId9 ==0){  //Checking if Tabs are not open already
+          //If not selected show-all option ,then check and open indivisually
+          chrome.storage.sync.get(function(event4){
+            if(event4.alexa==true){
+              openThatContext("alexa",url,event.show_context);
+            }
+            chrome.storage.sync.get(function(event5){
+              if(event5.domaintools==true){
+                openThatContext("domaintools",message.url,event.show_context);
               }
-              chrome.storage.sync.get(function(event5){
-                if(event5.domaintools==true){
-                  openThatContext("domaintools",message.url,event.show_context);
+              chrome.storage.sync.get(function(event6){
+                if(event6.tweets==true){
+                  openThatContext("tweets",open_url,event.show_context);
                 }
-                chrome.storage.sync.get(function(event6){
-                  if(event6.tweets==true){
-                    openThatContext("tweets",open_url,event.show_context);
+                chrome.storage.sync.get(function(event7){
+                  if(event7.wbmsummary==true){
+                    openThatContext("wbmsummary",message.url,event.show_context);
                   }
-                  chrome.storage.sync.get(function(event7){
-                    if(event7.wbmsummary==true){
-                      openThatContext("wbmsummary",message.url,event.show_context);
+                  chrome.storage.sync.get(function(event8){
+                    if(event8.annotations==true){
+                      openThatContext("annotations",message.url,event.show_context);
                     }
-                    chrome.storage.sync.get(function(event8){
-                      if(event8.annotations==true){
-                        openThatContext("annotations",message.url,event.show_context);
+                    chrome.storage.sync.get(function(event9){
+                      if(event9.similarweb==true){
+                        openThatContext("similarweb",url,event.show_context);
                       }
-                      chrome.storage.sync.get(function(event9){
-                        if(event9.similarweb==true){
-                          openThatContext("similarweb",url,event.show_context);
+                      chrome.storage.sync.get(function(event10){
+                        if(event10.tagcloud==true){
+                          openThatContext("tagcloud",message.url,event.show_context);
                         }
-                        chrome.storage.sync.get(function(event10){
-                          if(event10.tagcloud==true){
-                            openThatContext("tagcloud",message.url,event.show_context);
+                        chrome.storage.sync.get(function(event11){
+                          if(event11.annotationsurl==true){
+                            openThatContext("annotationsurl",url,event.show_context);
                           }
                         });
                       });
@@ -297,60 +302,59 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                 });
               });
             });
-          }else{
-            //If context screens(tabs) are already opened and user again click on the Context button then update them
-            chrome.tabs.query({
-              windowId: windowIdtest
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
-            });
-            chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
-            chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
-            chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-            chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-            chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
-          }
-        }else if(event.show_context=="window"){
-          //If the Context is to be showed in Windows
-          if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0 || windowId10==0){
-            //Checking if Windows are not open already
-            chrome.storage.sync.get(function(event13){
-              if(event13.doi==true){
-                openThatContext("doi",message.url,event.show_context);
+          });
+        }else{
+          //If context screens(tabs) are already opened and user again click on the Context button then update them
+          chrome.tabs.query({
+            windowId: windowIdtest
+          }, function(tabs) {
+            var tab=tabs[0];
+          });
+          chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
+          chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
+          chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
+          chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
+          chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+          chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
+          chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+          chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
+        }
+      }else if(event.show_context=="window"){
+        //If the Context is to be showed in Windows
+        if(windowId1==0 ||windowId2==0||windowId3==0||windowId4==0||windowId5==0||windowId6==0 ||windowId7==0 ||windowId8 ==0 ||windowId9==0 || windowId10==0){
+          //Checking if Windows are not open already
+          chrome.storage.sync.get(function(event4){
+            if(event4.alexa==true){
+              openThatContext("alexa",url,event.show_context);
+            }
+            chrome.storage.sync.get(function(event5){
+              if(event5.domaintools==true){
+                openThatContext("domaintools",message.url,event.show_context);
               }
-              chrome.storage.sync.get(function(event4){
-                if(event4.alexa==true){
-                  openThatContext("alexa",url,event.show_context);
+              chrome.storage.sync.get(function(event6){
+                if(event6.tweets==true){
+                  openThatContext("tweets",open_url,event.show_context);
                 }
-                chrome.storage.sync.get(function(event5){
-                  if(event5.domaintools==true){
-                    openThatContext("domaintools",message.url,event.show_context);
+                chrome.storage.sync.get(function(event7){
+                  if(event7.wbmsummary==true){
+                    openThatContext("wbmsummary",message.url,event.show_context);
                   }
-                  chrome.storage.sync.get(function(event6){
-                    if(event6.tweets==true){
-                      openThatContext("tweets",open_url,event.show_context);
+                  chrome.storage.sync.get(function(event8){
+                    if(event8.annotations==true){
+                      openThatContext("annotations",message.url,event.show_context);
                     }
-                    chrome.storage.sync.get(function(event7){
-                      if(event7.wbmsummary==true){
-                        openThatContext("wbmsummary",message.url,event.show_context);
+                    chrome.storage.sync.get(function(event9){
+                      if(event9.similarweb==true){
+                        openThatContext("similarweb",url,event.show_context);
                       }
-                      chrome.storage.sync.get(function(event8){
-                        if(event8.annotations==true){
-                          openThatContext("annotations",message.url,event.show_context);
+                      chrome.storage.sync.get(function(event10){
+                        if(event10.tagcloud==true){
+                          openThatContext("tagcloud",message.url,event.show_context);
                         }
-                        chrome.storage.sync.get(function(event9){
-                          if(event9.similarweb==true){
-                            openThatContext("similarweb",url,event.show_context);
+                        chrome.storage.sync.get(function(event11){
+                          if(event11.annotationsurl==true){
+                            openThatContext("annotationsurl",url,event.show_context);
                           }
-                          chrome.storage.sync.get(function(event10){
-                            if(event10.tagcloud==true){
-                              openThatContext("tagcloud",message.url,event.show_context);
-                            }
-                          });
                         });
                       });
                     });
@@ -358,86 +362,71 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                 });
               });
             });
-          }else{
-            //If context screens(windows) are already opened and user again click on the Context button then update them
-            chrome.tabs.query({
-              windowId: windowId1
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:alexa_url});
-            });
-            chrome.tabs.query({
-              windowId: windowId2
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
-            });
-            chrome.tabs.query({
-              windowId: windowId3
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:'https://twitter.com/search?q=' + open_url});
-            });
-            chrome.tabs.query({
-              windowId: windowId4
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
-            });
-            chrome.tabs.query({
-              windowId: windowId5
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-            });
-            chrome.tabs.query({
-              windowId: windowId8
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-            });
-            chrome.tabs.query({
-              windowId: windowId6
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-            });
-            chrome.tabs.query({
-              windowId: windowId7
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
-            });
-            chrome.tabs.query({
-              windowId: windowId10
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("doi.html")+"?url="+message.url});
-            });
-          }
-        } else if(event.show_context=="singlewindow"){
-          //If the Context is to be showed in singleWindow
-          if(windowIdSingle!=0){
-            //Checking if SingleWindow context is not open already
-            chrome.tabs.query({
-              windowId: windowIdSingle
-            }, function(tabs) {
-              var tab=tabs[0];
-              chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url});
-            });
-          }else{
-            chrome.windows.create({url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
-                                    width:1000, height:1000, top:0, left:0, focused:false}, function (win) {
-              windowIdSingle = win.id;
-            });
-          }
+          });
+        }else{
+          //If context screens(windows) are already opened and user again click on the Context button then update them
+          chrome.tabs.query({
+            windowId: windowId1
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:alexa_url});
+          });
+          chrome.tabs.query({
+            windowId: windowId2
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+message.url});
+          });
+          chrome.tabs.query({
+            windowId: windowId3
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:'https://twitter.com/search?q=' + open_url});
+          });
+          chrome.tabs.query({
+            windowId: windowId4
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
+          });
+          chrome.tabs.query({
+            windowId: windowId5
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
+          });
+          chrome.tabs.query({
+            windowId: windowId8
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
+          });
+          chrome.tabs.query({
+            windowId: windowId6
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+          });
+          chrome.tabs.query({
+            windowId: windowId7
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
+          });
         }
-      });
-    });
-  }
+      } else if(event.show_context=="singlewindow"){
+        //If the Context is to be showed in singleWindow
+        if(windowIdSingle!=0){
+          //Checking if SingleWindow context is not open already
+          chrome.tabs.query({
+            windowId: windowIdSingle
+          }, function(tabs) {
+            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+message.url});
+          });
+        }else{
+          chrome.windows.create({url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
+                                 width:1000, height:1000, top:0, left:0, focused:false}, function (win) {
+            windowIdSingle = win.id;
+          });
+        }
+      }
+    }); // closing chrome.storage.sync.get(['show_context', 'auto_update_context'],function(event){
+  } // closing showall if
 });
 
-var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl,tabIddoi;
+var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
@@ -454,202 +443,167 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
         singlewindowurl=received_url;
         tagcloudurl=new URL(singlewindowurl);
         received_url = received_url.replace(/^https?:\/\//,'');
-        var length =received_url.length;
         var last_index=received_url.indexOf('/');
         var url=received_url.slice(0,last_index);
         var open_url=received_url;
-        if(open_url.slice(-1)=='/') open_url=received_url.substring(0,open_url.length-1);
-        chrome.storage.sync.get(['auto_update_context'],function(event){
-          if(event.auto_update_context==true){
-            chrome.storage.sync.get(['show_context'],function(event1){
-              if(event1.show_context=="tab"){
-                if((tabId5!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)||(windowIdtest!=0)){
-                  chrome.tabs.query({
-                    windowId: windowIdtest
-                  }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdtest=tab1.id;
-                    if((tab.id!=tabIdtest)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)&&(tab.id!=tabId6)&&(tab.id!=tabId7)&&(tab.id!=tabId8)&&(tab.id!=tabId9)&&(tab.id!=tabId10)){
-                      if((tab1.url).includes("alexa")){
-                        var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                        chrome.tabs.update(parseInt(tabIdtest), {url:alexa_url});
-                      }else if ((tab1.url).includes("domaintools")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
-                      }else if((tab1.url).includes("twitter.com")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:'https://twitter.com/search?q=' + open_url});
-                      }else if((tab1.url).includes("overview")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
-                      }else if((tab1.url).includes("annotation")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                      }else if((tab1.url).includes("annotationURL")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-                      }else if((tab1.url).includes("similarweb")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                      }else if((tab1.url).includes("tagcloud")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
-                      }else if((tab1.url).includes("doi")){
-                        chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
-                      }
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
-                      chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
-                      chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
-                      chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
-                      chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                      chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-                      chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                      chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
+        if (open_url.slice(-1) ==='/') {
+          open_url=received_url.substring(0,open_url.length-1);
+        }
+        chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function(event1) {
+          if (event1.books === true) {
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+              url = tabs[0].url;
+              tabId = tabs[0].id;
+              if (url.includes('www.amazon')) {
+                fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+                  .then(resp => resp.json())
+                  .then(resp => {
+                    if (('metadata' in resp && 'identifier' in resp['metadata']) ||
+                        'ocaid' in resp) {
+                      chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
                     }
-                  });
+                  })
                 }
-              }else if(event1.show_context=="singlewindow"){
+            })
+          }
+          if (event1.auto_update_context === true) {
+            if(event1.show_context=="tab"){
+              if((tabId5!=0)||(tabId2!=0)||(tabId3!=0)||(tabId4!=0)||(windowIdtest!=0)){
                 chrome.tabs.query({
-                  windowId: windowIdSingle
+                  windowId: windowIdtest
                 }, function(tabs) {
-                  var tab=tabs[0];
-                  chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+singlewindowurl});
+                  var tab1=tabs[0];
+                  tabIdtest=tab1.id;
+                  if((tab.id!=tabIdtest)&&(tab.id!=tabId2)&&(tab.id!=tabId3)&&(tab.id!=tabId4)&&(tab.id!=tabId5)&&(tab.id!=tabId6)&&(tab.id!=tabId7)&&(tab.id!=tabId8)&&(tab.id!=tabId9)&&(tab.id!=tabId10)){
+                    if((tab1.url).includes("alexa")){
+                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                      chrome.tabs.update(parseInt(tabIdtest), {url:alexa_url});
+                    }else if ((tab1.url).includes("domaintools")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
+                    }else if((tab1.url).includes("twitter.com")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:'https://twitter.com/search?q=' + open_url});
+                    }else if((tab1.url).includes("overview")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                    }else if((tab1.url).includes("annotation")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
+                    }else if((tab1.url).includes("annotationURL")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
+                    }else if((tab1.url).includes("similarweb")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                    }else if((tab1.url).includes("tagcloud")){
+                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
+                    }
+                    var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                    chrome.tabs.update(parseInt(tabId1), {url:alexa_url});
+                    chrome.tabs.update(parseInt(tabId2), {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
+                    chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
+                    chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
+                    chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
+                    chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
+                    chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
+                    chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
+                  }
                 });
-              }else{
-                if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)||(windowId7!=0)){
+              }
+            }else if(event1.show_context=="singlewindow"){
+              chrome.tabs.query({
+                windowId: windowIdSingle
+              }, function(tabs) {
+                var tab=tabs[0];
+                chrome.tabs.update(tab.id, {url:chrome.runtime.getURL("singleWindow.html")+"?url="+singlewindowurl});
+              });
+            }else{
+              if((windowId1!=0)||(windowId2!=0)||(windowId3!=0)||(windowId4!=0)||(windowId5!=0)||(windowId6!=0)||(windowId7!=0)){
+                chrome.tabs.query({
+                  windowId: windowId2
+                }, function(tabs) {
+                  tabIdDomaintools=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId3
+                }, function(tabs) {
+                  tabIdtwit=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId4
+                }, function(tabs) {
+                  tabIdoverview=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId5
+                }, function(tabs) {
+                  tabIdannotation=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId6
+                }, function(tabs) {
+                  tabIdsimilarweb=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId7
+                }, function(tabs) {
+                  tabIdtagcloud=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId8
+                }, function(tabs) {
+                  tabIdannotationurl=tabs[0].id;
+                });
+                chrome.tabs.query({
+                  windowId: windowId1
+                }, function(tabs) {
+                  tabIdalexa=tabs[0].id;
+                });
+                if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)){
                   chrome.tabs.query({
-                    windowId: windowId10
+                    windowId: windowId1
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIddoi=tab1.id;
+                    var alexa_url="https://archive.org/services/context/alexa?url="+url;
+                    chrome.tabs.update(tabs[0].id, {url:alexa_url});
                   });
                   chrome.tabs.query({
                     windowId: windowId2
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdDomaintools=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
                   });
                   chrome.tabs.query({
                     windowId: windowId3
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdtwit=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:'https://twitter.com/search?q=' + open_url});
                   });
                   chrome.tabs.query({
                     windowId: windowId4
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdoverview=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                   });
                   chrome.tabs.query({
                     windowId: windowId5
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdannotation=tab1.id;
-                  });
-                  chrome.tabs.query({
-                    windowId: windowId6
-                  }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdsimilarweb=tab1.id;
-                  });
-                  chrome.tabs.query({
-                    windowId: windowId7
-                  }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdtagcloud=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
                   });
                   chrome.tabs.query({
                     windowId: windowId8
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdannotationurl=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                   });
                   chrome.tabs.query({
-                    windowId: windowId1
+                    windowId: windowId6
                   }, function(tabs) {
-                    var tab1=tabs[0];
-                    tabIdalexa=tab1.id;
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                   });
-                  if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)&&(tab.id!=tabIddoi)){
-                    chrome.tabs.query({
-                      windowId: windowId1
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      var alexa_url="https://archive.org/services/context/alexa?url="+url;
-                      chrome.tabs.update(tab1.id, {url:alexa_url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId2
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("domaintools.html")+"?url="+tab.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId3
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:'https://twitter.com/search?q=' + open_url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId4
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId5
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId8
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId6
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId7
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
-                    });
-                    chrome.tabs.query({
-                      windowId: windowId10
-                    }, function(tabs) {
-                      var tab1=tabs[0];
-                      chrome.tabs.update(tab1.id, {url:chrome.runtime.getURL("doi.html")+"?url="+tab.url});
-                    });
-                  }
-                }
-              }
-            });
-          }
-        });
-      }
-      chrome.storage.sync.get(['books'],function(event){
-        if (event.books === true) {
-          chrome.tabs.query({active: true, currentWindow:true}, function(tabs){
-            url = tabs[0].url;
-            tabId = tabs[0].id;
-            if(url.includes("www.amazon")){
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', 'https://archive.org/services/context/amazonbooks?url=' + url, true);
-              xhr.send(null);
-              xhr.onload = function () {
-                const resp = JSON.parse(xhr.response);
-                if (('metadata' in resp && 'identifier' in resp['metadata']) ||
-                    'ocaid' in resp) {
-                  chrome.browserAction.setBadgeText({tabId: tabId, text: 'B'});
+                  chrome.tabs.query({
+                    windowId: windowId7
+                  }, function(tabs) {
+                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
+                  });
                 }
               }
             }
-          });
-        }
-      });
-    });
-  }
+          }
+        }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
+      }
+    }); // closing chrome.tabs.get(tabId, function(tab) {
+  } // closing if info.status ==="loading"
 });
 
 function auto_save(tabId){
@@ -676,12 +630,7 @@ function openThatContext(temp,url,methodOfShowing){
   var twitter_search_url = 'https://twitter.com/search?q=' + url;
   if(methodOfShowing==='tab'){
     if(windowIdtest===0){
-      if(temp==='doi'){
-        chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
-          windowIdtest = win.id;
-          //to add onremoved event listener
-        });
-      }else if(temp==='domaintools'){
+      if(temp==='domaintools'){
         chrome.windows.create({url:chrome.runtime.getURL("domaintools.html")+"?url="+url, width:800, height:800, top:0, left:0, focused:true},function (win) {
           windowIdtest = win.id;
         });
@@ -775,10 +724,6 @@ function openThatContext(temp,url,methodOfShowing){
       chrome.windows.create({url:chrome.runtime.getURL("tagcloud.html")+"?url="+url,width:600, height:500, top:500, left:1200, focused:false},function (win) {
         windowId7 = win.id;
       });
-    }else if (temp==='doi'){
-      chrome.windows.create({url:chrome.runtime.getURL("doi.html")+"?url="+url,width:600, height:500, top:0, left:1200, focused:false},function (win) {
-          windowId10 = win.id;
-        });
     }
   }
 }
