@@ -4,3 +4,18 @@
   max-width:25px;
 
 }
+
+.text_elements{
+  max-width: 100%;
+}
+.cover-img{
+  align-self: center;
+  display:block;
+  height:168px;
+  margin:10px auto;
+  width: 120px;
+}
+.popup-title{
+  color:#c3c3c3;
+  text-align: center;
+}

@@ -8,23 +8,66 @@ function addCitations () {
     for (let book of books) {
       let isbn = getISBNFromCitation(book)
       let id = getIdentifier(data[isbn])
+      let metadata = getMetadata(data[isbn])
       if (id) {
-        let link = createLinkToArchive(id)
-        book.parentElement.append(link)
+
+        let icon = addArchiveIcon(id, metadata)
+        book.parentElement.append(icon[0])
       }
     }
   })
 }
 
-// Get all books on wikipedia page through
-// https://archive.org/services/context/books?url=...
-function getWikipediaBooks (url) {
-  return fetch('https://archive.org/services/context/books?url=' + url)
-    .then(res => res.json())
-    .catch(err => console.log(err))
+function addArchiveIcon(id, metadata){
+  let toolTip = createTooltipWindow(metadata, id)
+  let anchor = attachTooltip(createArchiveAnchor(id, metadata), toolTip)
+  return anchor
+}
+function attachTooltip (anchor, tooltip) {
+  // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
+  return anchor.attr({
+    'data-toggle': 'tooltip',
+    'title': tooltip
+  })
+  .tooltip({
+    animated: false,
+    placement: 'right auto',
+    html: true,
+    trigger: 'manual'
+  })
+  //Handles staying open
+  .on("mouseenter", function () {
+
+    $(anchor).tooltip("show");
+    $(".popup_box").on("mouseleave", function () {
+      setTimeout(function() {
+        if(!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length){
+          $(anchor).tooltip('hide');
+        }
+      }, 200);
+    });
+  })
+  .on("mouseleave", function () {
+    setTimeout(function () {
+      if (!$(".popup_box:hover").length) {
+        $(anchor).tooltip("hide");
+      }
+    },200);
+  })
+}
+function createTooltipWindow (metadata, id) {
+  let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
+    $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
+    $('<p>').addClass('text-muted').text(metadata.author)
+  )
+  let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
+    metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
+    $('<p>').text('Click To Read Now').addClass('text-muted')
+  )
+  return $('<a>').append(text_elements, details).addClass('popup_box').attr('href', 'https://archive.org/details/' + id)[0].outerHTML
 }
 
-function createLinkToArchive (id) {
+function createArchiveAnchor (id, metadata) {
   let img = $('<img>')
     .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
   let a = $('<a>')
@@ -34,21 +77,13 @@ function createLinkToArchive (id) {
       'style': 'padding: 5px;'
     })
     .prepend(img)
-    .hover(
-      function () {
-        $(this).text(' Read Now! ').prepend(img)
-      },
-      function () {
-        $(this).text('').prepend(img)
-      })[0]
-
   return a
 }
 
 function getIdentifier (book) {
   // identifier can be found as metadata.identifier or ocaid
   if (book) {
-    var id = '';
+    var id = ''
     if (book.metadata) {
       id = book.metadata.identifier
     } else {
@@ -66,6 +101,14 @@ function getISBNFromCitation (citation) {
   let rawISBN = citation.text
   let isbn = rawISBN.replace(/-/g, '')
   return isbn
+}
+
+// Get all books on wikipedia page through
+// https://archive.org/services/context/books?url=...
+function getWikipediaBooks (url) {
+  return fetch('https://archive.org/services/context/books?url=' + url)
+    .then(res => res.json())
+    .catch(err => console.log(err))
 }
 
 if (typeof module !== 'undefined') {
