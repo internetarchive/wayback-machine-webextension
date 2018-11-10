@@ -14,7 +14,6 @@ function restore_options () {
     tweets: false,
     wbmsummary: false,
     annotations: false,
-    // annotationsurl: false,
     similarweb: false,
     tagcloud: false,
     doi: false,
@@ -31,7 +30,6 @@ function restore_options () {
     $('#tweets').prop('checked', items.tweets)
     $('#wbmsummary').prop('checked', items.wbmsummary)
     $('#annotations').prop('checked', items.annotations)
-    // $('#annotationsurl').prop('checked', items.annotationsurl)
     $('#similarweb').prop('checked', items.similarweb)
     $('#tagcloud').prop('checked', items.tagcloud)
     $('#showall').prop('checked', items.showall)
@@ -52,7 +50,6 @@ function save_options () {
     tweets : $('#tweets').prop('checked'),
     wbmsummary : $('#wbmsummary').prop('checked'),
     annotations : $('#annotations').prop('checked'),
-    // annotationsurl : $('#annotationsurl').prop('checked'),
     similarweb : $('#similarweb').prop('checked'),
     tagcloud : $('#tagcloud').prop('checked'),
     showall : $('#showall').prop('checked'),
@@ -63,7 +60,6 @@ function save_options () {
     $('#status').css('visibility', 'visible').delay(500).fadeOut(300, function() {
       window.close()
     });
-    // window.close()
   })
 }
 
