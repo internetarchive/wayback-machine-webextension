@@ -291,11 +291,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                         if(event10.tagcloud==true){
                           openThatContext("tagcloud",message.url,event.show_context);
                         }
-                        chrome.storage.sync.get(function(event11){
-                          if(event11.annotationsurl==true){
-                            openThatContext("annotationsurl",url,event.show_context);
-                          }
-                        });
                       });
                     });
                   });
@@ -315,7 +310,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
           chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
           chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+message.url});
           chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
-          chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
           chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
           chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+message.url});
         }
@@ -351,11 +345,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
                         if(event10.tagcloud==true){
                           openThatContext("tagcloud",message.url,event.show_context);
                         }
-                        chrome.storage.sync.get(function(event11){
-                          if(event11.annotationsurl==true){
-                            openThatContext("annotationsurl",url,event.show_context);
-                          }
-                        });
                       });
                     });
                   });
@@ -391,11 +380,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
             chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotation.html")+"?url="+message.url});
           });
           chrome.tabs.query({
-            windowId: windowId8
-          }, function(tabs) {
-            chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+message.url});
-          });
-          chrome.tabs.query({
             windowId: windowId6
           }, function(tabs) {
             chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
@@ -426,7 +410,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
   } // closing showall if
 });
 
-var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud,tabIdannotationurl;
+var tabIdAlexa,tabIdDomaintools,tabIdtwit,tabIdoverview,tabIdannotation,tabIdtest,tabIdsimilarweb,tabIdtagcloud;
 chrome.tabs.onUpdated.addListener(function(tabId, info) {
   if (info.status == "complete") {
     chrome.tabs.get(tabId, function(tab) {
@@ -486,8 +470,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                       chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                     }else if((tab1.url).includes("annotation")){
                       chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                    }else if((tab1.url).includes("annotationURL")){
-                      chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                     }else if((tab1.url).includes("similarweb")){
                       chrome.tabs.update(parseInt(tabIdtest), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                     }else if((tab1.url).includes("tagcloud")){
@@ -499,7 +481,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     chrome.tabs.update(parseInt(tabId3), {url:'https://twitter.com/search?q=' + open_url});
                     chrome.tabs.update(parseInt(tabId4), {url:chrome.runtime.getURL("overview.html")+"?url="+tab.url});
                     chrome.tabs.update(parseInt(tabId5), {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                    chrome.tabs.update(parseInt(tabId8), {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                     chrome.tabs.update(parseInt(tabId6), {url:chrome.runtime.getURL("similarweb.html")+"?url="+url});
                     chrome.tabs.update(parseInt(tabId7), {url:chrome.runtime.getURL("tagcloud.html")+"?url="+tagcloudurl});
                   }
@@ -545,16 +526,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                   tabIdtagcloud=tabs[0].id;
                 });
                 chrome.tabs.query({
-                  windowId: windowId8
-                }, function(tabs) {
-                  tabIdannotationurl=tabs[0].id;
-                });
-                chrome.tabs.query({
                   windowId: windowId1
                 }, function(tabs) {
                   tabIdalexa=tabs[0].id;
                 });
-                if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)&&(tab.id!=tabIdannotationurl)){
+                if((tab.id!=tabIdAlexa)&&(tab.id!=tabIdDomaintools)&&(tab.id!=tabIdtwit)&&(tab.id!=tabIdoverview)&&(tab.id!=tabIdannotation)&&(tab.id!=tabIdsimilarweb)&&(tab.id!=tabIdtagcloud)){
                   chrome.tabs.query({
                     windowId: windowId1
                   }, function(tabs) {
@@ -580,11 +556,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, info) {
                     windowId: windowId5
                   }, function(tabs) {
                     chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotation.html")+"?url="+tab.url});
-                  });
-                  chrome.tabs.query({
-                    windowId: windowId8
-                  }, function(tabs) {
-                    chrome.tabs.update(tabs[0].id, {url:chrome.runtime.getURL("annotationURL.html")+"?url="+tab.url});
                   });
                   chrome.tabs.query({
                     windowId: windowId6
