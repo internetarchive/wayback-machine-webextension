@@ -186,7 +186,7 @@ function makeModal () {
 }
 
 function settings(){
-    window.open('settings.html','newwindow', 'width=900, height=700,left=0');
+    window.open('settings.html','newwindow', 'width=600, height=700,left=0,top=30');
 }
 
 /**
