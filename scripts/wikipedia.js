@@ -3,19 +3,20 @@
 
 // main method
 function addCitations () {
-  getWikipediaBooks(location.href).then(data => {
+  getWikipediaBooks(location.href).done(data => {
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
       let isbn = getISBNFromCitation(book)
       let id = getIdentifier(data[isbn])
       let metadata = getMetadata(data[isbn])
       if (id) {
-
         let icon = addArchiveIcon(id, metadata)
         book.parentElement.append(icon[0])
       }
     }
-  })
+  }).fail( function( xhr, status ) {
+    console.log(getErrorMessage(status))
+  });
 }
 
 function addArchiveIcon(id, metadata){
@@ -106,9 +107,11 @@ function getISBNFromCitation (citation) {
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
-  return fetch('https://archive.org/services/context/books?url=' + url)
-    .then(res => res.json())
-    .catch(err => console.log(err))
+  return $.ajax({
+    dataType: "json",
+    url: 'https://archive.org/services/context/books?url=' + url,
+    timeout: 2000
+  })
 }
 
 if (typeof module !== 'undefined') {

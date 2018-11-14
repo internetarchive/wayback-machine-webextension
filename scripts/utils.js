@@ -49,6 +49,20 @@ function getWaybackUrlFromResponse(response) {
   }
 }
 
+/**
+ * Customizes error handling
+ * @param status {string}
+ * @return {string}
+ */
+function getErrorMessage(status){
+  if(status === "timeout"){
+    return "The service you have requested has timed out."
+  }
+  else{
+    return "Something went wrong: " + status
+  }
+}
+
 function getUrlByParameter (name) {
   const url = new URL(window.location.href)
   return url.searchParams.get(name)
