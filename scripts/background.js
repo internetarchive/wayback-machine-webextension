@@ -431,7 +431,6 @@ function auto_save(tabId) {
 
 //function for opeing a particular context
 function openThatContext(temp, url, methodOfShowing) {
-  console.log("RECEIVED ", temp, url, methodOfShowing);
   return function () {
     return new Promise(function (resolve, reject) {
       var alexa_url = "https://archive.org/services/context/alexa?url=" + url;
