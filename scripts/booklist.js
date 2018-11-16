@@ -1,6 +1,6 @@
 function populateBooks(url){
   // Gets the data for each book on the wikipedia url
-  getWikipediaBooks(url).then((data)=>{
+  getWikipediaBooks(url).done(data=>{
     $(".loader").hide();
     if (data['status'] === 'error') {
       $("#resultsTray").css("grid-template-columns", "none").append(
@@ -19,6 +19,12 @@ function populateBooks(url){
         }
       }
     }
+  }).fail( function( xhr, status ) {
+    $(".loader").hide();
+
+    $("#resultsTray").css("grid-template-columns", "none").append(
+      $("<div>").html(getErrorMessage(xhr))
+    );
   });
 }
 

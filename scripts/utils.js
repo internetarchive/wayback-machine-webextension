@@ -49,6 +49,15 @@ function getWaybackUrlFromResponse(response) {
   }
 }
 
+/**
+ * Customizes error handling
+ * @param status {string}
+ * @return {string}
+ */
+function getErrorMessage(req){
+  return "The requested service " + req.url + " failed: " + req.status + ", " + req.statusText
+}
+
 function getUrlByParameter (name) {
   const url = new URL(window.location.href)
   return url.searchParams.get(name)
