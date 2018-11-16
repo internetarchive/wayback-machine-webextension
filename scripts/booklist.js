@@ -21,9 +21,10 @@ function populateBooks(url){
     }
   }).fail( function( xhr, status ) {
     $(".loader").hide();
+    console.log(xhr);
 
     $("#resultsTray").css("grid-template-columns", "none").append(
-      $("<p></p>").text(getErrorMessage(status))
+      $("<div>").html(getErrorMessage(status))
     );
   });
 }
