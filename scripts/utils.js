@@ -54,13 +54,8 @@ function getWaybackUrlFromResponse(response) {
  * @param status {string}
  * @return {string}
  */
-function getErrorMessage(status){
-  if(status === "timeout"){
-    return "The service you have requested has timed out."
-  }
-  else{
-    return "Something went wrong: " + status
-  }
+function getErrorMessage(req){
+  return "The requested service " + req.url + " failed: " + req.status + ", " + req.statusText
 }
 
 function getUrlByParameter (name) {

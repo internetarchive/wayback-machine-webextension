@@ -110,7 +110,10 @@ function getWikipediaBooks (url) {
   return $.ajax({
     dataType: "json",
     url: 'https://archive.org/services/context/books?url=' + url,
-    timeout: 2000
+    beforeSend: function(jqXHR, settings) {
+       jqXHR.url = settings.url;
+   },
+    timeout: 10000
   })
 }
 
