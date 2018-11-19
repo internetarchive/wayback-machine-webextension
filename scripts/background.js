@@ -450,6 +450,9 @@ function openThatContext(temp, url, methodOfShowing) {
           var context = contexts.filter(e => e.name == temp);
           chrome.windows.create({ url: context[0].htmlUrl + url, width: 800, height: 800, top: 0, left: 0, focused: true }, function (win) {
             windowIdtest = win.id;
+            chrome.windows.onRemoved.addListener(function(){
+              windowIdtest = 0;
+            })
             resolve();
           });
         } else {
