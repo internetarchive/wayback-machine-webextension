@@ -224,7 +224,7 @@ function borrow_books () {
     url = tabs[0].url
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result === 'B' && url.includes('www.amazon') && url.includes('/dp/')) {
+      if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
         get_amazonbooks(url).then(response => {
           if (response['metadata'] && response['metadata']['identifier-access']) {
             let details_url = response['metadata']['identifier-access']
