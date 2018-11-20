@@ -120,6 +120,10 @@ chrome.windows.onRemoved.addListener(function (id) {
   var index = contexts.findIndex(e => e.window === id);
   if (index >= 0) {
     contexts[index].window = 0;
+  }else if(windowIdtest === id){
+    windowIdtest = 0;
+  }else if(windowIdSingle === id){
+    windowIdSingle = 0;
   }
 });
 
