@@ -120,6 +120,10 @@ chrome.windows.onRemoved.addListener(function (id) {
   var index = contexts.findIndex(e => e.window === id);
   if (index >= 0) {
     contexts[index].window = 0;
+  }else if(windowIdtest === id){
+    windowIdtest = 0;
+  }else if(windowIdSingle === id){
+    windowIdSingle = 0;
   }
 });
 
@@ -450,9 +454,6 @@ function openThatContext(temp, url, methodOfShowing) {
           var context = contexts.filter(e => e.name == temp);
           chrome.windows.create({ url: context[0].htmlUrl + url, width: 800, height: 800, top: 0, left: 0, focused: true }, function (win) {
             windowIdtest = win.id;
-            chrome.windows.onRemoved.addListener(function(){
-              windowIdtest = 0;
-            })
             resolve();
           });
         } else {
