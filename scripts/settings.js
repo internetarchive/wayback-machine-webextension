@@ -14,7 +14,7 @@ function restore_options () {
     tweets: false,
     wbmsummary: false,
     annotations: false,
-    similarweb: false,
+    // similarweb: false,
     tagcloud: false,
     doi: false,
     news: false,
@@ -30,7 +30,7 @@ function restore_options () {
     $('#tweets').prop('checked', items.tweets)
     $('#wbmsummary').prop('checked', items.wbmsummary)
     $('#annotations').prop('checked', items.annotations)
-    $('#similarweb').prop('checked', items.similarweb)
+    // $('#similarweb').prop('checked', items.similarweb)
     $('#tagcloud').prop('checked', items.tagcloud)
     $('#showall').prop('checked', items.showall)
     $('#news').prop('checked', items.news)
@@ -50,7 +50,7 @@ function save_options () {
     tweets : $('#tweets').prop('checked'),
     wbmsummary : $('#wbmsummary').prop('checked'),
     annotations : $('#annotations').prop('checked'),
-    similarweb : $('#similarweb').prop('checked'),
+    // similarweb : $('#similarweb').prop('checked'),
     tagcloud : $('#tagcloud').prop('checked'),
     showall : $('#showall').prop('checked'),
     news : $('#news').prop('checked'),
