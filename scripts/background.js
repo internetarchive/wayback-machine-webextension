@@ -63,15 +63,15 @@ var contexts = [
     top: 0,
     left: 1000
   },
-  {
-    name: "similarweb",
-    htmlUrl: chrome.runtime.getURL("similarweb.html") + "?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 0,
-    left: 1200
-  },
+  // {
+  //   name: "similarweb",
+  //   htmlUrl: chrome.runtime.getURL("similarweb.html") + "?url=",
+  //   tab: 0,
+  //   window: 0,
+  //   tabContextName: 0,
+  //   top: 0,
+  //   left: 1200
+  // },
   {
     name: "tagcloud",
     htmlUrl: chrome.runtime.getURL("tagcloud.html") + "?url=",
@@ -242,7 +242,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
   } else if (message.message === 'showall') {
-    chrome.storage.sync.get(['show_context', 'auto_update_context', 'alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'similarweb', 'tagcloud'], function (event) {
+    chrome.storage.sync.get(['show_context', 'auto_update_context', 'alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) { //'similarweb',
       if (!event.show_context) {
         //By-default the context-window open in tabs
         event.show_context = "tab";
