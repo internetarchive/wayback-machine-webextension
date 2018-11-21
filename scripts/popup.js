@@ -202,7 +202,7 @@ function auto_archive_url () {
           tab_url.includes('chrome://newtab') === false) {
         wmAvailabilityCheck(tab_url, onsuccess = function () { }, onfailure = function () {
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (result === 'S') {
+            if (result.includes('S')) {
               fetch('https://web.archive.org/save/' + tab_url).then(function () {
                 chrome.runtime.sendMessage({ message: 'changeBadge', tabId: tabId })
               })
