@@ -430,12 +430,16 @@ function auto_save(tabId) {
       if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
         wmAvailabilityCheck(page_url,
           function () {
-            console.log("Available already");
+            chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
+              if(result.includes('S')){
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+              }
+            })
           },
           function () {
             chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
               if(!result.includes('S')){
-                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S'+result });                
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S'+result });
               }
             })
           });
