@@ -101,8 +101,8 @@ function rewriteUserAgentHeader(e) {
   return { requestHeaders: e.requestHeaders };
 }
 
-function URLopener(open_url, url, wmAvailabilitycheck) {
-  if (wmAvailabilitycheck === true) {
+function URLopener(open_url, url, wmIsAvailable) {
+  if (wmIsAvailable === true) {
     wmAvailabilityCheck(url, function () {
       chrome.tabs.create({ url: open_url });
     }, function () {
@@ -510,19 +510,19 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       const page_url = tabs[0].url.replace(pattern, '');
       let wayback_url;
-      let wmAvailabilitycheck = true;
+      let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
         wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
         wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
-        wmAvailabilitycheck = false;
+        wmIsAvailable = false;
         wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
-        wmAvailabilitycheck = false;
+        wmIsAvailable = false;
         wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
       }
-      URLopener(wayback_url, page_url, wmAvailabilitycheck);
+      URLopener(wayback_url, page_url, wmIsAvailable);
     }
   });
 });
