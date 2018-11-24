@@ -430,15 +430,22 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
 function auto_save(tabId) {
   chrome.tabs.get(tabId, function (tab) {
     var page_url = tab.url;
-    chrome.browserAction.setBadgeText({ tabId: tabId, text: "" });
     if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
       if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
         wmAvailabilityCheck(page_url,
           function () {
-            console.log("Available already");
+            chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
+              if(result.includes('S')){
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+              }
+            })
           },
           function () {
-            chrome.browserAction.setBadgeText({ tabId: tabId, text: "S" });
+            chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
+              if(!result.includes('S')){
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S'+result });
+              }
+            })
           });
       }
     }
