@@ -28,33 +28,6 @@ function populateBooks(url){
   });
 }
 
-function getMetadata(book){
-  if (book) {
-    if(book.metadata){
-      return {
-        "title" : book.metadata.title,
-        "author" : book.metadata.creator,
-        "image" : "https://archive.org/services/img/" + book.metadata.identifier,
-        "link" : book.metadata["identifier-access"],
-        "button_text": "Read Now",
-        "button_class": "btn btn-success resize_fit_center",
-        "readable" : true
-      }
-    }else{
-      return {
-        "title" : book.title,
-        "author" : book.authors_metadata ? book.authors_metadata.personal_name : "",
-        "image" : book.covers ? "https://covers.openlibrary.org/w/id/"+ book.covers[0]+"-M.jpg" : undefined,
-        "link" : "https://archive.org/donate/",
-        "button_text": "Donate",
-        "button_class": "btn btn-warning resize_fit_center",
-        "readable" : false
-      }
-    }
-  }
-  return false;
-}
-
 function addBook(metadata){
   let text_elements = $("<div>").attr({"class": "text_elements"}).append(
     $("<p>").append($("<strong>").text(metadata.title)),
