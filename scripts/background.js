@@ -120,9 +120,9 @@ chrome.windows.onRemoved.addListener(function (id) {
   var index = contexts.findIndex(e => e.window === id);
   if (index >= 0) {
     contexts[index].window = 0;
-  }else if(windowIdtest === id){
+  } else if (windowIdtest === id) {
     windowIdtest = 0;
-  }else if(windowIdSingle === id){
+  } else if (windowIdSingle === id) {
     windowIdSingle = 0;
   }
 });
@@ -272,7 +272,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
           for (var i = 0; i < contexts.length; i++) {
             var e = contexts[i];
             if (event[e.name]) {
-              p = p.then(openThatContext(e.name, urlsToAppend[i], event.show_context));
+              p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
             }
           }
         } else {
@@ -295,7 +295,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
           for (var i = 0; i < contexts.length; i++) {
             var e = contexts[i];
             if (event[e.name]) {
-              p = p.then(openThatContext(e.name, urlsToAppend[i], event.show_context));
+              p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
             }
           }
         } else {
@@ -321,7 +321,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         } else {
           chrome.windows.create({
             url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
-            width: 1000, height: 1000, top: 0, left: 0, focused: false
+            width: 1000, height: 1000, top: 0, left: 0
           }, function (win) {
             windowIdSingle = win.id;
           });
@@ -373,13 +373,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
           }
           if (event1.auto_update_context === true) {
             if (event1.show_context === "tab") {
-              if (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0) {
+              if ((contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
                 chrome.tabs.query({
                   windowId: windowIdtest
                 }, function (tabs) {
                   var tab1 = tabs[0];
                   tabIdtest = tab1.id;
-                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0) {
+                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e=>e.id==tabId).length==0) {
                     for (var i = 0; i < contexts.length; i++) {
                       var e = contexts[i];
                       if ((tab1.url).includes(e.name)) {
@@ -399,25 +399,25 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
                 windowId: windowIdSingle
               }, function (tabs) {
                 var tab = tabs[0];
-                chrome.tabs.update(tab.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+                if(tabId!=tab.id){
+                  chrome.tabs.update(tab.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+                }
               });
             } else {
               if (contexts.findIndex(e => e.window !== 0) >= 0) {
+                var i=0;
                 contexts.map(e => {
                   chrome.tabs.query({
                     windowId: e.window
                   }, function (tabs) {
-                    if (tabs.length > 0) e.tabContextName = tabs[0].id;
+                    if (tabs.length > 0){
+                      e.tabContextName = tabs[0].id;
+                      if(contexts.filter(e=>e.tabContextName==tabId).length==0){
+                        chrome.tabs.update(e.tabContextName,{ url: e.htmlUrl + urlsToAppend[i++] }, function (tab) {});
+                      }
+                    }
                   });
                 });
-                if (contexts.findIndex(e => e.tabContextName !== tab.id) >= 0) {
-                  for (var i = 0; i < contexts.length; i++) {
-                    var e = contexts[i];
-                    if (e.window !== 0) {
-                      chrome.tabs.update(e.window + 1, { url: e.htmlUrl + urlsToAppend[i] });
-                    }
-                  }
-                }
               }
             }
           }
@@ -434,16 +434,16 @@ function auto_save(tabId) {
       if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
         wmAvailabilityCheck(page_url,
           function () {
-            chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
-              if(result.includes('S')){
+            chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+              if (result.includes('S')) {
                 chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
               }
             })
           },
           function () {
-            chrome.browserAction.getBadgeText({ tabId: tabId}, function(result){
-              if(!result.includes('S')){
-                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S'+result });
+            chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+              if (!result.includes('S')) {
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
               }
             })
           });
@@ -453,13 +453,12 @@ function auto_save(tabId) {
 }
 
 //function for opeing a particular context
-function openThatContext(temp, url, methodOfShowing) {
+function openThatContext(contextToOpen, url, methodOfShowing) {
   return function () {
     return new Promise(function (resolve, reject) {
       if (methodOfShowing === 'tab') {
         if (windowIdtest === 0) {
-          var context = contexts.filter(e => e.name == temp);
-          chrome.windows.create({ url: context[0].htmlUrl + url, width: 800, height: 800, top: 0, left: 0, focused: true }, function (win) {
+          chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 800, height: 800, top: 0, left: 0 }, function (win) {
             windowIdtest = win.id;
             resolve();
           });
@@ -467,18 +466,16 @@ function openThatContext(temp, url, methodOfShowing) {
           chrome.tabs.query({
             windowId: windowIdtest
           }, function (tabs) {
-            var context = contexts.filter(e => e.name == temp);
-            chrome.tabs.create({ 'url': context[0].htmlUrl + url, 'active': false }, function (tab) {
-              context[0].tab = tab.id;
+            chrome.tabs.create({ 'url': contextToOpen.htmlUrl + url, 'active': false }, function (tab) {
+              contextToOpen.tab = tab.id;
               resolve();
             });
           });
         }
       } else if (methodOfShowing === 'window') {
         //If context is to be shown in window
-        var context = contexts.filter(e => e.name == temp);
-        chrome.windows.create({ url: context[0].htmlUrl + url, width: 500, height: 500, top: context[0].top, left: context[0].left, focused: false }, function (win) {
-          context[0].window = win.id;
+        chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 500, height: 500, top: contextToOpen.top, left: contextToOpen.left }, function (win) {
+          contextToOpen.window = win.id;
           resolve();
         });
       }
