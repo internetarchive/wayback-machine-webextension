@@ -16,6 +16,17 @@
   width: 120px;
 }
 .popup-title{
-  color:#c3c3c3;
+  color:#eee;
   text-align: center;
+}
+
+.tooltip.in{
+  opacity: 1;
+}
+
+.bottom_details{
+  background-color: #eee;
+  width: 100%;
+  padding: 5px 5px 0;
+  border-radius: 8px;
 }
