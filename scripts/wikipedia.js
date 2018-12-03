@@ -15,7 +15,7 @@ function addCitations () {
       }
     }
   }).fail( function( xhr, status ) {
-    console.log(getErrorMessage(status))
+    console.log(getErrorMessage(xhr))
   });
 }
 
