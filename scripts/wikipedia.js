@@ -113,7 +113,7 @@ function getWikipediaBooks (url) {
     beforeSend: function(jqXHR, settings) {
        jqXHR.url = settings.url;
    },
-    timeout: 10000
+    timeout: 30000
   })
 }
 
