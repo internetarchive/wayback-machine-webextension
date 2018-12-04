@@ -20,10 +20,11 @@ function addCitations () {
 }
 
 function getMetadata(book){
+  const MAX_TITLE_LEN = 300
   if (book) {
     if(book.metadata){
       return {
-        "title" : book.metadata.title,
+        "title" : book.metadata.title.length > MAX_TITLE_LEN ? book.metadata.title.slice(0,MAX_TITLE_LEN)+ '...' : book.metadata.title,
         "author" : book.metadata.creator,
         "image" : "https://archive.org/services/img/" + book.metadata.identifier,
         "link" : book.metadata["identifier-access"],
@@ -33,7 +34,7 @@ function getMetadata(book){
       }
     }else{
       return {
-        "title" : book.title,
+        "title" : book.title.length > MAX_TITLE_LEN ? book.title.slice(0,MAX_TITLE_LEN)+ '...' : book.title,
         "author" : book.authors_metadata ? book.authors_metadata.personal_name : "",
         "image" : book.covers ? "https://covers.openlibrary.org/w/id/"+ book.covers[0]+"-M.jpg" : undefined,
         "link" : "https://archive.org/donate/",
