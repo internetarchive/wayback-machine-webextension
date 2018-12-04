@@ -1,6 +1,9 @@
 function getMetadata(entry){
-
+  const MAX_TITLE_LEN = 300
   let title = entry.title;
+  if(title.length > MAX_TITLE_LEN){
+    title = title.slice(0, MAX_TITLE_LEN) + "..."
+  }
   let author = '';
   if (entry.authors) {
     author = entry.authors[0];
