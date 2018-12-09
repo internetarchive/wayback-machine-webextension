@@ -268,14 +268,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       var urlsToAppend = [url, message.url, open_url, message.url, message.url, message.url];
       //If the Context is to be showed in tabs
       if (event.show_context === "tab") {
-          var p = Promise.resolve();
-          for (var i = 0; i < contexts.length; i++) {
-            var e = contexts[i];
-            if (event[e.name]) {
-              p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
-            }
+        var p = Promise.resolve();
+        for (var i = 0; i < contexts.length; i++) {
+          var e = contexts[i];
+          if (event[e.name]) {
+            p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
           }
-        
+        }
       } else if (event.show_context === "window") {
         //If the Context is to be showed in Windows
         if (contexts.findIndex(e => e.window === 0) >= 0) {
@@ -320,7 +319,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } // closing showall if
 });
 
-chrome.tabs.onUpdated.addListener(function (tabId, info,tab) {
+chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
     chrome.tabs.get(tabId, function (tab) {
       chrome.storage.sync.get(['auto_archive'], function (event) {
@@ -362,16 +361,15 @@ chrome.tabs.onUpdated.addListener(function (tabId, info,tab) {
           }
           if (event1.auto_update_context === true) {
             if (event1.show_context === "tab") {
-              if ((contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
+              if (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0) {
                 chrome.tabs.query({
                   windowId: windowIdtest
                 }, function (tabs) {
                   var tab1 = tabs[0];
                   tabIdtest = tab1.id;
-                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e=>e.tab === tab.id).length===0) {
+                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
                     for (var i = 0; i < contexts.length; i++) {
                       var e = contexts[i];
-
                       chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
                     };
                   }
@@ -395,7 +393,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info,tab) {
                   }, function (tabs) {
                     if (tabs.length > 0) {
                       e.tabContextName = tabs[0].id;
-                      if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e=>e.tabContextName === tab.id).length === 0) {
+                      if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
                         chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
                       }
                     }

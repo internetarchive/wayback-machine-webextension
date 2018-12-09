@@ -299,7 +299,6 @@ function show_wikibooks() {
                   left: width / 2
                 })
               })
-
             }
           })
         }
