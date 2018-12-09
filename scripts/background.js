@@ -264,10 +264,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         //By default auto-update context is off
         event.auto_update_context = false;
       }
-      var urlsToAppend = [url, message.url, open_url, message.url, message.url, url, message.url];
+      //var urlsToAppend = [url, message.url, open_url, message.url, message.url, url, message.url];
+      var urlsToAppend = [url, message.url, open_url, message.url, message.url, message.url];
       //If the Context is to be showed in tabs
       if (event.show_context === "tab") {
-        if (contexts.findIndex(e => e.tab === 0) >= 0) {
           var p = Promise.resolve();
           for (var i = 0; i < contexts.length; i++) {
             var e = contexts[i];
@@ -275,18 +275,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
               p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
             }
           }
-        } else {
-          //If context screens(tabs) are already opened and user again click on the Context button then update them
-          chrome.tabs.query({
-            windowId: windowIdtest
-          }, function (tabs) {
-            var tab = tabs[0];
-          });
-          for (var i = 0; i < contexts.length; i++) {
-            var e = contexts[i];
-            chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
-          }
-        }
+        
       } else if (event.show_context === "window") {
         //If the Context is to be showed in Windows
         if (contexts.findIndex(e => e.window === 0) >= 0) {
@@ -331,7 +320,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } // closing showall if
 });
 
-chrome.tabs.onUpdated.addListener(function (tabId, info) {
+chrome.tabs.onUpdated.addListener(function (tabId, info,tab) {
   if (info.status === "complete") {
     chrome.tabs.get(tabId, function (tab) {
       chrome.storage.sync.get(['auto_archive'], function (event) {
@@ -353,7 +342,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
         if (open_url.slice(-1) === '/') {
           open_url = received_url.substring(0, open_url.length - 1);
         }
-        var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, url, tagcloudurl];
+        var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl];
         chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function (event1) {
           if (event1.books === true) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -379,16 +368,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
                 }, function (tabs) {
                   var tab1 = tabs[0];
                   tabIdtest = tab1.id;
-                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e=>e.id==tabId).length==0) {
+                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e=>e.tab === tab.id).length===0) {
                     for (var i = 0; i < contexts.length; i++) {
                       var e = contexts[i];
-                      if ((tab1.url).includes(e.name)) {
-                        chrome.tabs.update(parseInt(tabIdtest), { url: e.htmlUrl + urlsToAppend[i] });
-                        break;
-                      }
-                    };
-                    for (var i = 0; i < contexts.length; i++) {
-                      var e = contexts[i];
+
                       chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
                     };
                   }
@@ -398,22 +381,22 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
               chrome.tabs.query({
                 windowId: windowIdSingle
               }, function (tabs) {
-                var tab = tabs[0];
-                if(tabId!=tab.id){
-                  chrome.tabs.update(tab.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+                var tab1 = tabs[0];
+                if (tabId !== tab1.id && tab.id !== tab1.id) {
+                  chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
                 }
               });
             } else {
               if (contexts.findIndex(e => e.window !== 0) >= 0) {
-                var i=0;
+                var i = 0;
                 contexts.map(e => {
                   chrome.tabs.query({
                     windowId: e.window
                   }, function (tabs) {
-                    if (tabs.length > 0){
+                    if (tabs.length > 0) {
                       e.tabContextName = tabs[0].id;
-                      if(contexts.filter(e=>e.tabContextName==tabId).length==0){
-                        chrome.tabs.update(e.tabContextName,{ url: e.htmlUrl + urlsToAppend[i++] }, function (tab) {});
+                      if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e=>e.tabContextName === tab.id).length === 0) {
+                        chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
                       }
                     }
                   });
@@ -459,8 +442,13 @@ function openThatContext(contextToOpen, url, methodOfShowing) {
       if (methodOfShowing === 'tab') {
         if (windowIdtest === 0) {
           chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 800, height: 800, top: 0, left: 0 }, function (win) {
-            windowIdtest = win.id;
-            resolve();
+            chrome.tabs.query({
+              windowId: win.id
+            }, function (tabs) {
+              windowIdtest = win.id;
+              contextToOpen.tab = tabs[0].id;
+              resolve();
+            });
           });
         } else {
           chrome.tabs.query({
