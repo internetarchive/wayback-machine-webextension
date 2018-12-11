@@ -1,66 +1,83 @@
 <!doctype html>
 <html>
-  <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
-    <title>Wayback Machine</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-  </head>
-  <body>
-    <div class='container-full' style='min-width: 120px;'>
-      <div class='row'>
-        <div class='col-sm-12 text-center'>
-          <img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' />
-          <form class="search-toolbar-input-container" style="margin: 10px 2px;">
-            <div class="bootstrap-typeahead clearfix open" style="position: relative;">
-              <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-                <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
-                <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
-              </div>
-              <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
-              </ul>
-            </div>
-            <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
-          </form>
-          <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1' style="background-color: #28a745;">Save Page Now</button><br/>
-          <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1' style="background-color: #007bff">Recent Version</button><br/>
-          <button type ="button" class="btn btn-primary btn-sm feedback_button" id="feedback" style="float:right;font-weight: bold;right: -8px;transform: rotate(270deg); position: absolute;">Feedback</button>
-    
-          <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
-          <br />
-          <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1' style="background-color: #17a2b9">Overview</button><br/>
-          <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR>
 
-          <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1' style="background-color: #dddddd">Site Map</button>
-          <div id="display_">
-            <button type="button" class="btn btn-info btn-sm" id="context-screen">Show me Context</button>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <title>Wayback Machine</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+  <div class='container-fluid'>
+    <div>
+      <div class='text-center'>
+        <img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' />
+        <form class="search-toolbar-input-container" style="margin: 10px 2px;">
+          <div class="bootstrap-typeahead clearfix open" style="position: relative;">
+            <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
+              <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
+                style="background-color: transparent; display: block; position: relative; z-index: 1;">
+              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
+                style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+            </div>
+            <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+            </ul>
           </div>
-          <div id="borrow_books_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm" id="borrow_books" tabindex='-1'>Read This Book</button>
+          <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+        </form>
+        <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1' style="background-color: #28a745;">Save
+          Page Now</button><br />
+        <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1' style="background-color: #007bff">Recent
+          Version</button><br />
+        <button type="button" class="btn btn-primary btn-sm feedback_button" id="feedback" style="float:right;font-weight: bold;right: -8px;transform: rotate(270deg); position: absolute;">Feedback</button>
+
+        <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
+        <br />
+        <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1' style="background-color: #17a2b9">Overview</button><br />
+        <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b>
+            <i class="fa fa-twitter"></i> Tweets</b></button><BR>
+
+        <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1' style="background-color: #dddddd">Site
+          Map</button>
+        <div id="display_">
+          <button type="button" class="btn btn-info btn-sm" id="context-screen">Show me Context</button>
+        </div>
+        <div id="borrow_books_tr" style="display: none;">
+          <button type="button" class="btn btn-warning btn-sm" id="borrow_books" tabindex='-1'>Read This Book</button>
+        </div>
+        <div id="news_recommend_tr" style="display: none;">
+          <button type="button" class="btn btn-warning btn-sm" id="news_recommend" tabindex='-1'>Related TV Clips</button>
+        </div>
+        <div id="wikibooks_tr" style="display: none;">
+          <button type="button" class="btn btn-warning btn-sm" id="wikibooks" tabindex='-1'>Find Cited Books</button>
+        </div>
+        <div id="doi_tr" style="display: none;">
+          <button type="button" class="btn btn-warning btn-sm" id="doi" tabindex='-1'>Find Cited Papers</button>
+        </div>
+        <div>
+          <a id="fb_share" class="btn-social btn-sm btn-facebook"><i class="fa fa-facebook"></i></a>
+          <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
+          <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
+        </div>
+        <div id="horizontal_line" style="margin-bottom: 5px"></div>
+        <div class="row">
+          <div class="col-xs-3">
+            <span class="glyphicon glyphicon-cog" style="font-size: 25px; cursor: pointer;" id="settings_button"></span>
           </div>
-          <div id="news_recommend_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm" id="news_recommend" tabindex='-1'>Related TV Clips</button>
+          <div class="col-xs-3"></div>
+          <div class="col-xs-3"></div>
+          <div class="col-xs-3">
+            <span class="glyphicon glyphicon-info-sign" style="font-size: 25px;color: #30a7af; cursor: pointer;" id="about_support_button"></span>
           </div>
-          <div id="wikibooks_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm" id="wikibooks" tabindex='-1'>Find Cited Books</button>
-          </div>
-          <div id="doi_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm" id="doi" tabindex='-1'>Find Cited Papers</button>
-          </div>
-          <div>
-            <a id="fb_share" class="btn-social btn-sm btn-facebook" ><i class="fa fa-facebook"></i></a>
-            <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
-            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
-         </div>
-         <div id="horizontal_line" style="margin-bottom: 5px"></div>
-         <span class="glyphicon glyphicon-cog" style="font-size: 25px; cursor: pointer; float: left; margin-left: 10px;" id="settings_button"></span>
-         <span class="glyphicon glyphicon-info-sign" style="font-size: 25px;color: #30a7af; cursor: pointer; float: right; margin-right: 10px;" id="about_support_button"></span>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
 <script src="scripts/build.js"></script>
 <script src="scripts/utils.js"></script>
