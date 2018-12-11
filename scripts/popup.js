@@ -1,13 +1,13 @@
 global_url = ''
 
-function remove_port (url) {
+function remove_port(url) {
   if (url.substr(-4) === ':80/') {
     url = url.substring(0, url.length - 4)
   }
   return url
 }
 
-function remove_wbm (url) {
+function remove_wbm(url) {
   var pos = url.indexOf('/http')
   var new_url = ''
   if (pos !== -1) {
@@ -19,19 +19,19 @@ function remove_wbm (url) {
   return remove_port(new_url)
 }
 
-function remove_alexa (url) {
+function remove_alexa(url) {
   var pos = url.indexOf('/siteinfo/')
   var new_url = url.substring(pos + 10)
   return remove_port(new_url)
 }
 
-function remove_whois (url) {
+function remove_whois(url) {
   var pos = url.indexOf('/whois/')
   var new_url = url.substring(pos + 7)
   return remove_port(new_url)
 }
 /* Common method used everywhere to retrieve cleaned up URL */
-function retrieve_url () {
+function retrieve_url() {
   var search_term = $('#search_input').val()
   var url = ''
   if (search_term === '') {
@@ -42,7 +42,7 @@ function retrieve_url () {
   return url
 }
 
-function get_clean_url () {
+function get_clean_url() {
   var url = retrieve_url()
   if (url.includes('web.archive.org')) {
     url = remove_wbm(url)
@@ -54,7 +54,7 @@ function get_clean_url () {
   return url
 }
 
-function save_now () {
+function save_now() {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: 'https://web.archive.org/save/',
@@ -63,7 +63,7 @@ function save_now () {
   }).then(handleResponse, handleError)
 }
 
-function recent_capture () {
+function recent_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: 'https://web.archive.org/web/2/',
@@ -72,7 +72,7 @@ function recent_capture () {
   })
 }
 
-function first_capture () {
+function first_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: 'https://web.archive.org/web/0/',
@@ -81,7 +81,7 @@ function first_capture () {
   })
 }
 
-function view_all () {
+function view_all() {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: 'https://web.archive.org/web/*/',
@@ -90,13 +90,13 @@ function view_all () {
   })
 }
 
-function get_url () {
+function get_url() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     global_url = tabs[0].url
   })
 }
 
-function social_share (eventObj) {
+function social_share(eventObj) {
   var parent = eventObj.target.parentNode
   var id = parent.getAttribute('id')
   var sharing_url = ''
@@ -120,7 +120,7 @@ function social_share (eventObj) {
   }
 }
 
-function search_tweet (eventObj) {
+function search_tweet(eventObj) {
   var url = get_clean_url()
   url = url.replace(/^https?:\/\//, '')
   if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
@@ -138,7 +138,7 @@ function search_tweet (eventObj) {
   })
 }
 
-function display_list (key_word) {
+function display_list(key_word) {
   $('#suggestion-box').text('').hide()
   $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
@@ -156,7 +156,7 @@ function display_list (key_word) {
   })
 }
 
-function display_suggestions (e) {
+function display_suggestions(e) {
   $('#suggestion-box').text('').hide()
   if (e.keyCode === 13) {
     e.preventDefault()
@@ -171,35 +171,35 @@ function display_suggestions (e) {
     }, 0.1)
   }
 }
-function open_feedback_page () {
+function open_feedback_page() {
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
   chrome.tabs.create({ url: feedback_url })
 }
 
-function about_support () {
+function about_support() {
   window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus()
 }
 
-function makeModal () {
+function makeModal() {
   var url = get_clean_url()
   chrome.runtime.sendMessage({ message: 'makemodal', rturl: url })
 }
 
-function settings(){
-    window.open('settings.html','newwindow', 'width=600, height=700,left=0,top=30');
+function settings() {
+  window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
 }
 
 /**
  * If a URL is NOT available in the WBM, try to save it.
  */
-function auto_archive_url () {
+function auto_archive_url() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let tab_url = tabs[0].url
     const tabId = tabs[0].id
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true &&
-          tab_url.includes('https://web.archive.org/web/') === false &&
-          tab_url.includes('chrome://newtab') === false) {
+        tab_url.includes('https://web.archive.org/web/') === false &&
+        tab_url.includes('chrome://newtab') === false) {
         wmAvailabilityCheck(tab_url, onsuccess = function () { }, onfailure = function () {
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
             if (result.includes('S')) {
@@ -214,12 +214,12 @@ function auto_archive_url () {
   })
 }
 
-function show_all_screens () {
+function show_all_screens() {
   var url = get_clean_url()
   chrome.runtime.sendMessage({ message: 'showall', url: url })
 }
 
-function borrow_books () {
+function borrow_books() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     url = tabs[0].url
     tabId = tabs[0].id
@@ -238,7 +238,7 @@ function borrow_books () {
   })
 }
 
-function show_news () {
+function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     url = tabs[0].url
     var to_check_url = url.replace(/^https?:\/\/(www\.)?/, '')
@@ -274,7 +274,7 @@ function show_news () {
     })
   })
 }
-function show_wikibooks () {
+function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
@@ -288,15 +288,16 @@ function show_wikibooks () {
             if (event.show_context === 'tab') {
               chrome.tabs.create({ url: chrome.runtime.getURL('booklist.html') + '?url=' + url })
             } else {
-              chrome.system.display.getInfo(function (displayInfo) {
-                const height = displayInfo[0].bounds.height
-                const width = displayInfo[0].bounds.width
-                chrome.windows.create({ url: chrome.runtime.getURL('booklist.html') + '?url=' + url,
+              chrome.windows.getCurrent(function (window) {
+                const height = window.height
+                const width = window.width
+                chrome.windows.create({
+                  url: chrome.runtime.getURL('booklist.html') + '?url=' + url,
                   width: width / 2,
                   height: height,
                   top: 0,
-                  left: width / 2,
-                  focused: true })
+                  left: width / 2
+                })
               })
             }
           })
@@ -306,15 +307,16 @@ function show_wikibooks () {
             if (event.show_context === 'tab') {
               chrome.tabs.create({ url: chrome.runtime.getURL('doi.html') + '?url=' + url })
             } else {
-              chrome.system.display.getInfo(function (displayInfo) {
-                const height = displayInfo[0].bounds.height
-                const width = displayInfo[0].bounds.width
-                chrome.windows.create({ url: chrome.runtime.getURL('doi.html') + '?url=' + url,
+              chrome.windows.getCurrent(function (window) {
+                const height = window.height
+                const width = window.width
+                chrome.windows.create({
+                  url: chrome.runtime.getURL('doi.html') + '?url=' + url,
                   width: width / 2,
                   height: height,
                   top: 0,
-                  left: width / 2,
-                  focused: true })
+                  left: width / 2
+                })
               })
             }
           })
