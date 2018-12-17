@@ -27,43 +27,29 @@ function get_alexa() {
         }
     });
 }
-
-function get_whois(url){
-    var url=getUrlByParameter('url');
+function get_whois(url) {
+    var url = getUrlByParameter('url');
     var host_url = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
-    var whois_url="https://www.whoisxmlapi.com/whoisserver/WhoisService?domainName="+host_url+"&username=anishkumarsarangi&password=archiveit";
-    var http = new XMLHttpRequest();
-    http.open("GET", whois_url, true);
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var html = "<b>"+"<span class='color_code_whois'>"+ host_url +'</span>'+"</b><br/><b>Domain-Name: </b>";
-            var xmldata = http.responseXML.documentElement;
-            if (xmldata.getElementsByTagName("domainName")){
-                html +="<span class='color_code_whois'>"+xmldata.getElementsByTagName("domainName")[0].innerHTML+"</span>";
-            } 
-            else {
-                html += "N/A";
-            }
-            if(xmldata.getElementsByTagName("registrarName")[0]){
-                html += '<br/>'+'<b>Registrar: </b>' +"<span class='color_code_whois'>"+
-                    xmldata.getElementsByTagName('registrarName')[0].innerHTML;
-            }
-            if(xmldata.getElementsByTagName("rawText")){
-                html += '<br/><br/>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('rawText')[0].innerHTML;
-            }
-            if(xmldata.getElementsByTagName("createdDateNormalized")){
-                html += '<br/><b>Registration Date: </b><br/>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('createdDateNormalized')[0].innerHTML;
-                html += '<br/><b>Updated Date: </b>'+"<span style='color:black'>"+
-                    xmldata.getElementsByTagName('updatedDateNormalized')[0].innerHTML;
-            }
-            document.getElementById("show_whois_data").innerHTML = html;
+    var whois_url = "https://www.whoisxmlapi.com/whoisserver/WhoisService?domainName=" + host_url + "&username=anishkumarsarangi&password=archiveit";
+    $.get(whois_url, function (xml) {
+        $("#whois_name").text(host_url);
+        if (xml.getElementsByTagName("domainName")) {
+            $("#whois_domain").text(xml.getElementsByTagName("domainName")[0].innerHTML);
         }
-    };
-    http.send(null);
+        if (xml.getElementsByTagName("registrarName")[0]) {
+            $("#whois_registrar").append(xml.getElementsByTagName('registrarName')[0].innerHTML);
+        }
+        if (xml.getElementsByTagName("rawText")[0]) {
+            $("#whois_raw_text").append(xml.getElementsByTagName('rawText')[0].innerHTML);
+        }
+        if (xml.getElementsByTagName("createdDateNormalized")[0]) {
+            $("#whois_registration_date").append(xml.getElementsByTagName('createdDateNormalized')[0].innerHTML);
+        }
+        if (xml.getElementsByTagName("updatedDateNormalized")[0]) {
+            $("#whois_updated_date").append(xml.getElementsByTagName('updatedDateNormalized')[0].innerHTML);
+        }
+    });
 }
-
 function get_details(){
     var url=getUrlByParameter('url');
     var xhr=new XMLHttpRequest();
