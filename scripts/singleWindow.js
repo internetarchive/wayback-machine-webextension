@@ -1,52 +1,31 @@
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
-}
-
 function get_alexa() {
     var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url=';
-    var url=getUrlByParameter('url');
-    url=url.replace(/^https?:\/\//,'')
-    var http = new XMLHttpRequest();
-    console.log(url);
-    http.open("GET", alexa_url + url, true);
-    console.log(alexa_url+url);
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var html = "<b>"+"<span class='color_code'>"+ url +'</span>'+"</b><br/><b>Alexa Rank: </b>";
-            var xmldata = http.responseXML.documentElement;
-            console.log(xmldata);
-            if (xmldata.getElementsByTagName("POPULARITY")) 
-            {
-                html +="<span class='color_code'>"+xmldata.getElementsByTagName("POPULARITY")[0].getAttribute('TEXT')+"</span>";
-            } 
-            else {
-                html += "N/A";
-            }
-            if(xmldata.getElementsByTagName("COUNTRY")[0])
-            {
-                html += '<br/>'+'<b>Country:</b>' +"<span class='color_code'>"+
-                        xmldata.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
-            }
-            var rl = xmldata.getElementsByTagName('RL');
-            if (rl.length > 0) {
-                html += '<br><br><span class="glyphicon glyphicon-globe red" aria-hidden="true"></span> ' +
-                '<b>Related sites:</b><br/><ul class="rl-list rl-link">';
-                for(var i = 0, len = rl.length; i < len && i < 5; i++) {
-                    var rl_title = rl[i].getAttribute('TITLE');
-                    html += '<li><a href="http://' + rl[i].getAttribute('HREF') + '" target="_blank" class="rl-a">' +
-                    (rl_title.length > 18 ? rl_title.substring(0, 15) + '...' : rl_title) +
-                    '</a></li>';
-                }
-                html += '</ul>';
-            }
-            document.getElementById("show_alexa_data").innerHTML = html;
+    var url = getUrlByParameter('url');
+    url = url.replace(/^https?:\/\//, '');
+    $.get(alexa_url + url, function (xml) {
+        var name = xml.getElementsByTagName("ALEXA")[0].getAttribute('URL');
+        $("#alexa_name").text(name);
+        if (xml.getElementsByTagName("POPULARITY")) {
+            var rank = xml.getElementsByTagName("POPULARITY")[0].getAttribute('TEXT');
+            $("#alexa_rank").text(rank);
         }
-    };
-    http.send(null);
+        if (xml.getElementsByTagName("COUNTRY")[0]) {
+            var country = xml.getElementsByTagName('COUNTRY')[0].getAttribute('NAME');
+            $("#alexa_country").text(country);
+        }
+        var rl = xml.getElementsByTagName('RL');
+        if (rl.length > 0) {
+            for (var i = 0, len = rl.length; i < len && i < 5; i++) {
+                var title = rl[i].getAttribute('TITLE');
+                var href = rl[i].getAttribute('HREF');
+                var list_item = $("<li>");
+                var link = $("<a>").attr('href', "http://" + href).attr('target', '_blank').attr('class', 'rl-a').text(title.length > 18 ? title.substring(0, 15) + '...' : title);
+                list_item.append(link);
+                $("#alexa_list").append(list_item);
+            }
+
+        }
+    });
 }
 
 function get_whois(url){

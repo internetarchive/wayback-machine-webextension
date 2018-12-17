@@ -8,7 +8,9 @@
         <link rel="stylesheet" type="text/css" href="css/common.css">
         <link rel="stylesheet" type="text/css" href="css/singleWindow.css">
         <script src="scripts/build.js"></script>
+        <script src="scripts/utils.js"></script>
         <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
+        <script src="scripts/overview.js"></script>
         <title>
             All Context Screen
         </title>
@@ -40,9 +42,15 @@
         <div class="container" id="container-whole">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4></h4>
-                    <pre id="show_alexa_data" style="font-size: 20px">
-                    </pre>
+                    <div class="pre" id="show_alexa_data">
+                        <div class="color_code"><b id="alexa_name"></b></div>
+                        <div><b>Alexa Rank: <span class="color_code" id="alexa_rank"></span></b></div>
+                        <div><b>Country: <span class="color_code" id="alexa_country"></span></b></div>
+                        <br />
+                        <span class="glyphicon glyphicon-globe red" aria-hidden="true"></span>&nbsp;&nbsp;<b>Related sites:</b>
+                        <ul id="alexa_list"class="rl-list rl-link">
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-sm-6">
                     <h4></h4>
