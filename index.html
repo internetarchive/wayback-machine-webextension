@@ -28,22 +28,19 @@
           </div>
           <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
         </form>
-        <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1' style="background-color: #28a745;">Save
+        <button type="button" class="btn btn-success btn-sm" id="save_now" tabindex='-1'>Save
           Page Now</button><br />
-        <button type="button" class="btn btn-primary btn-sm" id="recent_capture" tabindex='-1' style="background-color: #007bff">Recent
+        <button type="button" class="btn btn-sm captures" id="recent_capture" tabindex='-1'>Load Recent
           Version</button><br />
-        <button type="button" class="btn btn-primary btn-sm feedback_button" id="feedback">Feedback</button>
-
-        <button type="button" class="btn btn-warning btn-sm" id="first_capture" tabindex='-1'>First Version</button>
+        <button type="button" class="btn btn-sm captures" id="first_capture" tabindex='-1'>Load First Version</button>
         <br />
-        <button type="button" class="btn btn-info btn-sm" id="overview" tabindex='-1' style="background-color: #17a2b9">Overview</button><br />
-        <button type="button" class="btn btn-default btn-twitter btn-sm" id="search_tweet" tabindex="-1" style="color:#ffffff"><b>
-            <i class="fa fa-twitter"></i> Tweets</b></button><BR>
-
-        <button type="button" class="btn btn-default btn-sm" id="make_modal" tabindex='-1' style="background-color: #dddddd">Site
+        <button type="button" class="btn btn-sm captures" id="overview" tabindex='-1'>Browse All Versions</button><br />
+        <button type="button" class="btn btn-sm extra_feature" id="make_modal" tabindex='-1'>Visualize Site
           Map</button>
+        <button type="button" class="btn btn-default btn-twitter btn-sm extra_feature" id="search_tweet" tabindex="-1"><b>
+          <i class="fa fa-twitter"></i> Tweets About this Page</b></button><BR>
         <div id="display_">
-          <button type="button" class="btn btn-info btn-sm" id="context-screen">Show me Context</button>
+          <button type="button" class="btn btn-sm extra_feature" id="context-screen">Show Me Context</button>
         </div>
         <div id="borrow_books_tr" style="display: none;">
           <button type="button" class="btn btn-warning btn-sm" id="borrow_books" tabindex='-1'>Read This Book</button>
@@ -57,6 +54,7 @@
         <div id="doi_tr" style="display: none;">
           <button type="button" class="btn btn-warning btn-sm" id="doi" tabindex='-1'>Find Cited Papers</button>
         </div>
+        <button type="button" class="btn btn-primary btn-sm feedback_button">Feedback</button>
         <div>
           <a id="fb_share" class="btn-social btn-sm btn-facebook"><i class="fa fa-facebook"></i></a>
           <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
