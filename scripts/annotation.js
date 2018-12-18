@@ -17,7 +17,7 @@ function hypothesis_api_url(url, type) {
 /**
  * Get hypothes.is data and render results.
  */
-function get_annotations(type) {
+function get_annotations(type='url') {
   const url = getUrlByParameter('url');
   const new_url = hypothesis_api_url(url, type);
   $.getJSON(new_url, function(data) {

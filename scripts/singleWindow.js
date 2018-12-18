@@ -99,73 +99,9 @@ function get_tweets(){
     xhr.send(null);
 }
 
-function get_annotaions_url(){
-    var url1=getUrlByParameter('url');
-    url1=decodeURI(url1);
-    var xhr= new XMLHttpRequest();
-    var test_url="";    
-    if(url1.includes('iskme.org')){
-        test_url=url1.replace(/^www\./,'');
-    }
-    if(test_url){
-        url1=test_url;
-    }
-    length=url1.length;
-    url1=(url1.slice(0,length-1));
-    console.log(url1);
-    var new_url="https://hypothes.is/api/search?uri="+url1;
-    xhr.open("GET",new_url,true);
-    xhr.onload=function(){
-        var data=JSON.parse(xhr.response);
-        console.log(data);
-        var length=data.rows.length;
-        if(length>0){
-            for(var i=0;i<length;i++){
-                var rowData=data.rows[i];
-                var date=rowData.created.substring(0,10);
-                var source=rowData.target[0].source;
-                var exactData=rowData.text;
-                var user=rowData.user.substring(5,rowData.user.indexOf('@'));
-                var row=document.getElementById('row-contain');
-                var item=row.cloneNode(true);
-                var topDivDate=item.querySelectorAll('[id="date-"]')[0].appendChild(document.createTextNode("Dated on :"+date));
-                var topDivUserInfo=item.querySelectorAll('[id="userinfo"]')[0].appendChild(document.createTextNode(user));
-                var targetSelectorExact=item.querySelectorAll('[id="source-contain"]')[0].appendChild(document.createTextNode("("+source+")"));
-                var text=item.querySelectorAll('[id="text-contain"]')[0].appendChild(document.createTextNode(exactData));
-                var title=item.querySelectorAll('[id="title-contain"]')[0].appendChild(document.createTextNode(rowData.document.title[0]));
-                var createA = document.createElement('a');
-                var createAText = document.createTextNode("Click to see the in-context");
-                createA.setAttribute('href', rowData.links.incontext);
-                createA.setAttribute('id',"link-incontext");
-                createA.appendChild(createAText);
-                var date=item.querySelectorAll('[id="links"]')[0].appendChild(createA);
-                var createB = document.createElement('a');
-                var createBText = document.createTextNode("Click to see the HTML");
-                createB.setAttribute('href', rowData.links.html);
-                createB.setAttribute('id',"link-html");
-                createB.appendChild(createBText);
-                var linked1=item.querySelectorAll('[id="links"]')[0].appendChild(createA);
-                var linked2=item.querySelectorAll('[id="links"]')[0].appendChild(createB);
-                if(rowData.target[0].hasOwnProperty('selector')){
-                    var lengthOfSelctor=rowData.target[0].selector.length;
-                    var selector=rowData.target[0].selector[lengthOfSelctor-1].exact;
-                    var selectorDiv=item.querySelectorAll('[id="target-selector-exact-contain"]')[0].appendChild(document.createTextNode(selector));
-                }
-                else{
-                    item.querySelectorAll('[id="target-selector-exact-contain"]')[0].style.display="none";
-                }
-                item.id = "row-"+i;
-                document.getElementById("box-annotation").appendChild(item);
-            }
-            document.getElementById("row-contain").style.display="none";
-        }else{
-            document.getElementById("box-annotation").innerHTML="There are no Annotations for the current URL";
-            document.getElementById("row-contain").style.display="none";
-        }
-    }
-    xhr.send(null);
+function show_annotations(){
+    $('#row_contain-url').show();
 }
-
 
 function getAuthorization(httpMethod, baseUrl, reqParams) {
     // Get acces keys
@@ -305,7 +241,7 @@ function get_doi(){
     };
     xhr.send();
 }
-window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotaions_url,get_tags,get_doi];
+window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,get_doi];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();

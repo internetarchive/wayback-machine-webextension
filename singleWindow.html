@@ -12,6 +12,7 @@
     <script src="scripts/utils.js"></script>
     <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
     <script src="scripts/overview.js"></script>
+    <script src="scripts/annotation.js"></script>
     <title>
         All Context Screen
     </title>
@@ -143,7 +144,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div id="box-annotation" style="height: 500px;overflow: scroll">
+                <div class="box" id="container-whole-url" style="height: 500px;overflow: scroll">
                 </div>
             </div>
         </div>
@@ -165,23 +166,24 @@
         </a>
         <br>
     </div>
-    <div class="" id="row-contain">
-        <div class="top-div" id="top-div-contain">
-            <strong>
-                <span id="userinfo"></span>
-                <br>
-                <span id="date-"></span>
-            </strong>
+    <div class="row" id="row_contain-url">
+        <div class="col-sm-12">
+            <div>
+                <div>
+                    <strong class="userinfo"></strong>
+                    <span class="date"></span>
+                </div>
+                <div class="source" id="source-">
+                    <span class="glyphicon glyphicon-globe"></span>
+                    <span class="public_on">Public on</span>
+                    <span class="title text-danger"></span>
+                    <span id="source-contain"> </span>
+                </div>
+                <div class="target-selector-exact"></div>
+                <div class="text" id="text-contain"></div>
+                <div class="links"></div>
+            </div>
         </div>
-        <div class="source" id="source-">
-            <span class="glyphicon glyphicon-globe" id="public"></span>
-            <span id="public_on">Public on</span>
-            <span class="title" id="title-contain" style="color: red"></span>
-            <span id="source-contain" style="word-wrap: break-word"></span>
-        </div>
-        <div class="target-selector-exact" id="target-selector-exact-contain"></div>
-        <div class="text" id="text-contain"></div>
-        <div id="links"></div>
     </div>
 </body>
 
