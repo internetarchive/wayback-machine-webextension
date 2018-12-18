@@ -142,6 +142,6 @@ background-color: #4a8aff;
     color: white !important;
 }
 .feedback_button{
-    background-color:#306EAB !important;
-    color: white !important;
+    cursor: pointer;
+    padding-top: 2px;
 }
