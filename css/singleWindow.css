@@ -106,9 +106,6 @@ p{
 .half{
     width: 600px;
 }
-#doi-heading{
-    display: none;
-}
 @media screen and (max-width: 500px) {
     #link-incontext {
       margin-left: 5px;

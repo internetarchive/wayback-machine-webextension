@@ -215,33 +215,7 @@ function createList(mainContainer,listEl){
         });
     }
 }
-function get_doi(){
-    var url=getUrlByParameter('url');
-    console.log(url);
-    var xhr=new XMLHttpRequest();
-    xhr.open('GET','https://archive.org/services/context/papers?url='+url,true);
-    xhr.onload=function(){
-        var responseArray = JSON.parse(xhr.responseText);
-        console.log(responseArray);
-        var result = [];
-        for(var i=0;i<responseArray.length;i++){
-            if(responseArray[i].count_files==0 && responseArray[i].paper && responseArray[i].paper.title){
-                result.push({url:null,title:responseArray[i].paper.title});
-            }else if(responseArray[i].count_files>0 && responseArray[i].files.length>0 && responseArray[i].files[0].links.length>0 && responseArray[i].files[0].links[0].url && responseArray[i].paper && responseArray[i].paper.title){
-                result.push({url:responseArray[i].files[0].links[0].url,title:responseArray[i].paper.title});
-            }
-        }
-        var mainContainer = document.getElementById('doi');
-        mainContainer.innerHTML = "";
-        console.log(result);
-        for(var i=0;i<result.length;i++){
-            document.getElementById('doi-heading').style.display="block";
-            createList(mainContainer,result[i]);
-        }
-    };
-    xhr.send();
-}
-window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,get_doi];
+window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();

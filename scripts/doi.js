@@ -72,7 +72,7 @@ function makeEntry (data) {
 }
 
 function createPage () {
-  let container = $('#container-whole');
+  let container = $('#container-whole-doi');
   const url = getUrlByParameter('url');
   $.getJSON('https://archive.org/services/context/papers?url='+url, function(response) {
     $('.loader').hide();
