@@ -127,7 +127,6 @@ background-color: #1E88E5;
 background-color: #4a8aff;
 }
 .btn{
-    width: 100%;
     font-weight: 500;
 }
 #save_now{
@@ -141,7 +140,12 @@ background-color: #4a8aff;
     background-color: #444243f7 !important;
     color: white !important;
 }
-.feedback_button{
+.context_feature{
+    background-color: #25a7b0;
+    color: white !important;
+}
+.feedback{
     cursor: pointer;
-    padding-top: 2px;
+    font-size: 179%;
+    padding-top: 1px;
 }

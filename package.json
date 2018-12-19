@@ -39,5 +39,7 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bootstrap-material-design-icons": "^2.2.0"
+  }
 }
