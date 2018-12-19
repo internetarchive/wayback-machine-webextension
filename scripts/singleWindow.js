@@ -184,37 +184,6 @@ function percentEncode(str) {
       return '%' + character.charCodeAt(0).toString(16);
     });
 };
-function createList(mainContainer,listEl){
-    var mainRow=document.createElement('div');
-    mainRow.className='row row_main';
-    mainContainer.appendChild(mainRow);
-    var half = document.createElement('div');
-    half.className='col-xs-6 half';
-    mainRow.appendChild(half);
-    var subRow=document.createElement('div');
-    subRow.className = 'row box';
-    half.appendChild(subRow);
-    var title = document.createElement('div');
-    var link = document.createElement('div');
-    title.className = 'col-xs-9';
-    link.className = 'col-xs-3';
-    subRow.appendChild(title);
-    subRow.appendChild(link);
-    title.innerHTML = listEl.title;
-    if(listEl.url == null){
-        link.innerHTML = "Not available";
-        link.style.color = "red";
-    }else{
-        var btn = document.createElement('button');
-        btn.setAttribute('type','button');
-        btn.className = "btn btn-lg btn-success";
-        link.appendChild(btn);
-        btn.innerHTML = "Read";
-        btn.addEventListener('click',function(event){
-            window.open(listEl.url);
-        });
-    }
-}
 window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage];
 window.onload = function(){
  for(var i in this.onloadFuncs){
