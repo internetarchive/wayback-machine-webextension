@@ -53,11 +53,11 @@ function makeEntry (data) {
             if (event1.show_context === 'tab') {
               chrome.tabs.create({url: data.url});
             } else {
-              chrome.system.display.getInfo(function (displayInfo) {
-                const height = displayInfo[0].bounds.height;
-                const width = displayInfo[0].bounds.width;
+              chrome.windows.getCurrent(function (window) {
+                const height = window.height;
+                const width = window.width;
                 chrome.windows.create({url: data.url, width: width / 2, height: height,
-                                       top: 0, left: 0, focused: true});
+                                       top: 0, left: 0});
               });
             }
           });
