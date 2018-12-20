@@ -342,7 +342,7 @@ $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#settings_button').click(settings)
 $('#context-screen').click(show_all_screens)
-$('#feedback').click(open_feedback_page)
+$('.feedback_button').click(open_feedback_page)
 
 $('#overview').click(view_all)
 $('#make_modal').click(makeModal)

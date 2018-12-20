@@ -6,12 +6,6 @@ li{
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
-#feedback{
-    font-weight: bold;
-    right: -24px;
-    transform: rotate(270deg); 
-    position: absolute;
-} 
 #horizontal_line{
     margin: 0px; 
     padding: 0px; 
@@ -131,4 +125,27 @@ background-color: #1E88E5;
 .btn-linkedin:hover
 {
 background-color: #4a8aff;
+}
+.btn{
+    font-weight: 500;
+}
+#save_now{
+    background-color: #489C3E;
+}
+.captures{
+    background-color: #d63c24f2;
+    color: white !important;
+}
+.extra_feature{
+    background-color: #444243f7 !important;
+    color: white !important;
+}
+.context_feature{
+    background-color: #25a7b0;
+    color: white !important;
+}
+.feedback{
+    cursor: pointer;
+    font-size: 179%;
+    padding-top: 1px;
 }
