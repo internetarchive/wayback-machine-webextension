@@ -8,9 +8,11 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/singleWindow.css">
+    <link rel="stylesheet" type="text/css" href="css/domaintools.css">
     <script src="scripts/build.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
+    <script src="scripts/domaintools.js"></script>
     <script src="scripts/overview.js"></script>
     <script src="scripts/annotation.js"></script>
     <script src="scripts/doi.js"></script>
@@ -59,13 +61,25 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="pre" id="show_whois_data">
-                    <div class="color_code_whois"><b id="whois_name"></b></div>
-                    <div><b>Domain-Name: </b><span class="color_code_whois" id="whois_domain"></span></div>
-                    <div><b>Registrar: </b><span class="color_code_whois" id="whois_registrar"></span></div>
-                    <div id="whois_raw_text"></div>
-                    <div><b>Registration date: </b><span id="whois_registration_date"></span></div>
-                    <div><b>Updated date: </b><span id="whois_updated_date"></span></div>
+                <div>
+                    <div style="text-align:left;">
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:left;">
+                                <pre id="show_domaintools_data" class="title"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="color_code" id="domain"></span>
+                    <span class="color_code" id="alexa"></span>
+                    <span class="color_code" id="admin_contact_state"></span>
+                    <span class="color_code" id="admin_contact_country"></span>
+                    <a id="whois"></a>
+                    <span class="color_code" id="create_date"></span>
+                    <span class="color_code" id=""></span>
+                    <span class="color_code" id="expiration_date"></span>
+                    <span class="color_code" id="email_domain"></span>
+                    <span class="color_code" id="registrant_org"></span>
+                    <span class="color_code" id="website_response"></span>
                 </div>
             </div>
         </div>

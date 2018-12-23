@@ -27,29 +27,6 @@ function get_alexa() {
         }
     });
 }
-function get_whois(url) {
-    var url = getUrlByParameter('url');
-    var host_url = url.replace(/^https{0,1}:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '');
-    var whois_url = "https://www.whoisxmlapi.com/whoisserver/WhoisService?domainName=" + host_url + "&username=anishkumarsarangi&password=archiveit";
-    $.get(whois_url, function (xml) {
-        $("#whois_name").text(host_url);
-        if (xml.getElementsByTagName("domainName")) {
-            $("#whois_domain").text(xml.getElementsByTagName("domainName")[0].innerHTML);
-        }
-        if (xml.getElementsByTagName("registrarName")[0]) {
-            $("#whois_registrar").append(xml.getElementsByTagName('registrarName')[0].innerHTML);
-        }
-        if (xml.getElementsByTagName("rawText")[0]) {
-            $("#whois_raw_text").append(xml.getElementsByTagName('rawText')[0].innerHTML);
-        }
-        if (xml.getElementsByTagName("createdDateNormalized")[0]) {
-            $("#whois_registration_date").append(xml.getElementsByTagName('createdDateNormalized')[0].innerHTML);
-        }
-        if (xml.getElementsByTagName("updatedDateNormalized")[0]) {
-            $("#whois_updated_date").append(xml.getElementsByTagName('updatedDateNormalized')[0].innerHTML);
-        }
-    });
-}
 function showDOI(){
     var url=getUrlByParameter('url');
     if(url.match(/^https?:\/\/[\w\.]*wikipedia.org/)){
@@ -189,7 +166,7 @@ function percentEncode(str) {
       return '%' + character.charCodeAt(0).toString(16);
     });
 };
-window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage,showDOI];
+window.onloadFuncs = [get_alexa,url_getter,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage,showDOI];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
