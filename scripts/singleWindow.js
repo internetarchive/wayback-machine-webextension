@@ -50,7 +50,12 @@ function get_whois(url) {
         }
     });
 }
-
+function showDOI(){
+    var url=getUrlByParameter('url');
+    if(url.match(/^https?:\/\/[\w\.]*wikipedia.org/)){
+        $('#doi-heading').css('display','block');
+    }
+}
 function get_tweets(){
     var url=getUrlByParameter('url');
     url = url.replace(/^https?:\/\//,'');
@@ -184,7 +189,7 @@ function percentEncode(str) {
       return '%' + character.charCodeAt(0).toString(16);
     });
 };
-window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage];
+window.onloadFuncs = [get_alexa,get_whois,get_details,first_archive_details,recent_archive_details,get_thumbnail,get_tweets,get_annotations,show_annotations,get_tags,createPage,showDOI];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();
