@@ -6,7 +6,7 @@ function getUrlByParameter(name){
     return url.slice(index+length+1,indexOfEnd);
 }
 var mynewTags=new Array();
-function get_details(){
+function get_tags(){
     var url=getUrlByParameter('url');
     var hostname=new URL(url).hostname;
     toBeUsedAsURL=hostname.replace(/^www./, "");
@@ -62,9 +62,9 @@ function get_details(){
             var span=document.createElement("span");
             span.setAttribute("data-weight",result[i].weight);
             span.appendChild(document.createTextNode(result[i].text));
-            document.getElementById("hey").appendChild(span);
+            document.getElementById("container-wordcloud").appendChild(span);
         }
-        $("#hey").awesomeCloud({
+        $("#container-wordcloud").awesomeCloud({
             "size" : {
                 "grid" : 1,
                 "factor" : 4
@@ -84,7 +84,7 @@ function get_details(){
     xhr.send(null);
 }
 
-window.onloadFuncs = [get_details];
+window.onloadFuncs = [get_tags];
 window.onload = function(){
  for(var i in this.onloadFuncs){
   this.onloadFuncs[i]();

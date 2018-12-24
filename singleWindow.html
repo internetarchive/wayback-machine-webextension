@@ -1,20 +1,29 @@
 <!doctype html>
 <html>
-    <head>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="css/common.css">
-        <link rel="stylesheet" type="text/css" href="css/singleWindow.css">
-        <script src="scripts/build.js"></script>
-        <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
-        <title>
-            All Context Screen
-        </title>
-    </head>
-    <body>
-        <!-- <table width="100%" style="max-height: 200px; ">
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/singleWindow.css">
+    <link rel="stylesheet" type="text/css" href="css/domaintools.css">
+    <script src="scripts/build.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
+    <script src="scripts/domaintools.js"></script>
+    <script src="scripts/overview.js"></script>
+    <script src="scripts/annotation.js"></script>
+    <script src="scripts/doi.js"></script>
+    <script src="scripts/tagcloud.js"></script>
+    <title>
+        All Context Screen
+    </title>
+</head>
+
+<body>
+    <!-- <table width="100%" style="max-height: 200px; ">
             <tr class="spaceUnder">
                 <td style="text-align: center;">
                     <div id ="horizontal_line" class="lower_margin"></div>
@@ -26,147 +35,174 @@
                 </td>
             </tr>
         </table> -->
-        <div class="container" style="width: 100%;text-align: center;">
-            <div id="doi-heading">
-                <h2><strong>Current Wikipedia Page Scientific Publications"</strong></h2>
-            </div>
-            <div id="doi">
-
-            </div>
-        </div>
-        <div>
-            <h2 style="text-align: center;"><strong>Alexa, Whois overview of Current URL</strong><br></h2>
-        </div>
-        <div class="container" id="container-whole">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h4></h4>
-                    <pre id="show_alexa_data" style="font-size: 20px">
-                    </pre>
-                </div>
-                <div class="col-sm-6">
-                    <h4></h4>
-                    <pre id="show_whois_data" style="font-size: 20px">
-                    </pre>
-                </div>
-            </div>
-            <div></div>
-        </div>
-        <div>
-                <h2 style="text-align: center;"><strong>Wayback Machine overview of Current URL</strong></h2>
+    <div class="container" style="width: 100%;text-align: center;">
+        <div class="text-center">
+            <h2><strong id="doi-heading" style="display: none">Cited Papers</strong></h2>
         </div>
         <BR>
-        <BR>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of First Archive</strong>
-                    <p>
-                        The URL, where you were was first archived on
-                        <span id="first_archive_date">
-                        </span> at time
-                        <span id="first_archive_time">
-                        </span> . And you can view that
-                        <a id="link_first">HERE</a> .
-                    </p>
-                </div>
-                <div class="col-sm-6">
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Date of Recent Archive</strong>
-                    <p>
-                        The URL, where you were was recently archived on
-                        <span id="recent_archive_date">
-                        </span>  at time
-                        <span id="recent_archive_time">
-                        </span> .And you can view that
-                        <a id="link_recent">HERE</a> .
-                    </p>
+        <div class="loader"></div>
+        <div class="wrapper" id="container-whole-doi">
+        </div>
+    </div>
+    <div>
+        <h2 style="text-align: center;"><strong>Alexa, DomainTools overview of Current URL</strong><br></h2>
+    </div>
+    <div class="container" id="container-whole">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="pre" id="show_alexa_data">
+                    <div class="color_code"><b id="alexa_name"></b></div>
+                    <div><b>Alexa Rank: <span class="color_code" id="alexa_rank"></span></b></div>
+                    <div><b>Country: <span class="color_code" id="alexa_country"></span></b></div>
+                    <br />
+                    <span class="glyphicon glyphicon-globe red" aria-hidden="true"></span>&nbsp;&nbsp;<b>Related sites:</b>
+                    <ul id="alexa_list" class="rl-list rl-link">
+                    </ul>
                 </div>
             </div>
-        </div>
-        <br>
-        <br>
-        <br>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6" >
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Thumbnail of the Current URL</strong>
-                    <br>
-                    <div id="show_thumbnail" style="text-align: left">
+            <div class="col-sm-6">
+                <div>
+                    <div style="text-align:left;">
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:left;">
+                                <pre id="show_domaintools_data" class="title"></pre>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-6">
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Total Number of archives</strong>
-                    <div id="message" style="display:none"></div>
-                    <p>
-                        URLs for this domain have been captured <span id="total_archives"></span>
-                        times since <span id="first_archive_date_2"></span>. You can also archive this page now
-                        by clicking on <a id="save_now">HERE</a> .
-                    </p>
+                    <span class="color_code" id="domain"></span>
+                    <span class="color_code" id="alexa"></span>
+                    <span class="color_code" id="admin_contact_state"></span>
+                    <span class="color_code" id="admin_contact_country"></span>
+                    <a id="whois"></a>
+                    <span class="color_code" id="create_date"></span>
+                    <span class="color_code" id=""></span>
+                    <span class="color_code" id="expiration_date"></span>
+                    <span class="color_code" id="email_domain"></span>
+                    <span class="color_code" id="registrant_org"></span>
+                    <span class="color_code" id="website_response"></span>
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <div class="container" style="padding-left: 0px;padding-right: 0px">
-            <div class="col-sm-12 test">
-                <strong style="font-family: Bebas Neue;font-size: 30px;">Information about the Current URL</strong>
+        <div></div>
+    </div>
+    <div>
+        <h2 style="text-align: center;"><strong>Overview of current URL</strong></h2>
+    </div>
+    <BR>
+    <BR>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Date of First Archive</strong>
                 <p>
-                    The URL,where you had been recently is a <strong style="font-style: italic"><span id="details"></span> </strong>
+                    The URL, where you were was first archived on
+                    <span id="first_archive_date">
+                    </span> at time
+                    <span id="first_archive_time">
+                    </span> . And you can view that
+                    <a id="link_first">HERE</a> .
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Date of Recent Archive</strong>
+                <p>
+                    The URL, where you were was recently archived on
+                    <span id="recent_archive_date">
+                    </span> at time
+                    <span id="recent_archive_time">
+                    </span> .And you can view that
+                    <a id="link_recent">HERE</a> .
                 </p>
             </div>
         </div>
-        <div>
-                <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
-        </div>
-        <BR>
-        <BR>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div id="box-twitter" style="height: 500px;">
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div id="box-annotation" style="height: 500px;overflow: scroll">
-                    </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Thumbnail of the Current URL</strong>
+                <br>
+                <div id="show_thumbnail" style="text-align: left">
                 </div>
             </div>
-        </div>
-        <div>
-            <h2 style="text-align: center;"><strong>Tag-Cloud</strong><br></h2>
-        </div>
-        <div class="container" style="width: 100%;text-align: center;">
-            <div id="hey" class="wordcloud">
-
+            <div class="col-sm-6">
+                <strong style="font-family: Bebas Neue;font-size: 30px;">Total Number of archives</strong>
+                <div id="message" style="display:none"></div>
+                <p>
+                    URLs for this domain have been captured <span id="total_archives"></span>
+                    times since <span id="first_archive_date_2"></span>. You can also archive this page now
+                    by clicking on <a id="save_now">HERE</a> .
+                </p>
             </div>
         </div>
-        <div id="row-twitter" style="background-color: lightblue;">
-            <img src="" alt="" id="profile-image">
-            <span id="profile-name"></span>
-            <br>
-            <a id="link" href="">
-                <span id="tweets" ></span>
-            </a>
-            <br>
-        </div>
-        <div class="" id="row-contain">
-            <div class="top-div" id="top-div-contain">
-                <strong>
-                    <span id="userinfo"></span>
-                    <br>
-                    <span id="date-"></span>
+    </div>
+    <br>
+    <br>
+    <div class="container" style="padding-left: 0px;padding-right: 0px">
+        <div class="col-sm-12 test">
+            <strong style="font-family: Bebas Neue;font-size: 30px;">Information about the Current URL</strong>
+            <p>
+                The URL,where you had been recently is a <strong style="font-style: italic"><span id="details"></span>
                 </strong>
-            </div>
-            <div class="source" id="source-">
-                <span class="glyphicon glyphicon-globe" id="public"></span>
-                <span id="public_on">Public on</span>
-                <span class="title" id="title-contain" style="color: red"></span>
-                <span id="source-contain" style="word-wrap: break-word"></span>
-            </div>
-            <div class="target-selector-exact" id="target-selector-exact-contain"></div>
-            <div class="text" id="text-contain"></div>
-            <div id="links"></div>
+            </p>
         </div>
-    </body>
+    </div>
+    <div>
+        <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
+    </div>
+    <BR>
+    <BR>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="box-twitter" style="height: 500px;">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box" id="container-whole-url" style="height: 500px;overflow: scroll">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h2 style="text-align: center;"><strong>Tag-Cloud</strong><br></h2>
+    </div>
+    <div class="container" style="width: 100%;text-align: center;">
+        <div id="container-wordcloud" class="wordcloud">
+
+        </div>
+    </div>
+    <div id="row-twitter" style="background-color: lightblue;">
+        <img src="" alt="" id="profile-image">
+        <span id="profile-name"></span>
+        <br>
+        <a id="link" href="">
+            <span id="tweets"></span>
+        </a>
+        <br>
+    </div>
+    <div class="row" id="row_contain-url">
+        <div class="col-sm-12">
+            <div>
+                <div>
+                    <strong class="userinfo"></strong>
+                    <span class="date"></span>
+                </div>
+                <div class="source" id="source-">
+                    <span class="glyphicon glyphicon-globe"></span>
+                    <span class="public_on">Public on</span>
+                    <span class="title text-danger"></span>
+                    <span id="source-contain"> </span>
+                </div>
+                <div class="target-selector-exact"></div>
+                <div class="text" id="text-contain"></div>
+                <div class="links"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>
 <script src="scripts/singleWindow.js"></script>
