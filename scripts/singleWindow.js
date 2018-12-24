@@ -18,10 +18,11 @@ function get_alexa() {
             for (var i = 0, len = rl.length; i < len && i < 5; i++) {
                 var title = rl[i].getAttribute('TITLE');
                 var href = rl[i].getAttribute('HREF');
-                var list_item = $("<li>");
-                var link = $("<a>").attr('href', "http://" + href).attr('target', '_blank').attr('class', 'rl-a').text(title.length > 18 ? title.substring(0, 15) + '...' : title);
-                list_item.append(link);
-                $("#alexa_list").append(list_item);
+                $('#alexa_list').append(
+                    $('<li>').append(
+                      $("<a>").attr('href', "http://" + href).attr('target', '_blank').attr('class', 'rl-a').text(title.length > 18 ? title.substring(0, 15) + '...' : title)
+                    )
+                  );
             }
 
         }
