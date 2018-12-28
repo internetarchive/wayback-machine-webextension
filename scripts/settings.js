@@ -2,7 +2,7 @@ $(restore_options)
 $('#save').click(save_options)
 $('.only').click(validate)
 $('#showall').click(selectall)
-
+addDocs()
 function restore_options () {
   chrome.storage.sync.get({
     show_context: 'tab',
@@ -76,5 +76,28 @@ function selectall () {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
+  }
+}
+
+function addDocs(){
+  let docs = {
+    'auto-archive' : 'Enables extension to identify urls that have not previously been saved on the Wayback Machine',
+    'auto-update-context' : 'Enabling this setting will update context windows when the page they are referencing changes',
+    'books' : 'Display a ‘B’ when viewing a book on Amazon that is found on The Archive',
+    'wikibooks' : 'Enables a button in the extension on wikipedia pages that will display a list of books cited on the page that are available on the archive.  Also adds popup buttons to the citations on the wikipedia page',
+    'doi' : 'Enables a button in the extension on wikipedia pages that will display a list of papers cited on the page that are available on the archive',
+    'news' :  'Enables a button in the extension on select news outlets that can recommend related tv news clips from the TV News Archive',
+    'alexa' : 'Displays what Alexa Internet knows about the site you are on (traffic data).',
+    'domaintools' : 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
+    'tweets' : 'Show Tweets that include the URL you are on.',
+    'wbmsummary' : 'Displays what the Wayback Machine knows about the site you are on (captures).',
+    'annotations': 'Displays what Hypothes.is knows about the URL or the Site you are on (annotations).'
+  }
+  let labels = $('label')
+  for(var i =0; i < labels.length; i++){
+    let docFor = $(labels[i]).attr('for')
+    let tt = $('<div>').append($('<p>').text(docs[docFor]))[0].outerHTML
+    let docBtn = $('<button>').addClass('btn-docs').text('?')
+    $(labels[i]).append(attachTooltip(docBtn, tt))
   }
 }
