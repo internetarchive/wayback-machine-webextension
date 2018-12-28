@@ -13,7 +13,7 @@ function get_details () {
     $('#details').text(type)
     var captures = response.captures
     $('#total_archives').attr('href', 'https://web.archive.org/web/*/' + url)
-												.text(getTotal(captures).toLocaleString())
+                        .text(getTotal(captures).toLocaleString())
   })
 }
 
@@ -69,10 +69,11 @@ function recent_archive_details () {
     if (data.length == 0) {
       $('#recent_archive_datetime').text('Data are not available.')
     } else {
-			const ts = data[1][1];
-			const dt = timestamp2datetime(ts).toString().split('+')[0];
-			$('#recent_archive_datetime').text(dt);
-    	$('#link_recent').attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
+	  const ts = data[1][1];
+	  const dt = timestamp2datetime(ts).toString().split('+')[0];
+	  $('#recent_archive_datetime')
+        .text(dt)
+        .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
 }

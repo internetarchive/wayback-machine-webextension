@@ -14,13 +14,18 @@ function get_alexa () {
       $('#alexa_country').text(country)
     }
     var rl = xml.getElementsByTagName('RL')
+    const TITLE_LEN = 26
     if (rl.length > 0) {
       for (var i = 0, len = rl.length; i < len && i < 5; i++) {
         var title = rl[i].getAttribute('TITLE')
         var href = rl[i].getAttribute('HREF')
         $('#alexa_list').append(
           $('<li>').append(
-            $('<a>').attr('href', 'http://' + href).attr('target', '_blank').attr('class', 'rl-a').text(title.length > 18 ? title.substring(0, 15) + '...' : title)
+            $('<a>').attr('href', 'http://' + href)
+                    .attr('target', '_blank')
+                    .attr('class', 'rl-a')
+                    .attr('title', title)
+                    .text(title.length > TITLE_LEN ? title.substring(0, TITLE_LEN) + '...' : title)
           )
         )
       }
@@ -44,14 +49,11 @@ function get_tweets () {
   var res = new Object()
   res.q = url
   res.result_type = 'popular'
-  console.log(new_url)
   var author = getAuthorization('GET', 'https://api.twitter.com/1.1/search/tweets.json', res)
-  console.log(author)
   xhr.open('GET', new_url, true)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.setRequestHeader('Authorization', author)
   xhr.onload = function () {
-    console.log(JSON.parse(xhr.response))
     data = JSON.parse(xhr.response)
     var length = (data.statuses.length)
     if (length > 0) {

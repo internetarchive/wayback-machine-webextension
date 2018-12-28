@@ -23,32 +23,20 @@
 </head>
 
 <body>
-    <!-- <table width="100%" style="max-height: 200px; ">
-            <tr class="spaceUnder">
-                <td style="text-align: center;">
-                    <div id ="horizontal_line" class="lower_margin"></div>
-                        <div class='container'>
-                            <img class='resize_fit_center'
-                            src='images/logo.gif' />
-                        </div>
-                    <div id="horizontal_line" class="extra_margin"></div>
-                </td>
-            </tr>
-        </table> -->
-    <div class="container" style="width: 100%;text-align: center;">
-        <div class="text-center">
-            <h2><strong id="doi-heading" style="display: none">Cited Papers</strong></h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2><strong id="doi-heading" style="display: none">Cited Papers</strong></h2>
+                <div class="loader"></div>
+                <div class="wrapper" id="container-whole-doi"></div>
+            </div>
         </div>
-        <BR>
-        <div class="loader"></div>
-        <div class="wrapper" id="container-whole-doi">
-        </div>
-    </div>
-    <div>
-        <h2 style="text-align: center;"><strong>Alexa, DomainTools overview of Current URL</strong><br></h2>
     </div>
     <div class="container" id="container-whole">
         <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2><strong>Alexa, DomainTools overview of Current URL</strong></h2>
+            </div>
             <div class="col-sm-6">
                 <div class="pre" id="show_alexa_data">
                     <div class="color_code"><b id="alexa_name"></b></div>
@@ -61,34 +49,25 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div>
-                    <div style="text-align:left;">
-                        <div class="row">
-                            <div class="col-sm-12" style="text-align:left;">
-                                <pre id="show_domaintools_data" class="title"></pre>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="color_code" id="domain"></span>
-                    <span class="color_code" id="alexa"></span>
-                    <span class="color_code" id="admin_contact_state"></span>
-                    <span class="color_code" id="admin_contact_country"></span>
-                    <a id="whois"></a>
-                    <span class="color_code" id="create_date"></span>
-                    <span class="color_code" id=""></span>
-                    <span class="color_code" id="expiration_date"></span>
-                    <span class="color_code" id="email_domain"></span>
-                    <span class="color_code" id="registrant_org"></span>
-                    <span class="color_code" id="website_response"></span>
-                </div>
+                <pre id="show_domaintools_data" class="title"></pre>
+                <span class="color_code" id="domain"></span>
+                <span class="color_code" id="alexa"></span>
+                <span class="color_code" id="admin_contact_state"></span>
+                <span class="color_code" id="admin_contact_country"></span>
+                <a id="whois"></a>
+                <span class="color_code" id="create_date"></span>
+                <span class="color_code" id=""></span>
+                <span class="color_code" id="expiration_date"></span>
+                <span class="color_code" id="email_domain"></span>
+                <span class="color_code" id="registrant_org"></span>
+                <span class="color_code" id="website_response"></span>
             </div>
         </div>
-        <div></div>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <h2 style="text-align: center;"><strong>Captures overview</strong></h2>
+            <div class="col-sm-12 text-center">
+                <h2><strong>Captures overview</strong></h2>
             </div>
             <div class="col-sm-6">
                 <div class="pre title">
@@ -105,14 +84,10 @@
             </div>
         </div>
     </div>
-    <div>
-    </div>
-    <BR>
-    <BR>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
+            <div class="col-sm-12 text-center">
+                <h2><strong>Tweets and Annotations of Current URL</strong></h2>
             </div>
             <div class="col-sm-6">
                 <div id="box-twitter" style="height: 500px;">
@@ -124,12 +99,12 @@
             </div>
         </div>
     </div>
-    <div>
-        <h2 style="text-align: center;"><strong>Tag-Cloud</strong><br></h2>
-    </div>
-    <div class="container" style="width: 100%;text-align: center;">
-        <div id="container-wordcloud" class="wordcloud">
-
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2><strong>Tag-Cloud</strong></h2>
+                <div id="container-wordcloud" class="wordcloud"></div>
+            </div>
         </div>
     </div>
     <div id="row-twitter" style="background-color: lightblue;">
