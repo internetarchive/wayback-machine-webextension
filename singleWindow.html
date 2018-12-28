@@ -85,77 +85,35 @@
         </div>
         <div></div>
     </div>
-    <div>
-        <h2 style="text-align: center;"><strong>Overview of current URL</strong></h2>
-    </div>
-    <BR>
-    <BR>
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-                <strong style="font-family: Bebas Neue;font-size: 30px;">Date of First Archive</strong>
-                <p>
-                    The URL, where you were was first archived on
-                    <span id="first_archive_date">
-                    </span> at time
-                    <span id="first_archive_time">
-                    </span> . And you can view that
-                    <a id="link_first">HERE</a> .
-                </p>
+            <div class="col-sm-12">
+                <h2 style="text-align: center;"><strong>Captures overview</strong></h2>
             </div>
             <div class="col-sm-6">
-                <strong style="font-family: Bebas Neue;font-size: 30px;">Date of Recent Archive</strong>
-                <p>
-                    The URL, where you were was recently archived on
-                    <span id="recent_archive_date">
-                    </span> at time
-                    <span id="recent_archive_time">
-                    </span> .And you can view that
-                    <a id="link_recent">HERE</a> .
-                </p>
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
-    <br>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <strong style="font-family: Bebas Neue;font-size: 30px;">Thumbnail of the Current URL</strong>
-                <br>
-                <div id="show_thumbnail" style="text-align: left">
+                <div class="pre title">
+                    <p>First Capture: <a id="first_archive_datetime"></a></p>
+                    <p>Last Capture: <a id="recent_archive_datetime"></a></p>
+                    <p>Total Number of Captures: <a id="total_archives"></a></p>
+                    <p>The URL is a <strong id="details"></strong></p>
+                    <p><a id="save_now">Save Page Now</a></p>
+                    <div id="message" style="display:none"></div>
                 </div>
             </div>
             <div class="col-sm-6">
-                <strong style="font-family: Bebas Neue;font-size: 30px;">Total Number of archives</strong>
-                <div id="message" style="display:none"></div>
-                <p>
-                    URLs for this domain have been captured <span id="total_archives"></span>
-                    times since <span id="first_archive_date_2"></span>. You can also archive this page now
-                    by clicking on <a id="save_now">HERE</a> .
-                </p>
+                <div id="show_thumbnail"></div>
             </div>
         </div>
     </div>
-    <br>
-    <br>
-    <div class="container" style="padding-left: 0px;padding-right: 0px">
-        <div class="col-sm-12 test">
-            <strong style="font-family: Bebas Neue;font-size: 30px;">Information about the Current URL</strong>
-            <p>
-                The URL,where you had been recently is a <strong style="font-style: italic"><span id="details"></span>
-                </strong>
-            </p>
-        </div>
-    </div>
     <div>
-        <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
     </div>
     <BR>
     <BR>
     <div class="container">
         <div class="row">
+            <div class="col-sm-12">
+                <h2 style="text-align: center;"><strong>Tweets and Annotations of Current URL</strong></h2>
+            </div>
             <div class="col-sm-6">
                 <div id="box-twitter" style="height: 500px;">
                 </div>
