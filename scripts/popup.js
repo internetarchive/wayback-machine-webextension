@@ -172,6 +172,7 @@ function display_suggestions(e) {
   }
 }
 function open_feedback_page() {
+  console.log("hi");
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
   chrome.tabs.create({ url: feedback_url })
 }
@@ -342,7 +343,7 @@ $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#settings_button').click(settings)
 $('#context-screen').click(show_all_screens)
-$('.feedback_button').click(open_feedback_page)
+$('.feedback').click(open_feedback_page)
 
 $('#overview').click(view_all)
 $('#make_modal').click(makeModal)

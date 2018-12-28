@@ -8,3 +8,6 @@ global.Levenshtein = require('fast-levenshtein');
 global.jsSHA = require('jssha');
 import 'bootstrap';
 import '../node_modules/bootstrap-material-design-icons/css/material-icons.min.css'
+import '../css/bootstrap.min.css'
+import '../css/font-awesome.min.css'
+import '../css/bootstrap-theme.min.css'

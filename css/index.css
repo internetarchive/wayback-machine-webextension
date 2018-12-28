@@ -131,6 +131,7 @@ background-color: #4a8aff;
 }
 #save_now{
     background-color: #489C3E;
+    color: white !important;
 }
 .captures{
     background-color: #d63c24f2;
