@@ -8,24 +8,11 @@
 body{
     max-height: 100%;
 }
-.container{
-    padding-left: 15px;
-    padding-right: 15px;
-}
 p{
     font-family:Gill Sans Light;
     font-size: 20px;
 }
 #box-twitter{
-    margin-bottom: 12px;
-    padding: 5px 5px 5px 5px;
-    background-color: #fff;
-    border-radius: 5px;
-    overflow: scroll;
-    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
-    border:1px solid black;
-}
-#box-annotation{
     margin-bottom: 12px;
     padding: 5px 5px 5px 5px;
     background-color: #fff;
@@ -52,20 +39,6 @@ p{
     margin-bottom: 12px;
     overflow: hidden;
     padding: 5px 5px 5px 5px;
-}
-.box-annotation{
-    margin-bottom: 12px;
-    flex :0 0 420px;
-    padding: 5px 5px 5px 5px;
-    background-color: #fff;
-    border-radius: 5px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
-    border:1px solid black;
 }
 .target-selector-exact{
     word-wrap: break-word;
@@ -103,12 +76,6 @@ p{
     display: flex;
     justify-content: center;
 }
-.half{
-    width: 600px;
-}
-#doi-heading{
-    display: none;
-}
 @media screen and (max-width: 500px) {
     #link-incontext {
       margin-left: 5px;
@@ -131,9 +98,17 @@ p{
     font-weight: 150%;
     color: #818181;
 }
-.extra_margin{
-    margin-top:3px
-}
-.lower_margin{
-    margin-bottom: 5px;
+.pre{
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 20px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

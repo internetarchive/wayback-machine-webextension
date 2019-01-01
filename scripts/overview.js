@@ -12,11 +12,37 @@ function get_details () {
     var type = response.type
     $('#details').text(type)
     var captures = response.captures
-    var total = 0
-    total = getTotal(captures)
-    $('#total_archives').text(total)
-    $('#save_now').attr('href', 'https://web.archive.org/save/' + url)
+    $('#total_archives').attr('href', 'https://web.archive.org/web/*/' + url)
+                        .text(getTotal(captures).toLocaleString())
   })
+}
+
+function _splitTimestamp (timestamp) {
+  if (typeof timestamp === 'number') {
+    timestamp = timestamp.toString();
+  }
+  return [
+    // year
+    timestamp.slice(-14, -10),
+    // month
+    timestamp.slice(-10, -8),
+    // day
+    timestamp.slice(-8, -6),
+    // hour
+    timestamp.slice(-6, -4),
+    // minute
+    timestamp.slice(-4, -2),
+    // seconds
+    timestamp.slice(-2)
+  ];
+}
+
+function timestamp2datetime (timestamp) {
+  const tsArray = _splitTimestamp(timestamp);
+  return new Date(Date.UTC(
+    tsArray[0], tsArray[1] - 1, tsArray[2],
+    tsArray[3], tsArray[4], tsArray[5]
+  ));
 }
 
 function first_archive_details () {
@@ -24,17 +50,16 @@ function first_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#first_archive_date, #first_archive_date_2, #first_archive_time').text('( Data is not available -Not archived before )')
+      $('#first_archive_datetime').text('Data are not available.')
     } else {
-      var timestamp = data[1][1]
-      var date = timestamp.substring(4, 6) + '/' + timestamp.substring(6, 8) + '/' + timestamp.substring(0, 4)
-      var time = timestamp.substring(8, 10) + '.' + timestamp.substring(10, 12) + '.' + timestamp.substring(12, 14)
-      $('#first_archive_date').text('( ' + date + ' )')
-      $('#first_archive_date_2').text('( ' + date + ' )')
-      $('#first_archive_time').text('( ' + time + ' ) according to Universal Time Coordinated (UTC)')
+			const ts = data[1][1]
+			const dt = timestamp2datetime(ts).toString().split('+')[0]
+			$('#first_archive_datetime')
+				.text(dt)
+    		.attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
-    $('#link_first').attr('href', 'https://web.archive.org/web/0/' + url)
   })
+  $('#save_now').attr('href', 'https://web.archive.org/save/' + url)
 }
 
 function recent_archive_details () {
@@ -42,24 +67,20 @@ function recent_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#recent_archive_date, #recent_archive_date_2, #recent_archive_time').text('( Data is not available -Not archived before )')
+      $('#recent_archive_datetime').text('Data are not available.')
     } else {
-      var timestamp = data[1][1]
-      var date = timestamp.substring(4, 6) + '/' + timestamp.substring(6, 8) + '/' + timestamp.substring(0, 4)
-      var time = timestamp.substring(8, 10) + '.' + timestamp.substring(10, 12) + '.' + timestamp.substring(12, 14)
-      $('#recent_archive_date').text('( ' + date + ' )')
-      $('#recent_archive_time').text('( ' + time + ' ) according to Universal Time Coordinated (UTC)')
+	  const ts = data[1][1];
+	  const dt = timestamp2datetime(ts).toString().split('+')[0];
+	  $('#recent_archive_datetime')
+        .text(dt)
+        .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
-    $('#link_recent').attr('href', 'https://web.archive.org/web/2/' + url)
   })
 }
 
 function get_thumbnail () {
   var url = getUrlByParameter('url')
-  url = url.replace(/^https?:\/\//, '')
-  var index = url.indexOf('/')
-  url = url.substring(0, index)
-  var new_url = 'https://web.archive.org/thumb/' + url
+  var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $.ajax({ url: new_url,
     success: function (response) {
       if (response.size != 233) {
