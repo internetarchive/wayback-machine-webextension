@@ -172,7 +172,6 @@ function display_suggestions(e) {
   }
 }
 function open_feedback_page() {
-  console.log("hi");
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
   chrome.tabs.create({ url: feedback_url })
 }
