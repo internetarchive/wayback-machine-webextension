@@ -29,10 +29,11 @@ input[type='checkbox']{
   margin: auto;
 }
 .btn-docs{
-  background-color: rgb(0, 188,188);
+  background-color: gray;
   color:white;
   border-radius: 50%;
   border:none;
+  transform: scale(.7);
 }
 #show_context{
   padding-top: 5px;
