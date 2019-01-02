@@ -7,3 +7,5 @@ global.wb = require('@internetarchive/radial-tree');
 global.Levenshtein = require('fast-levenshtein');
 global.jsSHA = require('jssha');
 import 'bootstrap';
+import 'bootstrap-material-design-icons'
+import '@fortawesome/fontawesome-free'

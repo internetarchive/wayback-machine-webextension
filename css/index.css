@@ -131,6 +131,7 @@ background-color: #4a8aff;
 }
 #save_now{
     background-color: #489C3E;
+    color: white !important;
 }
 .captures{
     background-color: #d63c24f2;
@@ -146,6 +147,5 @@ background-color: #4a8aff;
 }
 .feedback{
     cursor: pointer;
-    font-size: 179%;
-    padding-top: 1px;
+    font-size: 185%;
 }
