@@ -9,8 +9,13 @@ function addCitations () {
       let isbn = getISBNFromCitation(book)
       let id = getIdentifier(data[isbn])
       let metadata = getMetadata(data[isbn])
+      let page = getPageFromCitation(book)
       if (id) {
+
         let icon = addArchiveIcon(id, metadata)
+        if(page){
+          icon[0].href += '/page/' + page
+        }
         book.parentElement.append(icon[0])
       }
     }
@@ -130,6 +135,16 @@ function getISBNFromCitation (citation) {
   let rawISBN = citation.text
   let isbn = rawISBN.replace(/-/g, '')
   return isbn
+}
+
+function getPageFromCitation(book){
+  var raw = book.parentElement.innerText
+  var re = /p{1,2}\.\s(\d+)-?\d*/g
+  var result = re.exec(raw)
+  if(result){
+    return result[1]
+  }
+  return result
 }
 
 // Get all books on wikipedia page through
