@@ -28,7 +28,13 @@ input[type='checkbox']{
   max-width: 400px;
   margin: auto;
 }
-
+.btn-docs{
+  background-color: gray;
+  color:white;
+  border-radius: 50%;
+  border:none;
+  transform: scale(.7);
+}
 #show_context{
   padding-top: 5px;
   font-size: 17px;
