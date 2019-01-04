@@ -100,21 +100,19 @@ function attachTooltip (anchor, tooltip) {
   })
 }
 function createDonateToolTip (isbn){
-  var btnDonate = $('<a>').text('Or click here to donate').attr({'class':'btn btn-success btn-sm','href': 'https://www.archive.org/donate?isbn=' + isbn})
-
   var text_elements = $('<div>').attr({'class':'text_elements' }).append(
-			$('<p>').append($('<strong>').text("We don't have this book yet.")),
-			$('<p>').text("But you can help us get it.")
+			$('<p>').append($('<strong>').text("Please donate $50 and we will try to purchase and digitize the book for you.")),
 		)
 
-		var details = $('<div>').attr({'class':'bottom_details text-muted'}).append(
-			$('<p>').text('Mail the book to:'),
-			$('<p>').text('Internet Archive'),
-			$('<p>').text('300 Funston Avenue'),
-			$('<p>').text('San Francisco, CA 94118')
-		)
-		return $('<div>').append(text_elements, details, btnDonate).attr({'class': 'popup_box'})[0].outerHTML
+	var details = $('<div>').attr({'class':'bottom_details text-muted'}).append(
+		$('<p>').text("Or if you have a copy of this book please mail it to: "),
+    $('<p>').text('300 Funston, San Francisco, CA 94118'),
+    $('<p>').text('so we can digitize it.')
+	)
+
+	return $('<a>').append(text_elements, details).attr({'class': 'popup_box', 'href': 'https://www.archive.org/donate?isbn=' + isbn})[0].outerHTML
 }
+
 function createReadToolTip (metadata, id) {
   let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
     $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
