@@ -12,10 +12,13 @@ function addCitations () {
       let page = getPageFromCitation(book)
       if (id) {
 
-        let icon = addArchiveIcon(id, metadata)
+        let icon = addReadIcon(id, metadata)
         if(page){
           icon[0].href += '/page/' + page
         }
+        book.parentElement.append(icon[0])
+      }else {
+        let icon = addDonateIcon(isbn)
         book.parentElement.append(icon[0])
       }
     }
@@ -23,7 +26,8 @@ function addCitations () {
     console.log(getErrorMessage(xhr))
   });
 }
-
+// getMetadata was used to standardize data between OL and IA.
+// probably can be refactored out
 function getMetadata(book){
   const MAX_TITLE_LEN = 300
   if (book) {
@@ -51,11 +55,17 @@ function getMetadata(book){
   }
   return false;
 }
-
-function addArchiveIcon(id, metadata){
-  let toolTip = createTooltipWindow(metadata, id)
-  let anchor = attachTooltip(createArchiveAnchor(id, metadata), toolTip)
-  return anchor
+function addDonateIcon(isbn){
+  let toolTip = createDonateToolTip(isbn)
+  let anchor = createDonateAnchor(isbn)
+  let icon = attachTooltip(anchor, toolTip)
+  return icon
+}
+function addReadIcon(id, metadata){
+  let toolTip = createReadToolTip(metadata, id)
+  let anchor = createArchiveAnchor(id, metadata)
+  let icon = attachTooltip(anchor, toolTip)
+  return icon
 }
 function attachTooltip (anchor, tooltip) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
@@ -89,7 +99,23 @@ function attachTooltip (anchor, tooltip) {
     },200);
   })
 }
-function createTooltipWindow (metadata, id) {
+function createDonateToolTip (isbn){
+  var btnDonate = $('<a>').text('Or click here to donate').attr({'class':'btn btn-success btn-sm','href': 'https://www.archive.org/donate?isbn=' + isbn})
+
+  var text_elements = $('<div>').attr({'class':'text_elements' }).append(
+			$('<p>').append($('<strong>').text("We don't have this book yet.")),
+			$('<p>').text("But you can help us get it.")
+		)
+
+		var details = $('<div>').attr({'class':'bottom_details text-muted'}).append(
+			$('<p>').text('Mail the book to:'),
+			$('<p>').text('Internet Archive'),
+			$('<p>').text('300 Funston Avenue'),
+			$('<p>').text('San Francisco, CA 94118')
+		)
+		return $('<div>').append(text_elements, details, btnDonate).attr({'class': 'popup_box'})[0].outerHTML
+}
+function createReadToolTip (metadata, id) {
   let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
     $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
     $('<p>').addClass('text-muted').text(metadata.author)
@@ -100,7 +126,18 @@ function createTooltipWindow (metadata, id) {
   )
   return $('<a>').append(text_elements, details).addClass('popup_box').attr('href', 'https://archive.org/details/' + id)[0].outerHTML
 }
-
+function createDonateAnchor(isbn){
+  let img = $('<img>')
+    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
+  let a = $('<a>')
+    .attr({
+      'href': 'https://archive.org/donate',
+      'class': 'btn-archive',
+      'style': 'padding: 5px;'
+    })
+    .prepend(img)
+  return a
+}
 function createArchiveAnchor (id, metadata) {
   let img = $('<img>')
     .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
