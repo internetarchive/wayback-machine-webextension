@@ -35,6 +35,9 @@ input[type='checkbox']{
   border:none;
   transform: scale(.7);
 }
+.tooltip-inner p{
+  margin: 10px 0 10px 0;
+}
 #show_context{
   padding-top: 5px;
   font-size: 17px;

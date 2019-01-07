@@ -81,7 +81,7 @@ function selectall () {
 
 function addDocs(){
   let docs = {
-    'auto-archive' : 'Enables extension to identify urls that have not previously been saved on the Wayback Machine.',
+    'auto-archive' : 'Enables extension to identify URLs that have not previously been saved on the Wayback Machine.',
     'auto-update-context' : 'Enabling this setting will update context windows when the page they are referencing changes.',
     'books' : 'Display a ‘B’ when viewing a book on Amazon that is found on The Archive.',
     'wikibooks' : 'Enables a button in the extension on wikipedia pages that will display a list of books cited on the page that are available on the archive.  Also adds popup buttons to the citations on the wikipedia page.',
