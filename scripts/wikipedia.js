@@ -11,57 +11,56 @@ function addCitations () {
       let metadata = getMetadata(data[isbn])
       let page = getPageFromCitation(book)
       if (id) {
-
         let icon = addReadIcon(id, metadata)
-        if(page){
+        if (page) {
           icon[0].href += '/page/' + page
         }
         book.parentElement.append(icon[0])
-      }else {
+      } else {
         let icon = addDonateIcon(isbn)
         book.parentElement.append(icon[0])
       }
     }
-  }).fail( function( xhr, status ) {
+  }).fail(function (xhr, status) {
     console.log(getErrorMessage(xhr))
-  });
+  })
 }
 // getMetadata was used to standardize data between OL and IA.
 // probably can be refactored out
-function getMetadata(book){
+function getMetadata (book) {
   const MAX_TITLE_LEN = 300
   if (book) {
-    if(book.metadata){
+    if (book.metadata) {
       return {
-        "title" : book.metadata.title.length > MAX_TITLE_LEN ? book.metadata.title.slice(0,MAX_TITLE_LEN)+ '...' : book.metadata.title,
-        "author" : book.metadata.creator,
-        "image" : "https://archive.org/services/img/" + book.metadata.identifier,
-        "link" : book.metadata["identifier-access"],
-        "button_text": "Read Now",
-        "button_class": "btn btn-success resize_fit_center",
-        "readable" : true
+        'title': book.metadata.title.length > MAX_TITLE_LEN ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
+        'author': book.metadata.creator,
+        'image': 'https://archive.org/services/img/' + book.metadata.identifier,
+        'link': book.metadata['identifier-access'],
+        'button_text': 'Read Now',
+        'button_class': 'btn btn-success resize_fit_center',
+        'readable': true
       }
-    }else{
+    } else {
       return {
-        "title" : book.title.length > MAX_TITLE_LEN ? book.title.slice(0,MAX_TITLE_LEN)+ '...' : book.title,
-        "author" : book.authors_metadata ? book.authors_metadata.personal_name : "",
-        "image" : book.covers ? "https://covers.openlibrary.org/w/id/"+ book.covers[0]+"-M.jpg" : undefined,
-        "link" : "https://archive.org/donate/",
-        "button_text": "Donate",
-        "button_class": "btn btn-warning resize_fit_center",
-        "readable" : false
+        'title': book.title.length > MAX_TITLE_LEN ? book.title.slice(0, MAX_TITLE_LEN) + '...' : book.title,
+        'author': book.authors_metadata ? book.authors_metadata.personal_name : '',
+        'image': book.covers ? 'https://covers.openlibrary.org/w/id/' + book.covers[0] + '-M.jpg' : undefined,
+        'link': 'https://archive.org/donate/',
+        'button_text': 'Donate',
+        'button_class': 'btn btn-warning resize_fit_center',
+        'readable': false
       }
     }
   }
-  return false;
+  return false
 }
-function addDonateIcon(isbn){
+function addDonateIcon (isbn) {
   return attachTooltip(
     createDonateAnchor(isbn),
     createDonateToolTip(isbn)
   )
 }
-function addReadIcon(id, metadata){
+function addReadIcon (id, metadata) {
   return attachTooltip(
     createArchiveAnchor(id, metadata),
     createReadToolTip(id, metadata)
@@ -73,44 +72,43 @@ function attachTooltip (anchor, tooltip) {
     'data-toggle': 'tooltip',
     'title': tooltip
   })
-  .tooltip({
-    animated: false,
-    placement: 'right auto',
-    html: true,
-    trigger: 'manual'
-  })
-  //Handles staying open
-  .on("mouseenter", function () {
-
-    $(anchor).tooltip("show");
-    $(".popup_box").on("mouseleave", function () {
-      setTimeout(function() {
-        if(!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length){
-          $(anchor).tooltip('hide');
+    .tooltip({
+      animated: false,
+      placement: 'right auto',
+      html: true,
+      trigger: 'manual'
+    })
+  // Handles staying open
+    .on('mouseenter', function () {
+      $(anchor).tooltip('show')
+      $('.popup_box').on('mouseleave', function () {
+        setTimeout(function () {
+          if (!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length) {
+            $(anchor).tooltip('hide')
+          }
+        }, 200)
+      })
+    })
+    .on('mouseleave', function () {
+      setTimeout(function () {
+        if (!$('.popup_box:hover').length) {
+          $(anchor).tooltip('hide')
         }
-      }, 200);
-    });
-  })
-  .on("mouseleave", function () {
-    setTimeout(function () {
-      if (!$(".popup_box:hover").length) {
-        $(anchor).tooltip("hide");
-      }
-    },200);
-  })
+      }, 200)
+    })
 }
-function createDonateToolTip (isbn){
-  var text_elements = $('<div>').attr({'class':'text_elements' }).append(
-			$('<p>').append($('<strong>').text("Please donate $50 and we will try to purchase and digitize the book for you.")),
-		)
+function createDonateToolTip (isbn) {
+  var text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
+    $('<p>').append($('<strong>').text('Please donate $50 and we will try to purchase and digitize the book for you.'))
+  )
 
-	var details = $('<div>').attr({'class':'bottom_details text-muted'}).append(
-		$('<p>').text("Or if you have a copy of this book please mail it to: "),
+  var details = $('<div>').attr({ 'class': 'bottom_details text-muted' }).append(
+    $('<p>').text('Or if you have a copy of this book please mail it to: '),
     $('<p>').text('300 Funston, San Francisco, CA 94118'),
     $('<p>').text('so we can digitize it.')
-	)
+  )
 
-	return $('<a>').append(text_elements, details).attr({'class': 'popup_box popup_donate', 'href': 'https://www.archive.org/donate?isbn=' + isbn})[0].outerHTML
+  return $('<a>').append(text_elements, details).attr({ 'class': 'popup_box popup_donate', 'href': 'https://www.archive.org/donate?isbn=' + isbn })[0].outerHTML
 }
 
 function createReadToolTip (id, metadata) {
@@ -122,9 +120,9 @@ function createReadToolTip (id, metadata) {
     metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
     $('<p>').text('Click To Read Now').addClass('text-muted')
   )
-  return $('<a>').append(text_elements, details).attr({'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id})[0].outerHTML
+  return $('<a>').append(text_elements, details).attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id })[0].outerHTML
 }
-function createDonateAnchor(isbn){
+function createDonateAnchor (isbn) {
   let img = $('<img>')
     .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
   let a = $('<a>')
@@ -172,11 +170,11 @@ function getISBNFromCitation (citation) {
   return isbn
 }
 
-function getPageFromCitation(book){
+function getPageFromCitation (book) {
   var raw = book.parentElement.innerText
   var re = /p{1,2}\.\s(\d+)-?\d*/g
   var result = re.exec(raw)
-  if(result){
+  if (result) {
     return result[1]
   }
   return result
@@ -186,11 +184,11 @@ function getPageFromCitation(book){
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
   return $.ajax({
-    dataType: "json",
+    dataType: 'json',
     url: 'https://archive.org/services/context/books?url=' + url,
-    beforeSend: function(jqXHR, settings) {
-       jqXHR.url = settings.url;
-   },
+    beforeSend: function (jqXHR, settings) {
+      jqXHR.url = settings.url
+    },
     timeout: 30000
   })
 }
