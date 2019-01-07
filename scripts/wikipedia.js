@@ -56,16 +56,16 @@ function getMetadata(book){
   return false;
 }
 function addDonateIcon(isbn){
-  let toolTip = createDonateToolTip(isbn)
-  let anchor = createDonateAnchor(isbn)
-  let icon = attachTooltip(anchor, toolTip)
-  return icon
+  return attachTooltip(
+    createDonateAnchor(isbn),
+    createDonateToolTip(isbn)
+  )
 }
 function addReadIcon(id, metadata){
-  let toolTip = createReadToolTip(metadata, id)
-  let anchor = createArchiveAnchor(id, metadata)
-  let icon = attachTooltip(anchor, toolTip)
-  return icon
+  return attachTooltip(
+    createArchiveAnchor(id, metadata),
+    createReadToolTip(id, metadata)
+  )
 }
 function attachTooltip (anchor, tooltip) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
@@ -110,10 +110,10 @@ function createDonateToolTip (isbn){
     $('<p>').text('so we can digitize it.')
 	)
 
-	return $('<a>').append(text_elements, details).attr({'class': 'popup_box', 'href': 'https://www.archive.org/donate?isbn=' + isbn})[0].outerHTML
+	return $('<a>').append(text_elements, details).attr({'class': 'popup_box popup_donate', 'href': 'https://www.archive.org/donate?isbn=' + isbn})[0].outerHTML
 }
 
-function createReadToolTip (metadata, id) {
+function createReadToolTip (id, metadata) {
   let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
     $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
     $('<p>').addClass('text-muted').text(metadata.author)
@@ -122,11 +122,11 @@ function createReadToolTip (metadata, id) {
     metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
     $('<p>').text('Click To Read Now').addClass('text-muted')
   )
-  return $('<a>').append(text_elements, details).addClass('popup_box').attr('href', 'https://archive.org/details/' + id)[0].outerHTML
+  return $('<a>').append(text_elements, details).attr({'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id})[0].outerHTML
 }
 function createDonateAnchor(isbn){
   let img = $('<img>')
-    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
+    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
   let a = $('<a>')
     .attr({
       'href': 'https://archive.org/donate',
