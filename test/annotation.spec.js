@@ -1,3 +1,4 @@
+const dom = require("./setup").jsdom;
 const expect = require('chai').expect
 const hypothesis_api_url = require('../scripts/annotation').hypothesis_api_url
 

@@ -1,6 +1,6 @@
 const dom = require("./setup").jsdom;
 const expect = require("chai").expect;
-const getMetadata = require("../scripts/booklist").getMetadata;
+const getMetadata = require("../scripts/wikipedia").getMetadata;
 
 const response = {
   "0143036556": {
