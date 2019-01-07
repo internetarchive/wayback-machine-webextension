@@ -40,16 +40,6 @@ function getMetadata (book) {
         'button_class': 'btn btn-success resize_fit_center',
         'readable': true
       }
-    } else {
-      return {
-        'title': book.title.length > MAX_TITLE_LEN ? book.title.slice(0, MAX_TITLE_LEN) + '...' : book.title,
-        'author': book.authors_metadata ? book.authors_metadata.personal_name : '',
-        'image': book.covers ? 'https://covers.openlibrary.org/w/id/' + book.covers[0] + '-M.jpg' : undefined,
-        'link': 'https://archive.org/donate/',
-        'button_text': 'Donate',
-        'button_class': 'btn btn-warning resize_fit_center',
-        'readable': false
-      }
     }
   }
   return false
@@ -98,53 +88,70 @@ function attachTooltip (anchor, tooltip) {
     })
 }
 function createDonateToolTip (isbn) {
-  var text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
-    $('<p>').append($('<strong>').text('Please donate $50 and we will try to purchase and digitize the book for you.'))
-  )
-
-  var details = $('<div>').attr({ 'class': 'bottom_details text-muted' }).append(
-    $('<p>').text('Or if you have a copy of this book please mail it to: '),
-    $('<p>').text('300 Funston, San Francisco, CA 94118'),
-    $('<p>').text('so we can digitize it.')
-  )
-
-  return $('<a>').append(text_elements, details).attr({ 'class': 'popup_box popup_donate', 'href': 'https://www.archive.org/donate?isbn=' + isbn })[0].outerHTML
+  return $('<a>')
+    .attr({
+      'class': 'popup_box popup_donate',
+      'href': 'https://www.archive.org/donate?isbn=' + isbn
+    })
+    .append(
+      $('<div>')
+        .addClass('text_elements')
+        .append(
+          $('<p>').append(
+            $('<strong>').text('Please donate $50 and we will try to purchase and digitize the book for you.')
+          )
+        ),
+      $('<div>')
+        .addClass('bottom_details text-muted')
+        .append(
+          $('<p>').text('Or if you have a copy of this book please mail it to: '),
+          $('<p>').text('300 Funston, San Francisco, CA 94118'),
+          $('<p>').text('so we can digitize it.')
+        )
+    )[0].outerHTML
 }
 
 function createReadToolTip (id, metadata) {
-  let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
-    $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
-    $('<p>').addClass('text-muted').text(metadata.author)
-  )
-  let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
-    metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
-    $('<p>').text('Click To Read Now').addClass('text-muted')
-  )
-  return $('<a>').append(text_elements, details).attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id })[0].outerHTML
+  return $('<a>')
+    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id })
+    .append(
+      $('<div>')
+        .addClass('text_elements')
+        .append(
+          $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
+          $('<p>').addClass('text-muted').text(metadata.author)
+        ),
+      $('<div>')
+        .addClass('bottom_details')
+        .append(
+          metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
+          $('<p>').text('Click To Read Now').addClass('text-muted')
+        )
+    )[0].outerHTML
 }
 function createDonateAnchor (isbn) {
-  let img = $('<img>')
-    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
-  let a = $('<a>')
+  return $('<a>')
     .attr({
       'href': 'https://archive.org/donate',
       'class': 'btn-archive',
       'style': 'padding: 5px;'
     })
-    .prepend(img)
-  return a
+    .prepend(
+      $('<img>')
+        .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
+    )
 }
 function createArchiveAnchor (id, metadata) {
-  let img = $('<img>')
-    .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
-  let a = $('<a>')
+  return $('<a>')
     .attr({
       'href': 'https://archive.org/details/' + id,
       'class': 'btn-archive',
       'style': 'padding: 5px;'
     })
-    .prepend(img)
-  return a
+    .prepend(
+      $('<img>')
+        .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
+    )
 }
 
 function getIdentifier (book) {
