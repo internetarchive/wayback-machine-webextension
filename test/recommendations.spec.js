@@ -5,7 +5,7 @@ const parseDate = require("../scripts/recommendations").parseDate;
 describe('parseDate', () => {
   var tests = [
     {
-      'input' : '20181025T144028Z',
+      'input' : '20181024T144028Z',
       'expected' : 'Wed Oct 24 2018'
     },
     {

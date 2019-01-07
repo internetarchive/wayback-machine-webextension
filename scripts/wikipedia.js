@@ -163,6 +163,7 @@ function getWikipediaBooks (url) {
 if (typeof module !== 'undefined') {
   module.exports = {
     getISBNFromCitation: getISBNFromCitation,
-    getIdentifier: getIdentifier
+    getIdentifier: getIdentifier,
+    getMetadata: getMetadata
   }
 }
