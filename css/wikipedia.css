@@ -6,6 +6,7 @@
 }
 
 .text_elements{
+  color:white;
   max-width: 100%;
 }
 .cover-img{
@@ -25,6 +26,7 @@
 .tooltip.in{
   opacity: 1;
 }
+
 
 .bottom_details{
   background-color: #eee;
