@@ -57,7 +57,7 @@ function get_clean_url() {
 function save_now() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/save/',
+    wayback_url: 'https://web-beta.archive.org/save/',
     page_url: get_clean_url(),
     method: 'save'
   }).then(handleResponse, handleError)
@@ -203,7 +203,7 @@ function auto_archive_url() {
         wmAvailabilityCheck(tab_url, onsuccess = function () { }, onfailure = function () {
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
             if (result.includes('S')) {
-              fetch('https://web.archive.org/save/' + tab_url).then(function () {
+              fetch('https://web-beta.archive.org/save/' + tab_url).then(function () {
                 chrome.runtime.sendMessage({ message: 'changeBadge', tabId: tabId })
               })
             }

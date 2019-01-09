@@ -507,7 +507,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
         wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
-        wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
+        wayback_url = 'https://web-beta.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
         wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
