@@ -8,7 +8,7 @@
     }
   },
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "homepage_url": "https://archive.org/",
   "icons": {
     "48": "images/icon.png",
