@@ -194,7 +194,7 @@ function settings() {
  */
 function auto_archive_url() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let tab_url = tabs[0].url
+    let tab_url = tabs[0].url.replace(/\?.*/, '')
     const tabId = tabs[0].id
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true &&
