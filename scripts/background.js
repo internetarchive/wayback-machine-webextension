@@ -200,7 +200,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     var page_url = message.page_url;
     var wayback_url = message.wayback_url;
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '').replace(/\?.*/, '');
-    console.log(url);
     var open_url = wayback_url + encodeURI(url);
     if (!page_url.includes('chrome://')) {
       if (message.method !== 'save') {
