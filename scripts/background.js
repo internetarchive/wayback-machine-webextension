@@ -411,7 +411,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 function auto_save(tabId) {
   chrome.tabs.get(tabId, function (tab) {
     var page_url = tab.url.replace(/\?.*/, '');
-    console.log(page_url)
     if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
       if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
         wmAvailabilityCheck(page_url,
