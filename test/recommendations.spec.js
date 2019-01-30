@@ -5,12 +5,12 @@ const parseDate = require("../scripts/recommendations").parseDate;
 describe('parseDate', () => {
   var tests = [
     {
-      'input' : '20181024T144028Z',
-      'expected' : 'Wed Oct 24 2018'
+      'input' : '2019-01-29T16:00:00Z',
+      'expected' : 'Tue Jan 29 2019'
     },
     {
-      'input' : '201805',
-      'expected' : 'Tue May 01 2018'
+      'input' : '201901',
+      'expected' : 'Tue Jan 01 2019'
     },
     {
       'input' : '201704ab',
@@ -33,10 +33,6 @@ describe('parseDate', () => {
   it('should return a formatted date string on success', () => {
     let result = parseDate(tests[0]['input']);
     expect(result).to.equal(tests[0]['expected']);
-  });
-  it('should return first of month if no day specified', () => {
-    let result = parseDate(tests[1]['input']);
-    expect(result).to.equal(tests[1]['expected']);
   });
   it('should return empty string on impropperly formatted date input string', () => {
     let result = parseDate(tests[2]['input']);

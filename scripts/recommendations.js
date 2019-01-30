@@ -1,7 +1,6 @@
 function parseDate (date) {
   if(typeof date === "string"){
-    const entryDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
-    const dateObject = new Date(entryDate)
+    const dateObject = new Date(date)
     if(dateObject.toDateString() !== 'Invalid Date'){
       return dateObject.toDateString()
     }
@@ -29,7 +28,7 @@ function constructArticles (clip) {
         }
       })
     }),
-    $('<p>').text(parseDate(clip.date))
+    $('<p>').text(parseDate(clip.show_date))
   )
 
   return $('<div>').append(
