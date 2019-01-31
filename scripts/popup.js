@@ -16,19 +16,19 @@ function remove_wbm(url) {
     pos = url.indexOf('/www')
     new_url = url.substring(pos + 1)
   }
-  return remove_port(new_url)
+  return new_url
 }
 
 function remove_alexa(url) {
   var pos = url.indexOf('/siteinfo/')
   var new_url = url.substring(pos + 10)
-  return remove_port(new_url)
+  return new_url
 }
 
 function remove_whois(url) {
   var pos = url.indexOf('/whois/')
   var new_url = url.substring(pos + 7)
-  return remove_port(new_url)
+  return new_url
 }
 /* Common method used everywhere to retrieve cleaned up URL */
 function retrieve_url() {
@@ -44,14 +44,19 @@ function retrieve_url() {
 
 function get_clean_url() {
   var url = retrieve_url()
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
+  var subsMap = {
+    'web.archive.org': remove_wbm,
+    'www.alexa.com': remove_alexa,
+    'www.whois.com': remove_whois
   }
-  return url
+  for(let subsSearchString in subsMap){
+    if(subsMap.hasOwnProperty(subsSearchString)){
+      if(url.includes(subsSearchString)){
+        url = subsMap[subsSearchString](url);
+      }
+    }
+  }
+  return remove_port(url)
 }
 
 function save_now() {
@@ -63,31 +68,25 @@ function save_now() {
   }).then(handleResponse, handleError)
 }
 
-function recent_capture() {
+function sendOpenUrlMessage(urlPathCode, method){
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/2/',
+    wayback_url: 'https://web.archive.org/web/' + urlPathCode + '/',
     page_url: get_clean_url(),
-    method: 'recent'
+    method
   })
+}
+
+function recent_capture() {
+  sendOpenUrlMessage(2, 'recent');
 }
 
 function first_capture() {
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/0/',
-    page_url: get_clean_url(),
-    method: 'first'
-  })
+  sendOpenUrlMessage(0, 'first');
 }
 
 function view_all() {
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/*/',
-    page_url: get_clean_url(),
-    method: 'viewall'
-  })
+  sendOpenUrlMessage('*', 'viewall');
 }
 
 function get_url() {
@@ -102,20 +101,31 @@ function social_share(eventObj) {
   var sharing_url = ''
   var url = retrieve_url()
   var overview_url = 'https://web.archive.org/web/*/'
+
+  // If the user is already at a playback page, share that URL
   if (url.includes('web.archive.org')) {
-    sharing_url = url // If the user is already at a playback page,share that URL
-  } else {
-    sharing_url = overview_url + get_clean_url() // When not on a playback page,share the overview version of that URL
+    sharing_url = url
   }
+  // else share the overview version of that URL
+  else {
+    sharing_url = overview_url + get_clean_url()
+  }
+
   var open_url = ''
-  if (!(url.includes('chrome://') || url.includes('chrome-extension://'))) { // Prevents sharing some unnecessary page
-    if (id.includes('fb')) {
-      open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
-    } else if (id.includes('twit')) {
-      open_url = 'https://twitter.com/home?status=' + sharing_url
-    } else if (id.includes('linkedin')) {
-      open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+  // Prevents sharing some unnecessary page
+  if (!(url.includes('chrome://') || url.includes('chrome-extension://'))) {
+    var sharingUrlMap = {
+      'fb': 'https://www.facebook.com/sharer/sharer.php?u=',
+      'twit': 'https://twitter.com/home?status=',
+      'linkedin': 'https://www.linkedin.com/shareArticle?url='
     }
+    for(let shareURL in sharingUrlMap){
+      if(id.includes(shareURL)){
+        open_url = sharingUrlMap[shareURL] + sharing_url
+        break
+      }
+    }
+
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0')
   }
 }
