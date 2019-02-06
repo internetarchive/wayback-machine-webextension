@@ -57,7 +57,7 @@ function save_options () {
     wikibooks : $('#wikibooks').prop('checked'),
     doi : $('#doi').prop('checked')
   }, function () {
-    $('#status').css('visibility', 'visible').delay(500).fadeOut(300, function() {
+    $('#save').toggleClass('btn-success btn-primary').text('Saved').delay(500).fadeOut(300, function() {
       window.close()
     });
   })
