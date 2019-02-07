@@ -1,0 +1,20 @@
+body{
+  background-color: #eee;
+}
+
+#container{
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+#header{
+  text-align: center;
+  background-color: black;
+  color: white;
+  font-family:  times;
+}
+
+#content{
+  padding: 15px;
+  background-color: #fff;
+}
