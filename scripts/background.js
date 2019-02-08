@@ -125,11 +125,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.storage.sync.get(['agreement'], function(result){
-    if(result.agreement !== 'agreed'){
-      chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')})
-    }
-  })
+  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 600, height:800, top: 0})
 });
 /**
  * Close window callback
