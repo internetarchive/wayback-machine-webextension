@@ -114,6 +114,20 @@ function URLopener(open_url, url, wmIsAvailable) {
 }
 
 /**
+ * Installed callback
+ */
+chrome.runtime.onInstalled.addListener(function(details){
+  chrome.storage.sync.get(['agreement'], function(result){
+    if(result.agreement === 'agreed'){
+      chrome.browserAction.setPopup({popup: 'index.html'});
+    }
+  })
+});
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 600, height:800, top: 0})
+});
+/**
  * Close window callback
  */
 chrome.windows.onRemoved.addListener(function (id) {
