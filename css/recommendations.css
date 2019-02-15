@@ -16,7 +16,6 @@
   display: flex;
   flex-flow: column wrap;
   text-align: center;
-  text-align: center;
   width: 300px;
 }
 
@@ -32,12 +31,16 @@
 .bottomElements{
   justify-content: flex-end;
   margin: 10px auto;
+  width:250px;
 }
 
-.bottomElements > img{
+img{
   align-self: center;
   display:block;
   margin: 4px auto 0 auto;
+  max-width: 250px;
+  height: auto;
+
 }
 
 body{
