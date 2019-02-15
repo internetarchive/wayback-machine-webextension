@@ -53,7 +53,7 @@ input[type='checkbox']{
   border-radius: 20px;
   padding-bottom: 30px;
   padding-left: 0px;
-  margin-left: 0px;
+  margin: 2px;
 }
 label {
   font-size: 14px;
