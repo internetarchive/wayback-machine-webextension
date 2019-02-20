@@ -371,21 +371,19 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
           })
         }
         if (event1.auto_update_context === true) {
-          if (event1.show_context === "tab") {
-            if (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0) {
-              chrome.tabs.query({
-                windowId: windowIdtest
-              }, function (tabs) {
-                var tab1 = tabs[0];
-                tabIdtest = tab1.id;
-                if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
-                  for (var i = 0; i < contexts.length; i++) {
-                    var e = contexts[i];
-                    chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
-                  };
-                }
-              });
-            }
+          if (event1.show_context === "tab" && (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
+            chrome.tabs.query({
+              windowId: windowIdtest
+            }, function (tabs) {
+              var tab1 = tabs[0];
+              tabIdtest = tab1.id;
+              if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
+                for (var i = 0; i < contexts.length; i++) {
+                  var e = contexts[i];
+                  chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
+                };
+              }
+            });
           } else if (event1.show_context === "singlewindow") {
             chrome.tabs.query({
               windowId: windowIdSingle
@@ -395,22 +393,20 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
               }
             });
-          } else {
-            if (contexts.findIndex(e => e.window !== 0) >= 0) {
-              var i = 0;
-              contexts.map(e => {
-                chrome.tabs.query({
-                  windowId: e.window
-                }, function (tabs) {
-                  if (tabs.length > 0) {
-                    e.tabContextName = tabs[0].id;
-                    if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
-                      chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
-                    }
+          } else if (contexts.findIndex(e => e.window !== 0) >= 0) {
+            var i = 0;
+            contexts.map(e => {
+              chrome.tabs.query({
+                windowId: e.window
+              }, function (tabs) {
+                if (tabs.length > 0) {
+                  e.tabContextName = tabs[0].id;
+                  if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
+                    chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
                   }
-                });
+                }
               });
-            }
+            });
           }
         }
       }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
