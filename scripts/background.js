@@ -436,10 +436,13 @@ function auto_save(tabId) {
             })
           },
           function () {
-            chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-              if (!result.includes('S')) {
-                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
-              }
+            fetch('https://web-beta.archive.org/save/' + page_url)
+            .then(function(){
+              chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+                if (!result.includes('S')) {
+                  chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
+                }
+              })
             })
           });
       }

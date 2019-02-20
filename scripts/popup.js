@@ -192,27 +192,27 @@ function settings() {
 /**
  * If a URL is NOT available in the WBM, try to save it.
  */
-function auto_archive_url() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let tab_url = tabs[0].url.replace(/\?.*/, '')
-    const tabId = tabs[0].id
-    chrome.storage.sync.get(['auto_archive'], function (event) {
-      if (event.auto_archive === true &&
-        tab_url.includes('https://web.archive.org/web/') === false &&
-        tab_url.includes('chrome://newtab') === false) {
-        wmAvailabilityCheck(tab_url, onsuccess = function () { }, onfailure = function () {
-          chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (result.includes('S')) {
-              fetch('https://web-beta.archive.org/save/' + tab_url).then(function () {
-                chrome.runtime.sendMessage({ message: 'changeBadge', tabId: tabId })
-              })
-            }
-          })
-        })
-      }
-    })
-  })
-}
+// function auto_archive_url() {
+//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//     let tab_url = tabs[0].url.replace(/\?.*/, '')
+//     const tabId = tabs[0].id
+//     chrome.storage.sync.get(['auto_archive'], function (event) {
+//       if (event.auto_archive === true &&
+//         tab_url.includes('https://web.archive.org/web/') === false &&
+//         tab_url.includes('chrome://newtab') === false) {
+//         wmAvailabilityCheck(tab_url, onsuccess = function () { }, onfailure = function () {
+//           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+//             if (result.includes('S')) {
+//               fetch('https://web-beta.archive.org/save/' + tab_url).then(function () {
+//                 chrome.runtime.sendMessage({ message: 'changeBadge', tabId: tabId })
+//               })
+//             }
+//           })
+//         })
+//       }
+//     })
+//   })
+// }
 
 function show_all_screens() {
   var url = get_clean_url()
@@ -326,7 +326,7 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, auto_archive_url, borrow_books, show_news, show_wikibooks]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
