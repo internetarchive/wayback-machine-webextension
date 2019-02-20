@@ -335,119 +335,114 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    chrome.tabs.get(tabId, function (tab) {
-      chrome.storage.sync.get(['auto_archive'], function (event) {
-        if (event.auto_archive === true) {
-          auto_save(tab.id);
-        }
-      });
+    chrome.storage.sync.get(['auto_archive'], function (event) {
+      if (event.auto_archive === true) {
+        auto_save(tab.id, tab.url);
+      }
     });
   } else if (info.status === "loading") {
-    chrome.tabs.get(tabId, function (tab) {
-      var received_url = tab.url;
-      if (!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://") || received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
-        singlewindowurl = received_url;
-        tagcloudurl = new URL(singlewindowurl);
-        received_url = received_url.replace(/^https?:\/\//, '');
-        var last_index = received_url.indexOf('/');
-        var url = received_url.slice(0, last_index);
-        var open_url = received_url;
-        if (open_url.slice(-1) === '/') {
-          open_url = received_url.substring(0, open_url.length - 1);
-        }
-        var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl];
-        chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function (event1) {
-          if (event1.books === true) {
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-              url = tabs[0].url;
-              tabId = tabs[0].id;
-              if (url.includes('www.amazon')) {
-                fetch('https://archive.org/services/context/amazonbooks?url=' + url)
-                  .then(resp => resp.json())
-                  .then(resp => {
-                    if (('metadata' in resp && 'identifier' in resp['metadata']) ||
-                      'ocaid' in resp) {
-                      chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
-                    }
-                  })
-              }
-            })
-          }
-          if (event1.auto_update_context === true) {
-            if (event1.show_context === "tab") {
-              if (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0) {
-                chrome.tabs.query({
-                  windowId: windowIdtest
-                }, function (tabs) {
-                  var tab1 = tabs[0];
-                  tabIdtest = tab1.id;
-                  if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
-                    for (var i = 0; i < contexts.length; i++) {
-                      var e = contexts[i];
-                      chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
-                    };
+    var received_url = tab.url;
+    if (!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://") || received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
+      singlewindowurl = received_url;
+      tagcloudurl = new URL(singlewindowurl);
+      received_url = received_url.replace(/^https?:\/\//, '');
+      var last_index = received_url.indexOf('/');
+      var url = received_url.slice(0, last_index);
+      var open_url = received_url;
+      if (open_url.slice(-1) === '/') {
+        open_url = received_url.substring(0, open_url.length - 1);
+      }
+      var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl];
+      chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function (event1) {
+        if (event1.books === true) {
+          chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            url = tabs[0].url;
+            tabId = tabs[0].id;
+            if (url.includes('www.amazon')) {
+              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+                .then(resp => resp.json())
+                .then(resp => {
+                  if (('metadata' in resp && 'identifier' in resp['metadata']) ||
+                    'ocaid' in resp) {
+                    chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
                   }
-                });
-              }
-            } else if (event1.show_context === "singlewindow") {
+                })
+            }
+          })
+        }
+        if (event1.auto_update_context === true) {
+          if (event1.show_context === "tab") {
+            if (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0) {
               chrome.tabs.query({
-                windowId: windowIdSingle
+                windowId: windowIdtest
               }, function (tabs) {
                 var tab1 = tabs[0];
-                if (tabId !== tab1.id && tab.id !== tab1.id) {
-                  chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+                tabIdtest = tab1.id;
+                if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
+                  for (var i = 0; i < contexts.length; i++) {
+                    var e = contexts[i];
+                    chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
+                  };
                 }
               });
-            } else {
-              if (contexts.findIndex(e => e.window !== 0) >= 0) {
-                var i = 0;
-                contexts.map(e => {
-                  chrome.tabs.query({
-                    windowId: e.window
-                  }, function (tabs) {
-                    if (tabs.length > 0) {
-                      e.tabContextName = tabs[0].id;
-                      if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
-                        chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
-                      }
-                    }
-                  });
-                });
+            }
+          } else if (event1.show_context === "singlewindow") {
+            chrome.tabs.query({
+              windowId: windowIdSingle
+            }, function (tabs) {
+              var tab1 = tabs[0];
+              if (tabId !== tab1.id && tab.id !== tab1.id) {
+                chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
               }
+            });
+          } else {
+            if (contexts.findIndex(e => e.window !== 0) >= 0) {
+              var i = 0;
+              contexts.map(e => {
+                chrome.tabs.query({
+                  windowId: e.window
+                }, function (tabs) {
+                  if (tabs.length > 0) {
+                    e.tabContextName = tabs[0].id;
+                    if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
+                      chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
+                    }
+                  }
+                });
+              });
             }
           }
-        }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
-      }
-    }); // closing chrome.tabs.get(tabId, function(tab) {
+        }
+      }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
+    }
   } // closing if info.status ==="loading"
 });
 
-function auto_save(tabId) {
-  chrome.tabs.get(tabId, function (tab) {
-    var page_url = tab.url.replace(/\?.*/, '');
-    if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
-      if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
-        wmAvailabilityCheck(page_url,
-          function () {
+function auto_save(tabId, url) {
+  var page_url = url.replace(/\?.*/, '');
+  if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
+    if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
+      wmAvailabilityCheck(page_url,
+        function () {
+          chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+            if (result.includes('S')) {
+              chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+            }
+          })
+        },
+        function () {
+          fetch('https://web-beta.archive.org/save/' + page_url)
+          .then(function(){
             chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-              if (result.includes('S')) {
-                chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+              if (!result.includes('S')) {
+                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
               }
             })
-          },
-          function () {
-            fetch('https://web-beta.archive.org/save/' + page_url)
-            .then(function(){
-              chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-                if (!result.includes('S')) {
-                  chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
-                }
-              })
-            })
-          });
-      }
+          })
+        });
     }
-  });
+  }
+
 }
 
 //function for opeing a particular context
