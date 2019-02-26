@@ -63,15 +63,6 @@ var contexts = [
     top: 0,
     left: 1000
   },
-  // {
-  //   name: "similarweb",
-  //   htmlUrl: chrome.runtime.getURL("similarweb.html") + "?url=",
-  //   tab: 0,
-  //   window: 0,
-  //   tabContextName: 0,
-  //   top: 0,
-  //   left: 1200
-  // },
   {
     name: "tagcloud",
     htmlUrl: chrome.runtime.getURL("tagcloud.html") + "?url=",
@@ -82,15 +73,6 @@ var contexts = [
     left: 1200
   }
 ];
-// Function to check whether it is a valid URL or not
-function isValidUrl(url) {
-  for (var i = 0; i < excluded_urls.length; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
-      return false;
-    }
-  }
-  return true;
-}
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -416,7 +398,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
+  if (isValidUrl(page_url) && ! isExcludedUrl(page_url, excluded_urls)) {
     if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
       wmAvailabilityCheck(page_url,
         function () {

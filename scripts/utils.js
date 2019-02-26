@@ -25,9 +25,19 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @param url {string}
  * @return {bool}
  */
-function isValidSnapshotUrl(url) {
+function isValidUrl(url) {
   return ((typeof url) === "string" &&
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+}
+
+// Function to check whether it is a valid URL or not
+function isExcludedUrl(url, blacklist) {
+  for (var i = 0; i < blacklist.length; i++) {
+    if (url.startsWith("http://" + blacklist[i]) || url.startsWith("https://" + blacklist[i])) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -42,7 +52,7 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available &&
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
+    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
     return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
   } else {
     return null;
@@ -67,7 +77,8 @@ if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
-    isValidSnapshotUrl: isValidSnapshotUrl,
+    isValidUrl: isValidUrl,
+    isExcludedUrl:isExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck
   }
 }
