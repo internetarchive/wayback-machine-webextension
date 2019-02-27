@@ -159,7 +159,7 @@ chrome.webRequest.onCompleted.addListener(function (details) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521,
       523, 524, 525, 526];
     if (isIncognito === false && details.frameId === 0 &&
-      httpFailCodes.indexOf(details.statusCode) >= 0 && isValidUrl(details.url)) {
+      httpFailCodes.indexOf(details.statusCode) >= 0 && isNotExcludedUrl(details.url, excluded_urls)) {
       globalStatusCode = details.statusCode;
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
@@ -398,7 +398,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && ! isExcludedUrl(page_url, excluded_urls)) {
+  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url, excluded_urls)) {
     if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
       wmAvailabilityCheck(page_url,
         function () {

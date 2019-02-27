@@ -31,13 +31,13 @@ function isValidUrl(url) {
 }
 
 // Function to check whether it is a valid URL or not
-function isExcludedUrl(url, blacklist) {
+function isNotExcludedUrl(url, blacklist) {
   for (var i = 0; i < blacklist.length; i++) {
     if (url.startsWith("http://" + blacklist[i]) || url.startsWith("https://" + blacklist[i])) {
-      return true;
+      return false;
     }
   }
-  return false;
+  return true;
 }
 
 /**
@@ -78,7 +78,7 @@ if (typeof module !== 'undefined') {
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
     isValidUrl: isValidUrl,
-    isExcludedUrl:isExcludedUrl,
+    isNotExcludedUrl:isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck
   }
 }
