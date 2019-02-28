@@ -30,10 +30,16 @@ function isValidUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
+//List of excluded Urls
+var excluded_urls = [
+  "localhost",
+  "0.0.0.0",
+  "127.0.0.1"
+];
 // Function to check whether it is a valid URL or not
-function isNotExcludedUrl(url, blacklist) {
-  for (var i = 0; i < blacklist.length; i++) {
-    if (url.startsWith("http://" + blacklist[i]) || url.startsWith("https://" + blacklist[i])) {
+function isNotExcludedUrl(url) {
+  for (var i = 0, len = excluded_urls.length; i < len; i++) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
       return false;
     }
   }

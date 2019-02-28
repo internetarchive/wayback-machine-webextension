@@ -7,12 +7,7 @@ var manifest = chrome.runtime.getManifest();
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
-//List of exluded URLs
-var excluded_urls = [
-  "localhost",
-  "0.0.0.0",
-  "127.0.0.1"
-];
+
 var previous_RTurl = "";
 var windowIdtest = 0;
 var windowIdSingle = 0;
@@ -156,10 +151,8 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
-    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521,
-      523, 524, 525, 526];
     if (isIncognito === false && details.frameId === 0 &&
-      httpFailCodes.indexOf(details.statusCode) >= 0 && isNotExcludedUrl(details.url, excluded_urls)) {
+      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode;
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
@@ -398,7 +391,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url, excluded_urls)) {
+  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url)) {
     if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
       wmAvailabilityCheck(page_url,
         function () {
