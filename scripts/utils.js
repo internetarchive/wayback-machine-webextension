@@ -39,7 +39,7 @@ var excluded_urls = [
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
   for (var i = 0, len = excluded_urls.length; i < len; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
       return false;
     }
   }
