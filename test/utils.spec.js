@@ -13,33 +13,29 @@ describe('twitter', () => {
 })
 
 describe('isValidUrl', ()=>{
+  var test_cases = [
+    {"url": 'chrome://extension', "result": false },
+    {"url": 'https://example.com', "result": true}
+  ]
+  test_cases.forEach(({url, result}) =>{
+    it('should return ' + result + ' on ' + url, ()=>{
+      expect(isValidUrl(url)).to.equal(result)
+    })
+  })
   it('should reject non-strings', ()=>{
     let result = isValidUrl(5) || isValidUrl({}) || isValidUrl(true)
     expect(result).to.be.false
   })
-  it('should reject impropper protocols', ()=>{
-    let result = isValidUrl('chrome://extension')
-    expect(result).to.be.false
-
-  })
-  it('should accept propper urls', ()=>{
-    let result = isValidUrl('https://example.com/')
-    expect(result).to.be.true
-  })
 })
 
 describe('isNotExcludedUrl', () =>{
-  var excluded_urls = [
-    "localhost",
-    "0.0.0.0",
-    "127.0.0.1"
-  ];
-  it('should reject urls on the excluded list', ()=>{
-    let result = isNotExcludedUrl('https://0.0.0.0', excluded_urls)
-    expect(result).to.be.false
-  })
-  it('should accept urls not on the list', ()=>{
-    let result = isNotExcludedUrl('https://example.com', excluded_urls)
-    expect(result).to.be.true
+  var test_cases = [
+    {"url": 'https://0.0.0.0', "result": false },
+    {"url": 'https://example.com', "result": true}
+  ]
+  test_cases.forEach(({url, result}) =>{
+    it('should return ' + result + ' on ' + url, ()=>{
+      expect(isNotExcludedUrl(url)).to.equal(result)
+    })
   })
 })
