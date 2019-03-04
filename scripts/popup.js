@@ -55,12 +55,14 @@ function get_clean_url() {
 }
 
 function save_now() {
+  let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: 'https://web-beta.archive.org/save/',
-    page_url: get_clean_url(),
+    page_url: clean_url,
     method: 'save'
-  }).then(handleResponse, handleError)
+  })
+  .then(handleResponse, handleError)
 }
 
 function recent_capture() {
