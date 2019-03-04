@@ -35,6 +35,9 @@ describe('isValidUrl', () => {
 describe('isNotExcludedUrl', () => {
   var test_cases = [
     { 'url': 'https://0.0.0.0', 'result': false },
+    { 'url': 'https://web.archive.org/web/20190214141732/https://developer.chrome.com/extensions/webRequest', 'result': false },
+    { 'url': 'chrome://extensions', 'result': false },
+    { 'url': 'chrome://newtab', 'result': false },
     { 'url': 'https://example.com', 'result': true },
     { 'url': '\xc3\xb1', 'result': true },
     { 'url': '\xc3\x28', 'result': true }

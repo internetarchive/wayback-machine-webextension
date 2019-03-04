@@ -34,7 +34,11 @@ function isValidUrl(url) {
 var excluded_urls = [
   "localhost",
   "0.0.0.0",
-  "127.0.0.1"
+  "127.0.0.1",
+  "chrome://",
+  "web.archive.org",
+  "web-beta.archive.org",
+  'chrome.google.com/webstore'
 ];
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
