@@ -7,12 +7,7 @@ var manifest = chrome.runtime.getManifest();
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
-//List of exluded URLs
-var excluded_urls = [
-  "localhost",
-  "0.0.0.0",
-  "127.0.0.1"
-];
+
 var previous_RTurl = "";
 var windowIdtest = 0;
 var windowIdSingle = 0;
@@ -63,15 +58,6 @@ var contexts = [
     top: 0,
     left: 1000
   },
-  // {
-  //   name: "similarweb",
-  //   htmlUrl: chrome.runtime.getURL("similarweb.html") + "?url=",
-  //   tab: 0,
-  //   window: 0,
-  //   tabContextName: 0,
-  //   top: 0,
-  //   left: 1200
-  // },
   {
     name: "tagcloud",
     htmlUrl: chrome.runtime.getURL("tagcloud.html") + "?url=",
@@ -82,15 +68,6 @@ var contexts = [
     left: 1200
   }
 ];
-// Function to check whether it is a valid URL or not
-function isValidUrl(url) {
-  for (var i = 0; i < excluded_urls.length; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
-      return false;
-    }
-  }
-  return true;
-}
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -174,10 +151,8 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
-    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521,
-      523, 524, 525, 526];
     if (isIncognito === false && details.frameId === 0 &&
-      httpFailCodes.indexOf(details.statusCode) >= 0 && isValidUrl(details.url)) {
+      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode;
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
@@ -215,7 +190,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     var wayback_url = message.wayback_url;
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '').replace(/\?.*/, '');
     var open_url = wayback_url + encodeURI(url);
-    if (!page_url.includes('chrome://')) {
+    if (!isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true);
       } else {
@@ -238,7 +213,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         previous_RTurl = url;
       }
       //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
-      if (url.includes('web.archive.org') || url.includes('web-beta.archive.org') || url.includes('chrome.google.com/webstore')) {
+      if (!isNotExcludedUrl(url)) {
         alert("Structure as radial tree not available on this page");
       } else if ((previous_RTurl !== url && url === tab.url) || (previous_RTurl !== url && url !== tab.url)) {
         //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
@@ -342,7 +317,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     });
   } else if (info.status === "loading") {
     var received_url = tab.url;
-    if (!(received_url.includes("chrome://newtab/") || received_url.includes("chrome-extension://") || received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
+    if (isNotExcludedUrl(received_url) && !(received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
       singlewindowurl = received_url;
       tagcloudurl = new URL(singlewindowurl);
       received_url = received_url.replace(/^https?:\/\//, '');
@@ -416,29 +391,27 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && isValidSnapshotUrl(page_url)) {
-    if (!((page_url.includes("https://web.archive.org/web/")) || (page_url.includes("chrome://newtab")))) {
-      wmAvailabilityCheck(page_url,
-        function () {
+  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url)) {
+    wmAvailabilityCheck(page_url,
+      function () {
+        chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+          if (result.includes('S')) {
+            chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+          }
+        })
+      },
+      function () {
+        fetch('https://web-beta.archive.org/save/' + page_url)
+        .then(function(){
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (result.includes('S')) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+            if (!result.includes('S')) {
+              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
             }
           })
-        },
-        function () {
-          fetch('https://web-beta.archive.org/save/' + page_url)
-          .then(function(){
-            chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-              if (!result.includes('S')) {
-                chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
-              }
-            })
-          })
-        });
-    }
+        })
+      }
+    );
   }
-
 }
 
 //function for opeing a particular context

@@ -25,9 +25,29 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @param url {string}
  * @return {bool}
  */
-function isValidSnapshotUrl(url) {
+function isValidUrl(url) {
   return ((typeof url) === "string" &&
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+}
+
+//List of excluded Urls
+var excluded_urls = [
+  "localhost",
+  "0.0.0.0",
+  "127.0.0.1",
+  "chrome://",
+  "web.archive.org",
+  "web-beta.archive.org",
+  'chrome.google.com/webstore'
+];
+// Function to check whether it is a valid URL or not
+function isNotExcludedUrl(url) {
+  for (var i = 0, len = excluded_urls.length; i < len; i++) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -42,7 +62,7 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available &&
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
-    isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
+    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
     return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
   } else {
     return null;
@@ -67,7 +87,8 @@ if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
-    isValidSnapshotUrl: isValidSnapshotUrl,
+    isValidUrl: isValidUrl,
+    isNotExcludedUrl:isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck
   }
 }
