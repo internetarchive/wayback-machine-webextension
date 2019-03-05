@@ -93,9 +93,9 @@ function URLopener(open_url, url, wmIsAvailable) {
 /**
  * Installed callback
  */
-chrome.runtime.onInstalled.addListener(function(details){
+chrome.runtime.onStartup.addListener(function(details){
   chrome.storage.sync.get(['agreement'], function(result){
-    if(result.agreement === 'agreed'){
+    if(result.agreement === true){
       chrome.browserAction.setPopup({popup: 'index.html'});
     }
   })

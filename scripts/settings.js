@@ -55,7 +55,7 @@ function save_options () {
     tagcloud : $('#tagcloud').prop('checked'),
     showall : $('#showall').prop('checked'),
     news : $('#news').prop('checked'),
-    agreed : $('#agreement').prop('checked'),
+    agreement : $('#agreement').prop('checked'),
     optout: $('#optout').prop('checked'),
     wikibooks : $('#wikibooks').prop('checked'),
     doi : $('#doi').prop('checked')
