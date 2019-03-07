@@ -17,8 +17,6 @@ function restore_options () {
     tagcloud: false,
     doi: false,
     news: false,
-    agreement: false,
-    optout:false,
     wikibooks: false,
     showall: false
   }, function (items) {
@@ -34,8 +32,6 @@ function restore_options () {
     $('#tagcloud').prop('checked', items.tagcloud)
     $('#showall').prop('checked', items.showall)
     $('#news').prop('checked', items.news)
-    $('#agreement').prop('checked', items.agreement)
-    $('#optout').prop('checked', items.optout)
     $('#wikibooks').prop('checked', items.wikibooks)
     $('#doi').prop('checked', items.doi)
   })
@@ -55,18 +51,10 @@ function save_options () {
     tagcloud : $('#tagcloud').prop('checked'),
     showall : $('#showall').prop('checked'),
     news : $('#news').prop('checked'),
-    agreement : $('#agreement').prop('checked'),
-    optout: $('#optout').prop('checked'),
     wikibooks : $('#wikibooks').prop('checked'),
     doi : $('#doi').prop('checked')
   }, function () {
     $('#save').toggleClass('btn-success btn-primary').text('Saved').delay(500).fadeOut(300, function() {
-      if($('#agreement').prop('checked') === false){
-        chrome.browserAction.setPopup({popup: ''});
-        chrome.browserAction.onClicked.addListener(function(tab) {
-            chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')})
-        });
-      }
       window.close()
     });
   })
