@@ -3,6 +3,7 @@
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/common.css">
         <title>About</title>
     </head>
     <body>
@@ -57,7 +58,7 @@
                     <span id="version" style="font-family: Bebas Neue;font-size: 30px;">&nbsp;</span>
                     <br><br>
                     <strong style="font-family: Bebas Neue;font-size: 30px;">License</strong>
-                    <p>Copyright Internet Archive, 2017 AGPL-3&nbsp;
+                    <p>Copyright Internet Archive, <span id="year"></span> AGPL-3&nbsp;
                     </p>
                     <br>
                     <strong style="font-family: Bebas Neue;font-size: 30px;">Credit</strong>
@@ -72,6 +73,7 @@
                         Shiryaev Anton&nbsp;<a href="https://github.com/Eagle19243">@Eagle19243<br /></a>
                         Yogesh&nbsp;Kumar <a href="https://github.com/kumarjyogesh">@kumarjyogesh&nbsp;</a><br/>
                         Banos&nbsp;Vangelis <a href="https://github.com/vbanos">@vbanos&nbsp;</a><br/>
+                        Max&nbsp;Reinisch <a href="https://github.com/maxreinisch">@MaxReinisch&nbsp;</a><br/>
                         Rodden Kerry&nbsp;<a href="http://www.rodden.org/kerry">@kerryrodden</a> for sunburst code (used in the Site Map)<br />
                     </p>
                     <p>
@@ -83,61 +85,6 @@
         </div>
     </body>
 </html>
+<script src="scripts/utils.js"></script>
+<script src="scripts/build.js"></script>
 <script src="scripts/about.js"></script>
-<style>
-body{
-    max-height: 100%;
-}
-@font-face {
-    font-family: Bebas Neue;
-    src: url("../fonts/BebasNeue.otf");
-}
-
-@font-face {
-    font-family: Gill Sans Light;
-    src: url("../fonts/GillSans-Light.ttf");
-}
-#horizontal_line{
-    margin: 0px;
-    padding: 0px;
-    border: 0px solid rgb(6, 117, 211);
-    font-size: 19px; font-style: inherit;
-    font-variant: inherit;
-    font-weight: inherit;
-    font-stretch: inherit;
-    line-height: 1;
-    font-family: sans-serif;
-    vertical-align: baseline;
-    box-sizing: content-box;
-    overflow: unset;
-    height: 1px;
-    position: relative;
-    width: auto;
-    display: flex;
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
-    text-align: left;
-    align-items: center;
-    border-radius: 3px;
-    justify-content: center;
-    text-decoration: none;
-}
-
-.resize_fit_center {
-  max-width:100%;
-  max-height:100px;
-}
-
-h2{
-    font-family: Bebas Neue;
-    font-size: 50px;
-}
-
-.container{
-    padding-left: 15px;
-    padding-right: 15px;
-}
-p{
-    font-family:Gill Sans Light;
-    font-size: 20px;
-}
-</style>
