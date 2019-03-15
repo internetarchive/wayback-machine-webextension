@@ -26,10 +26,10 @@ function getCitation(cit){
     [author, ...rest] = str.split("<em>");
     [title, ...rest] = rest[0].split("</em>")
     //TODO: get publisher
-    let pages = rest[0].slice(rest[0].indexOf(')')).split(',')
+    let pages = rest[0].slice(rest[0].indexOf(')')+1).split(',')
     return {
-      author:author,
       title:title,
+      author:author.replace(/,\s?$/, ''),
       pages: pages.filter($.isNumeric).map(Number)
     }
   }

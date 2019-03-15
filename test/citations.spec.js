@@ -20,7 +20,7 @@ describe('getCitation', ()=>{
         }
       },
       {
-        case: '<a href="#_ftnref3" name="_ftn3" title="" id="_ftn3">[3]</a>Uri D. Herscher, <a href="https://archive.org/details/jewishagricultur0000hers/page/123"><em>Jewish Agricultural Utopias in America, 1880-1910</em></a> (Detroit: Wayne State University Press, 1991), 123.',
+        case: '<a href="#_ftnref3" name="_ftn3" title="" id="_ftn3">[3]</a>Uri D. Herscher, <em>Jewish Agricultural Utopias in America, 1880-1910</em> (Detroit: Wayne State University Press, 1991), 123.',
         result: {
           title: 'Jewish Agricultural Utopias in America, 1880-1910',
           author: 'Uri D. Herscher',
@@ -29,5 +29,9 @@ describe('getCitation', ()=>{
         }
       }
     ]
+    for(let i = 0; i < test_cases.length; i++){
+      let result = getCitation(test_cases[i].case);
+      expect(result).to.eql(test_cases[i].result)
+    }
   })
 })
