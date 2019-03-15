@@ -1,14 +1,12 @@
-const expect = require("chai").expect;
-const getCitation = require("../scripts/citations").getCitation
+const expect = require('chai').expect
+const getCitation = require('../scripts/citations').getCitation
 
-
-describe('getCitation', ()=>{
-
-  it('should return null on non-citations', ()=>{
+describe('getCitation', () => {
+  it('should return null on non-citations', () => {
     let result = getCitation('')
     expect(result).to.be.null
   })
-  it('should parse title, author, publisher, and page numbers.  null if not provided', ()=>{
+  it('should parse title, author, publisher, and page numbers.  null if not provided', () => {
     test_cases = [
       {
         case: '[1]Herman J. Levine and Benjamin Miller, The American Jewish Farmer in Changing Times (New York: The Jewish Agricultural Society, Inc. 1966) 19, 21, 50.',
@@ -27,10 +25,10 @@ describe('getCitation', ()=>{
           pages: [123],
           publisher: 'Detroit: Wayne State University Press, 1991'
         }
-      },
+      }
     ]
-    for(let i = 0; i < test_cases.length; i++){
-      let result = getCitation(test_cases[i].case);
+    for (let i = 0; i < test_cases.length; i++) {
+      let result = getCitation(test_cases[i].case)
       expect(result).to.eql(test_cases[i].result)
     }
   })
