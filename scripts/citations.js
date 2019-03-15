@@ -35,8 +35,8 @@ function getCitation(cit){
   }
 }
 
-function getAdvancedSearchQuery(pcit){
-({author, title} = pcit)
+function getAdvancedSearchQuery(parsed_cit){
+({author, title} = parsed_cit)
   //format author
   author = formatAuthor(author)
   return 'creator:"'+author+'" AND title:"'+title+'"'
