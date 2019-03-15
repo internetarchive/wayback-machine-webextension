@@ -11,7 +11,7 @@ $(document).ready(function() {
 function findCitations(){
   let candidates = $("a[href^='#_ftnref']").parent()
   for(let i = 0; i < candidates.length; i++){
-    let citation = getCitation(candidates[i].innerHTML)
+    let citation = getCitation(candidates[i].innerText)
     if(citation){
       advancedSearch(citation, candidates[i])
     }
@@ -19,18 +19,28 @@ function findCitations(){
 }
 
 function getCitation(cit){
-  str = cit.replace(/<a href="#_ftnref\d" name="_ftn\d" title="" id="_ftn\d">\[\d\]<\/a>/, '')
+  str = cit.replace(/^[^a-zA-Z]*/, '')
   if(str.length == 0){
     return null
   }else{
-    [author, ...rest] = str.split("<em>");
-    [title, ...rest] = rest[0].split("</em>")
-    //TODO: get publisher
-    let pages = rest[0].slice(rest[0].indexOf(')')+1).split(',')
+    let publisher = str.match(/\(.*\d\d\d\d\)/)[0];
+    let halves = str.split(publisher);
+    let pages = halves[1].split(',').filter($.isNumeric).map(Number)
+    let commaLoc = halves[0].indexOf(',');
+    let title, author;
+    if(commaLoc >=0){
+       author = halves[0].slice(0, commaLoc)
+       title = halves[0].slice(commaLoc+1)
+    }else{
+       author = null;
+       title = halves[0]
+    }
     return {
-      title:title,
-      author:author.replace(/,\s?$/, ''),
-      pages: pages.filter($.isNumeric).map(Number)
+      title:title.replace(/^\s/, '').replace(/\s$/, ''),
+      author:author,
+      pages: pages,
+      publisher: publisher.slice(1, -1)
+
     }
   }
 }
