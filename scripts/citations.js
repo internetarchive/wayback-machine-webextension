@@ -47,8 +47,12 @@ function getCitation (cit) {
 function getAdvancedSearchQuery (parsed_cit) {
   ({ author, title } = parsed_cit)
   // format author
-  author = formatAuthor(author)
-  return 'creator:"' + author + '" AND title:"' + title + '"'
+  if (author){
+    author = formatAuthor(author)
+    return 'creator:"' + author + '" AND title:"' + title + '"'
+  }else{
+    return 'title:"' + title +'"'
+  }
 }
 
 function formatAuthor (auth) {
