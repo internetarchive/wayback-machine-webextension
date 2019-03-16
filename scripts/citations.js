@@ -49,19 +49,19 @@ function getAdvancedSearchQuery (parsed_cit) {
   // format author
   if (author){
     author = formatAuthor(author)
-    return 'creator:"' + author + '" AND title:"' + title + '"'
+    return 'creator:' + author + ' AND title:"' + title + '"'
   }else{
     return 'title:"' + title +'"'
   }
 }
 
-function formatAuthor (auth) {
-  let names = auth.split('.')
-  return names[1] + ' ' + names[0]
+function formatAuthor (auth) { //todo: handle multiple authors
+  return auth.replace(' and ', ' ')
 }
 
 function advancedSearch (citation, cand) {
   query = getAdvancedSearchQuery(citation)
+  console.log(query)
   let host = 'https://archive.org/advancedsearch.php?q='
   let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
   let url = host + query + endsearch
@@ -85,11 +85,12 @@ function advancedSearch (citation, cand) {
       }
     })
     .fail(function (err) {
-      console.log(err)
+      console.log(query)
     })
 }
 if (typeof module !== 'undefined') {
   module.exports = {
-    getCitation: getCitation
+    getCitation: getCitation,
+    getAdvancedSearchQuery:getAdvancedSearchQuery
   }
 }
