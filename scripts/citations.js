@@ -4,6 +4,14 @@
 // search archive to get https://archive.org/details/jewishagricultur0000hers
 
 $(document).ready(function () {
+  let citation_pattern = /.*, .* \(.*,\s(Inc\.\s)?\d\d\d\d\)(,)?\s?(\d*(,\s)?)*\./g;
+  let body = $('body').innerText;
+  if(body === undefined){
+    body = $('body')[0].innerText;
+  }
+  // console.log(body.match(citation_pattern))
+  // console.log(body.match(citation_pattern).map(getCitation).map(getAdvancedSearchQuery))
+  // TODO: Make a window for this instead of inline citations
   findCitations()
 })
 
