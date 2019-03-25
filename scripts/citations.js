@@ -18,7 +18,8 @@
 function findCitations () {
   let candidates = $("a[href^='#_ftnref']").parent()
   for (let i = 0; i < candidates.length; i++) {
-    let citation = getCitation(candidates[i].innerText)
+    console.log(candidates[i], candidates[i].innerText, candidates[i].innerHTML);
+    let citation = getCitation(candidates[i].innerText || candidates[i].textContent)
     console.log(citation)
     if (citation) {
       advancedSearch(citation, candidates[i])
