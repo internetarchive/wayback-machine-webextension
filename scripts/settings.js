@@ -19,7 +19,7 @@ function initializeSettings () {
     doi: false,
     news: false,
     wikibooks: false,
-    showall: false,
+    showall: false
   }, restoreOptions)
 }
 function restoreOptions (items) {
@@ -54,7 +54,7 @@ function save_options () {
     showall: $('#showall').prop('checked'),
     news: $('#news').prop('checked'),
     wikibooks: $('#wikibooks').prop('checked'),
-    doi: $('#doi').prop('checked'),
+    doi: $('#doi').prop('checked')
   })
 }
 
@@ -75,7 +75,7 @@ function selectall () {
 }
 
 function addDocs () {
-  chrome.storage.sync.get(['newshosts'], function(items){
+  chrome.storage.sync.get(['newshosts'], function (items) {
     let docs = {
       'auto-archive': 'Enables extension to identify URLs that have not previously been saved on the Wayback Machine.',
       'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
@@ -100,5 +100,4 @@ function addDocs () {
       }
     }
   })
-
 }
