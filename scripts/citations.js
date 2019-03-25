@@ -3,22 +3,23 @@
 // Parse citation to get creator:"Herscher, Uri D" AND title:"Jewish Agricultural Utopias in America"
 // search archive to get https://archive.org/details/jewishagricultur0000hers
 
-$(document).ready(function () {
-  let citation_pattern = /.*, .* \(.*,\s(Inc\.\s)?\d\d\d\d\)(,)?\s?(\d*(,\s)?)*\./g;
-  let body = $('body').innerText;
-  if(body === undefined){
-    body = $('body')[0].innerText;
-  }
-  // console.log(body.match(citation_pattern))
-  // console.log(body.match(citation_pattern).map(getCitation).map(getAdvancedSearchQuery))
-  // TODO: Make a window for this instead of inline citations
-  findCitations()
-})
+// $(document).ready(function () {
+//   let citation_pattern = /.*, .* \(.*,\s(Inc\.\s)?\d\d\d\d\)(,)?\s?(\d*(,\s)?)*\./g;
+//   let body = $('body').innerText;
+//   if(body === undefined){
+//     body = $('body')[0].innerText;
+//   }
+//   // console.log(body.match(citation_pattern))
+//   // console.log(body.match(citation_pattern).map(getCitation).map(getAdvancedSearchQuery))
+//   // TODO: Make a window for this instead of inline citations
+//   findCitations()
+// })
 
 function findCitations () {
   let candidates = $("a[href^='#_ftnref']").parent()
   for (let i = 0; i < candidates.length; i++) {
     let citation = getCitation(candidates[i].innerText)
+    console.log(citation)
     if (citation) {
       advancedSearch(citation, candidates[i])
     }
@@ -69,7 +70,6 @@ function formatAuthor (auth) { //todo: handle multiple authors
 
 function advancedSearch (citation, cand) {
   query = getAdvancedSearchQuery(citation)
-  console.log(query)
   let host = 'https://archive.org/advancedsearch.php?q='
   let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
   let url = host + query + endsearch
@@ -93,7 +93,7 @@ function advancedSearch (citation, cand) {
       }
     })
     .fail(function (err) {
-      console.log(query)
+      console.log(err)
     })
 }
 if (typeof module !== 'undefined') {

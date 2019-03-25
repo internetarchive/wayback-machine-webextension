@@ -16,6 +16,7 @@ function restore_options () {
     annotations: false,
     tagcloud: false,
     doi: false,
+    citations: false,
     news: false,
     wikibooks: false,
     showall: false
@@ -34,6 +35,7 @@ function restore_options () {
     $('#news').prop('checked', items.news)
     $('#wikibooks').prop('checked', items.wikibooks)
     $('#doi').prop('checked', items.doi)
+    $('#citations').prop('checked', items.citations)
   })
 }
 
@@ -52,7 +54,8 @@ function save_options () {
     showall : $('#showall').prop('checked'),
     news : $('#news').prop('checked'),
     wikibooks : $('#wikibooks').prop('checked'),
-    doi : $('#doi').prop('checked')
+    doi : $('#doi').prop('checked'),
+    citations: $('#citations').prop('checked')
   }, function () {
     $('#save').toggleClass('btn-success btn-primary').text('Saved').delay(500).fadeOut(300, function() {
       window.close()
@@ -83,6 +86,7 @@ function addDocs(){
     'books' : 'Display a ‘B’ when viewing a book on Amazon that is found on The Archive.',
     'wikibooks' : 'Enables a button in the extension on wikipedia pages that will display a list of books cited on the page that are available on the archive.  Also adds popup buttons to the citations on the wikipedia page.',
     'doi' : 'Enables a button in the extension on wikipedia pages that will display a list of papers cited on the page that are available on the archive.',
+    'citations' : 'If a page contains a citation, enabling this will allow the extension to search the Archive for the citation and insert a link if found.',
     'news' :  'Enables a button in the extension on select news outlets that can recommend related tv news clips from the TV News Archive.',
     'alexa' : 'Displays what Alexa Internet knows about the site you are on (traffic data).',
     'domaintools' : 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
