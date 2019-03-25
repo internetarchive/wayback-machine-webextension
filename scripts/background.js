@@ -12,6 +12,19 @@ var previous_RTurl = "";
 var windowIdtest = 0;
 var windowIdSingle = 0;
 var WB_API_URL = "https://archive.org/wayback/available";
+var newshosts = [
+  'apnews',
+  'factcheck',
+  'forbes',
+  'huffpost',
+  'nytimes',
+  'politifact',
+  'snopes',
+  'theverge',
+  'usatoday',
+  'vox',
+  'washingtonpost'
+];
 var contexts = [
   {
     name: "alexa",
@@ -89,7 +102,9 @@ function URLopener(open_url, url, wmIsAvailable) {
     chrome.tabs.create({ url: open_url });
   }
 }
-
+chrome.storage.sync.set({
+  newshosts: newshosts
+})
 /**
  * Installed callback
  */

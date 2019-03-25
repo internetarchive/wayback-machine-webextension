@@ -221,20 +221,9 @@ function show_news() {
     var to_check_url = url.replace(/^https?:\/\/(www\.)?/, '')
     var news_host = to_check_url.split('.')[0]
     tabId = tabs[0].id
-    var set_of_sites = new Set([
-      'apnews',
-      'factcheck',
-      'forbes',
-      'huffingtonpost',
-      'nytimes',
-      'politifact',
-      'snopes',
-      'theverge',
-      'usatoday',
-      'vox',
-      'washingtonpost'
-    ])
-    chrome.storage.sync.get(['news', 'show_context'], function (event) {
+
+    chrome.storage.sync.get(['news', 'newshosts', 'show_context'], function (event) {
+      var set_of_sites = new Set(event.newshosts)
       if (event.news && set_of_sites.has(news_host)) {
         $('#news_recommend_tr').show().click(() => {
           if (event.show_context === 'tab' || event.show_context === undefined) {
