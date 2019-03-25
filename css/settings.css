@@ -25,7 +25,7 @@ input[type='checkbox']{
 .settings{
   line-height: 20px;
   text-align: left;
-  max-width: 400px;
+  max-width: 450px;
   margin: auto;
 }
 .btn-docs{
@@ -42,22 +42,17 @@ input[type='checkbox']{
   padding-top: 5px;
   font-size: 17px;
 }
-#status{
-  visibility: hidden;
-}
+
 #wrap {
   width: 100%;
   height:auto;
   border-style:groove;
   border-color:rgba(121, 197, 165, 0.24);
   border-radius: 20px;
-  padding-bottom: 30px;
-  padding-left: 0px;
-  margin-left: 0px;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  margin: 2px;
 }
 label {
   font-size: 14px;
-}
-#adjust{
-  margin-left: 137px;
 }
