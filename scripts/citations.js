@@ -22,7 +22,10 @@ function findCitations () {
     let citation = getCitation(candidates[i].innerText || candidates[i].textContent)
     console.log(citation)
     if (citation) {
-      advancedSearch(citation, candidates[i])
+      let identifier = advancedSearch(citation)
+      if(identifier){
+        insertLink(getUrlFromIdentifier(identifier, citation), candidates[i])
+      }
     }
   }
 }
@@ -69,34 +72,57 @@ function formatAuthor (auth) { //todo: handle multiple authors
   return auth.replace(' and ', ' ')
 }
 
-function advancedSearch (citation, cand) {
+function advancedSearch (citation) {
   query = getAdvancedSearchQuery(citation)
-  let host = 'https://archive.org/advancedsearch.php?q='
-  let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
-  let url = host + query + endsearch
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    crossDomain: true,
-    jsonp: 'callback'
+  chrome.runtime.sendMessage({
+    message: 'citationadvancedsearch',
+    query: query
+  }, function(identifier){
+    return identifier
+    // $(cand).html(
+    //   cand.innerHTML.replace('<em>', '<a href="https://archive.org/details/' + identifier + pagestring + '"><em>').replace('</em>', '</em></a>')
+    // )
   })
-    .done(function (data) {
-      if (data.response.docs.length > 0) {
-        let identifier = data.response.docs[0].identifier
-        let pagestring = ''
-        if (citation.pages) {
-          pagestring = '/page/' + citation.pages[0]
-        }
-        $(cand).html(
-          cand.innerHTML.replace('<em>', '<a href="https://archive.org/details/' + identifier + pagestring + '"><em>').replace('</em>', '</em></a>')
-        )
-      }
-    })
-    .fail(function (err) {
-      console.log(err)
-    })
 }
+function getUrlFromIdentifier(identifier, citation){
+  let pagestring = ''
+  if (citation.pages) {
+    pagestring = '/page/' + citation.pages[0]
+  }
+  let url = 'https://archive.org/details/' + identifier + pagestring
+  return url
+}
+function insertLink(url, cand){
+  $(cand).html(
+    cand.innerHTML.replace('<em>', '<a href="'+url+'"><em>').replace('</em>', '</em></a>')
+  )
+}
+  // let host = 'https://archive.org/advancedsearch.php?q='
+  // let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
+  // let url = host + query + endsearch
+  // $.ajax({
+  //   url: url,
+  //   type: 'GET',
+  //   dataType: 'json',
+  //   crossDomain: true,
+  //   jsonp: 'callback'
+  // })
+  // .done(function (data) {
+  //   if (data.response.docs.length > 0) {
+  //     let identifier = data.response.docs[0].identifier
+  //     let pagestring = ''
+  //     if (citation.pages) {
+  //       pagestring = '/page/' + citation.pages[0]
+  //     }
+  //     $(cand).html(
+  //       cand.innerHTML.replace('<em>', '<a href="https://archive.org/details/' + identifier + pagestring + '"><em>').replace('</em>', '</em></a>')
+  //     )
+  //   }
+  // })
+  // .fail(function (err) {
+  //   console.log(err)
+  // })
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getCitation: getCitation,
