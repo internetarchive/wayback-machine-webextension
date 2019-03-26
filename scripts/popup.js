@@ -223,7 +223,8 @@ function show_news() {
     tabId = tabs[0].id
 
     chrome.storage.sync.get(['news', 'newshosts', 'show_context'], function (event) {
-      var set_of_sites = new Set(event.newshosts)
+      var set_of_sites = new Set(event.newshosts.map(host => host.slice(0, host.indexOf("."))))
+      console.log(set_of_sites)
       if (event.news && set_of_sites.has(news_host)) {
         $('#news_recommend_tr').show().click(() => {
           if (event.show_context === 'tab' || event.show_context === undefined) {

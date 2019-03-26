@@ -13,17 +13,18 @@ var windowIdtest = 0;
 var windowIdSingle = 0;
 var WB_API_URL = "https://archive.org/wayback/available";
 var newshosts = [
-  'apnews',
-  'factcheck',
-  'forbes',
-  'huffpost',
-  'nytimes',
-  'politifact',
-  'snopes',
-  'theverge',
-  'usatoday',
-  'vox',
-  'washingtonpost'
+  'apnews.com',
+  'factcheck.org',
+  'forbes.com',
+  'huffpost.com',
+  'nytimes.com',
+  'politico.com',
+  'politifact.com',
+  'snopes.com',
+  'theverge.com',
+  'usatoday.com',
+  'vox.com',
+  'washingtonpost.com'
 ];
 var contexts = [
   {

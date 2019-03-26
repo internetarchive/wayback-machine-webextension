@@ -82,7 +82,7 @@ function addDocs () {
       'books': 'Display a ‘B’ when viewing a book on Amazon that is found on The Archive.',
       'wikibooks': 'Enables a button in the extension on wikipedia pages that will display a list of books cited on the page that are available on the archive.  Also adds popup buttons to the citations on the wikipedia page.',
       'doi': 'Enables a button in the extension on wikipedia pages that will display a list of papers cited on the page that are available on the archive.',
-      'news': 'Enables a button in the extension on select news outlets that can recommend related tv news clips from the TV News Archive.  \n\n Works with articles posted on ' + items.newshosts.join(', '),
+      'news': 'Enables a button in the extension on select news outlets that can recommend related tv news clips from the TV News Archive.  \n\n\n Works with articles posted on ' + items.newshosts.join(', '),
       'alexa': 'Displays what Alexa Internet knows about the site you are on (traffic data).',
       'domaintools': 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
       'tweets': 'Show Tweets that include the URL you are on.',
