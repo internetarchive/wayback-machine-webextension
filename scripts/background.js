@@ -102,7 +102,7 @@ chrome.runtime.onStartup.addListener(function(details){
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 600, height:800, top: 0})
+  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
 });
 /**
  * Close window callback
