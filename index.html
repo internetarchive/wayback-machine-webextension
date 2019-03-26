@@ -14,18 +14,16 @@
     <div>
       <div class='text-center'>
         <img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' />
-        <form class="search-toolbar-input-container" style="margin: 10px 2px;">
-          <div class="bootstrap-typeahead clearfix open" style="position: relative;">
-            <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-              <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
-                style="background-color: transparent; display: block; position: relative; z-index: 1;">
-              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
-                style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+        <form class="search-toolbar-input-container search-form">
+          <div class="bootstrap-typeahead clearfix open search-typeahead" >
+            <div class="bootstrap-typeahead-input search-typeahead-input" tabindex="-1" >
+              <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection">
+              <input id="search_box" type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint">
             </div>
-            <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+            <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left">
             </ul>
           </div>
-          <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+          <input type="submit" class="hidden-button" tabindex="-1" >
         </form>
         <button type="button" class="btn btn-sm btn-block" id="save_now" tabindex='-1'>Save
           Page Now</button>
@@ -40,16 +38,16 @@
         <div id="display_">
           <button type="button" class="btn btn-sm btn-block context_feature" id="context-screen">Show Me Context</button>
         </div>
-        <div id="borrow_books_tr" style="display: none;">
+        <div id="borrow_books_tr" class="invisible">
           <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex='-1'>Read This Book</button>
         </div>
-        <div id="news_recommend_tr" style="display: none;">
+        <div id="news_recommend_tr" class="invisible">
           <button type="button" class="btn btn-warning btn-sm btn-block" id="news_recommend" tabindex='-1'>Related TV Clips</button>
         </div>
-        <div id="wikibooks_tr" style="display: none;">
+        <div id="wikibooks_tr" class="invisible">
           <button type="button" class="btn btn-warning btn-sm btn-block" id="wikibooks" tabindex='-1'>Find Cited Books</button>
         </div>
-        <div id="doi_tr" style="display: none;">
+        <div id="doi_tr" class="invisible">
           <button type="button" class="btn btn-warning btn-sm btn-block" id="doi" tabindex='-1'>Find Cited Papers</button>
         </div>
         <div>
@@ -57,16 +55,16 @@
           <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
           <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
         </div>
-        <div id="horizontal_line" style="margin-bottom: 5px"></div>
+        <div id="horizontal_line" class="horizontal-line-margin"></div>
         <div class="row">
           <div class="col-xs-4">
-            <span class="glyphicon glyphicon-cog" style="font-size: 25px; cursor: pointer;" id="settings_button"></span>
+            <span class="glyphicon glyphicon-cog" id="settings_button"></span>
           </div>
           <div class="col-xs-4">
             <i class="mdi mdi-feedback feedback"></i>
           </div>
           <div class="col-xs-4">
-            <span class="glyphicon glyphicon-info-sign" style="font-size: 25px;color: #30a7af; cursor: pointer;" id="about_support_button"></span>
+            <span class="glyphicon glyphicon-info-sign" id="about_support_button"></span>
           </div>
         </div>
       </div>
