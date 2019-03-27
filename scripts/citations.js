@@ -18,14 +18,9 @@
 function findCitations () {
   let candidates = $("a[href^='#_ftnref']").parent()
   for (let i = 0; i < candidates.length; i++) {
-    console.log(candidates[i], candidates[i].innerText, candidates[i].innerHTML);
     let citation = getCitation(candidates[i].innerText || candidates[i].textContent)
-    console.log(citation)
     if (citation) {
-      let identifier = advancedSearch(citation)
-      if(identifier){
-        insertLink(getUrlFromIdentifier(identifier, citation), candidates[i])
-      }
+      advancedSearch(citation, candidates[i])
     }
   }
 }
@@ -72,13 +67,15 @@ function formatAuthor (auth) { //todo: handle multiple authors
   return auth.replace(' and ', ' ')
 }
 
-function advancedSearch (citation) {
+function advancedSearch (citation, cand) {
   query = getAdvancedSearchQuery(citation)
   chrome.runtime.sendMessage({
     message: 'citationadvancedsearch',
     query: query
   }, function(identifier){
-    return identifier
+    if(identifier){
+      insertLink(getUrlFromIdentifier(identifier, citation), cand)
+    }
     // $(cand).html(
     //   cand.innerHTML.replace('<em>', '<a href="https://archive.org/details/' + identifier + pagestring + '"><em>').replace('</em>', '</em></a>')
     // )
