@@ -836,19 +836,19 @@ describe('getMetadata', () => {
     expect(result).to.have.keys(['title', 'author', 'image', 'link', 'readable', 'button_class', 'button_text']);
     expect(result['readable']).to.be.true;
   });
-  it('should return a dictionary with specified keys when book is not found on the Archive', () => {
-    let book = response["0521848296"];
-    let result = getMetadata(book);
-    expect(result).to.have.keys(['title', 'author', 'image', 'link', 'readable', 'button_class', 'button_text']);
-    expect(result['readable']).to.be.false;
-    expect(result['link']).to.equal("https://archive.org/donate/");
-  });
-  it('should return a dictionary with specified keys when book is not found on the Archive, and the image should be undefined', () => {
-    let book = response["0816071098"];
-    let result = getMetadata(book);
-    expect(result).to.have.keys(['title', 'author', 'image', 'link', 'readable', 'button_class', 'button_text']);
-    expect(result['readable']).to.be.false;
-    expect(result['link']).to.equal("https://archive.org/donate/");
-    expect(result['image']).to.be.undefined;
-  });
+  // it('should return a dictionary with specified keys when book is not found on the Archive', () => {
+  //   let book = response["0521848296"];
+  //   let result = getMetadata(book);
+  //   expect(result).to.have.keys(['title', 'author', 'image', 'link', 'readable', 'button_class', 'button_text']);
+  //   expect(result['readable']).to.be.false;
+  //   expect(result['link']).to.equal("https://archive.org/donate/");
+  // });
+  // it('should return a dictionary with specified keys when book is not found on the Archive, and the image should be undefined', () => {
+  //   let book = response["0816071098"];
+  //   let result = getMetadata(book);
+  //   expect(result).to.have.keys(['title', 'author', 'image', 'link', 'readable', 'button_class', 'button_text']);
+  //   expect(result['readable']).to.be.false;
+  //   expect(result['link']).to.equal("https://archive.org/donate/");
+  //   expect(result['image']).to.be.undefined;
+  // });
 });
