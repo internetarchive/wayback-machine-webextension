@@ -9,9 +9,9 @@
     box-sizing: content-box;
     overflow: unset;
     font-weight: inherit;
-    height: auto;
+    /* height: auto; */
     position: relative;
-    width: auto;
+    /* width: auto; */
     display: inline;
     background-color:transparent;
     color: #333;
