@@ -9,7 +9,7 @@ describe('overview', () => {
             '2002': {
                 'text/html': 4
             }
-        }
+        };
         expect(getTotal(captures)).to.equal(5);
     });
 });

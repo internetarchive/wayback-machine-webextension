@@ -1,7 +1,7 @@
 /*
-* License: AGPL-3
-* Copyright 2016, Internet Archive
-*/
+ * License: AGPL-3
+ * Copyright 2016, Internet Archive
+ */
 var manifest = chrome.runtime.getManifest();
 //Load version from Manifest.json file
 var VERSION = manifest.version;
@@ -12,8 +12,7 @@ var previous_RTurl = "";
 var windowIdtest = 0;
 var windowIdSingle = 0;
 var WB_API_URL = "https://archive.org/wayback/available";
-var contexts = [
-  {
+var contexts = [{
     name: "alexa",
     htmlUrl: "https://archive.org/services/context/alexa?url=",
     tab: 0,
@@ -67,7 +66,7 @@ var contexts = [
     top: 500,
     left: 1200
   }
-];
+]
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -75,34 +74,47 @@ function rewriteUserAgentHeader(e) {
       header.value = header.value + " Wayback_Machine_Chrome/" + VERSION + " Status-code/" + globalStatusCode;
     }
   }
-  return { requestHeaders: e.requestHeaders };
+  return {
+    requestHeaders: e.requestHeaders
+  };
 }
 
 function URLopener(open_url, url, wmIsAvailable) {
   if (wmIsAvailable === true) {
     wmAvailabilityCheck(url, function () {
-      chrome.tabs.create({ url: open_url });
+      chrome.tabs.create({
+        url: open_url
+      });
     }, function () {
       alert("URL not found");
     });
   } else {
-    chrome.tabs.create({ url: open_url });
+    chrome.tabs.create({
+      url: open_url
+    });
   }
 }
 
 /**
  * Installed callback
  */
-chrome.runtime.onStartup.addListener(function(details){
-  chrome.storage.sync.get(['agreement'], function(result){
-    if(result.agreement === true){
-      chrome.browserAction.setPopup({popup: 'index.html'});
+chrome.runtime.onStartup.addListener(function (details) {
+  chrome.storage.sync.get(['agreement'], function (result) {
+    if (result.agreement === true) {
+      chrome.browserAction.setPopup({
+        popup: 'index.html'
+      });
     }
   })
 });
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
+chrome.browserAction.onClicked.addListener(function (tab) {
+  chrome.windows.create({
+    url: chrome.runtime.getURL('welcome.html'),
+    width: 600,
+    height: 800,
+    top: 0
+  })
 });
 /**
  * Close window callback
@@ -130,24 +142,31 @@ chrome.tabs.onRemoved.addListener(function (id) {
 
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  rewriteUserAgentHeader,
-  { urls: [WB_API_URL] },
+  rewriteUserAgentHeader, {
+    urls: [WB_API_URL]
+  },
   ["blocking", "requestHeaders"]
 );
 
 chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
-    'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
+      'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'
+    ].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
     wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
-    }, function () { });
+      chrome.tabs.update(details.tabId, {
+        url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode
+      });
+    }, function () {});
   }
-}, { urls: ["<all_urls>"], types: ["main_frame"] });
+}, {
+  urls: ["<all_urls>"],
+  types: ["main_frame"]
+});
 
 /**
-* Header callback
-*/
+ * Header callback
+ */
 RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
@@ -159,7 +178,9 @@ chrome.webRequest.onCompleted.addListener(function (details) {
           file: "scripts/client.js"
         }, function () {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
+            chrome.tabs.update(details.tabId, {
+              url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode
+            });
           } else {
             chrome.tabs.sendMessage(details.tabId, {
               type: "SHOW_BANNER",
@@ -169,11 +190,13 @@ chrome.webRequest.onCompleted.addListener(function (details) {
             });
           }
         });
-      }, function () { });
+      }, function () {});
     }
   }
   if (details.tabId > 0) {
-    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+    chrome.tabs.query({
+      currentWindow: true
+    }, function (tabs) {
       var tabsArr = tabs.map(tab => tab.id);
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
@@ -182,7 +205,10 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       }
     })
   }
-}, { urls: ["<all_urls>"], types: ["main_frame"] });
+}, {
+  urls: ["<all_urls>"],
+  types: ["main_frame"]
+});
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
@@ -194,12 +220,17 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true);
       } else {
-        chrome.tabs.create({ url: open_url });
+        chrome.tabs.create({
+          url: open_url
+        });
       }
     }
   } else if (message.message === 'makemodal') {
     RTurl = message.rturl;
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function (tabs) {
       var tab = tabs[0];
       var url = RTurl;
       // utility function to run Radial Tree JS
@@ -217,23 +248,38 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         alert("Structure as radial tree not available on this page");
       } else if ((previous_RTurl !== url && url === tab.url) || (previous_RTurl !== url && url !== tab.url)) {
         //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
-        chrome.tabs.sendMessage(tab.id, { message: "deletenode" });
+        chrome.tabs.sendMessage(tab.id, {
+          message: "deletenode"
+        });
         _run_modalbox_scripts();
       } else if (previous_RTurl === url) {
         _run_modalbox_scripts();
       }
     });
   } else if (message.message === 'sendurl') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        url: tabs[0].url
+      });
     });
   } else if (message.message === 'sendurlforrt') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        RTurl: RTurl
+      });
     });
   } else if (message.message === 'changeBadge') {
     //Used to change bage for auto-archive feature
-    chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
+    chrome.browserAction.setBadgeText({
+      tabId: message.tabId,
+      text: "\u2713"
+    });
   } else if (message.message === 'showall') {
     chrome.storage.sync.get(['show_context', 'auto_update_context', 'alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) { //'similarweb',
       if (!event.show_context) {
@@ -282,7 +328,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             chrome.tabs.query({
               windowId: contexts[i].window
             }, function (tabs) {
-              chrome.tabs.update(tabs[0].id, { url: e.htmlUrl + urlsToAppend[i] });
+              chrome.tabs.update(tabs[0].id, {
+                url: e.htmlUrl + urlsToAppend[i]
+              });
             });
           }
         }
@@ -293,12 +341,17 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
           chrome.tabs.query({
             windowId: windowIdSingle
           }, function (tabs) {
-            chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + message.url });
+            chrome.tabs.update(tabs[0].id, {
+              url: chrome.runtime.getURL("singleWindow.html") + "?url=" + message.url
+            });
           });
         } else {
           chrome.windows.create({
             url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
-            width: 1000, height: 1000, top: 0, left: 0
+            width: 1000,
+            height: 1000,
+            top: 0,
+            left: 0
           }, function (win) {
             windowIdSingle = win.id;
           });
@@ -330,7 +383,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl];
       chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function (event1) {
         if (event1.books === true) {
-          chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          chrome.tabs.query({
+            active: true,
+            currentWindow: true
+          }, function (tabs) {
             url = tabs[0].url;
             tabId = tabs[0].id;
             if (url.includes('www.amazon')) {
@@ -339,7 +395,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) ||
                     'ocaid' in resp) {
-                    chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
+                    chrome.browserAction.setBadgeText({
+                      tabId: tabId,
+                      text: 'B'
+                    })
                   }
                 })
             }
@@ -355,7 +414,9 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
               if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
                 for (var i = 0; i < contexts.length; i++) {
                   var e = contexts[i];
-                  chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
+                  chrome.tabs.update(parseInt(e.tab), {
+                    url: e.htmlUrl + urlsToAppend[i]
+                  });
                 };
               }
             });
@@ -365,7 +426,9 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             }, function (tabs) {
               var tab1 = tabs[0];
               if (tabId !== tab1.id && tab.id !== tab1.id) {
-                chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+                chrome.tabs.update(tab1.id, {
+                  url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl
+                });
               }
             });
           } else if (contexts.findIndex(e => e.window !== 0) >= 0) {
@@ -377,7 +440,9 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 if (tabs.length > 0) {
                   e.tabContextName = tabs[0].id;
                   if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
-                    chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
+                    chrome.tabs.update(e.tabContextName, {
+                      url: e.htmlUrl + urlsToAppend[i++]
+                    }, function (tab) {});
                   }
                 }
               });
@@ -391,24 +456,34 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url)) {
+  if (isValidUrl(page_url) && !isNotExcludedUrl(page_url)) {
     wmAvailabilityCheck(page_url,
       function () {
-        chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+        chrome.browserAction.getBadgeText({
+          tabId: tabId
+        }, function (result) {
           if (result.includes('S')) {
-            chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') });
+            chrome.browserAction.setBadgeText({
+              tabId: tabId,
+              text: result.replace('S', '')
+            });
           }
         })
       },
       function () {
         fetch('https://web-beta.archive.org/save/' + page_url)
-        .then(function(){
-          chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (!result.includes('S')) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
-            }
+          .then(function () {
+            chrome.browserAction.getBadgeText({
+              tabId: tabId
+            }, function (result) {
+              if (!result.includes('S')) {
+                chrome.browserAction.setBadgeText({
+                  tabId: tabId,
+                  text: 'S' + result
+                });
+              }
+            })
           })
-        })
       }
     );
   }
@@ -420,7 +495,13 @@ function openThatContext(contextToOpen, url, methodOfShowing) {
     return new Promise(function (resolve, reject) {
       if (methodOfShowing === 'tab') {
         if (windowIdtest === 0) {
-          chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 800, height: 800, top: 0, left: 0 }, function (win) {
+          chrome.windows.create({
+            url: contextToOpen.htmlUrl + url,
+            width: 800,
+            height: 800,
+            top: 0,
+            left: 0
+          }, function (win) {
             chrome.tabs.query({
               windowId: win.id
             }, function (tabs) {
@@ -433,7 +514,10 @@ function openThatContext(contextToOpen, url, methodOfShowing) {
           chrome.tabs.query({
             windowId: windowIdtest
           }, function (tabs) {
-            chrome.tabs.create({ 'url': contextToOpen.htmlUrl + url, 'active': false }, function (tab) {
+            chrome.tabs.create({
+              'url': contextToOpen.htmlUrl + url,
+              'active': false
+            }, function (tab) {
               contextToOpen.tab = tab.id;
               resolve();
             });
@@ -441,7 +525,13 @@ function openThatContext(contextToOpen, url, methodOfShowing) {
         }
       } else if (methodOfShowing === 'window') {
         //If context is to be shown in window
-        chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 500, height: 500, top: contextToOpen.top, left: contextToOpen.left }, function (win) {
+        chrome.windows.create({
+          url: contextToOpen.htmlUrl + url,
+          width: 500,
+          height: 500,
+          top: contextToOpen.top,
+          left: contextToOpen.left
+        }, function (win) {
           contextToOpen.window = win.id;
           resolve();
         });
@@ -476,7 +566,10 @@ chrome.contextMenus.create({
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 });
 chrome.contextMenus.onClicked.addListener(function (click) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function (tabs) {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
       const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       const page_url = tabs[0].url.replace(pattern, '');
