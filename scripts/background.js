@@ -118,7 +118,7 @@ chrome.runtime.onStartup.addListener(function(details){
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 600, height:800, top: 0})
+  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
 });
 /**
  * Close window callback
@@ -239,6 +239,43 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         _run_modalbox_scripts();
       }
     });
+  } else if(message.message === 'citationadvancedsearch'){
+    let host = 'https://archive.org/advancedsearch.php?q='
+    let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
+    let url = host + encodeURI(message.query) + endsearch
+    fetch(url)
+      .then(response => response.json())
+      .then(function (data) {
+        let identifier = null
+        if (data && data.response && data.response.docs && data.response.docs.length > 0) {
+          identifier = data.response.docs[0].identifier
+        }
+        sendResponse(identifier)
+
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+    return true
+    // $.ajax({
+    //   url: url,
+    //   type: 'GET',
+    //   dataType: 'json',
+    //   crossDomain: true,
+    //   jsonp: 'callback'
+    // })
+    // .done(function (data) {
+    //   let identifier = null
+    //   if (data.response.docs.length > 0) {
+    //     let identifier = data.response.docs[0].identifier
+    //   }
+    //   console.log(identifier)
+    //   sendResponse(identifier)
+    //
+    // })
+    // .fail(function (err) {
+    //   console.log(err)
+    // })
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
