@@ -1,5 +1,8 @@
 global_url = ''
-
+var set_of_sites;
+chrome.storage.sync.get(['newshosts'], function(event){
+  set_of_sites = new Set(event.newshosts);
+})
 function remove_port(url) {
   if (url.substr(-4) === ':80/') {
     url = url.substring(0, url.length - 4)
@@ -218,13 +221,9 @@ function borrow_books() {
 function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     url = tabs[0].url
-    var to_check_url = url.replace(/^https?:\/\/(www\.)?/, '')
-    var news_host = to_check_url.split('.')[0]
+    var news_host = new URL(url).hostname
     tabId = tabs[0].id
-
-    chrome.storage.sync.get(['news', 'newshosts', 'show_context'], function (event) {
-      var set_of_sites = new Set(event.newshosts.map(host => host.slice(0, host.indexOf("."))))
-      console.log(set_of_sites)
+    chrome.storage.sync.get(['news', 'show_context'], function (event) {
       if (event.news && set_of_sites.has(news_host)) {
         $('#news_recommend_tr').show().click(() => {
           if (event.show_context === 'tab' || event.show_context === undefined) {
