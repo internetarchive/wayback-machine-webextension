@@ -29,6 +29,35 @@ li{
     justify-content: center; 
     text-decoration: none;
 }
+#search_input {
+    border: 0;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0; 
+    outline: none;
+    transition: 0.3s all;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+}
+#search_input:focus {
+    border-bottom: 2px solid #00000080;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+ 
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: rgba(0,0,0,0.1);
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
 
 button {
   display: block;
@@ -128,20 +157,56 @@ background-color: #4a8aff;
 .btn{
     font-weight: 500;
 }
-#save_now{
-    background-color: #489C3E;
+.btn-outline {
+    background: transparent !important;
+    border-width: 2px;
+    transition: 0.3s all;
+}
+.btn-outline.btn-warning {
+    color: #eb9316 !important;
+    border-color: #eb9316;
+    text-shadow: none;
+    box-shadow: none;
+}
+.btn-outline.btn-warning:hover,
+.btn-outline.btn-warning:focus {
+    background-color: #eb9316 !important;
     color: white !important;
 }
-.captures{
-    background-color: #d63c24f2;
+#save_now {
+    color: #489C3E !important;
+    border-color: #489C3E;
+}
+#save_now:hover,
+#save_now:focus {
+    background-color: #489C3E !important;
+    color: white !important;
+}
+.captures {
+    color: #d63c24f2 !important;
+    border-color: #d63c24f2;
+}
+.captures:hover,
+.captures:focus {
+    background-color: #d63c24f2 !important;
     color: white !important;
 }
 .extra_feature{
+    color: #444243f7 !important;
+    border-color: #444243f7;
+}
+.extra_feature:hover,
+.extra_feature:focus {
     background-color: #444243f7 !important;
     color: white !important;
 }
-.context_feature{
-    background-color: #25a7b0;
+.context_feature {
+    color: #25a7b0 !important;
+    border-color: #25a7b0;
+}
+.context_feature:hover,
+.context_feature:focus {
+    background-color: #25a7b0 !important;
     color: white !important;
 }
 .feedback{
