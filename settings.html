@@ -11,18 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="css/settings.css">
 </head>
 <body>
-	<table width="100%" style="min-width: 120px; ">
-		<!-- <tr class="spaceUnder"> -->
-		<td>
-			<!-- <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div> -->
-			<div class='container'>
-				<img class='resize_fit_center'
-				src='images/icon.png'/>
-			</div>
-			<!-- <div style="margin: 0px; padding: 0px; border: 0px solid rgb(6, 117, 211); font-size: 19px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: 1; font-family: sans-serif; vertical-align: baseline; box-sizing: content-box; overflow: unset; height: 1px; position: relative; width: auto; display: flex; background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); text-align: left; align-items: center; border-radius: 3px; justify-content: center; text-decoration: none;"></div> -->
-		</td>
-		<!-- </tr> -->
-	</table>
 	<h1 style="text-align: center;"><strong>Settings</strong></h1>
 	<div class="container">
 		<div class="row" id="wrap">
@@ -53,6 +41,11 @@
 						<label for="doi">
 							<input type="checkbox" id="doi">
 							<span class="enable"><strong>Find Cited Papers on Wikipedia</strong></span>
+						</label>
+						<br>
+						<label for="citations">
+							<input type="checkbox" id="citations">
+							<span class="enable"><strong>Add Archive.org links to citations on Web pages</strong></span>
 						</label>
 						<br>
 						<label for="news">
@@ -113,10 +106,6 @@
 			</div>
 		</div>
 
-
-		<div style="text-align: center;">
-			<button type="button" class="btn btn-success btn-sm"  style="padding-left: 20px;padding-right: 21px;text-align: center" id="save">Apply</button>
-		</div>
 	</div>
 	<script src="scripts/build.js"></script>
 	<script src="scripts/wikipedia.js"></script>

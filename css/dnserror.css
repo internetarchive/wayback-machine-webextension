@@ -92,9 +92,7 @@
     vertical-align: baseline; 
     box-sizing: content-box; 
     overflow: unset; 
-    height: auto; 
     position: relative; 
-    width: auto; 
     display: inline; 
     background-color: transparent; 
     color: rgb(51, 51, 51); 
@@ -114,9 +112,7 @@
     vertical-align: baseline; 
     box-sizing: border-box; 
     overflow: unset; 
-    height: auto; 
     position: relative; 
-    width: 100%; 
     display: inline; 
     background-color: transparent; 
     color: rgb(51, 51, 51); 
