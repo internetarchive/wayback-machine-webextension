@@ -14,18 +14,19 @@
     <div>
       <div class='text-center'>
         <img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' />
-        <form class="search-toolbar-input-container" style="margin: 10px 2px;">
+        <form action='http://www.youtube.com' method='GET' target="_blank" class="search-toolbar-input-container" style="margin: 10px 2px;">
           <div class="bootstrap-typeahead clearfix open" style="position: relative;">
             <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
               <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
                 style="background-color: transparent; display: block; position: relative; z-index: 1;">
-              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
-                style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+              <!-- <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
+                style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;"> -->
             </div>
             <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
             </ul>
           </div>
-          <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+          <!-- <input type="submit" id= "search_btn" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"> -->
+          <input type="submit" id= "search_btn" tabindex="-1" style="background-color: red">
         </form>
         <button type="button" class="btn btn-sm btn-block" id="save_now" tabindex='-1'>Save
           Page Now</button>
