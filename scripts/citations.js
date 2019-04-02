@@ -91,7 +91,7 @@ function getUrlFromIdentifier(identifier, citation){
 }
 function insertLink(url, cand){
   $(cand).html(
-    cand.innerHTML.replace('<em>', '<a href="'+url+'"><em>').replace('</em>', '</em></a>')
+    cand.innerHTML.replace('<em>', '<a target="_blank" href="'+url+'"><em>').replace('</em>', '</em></a>')
   )
 }
   // let host = 'https://archive.org/advancedsearch.php?q='
