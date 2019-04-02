@@ -57,25 +57,6 @@ function get_clean_url() {
   return url
 }
 
-function search() {
-  console.log('Search')
-  const btn = document.getElementById('search_btn')
-  console.log(btn)
-  btn.addEventListener('click', goBack)
-}
-
-function goBack() {
-  console.log('Here')
-  const myform = document.getElementsByClassName('search-toolbar-input-container')
-  const url = 'https://web.archive.org/web/*/'
-  const keyword = document.getElementById('search_input').value
-  console.log('this is keyword', keyword)
-  myform.action = url + keyword
-  myform.method = 'GET'
-  myform.target = '_blank'
-  myform.submit()
-}
-
 function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
@@ -308,7 +289,7 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
