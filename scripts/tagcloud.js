@@ -110,3 +110,9 @@ function findWeightOf(x,result,data){
         }
     }
 }
+
+if (typeof module !== 'undefined') {
+    module.exports = {
+        _toConsumableArray: _toConsumableArray
+    }
+}
