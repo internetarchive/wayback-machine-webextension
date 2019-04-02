@@ -57,6 +57,25 @@ function get_clean_url() {
   return url
 }
 
+function search() {
+  console.log('Search')
+  const btn = document.getElementById('search_btn')
+  console.log(btn)
+  btn.addEventListener('click', goBack)
+}
+
+function goBack() {
+  console.log('Here')
+  const myform = document.getElementsByClassName('search-toolbar-input-container')
+  const url = 'https://web.archive.org/web/*/'
+  const keyword = document.getElementById('search_input').value
+  console.log('this is keyword', keyword)
+  myform.action = url + keyword
+  myform.method = 'GET'
+  myform.target = '_blank'
+  myform.submit()
+}
+
 function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
@@ -205,13 +224,10 @@ function borrow_books() {
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
       if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        get_amazonbooks(url).then(response => {
-          if (response['metadata'] && response['metadata']['identifier-access']) {
-            let details_url = response['metadata']['identifier-access']
-            $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-              chrome.tabs.create({ url: details_url })
-            })
-          }
+        chrome.storage.sync.get(['details_url'], function (result) { 
+          $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
+            chrome.tabs.create({ url: result.details_url })
+          })
         })
       }
     })
@@ -292,7 +308,7 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
