@@ -1,13 +1,7 @@
-function getUrlByParameter(name){
-    var url=window.location.href;
-    var indexOfEnd=url.length;
-    var index=url.indexOf(name);
-    var length=name.length;
-    return url.slice(index+length+1,indexOfEnd);
-}
 var mynewTags=new Array();
-function get_tags(){
-    var url=getUrlByParameter('url');
+function get_tags(url){
+    var url=url;
+    console.log(url);
     var hostname=new URL(url).hostname;
     toBeUsedAsURL=hostname.replace(/^www./, "");
     var y=hostname.split('.');
@@ -84,12 +78,6 @@ function get_tags(){
     xhr.send(null);
 }
 
-window.onloadFuncs = [get_tags];
-window.onload = function(){
- for(var i in this.onloadFuncs){
-  this.onloadFuncs[i]();
- }
-}
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function findWeightOf(x,result,data){
@@ -113,6 +101,7 @@ function findWeightOf(x,result,data){
 
 if (typeof module !== 'undefined') {
     module.exports = {
+        get_tags: get_tags, 
         _toConsumableArray: _toConsumableArray
     }
 }
