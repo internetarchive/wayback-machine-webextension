@@ -393,9 +393,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) ||
                     'ocaid' in resp) {
                     chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
-                    chrome.storage.sync.set({ 'details_url': resp['metadata']['identifier-access'] }, function () {
-                      // console.log('url is set to:', resp['metadata']['identifier-access'])
-                    })
                   }
                 })
             }
