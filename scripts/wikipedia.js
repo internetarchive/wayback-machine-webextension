@@ -3,7 +3,21 @@
 
 // main method
 function addCitations () {
-  getWikipediaBooks(location.href).done(data => {
+  let p = new Promise(function (resolve, reject) {
+    chrome.runtime.sendMessage({
+      message: 'getWikipediaBooks',
+      query: location.href
+    }, function (books) {
+      if (books) {
+        console.log('book', books) 
+        resolve(books) 
+      } else {
+        reject(new Error('error'))
+      }
+    })
+  })
+  p.then((data) => {
+    console.log('data', data)
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
       let isbn = getISBNFromCitation(book)
@@ -21,9 +35,34 @@ function addCitations () {
         book.parentElement.append(icon[0])
       }
     }
-  }).fail(function (xhr, status) {
-    console.log(getErrorMessage(xhr))
+  }).catch(function (error) {
+    console.log(error)
   })
+  
+
+  // getWikipediaBooks(location.href).done(data => {
+  //   let books = $("a[title^='Special:BookSources']")
+  //   console.log('books', books)
+  //   for (let book of books) {
+  //     let isbn = getISBNFromCitation(book)
+  //     let id = getIdentifier(data[isbn])
+  //     console.log('id', id)
+  //     let metadata = getMetadata(data[isbn])
+  //     let page = getPageFromCitation(book)
+  //     if (id) {
+  //       let icon = addReadIcon(id, metadata)
+  //       if (page) {
+  //         icon[0].href += '/page/' + page
+  //       }
+  //       book.parentElement.append(icon[0])
+  //     } else {
+  //       let icon = addDonateIcon(isbn)
+  //       book.parentElement.append(icon[0])
+  //     }
+  //   }
+  // }).fail(function (xhr, status) {
+  //   console.log(getErrorMessage(xhr))
+  // })
 }
 // getMetadata was used to standardize data between OL and IA.
 // probably can be refactored out
@@ -190,13 +229,17 @@ function getPageFromCitation (book) {
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
-  return $.ajax({
-    dataType: 'json',
-    url: 'https://archive.org/services/context/books?url=' + url,
-    beforeSend: function (jqXHR, settings) {
-      jqXHR.url = settings.url
-    },
-    timeout: 30000
+  chrome.runtime.sendMessage({
+    message: 'getWikipediaBooks',
+    query: url
+  }, function (books) {
+    const p = new Promise(function (resolve, reject) {
+      if (books) { 
+        resolve(books) 
+      }
+    })
+    console.log('promise', p)
+    return p
   })
 }
 
