@@ -190,7 +190,7 @@ function getPageFromCitation (book) {
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
-  // Encapsulate the chrome message sender with promise
+  // Encapsulate the chrome message sender with a promise object
   return new Promise(function (resolve, reject) {
     chrome.runtime.sendMessage({
       message: 'getWikipediaBooks',

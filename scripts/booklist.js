@@ -2,7 +2,7 @@ function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
   getWikipediaBooks(url).then(data=>{
     $(".loader").hide();
-    // No need to check the validation of data since promise is already resolved
+    // No need to check the validation of data since promise is already being resolved
     for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
       let metadata = getMetadata(data[isbn]);
       if (metadata){
@@ -16,7 +16,6 @@ function populateBooks(url) {
     }
   }).catch( function(error) {
     $(".loader").hide();
-
     $("#resultsTray").css("grid-template-columns", "none").append(
       $("<div>").html(error)
     );

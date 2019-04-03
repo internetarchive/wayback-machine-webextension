@@ -243,8 +243,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
     let url = host + encodeURI(message.query)
-    console.log('url', url)
-    // Encapsulate fetch with a timeout promise
+    // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function(resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
