@@ -205,13 +205,10 @@ function borrow_books() {
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
       if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        get_amazonbooks(url).then(response => {
-          if (response['metadata'] && response['metadata']['identifier-access']) {
-            let details_url = response['metadata']['identifier-access']
-            $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-              chrome.tabs.create({ url: details_url })
-            })
-          }
+        chrome.storage.sync.get(['details_url'], function (result) { 
+          $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
+            chrome.tabs.create({ url: result.details_url })
+          })
         })
       }
     })
