@@ -239,6 +239,30 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         _run_modalbox_scripts();
       }
     });
+  } else if (message.message === 'getWikipediaBooks'){
+    // wikipedia message listener
+    let host = 'https://archive.org/services/context/books?url='
+    let url = host + encodeURI(message.query)
+    // Encapsulate fetch with a timeout promise object
+    const timeoutPromise = new Promise(function(resolve, reject) {
+      setTimeout(() => {
+        reject(new Error('timeout'))
+      }, 30000);
+      fetch(url).then(resolve, reject)
+    })
+    timeoutPromise
+      .then(response => response.json())
+      .then(function (data) {
+        let books = null
+        if (data && data.message != 'No ISBNs found in page' && data.status != 'error') {
+          books = data
+        }
+        sendResponse(books)
+      })
+      .catch( function (err) {
+        console.log(err)
+      })
+      return true
   } else if(message.message === 'citationadvancedsearch'){
     let host = 'https://archive.org/advancedsearch.php?q='
     let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
