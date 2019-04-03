@@ -39,6 +39,7 @@
 
 .bottom_details{
   justify-content: flex-end;
+  text-align: center;
   margin: 10px auto;
 }
 
