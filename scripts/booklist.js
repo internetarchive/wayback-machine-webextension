@@ -1,29 +1,24 @@
-function populateBooks(url){
+function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
-  getWikipediaBooks(url).done(data=>{
+  getWikipediaBooks(url).then(data=>{
     $(".loader").hide();
-    if (data['status'] === 'error') {
-      $("#resultsTray").css("grid-template-columns", "none").append(
-        $("<p></p>").text(data.message)
-      );
-    } else {
-      for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
-        let metadata = getMetadata(data[isbn]);
-        if (metadata){
-          let book_element = addBook(metadata);
-          if(metadata.readable){
-            $("#resultsTray").prepend(book_element);
-          } else {
-            $("#resultsTray").append(book_element);
-          }
+    // No need to check the validation of data since promise is already resolved
+    for(let isbn of Object.keys(data)) {  // Iterate over each book to get data
+      let metadata = getMetadata(data[isbn]);
+      if (metadata){
+        let book_element = addBook(metadata);
+        if(metadata.readable){
+          $("#resultsTray").prepend(book_element);
+        } else {
+          $("#resultsTray").append(book_element);
         }
       }
     }
-  }).fail( function( xhr, status ) {
+  }).catch( function(error) {
     $(".loader").hide();
 
     $("#resultsTray").css("grid-template-columns", "none").append(
-      $("<div>").html(getErrorMessage(xhr))
+      $("<div>").html(error)
     );
   });
 }
