@@ -444,7 +444,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
-  if (isValidUrl(page_url) && ! isNotExcludedUrl(page_url)) {
+  if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     wmAvailabilityCheck(page_url,
       function () {
         chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
