@@ -478,11 +478,12 @@ function auto_save(tabId, url) {
         })
       },
       function () {
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' });
         fetch('https://web-beta.archive.org/save/' + page_url)
         .then(function(){
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (!result.includes('S')) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
+            if (result.includes('S')) {
+              chrome.browserAction.setBadgeText({ tabId: tabId, text:'\u2713' });
             }
           })
         })
