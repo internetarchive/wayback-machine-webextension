@@ -120,6 +120,8 @@ function social_share(eventObj) {
       open_url = 'https://twitter.com/home?status=' + sharing_url
     } else if (id.includes('linkedin')) {
       open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+    } else if (id.includes('insta')) {
+      open_url = 'https://www.instagram.com/internetarchive/?hl=en'
     }
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0')
   }
