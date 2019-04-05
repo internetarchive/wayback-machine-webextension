@@ -1,10 +1,188 @@
 body{
-    width: 200px;
+    width: 250px;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,'Helvetica Neue',Arial,Helvetica,sans-serif;
 }
 li{
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
+
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* New addition */
+.logo {
+    max-height: 50%;
+    max-width: 50%;
+}
+
+.logo-banner {
+    position: relative;
+    text-align: center;
+    background: #F2F2F2;
+}
+
+.settings {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.settings:hover path{
+    fill: #A11D52;
+}
+
+.submit {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+}
+
+.suggestion-box {
+    display:none;
+    max-height: 300px;
+    min-width:100%;
+    overflow: auto;
+}
+
+.search-form {
+    background: #F2F2F2;
+    text-align: center;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 10px;
+    padding-bottom: 14px;
+}
+
+.search-box {
+    max-width: 100%;
+    height: 30px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);
+    border-radius: 40px;
+}
+
+.search-box-2 {
+    border-color: transparent;
+    bottom: 0px;
+    box-shadow: none;
+    color: rgb(165, 165, 165);
+    display: block;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: 0;
+}
+
+ul {
+    margin-top: 10px;
+    margin-left: 0px !important;
+    padding: 0;
+}
+
+li {
+    display: block;
+    list-style: none;
+    position: relative;
+    padding-left: 61px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    cursor: pointer;
+}
+
+.content li:hover {
+    background: rgba(161, 29, 82, 0.07);
+    color: #A11D52;
+}
+
+.content li:hover path{
+    fill: #A11D52;
+}
+
+.social {
+    margin-left: 27px !important;
+    float: left;
+    margin-top: 9px !important;
+    margin-bottom: 0px !important;
+}
+
+.social li {
+    display: inline-block !important;
+    margin-right: 5px;
+    padding-left: 10px !important;
+    padding-right: 10px;
+}
+
+.others-ul {
+    margin-top: 13px !important;
+    margin-right: 10px;
+}
+
+.others-ul li {
+    display: inline-block !important;
+    margin-right: 5px;
+    padding-left: 25px !important;
+}
+
+.save-icon {
+    position: absolute;
+    left: 34px;
+    top: 8px;
+}
+
+.social-icon {
+    position: relative;
+}
+
+.social-icon:hover path{
+    fill: #A11D52;
+}
+
+.others {
+    font-size: 10px;
+    color: #686868;
+}
+.others-ul {
+    float: right;
+}
+
+.others-ul li p:hover {
+    color: #A11D52;
+}
+
+hr {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#suggestion-box li {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 10px !important;
+}
+
+#suggestion-box li a:hover {
+    background: rgba(161, 29, 82, 0.07) !important;
+    color: #A11D52 !important;
+}
+
+.section-title {
+    color: #BABABA;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-left: 12px;
+    margin-top: 11px;
+}
+
 #horizontal_line{
     margin: 0px; 
     padding: 0px; 
@@ -129,8 +307,6 @@ background-color: #4a8aff;
     font-weight: 500;
 }
 #save_now{
-    background-color: #489C3E;
-    color: white !important;
 }
 .captures{
     background-color: #d63c24f2;
@@ -144,7 +320,7 @@ background-color: #4a8aff;
     background-color: #25a7b0;
     color: white !important;
 }
-.feedback{
-    cursor: pointer;
-    font-size: 185%;
-}
+/*.feedback{*/
+    /*cursor: pointer;*/
+    /*font-size: 185%;*/
+/*}*/

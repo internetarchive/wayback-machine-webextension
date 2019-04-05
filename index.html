@@ -2,76 +2,140 @@
 <html>
 
 <head>
-  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-  <meta content="utf-8" http-equiv="encoding">
-  <title>Wayback Machine</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/index.css">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Wayback Machine</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 
 <body>
-  <div class='container-fluid'>
+<div class='container-fluid'>
     <div>
-      <div class='text-center'>
-        <img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' />
-        <form class="search-toolbar-input-container" style="margin: 10px 2px;">
-          <div class="bootstrap-typeahead clearfix open" style="position: relative;">
-            <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-              <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
-                style="background-color: transparent; display: block; position: relative; z-index: 1;">
-              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
-                style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
-            </div>
-            <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
-            </ul>
-          </div>
-          <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
-        </form>
-        <button type="button" class="btn btn-sm btn-block" id="save_now" tabindex='-1'>Save
-          Page Now</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent
-          Version</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
-        <button type="button" class="btn btn-sm extra_feature btn-block" id="make_modal" tabindex='-1'>Visualize Site
-          Map</button>
-        <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
-          <i class="fa fa-twitter"></i> Tweets About this Page</button>
-        <div id="display_">
-          <button type="button" class="btn btn-sm btn-block context_feature" id="context-screen">Show Me Context</button>
+        <div class="logo-banner">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="settings" id="settings_button">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4392 9.50004C15.4392 9.76921 15.4155 10.0225 15.3838 10.2759L17.0542 11.5821C17.2046 11.7009 17.2442 11.9146 17.1492 12.0888L15.5659 14.828C15.4709 15.0021 15.265 15.0734 15.083 15.0021L13.1117 14.2105C12.7 14.5192 12.2567 14.7884 11.7738 14.9863L11.473 17.0842C11.4492 17.2742 11.283 17.4167 11.085 17.4167H7.91837C7.72045 17.4167 7.5542 17.2742 7.53045 17.0842L7.22962 14.9863C6.7467 14.7884 6.30337 14.5271 5.8917 14.2105L3.92045 15.0021C3.74629 15.0655 3.53254 15.0021 3.43754 14.828L1.8542 12.0888C1.7592 11.9146 1.79879 11.7009 1.9492 11.5821L3.61962 10.2759C3.58795 10.0225 3.5642 9.76129 3.5642 9.50004C3.5642 9.23879 3.58795 8.97754 3.61962 8.72421L1.9492 7.41796C1.79879 7.29921 1.75129 7.08546 1.8542 6.91129L3.43754 4.17212C3.53254 3.99796 3.73837 3.92671 3.92045 3.99796L5.8917 4.78962C6.30337 4.48087 6.7467 4.21171 7.22962 4.01379L7.53045 1.91587C7.5542 1.72587 7.72045 1.58337 7.91837 1.58337H11.085C11.283 1.58337 11.4492 1.72587 11.473 1.91587L11.7738 4.01379C12.2567 4.21171 12.7 4.47296 13.1117 4.78962L15.083 3.99796C15.2571 3.93462 15.4709 3.99796 15.5659 4.17212L17.1492 6.91129C17.2442 7.08546 17.2046 7.29921 17.0542 7.41796L15.3838 8.72421C15.4155 8.97754 15.4392 9.23088 15.4392 9.50004ZM6.73089 9.50004C6.73089 11.028 7.9738 12.2709 9.50172 12.2709C11.0296 12.2709 12.2726 11.028 12.2726 9.50004C12.2726 7.97212 11.0296 6.72921 9.50172 6.72921C7.9738 6.72921 6.73089 7.97212 6.73089 9.50004Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <img class='logo' src='images/logo_wayback.png' alt='Internet Archive'/>
         </div>
-        <div id="borrow_books_tr" style="display: none;">
-          <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex='-1'>Read This Book</button>
+        <!--<div>settings</div>-->
+        <div class="search-form">
+            <form class="search-toolbar-input-container" style="margin: 10px 2px;">
+                <div class="bootstrap-typeahead clearfix open" style="position: relative;">
+                    <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
+                        <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off"
+                               class="form-control has-aux bootstrap-typeahead-input-main has-selection search-box"
+                        style="background-color: transparent; display: block; position: relative; z-index: 1;">
+                        <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
+                            style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;
+                            background: #F2F2F2;">
+                    </div>
+                    <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left"
+                        style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+                    </ul>
+                </div>
+                <input type="submit" class="submit" tabindex="-1">
+            </form>
         </div>
-        <div id="news_recommend_tr" style="display: none;">
-          <button type="button" class="btn btn-warning btn-sm btn-block" id="news_recommend" tabindex='-1'>Related TV Clips</button>
-        </div>
-        <div id="wikibooks_tr" style="display: none;">
-          <button type="button" class="btn btn-warning btn-sm btn-block" id="wikibooks" tabindex='-1'>Find Cited Books</button>
-        </div>
-        <div id="doi_tr" style="display: none;">
-          <button type="button" class="btn btn-warning btn-sm btn-block" id="doi" tabindex='-1'>Find Cited Papers</button>
-        </div>
-        <div>
-          <a id="fb_share" class="btn-social btn-sm btn-facebook"><i class="fa fa-facebook"></i></a>
-          <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
-          <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
-        </div>
-        <div id="horizontal_line" style="margin-bottom: 5px"></div>
-        <div class="row">
-          <div class="col-xs-4">
-            <span class="glyphicon glyphicon-cog" style="font-size: 25px; cursor: pointer;" id="settings_button" title="Settings"></span>
-          </div>
-          <div class="col-xs-4">
-            <i title="Feedback" class="mdi mdi-feedback feedback"></i>
-          </div>
-          <div class="col-xs-4">
-            <span title="About" class="glyphicon glyphicon-info-sign" style="font-size: 25px;color: #30a7af; cursor: pointer;" id="about_support_button"></span>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+    <ul class="content">
+        <li id="save_now">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.1925 2.6925C12.9075 2.4075 12.525 2.25 12.1275 2.25H3.75C2.9175 2.25 2.25 2.925 2.25 3.75V14.25C2.25 15.075 2.925 15.75 3.75 15.75H14.25C15.075 15.75 15.75 15.075 15.75 14.25V5.8725C15.75 5.475 15.5925 5.0925 15.3075 4.815L13.1925 2.6925ZM9 14.25C7.755 14.25 6.75 13.245 6.75 12C6.75 10.755 7.755 9.75 9 9.75C10.245 9.75 11.25 10.755 11.25 12C11.25 13.245 10.245 14.25 9 14.25ZM5.25 6.75H9.75C10.575 6.75 11.25 6.075 11.25 5.25C11.25 4.425 10.575 3.75 9.75 3.75H5.25C4.425 3.75 3.75 4.425 3.75 5.25C3.75 6.075 4.425 6.75 5.25 6.75Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Save page</p>
+        </li>
+        <li id="overview">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 2.25H15.75C16.575 2.25 17.25 2.925 17.25 3.75V12.75C17.25 13.575 16.575 14.25 15.75 14.25H12V15C12 15.4125 11.6625 15.75 11.25 15.75H6.75C6.3375 15.75 6 15.4125 6 15V14.25H2.25C1.425 14.25 0.75 13.575 0.75 12.75V3.75C0.75 2.925 1.425 2.25 2.25 2.25ZM3 12.75H15C15.4125 12.75 15.75 12.4125 15.75 12V4.5C15.75 4.0875 15.4125 3.75 15 3.75H3C2.5875 3.75 2.25 4.0875 2.25 4.5V12C2.25 12.4125 2.5875 12.75 3 12.75ZM13.5 6H6.75C6.3375 6 6 6.3375 6 6.75C6 7.1625 6.3375 7.5 6.75 7.5H13.5C13.9125 7.5 14.25 7.1625 14.25 6.75C14.25 6.3375 13.9125 6 13.5 6ZM6.75 9H13.5C13.9125 9 14.25 9.3375 14.25 9.75C14.25 10.1625 13.9125 10.5 13.5 10.5H6.75C6.3375 10.5 6 10.1625 6 9.75C6 9.3375 6.3375 9 6.75 9ZM5.25 6H3.75V7.5H5.25V6ZM3.75 9H5.25V10.5H3.75V9Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Overview</p>
+        </li>
+        <li id="recent_capture">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.10781 9.00134C3.10781 5.21384 6.23531 2.14634 10.0528 2.25134C13.5703 2.34884 16.5103 5.28884 16.6078 8.80634C16.7128 12.6238 13.6453 15.7513 9.85781 15.7513C8.65031 15.7513 7.52531 15.4288 6.54281 14.8813C6.11531 14.6413 6.04781 14.0488 6.39281 13.7038C6.62531 13.4638 6.98531 13.4038 7.27781 13.5688C8.04281 13.9963 8.92031 14.2513 9.85781 14.2513C12.7828 14.2513 15.1453 11.8588 15.1078 8.92634C15.0703 6.13634 12.7228 3.78884 9.93281 3.75134C6.99281 3.71384 4.60781 6.07634 4.60781 9.00134H5.95031C6.28781 9.00134 6.45281 9.40633 6.22031 9.63883L4.12781 11.7313C3.97781 11.8813 3.74531 11.8813 3.59531 11.7313L1.50281 9.63883C1.26281 9.40633 1.42781 9.00134 1.76531 9.00134H3.10781ZM9.85781 7.50134C10.6828 7.50134 11.3578 8.17634 11.3578 9.00134C11.3578 9.82634 10.6828 10.5013 9.85781 10.5013C9.03281 10.5013 8.35781 9.82634 8.35781 9.00134C8.35781 8.17634 9.03281 7.50134 9.85781 7.50134Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Recent Version</p>
+        </li>
+        <li id="first_capture">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.10781 9.00134C3.10781 5.21384 6.23531 2.14634 10.0528 2.25134C13.5703 2.34884 16.5103 5.28884 16.6078 8.80634C16.7128 12.6238 13.6453 15.7513 9.85781 15.7513C8.29031 15.7513 6.85781 15.2188 5.71781 14.3188C5.36531 14.0488 5.34281 13.5163 5.65781 13.2013C5.92781 12.9313 6.34781 12.9088 6.64781 13.1413C7.53281 13.8388 8.65031 14.2513 9.85781 14.2513C12.7828 14.2513 15.1453 11.8588 15.1078 8.92634C15.0703 6.13634 12.7228 3.78884 9.93281 3.75134C6.99281 3.71384 4.60781 6.07634 4.60781 9.00134H5.95031C6.28781 9.00134 6.45281 9.40633 6.22031 9.63883L4.12781 11.7388C3.97781 11.8888 3.74531 11.8888 3.59531 11.7388L1.50281 9.63883C1.26281 9.40633 1.42781 9.00134 1.76531 9.00134H3.10781ZM9.10781 6.56384C9.10781 6.25634 9.36281 6.00134 9.67031 6.00134C9.97781 6.00134 10.2328 6.25634 10.2328 6.55634V9.10634L12.3928 10.3888C12.6553 10.5463 12.7453 10.8913 12.5878 11.1613C12.4303 11.4238 12.0853 11.5138 11.8153 11.3563L9.47531 9.96884C9.25031 9.83384 9.10781 9.58634 9.10781 9.32384V6.56384Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Initial Version</p>
+        </li>
+        <li id="search_tweet">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0229 11.4566H12.6483L16.0049 14.8291C16.3295 15.1537 16.3295 15.6841 16.0049 16.0087C15.6804 16.3333 15.1499 16.3333 14.8254 16.0087L11.4608 12.6441V12.0187L11.247 11.797C10.1387 12.747 8.62662 13.2379 7.01953 12.9687C4.8187 12.5966 3.0612 10.76 2.79203 8.5433C2.38037 5.19455 5.1987 2.37621 8.54745 2.78788C10.7641 3.05705 12.6008 4.81455 12.9729 7.01538C13.242 8.62246 12.7512 10.1345 11.8012 11.2429L12.0229 11.4566ZM4.33578 7.89413C4.33578 9.86538 5.92703 11.4566 7.89828 11.4566C9.86953 11.4566 11.4608 9.86538 11.4608 7.89413C11.4608 5.92288 9.86953 4.33163 7.89828 4.33163C5.92703 4.33163 4.33578 5.92288 4.33578 7.89413Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Search Tweet</p>
+        </li>
+    </ul>
+    <hr>
+    <div class="section-title">
+        WEBSITE INFO
+    </div>
+    <ul class="content">
+        <li id="context-screen">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path id="icon/action/visibility_24px_2" fill-rule="evenodd" clip-rule="evenodd" d="M9.49984 3.5625C5.5415 3.5625 2.16109 6.02458 0.791504 9.5C2.16109 12.9754 5.5415 15.4375 9.49984 15.4375C13.4582 15.4375 16.8386 12.9754 18.2082 9.5C16.8386 6.02458 13.4582 3.5625 9.49984 3.5625ZM9.49984 13.4583C7.31484 13.4583 5.5415 11.685 5.5415 9.5C5.5415 7.315 7.31484 5.54167 9.49984 5.54167C11.6848 5.54167 13.4582 7.315 13.4582 9.5C13.4582 11.685 11.6848 13.4583 9.49984 13.4583ZM7.12484 9.5C7.12484 8.18583 8.18567 7.125 9.49984 7.125C10.814 7.125 11.8748 8.18583 11.8748 9.5C11.8748 10.8142 10.814 11.875 9.49984 11.875C8.18567 11.875 7.12484 10.8142 7.12484 9.5Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>View context</p>
+        </li>
+        <li id="make_modal">
+            <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5693 3.03324C11.5693 4.46515 10.5607 5.66849 9.20826 5.98528V7.05267H13.724C14.0858 7.05267 14.3791 7.36599 14.3791 7.75267C14.3791 7.75782 14.379 7.76295 14.3789 7.76807C14.3789 7.77179 14.3788 7.77551 14.3786 7.77922C14.3789 7.78777 14.3791 7.79635 14.3791 7.80498V10.815C15.7315 11.1317 16.7401 12.3349 16.7401 13.767C16.7401 15.4395 15.3637 16.8 13.6708 16.8C11.9779 16.8 10.6014 15.4395 10.6014 13.767C10.6014 12.3349 11.6101 11.1318 12.9624 10.815V8.45267H4.03742V10.815C5.38965 11.1318 6.39847 12.3348 6.39847 13.7665C6.39847 15.4395 5.02175 16.8 3.32912 16.8C1.63648 16.8 0.259766 15.4395 0.259766 13.7665C0.259766 12.3349 1.26856 11.1318 2.62076 10.815V7.80498C2.62076 7.7964 2.62091 7.78785 2.62122 7.77934C2.62091 7.77049 2.62076 7.7616 2.62076 7.75267C2.62076 7.36627 2.91401 7.05267 3.27611 7.05267H7.7916V5.98525C6.43939 5.66841 5.4306 4.46514 5.4306 3.03352C5.4306 1.3608 6.80732 0 8.49995 0C10.1929 0 11.5693 1.3608 11.5693 3.03324ZM10.1526 3.03324C10.1526 3.92015 9.4336 4.64436 8.54103 4.66598C8.52743 4.6654 8.51373 4.6651 8.49993 4.6651C8.48614 4.6651 8.47244 4.6654 8.45884 4.66598C7.56629 4.64435 6.84727 3.92042 6.84727 3.03324C6.84727 2.13276 7.58847 1.4 8.49995 1.4C9.41144 1.4 10.1526 2.13276 10.1526 3.03324ZM13.6708 12.1335C12.7593 12.1335 12.0181 12.8663 12.0181 13.767C12.0181 14.6678 12.7593 15.4 13.6708 15.4C14.5823 15.4 15.3235 14.6678 15.3235 13.767C15.3235 12.8663 14.5823 12.1335 13.6708 12.1335ZM1.67643 13.7665C1.67643 12.866 2.41763 12.1335 3.32912 12.1335C4.2406 12.1335 4.9818 12.866 4.9818 13.7665C4.9818 14.6672 4.2406 15.4 3.32912 15.4C2.41763 15.4 1.67643 14.6672 1.67643 13.7665Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Sitemap</p>
+        </li>
+    </ul>
+    <hr>
+    <div class="section-title">
+        wikipedia
+    </div>
+    <ul class="content">
+        <li id="wikibooks">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.50374 4.09888C10.6517 3.22804 12.3142 2.91138 13.8579 2.91138C15.0058 2.91138 16.225 3.08554 17.2383 3.53679C17.8162 3.79804 18.2042 4.36013 18.2042 5.00138V13.9314C18.2042 14.9685 17.2383 15.7285 16.2408 15.4672C15.465 15.2693 14.6417 15.1822 13.85 15.1822C12.615 15.1822 11.3008 15.3801 10.24 15.9105C9.77291 16.148 9.23458 16.148 8.75958 15.9105C7.69874 15.388 6.38458 15.1822 5.14958 15.1822C4.35791 15.1822 3.53458 15.2693 2.75874 15.4672C1.76124 15.7205 0.79541 14.9605 0.79541 13.9314V5.00138C0.79541 4.36013 1.18333 3.79804 1.76124 3.53679C2.78249 3.08554 4.00166 2.91138 5.14958 2.91138C6.69333 2.91138 8.35583 3.22804 9.50374 4.09888ZM15.6787 13.7651C16.1696 13.8522 16.6287 13.488 16.6287 12.9893V5.49221C16.6287 5.12013 16.3596 4.79554 15.9954 4.71638C15.3067 4.56596 14.5862 4.49471 13.8579 4.49471C12.5121 4.49471 10.5725 5.00929 9.50374 5.68221V14.7943C10.5725 14.1214 12.5121 13.6068 13.8579 13.6068C14.4675 13.6068 15.085 13.6543 15.6787 13.7651Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Find cited books</p>
+        </li>
+        <li id="doi">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="save-icon">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.17442 3.16665C3.17442 2.29581 3.879 1.58331 4.74984 1.58331H10.4261C10.8457 1.58331 11.2494 1.74956 11.5423 2.0504L15.3661 5.87415C15.6669 6.16706 15.8332 6.57081 15.8332 6.9904V15.8333C15.8332 16.7041 15.1207 17.4166 14.2498 17.4166H4.74192C3.87109 17.4166 3.1665 16.7041 3.1665 15.8333L3.17442 3.16665ZM10.2915 2.77081V6.33331C10.2915 6.76873 10.6478 7.12498 11.0832 7.12498H14.6457L10.2915 2.77081Z" fill="#B3B3B3" fill-opacity="1"/>
+            </svg>
+            <p>Find cited papers</p>
+        </li>
+    </ul>
+    <hr>
+    <div>
+        <ul class="social">
+            <li id="fb_share">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="social-icon">
+                    <path d="M13.125 1.54492C13.125 1.33984 13.0371 1.16406 12.8906 1.01758C12.7441 0.900391 12.5684 0.8125 12.3926 0.8125H0.732422C0.498047 0.8125 0.322266 0.900391 0.205078 1.01758C0.0585938 1.16406 0 1.33984 0 1.54492V13.2051C0 13.4102 0.0585938 13.5859 0.205078 13.7324C0.322266 13.8789 0.498047 13.9375 0.732422 13.9375H7.00195V8.83984H5.30273V6.87695H7.00195V5.41211C7.00195 4.5918 7.23633 3.94727 7.70508 3.47852C8.17383 3.03906 8.78906 2.80469 9.55078 2.80469C10.1367 2.80469 10.6641 2.83398 11.0742 2.86328V4.65039H10.0195C9.63867 4.65039 9.375 4.73828 9.22852 4.91406C9.11133 5.06055 9.05273 5.29492 9.05273 5.61719V6.87695H11.0156L10.752 8.83984H9.05273V13.9375H12.3926C12.5977 13.9375 12.7734 13.8789 12.9199 13.7324C13.0371 13.5859 13.125 13.4102 13.125 13.2051V1.54492Z" fill="#B3B3B3" fill-opacity="1"/>
+                </svg>
+            </li>
+            <li id="twit_share">
+                <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="social-icon">
+                  <path d="M13.4473 3.32812C14.0332 2.88867 14.5605 2.36133 15 1.7168C14.4141 1.98047 13.8281 2.15625 13.2422 2.21484C13.8867 1.80469 14.3555 1.24805 14.5898 0.515625C13.9746 0.867188 13.3301 1.13086 12.627 1.24805C12.334 0.955078 11.9824 0.720703 11.6016 0.544922C11.2207 0.369141 10.8105 0.28125 10.3711 0.28125C9.81445 0.28125 9.31641 0.427734 8.84766 0.691406C8.37891 0.984375 7.99805 1.36523 7.73438 1.83398C7.44141 2.30273 7.32422 2.83008 7.32422 3.35742C7.32422 3.5918 7.32422 3.82617 7.38281 4.06055C6.12305 4.00195 4.95117 3.70898 3.83789 3.12305C2.72461 2.56641 1.81641 1.80469 1.05469 0.837891C0.761719 1.33594 0.615234 1.86328 0.615234 2.39062C0.615234 2.91797 0.732422 3.41602 0.996094 3.85547C1.23047 4.32422 1.58203 4.67578 1.99219 4.96875C1.49414 4.96875 1.02539 4.82227 0.615234 4.55859V4.61719C0.615234 5.34961 0.849609 5.99414 1.31836 6.55078C1.78711 7.13672 2.37305 7.48828 3.07617 7.63477C2.7832 7.69336 2.51953 7.72266 2.25586 7.72266C2.08008 7.72266 1.875 7.72266 1.69922 7.69336C1.875 8.30859 2.22656 8.80664 2.75391 9.2168C3.28125 9.62695 3.86719 9.80273 4.57031 9.80273C3.42773 10.6816 2.13867 11.1211 0.732422 11.1211C0.439453 11.1211 0.205078 11.1211 0 11.0918C1.40625 12.0293 2.98828 12.4688 4.7168 12.4688C6.50391 12.4688 8.08594 12.0293 9.49219 11.0918C10.752 10.2715 11.748 9.1875 12.4512 7.78125C13.125 6.49219 13.4766 5.11523 13.4766 3.70898C13.4766 3.5332 13.4473 3.41602 13.4473 3.32812Z" fill="#B3B3B3" fill-opacity="1"/>
+                </svg>
+
+            </li>
+            <li id="linkedin_share">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="social-icon">
+                    <path d="M2.92969 13.9375V5.17773H0.205078V13.9375H2.92969ZM1.58203 3.97656C1.99219 3.97656 2.37305 3.83008 2.69531 3.50781C2.98828 3.21484 3.16406 2.83398 3.16406 2.39453C3.16406 1.98438 2.98828 1.60352 2.69531 1.28125C2.37305 0.988281 1.99219 0.8125 1.58203 0.8125C1.14258 0.8125 0.761719 0.988281 0.46875 1.28125C0.146484 1.60352 0 1.98438 0 2.39453C0 2.83398 0.146484 3.21484 0.46875 3.50781C0.761719 3.83008 1.14258 3.97656 1.58203 3.97656ZM13.125 13.9375V9.13281C13.125 7.78516 12.9199 6.78906 12.5391 6.14453C12.0117 5.35352 11.1328 4.94336 9.87305 4.94336C9.22852 4.94336 8.70117 5.11914 8.23242 5.41211C7.79297 5.67578 7.4707 5.99805 7.29492 6.37891H7.26562V5.17773H4.6582V13.9375H7.35352V9.60156C7.35352 8.92773 7.44141 8.40039 7.64648 8.04883C7.88086 7.58008 8.32031 7.3457 8.96484 7.3457C9.58008 7.3457 9.99023 7.60938 10.2246 8.13672C10.3418 8.45898 10.4004 8.95703 10.4004 9.66016V13.9375H13.125Z" fill="#B3B3B3" fill-opacity="1"/>
+                </svg>
+            </li>
+        </ul>
+        <ul class="others-ul">
+            <li id="about_support_button">
+                <p class="others">About us</p>
+            </li>
+            <li>
+                <p class="feedback others">Feedback</p>
+            </li>
+        </ul>
+    </div>
+</div>
 </body>
 
 </html>
