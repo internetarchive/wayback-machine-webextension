@@ -125,6 +125,14 @@ background-color: #1E88E5;
 {
 background-color: #4a8aff;
 }
+.btn-instagram
+{
+background-color: #1E88E5;
+}
+.btn-instagram:hover
+{
+background-color: #4a8aff;
+}
 .btn{
     font-weight: 500;
 }
