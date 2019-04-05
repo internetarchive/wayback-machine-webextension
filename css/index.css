@@ -29,6 +29,7 @@ li{
     justify-content: center; 
     text-decoration: none;
 }
+
 #search_input {
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 20px;
@@ -209,7 +210,29 @@ background-color: #4a8aff;
     background-color: #25a7b0 !important;
     color: white !important;
 }
-.feedback{
+.link{
     cursor: pointer;
-    font-size: 185%;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+    text-decoration: none;
+}
+.link:hover,
+.link:focus {
+    color: rgba(0,0,0,1);
+    text-decoration: none;
+}
+
+#settings_button {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 3s all;
+}
+
+#settings_button:hover,
+#settings_button:focus {
+    transform: rotateZ(360deg);
 }
