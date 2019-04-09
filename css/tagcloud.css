@@ -7,6 +7,8 @@
     page-break-after: always;
     page-break-inside: avoid;
     width:7in;
+    animation: rotatingTag 15s linear infinite normal;
+
 }
 #tag_background{
     background: white;
@@ -50,4 +52,10 @@ h2{
     background: white;
     padding-left: 15px;
     padding-right: 15px;
+    padding-top: 100px;
+}
+
+@keyframes rotatingTag{
+    0% { transform: rotateZ(0deg);}
+    100% { transform: rotateZ(360deg); }
 }
