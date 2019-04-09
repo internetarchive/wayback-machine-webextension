@@ -181,6 +181,11 @@ function open_feedback_page() {
   chrome.tabs.create({ url: feedback_url })
 }
 
+function open_donations_page() {
+  var donation_url = 'https://archive.org/donate/'
+  chrome.tabs.create({ url: donation_url })
+}
+
 function about_support() {
   window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus()
 }
@@ -304,6 +309,7 @@ $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
 $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
+$('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
 $('#context-screen').click(show_all_screens)
 $('.feedback').click(open_feedback_page)
