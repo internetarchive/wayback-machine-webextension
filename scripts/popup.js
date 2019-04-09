@@ -60,7 +60,7 @@ function get_clean_url() {
 function search_box_activate() {
   const search_box = document.getElementById('search_input')
   search_box.addEventListener('keydown', (e) => {
-    if (e.keyCode === 13 && search_box.value !== '') {
+    if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
       chrome.tabs.create({ url: 'https://web.archive.org/web/*/' + search_box.value })
     } 
   })
@@ -185,7 +185,7 @@ function display_suggestions(e) {
   const suggestion_box = document.getElementById('suggestion-box')
   suggestion_box.textContent = ''
   suggestion_box.style.display = 'none'
-  if (e.keyCode === 13) {
+  if (e.keyCode === 13 || e.which === 13) {
     e.preventDefault()
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
