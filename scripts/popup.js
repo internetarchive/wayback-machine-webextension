@@ -208,6 +208,7 @@ function borrow_books() {
         get_amazonbooks(url).then(response => {
           if (response['metadata'] && response['metadata']['identifier-access']) {
             let details_url = response['metadata']['identifier-access']
+            $('.book').show()
             $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
               chrome.tabs.create({ url: details_url })
             })
@@ -225,6 +226,7 @@ function show_news() {
     tabId = tabs[0].id
     chrome.storage.sync.get(['news', 'show_context'], function (event) {
       if (event.news && set_of_sites.has(news_host)) {
+        $('.tv').show()
         $('#news_recommend_tr').show().click(() => {
           if (event.show_context === 'tab' || event.show_context === undefined) {
             chrome.tabs.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url })
@@ -250,6 +252,7 @@ function show_wikibooks() {
           event.show_context = 'tab'
         }
         if (event.wikibooks) {
+          $('.wikipedia').show()
           $('#wikibooks_tr').show().click(function () {
             if (event.show_context === 'tab') {
               chrome.tabs.create({ url: chrome.runtime.getURL('booklist.html') + '?url=' + url })
@@ -269,6 +272,7 @@ function show_wikibooks() {
           })
         }
         if (event.doi === true) {
+          $('.wikipedia').show()
           $('#doi_tr').show().click(function () {
             if (event.show_context === 'tab') {
               chrome.tabs.create({ url: chrome.runtime.getURL('doi.html') + '?url=' + url })
