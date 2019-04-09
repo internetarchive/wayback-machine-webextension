@@ -57,6 +57,15 @@ function get_clean_url() {
   return url
 }
 
+function search_box_activate() {
+  const search_box = document.getElementById('search_input')
+  search_box.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13 && search_box.value !== '') {
+      chrome.tabs.create({ url: 'https://web.archive.org/web/*/' + search_box.value })
+    } 
+  })
+}
+
 function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
@@ -173,16 +182,21 @@ function display_list() {
 }
 
 function display_suggestions(e) {
-  $('#suggestion-box').text('').hide()
+  const suggestion_box = document.getElementById('suggestion-box')
+  suggestion_box.textContent = ''
+  suggestion_box.style.display = 'none'
   if (e.keyCode === 13) {
     e.preventDefault()
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(function () {
-      if ($('#search_input').val().length >= 3) {
-        display_list($('#search_input').val())
+      const search_input = document.getElementById('search_input')
+      if (search_input.value.length >= 3) {
+        display_list()
       } else {
-        $('#suggestion-box').text('').hide()
+        const suggestion_box = document.getElementById('suggestion-box')
+        suggestion_box.textContent = ''
+        suggestion_box.style.display = 'none'
       }
     }, 0.1)
   }
@@ -303,7 +317,7 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
