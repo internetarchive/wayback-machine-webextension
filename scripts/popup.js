@@ -222,7 +222,6 @@ function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     url = tabs[0].url
     var news_host = new URL(url).hostname
-    tabId = tabs[0].id
     chrome.storage.sync.get(['news', 'show_context'], function (event) {
       if (event.news && set_of_sites.has(news_host)) {
         $('#news_recommend_tr').show().click(() => {
@@ -244,7 +243,6 @@ function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      const tabId = tabs[0].id
       chrome.storage.sync.get(['wikibooks', 'doi', 'show_context'], function (event) {
         if (event.show_context === undefined) {
           event.show_context = 'tab'
