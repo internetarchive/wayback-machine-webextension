@@ -196,7 +196,29 @@ function settings() {
 
 function show_all_screens() {
   var url = get_clean_url()
-  chrome.runtime.sendMessage({ message: 'showall', url: url })
+  contexts = ['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud']
+  var is_contexts_available = false
+  chrome.storage.sync.get(contexts, function (event) {
+    for(let x in contexts){
+      let context = event[contexts[x]]
+      if (context){
+        is_contexts_available = true
+        break
+      }
+    }
+    if(is_contexts_available)
+      chrome.runtime.sendMessage({ message: 'showall', url: url })
+    else {
+      let context_button = $("#context-screen")
+      context_button.attr('disabled', 'disabled')
+      let o_html = context_button.html()
+      context_button.html("No Context(s) Selected")
+      setTimeout(function(e){
+        context_button.html(o_html)
+        context_button.removeAttr('disabled')
+      }, 1000)
+    }
+  });
 }
 
 function borrow_books() {
