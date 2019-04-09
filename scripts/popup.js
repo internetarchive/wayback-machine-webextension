@@ -210,14 +210,27 @@ function borrow_books() {
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
       if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        get_amazonbooks(url).then(response => {
-          if (response['metadata'] && response['metadata']['identifier-access']) {
-            let details_url = response['metadata']['identifier-access']
+        chrome.storage.sync.get(['tab_url', 'detail_url'], function (result) { 
+          let stored_url = result.tab_url
+          let detail_url = result.detail_url
+          // Checking if the tab url is the same as the last stored one
+          if (stored_url === url) {
+            // if so, then we can use the previously fetched url
             $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-              chrome.tabs.create({ url: details_url })
+              chrome.tabs.create({ url: detail_url })
+            })
+          } else {
+            // if not, we can then fetch it again
+            get_amazonbooks(url).then(response => {
+              if (response['metadata'] && response['metadata']['identifier-access']) {
+                let details_url = response['metadata']['identifier-access']
+                $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
+                  chrome.tabs.create({ url: details_url })
+                })
+              }
             })
           }
-        })
+        })  
       }
     })
   })
