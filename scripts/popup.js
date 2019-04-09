@@ -143,20 +143,31 @@ function search_tweet(eventObj) {
   })
 }
 
-function display_list(key_word) {
-  $('#suggestion-box').text('').hide()
-  $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
-    $('#suggestion-box').text('').hide()
-    if (data.hosts.length > 0 && $('#search_input').val() !== '') {
-      $('#suggestion-box').show()
+function display_list() {
+  const search_input = document.getElementById('search_input')
+  const suggestion_box = document.getElementById('suggestion-box')
+  suggestion_box.textContent = ''
+  suggestion_box.style.display = 'none'
+  $.getJSON('https://web.archive.org/__wb/search/host?q=' + search_input.value, function (data) {
+    suggestion_box.textContent = ''
+    suggestion_box.style.display = 'none'
+    if (data.hosts.length > 0 && search_input.value !== '') {
+      suggestion_box.style.display = 'block'
+      const container = document.createDocumentFragment()
       for (var i = 0; i < data.hosts.length; i++) {
-        $('#suggestion-box').append($('<li>').append(
-          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            $('#search_input').val(event.target.innerHTML)
-            $('#suggestion-box').text('').hide()
-          })
-        ))
+        const lst = document.createElement('li')
+        const anchor = document.createElement('a')
+        anchor.setAttribute('role', 'button')
+        anchor.textContent = data.hosts[i].display_name
+        anchor.addEventListener('click', (event) => {
+          search_input.value = event.target.innerHTML
+          suggestion_box.text = ''
+          suggestion_box.style.display = 'none'
+        })
+        lst.appendChild(anchor)
+        container.appendChild(lst)
       }
+      suggestion_box.appendChild(container)
     }
   })
 }
