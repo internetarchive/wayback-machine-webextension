@@ -1,9 +1,12 @@
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
   getWikipediaBooks(url).then(data=>{
-    $(".loader").hide();
-    // No need to check the validation of data since promise is already being resolved
-    console.time()
+    const loaders = document.getElementsByClassName('loader');
+    for (const i of loaders) {
+      const cur_ele= i;
+      cur_ele.style.display = 'none';
+    }
+    // No need to check the validation of data since promise has already been resolved
     for (let isbn of Object.keys(data)) {  // Iterate over each book to get data
       let metadata = getMetadata(data[isbn]);
       if (metadata) {
@@ -26,12 +29,17 @@ function populateBooks(url) {
         resultsTray.appendChild(containerForAppend);
       }
     }
-    console.timeEnd()
   }).catch( function(error) {
-    $(".loader").hide();
-    $("#resultsTray").css("grid-template-columns", "none").append(
-      $("<div>").html(error)
-    );
+    const loaders = document.getElementsByClassName('loader');
+    for (const i of loaders) {
+      const cur_ele= i;
+      cur_ele.style.display = 'none';
+    }
+    const resultsTray = document.getElementById('resultsTray');
+    resultsTray.style.gridTemplateColumns = 'none';
+    const container = document.createElement('div');
+    container.innerHTML = error;
+    resultsTray.appendChild(container);
   });
 }
 
