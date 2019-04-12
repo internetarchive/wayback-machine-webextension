@@ -3,7 +3,7 @@
 
 // main method
 function addCitations () {
-  getWikipediaBooks(location.href).done(data => {
+  getWikipediaBooks(location.href).then((data) => {
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
       let isbn = getISBNFromCitation(book)
@@ -21,8 +21,8 @@ function addCitations () {
         book.parentElement.append(icon[0])
       }
     }
-  }).fail(function (xhr, status) {
-    console.log(getErrorMessage(xhr))
+  }).catch(function (error) {
+    console.log(error)
   })
 }
 // getMetadata was used to standardize data between OL and IA.
@@ -190,13 +190,18 @@ function getPageFromCitation (book) {
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
-  return $.ajax({
-    dataType: 'json',
-    url: 'https://gext-api.archive.org/services/context/books?url=' + url,
-    beforeSend: function (jqXHR, settings) {
-      jqXHR.url = settings.url
-    },
-    timeout: 30000
+  // Encapsulate the chrome message sender with a promise object
+  return new Promise(function (resolve, reject) {
+    chrome.runtime.sendMessage({
+      message: 'getWikipediaBooks',
+      query: url
+    }, function (books) {
+      if (books) {
+        resolve(books)
+      } else {
+        reject(new Error('error'))
+      }
+    })
   })
 }
 
