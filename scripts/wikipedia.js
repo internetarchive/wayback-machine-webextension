@@ -192,7 +192,7 @@ function getPageFromCitation (book) {
 function getWikipediaBooks (url) {
   return $.ajax({
     dataType: 'json',
-    url: 'https://archive.org/services/context/books?url=' + url,
+    url: 'https://gext-api.archive.org/services/context/books?url=' + url,
     beforeSend: function (jqXHR, settings) {
       jqXHR.url = settings.url
     },

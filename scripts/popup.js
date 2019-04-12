@@ -61,7 +61,7 @@ function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web-beta.archive.org/save/',
+    wayback_url: 'https://gext-api.archive.org/save/',
     page_url: clean_url,
     method: 'save'
   })
@@ -71,7 +71,7 @@ function save_now() {
 function recent_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/2/',
+    wayback_url: 'https://gext-api.archive.org/proxy/web/2/',
     page_url: get_clean_url(),
     method: 'recent'
   })
@@ -80,7 +80,7 @@ function recent_capture() {
 function first_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/0/',
+    wayback_url: 'https://gext-api.archive.org/proxy/web/0/',
     page_url: get_clean_url(),
     method: 'first'
   })
@@ -89,7 +89,7 @@ function first_capture() {
 function view_all() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/*/',
+    wayback_url: 'https://gext-api.archive.org/proxy/web/*/',
     page_url: get_clean_url(),
     method: 'viewall'
   })
@@ -106,7 +106,7 @@ function social_share(eventObj) {
   var id = parent.getAttribute('id')
   var sharing_url = ''
   var url = retrieve_url()
-  var overview_url = 'https://web.archive.org/web/*/'
+  var overview_url = 'https://gext-api.archive.org/proxy/web/*/'
   if (url.includes('web.archive.org')) {
     sharing_url = url // If the user is already at a playback page,share that URL
   } else {
