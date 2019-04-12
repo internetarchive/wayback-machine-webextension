@@ -1,4 +1,4 @@
-gext-api.archive.org/*
+/*
 * License: AGPL-3
 * Copyright 2016, Internet Archive
 */
