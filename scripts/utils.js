@@ -3,7 +3,7 @@
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var xhr = new XMLHttpRequest();
-  var requestUrl = 'https://http://gext-api.archive.org/wayback/available';
+  var requestUrl = 'https://gext-api.archive.org/wayback/available';
   var requestParams = 'url=' + encodeURI(url);
   xhr.open('POST', requestUrl, true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
