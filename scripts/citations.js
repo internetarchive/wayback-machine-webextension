@@ -15,7 +15,7 @@
 //   findCitations()
 // })
 
-function findCitations () {
+var findCitations = () => {
   let candidates = $("a[href^='#_ftnref']").parent()
   for (let i = 0; i < candidates.length; i++) {
     let citation = getCitation(candidates[i].innerText || candidates[i].textContent)
@@ -25,7 +25,7 @@ function findCitations () {
   }
 }
 
-function getCitation (cit) {
+var getCitation = (cit) => {
   str = cit.replace(/^[^a-zA-Z]*/, '')
   if (str.length == 0) {
     return null
@@ -52,7 +52,7 @@ function getCitation (cit) {
   }
 }
 
-function getAdvancedSearchQuery (parsed_cit) {
+var getAdvancedSearchQuery = (parsed_cit) => {
   ({ author, title } = parsed_cit)
   // format author
   if (author){
@@ -63,11 +63,11 @@ function getAdvancedSearchQuery (parsed_cit) {
   }
 }
 
-function formatAuthor (auth) { //todo: handle multiple authors
+var formatAuthor = (auth) => { //todo: handle multiple authors
   return auth.replace(' and ', ' ')
 }
 
-function advancedSearch (citation, cand) {
+var advancedSearch = (citation, cand) => {
   query = getAdvancedSearchQuery(citation)
   chrome.runtime.sendMessage({
     message: 'citationadvancedsearch',
@@ -81,7 +81,7 @@ function advancedSearch (citation, cand) {
     // )
   })
 }
-function getUrlFromIdentifier(identifier, citation){
+var getUrlFromIdentifier = (identifier, citation) => {
   let pagestring = ''
   if (citation.pages) {
     pagestring = '/page/' + citation.pages[0]
@@ -89,7 +89,7 @@ function getUrlFromIdentifier(identifier, citation){
   let url = 'https://archive.org/details/' + identifier + pagestring
   return url
 }
-function insertLink(url, cand){
+var insertLink = (url, cand) => {
   $(cand).html(
     cand.innerHTML.replace('<em>', '<a target="_blank" href="'+url+'"><em>').replace('</em>', '</em></a>')
   )
