@@ -480,7 +480,7 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://gext-api.archive.org/save/' + page_url)
+        fetch('https://gext-api.archive.org/auto/save/' + page_url, {credentials: 'include'})
         .then(function(){
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
             if (!result.includes('S')) {
