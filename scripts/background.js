@@ -387,6 +387,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
+    fetch('https://gext-api.archive.org/event/gext/'+tab.url)
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
@@ -562,15 +563,15 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       let wayback_url;
       let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
-        wayback_url = 'https://gext-api.archive.org/proxy/web/0/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
-        wayback_url = 'https://gext-api.archive.org/proxy/web/2/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
         wayback_url = 'https://gext-api.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
-        wayback_url = 'https://gext-api.archive.org/proxy/web/*/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/*/' + encodeURI(page_url);
       }
       URLopener(wayback_url, page_url, wmIsAvailable);
     }

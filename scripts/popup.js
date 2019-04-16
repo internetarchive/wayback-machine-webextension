@@ -71,7 +71,7 @@ function save_now() {
 function recent_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://gext-api.archive.org/proxy/web/2/',
+    wayback_url: 'https://gext-api.archive.org/web/2/',
     page_url: get_clean_url(),
     method: 'recent'
   })
@@ -80,7 +80,7 @@ function recent_capture() {
 function first_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://gext-api.archive.org/proxy/web/0/',
+    wayback_url: 'https://gext-api.archive.org/web/0/',
     page_url: get_clean_url(),
     method: 'first'
   })
@@ -89,7 +89,7 @@ function first_capture() {
 function view_all() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://gext-api.archive.org/proxy/web/*/',
+    wayback_url: 'https://gext-api.archive.org/web/*/',
     page_url: get_clean_url(),
     method: 'viewall'
   })
@@ -106,7 +106,7 @@ function social_share(eventObj) {
   var id = parent.getAttribute('id')
   var sharing_url = ''
   var url = retrieve_url()
-  var overview_url = 'https://gext-api.archive.org/proxy/web/*/'
+  var overview_url = 'https://gext-api.archive.org/web/*/'
   if (url.includes('web.archive.org')) {
     sharing_url = url // If the user is already at a playback page,share that URL
   } else {
@@ -210,7 +210,7 @@ function borrow_books() {
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
       if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        chrome.storage.sync.get(['tab_url', 'detail_url'], function (result) { 
+        chrome.storage.sync.get(['tab_url', 'detail_url'], function (result) {
           let stored_url = result.tab_url
           let detail_url = result.detail_url
           // Checking if the tab url is the same as the last stored one
@@ -230,7 +230,7 @@ function borrow_books() {
               }
             })
           }
-        })  
+        })
       }
     })
   })
