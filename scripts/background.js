@@ -387,7 +387,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    fetch('https://gext-api.archive.org/event/gext/'+tab.url)
+    fetch('http://gext-log.archive.org/'+tab.url)
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
