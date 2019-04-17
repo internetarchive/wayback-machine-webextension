@@ -59,12 +59,6 @@ body{
 .container{
   padding: 15px;
 }
-.rec_results{
-  background-color: white;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin:auto;
-}
 p{
   font-family:Gill Sans Light;
   font-size: 20px;
