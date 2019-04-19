@@ -5,6 +5,14 @@ li{
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
+img#logo:hover, button#save_now:hover, 
+button#overview:hover, button#first_capture:hover, 
+button#search_tweet:hover,button#make_modal:hover,
+button#context-screen:hover,button#recent_capture:hover
+{
+    transform:scale(1.09);
+    border: 2px solid black;
+}
 #horizontal_line{
     margin: 0px; 
     padding: 0px; 
