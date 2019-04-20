@@ -5,6 +5,35 @@ li{
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
+.dropdown,.dropdown2{
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+.dropdown2{
+    display: inline-block;
+    position: relative;
+    width:auto;
+    height: auto;
+}
+.menu_content2{
+    display: none;
+    height:auto;
+    width: 165px;
+}
+.menu_content{
+    display:none;
+}
+.dropdown:hover{
+    transform: scale(1.02);
+}
+.dropdown:hover .menu_content{
+    display: block;
+}
+.dropdown2:hover .menu_content2{
+    display: block;
+}
 #horizontal_line{
     margin: 0px; 
     padding: 0px; 
