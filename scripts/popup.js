@@ -144,29 +144,37 @@ function search_tweet(eventObj) {
 }
 
 function display_list(key_word) {
-  $('#search_input').autocomplete({
-    source: function(request, response) {
-      $.get('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
-        response($.map(data.hosts, function(value, key) {
-          return {
-            label: value.display_name,
-            value: value.display_name
-          }
-        }));
-      })
-    },
-    minLength: 3
+  $('#suggestion-box').text('').hide()
+  $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
+    $('#suggestion-box').text('').hide()
+    if (data.hosts.length > 0 && $('#search_input').val() !== '') {
+      $('#suggestion-box').show()
+      for (var i = 0; i < data.hosts.length; i++) {
+        $('#suggestion-box').append($('<li>').append(
+          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+            $('#search_input').val(event.target.innerHTML)
+            $('#suggestion-box').text('').hide()
+          })
+        ))
+      }
+    }
   })
-  
 }
 
 function display_suggestions(e) {
-  // setTimeout is used to get the text in the text field after key has been pressed
-  window.setTimeout(function () {
-    if ($('#search_input').val().length >= 3) {
-      display_list($('#search_input').val())
-    } 
-  }, 0.1)
+  $('#suggestion-box').text('').hide()
+  if (e.keyCode === 13) {
+    e.preventDefault()
+  } else {
+    // setTimeout is used to get the text in the text field after key has been pressed
+    window.setTimeout(function () {
+      if ($('#search_input').val().length >= 3) {
+        display_list($('#search_input').val())
+      } else {
+        $('#suggestion-box').text('').hide()
+      }
+    }, 0.1)
+  }
 }
 function open_feedback_page() {
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
