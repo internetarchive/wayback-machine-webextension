@@ -170,9 +170,9 @@ function percentEncode (str) {
     return '%' + character.charCodeAt(0).toString(16)
   })
 };
-window.onloadFuncs = [get_alexa, url_getter, get_details, first_archive_details, recent_archive_details, get_thumbnail, get_tweets, get_annotations, show_annotations, get_tags, createPage, showDOI]
+window.onloadFuncs = [get_alexa(), url_getter(), get_details(), first_archive_details(), recent_archive_details(), get_thumbnail(), get_tweets(), get_annotations(), show_annotations(), get_tags(getUrlByParameter('url')), createPage(), showDOI()]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
-    this.onloadFuncs[i]()
+    this.onloadFuncs[i]
   }
 }
