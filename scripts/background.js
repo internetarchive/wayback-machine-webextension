@@ -5,7 +5,7 @@
 var manifest = chrome.runtime.getManifest();
 //Load version from Manifest.json file
 var VERSION = manifest.version;
-//Used to store the statuscode of the request if it is a httpFailCodes
+//Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
 
 var previous_RTurl = "";
