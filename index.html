@@ -29,16 +29,23 @@
         </form>
         <button type="button" class="btn btn-sm btn-block" id="save_now" tabindex='-1'>Save
           Page Now</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent
-          Version</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
-        <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
-        <button type="button" class="btn btn-sm extra_feature btn-block" id="make_modal" tabindex='-1'>Visualize Site
-          Map</button>
-        <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
-          <i class="fa fa-twitter"></i> Tweets About this Page</button>
-        <div id="display_">
-          <button type="button" class="btn btn-sm btn-block context_feature" id="context-screen">Show Me Context</button>
+        <div class="dropdown">
+          <p id="drop_menu"><img src="images/square.png" alt="ICON_MENU" width="20px" height="20px"></p>
+          <div class="menu_content">
+              <button type="button" class="btn btn-sm extra_feature btn-block" id="make_modal" tabindex='-1'>Visualize Site
+                  Map</button>
+                <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
+                  <i class="fa fa-twitter"></i> Tweets About this Page</button>
+                  <button type="button" class="btn btn-sm btn-block context_feature" id="context-screen">Show Me Context</button>
+                  <div class="dropdown2">
+                      <p id="load_versions" ><img src="images/ddown.png" alt="MENU2" width="20px" height="20px"></p>
+                    <div class="menu_content2">
+                        <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent Version</button>
+                        <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
+                        <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
+                    </div>                  
+                  </div> 
+          </div>
         </div>
         <div id="borrow_books_tr" style="display: none;">
           <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex='-1'>Read This Book</button>
