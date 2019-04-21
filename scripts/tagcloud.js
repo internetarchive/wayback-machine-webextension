@@ -1,4 +1,3 @@
-var mynewTags = new Array();
 function get_tags (url) {
   var hostname = new URL(url).hostname
   var toBeUsedAsURL = hostname.replace(/^www./, '')
