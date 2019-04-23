@@ -2,22 +2,17 @@
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var xhr = new XMLHttpRequest();
-  var requestUrl = 'https://archive.org/wayback/available';
-  var requestParams = 'url=' + encodeURI(url);
-  xhr.open('POST', requestUrl, true);
-  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhr.setRequestHeader('Wayback-Api-Version', 2);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.responseText);
-    var wayback_url = getWaybackUrlFromResponse(response);
+  fetch('https://archive.org/wayback/available?url=' + encodeURI(url))
+  .then(resp => resp.json())
+  .then(resp => {
+    let wayback_url = getWaybackUrlFromResponse(resp);
     if (wayback_url !== null) {
       onsuccess(wayback_url, url);
-    } else if (onfail) {
+    }
+    else if (onfail) {
       onfail();
     }
-  };
-  xhr.send(requestParams);
+  })
 }
 
 /**
