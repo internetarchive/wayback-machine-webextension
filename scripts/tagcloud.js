@@ -1,26 +1,25 @@
-var mynewTags = new Array();
+let mynewTags = new Array();
 
 function get_tags(url) {
-    var hostname = new URL(url).hostname
-    var toBeUsedAsURL = hostname.replace(/^www./, '')
-    var y = hostname.split('.')
-    var not_display4 = y.join(' ')
-    var not_display1 = y.join(' ')
+    let hostname = new URL(url).hostname
+    let toBeUsedAsURL = hostname.replace(/^www./, '')
+    let y = hostname.split('.')
+    let not_display4 = y.join(' ')
+    let not_display1 = y.join(' ')
     if (url.includes('https')) {
         not_display1 = 'https ' + not_display1
     } else {
         not_display1 = 'http ' + not_display1
     }
-    var not_display2 = not_display1 + ' extension'
-    var not_display3 = not_display4 + ' extension'
-    var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
-    var xhr = new XMLHttpRequest()
-    var new_url = 'https://archive.org/services/context/tagcloud?url=' + toBeUsedAsURL
-    xhr.open('GET', new_url, true)
-    xhr.onload = function () {
-        var data = JSON.parse(xhr.response)
-        for (var i = 0; i < data.length; i++) {
-            var b = new Object()
+    let not_display2 = not_display1 + ' extension'
+    let not_display3 = not_display4 + ' extension'
+    let dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
+    fetch('https://archive.org/services/context/tagcloud?url=' + encodeURI(toBeUsedAsURL))
+    .then(resp => resp.json())
+    .then(resp => {
+        let data = resp
+        for (let i = 0; i < data.length; i++) {
+            let b = new Object()
             if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
                 mynewTags[i] = decodeURIComponent(data[i][0])
                 b.text = decodeURIComponent(data[i][0])
@@ -33,8 +32,8 @@ function get_tags(url) {
         } else {
             var coefOfDistance = 3 / 4
         }
-        var arr = mynewTags.reduce(function (acc, newTag) {
-            var minDistance = void 0
+        let arr = mynewTags.reduce(function (acc, newTag) {
+            let minDistance = void 0
             if (acc.length > 0) {
                 minDistance = Math.min.apply(Math, _toConsumableArray(acc.map(function (oldTag) {
                     return Levenshtein.get(oldTag, newTag)
@@ -47,7 +46,7 @@ function get_tags(url) {
             }
             return acc
         }, []).sort()
-        var result = new Array()
+        let result = new Array()
 
         // Filtering out the elements from data which aren't in arr
         data = data.filter( function (el) {
@@ -67,8 +66,8 @@ function get_tags(url) {
             return {'text': el[0], 'weight': el[1]};
         })
 
-        for (var i = 0; i < result.length; i++) {
-            var span = document.createElement('span')
+        for (let i = 0; i < result.length; i++) {
+            let span = document.createElement('span')
             span.setAttribute('data-weight', result[i].weight)
             span.appendChild(document.createTextNode(result[i].text))
             document.getElementById('container-wordcloud').appendChild(span)
@@ -89,8 +88,7 @@ function get_tags(url) {
             'font': "'Times New Roman', Times, serif",
             'shape': 'square'
         })
-    }
-    xhr.send(null)
+    })
 }
 
 function _toConsumableArray(arr) {
