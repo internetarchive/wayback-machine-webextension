@@ -5,28 +5,80 @@ li{
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
+
+.show_context_options {
+    display: block !important;
+    background: #F4F4F4;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 1px;
+}
+
+.show_context_options button {
+    margin-bottom: 5px !important;
+}
+
+.show_context_options p {
+    margin: 0;
+}
+
+.show_context_options label {
+    font-weight: normal;
+}
+
+.show_context_options span {
+    margin-left: 5px;
+}
+
+.hide_context_options {
+    display: none;
+}
+
+.icon_dropdown {
+    position: absolute;
+    right: 12px;
+    top: 11px;
+}
+
+.tranform_icon_dropdown {
+    -webkit-transform: rotate(180deg);     /* Chrome and other webkit browsers */
+    -moz-transform: rotate(180deg);        /* FF */
+    -o-transform: rotate(180deg);          /* Opera */
+    -ms-transform: rotate(180deg);         /* IE9 */
+    transform: rotate(180deg);             /* W3C compliant browsers */
+    transition: transform 0.5s linear;
+    /* IE8 and below */
+    filter: progid:DXImageTransform.Microsoft.Matrix(M11=-1, M12=0, M21=0, M22=-1, DX=0, DY=0, SizingMethod='auto expand');
+}
+
+.context_feature {
+    position: relative;
+}
+
 #horizontal_line{
-    margin: 0px; 
-    padding: 0px; 
-    border: 0px solid rgb(6, 117, 211); 
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid rgb(6, 117, 211);
     font-size: 19px; font-style: inherit;
-    font-variant: inherit; 
-    font-weight: inherit; 
-    font-stretch: inherit; 
-    line-height: 1; 
-    font-family: sans-serif; 
-    vertical-align: baseline; 
-    box-sizing: content-box; 
-    overflow: unset; 
-    height: 1px; 
-    position: relative; 
-    width: auto; 
-    display: flex; 
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
-    text-align: left; 
-    align-items: center; 
-    border-radius: 3px; 
-    justify-content: center; 
+    font-variant: inherit;
+    font-weight: inherit;
+    font-stretch: inherit;
+    line-height: 1;
+    font-family: sans-serif;
+    vertical-align: baseline;
+    box-sizing: content-box;
+    overflow: unset;
+    height: 1px;
+    position: relative;
+    width: auto;
+    display: flex;
+    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
+    text-align: left;
+    align-items: center;
+    border-radius: 3px;
+    justify-content: center;
     text-decoration: none;
 }
 
