@@ -39,7 +39,7 @@ function constructArticles (clip) {
 
 function getDetails () {
   var article = getUrlByParameter('url')
-  var apiURL = 'https://archive.org/services/context/tvnews?url=' + article
+  var apiURL = 'https://gext-api.archive.org/services/context/tvnews?url=' + article
   $.getJSON(apiURL, function (clips) {
     $('.loader').hide()
     if (clips.status !== 'error') {
