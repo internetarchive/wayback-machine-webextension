@@ -29,7 +29,14 @@ li{
     justify-content: center; 
     text-decoration: none;
 }
-
+i#MIC{
+    position: relative;
+    left:90px;
+    bottom:30px;
+}
+i#MIC:hover{
+    transform:scale(1.2);
+}
 button {
   display: block;
   margin-bottom: 10px !important;
