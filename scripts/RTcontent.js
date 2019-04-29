@@ -58,7 +58,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		}
 		var pos = url.indexOf('/');
 		if (pos != -1) url = url.substring(0, pos);
-		var base_url = url;
 		var xhr = new XMLHttpRequest();
     xhr.open("GET", "https://web.archive.org/web/timemap/json?url="+url+"/&fl=timestamp:4,urlkey&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&collapse=urlkey&collapse=timestamp:4&limit=100000", true);
 		xhr.onerror = function() {
