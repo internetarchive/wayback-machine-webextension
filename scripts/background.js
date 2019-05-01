@@ -417,6 +417,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) ||
                     'ocaid' in resp) {
                     chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
+                    // Storing the tab url as well as the fetched archive url for future use
+                    chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access']  }, function () {})
                   }
                 })
             }
