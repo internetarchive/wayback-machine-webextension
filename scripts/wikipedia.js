@@ -197,7 +197,7 @@ function getWikipediaBooks (url) {
       query: url
     }, function (books) {
       if (books) {
-        resolve(books) 
+        resolve(books)
       } else {
         reject(new Error('error'))
       }

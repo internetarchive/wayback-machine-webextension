@@ -117,6 +117,14 @@ chrome.runtime.onStartup.addListener(function(details){
   })
 });
 
+chrome.runtime.onInstalled.addListener(function(details){
+  chrome.storage.sync.get(['agreement'], function(result){
+    if(result.agreement === true){
+      chrome.browserAction.setPopup({popup: 'index.html'});
+    }
+  })
+});
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
 });
@@ -241,7 +249,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     });
   } else if (message.message === 'getWikipediaBooks'){
     // wikipedia message listener
-    let host = 'https://archive.org/services/context/books?url='
+    let host = 'https://gext-api.archive.org/services/context/books?url='
     let url = host + encodeURI(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function(resolve, reject) {
@@ -264,7 +272,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       })
       return true
   } else if(message.message === 'citationadvancedsearch'){
-    let host = 'https://archive.org/advancedsearch.php?q='
+    let host = 'https://gext-api.archive.org/advancedsearch.php?q='
     let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
     let url = host + encodeURI(message.query) + endsearch
     fetch(url)
@@ -387,9 +395,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    chrome.storage.sync.get(['auto_archive'], function (event) {
+    chrome.storage.sync.get(['auto_archive', 'agreement'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
+      }
+      if(event.agreement === true){
+        fetch('http://gext-log.archive.org/'+tab.url)
       }
     });
   } else if (info.status === "loading") {
@@ -411,7 +422,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             url = tabs[0].url;
             tabId = tabs[0].id;
             if (url.includes('www.amazon')) {
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch('https://gext-api.archive.org/services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) ||
@@ -480,7 +491,7 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://web-beta.archive.org/save/' + page_url)
+        fetch('https://gext-api.archive.org/auto/save/' + page_url, {credentials: 'include'})
         .then(function(){
           chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
             if (!result.includes('S')) {
@@ -562,15 +573,15 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       let wayback_url;
       let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
-        wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
-        wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
-        wayback_url = 'https://web-beta.archive.org/save/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
-        wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
+        wayback_url = 'https://gext-api.archive.org/web/*/' + encodeURI(page_url);
       }
       URLopener(wayback_url, page_url, wmIsAvailable);
     }
