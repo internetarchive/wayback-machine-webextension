@@ -402,7 +402,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       if(event.agreement === true){
         fetch('http://gext-log.archive.org/'+tab.url)
       }
-      console.log(event.agreement)
     });
   } else if (info.status === "loading") {
     var received_url = tab.url;
