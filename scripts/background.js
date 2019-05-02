@@ -109,6 +109,14 @@ chrome.storage.sync.set({
 /**
  * Installed callback
  */
+chrome.runtime.onStartup.addListener(function(details){
+  chrome.storage.sync.get(['agreement'], function(result){
+    if(result.agreement === true){
+      chrome.browserAction.setPopup({popup: 'index.html'});
+    }
+  })
+});
+
 chrome.runtime.onInstalled.addListener(function(details){
   chrome.storage.sync.get(['agreement'], function(result){
     if(result.agreement === true){
