@@ -109,6 +109,14 @@ chrome.storage.sync.set({
 /**
  * Installed callback
  */
+chrome.runtime.onStartup.addListener(function(details){
+  chrome.storage.sync.get(['agreement'], function(result){
+    if(result.agreement === true){
+      chrome.browserAction.setPopup({popup: 'index.html'});
+    }
+  })
+});
+
 chrome.runtime.onInstalled.addListener(function(details){
   chrome.storage.sync.get(['agreement'], function(result){
     if(result.agreement === true){
@@ -394,6 +402,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       if(event.agreement === true){
         fetch('http://gext-log.archive.org/'+tab.url)
       }
+      console.log(event.agreement)
     });
   } else if (info.status === "loading") {
     var received_url = tab.url;
