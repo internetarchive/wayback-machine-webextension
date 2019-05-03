@@ -18,11 +18,10 @@ function get_tags (url) {
   xhr.onload = function () {
     var data = JSON.parse(xhr.response)
     var entries = []
+    data = data.filter(i => i[0].length < 30)
     const length = data.length > 70 ? 70 : data.length
     for (var i = 0; i < length; i++) {
-      if (data[i][0].length < 30)
-        entries.push({ label: data[i][0], url: '#', target: '_self'})
-
+      entries.push({ label: data[i][0], url: '#', target: '_self', weight: data[i][1]})
     }
     const settings = {
       entries: entries,
