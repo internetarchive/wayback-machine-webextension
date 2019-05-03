@@ -1,12 +1,12 @@
 .wordcloud {
     border: 1px solid #036;
     display: inline-block;
-    height: 7in;
+    height: 8in;
     margin: 0.5in auto;
     padding: 0;
     page-break-after: always;
     page-break-inside: avoid;
-    width:7in;
+    width:8in;
 }
 h2{
     font-family: Bebas Neue;
