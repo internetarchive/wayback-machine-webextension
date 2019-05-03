@@ -25,8 +25,8 @@ function get_tags (url) {
     }
     const settings = {
       entries: entries,
-      width: 800,
-      height: 800,
+      width: 672,
+      height: 680,
       radius: '70%',
       radiusMin: 75,
       bgDraw: true,
