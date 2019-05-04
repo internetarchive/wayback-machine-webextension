@@ -144,46 +144,33 @@ function search_tweet(eventObj) {
 }
 
 function display_list(key_word) {
-  $('#suggestion-box').text('').hide()
-  $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
-    $('#suggestion-box').text('').hide()
-    if (data.hosts.length > 0 && $('#search_input').val() !== '') {
-      $('#suggestion-box').show()
-      for (var i = 0; i < data.hosts.length; i++) {
-        $('#suggestion-box').append($('<li>').append(
-          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            $('#search_input').val(event.target.innerHTML)
-            $('#suggestion-box').text('').hide()
-          })
-        ))
-      }
-    }
+  $('#search_input').autocomplete({
+    source: function(request, response) {
+      $.get('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
+        response($.map(data.hosts, function(value, key) {
+          return {
+            label: value.display_name,
+            value: value.display_name
+          }
+        }));
+      })
+    },
+    minLength: 3
   })
+  
 }
 
 function display_suggestions(e) {
-  $('#suggestion-box').text('').hide()
-  if (e.keyCode === 13) {
-    e.preventDefault()
-  } else {
-    // setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(function () {
-      if ($('#search_input').val().length >= 3) {
-        display_list($('#search_input').val())
-      } else {
-        $('#suggestion-box').text('').hide()
-      }
-    }, 0.1)
-  }
+  // setTimeout is used to get the text in the text field after key has been pressed
+  window.setTimeout(function () {
+    if ($('#search_input').val().length >= 3) {
+      display_list($('#search_input').val())
+    } 
+  }, 0.1)
 }
 function open_feedback_page() {
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
   chrome.tabs.create({ url: feedback_url })
-}
-
-function open_donations_page() {
-  var donation_url = 'https://archive.org/donate/'
-  chrome.tabs.create({ url: donation_url })
 }
 
 function about_support() {
@@ -210,27 +197,14 @@ function borrow_books() {
     tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
       if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        chrome.storage.sync.get(['tab_url', 'detail_url'], function (result) { 
-          let stored_url = result.tab_url
-          let detail_url = result.detail_url
-          // Checking if the tab url is the same as the last stored one
-          if (stored_url === url) {
-            // if so, then we can use the previously fetched url
+        get_amazonbooks(url).then(response => {
+          if (response['metadata'] && response['metadata']['identifier-access']) {
+            let details_url = response['metadata']['identifier-access']
             $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-              chrome.tabs.create({ url: detail_url })
-            })
-          } else {
-            // if not, we can then fetch it again
-            get_amazonbooks(url).then(response => {
-              if (response['metadata'] && response['metadata']['identifier-access']) {
-                let details_url = response['metadata']['identifier-access']
-                $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-                  chrome.tabs.create({ url: details_url })
-                })
-              }
+              chrome.tabs.create({ url: details_url })
             })
           }
-        })  
+        })
       }
     })
   })
@@ -240,6 +214,7 @@ function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     url = tabs[0].url
     var news_host = new URL(url).hostname
+    tabId = tabs[0].id
     chrome.storage.sync.get(['news', 'show_context'], function (event) {
       if (event.news && set_of_sites.has(news_host)) {
         $('#news_recommend_tr').show().click(() => {
@@ -261,6 +236,7 @@ function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      const tabId = tabs[0].id
       chrome.storage.sync.get(['wikibooks', 'doi', 'show_context'], function (event) {
         if (event.show_context === undefined) {
           event.show_context = 'tab'
@@ -322,7 +298,6 @@ $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
 $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
-$('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
 $('#context-screen').click(show_all_screens)
 $('.feedback').click(open_feedback_page)
