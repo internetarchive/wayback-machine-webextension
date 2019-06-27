@@ -24,6 +24,7 @@ var newshosts = [
   'www.vox.com',
   'www.washingtonpost.com'
 ];
+var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526];
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === "user-agent") {
@@ -48,6 +49,7 @@ chrome.storage.sync.set({
   newshosts: newshosts
 })
 /**
+ * 
  * Installed callback
  */
 chrome.runtime.onStartup.addListener(function(details){
@@ -94,11 +96,11 @@ RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
-      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
+      HTTP_CODE.includes(details.statusCode) && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode;
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
-          file: "scripts/client.js"
+          file: "scripts/archive.js"
         }, function () {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
             chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
@@ -111,7 +113,7 @@ chrome.webRequest.onCompleted.addListener(function (details) {
             });
           }
         });
-      }, function () { });
+      }, function() {});
     }
   }
   if (details.tabId > 0) {
