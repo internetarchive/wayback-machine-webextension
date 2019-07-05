@@ -29,7 +29,10 @@ li{
     justify-content: center; 
     text-decoration: none;
 }
-
+.focused {
+    background-color: #D3D3D3;
+    opacity: 0.7;
+}
 button {
   display: block;
   margin-bottom: 10px !important;
