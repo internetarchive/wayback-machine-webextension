@@ -121,7 +121,17 @@ function social_share(eventObj) {
     } else if (id.includes('linkedin')) {
       open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
     }
-    chrome.tabs.create({ url: open_url })
+    chrome.storage.sync.get(['show_context'], function (e) {
+      if (e.show_context === 'tab' || e.show_context === undefined) {
+        chrome.tabs.create({ url: open_url })
+      } else {
+        chrome.system.display.getInfo(function (displayInfo) {
+          let height = displayInfo[0].bounds.height
+          let width = displayInfo[0].bounds.width
+          chrome.windows.create({ url: open_url, width: width / 2, height: height, top: 0, left: width / 2, focused: true })
+        })
+      }
+    })
   }
 }
 
