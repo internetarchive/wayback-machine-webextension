@@ -3,6 +3,11 @@ var set_of_sites;
 chrome.storage.sync.get(['newshosts'], function(event){
   set_of_sites = new Set(event.newshosts);
 })
+
+function homepage() {
+  chrome.tabs.create({ url: 'https://archive.org/web/' })
+}
+
 function remove_port(url) {
   if (url.substr(-4) === ':80/') {
     url = url.substring(0, url.length - 4)
@@ -314,6 +319,8 @@ window.onload = function () {
     this.onloadFuncs[i]()
   }
 }
+
+$('#logo_internet_archive').click(homepage)
 $('#save_now').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
