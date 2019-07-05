@@ -121,7 +121,7 @@ function social_share(eventObj) {
     } else if (id.includes('linkedin')) {
       open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0')
+    chrome.tabs.create({ url: open_url })
   }
 }
 
