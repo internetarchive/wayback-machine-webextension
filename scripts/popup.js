@@ -143,16 +143,72 @@ function search_tweet(eventObj) {
   })
 }
 
+function search_box_activate() {
+  const search_box = document.getElementById('search_input')
+  search_box.addEventListener('keydown', (e) => {
+    if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
+      chrome.tabs.create({ url: 'https://gext-api.archive.org/web/*/' + search_box.value })
+    } 
+  })
+}
+
+function arrow_key_access() {
+  const list = document.getElementById('suggestion-box')
+  const search_box = document.getElementById('search_input')
+  let index = search_box
+
+  search_box.addEventListener('keydown', (e) => {
+    // listen for up key
+    if (e.keyCode === 38 || e.which === 38) {
+      if (index === list.firstChild && index && list.lastChild) {
+        if (index.classList.contains('focused')) { index.classList.remove('focused') }
+        index = list.lastChild
+        if (!index.classList.contains('focused')) { index.classList.add('focused') }
+        search_box.value = index.textContent
+      } else if (index === search_box) {
+        return;
+      }
+      else if (index !== search_box && index && index.previousElementSibling) {
+        if (index.classList.contains('focused')) { index.classList.remove('focused') }
+        index = index.previousElementSibling
+        if (!index.classList.contains('focused')) { index.classList.add('focused') }
+        search_box.value = index.textContent
+      } 
+
+    // listen for down key 
+    } else if (e.keyCode === 40 || e.which === 40) {
+      if (index === search_box && list.firstChild) {
+        index = list.firstChild
+        if (!index.classList.contains('focused')) { index.classList.add('focused') }
+        search_box.value = index.textContent
+      } else if (index === list.lastChild && list.lastChild) {
+        if (index.classList.contains('focused')) { index.classList.remove('focused') }
+        index = list.firstChild
+        if (!index.classList.contains('focused')) { index.classList.add('focused') }
+        search_box.value = index.textContent
+      } else if (index !== search_box && index && index.nextElementSibling) {
+        if (index.classList.contains('focused')) { index.classList.remove('focused') }
+        index = index.nextElementSibling
+        if (!index.classList.contains('focused')) { index.classList.add('focused') }
+        search_box.value = index.textContent
+      }
+    } else {
+      index = search_box
+    }
+  })
+}
+
 function display_list(key_word) {
   $('#suggestion-box').text('').hide()
   $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search_input').val() !== '') {
       $('#suggestion-box').show()
+      arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append($('<li>').append(
           $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            $('#search_input').val(event.target.innerHTML)
+            chrome.tabs.create({ url: 'https://gext-api.archive.org/web/*/' + event.target.innerHTML })
             $('#suggestion-box').text('').hide()
           })
         ))
@@ -162,6 +218,9 @@ function display_list(key_word) {
 }
 
 function display_suggestions(e) {
+  // exclude arrow keys from keypress event
+  if (e.keyCode === 38 || e.keyCode === 40) { return false }
+
   $('#suggestion-box').text('').hide()
   if (e.keyCode === 13) {
     e.preventDefault()
@@ -308,7 +367,7 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
