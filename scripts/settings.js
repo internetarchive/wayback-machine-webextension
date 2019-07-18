@@ -20,7 +20,8 @@ function initializeSettings () {
     citations: false,
     news: false,
     wikibooks: false,
-    showall: false
+    showall: false,
+    resource: false
   }, restoreOptions)
 }
 function restoreOptions (items) {
@@ -39,6 +40,7 @@ function restoreOptions (items) {
   $('#wikibooks').prop('checked', items.wikibooks)
   $('#doi').prop('checked', items.doi)
   $('#citations').prop('checked', items.citations)
+  $('#resource').prop('checked', items.resource)
 }
 
 function save_options () {
@@ -58,6 +60,7 @@ function save_options () {
     wikibooks: $('#wikibooks').prop('checked'),
     doi: $('#doi').prop('checked'),
     citations: $('#citations').prop('checked'),
+    resource: $('#resource').prop('checked')
   })
 }
 
