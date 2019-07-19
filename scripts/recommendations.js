@@ -12,7 +12,9 @@ function constructArticles (clip) {
     $('<p>').text(clip.show).prepend($('<strong>').text(clip.station + ': '))
   )
   let bottomElements = $('<div>').addClass('bottom_elements').append(
-    $('<img>').attr({ 'src': clip.preview_thumb }).click(() => {
+    $("<a>").attr({"href": "#"}).append(
+      $('<img>').attr({ 'src': clip.preview_thumb })
+    ).click(() => {
       chrome.storage.sync.get(['show_context'], function (event1) {
         if (event1.show_context === undefined) {
           event1.show_context = 'tab'
