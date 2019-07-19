@@ -221,32 +221,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         chrome.tabs.create({ url: open_url });
       }
     }
-  } else if (message.message === 'makemodal') {
-    RTurl = message.rturl;
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      var tab = tabs[0];
-      var url = RTurl;
-      // utility function to run Radial Tree JS
-      function _run_modalbox_scripts() {
-        chrome.tabs.executeScript(tab.id, {
-          file: "scripts/build.js"
-        });
-        chrome.tabs.executeScript(tab.id, {
-          file: "scripts/RTcontent.js"
-        });
-        previous_RTurl = url;
-      }
-      //chrome debugger API  isn’t allowed to attach to any page in the Chrome Web Store
-      if (!isNotExcludedUrl(url)) {
-        alert("Structure as radial tree not available on this page");
-      } else if ((previous_RTurl !== url && url === tab.url) || (previous_RTurl !== url && url !== tab.url)) {
-        //Checking the condition for no recreation of the SiteMap and sending a message to RTContent.js
-        chrome.tabs.sendMessage(tab.id, { message: "deletenode" });
-        _run_modalbox_scripts();
-      } else if (previous_RTurl === url) {
-        _run_modalbox_scripts();
-      }
-    });
   } else if (message.message === 'getWikipediaBooks'){
     // wikipedia message listener
     let host = 'https://gext-api.archive.org/services/context/books?url='

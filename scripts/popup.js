@@ -148,7 +148,7 @@ function search_box_activate() {
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
       chrome.tabs.create({ url: 'https://gext-api.archive.org/web/*/' + search_box.value })
-    } 
+    }
   })
 }
 
@@ -173,9 +173,9 @@ function arrow_key_access() {
         index = index.previousElementSibling
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
         search_box.value = index.textContent
-      } 
+      }
 
-    // listen for down key 
+    // listen for down key
     } else if (e.keyCode === 40 || e.which === 40) {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
@@ -249,9 +249,9 @@ function about_support() {
   window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus()
 }
 
-function makeModal() {
+function sitemap() {
   var url = get_clean_url()
-  chrome.runtime.sendMessage({ message: 'makemodal', rturl: url })
+  chrome.tabs.create({url: "https://web.archive.org/web/sitemap/" + url})
 }
 
 function settings() {
@@ -387,5 +387,5 @@ $('#context-screen').click(show_all_screens)
 $('.feedback').click(open_feedback_page)
 
 $('#overview').click(view_all)
-$('#make_modal').click(makeModal)
+$('#site_map').click(sitemap)
 $('#search_input').keydown(display_suggestions)
