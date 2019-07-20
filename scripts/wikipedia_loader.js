@@ -1,5 +1,5 @@
-chrome.storage.sync.get(['wikibooks'], function (event) {
-  if(event.wikibooks){
-    addCitations();
+chrome.storage.sync.get(['resource'], function (event) {
+  if (event.resource) {
+    addCitations()
   }
 })
