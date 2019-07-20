@@ -394,7 +394,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             const url = tabs[0].url
             const tabId = tabs[0].id
             const news_host = new URL(url).hostname
-            console.log(news_host, newshosts, newshosts.includes(news_host))
             // checking resource of amazon books
             if (url.includes('www.amazon')) {
               fetch('https://gext-api.archive.org/services/context/amazonbooks?url=' + url)
@@ -404,7 +403,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                     chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
                     // Storing the tab url as well as the fetched archive url for future use
                     chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, function () {})
-                    console.log(url, 'backgroundJS')
                   }
                 })
             // checking resource of wikipedia books and papers
