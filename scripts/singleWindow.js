@@ -32,13 +32,7 @@ function get_alexa () {
     }
   })
 }
-function showDOI () {
-  var url = getUrlByParameter('url')
-  if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-    $('#doi-heading').css('display', 'block')
-  }
-}
-function get_tweets () {
+function get_tweetsSinglePage () {
   var url = getUrlByParameter('url')
   url = url.replace(/^https?:\/\//, '')
   url = url.replace(/^www./, '')
@@ -80,10 +74,6 @@ function get_tweets () {
     }
   }
   xhr.send(null)
-}
-
-function show_annotations () {
-  $('#row_contain-url').show()
 }
 
 function getAuthorization (httpMethod, baseUrl, reqParams) {
@@ -170,9 +160,26 @@ function percentEncode (str) {
     return '%' + character.charCodeAt(0).toString(16)
   })
 };
-window.onloadFuncs = [get_alexa(), url_getter(), get_details(), first_archive_details(), recent_archive_details(), get_thumbnail(), get_tweets(), get_annotations(), show_annotations(), get_tags(getUrlByParameter('url')), createPage(), showDOI()]
-window.onload = function () {
-  for (var i in this.onloadFuncs) {
-    this.onloadFuncs[i]
+
+function get_tagCloud() {
+  const url = getUrlByParameter('url');
+  get_tags(url);
+}
+
+function get_DOI() {
+  createPage();
+  var url = getUrlByParameter('url')
+  if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+    $('#doi-heading').css('display', 'block')
   }
 }
+
+function get_hypothesis() {
+  get_annotations('domain');
+  get_annotations('url');
+  $('#row_contain-url').show();
+}
+
+const toBeLoaded = [get_DOI, get_alexa, get_domainTool, get_WBMSummary, get_tweetsSinglePage, get_hypothesis, get_tagCloud]
+// chrome.storage.sync()
+window.onload = function () { toBeLoaded.forEach(f => f()) }

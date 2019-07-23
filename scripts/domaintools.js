@@ -7,7 +7,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
     }
   }
 }
-function url_getter () {
+function get_domainTool () {
   var url = getUrlByParameter('url')
   var domaintools_api = 'https://archive.org/services/context/domaintools?url=' + url
   $.getJSON(domaintools_api, function (data) {
