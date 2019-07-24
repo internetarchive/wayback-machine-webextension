@@ -84,12 +84,36 @@ function getUrlByParameter (name) {
   return url.searchParams.get(name)
 }
 
+function openByWindowSetting(url, option=null, callback) {
+  if (option === null) {
+    chrome.storage.sync.get(['show_context'], function (event) { 
+      option = event.show_context; 
+      if (option === 'tab' || option === undefined) {
+        chrome.tabs.create({ url: url }, function (tab) {
+          if (callback) { 
+            callback(tab.id); 
+          }
+        });
+      } else {
+        chrome.system.display.getInfo(function (displayInfo) {
+          let height = displayInfo[0].bounds.height
+          let width = displayInfo[0].bounds.width
+          chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+            if (callback) { callback(window.tabs[0].id); }
+          });
+        })
+      }
+    });
+  }
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
     isValidUrl: isValidUrl,
-    isNotExcludedUrl:isNotExcludedUrl,
-    wmAvailabilityCheck: wmAvailabilityCheck
+    isNotExcludedUrl: isNotExcludedUrl,
+    wmAvailabilityCheck: wmAvailabilityCheck,
+    openByWindowSetting: openByWindowSetting
   }
 }

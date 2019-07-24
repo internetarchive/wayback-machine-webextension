@@ -1,1 +1,1 @@
-window.onload = url_getter;
+window.onload = get_domainTool;
