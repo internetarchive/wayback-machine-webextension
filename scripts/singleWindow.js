@@ -180,6 +180,27 @@ function get_hypothesis() {
   $('#row_contain-url').show();
 }
 
-const toBeLoaded = [get_DOI, get_alexa, get_domainTool, get_WBMSummary, get_tweetsSinglePage, get_hypothesis, get_tagCloud]
-// chrome.storage.sync()
-window.onload = function () { toBeLoaded.forEach(f => f()) }
+const contexts_dic = {
+  "alexa": get_alexa, 
+  "domaintools": get_domainTool, 
+  "wbmsummary": get_WBMSummary, 
+  "tweets": get_tweetsSinglePage, 
+  "annotations": get_hypothesis, 
+  "tagcloud": get_tagCloud, 
+  "doi": get_DOI
+};
+
+chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
+  let toBeLoaded = [get_DOI];
+  for (const feature in event) {
+    if (event.hasOwnProperty(feature)) {
+      if (!event[feature]) {
+        const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+        $(featureId).hide();
+      } else {
+        toBeLoaded.push(contexts_dic[feature]);
+      }
+    }
+  }
+  window.onload = function () { toBeLoaded.forEach(f => f()) }
+})

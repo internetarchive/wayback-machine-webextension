@@ -210,11 +210,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
   } else if (message.message === 'showall') {
-    chrome.storage.sync.get(['show_context', 'auto_update_context', 'alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) { //'similarweb',
-      const context_url = chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url;
-      tabIdPromise = new Promise(function (resolve) {
-        openByWindowSetting(context_url, event.show_context, resolve)
-      });
+    const context_url = chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url;
+    tabIdPromise = new Promise(function (resolve) {
+      openByWindowSetting(context_url, null, resolve);
     });
   } 
 });
