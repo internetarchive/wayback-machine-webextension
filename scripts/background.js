@@ -7,10 +7,8 @@ var manifest = chrome.runtime.getManifest();
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
-
 var previous_RTurl = "";
-var windowIdtest = 0;
-var windowIdSingle = 0;
+let tabIdPromise;
 var WB_API_URL = "https://archive.org/wayback/available";
 var newshosts = [
   'www.apnews.com',
@@ -26,63 +24,6 @@ var newshosts = [
   'www.vox.com',
   'www.washingtonpost.com'
 ];
-var contexts = [
-  {
-    name: "alexa",
-    htmlUrl: "https://archive.org/services/context/alexa?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 0,
-    left: 0
-  },
-  {
-    name: "domaintools",
-    htmlUrl: chrome.runtime.getURL("domaintools.html") + "?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 500,
-    left: 0
-  },
-  {
-    name: "tweets",
-    htmlUrl: 'https://twitter.com/search?q=',
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 0,
-    left: 500
-  },
-  {
-    name: "wbmsummary",
-    htmlUrl: chrome.runtime.getURL("overview.html") + "?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 500,
-    left: 500
-  },
-  {
-    name: "annotations",
-    htmlUrl: chrome.runtime.getURL("annotation.html") + "?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 0,
-    left: 1000
-  },
-  {
-    name: "tagcloud",
-    htmlUrl: chrome.runtime.getURL("tagcloud.html") + "?url=",
-    tab: 0,
-    window: 0,
-    tabContextName: 0,
-    top: 500,
-    left: 1200
-  }
-];
-
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === "user-agent") {
@@ -127,29 +68,6 @@ chrome.runtime.onInstalled.addListener(function(details){
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
-});
-/**
- * Close window callback
- */
-chrome.windows.onRemoved.addListener(function (id) {
-  var index = contexts.findIndex(e => e.window === id);
-  if (index >= 0) {
-    contexts[index].window = 0;
-  } else if (windowIdtest === id) {
-    windowIdtest = 0;
-  } else if (windowIdSingle === id) {
-    windowIdSingle = 0;
-  }
-});
-
-/**
- * Close tab callback
- */
-chrome.tabs.onRemoved.addListener(function (id) {
-  var index = contexts.findIndex(e => e.tab === id);
-  if (index >= 0) {
-    contexts[index].tab = 0;
-  }
 });
 
 
@@ -292,77 +210,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
   } else if (message.message === 'showall') {
-    chrome.storage.sync.get(['show_context', 'auto_update_context', 'alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) { //'similarweb',
-      if (!event.show_context) {
-        //By-default the context-window open in tabs
-        event.show_context = "tab";
-      }
-      var received_url = message.url;
-      received_url = received_url.replace(/^https?:\/\//, '');
-      var last_index = received_url.indexOf('/');
-      var url = received_url.slice(0, last_index);
-      //URL which will be needed for finding tweets
-      var open_url = received_url;
-      if (open_url.slice(-1) === '/') {
-        open_url = received_url.substring(0, open_url.length - 1);
-      }
-      if (event.auto_update_context === undefined) {
-        //By default auto-update context is off
-        event.auto_update_context = false;
-      }
-      //var urlsToAppend = [url, message.url, open_url, message.url, message.url, url, message.url];
-      var urlsToAppend = [url, message.url, open_url, message.url, message.url, message.url];
-      //If the Context is to be showed in tabs
-      if (event.show_context === "tab") {
-        var p = Promise.resolve();
-        for (var i = 0; i < contexts.length; i++) {
-          var e = contexts[i];
-          if (event[e.name]) {
-            p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
-          }
-        }
-      } else if (event.show_context === "window") {
-        //If the Context is to be showed in Windows
-        if (contexts.findIndex(e => e.window === 0) >= 0) {
-          //Checking if Windows are not open already
-          var p = Promise.resolve();
-          for (var i = 0; i < contexts.length; i++) {
-            var e = contexts[i];
-            if (event[e.name]) {
-              p = p.then(openThatContext(e, urlsToAppend[i], event.show_context));
-            }
-          }
-        } else {
-          //If context screens(windows) are already opened and user again click on the Context button then update them
-          for (var i = 0; i < contexts.length; i++) {
-            var e = contexts[i];
-            chrome.tabs.query({
-              windowId: contexts[i].window
-            }, function (tabs) {
-              chrome.tabs.update(tabs[0].id, { url: e.htmlUrl + urlsToAppend[i] });
-            });
-          }
-        }
-      } else if (event.show_context === "singlewindow") {
-        //If the Context is to be showed in singleWindow
-        if (windowIdSingle !== 0) {
-          //Checking if SingleWindow context is not open already
-          chrome.tabs.query({
-            windowId: windowIdSingle
-          }, function (tabs) {
-            chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + message.url });
-          });
-        } else {
-          chrome.windows.create({
-            url: chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url,
-            width: 1000, height: 1000, top: 0, left: 0
-          }, function (win) {
-            windowIdSingle = win.id;
-          });
-        }
-      }
-    }); // closing chrome.storage.sync.get(['show_context', 'auto_update_context'],function(event){
-  } // closing showall if
+    const context_url = chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url;
+    tabIdPromise = new Promise(function (resolve) {
+      openByWindowSetting(context_url, null, resolve);
+    });
+  } 
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
@@ -415,47 +267,15 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
           })
         }
         if (event.auto_update_context === true) {
-          if (event.show_context === "tab" && (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
-            chrome.tabs.query({
-              windowId: windowIdtest
-            }, function (tabs) {
-              var tab1 = tabs[0];
-              tabIdtest = tab1.id;
-              if (tab.id !== tabIdtest && contexts.findIndex(e => e.tab !== tab.id) >= 0 && tabs.filter(e => e.id === tabId).length === 0 && contexts.filter(e => e.tab === tabId).length === 0 && contexts.filter(e => e.tab === tab.id).length === 0) {
-                for (var i = 0; i < contexts.length; i++) {
-                  var e = contexts[i];
-                  chrome.tabs.update(parseInt(e.tab), { url: e.htmlUrl + urlsToAppend[i] });
-                };
-              }
-            });
-          } else if (event.show_context === "singlewindow") {
-            chrome.tabs.query({
-              windowId: windowIdSingle
-            }, function (tabs) {
-              var tab1 = tabs[0];
-              if (tabId !== tab1.id && tab.id !== tab1.id) {
-                chrome.tabs.update(tab1.id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
-              }
-            });
-          } else if (contexts.findIndex(e => e.window !== 0) >= 0) {
-            var i = 0;
-            contexts.map(e => {
-              chrome.tabs.query({
-                windowId: e.window
-              }, function (tabs) {
-                if (tabs.length > 0) {
-                  e.tabContextName = tabs[0].id;
-                  if (contexts.filter(e => e.tabContextName === tabId).length == 0 && contexts.filter(e => e.tabContextName === tab.id).length === 0) {
-                    chrome.tabs.update(e.tabContextName, { url: e.htmlUrl + urlsToAppend[i++] }, function (tab) { });
-                  }
-                }
-              });
-            });
-          }
+          tabIdPromise.then(function (id) {
+            if (tabId !== id && tab.id !== id && isNotExcludedUrl(singlewindowurl)) {
+              chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+            } 
+          });
         }
-      }); // closing chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'],function(event){
+      }); 
     }
-  } // closing if info.status ==="loading"
+  }
 });
 
 function auto_save(tabId, url) {
@@ -478,42 +298,6 @@ function auto_save(tabId, url) {
           })
       }
     )
-  }
-}
-
-//function for opeing a particular context
-function openThatContext(contextToOpen, url, methodOfShowing) {
-  return function () {
-    return new Promise(function (resolve, reject) {
-      if (methodOfShowing === 'tab') {
-        if (windowIdtest === 0) {
-          chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 800, height: 800, top: 0, left: 0 }, function (win) {
-            chrome.tabs.query({
-              windowId: win.id
-            }, function (tabs) {
-              windowIdtest = win.id;
-              contextToOpen.tab = tabs[0].id;
-              resolve();
-            });
-          });
-        } else {
-          chrome.tabs.query({
-            windowId: windowIdtest
-          }, function (tabs) {
-            chrome.tabs.create({ 'url': contextToOpen.htmlUrl + url, 'active': false }, function (tab) {
-              contextToOpen.tab = tab.id;
-              resolve();
-            });
-          });
-        }
-      } else if (methodOfShowing === 'window') {
-        //If context is to be shown in window
-        chrome.windows.create({ url: contextToOpen.htmlUrl + url, width: 500, height: 500, top: contextToOpen.top, left: contextToOpen.left }, function (win) {
-          contextToOpen.window = win.id;
-          resolve();
-        });
-      }
-    });
   }
 }
 

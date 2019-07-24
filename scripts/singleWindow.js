@@ -28,19 +28,15 @@ function get_alexa () {
                     .text(title.length > TITLE_LEN ? title.substring(0, TITLE_LEN) + '...' : title)
           )
         )
+        $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url);
       }
     }
   })
 }
-function showDOI () {
-  var url = getUrlByParameter('url')
-  if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-    $('#doi-heading').css('display', 'block')
-  }
-}
-function get_tweets () {
+function get_tweetsSinglePage () {
   var url = getUrlByParameter('url')
   url = url.replace(/^https?:\/\//, '')
+  const searchPattern = url
   url = url.replace(/^www./, '')
   var index_new = url.indexOf('/')
   url = url.slice(0, index_new - 1)
@@ -74,16 +70,14 @@ function get_tweets () {
         document.getElementById('box-twitter').appendChild(item)
       }
       document.getElementById('row-twitter').style.display = 'none'
+      $('#twitter_page').attr('href', 'https://twitter.com/search?q=' + searchPattern)
     } else {
       document.getElementById('box-twitter').innerHTML = 'There are no Tweets for the current URL'
       document.getElementById('row-twitter').style.display = 'none'
+      $('#twitter_page').hide()
     }
   }
   xhr.send(null)
-}
-
-function show_annotations () {
-  $('#row_contain-url').show()
 }
 
 function getAuthorization (httpMethod, baseUrl, reqParams) {
@@ -170,9 +164,47 @@ function percentEncode (str) {
     return '%' + character.charCodeAt(0).toString(16)
   })
 };
-window.onloadFuncs = [get_alexa(), url_getter(), get_details(), first_archive_details(), recent_archive_details(), get_thumbnail(), get_tweets(), get_annotations(), show_annotations(), get_tags(getUrlByParameter('url')), createPage(), showDOI()]
-window.onload = function () {
-  for (var i in this.onloadFuncs) {
-    this.onloadFuncs[i]
+
+function get_tagCloud() {
+  const url = getUrlByParameter('url');
+  get_tags(url);
+}
+
+function get_DOI() {
+  createPage();
+  var url = getUrlByParameter('url')
+  if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+    $('#doi-heading').css('display', 'block')
   }
 }
+
+function get_hypothesis() {
+  get_annotations('domain');
+  get_annotations('url');
+  $('#row_contain-url').show();
+}
+
+const contexts_dic = {
+  "alexa": get_alexa, 
+  "domaintools": get_domainTool, 
+  "wbmsummary": get_WBMSummary, 
+  "tweets": get_tweetsSinglePage, 
+  "annotations": get_hypothesis, 
+  "tagcloud": get_tagCloud, 
+  "doi": get_DOI
+};
+
+chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
+  let toBeLoaded = [get_DOI];
+  for (const feature in event) {
+    if (event.hasOwnProperty(feature)) {
+      if (!event[feature]) {
+        const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+        $(featureId).hide();
+      } else {
+        toBeLoaded.push(contexts_dic[feature]);
+      }
+    }
+  }
+  window.onload = function () { toBeLoaded.forEach(f => f()) }
+})

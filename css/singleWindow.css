@@ -112,3 +112,7 @@ p{
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.col-sm-6 {
+    margin-left: 25%;
+}

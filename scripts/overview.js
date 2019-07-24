@@ -1,3 +1,10 @@
+function get_WBMSummary() {
+  get_details();
+  first_archive_details();
+  recent_archive_details();
+  get_thumbnail();
+}
+
 function getTotal (captures) {
   var total = 0
   for (var key in captures) {
