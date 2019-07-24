@@ -268,7 +268,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
         }
         if (event.auto_update_context === true) {
           tabIdPromise.then(function (id) {
-            if (tabId !== id && tab.id !== id) {
+            if (tabId !== id && tab.id !== id && isNotExcludedUrl(singlewindowurl)) {
               chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
             } 
           });

@@ -28,6 +28,7 @@ function get_alexa () {
                     .text(title.length > TITLE_LEN ? title.substring(0, TITLE_LEN) + '...' : title)
           )
         )
+        $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url);
       }
     }
   })
@@ -35,6 +36,7 @@ function get_alexa () {
 function get_tweetsSinglePage () {
   var url = getUrlByParameter('url')
   url = url.replace(/^https?:\/\//, '')
+  const searchPattern = url
   url = url.replace(/^www./, '')
   var index_new = url.indexOf('/')
   url = url.slice(0, index_new - 1)
@@ -68,9 +70,11 @@ function get_tweetsSinglePage () {
         document.getElementById('box-twitter').appendChild(item)
       }
       document.getElementById('row-twitter').style.display = 'none'
+      $('#twitter_page').attr('href', 'https://twitter.com/search?q=' + searchPattern)
     } else {
       document.getElementById('box-twitter').innerHTML = 'There are no Tweets for the current URL'
       document.getElementById('row-twitter').style.display = 'none'
+      $('#twitter_page').hide()
     }
   }
   xhr.send(null)
