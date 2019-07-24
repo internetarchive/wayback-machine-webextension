@@ -106,6 +106,21 @@ function get_url() {
   })
 }
 
+function openByWindowSetting(url, option=null) {
+  if (option === null) {
+    chrome.storage.sync.get(['show_context'], function (event) { option = event.show_context })
+  }
+  if (option === 'tab' || option === undefined) {
+    chrome.tabs.create({ url: url })
+  } else {
+    chrome.system.display.getInfo(function (displayInfo) {
+      let height = displayInfo[0].bounds.height
+      let width = displayInfo[0].bounds.width
+      chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true })
+    })
+  }
+}
+
 function social_share(eventObj) {
   var parent = eventObj.target.parentNode
   var id = parent.getAttribute('id')
@@ -136,15 +151,9 @@ function search_tweet(eventObj) {
   if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
   var open_url = 'https://twitter.com/search?q=' + url
   chrome.storage.sync.get(['show_context'], function (event1) {
-    if (event1.show_context === 'tab' || event1.show_context === undefined) {
-      chrome.tabs.create({ url: open_url })
-    } else {
-      chrome.system.display.getInfo(function (displayInfo) {
-        let height = displayInfo[0].bounds.height
-        let width = displayInfo[0].bounds.width
-        chrome.windows.create({ url: open_url, width: width / 2, height: height, top: 0, left: width / 2, focused: true })
-      })
-    }
+    const option =  event1.show_context
+    const URL = open_url
+    openByWindowSetting(option, URL)
   })
 }
 
@@ -270,29 +279,33 @@ function show_all_screens() {
 
 function borrow_books() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    url = tabs[0].url
-    tabId = tabs[0].id
+    const url = tabs[0].url
+    const tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result.includes('B') && url.includes('www.amazon') && url.includes('/dp/')) {
-        chrome.storage.sync.get(['tab_url', 'detail_url'], function (result) {
-          let stored_url = result.tab_url
-          let detail_url = result.detail_url
+      if (result.includes('R') && url.includes('www.amazon') && url.includes('/dp/')) {
+        $('#borrow_books_tr').css({ 'display': 'block' })
+        chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
+          const stored_url = res.tab_url
+          const detail_url = res.detail_url
+          const context = res.show_context
           // Checking if the tab url is the same as the last stored one
           if (stored_url === url) {
-            // if so, then we can use the previously fetched url
-            $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-              chrome.tabs.create({ url: detail_url })
+            // if same, use the previously fetched url
+            $('#borrow_books_tr').click(function () {
+              openByWindowSetting(detail_url, context)
             })
           } else {
-            // if not, we can then fetch it again
-            get_amazonbooks(url).then(response => {
-              if (response['metadata'] && response['metadata']['identifier-access']) {
-                let details_url = response['metadata']['identifier-access']
-                $('#borrow_books_tr').css({ 'display': 'block' }).click(function () {
-                  chrome.tabs.create({ url: details_url })
-                })
-              }
-            })
+            // if not, fetch it again
+            fetch('https://gext-api.archive.org/services/context/amazonbooks?url=' + url)
+              .then(res => res.json())
+              .then(response => {
+                if (response['metadata'] && response['metadata']['identifier-access']) {
+                  const new_details_url = response['metadata']['identifier-access']
+                  $('#borrow_books_tr').click(function () {
+                    openByWindowSetting(new_details_url, context)
+                  })
+                }
+              })
           }
         })
       }
@@ -302,73 +315,41 @@ function borrow_books() {
 
 function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    url = tabs[0].url
-    var news_host = new URL(url).hostname
-    chrome.storage.sync.get(['news', 'show_context'], function (event) {
-      if (event.news && set_of_sites.has(news_host)) {
-        $('#news_recommend_tr').show().click(() => {
-          if (event.show_context === 'tab' || event.show_context === undefined) {
-            chrome.tabs.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url })
-          } else {
-            chrome.system.display.getInfo(function (displayInfo) {
-              const height = displayInfo[0].bounds.height
-              const width = displayInfo[0].bounds.width
-              chrome.windows.create({ url: chrome.runtime.getURL('recommendations.html') + '?url=' + url, width: width / 2, height: height, top: 0, left: width / 2, focused: true })
-            })
-          }
-        })
-      }
+    const url = tabs[0].url
+    const tabId = tabs[0].id
+    const news_host = new URL(url).hostname
+    chrome.storage.sync.get(['show_context', 'newshosts'], function (event) {
+      let set_of_sites = new Set(event.newshosts)
+      const option = event.show_context
+      chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+        if (result.includes('R') && set_of_sites.has(news_host)) {
+          $('#news_recommend_tr').show().click(() => {
+            const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+            openByWindowSetting(URL, option)
+          })
+        }
+      })
     })
   })
 }
 function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
-    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.storage.sync.get(['wikibooks', 'doi', 'show_context'], function (event) {
-        if (event.show_context === undefined) {
-          event.show_context = 'tab'
-        }
-        if (event.wikibooks) {
-          $('#wikibooks_tr').show().click(function () {
-            if (event.show_context === 'tab') {
-              chrome.tabs.create({ url: chrome.runtime.getURL('booklist.html') + '?url=' + url })
-            } else {
-              chrome.windows.getCurrent(function (window) {
-                const height = window.height
-                const width = window.width
-                chrome.windows.create({
-                  url: chrome.runtime.getURL('booklist.html') + '?url=' + url,
-                  width: width / 2,
-                  height: height,
-                  top: 0,
-                  left: width / 2
-                })
-              })
-            }
-          })
-        }
-        if (event.doi === true) {
-          $('#doi_tr').show().click(function () {
-            if (event.show_context === 'tab') {
-              chrome.tabs.create({ url: chrome.runtime.getURL('doi.html') + '?url=' + url })
-            } else {
-              chrome.windows.getCurrent(function (window) {
-                const height = window.height
-                const width = window.width
-                chrome.windows.create({
-                  url: chrome.runtime.getURL('doi.html') + '?url=' + url,
-                  width: width / 2,
-                  height: height,
-                  top: 0,
-                  left: width / 2
-                })
-              })
-            }
-          })
-        }
-      })
-    }
+    const tabId = tabs[0].id
+    chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+      if (result.includes('R') && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+        // show wikipedia books button
+        $('#wikibooks_tr').show().click(function () {
+          const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+          openByWindowSetting(URL)
+        })
+        // show wikipedia cited paper button
+        $('#doi_tr').show().click(function () {
+          const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+          openByWindowSetting(URL)
+        })
+      }
+    })
   })
 }
 

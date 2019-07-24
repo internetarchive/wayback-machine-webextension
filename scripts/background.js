@@ -221,31 +221,29 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         chrome.tabs.create({ url: open_url });
       }
     }
-  } else if (message.message === 'getWikipediaBooks'){
+  } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://gext-api.archive.org/services/context/books?url='
     let url = host + encodeURI(message.query)
     // Encapsulate fetch with a timeout promise object
-    const timeoutPromise = new Promise(function(resolve, reject) {
+    const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
-      }, 30000);
+      }, 30000)
       fetch(url).then(resolve, reject)
     })
     timeoutPromise
       .then(response => response.json())
       .then(function (data) {
         let books = null
-        if (data && data.message != 'No ISBNs found in page' && data.status != 'error') {
+        if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
           books = data
         }
         sendResponse(books)
       })
-      .catch( function (err) {
-        console.log(err)
-      })
       return true
-  } else if(message.message === 'citationadvancedsearch'){
+
+  } else if (message.message === 'citationadvancedsearch') {
     let host = 'https://gext-api.archive.org/advancedsearch.php?q='
     let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
     let url = host + encodeURI(message.query) + endsearch
@@ -258,7 +256,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         }
         sendResponse(identifier)
 
-      })
+      })       
       .catch(function (err) {
         console.log(err)
       })
@@ -387,30 +385,37 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       var url = received_url.slice(0, last_index);
       var open_url = received_url;
       if (open_url.slice(-1) === '/') {
-        open_url = received_url.substring(0, open_url.length - 1);
+        open_url = received_url.substring(0, open_url.length - 1)
       }
-      var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl];
-      chrome.storage.sync.get(['books', 'auto_update_context', 'show_context'], function (event1) {
-        if (event1.books === true) {
+      var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl]
+      chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
+        if (event.resource === true) {
           chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            url = tabs[0].url;
-            tabId = tabs[0].id;
+            const url = tabs[0].url
+            const tabId = tabs[0].id
+            const news_host = new URL(url).hostname
+            // checking resource of amazon books
             if (url.includes('www.amazon')) {
               fetch('https://gext-api.archive.org/services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
-                  if (('metadata' in resp && 'identifier' in resp['metadata']) ||
-                    'ocaid' in resp) {
-                    chrome.browserAction.setBadgeText({ tabId: tabId, text: 'B' })
+                  if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
+                    chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
                     // Storing the tab url as well as the fetched archive url for future use
-                    chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access']  }, function () {})
+                    chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, function () {})
                   }
                 })
+            // checking resource of wikipedia books and papers
+            } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
+            // checking resource of tv news
+            } else if (newshosts.includes(news_host)) {
+              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
             }
           })
         }
-        if (event1.auto_update_context === true) {
-          if (event1.show_context === "tab" && (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
+        if (event.auto_update_context === true) {
+          if (event.show_context === "tab" && (contexts.findIndex(e => e.tab !== 0) >= 0 || windowIdtest !== 0)) {
             chrome.tabs.query({
               windowId: windowIdtest
             }, function (tabs) {
@@ -423,7 +428,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 };
               }
             });
-          } else if (event1.show_context === "singlewindow") {
+          } else if (event.show_context === "singlewindow") {
             chrome.tabs.query({
               windowId: windowIdSingle
             }, function (tabs) {
@@ -465,16 +470,14 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://gext-api.archive.org/auto/save/' + page_url, {credentials: 'include'})
-        .then(function(){
-          chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (!result.includes('S')) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result });
-            }
+        fetch('https://gext-api.archive.org/auto/save/' + page_url, { credentials: 'include' })
+          .then(function () {
+            chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+              if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
+            })
           })
-        })
       }
-    );
+    )
   }
 }
 
