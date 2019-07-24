@@ -36,12 +36,12 @@ function rewriteUserAgentHeader(e) {
 function URLopener(open_url, url, wmIsAvailable) {
   if (wmIsAvailable === true) {
     wmAvailabilityCheck(url, function () {
-      chrome.tabs.create({ url: open_url });
+      openByWindowSetting(open_url)
     }, function () {
       alert("URL not found");
     });
   } else {
-    chrome.tabs.create({ url: open_url });
+    openByWindowSetting(open_url)
   }
 }
 chrome.storage.sync.set({
@@ -136,7 +136,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true);
       } else {
-        chrome.tabs.create({ url: open_url });
+        openByWindowSetting(open_url)
       }
     }
   } else if (message.message === 'getWikipediaBooks') {
