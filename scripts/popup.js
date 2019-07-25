@@ -357,16 +357,15 @@ function noContextTip() {
   chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function(event) {
     for (const context in event) { if (event[context]) { return true; } }
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    $('#context-screen').off('click').css({ opacity: 0.5 }).tooltip().hover(function() {
-      const tooltipId = $(this).attr('aria-describedby')
-      $('#' + tooltipId).css({
-        'opacity': '0.75',
-        'padding-left': '13px',
-        'padding-right': '13px',
-        'padding-bottom': '5px',
-        'padding-top': '10px'
-      })
-    })
+    const tip = 'Enable context in the extension settings'
+    const styling = {
+      'opacity': '0.75',
+      'padding-left': '13px',
+      'padding-right': '13px',
+      'padding-bottom': '5px',
+      'padding-top': '10px'
+    }
+    attachTooltip($('#context-screen'), tip, 'top', styling, 150).off('click').css({ opacity: 0.5 })
   })
 }
 

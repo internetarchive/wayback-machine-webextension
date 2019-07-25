@@ -56,37 +56,7 @@ function addReadIcon (id, metadata) {
     createReadToolTip(id, metadata)
   )
 }
-function attachTooltip (anchor, tooltip) {
-  // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
-  return anchor.attr({
-    'data-toggle': 'tooltip',
-    'title': tooltip
-  })
-    .tooltip({
-      animated: false,
-      placement: 'right auto',
-      html: true,
-      trigger: 'manual'
-    })
-  // Handles staying open
-    .on('mouseenter', function () {
-      $(anchor).tooltip('show')
-      $('.popup_box').on('mouseleave', function () {
-        setTimeout(function () {
-          if (!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length) {
-            $(anchor).tooltip('hide')
-          }
-        }, 200)
-      })
-    })
-    .on('mouseleave', function () {
-      setTimeout(function () {
-        if (!$('.popup_box:hover').length) {
-          $(anchor).tooltip('hide')
-        }
-      }, 200)
-    })
-}
+
 function createDonateToolTip (isbn) {
   return $('<a>')
     .attr({
