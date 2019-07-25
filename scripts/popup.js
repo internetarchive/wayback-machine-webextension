@@ -5,7 +5,7 @@ chrome.storage.sync.get(['newshosts'], function(event){
 })
 
 function homepage() {
-  chrome.tabs.create({ url: 'https://archive.org/web/' })
+  openByWindowSetting('https://archive.org/web/')
 }
 
 function remove_port(url) {
@@ -106,21 +106,6 @@ function get_url() {
   })
 }
 
-function openByWindowSetting(url, option=null) {
-  if (option === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { option = event.show_context })
-  }
-  if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url })
-  } else {
-    chrome.system.display.getInfo(function (displayInfo) {
-      let height = displayInfo[0].bounds.height
-      let width = displayInfo[0].bounds.width
-      chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true })
-    })
-  }
-}
-
 function social_share(eventObj) {
   var parent = eventObj.target.parentNode
   var id = parent.getAttribute('id')
@@ -141,7 +126,7 @@ function social_share(eventObj) {
     } else if (id.includes('linkedin')) {
       open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
     }
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0')
+    openByWindowSetting(open_url)
   }
 }
 
@@ -150,18 +135,14 @@ function search_tweet(eventObj) {
   url = url.replace(/^https?:\/\//, '')
   if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
   var open_url = 'https://twitter.com/search?q=' + url
-  chrome.storage.sync.get(['show_context'], function (event1) {
-    const option =  event1.show_context
-    const URL = open_url
-    openByWindowSetting(option, URL)
-  })
+  openByWindowSetting(open_url)
 }
 
 function search_box_activate() {
   const search_box = document.getElementById('search_input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
-      chrome.tabs.create({ url: 'https://gext-api.archive.org/web/*/' + search_box.value })
+      openByWindowSetting('https://gext-api.archive.org/web/*/' + search_box.value)
     }
   })
 }
@@ -222,7 +203,7 @@ function display_list(key_word) {
       for (var i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append($('<li>').append(
           $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            chrome.tabs.create({ url: 'https://gext-api.archive.org/web/*/' + event.target.innerHTML })
+            openByWindowSetting('https://gext-api.archive.org/web/*/' + event.target.innerHTML)
             $('#suggestion-box').text('').hide()
           })
         ))
@@ -251,21 +232,21 @@ function display_suggestions(e) {
 }
 function open_feedback_page() {
   var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
-  chrome.tabs.create({ url: feedback_url })
+  openByWindowSetting(feedback_url)
 }
 
 function open_donations_page() {
   var donation_url = 'https://archive.org/donate/'
-  chrome.tabs.create({ url: donation_url })
+  openByWindowSetting(donation_url)
 }
 
 function about_support() {
-  window.open('about.html', 'newwindow', 'width=1200, height=900,left=0').focus()
+  openByWindowSetting('about.html')
 }
 
 function sitemap() {
   var url = get_clean_url()
-  chrome.tabs.create({url: "https://web.archive.org/web/sitemap/" + url})
+  openByWindowSetting("https://web.archive.org/web/sitemap/" + url)
 }
 
 function settings() {
