@@ -360,7 +360,7 @@ function noContextTip() {
     $('#context-screen').off('click').css({ opacity: 0.5 }).tooltip().hover(function() {
       const tooltipId = $(this).attr('aria-describedby')
       $('#' + tooltipId).css({
-        'opacity': '0.8',
+        'opacity': '0.75',
         'padding-left': '13px',
         'padding-right': '13px',
         'padding-bottom': '5px',
