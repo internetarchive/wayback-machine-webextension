@@ -84,15 +84,18 @@ function getUrlByParameter (name) {
   return url.searchParams.get(name)
 }
 
-function openByWindowSetting(url, option=null, callback) {
-  if (option === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { option = event.show_context; });
+function openByWindowSetting(url, op=null, cb) {
+  if (op === null) {
+    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) });
+  } else {
+    opener(url, op);
   }
+}
+
+function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
     chrome.tabs.create({ url: url }, function (tab) {
-      if (callback) { 
-        callback(tab.id); 
-      }
+      if (callback) { callback(tab.id); }
     });
   } else {
     chrome.system.display.getInfo(function (displayInfo) {
