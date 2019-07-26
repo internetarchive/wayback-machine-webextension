@@ -362,6 +362,7 @@ $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
+$('#settingPage').hide();
 $('#context-screen').click(show_all_screens)
 $('.feedback').click(open_feedback_page)
 
