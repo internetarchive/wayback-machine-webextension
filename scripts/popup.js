@@ -334,7 +334,17 @@ function show_wikibooks() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate]
+function noContextTip() {
+  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function(event) {
+    for (const context in event) { if (event[context]) { return true; } }
+    // If none of the context is selected, grey out the button and adding tip when the user hovers
+    const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
+    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
+    attachTooltip(btn, tip, 'top', 50)
+  })
+}
+
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

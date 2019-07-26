@@ -147,6 +147,15 @@ background-color: #4a8aff;
     background-color: #25a7b0;
     color: white !important;
 }
+.context_tip{
+    opacity: 0.75;
+    width: 154px;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin-bottom: 3px;
+}
 .feedback{
     cursor: pointer;
     font-size: 185%;
