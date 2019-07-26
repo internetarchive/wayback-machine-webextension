@@ -1,5 +1,6 @@
 body{
     width: 200px;
+    max-height: 538px;
 }
 li{
     margin:0px 0px 0px -18px;

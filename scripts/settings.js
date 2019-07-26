@@ -3,7 +3,8 @@ $('.only').click(validate)
 $('#showall').click(selectall)
 $('input').change(save_options)
 $('#show_context').change(save_options)
-addDocs()
+$('#back').click(goBack)
+// addDocs()
 function initializeSettings () {
   chrome.storage.sync.get({
     show_context: 'tab',
@@ -66,6 +67,11 @@ function selectall () {
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
   }
+}
+
+function goBack () {
+  $('#settingPage').hide()
+  $('#popupPage').show()
 }
 
 function addDocs () {

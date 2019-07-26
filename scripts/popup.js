@@ -250,7 +250,9 @@ function sitemap() {
 }
 
 function settings() {
-  window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
+  // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
+  $('#popupPage').hide();
+  $('#settingPage').show();
 }
 
 function show_all_screens() {
