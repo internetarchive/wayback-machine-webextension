@@ -107,6 +107,38 @@ function openByWindowSetting(url, option=null, callback) {
   }
 }
 
+function attachTooltip (anchor, tooltip, pos='right', time=200) {
+  // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
+  return anchor.attr({
+    'data-toggle': 'tooltip',
+    'title': tooltip
+  })
+    .tooltip({
+      animated: false,
+      placement: `${pos} auto`,
+      html: true,
+      trigger: 'manual'
+    })
+  // Handles staying open
+    .on('mouseenter', function () {
+      $(anchor).tooltip('show')
+      $('.popup_box').on('mouseleave', function () {
+        setTimeout(function () {
+          if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
+            $(anchor).tooltip('hide')
+          }
+        }, time)
+      })
+    })
+    .on('mouseleave', function () {
+      setTimeout(function () {
+        if (!$('.popup_box:hover').length) {
+          $(anchor).tooltip('hide')
+        }
+      }, time)
+    })
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
@@ -114,6 +146,7 @@ if (typeof module !== 'undefined') {
     isValidUrl: isValidUrl,
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
-    openByWindowSetting: openByWindowSetting
+    openByWindowSetting: openByWindowSetting,
+    attachTooltip: attachTooltip
   }
 }
