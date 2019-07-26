@@ -107,7 +107,7 @@ function openByWindowSetting(url, option=null, callback) {
   }
 }
 
-function attachTooltip (anchor, tooltip, pos='right', style, time=200) {
+function attachTooltip (anchor, tooltip, pos='right', time=200) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
   return anchor.attr({
     'data-toggle': 'tooltip',
@@ -122,11 +122,9 @@ function attachTooltip (anchor, tooltip, pos='right', style, time=200) {
   // Handles staying open
     .on('mouseenter', function () {
       $(anchor).tooltip('show')
-      // styling the tooltip
-      if (style) { $('#' + anchor.attr('aria-describedby')).css(style) }
       $('.popup_box').on('mouseleave', function () {
         setTimeout(function () {
-          if (!$('.btn-archive[href*="' + anchor.attr('href') + '"]:hover').length) {
+          if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
             $(anchor).tooltip('hide')
           }
         }, time)
@@ -137,7 +135,7 @@ function attachTooltip (anchor, tooltip, pos='right', style, time=200) {
         if (!$('.popup_box:hover').length) {
           $(anchor).tooltip('hide')
         }
-      }, 200)
+      }, time)
     })
 }
 
