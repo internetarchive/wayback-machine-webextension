@@ -84,26 +84,27 @@ function getUrlByParameter (name) {
   return url.searchParams.get(name)
 }
 
-function openByWindowSetting(url, option=null, callback) {
-  if (option === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { 
-      option = event.show_context; 
-      if (option === 'tab' || option === undefined) {
-        chrome.tabs.create({ url: url }, function (tab) {
-          if (callback) { 
-            callback(tab.id); 
-          }
-        });
-      } else {
-        chrome.system.display.getInfo(function (displayInfo) {
-          let height = displayInfo[0].bounds.height
-          let width = displayInfo[0].bounds.width
-          chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
-            if (callback) { callback(window.tabs[0].id); }
-          });
-        })
-      }
+function openByWindowSetting(url, op=null, cb) {
+  if (op === null) {
+    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) });
+  } else {
+    opener(url, op);
+  }
+}
+
+function opener(url, option, callback) {
+  if (option === 'tab' || option === undefined) {
+    chrome.tabs.create({ url: url }, function (tab) {
+      if (callback) { callback(tab.id); }
     });
+  } else {
+    chrome.system.display.getInfo(function (displayInfo) {
+      let height = displayInfo[0].bounds.height
+      let width = displayInfo[0].bounds.width
+      chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+        if (callback) { callback(window.tabs[0].id); }
+      });
+    })
   }
 }
 
