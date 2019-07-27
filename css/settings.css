@@ -19,14 +19,14 @@ button:focus {
 }
 
 /* navgation bar */
-ul {
+ul.nav {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
     overflow: hidden;
 }
 
-li {
+li.section {
     float: left;
     margin-left: 0;
     border-width: 0 0 1px 0;
@@ -34,7 +34,7 @@ li {
     border-style: none none solid none;
 }
 
-li span {
+li.section span.section {
     display: block;
     color: white;
     text-align: center;
@@ -45,18 +45,18 @@ li span {
     font-size: 15px;
 }
 
-li:nth-child(1) {
+li.section:nth-child(1) {
     border-right: solid white 0.5px;
     background-color: #d63c24f2;
 }
 
-li:nth-child(2) {
+li.section:nth-child(2) {
     width: 101px;
     border-left: solid white 0.5px;
     background-color: #25a7b0;
 }
 
-li:active {
+li.section:active {
     opacity: 0.5;
 }
 
