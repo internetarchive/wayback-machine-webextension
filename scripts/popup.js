@@ -50,18 +50,6 @@ function retrieve_url() {
   return url
 }
 
-function get_clean_url() {
-  var url = retrieve_url()
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
-  }
-  return url
-}
-
 function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({

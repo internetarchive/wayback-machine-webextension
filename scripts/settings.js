@@ -4,7 +4,9 @@ $('#showall').click(selectall)
 $('input').change(save_options)
 $('#show_context').change(save_options)
 $('#back').click(goBack)
-// addDocs()
+switchSetting()
+addDocs()
+
 function initializeSettings () {
   chrome.storage.sync.get({
     show_context: 'tab',
@@ -38,7 +40,7 @@ function restoreOptions (items) {
 
 function save_options () {
   chrome.storage.sync.set({
-    show_context: $('#show_context').val(),
+    show_context: $('input[name=tw]:checked').val(),
     citations: $('#citations').prop('checked'),
     resource: $('#resource').prop('checked'),
     auto_update_context: $('#auto-update-context').prop('checked'),
@@ -69,9 +71,39 @@ function selectall () {
   }
 }
 
+function noneSelected () {
+  let checkboxes = $('[name="context"]')
+  for (var i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) { return false }
+  }
+  return true
+}
+
 function goBack () {
   $('#settingPage').hide()
   $('#popupPage').show()
+  if (noneSelected()) {
+    const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
+    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
+    attachTooltip(btn, tip, 'top', 50)
+  } else {
+    $('#context-screen').css({ opacity: 1.0 }).on('click', function () {
+      const url = get_clean_url()
+      chrome.runtime.sendMessage({ message: 'showall', url: url })
+    })
+  }
+}
+
+function switchSetting() {
+  $('#context').hide()
+  $('#general_btn').click(function () {
+    $('#context').hide()
+    $('#general').show()
+  })
+  $('#context_btn').click(function () {
+    $('#general').hide()
+    $('#context').show()
+  })
 }
 
 function addDocs () {
@@ -92,9 +124,9 @@ function addDocs () {
     for (var i = 0; i < labels.length; i++) {
       let docFor = $(labels[i]).attr('for')
       if (docs[docFor]) {
-        let tt = $('<div>').append($('<p>').text(docs[docFor]))[0].outerHTML
+        let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting_tip' }))[0].outerHTML
         let docBtn = $('<button>').addClass('btn-docs').text('?')
-        $(labels[i]).append(attachTooltip(docBtn, tt))
+        $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
       }
     }
   })

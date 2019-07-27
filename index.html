@@ -6,10 +6,9 @@
   <meta content="utf-8" http-equiv="encoding">
   <title>Wayback Machine</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/index.css">
   <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/index.css">
 	<link rel="stylesheet" type="text/css" href="css/set.css">
-	<!-- <link rel="stylesheet" type="text/css" href="css/settings.css"> -->
 </head>
 
 <body>
@@ -83,88 +82,77 @@
 
   <div id="settingPage">
     <ul>
-      <li><span>General</span></li>
-      <li><span>Context</span></li>
+      <li id="general_btn"><span class="unselectable">General</span></li>
+      <li id="context_btn"><span class="unselectable">Context</span></li>
     </ul>
-    <div class="container">
-      <div class="general">
-  
+    <div class="container unselectable">
+      <div id="general">
         <label class="switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
-          <span class="toggle"><strong>Show 'S' in icon if current page hasn't been saved</strong></span>
+          <span class="toggle">Show 'S' in icon if current page hasn't been saved</span>
         </label>
-        <span></span>
-        <br>
-        <br>
-        <label class="switch" for="citations">
-        <input type="checkbox" id="citations">
-        <span class="toggle"><strong>Add Archive.org links to citations on Web pages</strong></span>
-        </label>
-        <br>
         <br>
         <label class="switch" for="resource">
-        <input type="checkbox" id="resource">
-        <span class="toggle"><strong>Show 'R' in icon if there is resource available</strong></span>
+          <input type="checkbox" id="resource">
+          <span class="toggle">Show 'R' in icon if there is resource available</span>
         </label>
         <br>
+        <label class="switch" for="citations">
+          <input type="checkbox" id="citations">
+          <span class="toggle">Add Archive.org links to citations on Web pages</span>
+        </label>
         <br>
         <label class="switch" for="auto-update-context">
-        <input type="checkbox" id="auto-update-context">
-        <span class="toggle"><strong>Update context windows automatically on new pages</strong></span>
+          <input type="checkbox" id="auto-update-context">
+          <span class="toggle">Update context windows automatically on new pages</span>
         </label>
-        <select id="show_context">
-            <option value="tab">Show Features in Tabs</option>
-            <option value="window">Show Features in Windows</option>
-        </select>
+        <div class="switch" id="view">
+          <div id="viewText">Show Features in</div>
+              <input type="radio" name="tw" value="tab" checked>
+              <label class="toggle">Tab</label>
+              <input type="radio" name="tw" value="window">
+              <label class="toggle">Window</label>
+        </div>
       </div>
-      <br>
-      <br>
-      <div class="context">
-        <h6><strong>"Show me Context" Features</strong></h3>
-        <label for="showall">
-        <input type="checkbox" id="showall">
-        <span class="enable"><strong>Show All Context Screens</strong></span>
+      
+      <div id="context">
+        <label class="switch ctx" for="showall">
+          <input type="checkbox" id="showall">
+          <span class="enable"><strong>Show All Context Screens</strong></span>
         </label>
         <br>
-        <br>
-        <label for="alexa">
-        <input type="checkbox" name="context" id="alexa" class="only">
-        <span class="enable"><strong>Alexa Internet</strong></span>
+        <label class="switch ctx" for="alexa">
+          <input type="checkbox" name="context" id="alexa" class="only">
+          <span class="enable"><strong>Alexa Internet</strong></span>
         </label>
         <br>
-        <br>
-        <label for="domaintools">
-        <input type="checkbox" name="context" id="domaintools" class="only">
-        <span class="enable"><strong>DomainTools</strong></span>
+        <label class="switch ctx" for="domaintools">
+          <input type="checkbox" name="context" id="domaintools" class="only">
+          <span class="enable"><strong>DomainTools</strong></span>
         </label>
         <br>
-        <br>
-        <label for="tweets">
-        <input type="checkbox" name="context" id="tweets" class="only">
-        <span class="enable"><strong>Tweets of URLs</strong></span>
+        <label class="switch ctx" for="tweets">
+          <input type="checkbox" name="context" id="tweets" class="only">
+          <span class="enable"><strong>Tweets of URLs</strong></span>
         </label>
         <br>
-        <br>
-        <label for="wbmsummary">
-        <input type="checkbox" name="context" id="wbmsummary" class="only">
-        <span class="enable"><strong>Wayback Machine Summary</strong></span>
+        <label class="switch ctx" for="wbmsummary">
+          <input type="checkbox" name="context" id="wbmsummary" class="only">
+          <span class="enable"><strong>Wayback Machine Summary</strong></span>
         </label>
         <br>
-        <br>
-        <label for="annotations">
-        <input type="checkbox" name="context" id="annotations" class="only">
-        <span class="enable"><strong>Annotations with Hypothes.is</strong></span>
+        <label class="switch ctx" for="annotations">
+          <input type="checkbox" name="context" id="annotations" class="only">
+          <span class="enable"><strong>Annotations with Hypothes.is</strong></span>
         </label>
         <br>
-        <br>
-        <label for="tagcloud">
-        <input type="checkbox" name="context" id="tagcloud" class="only">
-        <span class="enable"><strong>Word Cloud for Sites</strong></span>
+        <label class="switch ctx" for="tagcloud">
+          <input type="checkbox" name="context" id="tagcloud" class="only">
+          <span class="enable"><strong>Word Cloud for Sites</strong></span>
         </label>
       </div>
-
     </div>
-    <button id="back">Go Back</button>
+    <button id="back">save</button>
   </div>
 </body>
 
