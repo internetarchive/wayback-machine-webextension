@@ -95,14 +95,19 @@ function goBack () {
 }
 
 function switchSetting() {
+  if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') } 
   $('#context').hide()
   $('#general_btn').click(function () {
     $('#context').hide()
     $('#general').show()
+    if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') } 
+    if ($('#context_btn').hasClass('selected')) { $('#context_btn').removeClass('selected') } 
   })
   $('#context_btn').click(function () {
     $('#general').hide()
     $('#context').show()
+    if (!$('#context_btn').hasClass('selected')) { $('#context_btn').addClass('selected') } 
+    if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
   })
 }
 
