@@ -82,6 +82,7 @@ function noneSelected () {
 function goBack () {
   $('#settingPage').hide()
   $('#popupPage').show()
+  // checking contexts selection status
   if (noneSelected()) {
     const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
     const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
@@ -97,6 +98,7 @@ function goBack () {
 function switchSetting() {
   if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') } 
   $('#context').hide()
+  // switching pressed effect of tab button
   $('#general_btn').click(function () {
     $('#context').hide()
     $('#general').show()

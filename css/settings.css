@@ -41,17 +41,14 @@ li.section span.section {
 
 span.section {
     text-align: center;
-    padding-left: 18px;
-    padding-right: 18px;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding: 3px 18px 3px 18px;
     font-size: 15px;
 }
 
 li.section:nth-child(1) {
     background-color: #d63c24f2;
     border-top: solid 2px #d63c24f2;
-    border-right: solid #d63c24f2 2px;
+    border-right: solid 2px #d63c24f2 ;
     border-left: solid 4px #d63c24f2;
     margin-left: 4px;
 }
@@ -60,7 +57,7 @@ li.section:nth-child(2) {
     margin-left: 3.5px;
     background-color: #25a7b0;
     border-top: solid 2px #25a7b0;
-    border-left: solid #25a7b0 2px;
+    border-left: solid 2px #25a7b0 ;
     border-right: solid 4px #25a7b0;
 }
 
@@ -112,10 +109,7 @@ li.selected {
     border-radius: 5px;
     box-shadow: 0px 3px 3px #888888;
     margin-top: 8px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 5px;
+    padding: 10px 5px 5px 5px;
     text-align: left;
 }
 
@@ -131,10 +125,7 @@ li.selected {
 
 .ctx {
     width: 170px;
-    margin-top: 5px;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-bottom: 4px;
+    padding: 5px 5px 4px 5px;
 }
 
 .ctx:hover {
