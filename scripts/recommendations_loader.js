@@ -1,1 +1,1 @@
-getDetails()
+getArticles(getUrlByParameter('url'))
