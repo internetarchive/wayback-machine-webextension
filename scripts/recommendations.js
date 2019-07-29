@@ -1,3 +1,5 @@
+const threshold = 0.90;
+
 function parseDate (date) {
   if(typeof date === "string"){
     const dateObject = new Date(date)
@@ -47,7 +49,9 @@ function getDetails () {
     if (clips.status !== 'error') {
       if (clips.length > 0) {
         for (let clip of clips) {
-          $('#RecommendationTray').append(constructArticles(clip))
+          if(threshold >= clip['similarity']){
+            $('#RecommendationTray').append(constructArticles(clip))
+          }
         }
       } else {
         $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
