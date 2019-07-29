@@ -50,18 +50,6 @@ function retrieve_url() {
   return url
 }
 
-function get_clean_url() {
-  var url = retrieve_url()
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
-  }
-  return url
-}
-
 function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
@@ -250,7 +238,9 @@ function sitemap() {
 }
 
 function settings() {
-  window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
+  // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
+  $('#popupPage').hide();
+  $('#settingPage').show();
 }
 
 function show_all_screens() {
@@ -362,6 +352,7 @@ $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
+$('#settingPage').hide();
 $('#context-screen').click(show_all_screens)
 $('.feedback').click(open_feedback_page)
 

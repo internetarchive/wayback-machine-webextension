@@ -1,0 +1,19 @@
+body {
+    font-size: 30px;
+    text-align: left;
+    margin-top: 100px;
+}
+
+#header {
+    font-size: 40px;
+    text-align: center;
+}
+
+div#content > h1 {
+    text-align: center;
+}
+
+#content {
+    width: 1000px;
+    margin: 0 auto;
+}
