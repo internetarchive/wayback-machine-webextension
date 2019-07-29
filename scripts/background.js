@@ -67,7 +67,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.windows.create({url:chrome.runtime.getURL('welcome.html'), width: 750, height:500, top: 0})
+  openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
 });
 
 
