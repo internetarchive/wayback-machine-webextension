@@ -160,7 +160,20 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendResponse(books)
       })
       return true
-
+  } else if (message.message === 'tvnews'){
+    let url = 'https://gext-api.archive.org/services/context/tvnews?url=' + message.article;
+    const timeoutPromise = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        reject(new Error('timeout'))
+      }, 30000)
+      fetch(url).then(resolve, reject)
+    })
+    timeoutPromise
+      .then(response => response.json())
+      .then(function (clips) {
+        sendResponse(clips)
+      })
+      return true
   } else if (message.message === 'citationadvancedsearch') {
     let host = 'https://gext-api.archive.org/advancedsearch.php?q='
     let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
@@ -174,30 +187,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         }
         sendResponse(identifier)
 
-      })       
+      })
       .catch(function (err) {
         console.log(err)
       })
     return true
-    // $.ajax({
-    //   url: url,
-    //   type: 'GET',
-    //   dataType: 'json',
-    //   crossDomain: true,
-    //   jsonp: 'callback'
-    // })
-    // .done(function (data) {
-    //   let identifier = null
-    //   if (data.response.docs.length > 0) {
-    //     let identifier = data.response.docs[0].identifier
-    //   }
-    //   console.log(identifier)
-    //   sendResponse(identifier)
-    //
-    // })
-    // .fail(function (err) {
-    //   console.log(err)
-    // })
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
@@ -214,7 +208,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     tabIdPromise = new Promise(function (resolve) {
       openByWindowSetting(context_url, null, resolve);
     });
-  } 
+  }
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
@@ -270,10 +264,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
           tabIdPromise.then(function (id) {
             if (tabId !== id && tab.id !== id && isNotExcludedUrl(singlewindowurl)) {
               chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
-            } 
+            }
           });
         }
-      }); 
+      });
     }
   }
 });
