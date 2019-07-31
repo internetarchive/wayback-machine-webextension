@@ -177,6 +177,27 @@ function get_hypothesis() {
   $('#row_contain-url').show();
 }
 
+function openContextFeature(evt, feature) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  $(feature).show();
+  evt.currentTarget.className += " active";
+}
+
 function singlePageView(){
   console.log("loading");
 
@@ -191,15 +212,20 @@ function singlePageView(){
 
   // Check settings for features
   chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
-    let toBeLoaded = [];
-    for (const feature in event) {
+    for (let feature in event) {
       if (event.hasOwnProperty(feature)) {
+        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+        let featureTabId = featureId + "_tab";
+
         // Hide features that weren't selected
         if (!event[feature]) {
-          const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
           $(featureId).hide();
+          $(featureTabId).hide();
         } else {
           contexts_dic[feature]();
+          $(featureTabId).click(function(event){
+            openContextFeature(event, featureId);
+          })
         }
       }
     }

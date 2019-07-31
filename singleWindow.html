@@ -20,7 +20,18 @@
 </head>
 
 <body>
-    <div class="container" id="Alexa">
+  <!-- Tab links -->
+    <div class="tab">
+      <button class="tablinks" id="Alexa_tab">Alexa</button>
+      <button class="tablinks" id="Domaintools_tab">Domain Tools</button>
+      <button class="tablinks" id="Wbmsummary_tab">Wayback Machine Summary</button>
+      <button class="tablinks" id="Tweets_tab">Tweets</button>
+      <button class="tablinks" id="Annotations_tab">Annotations</button>
+      <button class="tablinks" id="Tagcloud_tab">Tag Cloud</button>
+    </div>
+
+  <!-- Tab contents -->
+    <div class="container tabcontent" id="Alexa">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Alexa overview of Current URL</strong></h2>
@@ -39,7 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Domaintools">
+    <div class="container tabcontent" id="Domaintools">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>DomainTools overview of Current URL</strong></h2>
@@ -60,7 +71,7 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Wbmsummary">
+    <div class="container tabcontent" id="Wbmsummary">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Captures overview</strong></h2>
@@ -80,7 +91,7 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Tweets">
+    <div class="container tabcontent" id="Tweets">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Tweets of Current URL</strong></h2>
@@ -92,7 +103,7 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Annotations">
+    <div class="container tabcontent" id="Annotations">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Annotations of Current URL</strong></h2>
@@ -103,7 +114,7 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Tagcloud">
+    <div class="container tabcontent" id="Tagcloud">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Tag-Cloud</strong></h2>
@@ -111,6 +122,8 @@
             </div>
         </div>
     </div>
+
+<!-- HTML Templates -->
     <div id="row-twitter" style="background-color: lightblue;">
         <img src="" alt="" id="profile-image">
         <span id="profile-name"></span>
