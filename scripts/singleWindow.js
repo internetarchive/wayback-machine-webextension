@@ -177,26 +177,34 @@ function get_hypothesis() {
   $('#row_contain-url').show();
 }
 
-const contexts_dic = {
-  "alexa": get_alexa,
-  "domaintools": get_domainTool,
-  "wbmsummary": get_WBMSummary,
-  "tweets": get_tweetsSinglePage,
-  "annotations": get_hypothesis,
-  "tagcloud": get_tagCloud
-};
+function singlePageView(){
+  console.log("loading");
 
-chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
-  let toBeLoaded = [];
-  for (const feature in event) {
-    if (event.hasOwnProperty(feature)) {
-      if (!event[feature]) {
-        const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
-        $(featureId).hide();
-      } else {
-        toBeLoaded.push(contexts_dic[feature]);
+  const contexts_dic = {
+    "alexa": get_alexa,
+    "domaintools": get_domainTool,
+    "wbmsummary": get_WBMSummary,
+    "tweets": get_tweetsSinglePage,
+    "annotations": get_hypothesis,
+    "tagcloud": get_tagCloud
+  };
+
+  // Check settings for features
+  chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
+    let toBeLoaded = [];
+    for (const feature in event) {
+      if (event.hasOwnProperty(feature)) {
+        // Hide features that weren't selected
+        if (!event[feature]) {
+          const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+          $(featureId).hide();
+        } else {
+          contexts_dic[feature]();
+        }
       }
     }
-  }
-  window.onload = function () { toBeLoaded.forEach(f => f()) }
-})
+  })
+}
+
+
+window.onload = singlePageView;
