@@ -170,13 +170,6 @@ function get_tagCloud() {
   get_tags(url);
 }
 
-function get_DOI() {
-  createPage();
-  var url = getUrlByParameter('url')
-  if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-    $('#doi-heading').css('display', 'block')
-  }
-}
 
 function get_hypothesis() {
   get_annotations('domain');
@@ -185,17 +178,16 @@ function get_hypothesis() {
 }
 
 const contexts_dic = {
-  "alexa": get_alexa, 
-  "domaintools": get_domainTool, 
-  "wbmsummary": get_WBMSummary, 
-  "tweets": get_tweetsSinglePage, 
-  "annotations": get_hypothesis, 
-  "tagcloud": get_tagCloud, 
-  "doi": get_DOI
+  "alexa": get_alexa,
+  "domaintools": get_domainTool,
+  "wbmsummary": get_WBMSummary,
+  "tweets": get_tweetsSinglePage,
+  "annotations": get_hypothesis,
+  "tagcloud": get_tagCloud
 };
 
 chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
-  let toBeLoaded = [get_DOI];
+  let toBeLoaded = [];
   for (const feature in event) {
     if (event.hasOwnProperty(feature)) {
       if (!event[feature]) {
