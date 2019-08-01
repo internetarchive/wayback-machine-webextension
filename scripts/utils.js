@@ -39,7 +39,8 @@ var excluded_urls = [
   "web.gext-api.archive.org",
   "web-beta.archive.org",
   "gext-api.archive.org",
-  'chrome.google.com/webstore'
+  'chrome.google.com/webstore',
+  'chrome-extension://'
 ];
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
