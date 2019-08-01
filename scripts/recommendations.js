@@ -1,3 +1,5 @@
+const threshold = 0.85;
+
 function parseDate (date) {
   if(typeof date === "string"){
     const dateObject = new Date(date)
@@ -39,28 +41,49 @@ function constructArticles (clip) {
   )
 }
 
-function getDetails () {
-  var article = getUrlByParameter('url')
-  var apiURL = 'https://gext-api.archive.org/services/context/tvnews?url=' + article
-  $.getJSON(apiURL, function (clips) {
+function getDetails (article) {
+  return new Promise(function(resolve, reject){
+    chrome.runtime.sendMessage({
+      message: 'tvnews',
+      article: article
+    }, function (clips) {
+      if(clips){
+        resolve(clips)
+      }else{
+        reject(new Error('Clips not found'))
+      }
+    })
+  })
+}
+function getArticles(url){
+  getDetails(url)
+  .then(function(clips){
     $('.loader').hide()
     if (clips.status !== 'error') {
-      if (clips.length > 0) {
+      if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
         for (let clip of clips) {
-          $('#RecommendationTray').append(constructArticles(clip))
+          if(threshold >= clip['similarity']){
+            $('#RecommendationTray').append(constructArticles(clip))
+          }
         }
       } else {
+        console.log("No similar clips found.")
         $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
           $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
         )
       }
-    } else {
-      $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
-        $('<p>').text(clips.message).css({ 'width': '300px', 'margin': 'auto' })
-      )
     }
   })
+  .catch(function(err){
+    console.log("Something went wrong.")
+    $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
+      $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })
+    )
+  })
 }
+
+
+
 
 if (typeof module !== 'undefined') {
   module.exports = {

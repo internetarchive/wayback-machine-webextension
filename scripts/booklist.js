@@ -8,8 +8,6 @@ function populateBooks(url) {
       if (metadata){
         let book_element = addBook(metadata);
         if(metadata.readable){
-          $("#resultsTray").prepend(book_element);
-        } else {
           $("#resultsTray").append(book_element);
         }
       }
