@@ -88,7 +88,7 @@ function goBack () {
     const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
     attachTooltip(btn, tip, 'top', 50)
   } else {
-    $('#context-screen').css({ opacity: 1.0 }).on('click', function () {
+    $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', function () {
       const url = get_clean_url()
       chrome.runtime.sendMessage({ message: 'showall', url: url })
     })
