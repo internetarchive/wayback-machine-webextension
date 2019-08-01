@@ -66,7 +66,6 @@ function first_archive_details () {
     		.attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
-  $('#save_now').attr('href', 'https://web.archive.org/save/' + url)
 }
 
 function recent_archive_details () {
