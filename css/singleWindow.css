@@ -133,6 +133,9 @@ p{
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
+  overflow: wrap;
+  width: 110px;
+  height: 80px;
 }
 
 /* Change background color of buttons on hover */
