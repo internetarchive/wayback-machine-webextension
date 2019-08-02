@@ -31,6 +31,7 @@ function get_alexa () {
         $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url);
       }
     }
+    $('#loader_alexa').hide()
   })
 }
 
@@ -122,12 +123,14 @@ function percentEncode (str) {
 function get_tagCloud() {
   const url = getUrlByParameter('url');
   get_tags(url);
+  $("#loader_tagcloud").hide();
 }
 
 
 function get_hypothesis() {
   get_annotations('domain');
   get_annotations('url');
+  $("#loader_annotations").hide()
   $('#row_contain-url').show();
 }
 
@@ -153,27 +156,28 @@ function singlePageView(){
   };
 
   // Check settings for features
-  chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
+  let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud'];
+  chrome.storage.sync.get(features, function (event) {
     let first_feature = null;
-    for (let feature in event) {
-      if (event.hasOwnProperty(feature)) {
-        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
-        let featureTabId = featureId + "_tab";
+    for (let i =0; i < features.length; i++) {
+      let feature = features[i];
+      let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+      let featureTabId = featureId + "_tab";
 
-        // Hide features that weren't selected
-        if (!event[feature]) {
-          $(featureId).hide();
-          $(featureTabId).hide();
-        } else {
-          contexts_dic[feature]();
-          $(featureTabId).click(function(event){
-            openContextFeature(event, featureId);
-          })
-          if(!first_feature){
-            first_feature = featureTabId;
-          }
+      // Hide features that weren't selected
+      if (!event[feature]) {
+        $(featureId).hide();
+        $(featureTabId).hide();
+      } else {
+        contexts_dic[feature]();
+        $(featureTabId).click(function(event){
+          openContextFeature(event, featureId);
+        })
+        if(!first_feature){
+          first_feature = featureTabId;
         }
       }
+
     }
     if(first_feature){
       $(first_feature).click();
