@@ -154,6 +154,7 @@ function singlePageView(){
 
   // Check settings for features
   chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
+    let first_feature = null;
     for (let feature in event) {
       if (event.hasOwnProperty(feature)) {
         let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
@@ -168,8 +169,14 @@ function singlePageView(){
           $(featureTabId).click(function(event){
             openContextFeature(event, featureId);
           })
+          if(!first_feature){
+            first_feature = featureTabId;
+          }
         }
       }
+    }
+    if(first_feature){
+      $(first_feature).click();
     }
   })
 }
