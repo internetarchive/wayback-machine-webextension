@@ -5,6 +5,9 @@
 .color_code_whois{
     color: #ffcc66;
 }
+.row{
+  margin: auto;
+}
 body{
     max-height: 100%;
 }
@@ -114,7 +117,12 @@ p{
 }
 
 .col-sm-6 {
-    margin-left: 25%;
+    margin:auto;
+    width:700px;
+    float:none;
+}
+.col-sm-12{
+  float:none;
 }
 /* https://www.w3schools.com/howto/howto_js_tabs.asp */
 /* Style the tab */
