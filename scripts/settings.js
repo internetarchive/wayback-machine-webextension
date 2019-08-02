@@ -1,6 +1,9 @@
 $(initializeSettings)
 $('.only').click(validate)
 $('#showall').click(selectall)
+// use capture instead of bubbling
+document.getElementById('view').addEventListener('click', switchTabWindow, true)
+$('input[type="radio"]').click(function () { $(this).prop('checked', true) })
 $('input').change(save_options)
 $('#show_context').change(save_options)
 $('#back').click(goBack)
@@ -109,6 +112,8 @@ function switchSetting() {
     if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
   })
 }
+
+function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true) }
 
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {

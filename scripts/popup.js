@@ -2,7 +2,7 @@ global_url = ''
 var set_of_sites;
 chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
   set_of_sites = new Set(event.newshosts);
-  $(`input[name=tw][value=${event.show_context}]`).attr('checked', true);
+  $(`input[name=tw][value=${event.show_context}]`).prop('checked', true);
 })
 
 function homepage() {
