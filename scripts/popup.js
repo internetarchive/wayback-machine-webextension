@@ -2,7 +2,7 @@ global_url = ''
 var set_of_sites;
 chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
   set_of_sites = new Set(event.newshosts);
-  $(`input[name=tw][value=${event.show_context}]`).attr('checked', true);
+  $(`input[name=tw][value=${event.show_context}]`).prop('checked', true);
 })
 
 function homepage() {
@@ -327,11 +327,11 @@ function show_wikibooks() {
 
 function noContextTip() {
   chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function(event) {
-    for (const context in event) { if (event[context]) { return true; } }
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
+    const btn = $('#context-screen').css({ opacity: 0.5 })
     const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
     attachTooltip(btn, tip, 'top', 50)
+    for (const context in event) { if (event[context]) { return $('#context-screen').tooltip('disable').css({ opacity: 1.0 }).click(show_all_screens) } }
   })
 }
 
@@ -353,10 +353,8 @@ $('#search_tweet').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
-$('#settingPage').hide();
-$('#context-screen').click(show_all_screens)
+$('#settingPage').hide()
 $('.feedback').click(open_feedback_page)
-
 $('#overview').click(view_all)
 $('#site_map').click(sitemap)
 $('#search_input').keydown(display_suggestions)

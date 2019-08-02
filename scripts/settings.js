@@ -1,6 +1,9 @@
 $(initializeSettings)
 $('.only').click(validate)
 $('#showall').click(selectall)
+// use capture instead of bubbling
+document.getElementById('view').addEventListener('click', switchTabWindow, true)
+$('input[type="radio"]').click(function () { $(this).prop('checked', true) })
 $('input').change(save_options)
 $('#show_context').change(save_options)
 $('#back').click(goBack)
@@ -81,14 +84,11 @@ function goBack () {
   $('#popupPage').show()
   // checking contexts selection status
   if (noneSelected()) {
-    const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
-    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
-    attachTooltip(btn, tip, 'top', 50)
+    const btn = $('#context-screen').off('click').css({ opacity: 0.5 }).tooltip('enable')
   } else {
     $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', function () {
-      const url = get_clean_url()
-      chrome.runtime.sendMessage({ message: 'showall', url: url })
-    })
+      chrome.runtime.sendMessage({ message: 'showall', url: get_clean_url() })
+    }).tooltip('disable')
   }
 }
 
@@ -109,6 +109,8 @@ function switchSetting() {
     if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
   })
 }
+
+function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true) }
 
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {
