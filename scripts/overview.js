@@ -3,6 +3,7 @@ function get_WBMSummary() {
   first_archive_details();
   recent_archive_details();
   get_thumbnail();
+  $("#loader_wbmsummary").hide();
 }
 
 function getTotal (captures) {
