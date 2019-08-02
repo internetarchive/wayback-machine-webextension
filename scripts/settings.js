@@ -16,7 +16,6 @@ function initializeSettings () {
     auto_archive: false,
     alexa: false,
     domaintools: false,
-    tweets: false,
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
@@ -31,7 +30,6 @@ function restoreOptions (items) {
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#alexa').prop('checked', items.alexa)
   $('#domaintools').prop('checked', items.domaintools)
-  $('#tweets').prop('checked', items.tweets)
   $('#wbmsummary').prop('checked', items.wbmsummary)
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
@@ -47,7 +45,6 @@ function save_options () {
     auto_archive: $('#auto-archive').prop('checked'),
     alexa: $('#alexa').prop('checked'),
     domaintools: $('#domaintools').prop('checked'),
-    tweets: $('#tweets').prop('checked'),
     wbmsummary: $('#wbmsummary').prop('checked'),
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
@@ -96,19 +93,19 @@ function goBack () {
 }
 
 function switchSetting() {
-  if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') } 
+  if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
   $('#context').hide()
   // switching pressed effect of tab button
   $('#general_btn').click(function () {
     $('#context').hide()
     $('#general').show()
-    if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') } 
-    if ($('#context_btn').hasClass('selected')) { $('#context_btn').removeClass('selected') } 
+    if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
+    if ($('#context_btn').hasClass('selected')) { $('#context_btn').removeClass('selected') }
   })
   $('#context_btn').click(function () {
     $('#general').hide()
     $('#context').show()
-    if (!$('#context_btn').hasClass('selected')) { $('#context_btn').addClass('selected') } 
+    if (!$('#context_btn').hasClass('selected')) { $('#context_btn').addClass('selected') }
     if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
   })
 }
@@ -122,7 +119,6 @@ function addDocs () {
       'auto-archive': 'Enables extension to identify URLs that have not previously been saved on the Wayback Machine.',
       'alexa': 'Displays what Alexa Internet knows about the site you are on (traffic data).',
       'domaintools': 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
-      'tweets': 'Show Tweets that include the URL you are on.',
       'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on (captures).',
       'annotations': 'Displays what Hypothes.is knows about the URL or the Site you are on (annotations).',
       'tagcloud': 'Show a Word Cloud built from Anchor text (the text associated with links) of links archived in the Wayback Machine, to the web page you are you.'

@@ -33,52 +33,6 @@ function get_alexa () {
     }
   })
 }
-function get_tweetsSinglePage () {
-  var url = getUrlByParameter('url')
-  url = url.replace(/^https?:\/\//, '')
-  const searchPattern = url
-  url = url.replace(/^www./, '')
-  var index_new = url.indexOf('/')
-  url = url.slice(0, index_new - 1)
-  var xhr = new XMLHttpRequest()
-  var new_url = 'https://api.twitter.com/1.1/search/tweets.json?q=' + url + '&result_type=popular'
-  var res = new Object()
-  res.q = url
-  res.result_type = 'popular'
-  var author = getAuthorization('GET', 'https://api.twitter.com/1.1/search/tweets.json', res)
-  xhr.open('GET', new_url, true)
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-  xhr.setRequestHeader('Authorization', author)
-  xhr.onload = function () {
-    data = JSON.parse(xhr.response)
-    var length = (data.statuses.length)
-    if (length > 0) {
-      for (var i = 0; i < length; i++) {
-        dataRow = data.statuses[i]
-        var row = document.getElementById('row-twitter')
-        var item = row.cloneNode(true)
-        var tweet_text = dataRow.text
-        var name = dataRow.user.name
-        var url = dataRow.entities.urls[0].expanded_url
-        var tweet_div = item.querySelectorAll('[id="tweets"]')[0].appendChild(document.createTextNode(tweet_text))
-        var profile_name = item.querySelectorAll('[id="profile-name"]')[0].appendChild(document.createTextNode(name))
-        var img = item.querySelectorAll('[id="profile-image"]')[0]
-        img.setAttribute('src', dataRow.user.profile_image_url)
-        item.id = 'row-tweets' + i
-        var link = item.querySelectorAll('[id="link"]')[0]
-        link.setAttribute('href', url)
-        document.getElementById('box-twitter').appendChild(item)
-      }
-      document.getElementById('row-twitter').style.display = 'none'
-      $('#twitter_page').attr('href', 'https://twitter.com/search?q=' + searchPattern)
-    } else {
-      document.getElementById('box-twitter').innerHTML = 'There are no Tweets for the current URL'
-      document.getElementById('row-twitter').style.display = 'none'
-      $('#twitter_page').hide()
-    }
-  }
-  xhr.send(null)
-}
 
 function getAuthorization (httpMethod, baseUrl, reqParams) {
   // Get acces keys
@@ -177,26 +131,55 @@ function get_hypothesis() {
   $('#row_contain-url').show();
 }
 
-const contexts_dic = {
-  "alexa": get_alexa,
-  "domaintools": get_domainTool,
-  "wbmsummary": get_WBMSummary,
-  "tweets": get_tweetsSinglePage,
-  "annotations": get_hypothesis,
-  "tagcloud": get_tagCloud
-};
+function openContextFeature(evt, feature) {
+  // Get all elements with class="tabcontent" and hide them
+  $(".tabcontent").hide()
 
-chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'tweets', 'annotations', 'tagcloud'], function (event) {
-  let toBeLoaded = [];
-  for (const feature in event) {
-    if (event.hasOwnProperty(feature)) {
-      if (!event[feature]) {
-        const featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
-        $(featureId).hide();
-      } else {
-        toBeLoaded.push(contexts_dic[feature]);
+  // Get all elements with class="tablinks" and remove the class "active"
+  $(".tablinks").removeClass("active");
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  $(feature).show();
+  evt.currentTarget.className += " active";
+}
+
+function singlePageView(){
+
+  const contexts_dic = {
+    "alexa": get_alexa,
+    "domaintools": get_domainTool,
+    "wbmsummary": get_WBMSummary,
+    "annotations": get_hypothesis,
+    "tagcloud": get_tagCloud
+  };
+
+  // Check settings for features
+  chrome.storage.sync.get(['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
+    let first_feature = null;
+    for (let feature in event) {
+      if (event.hasOwnProperty(feature)) {
+        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1);
+        let featureTabId = featureId + "_tab";
+
+        // Hide features that weren't selected
+        if (!event[feature]) {
+          $(featureId).hide();
+          $(featureTabId).hide();
+        } else {
+          contexts_dic[feature]();
+          $(featureTabId).click(function(event){
+            openContextFeature(event, featureId);
+          })
+          if(!first_feature){
+            first_feature = featureTabId;
+          }
+        }
       }
     }
-  }
-  window.onload = function () { toBeLoaded.forEach(f => f()) }
-})
+    if(first_feature){
+      $(first_feature).click();
+    }
+  })
+}
+
+
+window.onload = singlePageView;
