@@ -134,7 +134,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     var open_url = wayback_url + encodeURI(url);
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
-        URLopener(open_url, url, true);
+        URLopener(open_url, url, true)
       } else {
         openByWindowSetting(open_url)
       }
@@ -203,7 +203,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'changeBadge') {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
-  } else if (message.message === 'showall') {
+  } else if (message.message === 'showall' && isNotExcludedUrl(message.url) && message.url !== '') {
     const context_url = chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url;
     tabIdPromise = new Promise(function (resolve) {
       openByWindowSetting(context_url, null, resolve);
