@@ -84,14 +84,11 @@ function goBack () {
   $('#popupPage').show()
   // checking contexts selection status
   if (noneSelected()) {
-    const btn = $('#context-screen').off('click').css({ opacity: 0.5 })
-    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
-    attachTooltip(btn, tip, 'top', 50)
+    const btn = $('#context-screen').off('click').css({ opacity: 0.5 }).tooltip('enable')
   } else {
     $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', function () {
-      const url = get_clean_url()
-      chrome.runtime.sendMessage({ message: 'showall', url: url })
-    })
+      chrome.runtime.sendMessage({ message: 'showall', url: get_clean_url() })
+    }).tooltip('disable')
   }
 }
 
