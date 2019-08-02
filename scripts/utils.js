@@ -36,9 +36,6 @@ var excluded_urls = [
   "0.0.0.0",
   "127.0.0.1",
   "chrome://",
-  "web.archive.org",
-  "web-beta.archive.org",
-  "archive.org",
   'chrome.google.com/webstore',
   'chrome-extension://'
 ];
