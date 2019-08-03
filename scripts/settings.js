@@ -26,7 +26,7 @@ function initializeSettings () {
   }, restoreOptions)
 }
 function restoreOptions (items) {
-  $('#show_context').val(items.show_context)
+  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   $('#citations').prop('checked', items.citations)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
@@ -110,7 +110,7 @@ function switchSetting() {
   })
 }
 
-function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true) }
+function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
 
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {
