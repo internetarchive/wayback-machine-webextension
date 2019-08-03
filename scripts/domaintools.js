@@ -27,6 +27,7 @@ function get_domainTool () {
     } else {
       parent.text('No data found!!')
     }
+    $("#loader_domaintools").hide();
   })
 }
 if (typeof module !== 'undefined') { module.exports = { appendToParent: appendToParent } }

@@ -134,14 +134,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     var open_url = wayback_url + encodeURI(url);
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
-        URLopener(open_url, url, true);
+        URLopener(open_url, url, true)
       } else {
         openByWindowSetting(open_url)
       }
     }
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
-    let host = 'https://gext-api.archive.org/services/context/books?url='
+    let host = 'https://archive.org/services/context/books?url='
     let url = host + encodeURI(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
@@ -161,7 +161,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       })
       return true
   } else if (message.message === 'tvnews'){
-    let url = 'https://gext-api.archive.org/services/context/tvnews?url=' + message.article;
+    let url = 'https://archive.org/services/context/tvnews?url=' + message.article;
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -175,7 +175,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       })
       return true
   } else if (message.message === 'citationadvancedsearch') {
-    let host = 'https://gext-api.archive.org/advancedsearch.php?q='
+    let host = 'https://archive.org/advancedsearch.php?q='
     let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
     let url = host + encodeURI(message.query) + endsearch
     fetch(url)
@@ -203,7 +203,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'changeBadge') {
     //Used to change bage for auto-archive feature
     chrome.browserAction.setBadgeText({ tabId: message.tabId, text: "\u2713" });
-  } else if (message.message === 'showall') {
+  } else if (message.message === 'showall' && isNotExcludedUrl(message.url) && message.url !== '') {
     const context_url = chrome.runtime.getURL('singleWindow.html') + '?url=' + message.url;
     tabIdPromise = new Promise(function (resolve) {
       openByWindowSetting(context_url, null, resolve);
@@ -242,7 +242,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             const news_host = new URL(url).hostname
             // checking resource of amazon books
             if (url.includes('www.amazon')) {
-              fetch('https://gext-api.archive.org/services/context/amazonbooks?url=' + url)
+              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
@@ -284,7 +284,7 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://gext-api.archive.org/auto/save/' + page_url, { credentials: 'include' })
+        fetch('https://archive.org/auto/save/' + page_url, { credentials: 'include' })
           .then(function () {
             chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
               if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
@@ -328,15 +328,15 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       let wayback_url;
       let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
-        wayback_url = 'https://gext-api.archive.org/web/0/' + encodeURI(page_url);
+        wayback_url = 'https://archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
-        wayback_url = 'https://gext-api.archive.org/web/2/' + encodeURI(page_url);
+        wayback_url = 'https://archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
-        wayback_url = 'https://gext-api.archive.org/save/' + encodeURI(page_url);
+        wayback_url = 'https://archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
-        wayback_url = 'https://gext-api.archive.org/web/*/' + encodeURI(page_url);
+        wayback_url = 'https://archive.org/web/*/' + encodeURI(page_url);
       }
       URLopener(wayback_url, page_url, wmIsAvailable);
     }

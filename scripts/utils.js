@@ -3,7 +3,7 @@
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var xhr = new XMLHttpRequest();
-  var requestUrl = 'https://gext-api.archive.org/wayback/available';
+  var requestUrl = 'https://archive.org/wayback/available';
   var requestParams = 'url=' + encodeURI(url);
   xhr.open('POST', requestUrl, true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -36,10 +36,8 @@ var excluded_urls = [
   "0.0.0.0",
   "127.0.0.1",
   "chrome://",
-  "web.gext-api.archive.org",
-  "web-beta.archive.org",
-  "gext-api.archive.org",
-  'chrome.google.com/webstore'
+  'chrome.google.com/webstore',
+  'chrome-extension://'
 ];
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {

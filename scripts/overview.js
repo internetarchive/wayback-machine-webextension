@@ -3,6 +3,7 @@ function get_WBMSummary() {
   first_archive_details();
   recent_archive_details();
   get_thumbnail();
+  $("#loader_wbmsummary").hide();
 }
 
 function getTotal (captures) {
@@ -66,7 +67,6 @@ function first_archive_details () {
     		.attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
-  $('#save_now').attr('href', 'https://web.archive.org/save/' + url)
 }
 
 function recent_archive_details () {

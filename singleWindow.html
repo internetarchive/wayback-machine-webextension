@@ -20,11 +20,22 @@
 </head>
 
 <body>
-    <div class="container" id="Alexa">
+  <!-- Tab links -->
+    <div class="tab">
+      <button class="tablinks" id="Alexa_tab">Alexa Internet</button>
+      <button class="tablinks" id="Domaintools_tab">Domain Tools</button>
+      <button class="tablinks" id="Wbmsummary_tab">Wayback Machine Summary</button>
+      <button class="tablinks" id="Annotations_tab">Annotations (Hypothes.is)</button>
+      <button class="tablinks" id="Tagcloud_tab">Tag Cloud</button>
+    </div>
+
+  <!-- Tab contents -->
+    <div class="container tabcontent" id="Alexa">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <h2><strong>Alexa overview of Current URL</strong></h2>
+                <h2><strong>Alexa Overview</strong></h2>
             </div>
+            <div class="loader" id="loader_alexa"></div>
             <div class="col-sm-6">
                 <div class="pre" id="show_alexa_data">
                     <div class="color_code"><b id="alexa_name"></b></div>
@@ -39,11 +50,12 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Domaintools">
+    <div class="container tabcontent" id="Domaintools">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>DomainTools overview of Current URL</strong></h2>
             </div>
+            <div class="loader" id="loader_domaintools"></div>
             <div class="col-sm-6">
                 <pre id="show_domaintools_data" class="title"></pre>
                 <span class="color_code" id="domain"></span>
@@ -60,18 +72,18 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Wbmsummary">
+    <div class="container tabcontent" id="Wbmsummary">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Captures overview</strong></h2>
             </div>
+            <div class="loader" id="loader_wbmsummary"></div>
             <div class="col-sm-6">
                 <div class="pre title">
                     <p>First Capture: <a id="first_archive_datetime"></a></p>
                     <p>Last Capture: <a id="recent_archive_datetime"></a></p>
                     <p>Total Number of Captures: <a id="total_archives"></a></p>
                     <p>The URL is a <strong id="details"></strong></p>
-                    <p><a id="save_now">Save Page Now</a></p>
                     <div id="message" style="display:none"></div>
                 </div>
             </div>
@@ -80,46 +92,29 @@
             </div>
         </div>
     </div>
-    <div class="container" id="Tweets">
+    <div class="container tabcontent" id="Annotations">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <h2><strong>Tweets of Current URL</strong></h2>
+                <h2><strong>Annotations (Hypothes.is)</strong></h2>
             </div>
-            <div class="col-sm-6">
-                <div id="box-twitter" style="height: 500px;">
-                </div>
-                <a id="twitter_page" href="#">Click to see more tweets</a>
-            </div>
-        </div>
-    </div>
-    <div class="container" id="Annotations">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2><strong>Annotations of Current URL</strong></h2>
-            </div>
+            <div class="loader" id="loader_annotations"></div>
             <div class="col-sm-6">
                 <div class="box" id="container-whole-url" style="height: 500px;overflow: scroll">
                 </div>
             </div>
         </div>
     </div>
-    <div class="container" id="Tagcloud">
+    <div class="container tabcontent" id="Tagcloud">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Tag-Cloud</strong></h2>
+                <div class="loader" id="loader_tagcloud"></div>
                 <div id="container-wordcloud" class="wordcloud"></div>
             </div>
         </div>
     </div>
-    <div id="row-twitter" style="background-color: lightblue;">
-        <img src="" alt="" id="profile-image">
-        <span id="profile-name"></span>
-        <br>
-        <a id="link" href="">
-            <span id="tweets"></span>
-        </a>
-        <br>
-    </div>
+
+<!-- HTML Templates -->
     <div class="row" id="row_contain-url">
         <div class="col-sm-12">
             <div>
