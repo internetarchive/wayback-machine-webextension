@@ -6,8 +6,8 @@ function addCitations () {
   getWikipediaBooks(location.href).then((data) => {
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
-      let isbn = getISBNFromCitation(book)
-      let id = getIdentifier(data[isbn])
+      let isbn = book.text.replace(/-/g, '')
+      let id = getIdentifier(data[isbn]) 
       let metadata = getMetadata(data[isbn])
       let page = getPageFromCitation(book)
       if (id) {
@@ -25,25 +25,23 @@ function addCitations () {
     console.log(error)
   })
 }
-// getMetadata was used to standardize data between OL and IA.
-// probably can be refactored out
+
 function getMetadata (book) {
   const MAX_TITLE_LEN = 300
-  if (book) {
-    if (book.metadata) {
-      return {
-        'title': book.metadata.title.length > MAX_TITLE_LEN ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
-        'author': book.metadata.creator,
-        'image': 'https://archive.org/services/img/' + book.metadata.identifier,
-        'link': book.metadata['identifier-access'],
-        'button_text': 'Read Now',
-        'button_class': 'btn btn-success resize_fit_center',
-        'readable': true
-      }
+  if (book && book.metadata) {
+    return {
+      'title': book.metadata.title.length > MAX_TITLE_LEN ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
+      'author': book.metadata.creator,
+      'image': 'https://archive.org/services/img/' + book.metadata.identifier,
+      'link': book.metadata['identifier-access'],
+      'button_text': 'Read Now',
+      'button_class': 'btn btn-success resize_fit_center',
+      'readable': true
     }
   }
   return false
 }
+
 function addDonateIcon (isbn) {
   return attachTooltip(
     createDonateAnchor(isbn),
@@ -52,7 +50,7 @@ function addDonateIcon (isbn) {
 }
 function addReadIcon (id, metadata) {
   return attachTooltip(
-    createArchiveAnchor(id, metadata),
+    createArchiveAnchor(id),
     createReadToolTip(id, metadata)
   )
 }
@@ -111,7 +109,7 @@ function createDonateAnchor (isbn) {
         .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
     )
 }
-function createArchiveAnchor (id, metadata) {
+function createArchiveAnchor (id) {
   return $('<a>')
     .attr({
       'href': 'https://archive.org/details/' + id,
@@ -125,26 +123,9 @@ function createArchiveAnchor (id, metadata) {
 }
 
 function getIdentifier (book) {
-  // identifier can be found as metadata.identifier or ocaid
-  if (book) {
-    var id = ''
-    if (book.metadata) {
-      id = book.metadata.identifier
-    } else {
-      id = book.ocaid
-    }
-    if (id) {
-      return id
-    }
-  }
+  // identifier can be found as metadata.identifier
+  if (book && book.metadata) { return book.metadata.identifier }
   return null
-}
-
-function getISBNFromCitation (citation) {
-  // Takes in HTMLElement and returns isbn number or null if isbn not found
-  let rawISBN = citation.text
-  let isbn = rawISBN.replace(/-/g, '')
-  return isbn
 }
 
 function getPageFromCitation (book) {
@@ -173,12 +154,4 @@ function getWikipediaBooks (url) {
       }
     })
   })
-}
-
-if (typeof module !== 'undefined') {
-  module.exports = {
-    getISBNFromCitation: getISBNFromCitation,
-    getIdentifier: getIdentifier,
-    getMetadata: getMetadata
-  }
 }

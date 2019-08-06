@@ -35,7 +35,10 @@ describe('isValidUrl', () => {
 describe('isNotExcludedUrl', () => {
   var test_cases = [
     { 'url': 'https://0.0.0.0', 'result': false },
-    { 'url': 'https://web.archive.org/web/20190214141732/https://developer.chrome.com/extensions/webRequest', 'result': false },
+    { 'url': 'https://localhost', 'result': false },
+    { 'url': 'https://127.0.0.1', 'result': false },
+    { 'url': 'chrome-extension://efppkbphbfgoiaadblijkcdkdmajikhd/singleWindow.html?url=https://www.google.com/', 'result': false },
+    { 'url': 'https://chrome.google.com/webstore/category/extensions', 'result': false },
     { 'url': 'chrome://extensions', 'result': false },
     { 'url': 'chrome://newtab', 'result': false },
     { 'url': 'https://example.com', 'result': true },
