@@ -45,6 +45,11 @@ button {
   vertical-align: middle;
 }
 
+#logo_internet_archive {
+    position: relative;
+    top: 2.5px;
+}
+
 a.btn-social,
 .btn-social
 {
