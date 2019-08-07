@@ -55,13 +55,13 @@
     "images/icon.png",
     "images/icon_color.png",
     "scripts/build.js",
-    "scripts/client.js",
+    "scripts/archive.js",
     "scripts/RTcontent.js",
     "css/RTstyle.css",
     "css/sequences.css",
     "css/googlestyle.css",
     "css/radial-tree.css",
-    "css/client.css"
+    "css/archive.css"
   ],
   "browser_action": {
     "default_icon": "images/icon.png"

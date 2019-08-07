@@ -1,0 +1,71 @@
+#error {
+    position: fixed;
+    z-index: 100;
+    width: 350px;
+    height: 250px;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    outline: 1rem black;
+    font-family: monospace, 'Courier New', Courier;
+    animation: fadein 0.8s ease-out;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.3);
+}
+
+#txt {
+    position: absolute;
+    width: 350px;
+    height: 35px;
+    font-size: 17px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    background-color: #9C3837;
+    border-radius: 5px 5px 0px 0px;
+}
+
+#close {
+    display: inline-block;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 8px;
+    right: 10px;
+}
+
+#logo {
+    display: block;
+    position: relative;
+    width: 280px;
+    height: 100px;
+    top: 60px;
+    left: 40px;
+}
+
+
+#archiveBtn {
+    display: block;
+    position: relative;
+    font-size: 20px;
+    width: 300px;
+    height: 35px;
+    top: 90px;
+    left: 25px;
+    background-color: #9C3837;
+    color: white;
+    line-height: 30px;
+    text-align: center;
+    text-decoration: none;
+    opacity: 1;
+    transition: 0.5s;
+}
+
+#archiveBtn:hover {
+    opacity: 0.6;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
