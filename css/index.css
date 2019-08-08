@@ -21,6 +21,7 @@ li{
     overflow: unset; 
     height: 1px; 
     position: relative; 
+    bottom: 2px;
     width: auto; 
     display: flex; 
     background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
@@ -45,6 +46,11 @@ button {
   vertical-align: middle;
 }
 
+#logo_internet_archive {
+    position: relative;
+    top: 2.5px;
+}
+
 a.btn-social,
 .btn-social
 {
@@ -59,6 +65,8 @@ text-decoration: none;
 transition: background-color .3s;
 webkit-transition: background-color .3s;
 width: 54px;
+position: relative;
+bottom: 5px;
 }
 
 .fa{
