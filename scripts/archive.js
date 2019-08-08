@@ -3,7 +3,7 @@ let closeClicked = false;
 let linkClicked = false;
 let shadowRoot;
 const ERROR_CODE_DIC = {
-    404: "404 Page not found", 
+    404: "404 Page not found",
     408: "408 Page request timeout", 
     410: "410 Page has gone", 
     451: "451 Page is illegal", 
@@ -17,7 +17,8 @@ const ERROR_CODE_DIC = {
     523: "523 Unreachable Origin", 
     524: "524 Timout occurred", 
     525: "525 SSL Handshake Failed",
-    526: "526 Invalid SSL Certificate"
+    526: "526 Invalid SSL Certificate",
+    999: "DNS Error"
 };
 console.log('client inject');
 

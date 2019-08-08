@@ -84,7 +84,12 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
     wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
+      chrome.tabs.sendMessage(details.tabId, {
+        type: "SHOW_BANNER",
+        wayback_url: wayback_url,
+        page_url: url,
+        status_code: 999
+      });
     }, function () { });
   }
 }, { urls: ["<all_urls>"], types: ["main_frame"] });
@@ -103,7 +108,12 @@ chrome.webRequest.onCompleted.addListener(function (details) {
           file: "scripts/archive.js"
         }, function () {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
+            chrome.tabs.sendMessage(details.tabId, {
+              type: "SHOW_BANNER",
+              wayback_url: wayback_url,
+              page_url: url,
+              status_code: 999
+            });
           } else {
             chrome.tabs.sendMessage(details.tabId, {
               type: "SHOW_BANNER",
