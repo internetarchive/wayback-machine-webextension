@@ -32,5 +32,6 @@ function get_alexa () {
       }
     }
     $('#loader_alexa').hide()
+    $('#show_alexa_data').show()
   })
 }
