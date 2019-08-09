@@ -13,7 +13,6 @@ addDocs()
 function initializeSettings () {
   chrome.storage.sync.get({
     show_context: 'tab',
-    citations: false,
     resource: false,
     auto_update_context: false,
     auto_archive: false,
@@ -27,7 +26,6 @@ function initializeSettings () {
 }
 function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
-  $('#citations').prop('checked', items.citations)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#auto-archive').prop('checked', items.auto_archive)
@@ -42,7 +40,6 @@ function restoreOptions (items) {
 function save_options () {
   chrome.storage.sync.set({
     show_context: $('input[name=tw]:checked').val(),
-    citations: $('#citations').prop('checked'),
     resource: $('#resource').prop('checked'),
     auto_update_context: $('#auto-update-context').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
@@ -115,7 +112,6 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {
     let docs = {
-      'citations': 'If a page contains a citation, enabling this will allow the extension to search the Archive for the citation and insert a link if found.',
       'resource': 'Display "R" badge when user is viewing Amazon books/Wikipedia/Selected News Outlets and will show related resource in archive accordingly',
       'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
       'auto-archive': 'Enables extension to identify URLs that have not previously been saved on the Wayback Machine.',

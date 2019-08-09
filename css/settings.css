@@ -85,7 +85,7 @@ li.selected {
     margin: 0 auto;
     text-align: center;
     padding-bottom: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     margin-top: 8px;
 }
 
@@ -108,9 +108,8 @@ li.selected {
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0px 3px 3px #888888;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    padding: 6px 5px 6px 5px;
+    margin: 10px auto 10px auto;
+    padding: 14px 8px 14px 8px;
     text-align: left;
 }
 
@@ -127,7 +126,7 @@ li.selected {
 .ctx {
     width: 170px;
     padding: 8px 5px 8px 5px;
-    margin-bottom: 8px;
+    margin: 8px auto 8px auto;
 }
 
 label[for=tagcloud] {
