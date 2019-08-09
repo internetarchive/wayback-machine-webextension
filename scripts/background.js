@@ -7,7 +7,6 @@ var manifest = chrome.runtime.getManifest();
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
-var previous_RTurl = "";
 let tabIdPromise;
 var WB_API_URL = "https://archive.org/wayback/available";
 var newshosts = [
@@ -97,7 +96,6 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 /**
 * Header callback
 */
-RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
@@ -189,10 +187,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
-    });
-  } else if (message.message === 'sendurlforrt') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
     });
   } else if (message.message === 'changeBadge') {
     //Used to change bage for auto-archive feature
