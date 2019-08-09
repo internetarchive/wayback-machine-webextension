@@ -176,24 +176,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendResponse(clips)
       })
       return true
-  } else if (message.message === 'citationadvancedsearch') {
-    let host = 'https://archive.org/advancedsearch.php?q='
-    let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
-    let url = host + encodeURI(message.query) + endsearch
-    fetch(url)
-      .then(response => response.json())
-      .then(function (data) {
-        let identifier = null
-        if (data && data.response && data.response.docs && data.response.docs.length > 0) {
-          identifier = data.response.docs[0].identifier
-        }
-        sendResponse(identifier)
-
-      })
-      .catch(function (err) {
-        console.log(err)
-      })
-    return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
