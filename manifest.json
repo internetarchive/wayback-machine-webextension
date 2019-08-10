@@ -39,19 +39,14 @@
       "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
       "js": ["scripts/build.js", "scripts/utils.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
       "css": ["css/style.css", "css/wikipedia.css"]
-    },
-    {
-        "matches": [
-          "http://jwa.org/teach/*", "https://jwa.org/teach/*", "https://www.future-ethics.com/notes"
-        ],
-        "js": ["scripts/build.js", "scripts/utils.js", "scripts/citations.js", "scripts/citations_loader.js"]
-      }
+    }
   ],
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
     "images/logo.gif",
     "images/logo-animate.svg",
+    "images/donate-icon.jpg",
     "images/icon.png",
     "images/icon_color.png",
     "scripts/build.js",

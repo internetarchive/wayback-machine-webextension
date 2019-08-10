@@ -7,7 +7,6 @@ var manifest = chrome.runtime.getManifest();
 var VERSION = manifest.version;
 //Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = "";
-var previous_RTurl = "";
 let tabIdPromise;
 var WB_API_URL = "https://archive.org/wayback/available";
 var newshosts = [
@@ -84,7 +83,12 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
     wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
+      chrome.tabs.sendMessage(details.tabId, {
+        type: "SHOW_BANNER",
+        wayback_url: wayback_url,
+        page_url: url,
+        status_code: 999
+      });
     }, function () { });
   }
 }, { urls: ["<all_urls>"], types: ["main_frame"] });
@@ -92,7 +96,6 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 /**
 * Header callback
 */
-RTurl = "";
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
@@ -103,7 +106,12 @@ chrome.webRequest.onCompleted.addListener(function (details) {
           file: "scripts/archive.js"
         }, function () {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + "?wayback_url=" + wayback_url + "&page_url=" + url + "&status_code=" + details.statusCode });
+            chrome.tabs.sendMessage(details.tabId, {
+              type: "SHOW_BANNER",
+              wayback_url: wayback_url,
+              page_url: url,
+              status_code: 999
+            });
           } else {
             chrome.tabs.sendMessage(details.tabId, {
               type: "SHOW_BANNER",
@@ -176,31 +184,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendResponse(clips)
       })
       return true
-  } else if (message.message === 'citationadvancedsearch') {
-    let host = 'https://archive.org/advancedsearch.php?q='
-    let endsearch = '&fl%5B%5D=identifier&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows=50&page=1&output=json&save=yes'
-    let url = host + encodeURI(message.query) + endsearch
-    fetch(url)
-      .then(response => response.json())
-      .then(function (data) {
-        let identifier = null
-        if (data && data.response && data.response.docs && data.response.docs.length > 0) {
-          identifier = data.response.docs[0].identifier
-        }
-        sendResponse(identifier)
-
-      })
-      .catch(function (err) {
-        console.log(err)
-      })
-    return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url });
-    });
-  } else if (message.message === 'sendurlforrt') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { RTurl: RTurl });
     });
   } else if (message.message === 'changeBadge') {
     //Used to change bage for auto-archive feature
