@@ -71,7 +71,7 @@ function get_annotations(type='url') {
       );
       $('#container-whole-' + type).hide();
       $('#title-' + type).hide();
-      // row.hide();
+      return "not found " + type;
     }
   });
 }
