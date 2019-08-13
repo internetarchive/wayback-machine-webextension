@@ -56,7 +56,6 @@ function get_annotations(type='url') {
         }
         $('#container-whole-' + type).append(item);
       }
-      $('#row_contain-' + type).hide();
     } else {
       let error_msg;
       if (type === 'domain') {

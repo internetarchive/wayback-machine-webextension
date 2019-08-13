@@ -9,7 +9,6 @@ function get_hypothesis() {
   get_annotations('domain');
   get_annotations('url');
   $("#loader_annotations").hide()
-  $('#row_contain-url').show();
 }
 
 function openContextFeature(evt, feature) {
