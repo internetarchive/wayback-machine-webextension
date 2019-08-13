@@ -100,8 +100,12 @@
             </div>
             <div class="loader" id="loader_annotations"></div>
             <div class="col-sm-6">
-                <div class="box" id="container-whole-url" style="height: 500px;overflow: scroll">
-                </div>
+                <h4 class="title">URL</h4>
+                <div class="box" id="container-whole-url"></div>
+            </div>
+            <div class="col-sm-6">
+                <h4 class="title">Domain</h4>
+                <div class="box" id="container-whole-domain"></div>
             </div>
         </div>
     </div>
@@ -115,8 +119,28 @@
         </div>
     </div>
 
-<!-- HTML Templates -->
+<!-- HTML Templates for annotation url -->
     <div class="row" id="row_contain-url">
+        <div class="col-sm-12">
+            <div>
+                <div>
+                    <strong class="userinfo"></strong>
+                    <span class="date"></span>
+                </div>
+                <div class="source" id="source-">
+                    <span class="glyphicon glyphicon-globe"></span>
+                    <span class="public_on">Public on</span>
+                    <span class="title text-danger"></span>
+                    <span id="source-contain"> </span>
+                </div>
+                <div class="target-selector-exact"></div>
+                <div class="text" id="text-contain"></div>
+                <div class="links"></div>
+            </div>
+        </div>
+    </div>
+<!-- HTML Templates for annotation domain -->
+    <div class="row" id="row_contain-domain">
         <div class="col-sm-12">
             <div>
                 <div>

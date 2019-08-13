@@ -163,3 +163,16 @@ p{
   border: 1px solid #ccc;
   border-top: none;
 }
+
+#row_contain-url, #row_contain-domain {
+    display: none;
+}
+
+#container-whole-url, #container-whole-domain {
+    height: 500px;
+    overflow: scroll;
+}
+
+.title {
+    text-align: center;
+}
