@@ -69,8 +69,9 @@ function get_annotations(type='url') {
         $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
                   .html(error_msg)
       );
-      $('#container-whole-' + type).append(item);
-      row.hide();
+      $('#container-whole-' + type).hide();
+      $('#title-' + type).hide();
+      // row.hide();
     }
   });
 }
