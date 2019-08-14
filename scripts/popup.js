@@ -344,6 +344,7 @@ window.onload = function () {
 
 $('#logo_internet_archive').click(homepage)
 $('#save_now').click(save_now)
+$('#last_save').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)

@@ -140,10 +140,44 @@ background-color: #4a8aff;
 .btn{
     font-weight: 500;
 }
+
 #save_now{
     background-color: #489C3E;
     color: white !important;
+    backface-visibility: hidden;
+    transform: rotateX(0deg);
+    z-index: 999;
 }
+
+#last_save {
+    background-color: #489C3E;
+    color: white !important;
+    backface-visibility: hidden;
+    transform: rotateX(-180deg);
+    display: none;
+}
+
+.flip {
+    perspective: 1000px;
+}
+
+.flip-inside {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip:hover .flip-inside {
+    transform: rotateX(180deg);
+}
+
+.flip:hover #last_save {
+    display: inherit;
+}
+
+.flip:hover #save_now {
+    display: none;
+}
+
 .captures{
     background-color: #d63c24f2;
     color: white !important;
