@@ -169,7 +169,7 @@ p{
 }
 
 #container-whole-url, #container-whole-domain {
-    height: 500px;
+    max-height: 500px;
     overflow: scroll;
 }
 

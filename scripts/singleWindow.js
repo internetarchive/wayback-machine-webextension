@@ -6,9 +6,12 @@ function get_tagCloud() {
 
 
 function get_hypothesis() {
-  get_annotations('domain');
-  get_annotations('url');
+  let hypo_domain = get_annotations('domain');
+  let hypo_url = get_annotations('url');
   $("#loader_annotations").hide()
+  if(hypo_url && hypo_domain){
+    $("#annotations_status").show();
+  }
 }
 
 function openContextFeature(evt, feature) {
