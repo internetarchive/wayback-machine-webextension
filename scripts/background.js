@@ -260,6 +260,21 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   }
 });
 
+// Updating the context page based on every tab the user is selecting
+chrome.tabs.onActivated.addListener(function (info) {
+  chrome.storage.sync.get(['auto_update_context'], function (event) {
+    if (event.auto_update_context === true) {
+      chrome.tabs.get(info.tabId, function (tab) {
+        tabIdPromise.then(function (id) {
+          if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
+            chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + tab.url })
+          }
+        })
+      })
+    }
+  })
+})
+
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
