@@ -48,7 +48,7 @@ chrome.storage.sync.set({
   newshosts: newshosts
 })
 /**
- * 
+ *
  * Installed callback
  */
 chrome.runtime.onStartup.addListener(function(details){
@@ -201,12 +201,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    chrome.storage.sync.get(['auto_archive', 'agreement'], function (event) {
+    chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
-      }
-      if(event.agreement === true){
-        fetch('http://gext-log.archive.org/'+tab.url)
       }
     });
   } else if (info.status === "loading") {
