@@ -50,9 +50,18 @@
             Map</button>
           <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
             <i class="fa fa-twitter"></i> Tweets About this Page</button>
-          <div id="display_">
-            <button type="button" class="btn btn-sm btn-block context_feature" id="context-screen">Show Me Context</button>
+
+          <div class="flip" id="context-screen">
+            <div class="flip-inside" id="ctxbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm btn-block context_feature" id="contextBtn" tabindex='-1'>Show Me Context</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm btn-block context_feature" id="contextTip" tabindex='-1'>Enable context in setting</button>
+              </div>
+            </div>
           </div>
+
           <div id="borrow_books_tr" style="display: none;">
             <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex='-1'>Read This Book</button>
           </div>

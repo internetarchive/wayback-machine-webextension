@@ -141,14 +141,7 @@ background-color: #4a8aff;
     font-weight: 500;
 }
 
-#save_now {
-    background-color: #489C3E;
-    color: white !important;
-    width: 170px;
-    height: 30px;
-}
-
-#last_save {
+#save_now, #last_save {
     background-color: #489C3E;
     color: white !important;
     width: 170px;
@@ -202,6 +195,14 @@ background-color: #4a8aff;
     background-color: #25a7b0;
     color: white !important;
 }
+
+#contextBtn, #contextTip {
+    background-color: #25a7b0;
+    color: white !important;
+    width: 170px;
+    height: 30px;
+}
+
 .context_tip{
     opacity: 0.75;
     width: 154px;

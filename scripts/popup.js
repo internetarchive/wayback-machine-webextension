@@ -326,12 +326,13 @@ function show_wikibooks() {
 }
 
 function noContextTip() {
-  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function(event) {
+  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    const btn = $('#context-screen').css({ opacity: 0.5 })
-    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
-    attachTooltip(btn, tip, 'top', 50)
-    for (const context in event) { if (event[context]) { return $('#context-screen').tooltip('disable').css({ opacity: 1.0 }).click(show_all_screens) } }
+    $('#context-screen').css({ opacity: 0.5 })
+    for (const context in event) { if (event[context]) { 
+      $('#ctxbox').removeClass('flip-inside')
+      return $('#context-screen').css({ opacity: 1.0 }).click(show_all_screens) 
+    }}
   })
 }
 
