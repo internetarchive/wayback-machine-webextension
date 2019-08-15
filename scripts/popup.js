@@ -119,12 +119,14 @@ function social_share(eventObj) {
   }
 }
 
-function search_tweet(eventObj) {
+function search_tweet() {
   var url = get_clean_url()
-  url = url.replace(/^https?:\/\//, '')
-  if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-  var open_url = 'https://twitter.com/search?q=' + url
-  openByWindowSetting(open_url)
+  if (isNotExcludedUrl(url)) {
+    url = url.replace(/^https?:\/\//, '')
+    if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
+    var open_url = 'https://twitter.com/search?q=' + url
+    openByWindowSetting(open_url)
+  }
 }
 
 function search_box_activate() {
@@ -235,7 +237,7 @@ function about_support() {
 
 function sitemap() {
   var url = get_clean_url()
-  openByWindowSetting("https://web.archive.org/web/sitemap/" + url)
+  if (isNotExcludedUrl(url)) { openByWindowSetting("https://web.archive.org/web/sitemap/" + url) }
 }
 
 function settings() {
