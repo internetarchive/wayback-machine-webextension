@@ -158,7 +158,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         if (resp.length === 0) {
           chrome.runtime.sendMessage({
             message: "last_save",
-            time: "Page hasn't been saved yet"
+            time: "Page hasn't been saved"
           })
         } else {
           const date = resp[1][1]
