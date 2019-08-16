@@ -55,7 +55,7 @@ function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://web.archive.org/save/',
+    wayback_url: 'https://web-beta.archive.org/save/',
     page_url: clean_url,
     method: 'save'
   })
