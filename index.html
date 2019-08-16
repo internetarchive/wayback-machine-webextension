@@ -34,22 +34,70 @@
           <div class="flip" id="savebtn">
             <div id="savebox">
               <div class="front">
-                <button type="button" class="btn btn-sm btn-block" id="save_now" tabindex='-1'>Save Page Now</button>
+                <button type="button" class="btn btn-sm btn-block save" id="save_now" tabindex='-1'>Save Page Now</button>
               </div>
               <div class="back">
-                <button type="button" class="btn btn-sm btn-block" id="last_save" tabindex='-1'></button>
+                <button type="button" class="btn btn-sm btn-block save" id="last_save" tabindex='-1'>URL not supported</button>
               </div>
             </div>
           </div>
 
-          <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent
-            Version</button>
-          <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
-          <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
-          <button type="button" class="btn btn-sm extra_feature btn-block" id="site_map" tabindex='-1'>Visualize Site
-            Map</button>
-          <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
-            <i class="fa fa-twitter"></i> Tweets About this Page</button>
+          <div class="flip" id="recentbtn">
+            <div id="recentbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent Version</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm captures btn-block" id="recent_capture_error" tabindex='-1'>URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip" id="firstbtn">
+            <div id="firstbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm captures btn-block" id="first_capture_error" tabindex='-1'>URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip" id="allbtn">
+            <div id="allbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm captures btn-block" id="overview_error" tabindex='-1'>URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip" id="mapbtn">
+            <div id="mapbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm extra_feature btn-block" id="site_map" tabindex='-1'>Visualize Site Map</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm extra_feature btn-block" id="site_map_error" tabindex='-1'>URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip" id="twitterbtn">
+            <div id="twitterbox">
+              <div class="front">
+                <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
+                  <i class="fa fa-twitter"></i> Tweets About this Page</button>
+              </div>
+              <div class="back">
+                <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet_error" tabindex="-1">
+                 URL not supported</button>
+              </div>
+            </div>
+          </div>
 
           <div class="flip" id="context-screen">
             <div class="flip-inside" id="ctxbox">

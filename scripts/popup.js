@@ -368,7 +368,17 @@ function noContextTip() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+function checkExcluded() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    global_url = tabs[0].url
+    if (!isNotExcludedUrl(global_url)) {
+      const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
+      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+    }
+  })
+}
+
+window.onloadFuncs = [get_url, checkExcluded,borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -377,17 +387,17 @@ window.onload = function () {
 
 $('#logo_internet_archive').click(homepage)
 $('#savebtn').click(save_now)
-$('#recent_capture').click(recent_capture)
-$('#first_capture').click(first_capture)
+$('#recentbtn').click(recent_capture)
+$('#firstbtn').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
-$('#search_tweet').click(search_tweet)
+$('#twitterbtn').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
 $('#settingPage').hide()
 $('.feedback').click(open_feedback_page)
-$('#overview').click(view_all)
-$('#site_map').click(sitemap)
+$('#allbtn').click(view_all)
+$('#mapbtn').click(sitemap)
 $('#search_input').keydown(display_suggestions)

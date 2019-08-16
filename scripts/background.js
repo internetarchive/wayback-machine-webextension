@@ -150,8 +150,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       }
     }
   } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time
-    fetch('http://web.archive.org/cdx/search?url=' + message.page_url + '&limit=-1&output=json')
+    // get most recent saved time, remove hash for some sites
+    const url = message.page_url.split('#')[0]
+    fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
       .then(resp => resp.json())
       .then(resp => {
         if (resp.length === 0) {
@@ -165,7 +166,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
           const month = date.substring(4, 6)
           const day = date.substring(6, 8)
           chrome.runtime.sendMessage({
-            message: "last_save",
+            message: 'last_save',
             time: `Last saved: ${year}-${month}-${day}`
           })
         }
