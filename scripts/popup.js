@@ -360,11 +360,9 @@ function show_wikibooks() {
 function noContextTip() {
   chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
+    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
+    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') } 
     $('#context-screen').css({ opacity: 0.5 })
-    for (const context in event) { if (event[context]) { 
-      $('#ctxbox').removeClass('flip-inside')
-      return $('#context-screen').css({ opacity: 1.0 }).click(show_all_screens) 
-    }}
   })
 }
 
@@ -374,11 +372,13 @@ function checkExcluded() {
     if (!isNotExcludedUrl(global_url)) {
       const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#contextTip').text('URL not supported')
+      $('#ctxbox').addClass('flip-inside')
     }
   })
 }
 
-window.onloadFuncs = [get_url, checkExcluded,borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+window.onloadFuncs = [get_url, checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
