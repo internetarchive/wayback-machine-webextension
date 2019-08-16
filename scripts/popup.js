@@ -5,6 +5,15 @@ chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
   $(`input[name=tw][value=${event.show_context}]`).prop('checked', true);
 })
 
+chrome.runtime.onMessage.addListener(
+  function(message) {
+    if (message.message === "last_save") { 
+      $('#last_save').text(message.time)
+      $('#savebox').addClass('flip-inside') 
+    }
+  }
+)
+
 function homepage() {
   openByWindowSetting('https://web.archive.org/web/')
 }
@@ -39,6 +48,19 @@ function remove_whois(url) {
   var new_url = url.substring(pos + 7)
   return remove_port(new_url)
 }
+
+function get_clean_url() {
+  var url = retrieve_url()
+  if (url.includes('web.archive.org')) {
+    url = remove_wbm(url)
+  } else if (url.includes('www.alexa.com')) {
+    url = remove_alexa(url)
+  } else if (url.includes('www.whois.com')) {
+    url = remove_whois(url)
+  }
+  return url
+}
+
 /* Common method used everywhere to retrieve cleaned up URL */
 function retrieve_url() {
   var search_term = $('#search_input').val()
@@ -60,6 +82,16 @@ function save_now() {
     method: 'save'
   })
   .then(handleResponse, handleError)
+}
+
+function last_save() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    global_url = tabs[0].url
+    chrome.runtime.sendMessage({
+      message: 'getLastSaveTime',
+      page_url: get_clean_url()
+    })
+  })
 }
 
 function recent_capture() {
@@ -328,16 +360,27 @@ function show_wikibooks() {
 }
 
 function noContextTip() {
-  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function(event) {
+  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    const btn = $('#context-screen').css({ opacity: 0.5 })
-    const tip = $('<p>').attr({ 'class': 'context_tip' }).text('Enable context in the extension settings')[0].outerHTML
-    attachTooltip(btn, tip, 'top', 50)
-    for (const context in event) { if (event[context]) { return $('#context-screen').tooltip('disable').css({ opacity: 1.0 }).click(show_all_screens) } }
+    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
+    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') } 
+    $('#context-screen').css({ opacity: 0.5 })
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
+function checkExcluded() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    global_url = tabs[0].url
+    if (!isNotExcludedUrl(global_url)) {
+      const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
+      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#contextTip').text('URL not supported')
+      $('#ctxbox').addClass('flip-inside')
+    }
+  })
+}
+
+window.onloadFuncs = [get_url, checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -345,18 +388,18 @@ window.onload = function () {
 }
 
 $('#logo_internet_archive').click(homepage)
-$('#save_now').click(save_now)
-$('#recent_capture').click(recent_capture)
-$('#first_capture').click(first_capture)
+$('#savebtn').click(save_now)
+$('#recentbtn').click(recent_capture)
+$('#firstbtn').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
-$('#search_tweet').click(search_tweet)
+$('#twitterbtn').click(search_tweet)
 $('#about_support_button').click(about_support)
 $('#donate_button').click(open_donations_page)
 $('#settings_button').click(settings)
 $('#settingPage').hide()
 $('.feedback').click(open_feedback_page)
-$('#overview').click(view_all)
-$('#site_map').click(sitemap)
+$('#allbtn').click(view_all)
+$('#mapbtn').click(sitemap)
 $('#search_input').keydown(display_suggestions)

@@ -139,17 +139,7 @@ function attachTooltip (anchor, tooltip, pos='right', time=200) {
     })
 }
 
-function get_clean_url() {
-  var url = retrieve_url()
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
-  }
-  return url
-}
+
 
 if (typeof module !== 'undefined') {
   module.exports = {
@@ -160,6 +150,7 @@ if (typeof module !== 'undefined') {
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
     attachTooltip: attachTooltip,
-    get_clean_url: get_clean_url
+    // get_clean_url: get_clean_url,
+    // retrieve_url: retrieve_url
   }
 }

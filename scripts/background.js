@@ -149,6 +149,28 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         openByWindowSetting(open_url)
       }
     }
+  } else if (message.message === 'getLastSaveTime') {
+    // get most recent saved time, remove hash for some sites
+    const url = message.page_url.split('#')[0]
+    fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.length === 0) {
+          chrome.runtime.sendMessage({
+            message: "last_save",
+            time: "Page hasn't been saved"
+          })
+        } else {
+          const date = resp[1][1]
+          const year = date.substring(0, 4)
+          const month = date.substring(4, 6)
+          const day = date.substring(6, 8)
+          chrome.runtime.sendMessage({
+            message: 'last_save',
+            time: `Last saved: ${year}-${month}-${day}`
+          })
+        }
+      })
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
@@ -215,9 +237,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       var last_index = received_url.indexOf('/');
       var url = received_url.slice(0, last_index);
       var open_url = received_url;
-      if (open_url.slice(-1) === '/') {
-        open_url = received_url.substring(0, open_url.length - 1)
-      }
+      if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl]
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
         if (event.resource === true) {
