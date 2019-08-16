@@ -5,6 +5,15 @@ chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
   $(`input[name=tw][value=${event.show_context}]`).prop('checked', true);
 })
 
+chrome.runtime.onMessage.addListener(
+  function(message) {
+    if (message.message === "last_save") { 
+      $('#last_save').text(message.time)
+      $('#savebox').addClass('flip-inside') 
+    }
+  }
+)
+
 function homepage() {
   openByWindowSetting('https://archive.org/web/')
 }
@@ -39,6 +48,19 @@ function remove_whois(url) {
   var new_url = url.substring(pos + 7)
   return remove_port(new_url)
 }
+
+function get_clean_url() {
+  var url = retrieve_url()
+  if (url.includes('web.archive.org')) {
+    url = remove_wbm(url)
+  } else if (url.includes('www.alexa.com')) {
+    url = remove_alexa(url)
+  } else if (url.includes('www.whois.com')) {
+    url = remove_whois(url)
+  }
+  return url
+}
+
 /* Common method used everywhere to retrieve cleaned up URL */
 function retrieve_url() {
   var search_term = $('#search_input').val()
@@ -60,6 +82,16 @@ function save_now() {
     method: 'save'
   })
   .then(handleResponse, handleError)
+}
+
+function last_save() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    global_url = tabs[0].url
+    chrome.runtime.sendMessage({
+      message: 'getLastSaveTime',
+      page_url: get_clean_url()
+    })
+  })
 }
 
 function recent_capture() {
@@ -336,7 +368,7 @@ function noContextTip() {
   })
 }
 
-window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
+window.onloadFuncs = [get_url, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
