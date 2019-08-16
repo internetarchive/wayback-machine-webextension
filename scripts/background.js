@@ -284,7 +284,7 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://archive.org/auto/save/' + page_url, { credentials: 'include' })
+        fetch('https://web.archive.org/save/' + page_url, { credentials: 'include' })
           .then(function () {
             chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
               if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
@@ -328,15 +328,15 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       let wayback_url;
       let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
-        wayback_url = 'https://archive.org/web/0/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
-        wayback_url = 'https://archive.org/web/2/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
-        wayback_url = 'https://archive.org/save/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
-        wayback_url = 'https://archive.org/web/*/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
       }
       URLopener(wayback_url, page_url, wmIsAvailable);
     }

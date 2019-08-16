@@ -6,7 +6,7 @@ chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
 })
 
 function homepage() {
-  openByWindowSetting('https://archive.org/web/')
+  openByWindowSetting('https://web.archive.org/web/')
 }
 
 function remove_port(url) {
@@ -55,7 +55,7 @@ function save_now() {
   let clean_url = get_clean_url()
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://archive.org/save/',
+    wayback_url: 'https://web-beta.archive.org/save/',
     page_url: clean_url,
     method: 'save'
   })
@@ -65,7 +65,7 @@ function save_now() {
 function recent_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://archive.org/web/2/',
+    wayback_url: 'https://web.archive.org/web/2/',
     page_url: get_clean_url(),
     method: 'recent'
   })
@@ -74,7 +74,7 @@ function recent_capture() {
 function first_capture() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://archive.org/web/0/',
+    wayback_url: 'https://web.archive.org/web/0/',
     page_url: get_clean_url(),
     method: 'first'
   })
@@ -83,7 +83,7 @@ function first_capture() {
 function view_all() {
   chrome.runtime.sendMessage({
     message: 'openurl',
-    wayback_url: 'https://archive.org/web/*/',
+    wayback_url: 'https://web.archive.org/web/*/',
     page_url: get_clean_url(),
     method: 'viewall'
   })
@@ -100,7 +100,7 @@ function social_share(eventObj) {
   var id = parent.getAttribute('id')
   var sharing_url = ''
   var url = retrieve_url()
-  var overview_url = 'https://archive.org/web/*/'
+  var overview_url = 'https://web.archive.org/web/*/'
   if (url.includes('web.archive.org')) {
     sharing_url = url // If the user is already at a playback page,share that URL
   } else {
@@ -133,7 +133,7 @@ function search_box_activate() {
   const search_box = document.getElementById('search_input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
-      openByWindowSetting('https://archive.org/web/*/' + search_box.value)
+      openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
     }
   })
 }
@@ -194,7 +194,7 @@ function display_list(key_word) {
       for (var i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append($('<li>').append(
           $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            openByWindowSetting('https://archive.org/web/*/' + event.target.innerHTML)
+            openByWindowSetting('https://web.archive.org/web/*/' + event.target.innerHTML)
             $('#suggestion-box').text('').hide()
           })
         ))
