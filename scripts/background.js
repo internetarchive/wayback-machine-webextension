@@ -48,7 +48,7 @@ chrome.storage.sync.set({
   newshosts: newshosts
 })
 /**
- * 
+ *
  * Installed callback
  */
 chrome.runtime.onStartup.addListener(function(details){
@@ -149,6 +149,28 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         openByWindowSetting(open_url)
       }
     }
+  } else if (message.message === 'getLastSaveTime') {
+    // get most recent saved time, remove hash for some sites
+    const url = message.page_url.split('#')[0]
+    fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.length === 0) {
+          chrome.runtime.sendMessage({
+            message: "last_save",
+            time: "Page hasn't been saved"
+          })
+        } else {
+          const date = resp[1][1]
+          const year = date.substring(0, 4)
+          const month = date.substring(4, 6)
+          const day = date.substring(6, 8)
+          chrome.runtime.sendMessage({
+            message: 'last_save',
+            time: `Last saved: ${year}-${month}-${day}`
+          })
+        }
+      })
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
@@ -201,12 +223,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    chrome.storage.sync.get(['auto_archive', 'agreement'], function (event) {
+    chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
-      }
-      if(event.agreement === true){
-        fetch('http://gext-log.archive.org/'+tab.url)
       }
     });
   } else if (info.status === "loading") {
@@ -218,9 +237,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       var last_index = received_url.indexOf('/');
       var url = received_url.slice(0, last_index);
       var open_url = received_url;
-      if (open_url.slice(-1) === '/') {
-        open_url = received_url.substring(0, open_url.length - 1)
-      }
+      if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl]
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
         if (event.resource === true) {
@@ -260,6 +277,21 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   }
 });
 
+// Updating the context page based on every tab the user is selecting
+chrome.tabs.onActivated.addListener(function (info) {
+  chrome.storage.sync.get(['auto_update_context'], function (event) {
+    if (event.auto_update_context === true) {
+      chrome.tabs.get(info.tabId, function (tab) {
+        tabIdPromise.then(function (id) {
+          if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
+            chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + tab.url })
+          }
+        })
+      })
+    }
+  })
+})
+
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
@@ -272,7 +304,7 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://archive.org/auto/save/' + page_url, { credentials: 'include' })
+        fetch('https://web.archive.org/save/' + page_url, { credentials: 'include' })
           .then(function () {
             chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
               if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
@@ -316,15 +348,15 @@ chrome.contextMenus.onClicked.addListener(function (click) {
       let wayback_url;
       let wmIsAvailable = true;
       if (click.menuItemId === 'first') {
-        wayback_url = 'https://archive.org/web/0/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url);
       } else if (click.menuItemId === 'recent') {
-        wayback_url = 'https://archive.org/web/2/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url);
       } else if (click.menuItemId === 'save') {
         wmIsAvailable = false;
-        wayback_url = 'https://archive.org/save/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url);
       } else if (click.menuItemId === 'all') {
         wmIsAvailable = false;
-        wayback_url = 'https://archive.org/web/*/' + encodeURI(page_url);
+        wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url);
       }
       URLopener(wayback_url, page_url, wmIsAvailable);
     }
