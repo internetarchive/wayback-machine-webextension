@@ -1,19 +1,3 @@
-global_url = ''
-var set_of_sites;
-chrome.storage.sync.get(['newshosts', 'show_context'], function(event){
-  set_of_sites = new Set(event.newshosts);
-  $(`input[name=tw][value=${event.show_context}]`).prop('checked', true);
-})
-
-chrome.runtime.onMessage.addListener(
-  function(message) {
-    if (message.message === "last_save") { 
-      $('#last_save').text(message.time)
-      $('#savebox').addClass('flip-inside') 
-    }
-  }
-)
-
 function homepage() {
   openByWindowSetting('https://web.archive.org/web/')
 }
@@ -49,8 +33,7 @@ function remove_whois(url) {
   return remove_port(new_url)
 }
 
-function get_clean_url() {
-  var url = retrieve_url()
+function get_clean_url(url) {
   if (url.includes('web.archive.org')) {
     url = remove_wbm(url)
   } else if (url.includes('www.alexa.com')) {
@@ -74,56 +57,60 @@ function retrieve_url() {
 }
 
 function save_now() {
-  let clean_url = get_clean_url()
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web-beta.archive.org/save/',
-    page_url: clean_url,
-    method: 'save'
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'openurl',
+      wayback_url: 'https://web-beta.archive.org/save/',
+      page_url: url,
+      method: 'save'
+    }).then(handleResponse, handleError)
   })
-  .then(handleResponse, handleError)
 }
 
 function last_save() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    global_url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'getLastSaveTime',
-      page_url: get_clean_url()
+      page_url: url
     })
   })
 }
 
 function recent_capture() {
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/2/',
-    page_url: get_clean_url(),
-    method: 'recent'
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'openurl',
+      wayback_url: 'https://web.archive.org/web/2/',
+      page_url: url,
+      method: 'recent'
+    })
   })
 }
 
 function first_capture() {
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/0/',
-    page_url: get_clean_url(),
-    method: 'first'
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'openurl',
+      wayback_url: 'https://web.archive.org/web/0/',
+      page_url: url,
+      method: 'first'
+    })
   })
 }
 
 function view_all() {
-  chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: 'https://web.archive.org/web/*/',
-    page_url: get_clean_url(),
-    method: 'viewall'
-  })
-}
-
-function get_url() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    global_url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'openurl',
+      wayback_url: 'https://web.archive.org/web/*/',
+      page_url: url,
+      method: 'viewall'
+    })
   })
 }
 
@@ -131,34 +118,39 @@ function social_share(eventObj) {
   var parent = eventObj.target.parentNode
   var id = parent.getAttribute('id')
   var sharing_url = ''
-  var url = retrieve_url()
   var overview_url = 'https://web.archive.org/web/*/'
-  if (url.includes('web.archive.org')) {
-    sharing_url = url // If the user is already at a playback page,share that URL
-  } else {
-    sharing_url = overview_url + get_clean_url() // When not on a playback page,share the overview version of that URL
-  }
-  var open_url = ''
-  if (!(url.includes('chrome://') || url.includes('chrome-extension://'))) { // Prevents sharing some unnecessary page
-    if (id.includes('fb')) {
-      open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
-    } else if (id.includes('twit')) {
-      open_url = 'https://twitter.com/home?status=' + sharing_url
-    } else if (id.includes('linkedin')) {
-      open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = tabs[0].url
+    if (url.includes('web.archive.org')) {
+      sharing_url = url // If the user is already at a playback page,share that URL
+    } else {
+      sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
     }
-    openByWindowSetting(open_url)
-  }
+    var open_url = ''
+    if (!(url.includes('chrome://') || url.includes('chrome-extension://'))) { // Prevents sharing some unnecessary page
+      if (id.includes('fb')) {
+        open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
+      } else if (id.includes('twit')) {
+        open_url = 'https://twitter.com/home?status=' + sharing_url
+      } else if (id.includes('linkedin')) {
+        open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+      }
+      openByWindowSetting(open_url)
+    }
+  })
 }
 
 function search_tweet() {
-  var url = get_clean_url()
-  if (isNotExcludedUrl(url)) {
-    url = url.replace(/^https?:\/\//, '')
-    if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-    var open_url = 'https://twitter.com/search?q=' + url
-    openByWindowSetting(open_url)
-  }
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    if (isNotExcludedUrl(url)) {
+      url = url.replace(/^https?:\/\//, '')
+      if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
+      var open_url = 'https://twitter.com/search?q=' + url
+      openByWindowSetting(open_url)
+    }
+  })
 }
 
 function search_box_activate() {
@@ -268,8 +260,10 @@ function about_support() {
 }
 
 function sitemap() {
-  var url = get_clean_url()
-  if (isNotExcludedUrl(url)) { openByWindowSetting("https://web.archive.org/web/sitemap/" + url) }
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    if (isNotExcludedUrl(url)) { openByWindowSetting("https://web.archive.org/web/sitemap/" + url) }
+  })
 }
 
 function settings() {
@@ -279,8 +273,10 @@ function settings() {
 }
 
 function show_all_screens() {
-  var url = get_clean_url()
-  chrome.runtime.sendMessage({ message: 'showall', url: url })
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({ message: 'showall', url: url })
+  })
 }
 
 function borrow_books() {
@@ -380,7 +376,19 @@ function checkExcluded() {
   })
 }
 
-window.onloadFuncs = [get_url, checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+// make the tab/window option in setting page checked according to previous setting
+chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
+
+chrome.runtime.onMessage.addListener(
+  function(message) {
+    if (message.message === "last_save") { 
+      $('#last_save').text(message.time)
+      $('#savebox').addClass('flip-inside') 
+    }
+  }
+)
+
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
