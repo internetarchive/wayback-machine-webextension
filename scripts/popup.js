@@ -44,18 +44,6 @@ function get_clean_url(url) {
   return url
 }
 
-/* Common method used everywhere to retrieve cleaned up URL */
-function retrieve_url() {
-  var search_term = $('#search_input').val()
-  var url = ''
-  if (search_term === '') {
-    url = global_url
-  } else {
-    url = search_term
-  }
-  return url
-}
-
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
