@@ -11,6 +11,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     }),
     body:requestParams
   })
+    .then(response => response.json())
     .then(function(json){
       let wayback_url = getWaybackUrlFromResponse(json);
       if(wayback_url !== null){

@@ -14,11 +14,10 @@ function get_tags(url) {
     var not_display2 = not_display1 + ' extension'
     var not_display3 = not_display4 + ' extension'
     var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
-    var xhr = new XMLHttpRequest()
     var new_url = 'https://archive.org/services/context/tagcloud?url=' + toBeUsedAsURL
-    xhr.open('GET', new_url, true)
-    xhr.onload = function () {
-        var data = JSON.parse(xhr.response)
+    fetch(new_url)
+    .then(response => response.json())
+    .then(function (data) {
         for (var i = 0; i < data.length; i++) {
             var b = new Object()
             if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
@@ -89,8 +88,7 @@ function get_tags(url) {
             'font': "'Times New Roman', Times, serif",
             'shape': 'square'
         })
-    }
-    xhr.send(null)
+    })
 }
 
 function _toConsumableArray(arr) {
