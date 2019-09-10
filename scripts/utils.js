@@ -2,23 +2,25 @@
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var xhr = new XMLHttpRequest();
   var requestUrl = 'https://archive.org/wayback/available';
   var requestParams = 'url=' + encodeURI(url);
-  xhr.open('POST', requestUrl, true);
-  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhr.setRequestHeader('Wayback-Api-Version', 2);
-  xhr.onload = function() {
-    var response = JSON.parse(xhr.responseText);
-    var wayback_url = getWaybackUrlFromResponse(response);
-    if (wayback_url !== null) {
-      onsuccess(wayback_url, url);
-    } else if (onfail) {
-      onfail();
-    }
-  };
-  xhr.send(requestParams);
+  fetch(requestUrl, {
+    method:'POST',
+    headers: new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }),
+    body:requestParams
+  })
+    .then(function(json){
+      let wayback_url = getWaybackUrlFromResponse(json);
+      if(wayback_url !== null){
+        onsuccess(wayback_url, url);
+      }else if(onfail){
+        onfail();
+      }
+    })
 }
+
 
 /**
  * Makes sure response is a valid URL to prevent code injection
