@@ -184,13 +184,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
     timeoutPromise
       .then(response => response.json())
-      .then(function (data) {
-        let books = null
-        if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
-          books = data
-        }
-        sendResponse(books)
-      })
+      .then(data => sendResponse(data))
       return true
   } else if (message.message === 'tvnews'){
     let url = 'https://archive.org/services/context/tvnews?url=' + message.article;
