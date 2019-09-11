@@ -90,9 +90,9 @@ function goBack () {
         if (!isNotExcludedUrl(global_url)) {
           $('#contextTip').text('URL not supported')
         } else {
-          $('#ctxbox').removeClass('flip-inside') 
+          $('#ctxbox').removeClass('flip-inside')
         }
-      }) 
+      })
     }
     $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens)
   }
@@ -121,9 +121,9 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {
     let docs = {
-      'resource': 'Display "R" badge when user is viewing Amazon books/Wikipedia/Selected News Outlets and will show related resource in archive accordingly',
+      'resource': 'Enables extension to notify and display archived resources on relevant urls, including Amazon books, Wikipedia, and select News outlets. ',
       'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
-      'auto-archive': 'Enables extension to identify URLs that have not previously been saved on the Wayback Machine.',
+      'auto-archive': 'Enables extension to identify and save URLs that have not previously been saved on the Wayback Machine.',
       'alexa': 'Displays what Alexa Internet knows about the site you are on (traffic data).',
       'domaintools': 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
       'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on (captures).',
