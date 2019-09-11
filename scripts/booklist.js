@@ -2,12 +2,19 @@ function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
   getWikipediaBooks(url).then(data => {
     $(".loader").hide()
-    for (let isbn of Object.keys(data)) {
-      let metadata = getMetadata(data[isbn])
-      if (metadata) {
-        let book_element = addBook(metadata)
-        $("#resultsTray").append(book_element)
+    if(data && data.message !== 'No ISBNs found in page' && data.status !== 'error'){
+      for (let isbn of Object.keys(data)) {
+        let metadata = getMetadata(data[isbn])
+        if (metadata) {
+          let book_element = addBook(metadata)
+          $("#resultsTray").append(book_element)
+        }
       }
+    }else{
+      $(".loader").hide()
+      $("#resultsTray").css("grid-template-columns", "none").append(
+        $("<div>").html(data.message)
+      )
     }
   }).catch(function (error) {
     $(".loader").hide()
