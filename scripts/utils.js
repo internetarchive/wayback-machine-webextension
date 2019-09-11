@@ -150,7 +150,5 @@ if (typeof module !== 'undefined') {
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
     attachTooltip: attachTooltip,
-    // get_clean_url: get_clean_url,
-    // retrieve_url: retrieve_url
   }
 }

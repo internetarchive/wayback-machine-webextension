@@ -94,9 +94,7 @@ function goBack () {
         }
       }) 
     }
-    $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', function () {
-      chrome.runtime.sendMessage({ message: 'showall', url: get_clean_url() })
-    })
+    $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens)
   }
 }
 
