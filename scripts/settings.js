@@ -84,7 +84,16 @@ function goBack () {
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
     $('#context-screen').off('click').css({ opacity: 0.5 })
   } else {
-    if ($('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').removeClass('flip-inside') }
+    if ($('#ctxbox').hasClass('flip-inside')) {
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        global_url = tabs[0].url
+        if (!isNotExcludedUrl(global_url)) {
+          $('#contextTip').text('URL not supported')
+        } else {
+          $('#ctxbox').removeClass('flip-inside') 
+        }
+      }) 
+    }
     $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens)
   }
 }
