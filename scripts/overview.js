@@ -89,23 +89,23 @@ function get_thumbnail () {
   var url = getUrlByParameter('url')
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
-  $.ajax({ url: new_url,
-    success: function (response) {
+  fetch(new_url)
+    .then(function (response) {
       $('#loader_thumbnail').hide()
       if (response.size != 233) {
         $('#show_thumbnail').append($('<img>').attr('src', new_url))
       } else {
         $('#show_thumbnail').text('Thumbnail not found')
       }
-    },
-    error: function (jqXHR, exception) {
+    })
+    .catch(function (exception) {
       $('#loader_thumbnail').hide()
       if (exception === 'timeout') {
         $('#show_thumbnail').text('Please refresh the page...Time out!!')
       } else {
         $('#show_thumbnail').text('Thumbnail not found')
       }
-    } })
+    })
 }
 
 if (typeof module !== 'undefined') { module.exports = { getTotal: getTotal } }
