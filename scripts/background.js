@@ -225,8 +225,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   } else if (info.status === "loading") {
     var received_url = tab.url;
     if (isNotExcludedUrl(received_url) && !(received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
-      singlewindowurl = received_url;
-      tagcloudurl = new URL(singlewindowurl);
+      contextUrl = received_url;
+      tagcloudurl = new URL(contextUrl);
       received_url = received_url.replace(/^https?:\/\//, '');
       var last_index = received_url.indexOf('/');
       var url = received_url.slice(0, last_index);
@@ -261,8 +261,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
         }
         if (event.auto_update_context === true) {
           tabIdPromise.then(function (id) {
-            if (tabId !== id && tab.id !== id && isNotExcludedUrl(singlewindowurl)) {
-              chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + singlewindowurl });
+            if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
+              chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + contextUrl });
             }
           });
         }
@@ -278,7 +278,7 @@ chrome.tabs.onActivated.addListener(function (info) {
       chrome.tabs.get(info.tabId, function (tab) {
         tabIdPromise.then(function (id) {
           if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
-            chrome.tabs.update(id, { url: chrome.runtime.getURL("singleWindow.html") + "?url=" + tab.url })
+            chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
           }
         })
       })
