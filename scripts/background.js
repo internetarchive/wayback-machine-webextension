@@ -44,6 +44,56 @@ function URLopener(open_url, url, wmIsAvailable) {
     openByWindowSetting(open_url)
   }
 }
+function save_page_now(page_url){
+  if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
+    const data = new URLSearchParams();
+    data.append('url', encodeURI(page_url))
+    fetch('https://web.archive.org/save/',
+    {
+      credentials: 'include',
+      method: 'POST',
+      body: data,
+      headers: {
+        "Accept": "application/json" ,
+      },
+    })
+      .then(response => response.json())
+      .then(function(res){
+        let snapshot_url = decodeURIComponent(res.url)
+        console.log(snapshot_url)
+        openByWindowSetting(snapshot_url)
+
+         // TODO: add validation and open snapshot
+         // console.log(res.job_id)
+         // const val_data = new URLSearchParams();
+         // val_data.append('job_id', res.job_id)
+         // fetch('https://web.archive.org/save/status',
+         // {
+         //   credentials: 'include',
+         //   method: 'POST',
+         //   body: val_data,
+         //   headers: {
+         //     "Accept": "application/json" ,
+         //   },
+         // })
+         // .then(response=> response.json())
+         // .then(function(validation){
+         //   console.log(validation)
+         //   if(validation.status === "success"){
+         //     let snapshot_url = "https://web.archive.org/web/" + validation.timestamp + "/" + validation.original_url;
+         //     openByWindowSetting(snapshot_url);
+         //   }
+         //   else if(validation.status === "error"){
+         //     console.log(validation.message)
+         //   }
+         //   else if( validation.status === "pending"){
+         //     let snapshot_url = "https://web.archive.org/web/2/" + validation.original_url;
+         //     openByWindowSetting(snapshot_url)
+         //   }
+         // })
+      })
+  }
+}
 chrome.storage.sync.set({
   newshosts: newshosts
 })
@@ -146,7 +196,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true)
       } else {
-        openByWindowSetting(open_url)
+        save_page_now(open_url)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
@@ -219,6 +269,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
+        console.log("auto_saving")
         auto_save(tab.id, tab.url);
       }
     });
@@ -298,8 +349,19 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        fetch('https://web.archive.org/save/' + page_url, { credentials: 'include' })
-          .then(function () {
+        const data = new URLSearchParams();
+        data.append('url', encodeURI(page_url))
+        fetch('https://web.archive.org/save/',
+        {
+          credentials: 'include',
+          method: 'POST',
+          body: data,
+          headers: {
+            "Accept": "application/json" ,
+          },
+        })
+          .then(response => response.json())
+          .then(function (data) {
             chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
               if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
             })
