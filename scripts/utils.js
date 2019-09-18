@@ -71,6 +71,9 @@ function getWaybackUrlFromResponse(response) {
     return null;
   }
 }
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * Customizes error handling
