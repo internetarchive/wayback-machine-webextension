@@ -209,6 +209,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         save_page_now(page_url)
          .then(function(res) {
           console.log(res)
+          notify("Saving " + page_url)
           sendResponse(res)
          })
          return true;
@@ -235,6 +236,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       .then(response=> response.json())
       .then(function(data){
         console.log(data.status)
+        if(data.status === "success"){
+          notify("Successful save", function(id){
+            chrome.notifications.onClicked.addListener(function(notifId){
+              console.log("Open Snapshot")
+            })
+          })
+        }
         sendResponse(data)
       })
       return true;

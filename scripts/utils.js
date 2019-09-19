@@ -112,6 +112,15 @@ function opener(url, option, callback) {
     })
   }
 }
+function notify(message, callback){
+  var options = {
+    type: "basic",
+    title: "WayBack Machine",
+    message: message,
+    iconUrl:chrome.extension.getURL("images/icon@2x.png")
+  }
+  chrome.notifications.create(options, callback);
+}
 
 function attachTooltip (anchor, tooltip, pos='right', time=200) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
