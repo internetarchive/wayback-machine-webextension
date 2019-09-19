@@ -46,7 +46,6 @@ function URLopener(open_url, url, wmIsAvailable) {
 }
 function save_page_now(page_url){
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    console.log(page_url)
     const data = new URLSearchParams();
     data.append('url', encodeURI(page_url))
 
@@ -67,43 +66,52 @@ function save_page_now(page_url){
     })
     return timeoutPromise
       .then(response => response.json())
-      // .then(function(res){
-        // while(true){
-        //   await sleep(5);
-        //   const val_data = new URLSearchParams();
-        //   val_data.append('job_id', res.job_id)
-        //   fetch('https://web.archive.org/save/status',
-        //   {
-        //     credentials: 'include',
-        //     method: 'POST',
-        //     body: val_data,
-        //     headers: {
-        //       "Accept": "application/json" ,
-        //     },
-        //   })
-        //   .then(response=> response.json())
-        //   .then(function(validation){
-        //     console.log(validation.status)
-        //     if(validation.status === "success"){
-        //       let snapshot_url = "https://web.archive.org/web/" + validation.timestamp + "/" + validation.original_url;
-        //       openByWindowSetting(snapshot_url);
-        //       break;
-        //     }
-        //     else if(validation.status === "error"){
-        //       // TODO: add signal that it broke.
-        //       console.log(validation.message)
-        //       break;
-        //
-        //     }
-        //     else if( validation.status === "pending"){
-        //       //TODO: add signal that its loading
-        //       continue;
-        //     }
-        //   })
-        // }
-      // })
   }
 }
+
+async function validate_spn(job_id){
+  let vdata;
+  let status = "pending";
+  const val_data = new URLSearchParams();
+  val_data.append('job_id', job_id)
+
+  while(status === "pending"){
+    await sleep(1000);
+      const timeoutPromise = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+          reject(new Error('timeout'))
+        }, 30000)
+        fetch('https://web.archive.org/save/status',
+          {
+            credentials: 'include',
+            method: 'POST',
+            body: val_data,
+            headers: {
+              "Accept": "application/json" ,
+            },
+          }).then(resolve, reject)
+      })
+      timeoutPromise
+      .then(response=> response.json())
+      .then(function(data){
+        status = data.status;
+        vdata = data
+    })
+  }
+  if(vdata.status === "success"){
+    let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
+    function clickNotification(){
+      openByWindowSetting(snapshot_url);
+      chrome.notifications.onClicked.removeListener(clickNotification)
+    }
+    notify("Successfully saved! Click to view snapshot.", function(){
+      chrome.notifications.onClicked.addListener(clickNotification)
+    })
+  }else if(vdata.status === "error"){
+    notify("Error: " + vdata.message)
+  }
+}
+
 chrome.storage.sync.set({
   newshosts: newshosts
 })
@@ -208,44 +216,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       } else {
         save_page_now(page_url)
          .then(function(res) {
-          console.log(res)
           notify("Saving " + page_url)
-          sendResponse(res)
+          validate_spn(res.job_id)
          })
          return true;
       }
     }
-  } else if (message.message === 'validate_spn'){
-      const val_data = new URLSearchParams();
-      val_data.append('job_id', message.job_id)
-      const timeoutPromise = new Promise(function (resolve, reject) {
-        setTimeout(() => {
-          reject(new Error('timeout'))
-        }, 30000)
-        fetch('https://web.archive.org/save/status',
-          {
-            credentials: 'include',
-            method: 'POST',
-            body: val_data,
-            headers: {
-              "Accept": "application/json" ,
-            },
-          }).then(resolve, reject)
-      })
-      timeoutPromise
-      .then(response=> response.json())
-      .then(function(data){
-        console.log(data.status)
-        if(data.status === "success"){
-          notify("Successful save", function(id){
-            chrome.notifications.onClicked.addListener(function(notifId){
-              console.log("Open Snapshot")
-            })
-          })
-        }
-        sendResponse(data)
-      })
-      return true;
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time, remove hash for some sites
     const url = message.page_url.split('#')[0]

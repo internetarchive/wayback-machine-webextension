@@ -45,6 +45,7 @@ function get_clean_url(url) {
 }
 
 function save_now() {
+  $("#save_now").text("Saving Snapshot...")
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
@@ -52,36 +53,8 @@ function save_now() {
       wayback_url: 'https://web.archive.org/save/',
       page_url: url,
       method: 'save'
-    }, function(res){
-      validate_spn(res.job_id)
     })
   })
-}
-
-async function validate_spn(job_id){
-  let vdata;
-  let status = "pending";
-  let num_periods = 0;
-  while(status === "pending"){
-    $('#save_now').text("Save Started" + ".".repeat(num_periods))
-    num_periods = (num_periods + 1) % 4;
-    await sleep(500);
-    chrome.runtime.sendMessage({
-      message: 'validate_spn',
-      job_id: job_id
-    }, function(data){
-      status = data.status;
-      vdata = data
-    })
-  }
-  if (vdata.status === "success"){
-    $('#save_now').text("Save Successful!")
-    let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
-    openByWindowSetting(snapshot_url);
-  }
-  else{
-    $('#save_now').text("Save Failed: " + vdata.message)
-  }
 }
 
 function last_save() {
