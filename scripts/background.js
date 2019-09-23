@@ -106,10 +106,13 @@ async function validate_spn(job_id){
     let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
     function clickNotification(){
       openByWindowSetting(snapshot_url);
-      chrome.notifications.onClicked.removeListener(clickNotification)
     }
-    notify("Successfully saved! Click to view snapshot.", function(){
-      chrome.notifications.onClicked.addListener(clickNotification)
+    notify("Successfully saved! Click to view snapshot.", function(notificationId){
+      chrome.notifications.onClicked.addListener(function(newNotificationId){
+        if(notificationId === newNotificationId){
+          clickNotification();
+        }
+      })
     })
   }else if(vdata.status === "error"){
     notify("Error: " + vdata.message)
