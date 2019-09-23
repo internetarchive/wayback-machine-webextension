@@ -295,7 +295,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
-        console.log("auto_saving")
         auto_save(tab.id, tab.url);
       }
     });

@@ -41,7 +41,8 @@ var excluded_urls = [
   "chrome://",
   'chrome://newtab',
   'chrome.google.com/webstore',
-  'chrome-extension://'
+  'chrome-extension://',
+  'web.archive.org'
 ];
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
