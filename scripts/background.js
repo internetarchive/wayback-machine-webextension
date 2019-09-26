@@ -44,7 +44,7 @@ function URLopener(open_url, url, wmIsAvailable) {
     openByWindowSetting(open_url)
   }
 }
-function save_page_now(page_url){
+function save_page_now(page_url, silent = false){
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams();
     data.append('url', encodeURI(page_url))
@@ -67,13 +67,15 @@ function save_page_now(page_url){
     return timeoutPromise
       .then(response => response.json())
       .then(function(res) {
-         notify("Saving " + page_url)
-         validate_spn(res.job_id)
+        if(!silent){
+          notify("Saving " + page_url)
+        }
+         validate_spn(res.job_id, silent)
       })
   }
 }
 
-async function validate_spn(job_id){
+async function validate_spn(job_id, silent = false){
   let vdata;
   let status = "pending";
   const val_data = new URLSearchParams();
@@ -107,15 +109,19 @@ async function validate_spn(job_id){
     function clickNotification(){
       openByWindowSetting(snapshot_url);
     }
-    notify("Successfully saved! Click to view snapshot.", function(notificationId){
-      chrome.notifications.onClicked.addListener(function(newNotificationId){
-        if(notificationId === newNotificationId){
-          clickNotification();
-        }
+    if(!silent){
+      notify("Successfully saved! Click to view snapshot.", function(notificationId){
+        chrome.notifications.onClicked.addListener(function(newNotificationId){
+          if(notificationId === newNotificationId){
+            clickNotification();
+          }
+        })
       })
-    })
+    }
   }else if(vdata.status === "error"){
-    notify("Error: " + vdata.message)
+    if(!silent){
+      notify("Error: " + vdata.message)
+    }
   }
 }
 
@@ -374,11 +380,13 @@ function auto_save(tabId, url) {
         })
       },
       function () {
-        save_page_now(page_url)
-        .then(function (data) {
-          chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-            if (!result.includes('S')) { chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result }); }
-          })
+        chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
+          if (!result.includes('S')) {
+            chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result },
+            function(){
+              save_page_now(page_url, true)
+            });
+          }
         })
       }
     )
