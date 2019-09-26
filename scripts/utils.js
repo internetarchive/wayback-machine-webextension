@@ -41,7 +41,8 @@ var excluded_urls = [
   "chrome://",
   'chrome://newtab',
   'chrome.google.com/webstore',
-  'chrome-extension://'
+  'chrome-extension://',
+  'web.archive.org'
 ];
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
@@ -70,6 +71,9 @@ function getWaybackUrlFromResponse(response) {
   } else {
     return null;
   }
+}
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
@@ -108,6 +112,15 @@ function opener(url, option, callback) {
       });
     })
   }
+}
+function notify(message, callback){
+  var options = {
+    type: "basic",
+    title: "WayBack Machine",
+    message: message,
+    iconUrl:chrome.extension.getURL("images/icon@2x.png")
+  }
+  chrome.notifications.create(options, callback);
 }
 
 function attachTooltip (anchor, tooltip, pos='right', time=200) {

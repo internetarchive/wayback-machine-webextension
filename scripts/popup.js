@@ -45,14 +45,15 @@ function get_clean_url(url) {
 }
 
 function save_now() {
+  $("#save_now").text("Saving Snapshot...")
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
-      wayback_url: 'https://web-beta.archive.org/save/',
+      wayback_url: 'https://web.archive.org/save/',
       page_url: url,
       method: 'save'
-    }).then(handleResponse, handleError)
+    })
   })
 }
 
@@ -347,7 +348,7 @@ function noContextTip() {
   chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
     for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
-    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') } 
+    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
     $('#context-screen').css({ opacity: 0.5 })
   })
 }
@@ -369,9 +370,9 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === "last_save") { 
+    if (message.message === "last_save") {
       $('#last_save').text(message.time)
-      $('#savebox').addClass('flip-inside') 
+      $('#savebox').addClass('flip-inside')
     }
   }
 )
