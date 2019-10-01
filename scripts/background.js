@@ -67,9 +67,6 @@ function save_page_now(page_url, silent = false){
     return timeoutPromise
       .then(response => response.json())
       .then(function(res) {
-        chrome.runtime.sendMessage({
-          message: 'save_start',
-        })
         if(!silent){
           notify("Saving " + page_url)
         }
@@ -85,6 +82,9 @@ async function validate_spn(job_id, silent = false){
   val_data.append('job_id', job_id)
 
   while(status === "pending"){
+    chrome.runtime.sendMessage({
+      message: 'save_start',
+    })
     await sleep(1000);
       const timeoutPromise = new Promise(function (resolve, reject) {
         setTimeout(() => {
@@ -245,22 +245,36 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time, remove hash for some sites
     const url = message.page_url.split('#')[0]
-    fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
-      .then(resp => resp.json())
-      .then(resp => {
-        if (resp.length === 0) {
-          sendResponse({
-            message: "last_save",
-            time: "Page hasn't been saved"
-          })
-        } else {
-          const date = resp[1][1]
-          sendResponse({
-            message: 'last_save',
-            time: 'Last saved: ' + getLastSaveTime(date)
-          })
-        }
+    wmAvailabilityCheck(url,
+    function(wb_url, url, timestamp){
+      sendResponse({
+        message: 'last_save',
+        time: 'Last saved: ' + getLastSaveTime(timestamp)
       })
+    },
+    function(){
+      sendResponse({
+        message: "last_save",
+        time: "Page hasn't been saved"
+      })
+    })
+
+    // fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
+    //   .then(resp => resp.json())
+    //   .then(resp => {
+    //     if (resp.length === 0) {
+    //       sendResponse({
+    //         message: "last_save",
+    //         time: "Page hasn't been saved"
+    //       })
+    //     } else {
+    //       const date = resp[1][1]
+    //       sendResponse({
+    //         message: 'last_save',
+    //         time: 'Last saved: ' + getLastSaveTime(date)
+    //       })
+    //     }
+    //   })
       return true;
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
