@@ -67,6 +67,9 @@ function save_page_now(page_url, silent = false){
     return timeoutPromise
       .then(response => response.json())
       .then(function(res) {
+        chrome.runtime.sendMessage({
+          message: 'save_start',
+        })
         if(!silent){
           notify("Saving " + page_url)
         }
@@ -105,15 +108,16 @@ async function validate_spn(job_id, silent = false){
     })
   }
   if(vdata.status === "success"){
-    let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
-    function clickNotification(){
-      openByWindowSetting(snapshot_url);
-    }
+    chrome.runtime.sendMessage({
+      message: 'save_success',
+      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
+    })
     if(!silent){
       notify("Successfully saved! Click to view snapshot.", function(notificationId){
         chrome.notifications.onClicked.addListener(function(newNotificationId){
           if(notificationId === newNotificationId){
-            clickNotification();
+            let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
+            openByWindowSetting(snapshot_url);
           }
         })
       })
@@ -217,6 +221,13 @@ chrome.webRequest.onCompleted.addListener(function (details) {
   }
 }, { urls: ["<all_urls>"], types: ["main_frame"] });
 
+function getLastSaveTime(date){
+  const year = date.substring(0, 4)
+  const month = date.substring(4, 6)
+  const day = date.substring(6, 8)
+  return `${year}-${month}-${day}`
+}
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
     var page_url = message.page_url;
@@ -238,21 +249,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       .then(resp => resp.json())
       .then(resp => {
         if (resp.length === 0) {
-          chrome.runtime.sendMessage({
+          sendResponse({
             message: "last_save",
             time: "Page hasn't been saved"
           })
         } else {
           const date = resp[1][1]
-          const year = date.substring(0, 4)
-          const month = date.substring(4, 6)
-          const day = date.substring(6, 8)
-          chrome.runtime.sendMessage({
+          sendResponse({
             message: 'last_save',
-            time: `Last saved: ${year}-${month}-${day}`
+            time: 'Last saved: ' + getLastSaveTime(date)
           })
         }
       })
+      return true;
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='

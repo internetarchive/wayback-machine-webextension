@@ -45,7 +45,6 @@ function get_clean_url(url) {
 }
 
 function save_now() {
-  $("#save_now").text("Saving Snapshot...")
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
@@ -63,6 +62,11 @@ function last_save() {
     chrome.runtime.sendMessage({
       message: 'getLastSaveTime',
       page_url: url
+    }, function(message) {
+      if (message.message === "last_save") {
+        $('#last_save').text(message.time)
+        $('#savebox').addClass('flip-inside')
+      }
     })
   })
 }
@@ -370,9 +374,13 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === "last_save") {
+    if (message.message === "save_success") {
+      $('#save_now').text('Save successful')
       $('#last_save').text(message.time)
       $('#savebox').addClass('flip-inside')
+    }
+    if (message.message === "save_start"){
+      $("#save_now").text("Saving Snapshot...")
     }
   }
 )
