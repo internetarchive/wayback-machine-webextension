@@ -369,6 +369,21 @@ function checkExcluded() {
   })
 }
 
+function checkAuthentication(){
+  chrome.runtime.sendMessage({
+    message: 'auth_check'
+  },function(result){
+    if(result.message === "You need to be logged in to use Save Page Now."){
+      console.log(result)
+
+      $('#last_save').text('Log in to save.')
+      $('#savebtn').off('click').click(function(){
+        openByWindowSetting('https://archive.org/account/login');
+      })
+    }
+  })
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -382,10 +397,19 @@ chrome.runtime.onMessage.addListener(
     if (message.message === "save_start"){
       $("#save_now").text("Saving Snapshot...")
     }
+    if(message.message === "save_error"){
+      $('#save_now').text('Save Failed')
+      $('#last_save').text(message.error)
+      if(message.error === "You need to be logged in to use Save Page Now."){
+        $('#savebtn').off('click').click(function(){
+          openByWindowSetting('https://archive.org/account/login');
+        })
+      }
+    }
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+window.onloadFuncs = [checkAuthentication, checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

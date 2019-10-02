@@ -74,7 +74,25 @@ function save_page_now(page_url, silent = false){
       })
   }
 }
+function auth_check(){
+  const timeoutPromise = new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 30000)
+    fetch('https://web.archive.org/save/',
+    {
+      credentials: 'include',
+      method: 'POST',
+      headers: {
+        "Accept": "application/json" ,
+      },
+    })
+    .then(resolve, reject)
+  })
+  return timeoutPromise
+  .then(response => response.json())
 
+}
 async function validate_spn(job_id, silent = false){
   let vdata;
   let status = "pending";
@@ -122,9 +140,27 @@ async function validate_spn(job_id, silent = false){
         })
       })
     }
-  }else if(vdata.status === "error"){
+  }else if(!vdata.status){
+    chrome.runtime.sendMessage({
+      message: 'save_error',
+      error: vdata.message
+    })
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tabId = tabs[0].id
+      chrome.browserAction.getBadgeText({tabId: tabId}, function (result) {
+        if (!result.includes('!')) {
+          chrome.browserAction.setBadgeText({tabId: tabId, text: result + '!' });
+        }
+      })
+    })
     if(!silent){
-      notify("Error: " + vdata.message)
+      notify("Error: " + vdata.message, function(notificationId){
+        chrome.notifications.onClicked.addListener(function(newNotificationId){
+          if(notificationId === newNotificationId){
+            openByWindowSetting('https://archive.org/account/login');
+          }
+        })
+      })
     }
   }
 }
@@ -258,24 +294,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         time: "Page hasn't been saved"
       })
     })
-
-    // fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
-    //   .then(resp => resp.json())
-    //   .then(resp => {
-    //     if (resp.length === 0) {
-    //       sendResponse({
-    //         message: "last_save",
-    //         time: "Page hasn't been saved"
-    //       })
-    //     } else {
-    //       const date = resp[1][1]
-    //       sendResponse({
-    //         message: 'last_save',
-    //         time: 'Last saved: ' + getLastSaveTime(date)
-    //       })
-    //     }
-    //   })
-      return true;
+    return true;
+  } else if (message.message === 'auth_check'){
+    auth_check()
+      .then(resp => sendResponse(resp))
+    return true;
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
