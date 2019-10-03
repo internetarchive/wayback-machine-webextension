@@ -145,14 +145,7 @@ async function validate_spn(job_id, silent = false){
       message: 'save_error',
       error: vdata.message
     })
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tabId = tabs[0].id
-      chrome.browserAction.getBadgeText({tabId: tabId}, function (result) {
-        if (!result.includes('!')) {
-          chrome.browserAction.setBadgeText({tabId: tabId, text: result + '!' });
-        }
-      })
-    })
+
     if(!silent){
       notify("Error: " + vdata.message, function(notificationId){
         chrome.notifications.onClicked.addListener(function(newNotificationId){

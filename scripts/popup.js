@@ -57,18 +57,37 @@ function save_now() {
 }
 
 function last_save() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
-      message: 'getLastSaveTime',
-      page_url: url
-    }, function(message) {
-      if (message.message === "last_save") {
-        $('#last_save').text(message.time)
-        $('#savebox').addClass('flip-inside')
-      }
-    })
+  checkAuthentication(function(result){
+    if(result && result.message && result.message === "You need to be logged in to use Save Page Now."){
+      $('#savebox').addClass('flip-inside')
+      $('#last_save').text('Log in to save.')
+      $('#save_now').attr('disabled', true)
+      $('#savebtn').off('click').click(function(){
+        openByWindowSetting('https://archive.org/account/login');
+      })
+    }else{
+      $('#save_now').removeAttr('disabled')
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        let url = get_clean_url(tabs[0].url)
+        chrome.runtime.sendMessage({
+          message: 'getLastSaveTime',
+          page_url: url
+        }, function(message) {
+          if (message.message === "last_save") {
+            $('#last_save').text(message.time)
+            $('#savebox').addClass('flip-inside')
+          }
+        })
+      })
+    }
   })
+
+}
+
+function checkAuthentication(callback){
+  chrome.runtime.sendMessage({
+    message: 'auth_check'
+  }, callback)
 }
 
 function recent_capture() {
@@ -369,20 +388,6 @@ function checkExcluded() {
   })
 }
 
-function checkAuthentication(){
-  chrome.runtime.sendMessage({
-    message: 'auth_check'
-  },function(result){
-    if(result.message === "You need to be logged in to use Save Page Now."){
-      console.log(result)
-
-      $('#last_save').text('Log in to save.')
-      $('#savebtn').off('click').click(function(){
-        openByWindowSetting('https://archive.org/account/login');
-      })
-    }
-  })
-}
 
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
@@ -397,19 +402,19 @@ chrome.runtime.onMessage.addListener(
     if (message.message === "save_start"){
       $("#save_now").text("Saving Snapshot...")
     }
-    if(message.message === "save_error"){
-      $('#save_now').text('Save Failed')
-      $('#last_save').text(message.error)
-      if(message.error === "You need to be logged in to use Save Page Now."){
-        $('#savebtn').off('click').click(function(){
-          openByWindowSetting('https://archive.org/account/login');
-        })
-      }
-    }
+    // if(message.message === "save_error"){
+    //   $('#save_now').text('Save Failed')
+    //   $('#last_save').text(message.error)
+    //   if(message.error === "You need to be logged in to use Save Page Now."){
+    //     $('#savebtn').off('click').click(function(){
+    //       openByWindowSetting('https://archive.org/account/login');
+    //     })
+    //   }
+    // }
   }
 )
 
-window.onloadFuncs = [checkAuthentication, checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
