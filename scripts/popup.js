@@ -74,14 +74,15 @@ function last_save() {
           page_url: url
         }, function(message) {
           if (message.message === "last_save") {
-            $('#last_save').text(message.time)
+            if($('#last_save').text !== 'URL not supported'){
+              $('#last_save').text(message.time)
+            }
             $('#savebox').addClass('flip-inside')
           }
         })
       })
     }
   })
-
 }
 
 function checkAuthentication(callback){
@@ -378,10 +379,13 @@ function noContextTip() {
 
 function checkExcluded() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    global_url = tabs[0].url
-    if (!isNotExcludedUrl(global_url)) {
+    let url = tabs[0].url
+    if (isNotExcludedUrl(url)) {
+      last_save()
+    }else{
       const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
       $('#ctxbox').addClass('flip-inside')
     }
@@ -414,7 +418,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
