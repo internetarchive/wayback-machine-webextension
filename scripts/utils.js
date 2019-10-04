@@ -14,8 +14,9 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     .then(response => response.json())
     .then(function(json){
       let wayback_url = getWaybackUrlFromResponse(json);
+      let timestamp = getWaybackTimestampFromResponse(json)
       if(wayback_url !== null){
-        onsuccess(wayback_url, url);
+        onsuccess(wayback_url, url, timestamp);
       }else if(onfail){
         onfail();
       }
@@ -72,6 +73,22 @@ function getWaybackUrlFromResponse(response) {
     return null;
   }
 }
+
+function getWaybackTimestampFromResponse(response) {
+  if (response.results &&
+    response.results[0] &&
+    response.results[0].archived_snapshots &&
+    response.results[0].archived_snapshots.closest &&
+    response.results[0].archived_snapshots.closest.available &&
+    response.results[0].archived_snapshots.closest.available === true &&
+    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
+    return response.results[0].archived_snapshots.closest.timestamp;
+  } else {
+    return null;
+  }
+}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

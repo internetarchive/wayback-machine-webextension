@@ -74,7 +74,25 @@ function save_page_now(page_url, silent = false){
       })
   }
 }
+function auth_check(){
+  const timeoutPromise = new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 30000)
+    fetch('https://web.archive.org/save/',
+    {
+      credentials: 'include',
+      method: 'POST',
+      headers: {
+        "Accept": "application/json" ,
+      },
+    })
+    .then(resolve, reject)
+  })
+  return timeoutPromise
+  .then(response => response.json())
 
+}
 async function validate_spn(job_id, silent = false){
   let vdata;
   let status = "pending";
@@ -82,6 +100,9 @@ async function validate_spn(job_id, silent = false){
   val_data.append('job_id', job_id)
 
   while(status === "pending"){
+    chrome.runtime.sendMessage({
+      message: 'save_start',
+    })
     await sleep(1000);
       const timeoutPromise = new Promise(function (resolve, reject) {
         setTimeout(() => {
@@ -105,22 +126,34 @@ async function validate_spn(job_id, silent = false){
     })
   }
   if(vdata.status === "success"){
-    let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
-    function clickNotification(){
-      openByWindowSetting(snapshot_url);
-    }
+    chrome.runtime.sendMessage({
+      message: 'save_success',
+      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
+    })
     if(!silent){
       notify("Successfully saved! Click to view snapshot.", function(notificationId){
         chrome.notifications.onClicked.addListener(function(newNotificationId){
           if(notificationId === newNotificationId){
-            clickNotification();
+            let snapshot_url = "https://web.archive.org/web/" + vdata.timestamp + "/" + vdata.original_url;
+            openByWindowSetting(snapshot_url);
           }
         })
       })
     }
-  }else if(vdata.status === "error"){
+  }else if(!vdata.status){
+    chrome.runtime.sendMessage({
+      message: 'save_error',
+      error: vdata.message
+    })
+
     if(!silent){
-      notify("Error: " + vdata.message)
+      notify("Error: " + vdata.message, function(notificationId){
+        chrome.notifications.onClicked.addListener(function(newNotificationId){
+          if(notificationId === newNotificationId){
+            openByWindowSetting('https://archive.org/account/login');
+          }
+        })
+      })
     }
   }
 }
@@ -217,6 +250,13 @@ chrome.webRequest.onCompleted.addListener(function (details) {
   }
 }, { urls: ["<all_urls>"], types: ["main_frame"] });
 
+function getLastSaveTime(date){
+  const year = date.substring(0, 4)
+  const month = date.substring(4, 6)
+  const day = date.substring(6, 8)
+  return `${year}-${month}-${day}`
+}
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
     var page_url = message.page_url;
@@ -234,25 +274,24 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time, remove hash for some sites
     const url = message.page_url.split('#')[0]
-    fetch('http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json')
-      .then(resp => resp.json())
-      .then(resp => {
-        if (resp.length === 0) {
-          chrome.runtime.sendMessage({
-            message: "last_save",
-            time: "Page hasn't been saved"
-          })
-        } else {
-          const date = resp[1][1]
-          const year = date.substring(0, 4)
-          const month = date.substring(4, 6)
-          const day = date.substring(6, 8)
-          chrome.runtime.sendMessage({
-            message: 'last_save',
-            time: `Last saved: ${year}-${month}-${day}`
-          })
-        }
+    wmAvailabilityCheck(url,
+    function(wb_url, url, timestamp){
+      sendResponse({
+        message: 'last_save',
+        time: 'Last saved: ' + getLastSaveTime(timestamp)
       })
+    },
+    function(){
+      sendResponse({
+        message: "last_save",
+        time: "Page hasn't been saved"
+      })
+    })
+    return true;
+  } else if (message.message === 'auth_check'){
+    auth_check()
+      .then(resp => sendResponse(resp))
+    return true;
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='

@@ -45,7 +45,6 @@ function get_clean_url(url) {
 }
 
 function save_now() {
-  $("#save_now").text("Saving Snapshot...")
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
@@ -58,13 +57,38 @@ function save_now() {
 }
 
 function last_save() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
-      message: 'getLastSaveTime',
-      page_url: url
-    })
+  checkAuthentication(function(result){
+    if(result && result.message && result.message === "You need to be logged in to use Save Page Now."){
+      $('#savebox').addClass('flip-inside')
+      $('#last_save').text('Log in to save.')
+      $('#save_now').attr('disabled', true)
+      $('#savebtn').off('click').click(function(){
+        openByWindowSetting('https://archive.org/account/login');
+      })
+    }else{
+      $('#save_now').removeAttr('disabled')
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        let url = get_clean_url(tabs[0].url)
+        chrome.runtime.sendMessage({
+          message: 'getLastSaveTime',
+          page_url: url
+        }, function(message) {
+          if (message.message === "last_save") {
+            if($('#last_save').text !== 'URL not supported'){
+              $('#last_save').text(message.time)
+            }
+            $('#savebox').addClass('flip-inside')
+          }
+        })
+      })
+    }
   })
+}
+
+function checkAuthentication(callback){
+  chrome.runtime.sendMessage({
+    message: 'auth_check'
+  }, callback)
 }
 
 function recent_capture() {
@@ -355,29 +379,46 @@ function noContextTip() {
 
 function checkExcluded() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    global_url = tabs[0].url
-    if (!isNotExcludedUrl(global_url)) {
+    let url = tabs[0].url
+    if (isNotExcludedUrl(url)) {
+      last_save()
+    }else{
       const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
       $('#ctxbox').addClass('flip-inside')
     }
   })
 }
 
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === "last_save") {
+    if (message.message === "save_success") {
+      $('#save_now').text('Save successful')
       $('#last_save').text(message.time)
       $('#savebox').addClass('flip-inside')
     }
+    if (message.message === "save_start"){
+      $("#save_now").text("Saving Snapshot...")
+    }
+    // if(message.message === "save_error"){
+    //   $('#save_now').text('Save Failed')
+    //   $('#last_save').text(message.error)
+    //   if(message.error === "You need to be logged in to use Save Page Now."){
+    //     $('#savebtn').off('click').click(function(){
+    //       openByWindowSetting('https://archive.org/account/login');
+    //     })
+    //   }
+    // }
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, last_save]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
