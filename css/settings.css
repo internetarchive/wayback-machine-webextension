@@ -1,7 +1,7 @@
 #settingPage {
     height: 458px;
     max-height: 458px;
-    overflow: hidden;
+    overflow: wrap;
 }
 
 #general {
@@ -45,21 +45,19 @@ span.section {
     font-size: 15px;
 }
 
-li.section:nth-child(1) {
+li.section {
     background-color: #d63c24f2;
-    border-top: solid 2px #d63c24f2;
-    border-right: solid 2px #d63c24f2 ;
-    border-left: solid 4px #d63c24f2;
+    border: solid 2px #d63c24f2;
     margin-left: 4px;
 }
 
-li.section:nth-child(2) {
+/* li.section:nth-child(2) {
     margin-left: 3.5px;
     background-color: #25a7b0;
     border-top: solid 2px #25a7b0;
     border-left: solid 2px #25a7b0 ;
     border-right: solid 4px #25a7b0;
-}
+} */
 
 li.section:active {
     opacity: 0.5;

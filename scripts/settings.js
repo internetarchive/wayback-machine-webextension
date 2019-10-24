@@ -101,18 +101,31 @@ function goBack () {
 function switchSetting() {
   if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
   $('#context').hide()
+  $('#data').hide()
   // switching pressed effect of tab button
   $('#general_btn').click(function () {
     $('#context').hide()
+    $('#data').hide()
     $('#general').show()
     if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
     if ($('#context_btn').hasClass('selected')) { $('#context_btn').removeClass('selected') }
+    if ($('#data_btn').hasClass('selected')) {$('#data_btn').removeClass('selected')}
   })
   $('#context_btn').click(function () {
     $('#general').hide()
+    $('#data').hide()
     $('#context').show()
     if (!$('#context_btn').hasClass('selected')) { $('#context_btn').addClass('selected') }
     if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
+    if ($('#data_btn').hasClass('selected')) {$('#data_btn').removeClass('selected')}
+  })
+  $('#data_btn').click(function () {
+    $('#general').hide()
+    $('#context').hide()
+    $('#data').show()
+    if (!$('#data_btn').hasClass('selected')) { $('#data_btn').addClass('selected') }
+    if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
+    if ($('#context_btn').hasClass('selected')) {$('#context_btn').removeClass('selected')}
   })
 }
 
