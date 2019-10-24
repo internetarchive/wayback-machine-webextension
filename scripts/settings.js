@@ -21,7 +21,8 @@ function initializeSettings () {
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
-    showall: false
+    showall: false,
+    share_data: false
   }, restoreOptions)
 }
 function restoreOptions (items) {
@@ -35,6 +36,7 @@ function restoreOptions (items) {
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
+  $('#share_data').prop('checked', items.share_data)
 }
 
 function save_options () {
@@ -48,7 +50,8 @@ function save_options () {
     wbmsummary: $('#wbmsummary').prop('checked'),
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
-    showall: $('#showall').prop('checked')
+    showall: $('#showall').prop('checked'),
+    share_data: $('#share_data').prop('checked')
   })
 }
 
@@ -141,7 +144,8 @@ function addDocs () {
       'domaintools': 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
       'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on (captures).',
       'annotations': 'Displays what Hypothes.is knows about the URL or the Site you are on (annotations).',
-      'tagcloud': 'Show a Word Cloud built from Anchor text (the text associated with links) of links archived in the Wayback Machine, to the web page you are you.'
+      'tagcloud': 'Show a Word Cloud built from Anchor text (the text associated with links) of links archived in the Wayback Machine, to the web page you are you.',
+      'share_data': 'Placeholder text'
     }
     let labels = $('label')
     for (var i = 0; i < labels.length; i++) {

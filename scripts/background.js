@@ -299,11 +299,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    chrome.storage.sync.get(['auto_archive', 'agreement'], function (event) {
+    chrome.storage.sync.get(['auto_archive', 'agreement', 'share_data'], function (event) {
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url);
       }
-      if(event.agreement === true) {
+      if(event.agreement === true && event.share_data) {
         fetch('http://gext-log.archive.org/'+tab.url)
       }
     });
