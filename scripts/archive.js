@@ -24,13 +24,13 @@ const ERROR_CODE_DIC = {
 console.log('client inject')
 
 // appending css to the popup
-const appendStyle = () => {
+function appendStyle () {
   const url = chrome.extension.getURL('css/archive.css')
   return `<link rel="stylesheet" type="text/css" href=${url}>`
 }
 
 // appending the actual dom of popup
-const appendHTML = (url , code) => {
+function appendHTML (url, code) {
   const logo = chrome.extension.getURL('images/logo.gif')
   const close = chrome.extension.getURL('images/close.svg')
   const info = ERROR_CODE_DIC[code]
@@ -42,7 +42,7 @@ const appendHTML = (url , code) => {
         </div>`
 }
 
-const popup = (url , code) => {
+function popup (url, code) {
   document.head.insertAdjacentHTML('beforeend', appendStyle())
   // Using shadow DOM to encapsulate the popup
   const container = document.createElement('div')
@@ -71,7 +71,7 @@ const popup = (url , code) => {
 }
 
 // Polling for dom update
-const refresh = (url , code ) => {
+function refresh (url, code) {
   const container = document.querySelector('#waybackmachineContainer');
   if (!closeClicked && !linkClicked && !container) {
     popup(url, code)

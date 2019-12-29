@@ -1,7 +1,7 @@
 /**
  * Prepare hypothes.is URL to request API.
  */
-const hypothesis_api_url = (url, type) => {
+function hypothesis_api_url(url, type) {
   if (!/^https?:\/\//i.test(url)) {
     url = 'http://' + url
   }
@@ -17,7 +17,7 @@ const hypothesis_api_url = (url, type) => {
 /**
  * Get hypothes.is data and render results.
  */
-const get_annotations = (type = 'url') => {
+function get_annotations(type='url') {
   const url = getUrlByParameter('url')
   const newUrl = hypothesis_api_url(url, type)
   $.getJSON(newUrl, (data) => {
@@ -73,14 +73,14 @@ const get_annotations = (type = 'url') => {
   })
 }
 
-const showAnnotations = (type) => {
+function showAnnotations(type) {
   $('.tabcontent').hide()
   $('.tablink').removeClass('active')
   $('.tablink[value="' + type + '"]').addClass('active')
   $('#' + type).show()
 }
 
-$('.tablink').click(()=>{
+$('.tablink').click(function () {
   showAnnotations($(this).attr('value'))
 })
 
