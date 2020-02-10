@@ -115,6 +115,18 @@ function first_capture() {
   })
 }
 
+function check_url() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'checkurl',
+      wayback_url: 'https://web.archive.org/web/0/',
+      page_url: url,
+      method: 'first'
+    })
+  })
+}
+
 function view_all() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
@@ -398,6 +410,13 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
+  
+     if(message.message=="update_btn")
+    { $('#first_capture').text("URL not Available")
+      $('#recent_capture').text("URL not Available")
+      $('#overview').text("URL not Available")
+
+}
     if (message.message === "save_success") {
       $('#save_now').text('Save successful')
       $('#last_save').text(message.time)
@@ -405,6 +424,7 @@ chrome.runtime.onMessage.addListener(
     }
     if (message.message === "save_start"){
       $("#save_now").text("Saving Snapshot...")
+  
     }
     // if(message.message === "save_error"){
     //   $('#save_now').text('Save Failed')
@@ -420,8 +440,10 @@ chrome.runtime.onMessage.addListener(
 
 window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
 window.onload = function () {
+  check_url();
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
+
   }
 }
 

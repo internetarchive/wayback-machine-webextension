@@ -33,6 +33,7 @@ function rewriteUserAgentHeader(e) {
   return { requestHeaders: e.requestHeaders };
 }
 
+
 function URLopener(open_url, url, wmIsAvailable) {
   if (wmIsAvailable === true) {
     wmAvailabilityCheck(url, function () {
@@ -44,6 +45,20 @@ function URLopener(open_url, url, wmIsAvailable) {
     openByWindowSetting(open_url)
   }
 }
+
+function URLchecker(open_url, url, wmIsAvailable) {
+  if (wmIsAvailable === true) {
+    wmAvailabilityCheck(url, function () {
+    
+    }, function () {
+     
+   chrome.runtime.sendMessage({
+      message: 'update_btn'     
+    })
+      });
+  } 
+}
+
 function save_page_now(page_url, silent = false){
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams();
@@ -258,6 +273,17 @@ function getLastSaveTime(date){
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if(message.message=="checkurl")
+     {
+      var pg_url = message.page_url;
+    var wayback_site_url = message.wayback_url;
+    var site_url = pg_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '').replace(/\?.*/, '');
+    var url_open = wayback_site_url + encodeURI(url);
+           URLchecker(url_open, site_url, true)
+
+
+     }
+   else
   if (message.message === 'openurl') {
     var page_url = message.page_url;
     var wayback_url = message.wayback_url;
