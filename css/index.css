@@ -37,6 +37,7 @@ li{
 }
 button {
   display: block;
+   transition-duration: 0.4s;
   margin-bottom: 10px !important;
 }
 .resize_fit_center {
@@ -186,15 +187,30 @@ background-color: #4a8aff;
 
 .captures{
     background-color: #d63c24f2;
-    color: white !important;
+    color: white ;
     width: 170px;
     height: 30px;
 }
 .extra_feature{
-    background-color: #444243f7 !important;
-    color: white !important;
+    background-color: #444243f7 ;
+    color: white ;
     width: 170px;
     height: 30px;
+}
+.hov:hover {
+
+      background-color: white;
+      color: black;
+      border: 2px solid #d63c24f2;
+      font-size: 12.5px;;
+}
+
+.hov-black:hover {
+
+      background-color: white;
+      color: black;
+      border: 2px solid black;
+      font-size: 12.5px;;
 }
 .context_feature{
     background-color: #25a7b0;
