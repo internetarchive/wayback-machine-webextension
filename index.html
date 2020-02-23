@@ -11,18 +11,22 @@
 	<link rel="stylesheet" type="text/css" href="css/settings.css">
 </head>
 
-<body>
+<body id="body_dark">
   <div id='popupPage'>
     <div class='container-fluid'>
       <div>
         <div class='text-center'>
           <a href="#"><img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' id="logo_internet_archive" /></a>
+        <div id="dark"> <label class="toggle">
+      <input id="dark_mode" type="checkbox"/>
+      <span class="slider"></span>
+        </label></div>
           <form class="search-toolbar-input-container" style="margin: 10px 2px;">
             <div class="bootstrap-typeahead clearfix open" style="position: relative;">
               <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-                <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
+                <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off"  class="form-control has-aux bootstrap-typeahead-input-main has-selection"
                   style="background-color: transparent; display: block; position: relative; z-index: 1;">
-                <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
+                <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" id="dark_search"
                   style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
               </div>
               <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
@@ -133,7 +137,7 @@
               <span class="glyphicon glyphicon-cog" style="font-size: 24.5px; cursor: pointer; color: black;" id="settings_button" title="Settings"></span>
             </div>
             <div class="col-xs-3">
-              <i title="Feedback" class="mdi mdi-feedback feedback" style="color: black;"></i>
+              <i title="Feedback" class="mdi mdi-feedback feedback" style="color: black;" id="feedback_drk"></i>
             </div>
             <div class="col-xs-3">
                 <img src="images/donate-icon.jpg" id="donate_button" style="position: relative; bottom: 2px; width: 29.5px; height: 29.5px; cursor: pointer;" alt="donate">

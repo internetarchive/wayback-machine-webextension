@@ -64,3 +64,72 @@ h2 strong{
         text-align: center;
     }
 }
+
+.toggle input {
+  display: none;
+}
+
+/* The container and background */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 14px;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #a5b6bb;
+  border: 1px solid #aaa;
+  border-radius: 30px;
+  transition: all 0.4s;
+}
+
+/* The sliding button */
+.slider:before {
+  position: absolute;
+  content: "";
+  width: 9px;
+  height: 9px;
+  left: 2px;
+  top: 2px;
+  background-color: #eee;
+  border-radius: 24px;
+  transition: all 0.4s;
+}
+
+/* On checked */
+input:checked + .slider {
+  background-color:rgb(9, 150, 248); ;
+}
+input:checked + .slider:before {
+  transform: translateX(15px);
+}
+#dark{
+  position: absolute;
+  top:20px;
+  left:150px;
+}
+.dark_body{
+  background-color: black;
+}
+.dark_theme_btn{
+  background-color: #444243f7 !important ;
+  opacity: 1!important;
+}
+.search_dark{
+
+
+    color:#f0efef !important;
+  background-color: #444243f7 !important;
+      border: 1px solid grey;
+
+
+}
+.bottom_dark{
+  color:white!important;
+}

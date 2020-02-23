@@ -347,6 +347,41 @@ function show_news() {
     })
   })
 }
+
+function dark_ext(){
+  if ($('#dark_mode').is(":checked"))
+{
+   document.getElementById("body_dark").classList.add("dark_body");
+   document.getElementById("save_now").classList.add("dark_theme_btn");
+   document.getElementById("recent_capture").classList.add("dark_theme_btn");
+   document.getElementById("first_capture").classList.add("dark_theme_btn");
+    document.getElementById("overview").classList.add("dark_theme_btn");
+    document.getElementById("search_input").classList.add("search_dark");
+    document.getElementById("context-screen").classList.add("dark_theme_btn");
+     document.getElementById("contextBtn").classList.add("dark_theme_btn");
+     document.getElementById("settings_button").classList.add("bottom_dark");
+      document.getElementById("feedback_drk").classList.add("bottom_dark");
+      document.getElementById("about_support_button").classList.add("bottom_dark");
+      $("#donate_button").attr("src","../images/donate-icon-dark.png");
+
+}
+else{
+document.getElementById("body_dark").classList.remove("dark_body");
+ document.getElementById("save_now").classList.remove("dark_theme_btn");
+    document.getElementById("recent_capture").classList.remove("dark_theme_btn");
+     document.getElementById("first_capture").classList.remove("dark_theme_btn");
+      document.getElementById("overview").classList.remove("dark_theme_btn");
+      document.getElementById("dark_search").classList.remove("search_dark");
+          document.getElementById("context-screen").classList.remove("dark_theme_btn");
+            document.getElementById("contextBtn").classList.remove("dark_theme_btn");
+           document.getElementById("search_input").classList.remove("search_dark");
+        document.getElementById("settings_button").classList.remove("bottom_dark");
+        document.getElementById("feedback_drk").classList.remove("bottom_dark");
+              document.getElementById("about_support_button").classList.remove("bottom_dark");
+               $("#donate_button").attr("src","../images/donate-icon.jpg");
+}
+ 
+}
 function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
@@ -441,3 +476,4 @@ $('.feedback').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search_input').keydown(display_suggestions)
+$('#dark_mode').click(dark_ext)
