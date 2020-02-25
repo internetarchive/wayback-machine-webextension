@@ -39,6 +39,14 @@ button {
   display: block;
   margin-bottom: 10px !important;
 }
+
+.btn{
+    border-radius: 1.4em;
+    background-color: transparent !important;
+    box-shadow: .1em .1em .3em #121212 ;
+    color: #121212 !important;
+}
+
 .resize_fit_center {
   margin: 5px 0 0 0;
   max-width:100%;
@@ -179,26 +187,26 @@ background-color: #4a8aff;
 
 .save {
     background-color: #489C3E;
-    color: white !important;
+    color: #121212;
     width: 170px;
     height: 30px;
 }
 
 .captures{
     background-color: #d63c24f2;
-    color: white !important;
+    color: #121212;
     width: 170px;
     height: 30px;
 }
 .extra_feature{
-    background-color: #444243f7 !important;
+    background-color: #121212 !important;
     color: white !important;
     width: 170px;
     height: 30px;
 }
 .context_feature{
     background-color: #25a7b0;
-    color: white !important;
+    color: #121212;
     width: 170px;
     height: 30px;
 }
