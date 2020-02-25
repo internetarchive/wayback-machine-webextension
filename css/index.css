@@ -1,6 +1,6 @@
 body{
-    width: 200px;
-    max-height: 538px;
+    width: 250px;
+    max-height: 600px;
 }
 li{
     margin:0px 0px 0px -18px;
@@ -180,26 +180,26 @@ background-color: #4a8aff;
 .save {
     background-color: #489C3E;
     color: white !important;
-    width: 170px;
+    width: 220px;
     height: 30px;
 }
 
 .captures{
     background-color: #d63c24f2;
     color: white !important;
-    width: 170px;
+    width: 220px;
     height: 30px;
 }
 .extra_feature{
     background-color: #444243f7 !important;
     color: white !important;
-    width: 170px;
+    width: 220px;
     height: 30px;
 }
 .context_feature{
     background-color: #25a7b0;
     color: white !important;
-    width: 170px;
+    width: 220px;
     height: 30px;
 }
 

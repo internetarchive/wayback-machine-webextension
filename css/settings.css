@@ -50,7 +50,7 @@ li.section:nth-child(1) {
     border-top: solid 2px #d63c24f2;
     border-right: solid 2px #d63c24f2 ;
     border-left: solid 4px #d63c24f2;
-    margin-left: 4px;
+    margin-left: 32px;
 }
 
 li.section:nth-child(2) {
@@ -124,7 +124,7 @@ li.selected {
 }
 
 .ctx {
-    width: 170px;
+    width: 220px;
     padding: 8px 5px 8px 5px;
     margin: 8px auto 8px auto;
 }
