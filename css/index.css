@@ -84,11 +84,13 @@ webkit-backface-visibility: hidden;
 webkit-transform: scale(1);
 webkit-transition: all .25s;
 }
+
 .btn-social:hover,.btn-social:focus
 {
 color: #fff;
 outline: none;
 text-decoration: none;
+cursor: pointer;
 }
 .btn-social:hover .fa,.btn-social:focus .fa,.btn-social:hover i,.btn-social:focus i
 {
