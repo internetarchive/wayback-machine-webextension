@@ -145,7 +145,7 @@ function social_share(eventObj) {
       if (id.includes('fb')) {
         open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
       } else if (id.includes('twit')) {
-        open_url = 'https://twitter.com/home?status=' + sharing_url
+        open_url = 'https://twitter.com/share?url=' + sharing_url
       } else if (id.includes('linkedin')) {
         open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
       }
