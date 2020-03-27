@@ -120,6 +120,7 @@ background-color: #3b5998;
 .btn-facebook:hover
 {
 background-color: #4c70ba;
+    cursor: pointer ;
 }
 .btn-twitter
 {
@@ -128,6 +129,7 @@ background-color: #55acee;
 .btn-twitter:hover
 {
 background-color: #83c3f3;
+    cursor: pointer ;
 }
 .btn-linkedin
 {
@@ -136,6 +138,7 @@ background-color: #1E88E5;
 .btn-linkedin:hover
 {
 background-color: #4a8aff;
+    cursor: pointer ;
 }
 .btn{
     font-weight: 500;
