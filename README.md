@@ -32,9 +32,9 @@ history of the Web!
 
  Follow the given steps to install the extension on your local machine:
 
-    Navigate to chrome://extensions in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over More Tools and selecting Extensions.
-    Check the box next to Developer Mode.
-    Click Load Unpacked Extension and select the directory for your "Hello Extensions" extension.
+  1. Navigate to chrome://extensions in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over More Tools and selecting Extensions.
+  2. Check the box next to Developer Mode.
+  3. Click Load Unpacked Extension and select the directory for your "Hello Extensions" extension.
 
 This is a "WebExtension". See https://developer.chrome.com/extensions for more information.
 
