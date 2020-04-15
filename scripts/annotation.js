@@ -42,9 +42,9 @@ function get_annotations(type='url') {
         item.find('#text-contain').html(exactData);
         item.find('.title').html(title);
         item.find('.links').append(
-          $('<a>').attr({'href': rowData.links.incontext, 'id': 'link-incontext'})
+          $('<a>').attr({'href': rowData.links.incontext, 'id': 'link-incontext','target':'_blank'})
                   .html('Click to see in context'),
-          $('<a>').attr({'href': rowData.links.html, 'id': 'link-html'})
+          $('<a>').attr({'href': rowData.links.html, 'id': 'link-html','target':'_blank'})
                   .html('Click to see the HTML')
         )
         if(rowData.target[0].hasOwnProperty('selector')){
