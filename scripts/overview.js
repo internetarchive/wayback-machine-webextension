@@ -1,9 +1,9 @@
-function get_WBMSummary() {
-  get_details();
-  first_archive_details();
-  recent_archive_details();
-  get_thumbnail();
-  $("#loader_wbmsummary").hide();
+function get_WBMSummary () {
+  get_details()
+  first_archive_details()
+  recent_archive_details()
+  get_thumbnail()
+  $('#loader_wbmsummary').hide()
 }
 
 function getTotal (captures) {
@@ -16,18 +16,21 @@ function getTotal (captures) {
 function get_details () {
   var url = getUrlByParameter('url')
   var new_url = 'https://archive.org/services/context/metadata?url=' + url
-  $.getJSON(new_url, function (response) {
+  $.getJSON(new_url, (response) => {
     var type = response.type
     $('#details').text(type)
     var captures = response.captures
-    $('#total_archives').attr('href', 'https://web.archive.org/web/*/' + url)
-                        .text(getTotal(captures).toLocaleString())
+    $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
+      .text(getTotal(captures).toLocaleString())
+  }).fail(() => {
+    $('#url_details').hide()
+    $('#total_captures').hide()
   })
 }
 
 function _splitTimestamp (timestamp) {
   if (typeof timestamp === 'number') {
-    timestamp = timestamp.toString();
+    timestamp = timestamp.toString()
   }
   return [
     // year
@@ -42,15 +45,15 @@ function _splitTimestamp (timestamp) {
     timestamp.slice(-4, -2),
     // seconds
     timestamp.slice(-2)
-  ];
+  ]
 }
 
 function timestamp2datetime (timestamp) {
-  const tsArray = _splitTimestamp(timestamp);
+  const tsArray = _splitTimestamp(timestamp)
   return new Date(Date.UTC(
     tsArray[0], tsArray[1] - 1, tsArray[2],
     tsArray[3], tsArray[4], tsArray[5]
-  ));
+  ))
 }
 
 function first_archive_details () {
@@ -60,10 +63,10 @@ function first_archive_details () {
     if (data.length == 0) {
       $('#first_archive_datetime').text('Data are not available.')
     } else {
-			const ts = data[1][1]
-			const dt = timestamp2datetime(ts).toString().split('+')[0]
-			$('#first_archive_datetime')
-				.text(dt)
+      const ts = data[1][1]
+      const dt = timestamp2datetime(ts).toString().split('+')[0]
+      $('#first_archive_datetime')
+        .text(dt)
     		.attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
@@ -76,8 +79,8 @@ function recent_archive_details () {
     if (data.length == 0) {
       $('#recent_archive_datetime').text('Data are not available.')
     } else {
-	  const ts = data[1][1];
-	  const dt = timestamp2datetime(ts).toString().split('+')[0];
+	  const ts = data[1][1]
+	  const dt = timestamp2datetime(ts).toString().split('+')[0]
 	  $('#recent_archive_datetime')
         .text(dt)
         .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
