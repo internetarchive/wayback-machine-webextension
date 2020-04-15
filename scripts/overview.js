@@ -24,7 +24,7 @@ function get_details () {
       .text(getTotal(captures).toLocaleString())
   }).fail(() => {
     $('#url_details').hide()
-    $('#total_caputres').hide()
+    $('#total_captures').hide()
   })
 }
 
