@@ -84,26 +84,27 @@ function recent_archive_details () {
     }
   })
 }
-
+// Function used to get the thumbnail of the URL
 function get_thumbnail () {
   var url = getUrlByParameter('url')
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
-    .then(function (response) {
-      $('#loader_thumbnail').hide()
-      if (response.size != 233) {
-        $('#show_thumbnail').append($('<img>').attr('src', new_url))
+    .then((response) => {
+      if (response.status === 200) {
+        $('#loader_thumbnail').hide()
+        if (response.size != 233) {
+          $('#show_thumbnail').append($('<img>').attr('src', new_url))
+        } else {
+          $('#show_thumbnail').text('Thumbnail not found')
+        }
       } else {
-        $('#show_thumbnail').text('Thumbnail not found')
-      }
-    })
-    .catch(function (exception) {
-      $('#loader_thumbnail').hide()
-      if (exception === 'timeout') {
-        $('#show_thumbnail').text('Please refresh the page...Time out!!')
-      } else {
-        $('#show_thumbnail').text('Thumbnail not found')
+        $('#loader_thumbnail').hide()
+        if (response.status === 504) {
+          $('#show_thumbnail').text('Please refresh the page...Time out!!')
+        } else {
+          $('#show_thumbnail').text('Thumbnail not found')
+        }
       }
     })
 }
