@@ -82,7 +82,7 @@ function goBack () {
   // checking contexts selection status
   if (noneSelected()) {
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    $('#context-screen').off('click').css({ opacity: 0.5 })
+    /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
   } else {
     if ($('#ctxbox').hasClass('flip-inside')) {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {

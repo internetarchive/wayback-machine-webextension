@@ -13,14 +13,17 @@
 
 <body>
   <div id='popupPage'>
-    <div class='container-fluid'>
+
+    <a href="#"><img class="resize-fit-center" src="images/wayback-logo.png" alt="Internet Archive" id="logo-internet-archive" /></a>
+
+    <div class="container-fluid">
       <div>
-        <div class='text-center'>
-          <a href="#"><img class='resize_fit_center' src='images/icon.png' alt='Internet Archive' id="logo_internet_archive" /></a>
-          <form class="search-toolbar-input-container" style="margin: 10px 2px;">
+        <div class="text-center">
+
+          <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
             <div class="bootstrap-typeahead clearfix open" style="position: relative;">
               <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-                <input id="search_input" type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
+                <input id="search_input" type="text" placeholder="Search URL" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
                   style="background-color: transparent; display: block; position: relative; z-index: 1;">
                 <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
                   style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
@@ -31,117 +34,99 @@
             <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
           </form>
 
+          <!-- Wayback -->
+
           <div class="flip" id="savebtn">
             <div id="savebox">
-              <div class="front">
-                <button type="button" class="btn btn-sm btn-block save" id="save_now" tabindex='-1'>Save Page Now</button>
-              </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm btn-block save" id="last_save" tabindex='-1'>URL not supported</button>
-              </div>
+              <div class="flip-front"><button type="button" class="btn btn-sm btn-block btn-savepage" id="save_now" tabindex="-1">Save Page Now</button></div>
+              <div class="flip-back"><button type="button" class="btn btn-sm btn-block btn-savepage" id="last_save" tabindex="-1">URL not supported</button></div>
             </div>
           </div>
 
-          <div class="flip" id="recentbtn">
-            <div id="recentbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm captures btn-block" id="recent_capture" tabindex='-1'>Load Recent Version</button>
-              </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm captures btn-block" id="recent_capture_error" tabindex='-1'>URL not supported</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flip" id="firstbtn">
-            <div id="firstbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm captures btn-block" id="first_capture" tabindex='-1'>Load First Version</button>
-              </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm captures btn-block" id="first_capture_error" tabindex='-1'>URL not supported</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flip" id="allbtn">
-            <div id="allbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm captures btn-block" id="overview" tabindex='-1'>Browse All Versions</button>
-              </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm captures btn-block" id="overview_error" tabindex='-1'>URL not supported</button>
-              </div>
-            </div>
+          <div class="btn-block">
+            <button type="button" class="btn btn-sm btn-oldest" id="first_capture" tabindex="-1">Oldest</button>
+            <a class="btn-social btn-sm btn-all" id="allbtn"><i class="fa fa-calendar"></i></a>
+            <button type="button" class="btn btn-sm btn-newest" id="recent_capture" tabindex="-1">Newest</button>
           </div>
 
           <div class="flip" id="mapbtn">
             <div id="mapbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm extra_feature btn-block" id="site_map" tabindex='-1'>Visualize Site Map</button>
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-sitemap" id="site_map" tabindex="-1">Site Map</button>
               </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm extra_feature btn-block" id="site_map_error" tabindex='-1'>URL not supported</button>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-sitemap" id="site_map_error" tabindex="-1">Not Archived</button>
               </div>
             </div>
           </div>
 
+          <!-- 3rd Party -->
+
           <div class="flip" id="twitterbtn">
             <div id="twitterbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet" tabindex="-1">
-                  <i class="fa fa-twitter"></i> Tweets About this Page</button>
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-tweet" id="search_tweet" tabindex="-1">
+                  <i class="fa fa-twitter"></i> Related Tweets</button>
               </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm btn-block extra_feature" id="search_tweet_error" tabindex="-1">
-                 URL not supported</button>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-tweet" id="search_tweet_error" tabindex="-1">URL not supported</button>
               </div>
             </div>
           </div>
 
           <div class="flip" id="context-screen">
             <div id="ctxbox">
-              <div class="front">
-                <button type="button" class="btn btn-sm btn-block context_feature" id="contextBtn" tabindex='-1'>Show Me Context</button>
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-context context_feature" id="contextBtn" tabindex="-1">Show Contexts</button>
               </div>
-              <div class="back">
-                <button type="button" class="btn btn-sm btn-block context_feature" id="contextTip" tabindex='-1'>Enable context in setting</button>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-context context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
               </div>
             </div>
           </div>
 
+          <!-- Hidden -->
+
           <div id="borrow_books_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex='-1'>Read This Book</button>
+            <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex="-1">Read This Book</button>
           </div>
           <div id="news_recommend_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="news_recommend" tabindex='-1'>Related TV Clips</button>
+            <button type="button" class="btn btn-warning btn-sm btn-block" id="news_recommend" tabindex="-1">Related TV Clips</button>
           </div>
           <div id="wikibooks_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="wikibooks" tabindex='-1'>Find Cited Books</button>
+            <button type="button" class="btn btn-warning btn-sm btn-block" id="wikibooks" tabindex="-1">Find Cited Books</button>
           </div>
           <div id="doi_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="doi" tabindex='-1'>Find Cited Papers</button>
+            <button type="button" class="btn btn-warning btn-sm btn-block" id="doi" tabindex="-1">Find Cited Papers</button>
           </div>
+
+          <!-- Share -->
+
           <div>
-            <a id="fb_share" class="btn-social btn-sm btn-facebook"><i class="fa fa-facebook"></i></a>
-            <a id="twit_share" class="btn-social btn-sm btn-twitter"><i class="fa fa-twitter"></i></a>
-            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin"><i class="fa fa-linkedin"></i></a>
+            <a id="fb_share" class="btn-social btn-sm btn-facebook" style="cursor: pointer"><i class="fa fa-facebook"></i></a>
+            <a id="twit_share" class="btn-social btn-sm btn-twitter" style="cursor: pointer"><i class="fa fa-twitter"></i></a>
+            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin" style="cursor: pointer"><i class="fa fa-linkedin"></i></a>
           </div>
-          <div id="horizontal_line" style="margin-bottom: 5px"></div>
-          <div class="row">
-            <div class="col-xs-3">
-              <span class="glyphicon glyphicon-cog" style="font-size: 24.5px; cursor: pointer; color: black;" id="settings_button" title="Settings"></span>
+
+          <hr>
+
+          <!-- Tabbar -->
+
+          <div class="tab-bar">
+            <div class="tab-item">
+              <span class="tab-icon glyphicon glyphicon-cog" style="font-size: 24.5px;" title="Settings" id="settings_button"></span>
             </div>
-            <div class="col-xs-3">
-              <i title="Feedback" class="mdi mdi-feedback feedback" style="color: black;"></i>
+            <div class="tab-item">
+              <i class="tab-icon mdi mdi-feedback feedback" title="Feedback"></i>
             </div>
-            <div class="col-xs-3">
-                <img src="images/donate-icon.jpg" title="Donate" id="donate_button" style="position: relative; bottom: 2px; width: 29.5px; height: 29.5px; cursor: pointer;" alt="donate">
+            <div class="tab-item">
+              <img src="images/donate-icon.jpg" class="tab-icon" title="Donate" id="donate_button" style="width: 29.5px; height: 29.5px; vertical-align:baseline" alt="donate">
             </div>
-            <div class="col-xs-3">
-              <span title="About" class="glyphicon glyphicon-info-sign" style="font-size: 25px;color: black; cursor: pointer;" id="about_support_button"></span>
+            <div class="tab-item">
+              <span class="tab-icon glyphicon glyphicon-info-sign" style="font-size: 25px;" title="About" id="about_support_button"></span>
             </div>
           </div>
+
         </div>
       </div>
     </div>

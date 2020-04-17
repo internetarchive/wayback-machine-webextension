@@ -1,36 +1,68 @@
-body{
+
+/* default light mode */
+
+body {
     width: 200px;
     max-height: 538px;
+    background-color: #eee;
 }
-li{
+
+hr {
+    margin: 0 0 5px 0;
+    border: none;
+    border-top: 1px solid #aaa;
+    height: 1px;
+}
+
+.tab-icon {
+    cursor: pointer;
+    color: #444;
+}
+.tab-icon:hover {
+    color: #666;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2C2C2C;
+        color: #fff;
+    }
+
+    hr {
+        border-top: 1px solid #555;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    .tab-icon {
+        color: #bbb;
+    }
+    .tab-icon:hover {
+        color: #888;
+    }
+
+}
+
+/* all modes */
+
+.tab-bar {
+    padding: 2px 0 5px 0;
+}
+.tab-item {
+    display: inline-block;
+    vertical-align: middle;
+    width: 22%;
+}
+
+li {
     margin:0px 0px 0px -18px;
     padding: 0px;
 }
-#horizontal_line{
-    margin: 0px; 
-    padding: 0px; 
-    border: 0px solid rgb(6, 117, 211); 
-    font-size: 19px; font-style: inherit;
-    font-variant: inherit; 
-    font-weight: inherit; 
-    font-stretch: inherit; 
-    line-height: 1; 
-    font-family: sans-serif; 
-    vertical-align: baseline; 
-    box-sizing: content-box; 
-    overflow: unset; 
-    height: 1px; 
-    position: relative; 
-    bottom: 2px;
-    width: auto; 
-    display: flex; 
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
-    text-align: left; 
-    align-items: center; 
-    border-radius: 3px; 
-    justify-content: center; 
-    text-decoration: none;
-}
+
 .focused {
     background-color: #D3D3D3;
     opacity: 0.7;
@@ -39,16 +71,15 @@ button {
   display: block;
   margin-bottom: 10px !important;
 }
-.resize_fit_center {
-  margin: 5px 0 0 0;
-  max-width:100%;
-  max-height:100%;
+.resize-fit-center {
+  margin: 0 0 0 0;
+  max-width: 100%;
   vertical-align: middle;
 }
 
-#logo_internet_archive {
+#logo-internet-archive {
     position: relative;
-    top: 2.5px;
+    padding: 5px;
 }
 
 a.btn-social,
@@ -67,10 +98,11 @@ webkit-transition: background-color .3s;
 width: 54px;
 position: relative;
 bottom: 5px;
+    cursor: pointer;
 }
 
 .fa{
-margin-top:6px;
+/* margin-top:6px; */
 }
 .btn-social .fa,.btn-social i
 {
@@ -101,7 +133,8 @@ webkit-transform: scale(1.3);
 {
 font-size: 13px;
 height: 36px;
-line-height: 18px;
+/* line-height: 18px; */
+line-height: 25px;
 margin: 6px 2px;
 width: 36px;
 }
@@ -137,8 +170,10 @@ background-color: #1E88E5;
 {
 background-color: #4a8aff;
 }
-.btn{
-    font-weight: 500;
+
+.btn {
+    font-weight: 400;
+    border-radius: 5px;
 }
 
 /* flipping effect rules */
@@ -163,41 +198,66 @@ background-color: #4a8aff;
     transform: rotateX(180deg);
 }
 
-.front, .back {
+.flip-front, .flip-back {
     position: absolute;
     backface-visibility: hidden;
 }
 
-.front {
+.flip-front {
     transform: rotateX(0deg);
     z-index: 2;
 }
 
-.back {
+.flip-back {
     transform: rotateX(180deg);
+    /* top:10px; */  /* TEST don't use [CG] REMOVE */
 }
 
-.save {
-    background-color: #489C3E;
+.btn-savepage {
+    /* background-color: #489C3E; */
+    background-color: #9A3B38;
     color: white !important;
     width: 170px;
     height: 30px;
 }
 
-.captures{
-    background-color: #d63c24f2;
+.btn-oldest {
+    background-color: #737373;
+    color: white !important;
+    width: 60px;
+    height: 30px;
+}
+
+.btn-newest {
+    background-color: #737373;
+    color: white !important;
+    width: 60px;
+    height: 30px;
+}
+
+.btn-all {
+    background-color: #9A3B38;
+}
+.btn-all:hover {
+}
+
+
+.btn-sitemap {
+    background-color: #4D4D4D;
     color: white !important;
     width: 170px;
     height: 30px;
 }
-.extra_feature{
-    background-color: #444243f7 !important;
+
+.btn-tweet {
+    background-color: #737373;
     color: white !important;
     width: 170px;
     height: 30px;
 }
-.context_feature{
-    background-color: #25a7b0;
+
+.btn-context {
+    background-color: #4D4D4D;
     color: white !important;
     width: 170px;
     height: 30px;
@@ -212,6 +272,7 @@ background-color: #4a8aff;
     padding-top: 0px;
     margin-bottom: 3px;
 }
+
 .feedback{
     cursor: pointer;
     font-size: 185%;

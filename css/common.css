@@ -9,6 +9,7 @@
     font-family: Gill Sans Light;
     src: url("../fonts/GillSans-Light.ttf");
 }
+/*
 #horizontal_line{
     align-items: center;
     background-color: rgb(9, 150, 248); color: rgb(255, 255, 255);
@@ -33,10 +34,13 @@
     vertical-align: baseline;
     width: auto;
 }
-.resize_fit_center {
+*/
+/*
+.resize-fit-center {
     max-width:100%;
     max-height:100px;
 }
+*/
 h2{
     font-family: Bebas Neue;
     font-size: 50px;

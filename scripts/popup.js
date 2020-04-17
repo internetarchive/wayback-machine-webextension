@@ -1,5 +1,5 @@
 function homepage() {
-  openByWindowSetting('https://web.archive.org/web/')
+  openByWindowSetting('https://web.archive.org/')
 }
 
 function remove_port(url) {
@@ -60,7 +60,7 @@ function last_save() {
   checkAuthentication(function(result){
     if(result && result.message && result.message === "You need to be logged in to use Save Page Now."){
       $('#savebox').addClass('flip-inside')
-      $('#last_save').text('Log in to save.')
+      $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
       $('#savebtn').off('click').click(function(){
         openByWindowSetting('https://archive.org/account/login');
@@ -373,7 +373,7 @@ function noContextTip() {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
     for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    $('#context-screen').css({ opacity: 0.5 })
+    /* $('#context-screen').css({ opacity: 0.5 }) */
   })
 }
 
@@ -383,7 +383,7 @@ function checkExcluded() {
     if (isNotExcludedUrl(url)) {
       last_save()
     }else{
-      const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
+      const idList = ['savebox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
@@ -425,10 +425,10 @@ window.onload = function () {
   }
 }
 
-$('#logo_internet_archive').click(homepage)
+$('#logo-internet-archive').click(homepage)
 $('#savebtn').click(save_now)
-$('#recentbtn').click(recent_capture)
-$('#firstbtn').click(first_capture)
+$('#recent_capture').click(recent_capture)
+$('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
