@@ -1,7 +1,7 @@
 #settingPage {
     height: 458px;
     max-height: 458px;
-    overflow: hidden;
+    overflow: auto;
 }
 
 #general {
@@ -41,7 +41,7 @@ li.section span.section {
 
 span.section {
     text-align: center;
-    padding: 1px 18px 3px 18px;
+    padding: 1px 14px 3px 14px;
     font-size: 15px;
 }
 
