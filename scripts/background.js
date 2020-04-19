@@ -399,11 +399,13 @@ chrome.tabs.onActivated.addListener(function (info) {
   chrome.storage.sync.get(['auto_update_context'], function (event) {
     if (event.auto_update_context === true) {
       chrome.tabs.get(info.tabId, function (tab) {
-        tabIdPromise.then(function (id) {
-          if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
-            chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
-          }
-        })
+        if(tabIdPromise){
+          tabIdPromise.then(function (id) {
+            if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
+              chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
+            }
+          })
+        }
       })
     }
   })
