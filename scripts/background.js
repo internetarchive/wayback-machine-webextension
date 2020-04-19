@@ -381,11 +381,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
           })
         }
         if (event.auto_update_context === true) {
-          tabIdPromise.then(function (id) {
-            if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
-              chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + contextUrl });
-            }
-          });
+          if(tabIdPromise){
+            tabIdPromise.then(function (id) {
+              if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
+                chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + contextUrl });
+              }
+            });
+          }
         }
       });
     }
