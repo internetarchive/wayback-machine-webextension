@@ -19,7 +19,7 @@ function openContextFeature(evt, feature) {
   $(".tabcontent").hide()
 
   // Get all elements with class="tablinks" and remove the class "active"
-  $(".tablinks").removeClass("active");
+  $(".col-tablinks button").removeClass("active");
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show();
   evt.currentTarget.className += " active";

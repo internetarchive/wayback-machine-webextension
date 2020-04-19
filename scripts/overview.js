@@ -61,7 +61,7 @@ function first_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#first_archive_datetime').text('Data are not available.')
+      $('#first_archive_datetime_error').text('Data are not available')
     } else {
       const ts = data[1][1]
       const dt = timestamp2datetime(ts).toString().split('+')[0]
@@ -77,7 +77,7 @@ function recent_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#recent_archive_datetime').text('Data are not available.')
+      $('#recent_archive_datetime_error').text('Data are not available')
     } else {
 	  const ts = data[1][1]
 	  const dt = timestamp2datetime(ts).toString().split('+')[0]
@@ -95,7 +95,7 @@ function get_thumbnail () {
   fetch(new_url)
     .then(function (response) {
       $('#loader_thumbnail').hide()
-      if (response.size != 233) {
+      if (response.size && response.size != 233) {
         $('#show_thumbnail').append($('<img>').attr('src', new_url))
       } else {
         $('#show_thumbnail').text('Thumbnail not found')
