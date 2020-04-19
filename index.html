@@ -12,6 +12,9 @@
 </head>
 
 <body>
+
+  <!-- Main Popup Page -->
+
   <div id='popupPage'>
 
     <a href="#"><img class="resize-fit-center" src="images/wayback-logo.png" alt="Internet Archive" id="logo-internet-archive" /></a>
@@ -23,12 +26,13 @@
           <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
             <div class="bootstrap-typeahead clearfix open" style="position: relative;">
               <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
-                <input id="search_input" type="text" placeholder="Search URL" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection"
-                  style="background-color: transparent; display: block; position: relative; z-index: 1;">
+                <input id="search-input" type="text" placeholder="Search URL" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection">
+<!--
                 <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint"
                   style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+-->
               </div>
-              <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+              <ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left">
               </ul>
             </div>
             <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
@@ -38,24 +42,27 @@
 
           <div class="flip" id="savebtn">
             <div id="savebox">
-              <div class="flip-front"><button type="button" class="btn btn-sm btn-block btn-savepage" id="save_now" tabindex="-1">Save Page Now</button></div>
-              <div class="flip-back"><button type="button" class="btn btn-sm btn-block btn-savepage" id="last_save" tabindex="-1">URL not supported</button></div>
+              <div class="flip-front"><button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="save_now">Save Page Now</button></div>
+              <div class="flip-back"><button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="last_save" tabindex="-1">URL not supported</button></div>
             </div>
           </div>
 
+          <label class="unselectable chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
+          <label class="unselectable chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+
           <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-oldest" id="first_capture" tabindex="-1">Oldest</button>
-            <a class="btn-social btn-sm btn-all" id="allbtn"><i class="fa fa-calendar"></i></a>
-            <button type="button" class="btn btn-sm btn-newest" id="recent_capture" tabindex="-1">Newest</button>
+            <button type="button" class="btn btn-sm btn-short btn-light-gray" id="first_capture">Oldest</button>
+            <a class="btn-social btn-sm btn-red" id="allbtn"><i class="fa fa-calendar"></i></a>
+            <button type="button" class="btn btn-sm btn-short btn-light-gray" id="recent_capture">Newest</button>
           </div>
 
           <div class="flip" id="mapbtn">
             <div id="mapbox">
               <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-sitemap" id="site_map" tabindex="-1">Site Map</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="site_map">Site Map</button>
               </div>
               <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-sitemap" id="site_map_error" tabindex="-1">Not Archived</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="site_map_error" tabindex="-1">Not Archived</button>
               </div>
             </div>
           </div>
@@ -65,11 +72,11 @@
           <div class="flip" id="twitterbtn">
             <div id="twitterbox">
               <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-tweet" id="search_tweet" tabindex="-1">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="search_tweet">
                   <i class="fa fa-twitter"></i> Related Tweets</button>
               </div>
               <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-tweet" id="search_tweet_error" tabindex="-1">URL not supported</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="search_tweet_error" tabindex="-1">URL not supported</button>
               </div>
             </div>
           </div>
@@ -77,29 +84,31 @@
           <div class="flip" id="context-screen">
             <div id="ctxbox">
               <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-context context_feature" id="contextBtn" tabindex="-1">Show Contexts</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn">Show Contexts</button>
               </div>
               <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-context context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
               </div>
             </div>
           </div>
 
           <!-- Hidden -->
-
-          <div id="borrow_books_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="borrow_books" tabindex="-1">Read This Book</button>
+          <!-- style="display: none;" -->
+          <!-- class="btn-warning;" -->
+<!--
+          <div id="borrow_books_tr">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="borrow_books">Read This Book</button>
           </div>
-          <div id="news_recommend_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="news_recommend" tabindex="-1">Related TV Clips</button>
+          <div id="news_recommend_tr">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="news_recommend">Related TV Clips</button>
           </div>
-          <div id="wikibooks_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="wikibooks" tabindex="-1">Find Cited Books</button>
+          <div id="wikibooks_tr">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="wikibooks">Find Cited Books</button>
           </div>
-          <div id="doi_tr" style="display: none;">
-            <button type="button" class="btn btn-warning btn-sm btn-block" id="doi" tabindex="-1">Find Cited Papers</button>
+          <div id="doi_tr">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="doi">Find Cited Papers</button>
           </div>
-
+-->
           <!-- Share -->
 
           <div>
@@ -132,12 +141,17 @@
     </div>
   </div>
 
+  <!-- Settings Page -->
+
   <div id="settingPage">
+
     <ul class="nav">
       <li class="section" id="general_btn"><span class="section unselectable">General</span></li>
       <li class="section" id="context_btn"><span class="section unselectable">Context</span></li>
     </ul>
+
     <div class="container unselectable">
+
       <div id="general">
         <label class="switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
@@ -193,8 +207,13 @@
           <span class="enable"><strong>Word Cloud for Sites</strong></span>
         </label>
       </div>
+
     </div>
-    <button class="unselectable" id="back">Back</button>
+
+    <div style="width:100%; text-align:center">
+      <button class="unselectable btn btn-sm btn-short btn-light-gray" id="back">Back</button>
+    </div>
+
   </div>
 </body>
 

@@ -5,6 +5,7 @@ body {
     width: 200px;
     max-height: 538px;
     background-color: #eee;
+    color: #222;
 }
 
 hr {
@@ -22,12 +23,18 @@ hr {
     color: #666;
 }
 
+#search-input {
+    background-color: #fff;
+    border-color: #777;
+    color: #222;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #2C2C2C;
-        color: #fff;
+        color: #eee;
     }
 
     hr {
@@ -45,6 +52,12 @@ hr {
         color: #888;
     }
 
+    #search-input {
+        background-color: #222;
+        border-color: #666;
+        color: #ddd;
+    }
+
 }
 
 /* all modes */
@@ -57,6 +70,8 @@ hr {
     vertical-align: middle;
     width: 22%;
 }
+
+/* general */
 
 li {
     margin:0px 0px 0px -18px;
@@ -81,6 +96,37 @@ button {
     position: relative;
     padding: 5px;
 }
+#logo-internet-archive:hover {
+    opacity: 0.8;
+}
+
+/* search box */
+
+#search-input {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+#suggestion-box {
+    display: none;
+    max-height: 300px;
+    min-width: 100%;
+    overflow: auto;
+}
+
+/* checkboxes */
+.chk-options {
+    font-weight: 400;
+    font-size: 12px;
+    padding:0 5px;
+    cursor: pointer;
+}
+.chk-options:hover {
+    background-color: rgba(127, 127, 127, 0.2);
+}
+
+/* buttons */
 
 a.btn-social,
 .btn-social
@@ -176,7 +222,8 @@ background-color: #4a8aff;
     border-radius: 5px;
 }
 
-/* flipping effect rules */
+/* flipping effect */
+
 .flip {
     position: relative;
     margin-bottom: 10px;
@@ -213,55 +260,51 @@ background-color: #4a8aff;
     /* top:10px; */  /* TEST don't use [CG] REMOVE */
 }
 
-.btn-savepage {
-    /* background-color: #489C3E; */
-    background-color: #9A3B38;
-    color: white !important;
+/* button sizes */
+
+.btn-wide {
     width: 170px;
     height: 30px;
 }
 
-.btn-oldest {
-    background-color: #737373;
-    color: white !important;
+.btn-short {
     width: 60px;
     height: 30px;
 }
 
-.btn-newest {
-    background-color: #737373;
-    color: white !important;
-    width: 60px;
-    height: 30px;
+/* button colors */
+
+.btn:focus {
+    outline: 4px auto #08f !important;
 }
 
-.btn-all {
+.btn-red {
     background-color: #9A3B38;
+    border: 1px solid #BF4946;
+    color: #eee !important;
 }
-.btn-all:hover {
-}
-
-
-.btn-sitemap {
-    background-color: #4D4D4D;
-    color: white !important;
-    width: 170px;
-    height: 30px;
+.btn-red:hover {
+    background-color: #AA4B48;
 }
 
-.btn-tweet {
+.btn-light-gray {
     background-color: #737373;
-    color: white !important;
-    width: 170px;
-    height: 30px;
+    color: #eee !important;
+    border: 1px solid #A9A9A9;
+}
+.btn-light-gray:hover {
+    background-color: #838383;
 }
 
-.btn-context {
+.btn-dark-gray {
     background-color: #4D4D4D;
-    color: white !important;
-    width: 170px;
-    height: 30px;
+    color: #eee !important;
+    border: 1px solid #737373;
 }
+.btn-dark-gray:hover {
+    background-color: #5D5D5D;
+}
+
 
 .context_tip{
     opacity: 0.75;

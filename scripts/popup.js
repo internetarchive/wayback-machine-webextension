@@ -167,7 +167,7 @@ function search_tweet() {
 }
 
 function search_box_activate() {
-  const search_box = document.getElementById('search_input')
+  const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
       openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
@@ -177,7 +177,7 @@ function search_box_activate() {
 
 function arrow_key_access() {
   const list = document.getElementById('suggestion-box')
-  const search_box = document.getElementById('search_input')
+  const search_box = document.getElementById('search-input')
   let index = search_box
 
   search_box.addEventListener('keydown', (e) => {
@@ -225,7 +225,7 @@ function display_list(key_word) {
   $('#suggestion-box').text('').hide()
   $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
-    if (data.hosts.length > 0 && $('#search_input').val() !== '') {
+    if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
       arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
@@ -250,8 +250,8 @@ function display_suggestions(e) {
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(function () {
-      if ($('#search_input').val().length >= 3) {
-        display_list($('#search_input').val())
+      if ($('#search-input').val().length >= 3) {
+        display_list($('#search-input').val())
       } else {
         $('#suggestion-box').text('').hide()
       }
@@ -440,4 +440,4 @@ $('#settingPage').hide()
 $('.feedback').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
-$('#search_input').keydown(display_suggestions)
+$('#search-input').keydown(display_suggestions)
