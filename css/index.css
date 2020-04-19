@@ -15,13 +15,40 @@ hr {
     height: 1px;
 }
 
-.tab-icon {
+.tab-bar {
+    padding: 2px 0 5px 0;
+}
+.tab-item {
+    display: inline-block;
+    vertical-align: top;
+    width: 22%;
     cursor: pointer;
+    opacity: 1.0;
+}
+.tab-item:hover {
+    opacity: 0.7;
+}
+.tab-icon {
     color: #444;
 }
-.tab-icon:hover {
-    color: #666;
+.donate-icon-outer {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto;
 }
+.donate-icon-inner {
+    /* overflow: hidden; */  /* Chrome bug causes glitch with 'transition' and 'overflow'. */
+    position: fixed;         /* Required to fix Chrome bug with 'clip' below. */
+    /* clip: rect(0px 28px 28px 0px); */
+    clip: rect(0px 28px 28px -1px);
+}
+.donate-icon {
+    /* trick to tint black icons */
+    filter: drop-shadow(28px 0px);
+    margin-left: -28px;
+    display: block;
+    width: 28px;
+    height: 28px;}
 
 #search-input {
     background-color: #fff;
@@ -48,9 +75,6 @@ hr {
     .tab-icon {
         color: #bbb;
     }
-    .tab-icon:hover {
-        color: #888;
-    }
 
     #search-input {
         background-color: #222;
@@ -60,16 +84,6 @@ hr {
 
 }
 
-/* all modes */
-
-.tab-bar {
-    padding: 2px 0 5px 0;
-}
-.tab-item {
-    display: inline-block;
-    vertical-align: middle;
-    width: 22%;
-}
 
 /* general */
 
@@ -116,6 +130,7 @@ button {
 }
 
 /* checkboxes */
+
 .chk-options {
     font-weight: 400;
     font-size: 12px;
@@ -257,7 +272,6 @@ background-color: #4a8aff;
 
 .flip-back {
     transform: rotateX(180deg);
-    /* top:10px; */  /* TEST don't use [CG] REMOVE */
 }
 
 /* button sizes */
@@ -316,7 +330,6 @@ background-color: #4a8aff;
     margin-bottom: 3px;
 }
 
-.feedback{
-    cursor: pointer;
+#feedback-button {
     font-size: 185%;
 }
