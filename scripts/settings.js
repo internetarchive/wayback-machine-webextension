@@ -1,3 +1,5 @@
+// settings.js
+
 $(initializeSettings)
 $('.only').click(validate)
 $('#showall').click(selectall)
@@ -6,7 +8,7 @@ document.getElementById('view').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(function () { $(this).prop('checked', true) })
 $('input').change(save_options)
 $('#show_context').change(save_options)
-$('#back').click(goBack)
+$('#back-btn').click(goBack)
 switchSetting()
 addDocs()
 
@@ -77,12 +79,14 @@ function noneSelected () {
 }
 
 function goBack () {
-  $('#settingPage').hide()
-  $('#popupPage').show()
+  $('#setting-page').hide()
+  $('#popup-page').show()
   // checking contexts selection status
   if (noneSelected()) {
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
     /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
+    $('#context-screen').off('click')
+    $('#contextBtn').attr('disabled', true)
   } else {
     if ($('#ctxbox').hasClass('flip-inside')) {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -94,25 +98,27 @@ function goBack () {
         }
       })
     }
-    $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens)
+    /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
+    $('#context-screen').off('click').on('click', show_all_screens) /* TODO: check this */
+    $('#contextBtn').removeAttr('disabled')
   }
 }
 
 function switchSetting() {
-  if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
-  $('#context').hide()
+  if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
+  $('#context-panel').hide()
   // switching pressed effect of tab button
-  $('#general_btn').click(function () {
-    $('#context').hide()
-    $('#general').show()
-    if (!$('#general_btn').hasClass('selected')) { $('#general_btn').addClass('selected') }
-    if ($('#context_btn').hasClass('selected')) { $('#context_btn').removeClass('selected') }
+  $('#general-btn').click(function () {
+    $('#context-panel').hide()
+    $('#general-panel').show()
+    if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
+    if ($('#context-btn').hasClass('selected')) { $('#context-btn').removeClass('selected') }
   })
-  $('#context_btn').click(function () {
-    $('#general').hide()
-    $('#context').show()
-    if (!$('#context_btn').hasClass('selected')) { $('#context_btn').addClass('selected') }
-    if ($('#general_btn').hasClass('selected')) { $('#general_btn').removeClass('selected') }
+  $('#context-btn').click(function () {
+    $('#general-panel').hide()
+    $('#context-panel').show()
+    if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
+    if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
   })
 }
 
@@ -134,7 +140,7 @@ function addDocs () {
     for (var i = 0; i < labels.length; i++) {
       let docFor = $(labels[i]).attr('for')
       if (docs[docFor]) {
-        let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting_tip' }))[0].outerHTML
+        let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML
         let docBtn = $('<button>').addClass('btn-docs').text('?')
         $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
       }

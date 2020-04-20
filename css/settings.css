@@ -1,68 +1,78 @@
-#settingPage {
-    height: 458px;
-    max-height: 458px;
+
+/* default light mode */
+
+#setting-page label {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+#view-text {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.setting-switch {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #888;
+    margin: 5px auto 5px auto;
+    padding: 8px 5px 8px 5px;
+    text-align: left;
+    cursor: pointer;
+}
+.setting-switch:hover {
+    background-color: #ccc;
+}
+
+.btn-docs {
+    background-color: #888;
+    color: #fff;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+
+    #setting-page label {
+        font-weight: 500;
+    }
+
+    #view-text {
+        font-weight: 500;
+    }
+
+    .setting-switch {
+        border: 1px solid #666;
+    }
+    .setting-switch:hover {
+        background-color: #444;
+    }
+
+    .btn-docs {
+        background-color: #888;
+        color: #000;
+    }
+}
+
+
+#setting-page {
+    /* max-height: 458px; */
     overflow: hidden;
-}
-
-#general {
-    font-size: 12px;
-    font-weight: initial;
-}
-
-#context {
-    font-size: 12px;
-    font-weight: initial;
-}
-
-button:focus {
-    outline: none !important;
+    margin: 10px 0;
 }
 
 /* navgation bar */
+
 ul.nav {
     list-style-type: none;
-    margin: 0px;
-    padding: 0px;
+    margin: 0 0 5px 0;
     overflow: hidden;
 }
 
-li.section {
+ul.nav li {
     float: left;
-    margin-left: 2px;
-    margin-top: 5px;
-    border-width: 0 0 1px 0;
-    border-radius: 4px;
-}
-
-li.section span.section {
-    display: block;
-    color: white;
-}
-
-span.section {
-    text-align: center;
-    padding: 1px 18px 3px 18px;
-    font-size: 15px;
-}
-
-li.section:nth-child(1) {
-    background-color: #d63c24f2;
-    border-top: solid 2px #d63c24f2;
-    border-right: solid 2px #d63c24f2 ;
-    border-left: solid 4px #d63c24f2;
-    margin-left: 4px;
-}
-
-li.section:nth-child(2) {
-    margin-left: 3.5px;
-    background-color: #25a7b0;
-    border-top: solid 2px #25a7b0;
-    border-left: solid 2px #25a7b0 ;
-    border-right: solid 4px #25a7b0;
-}
-
-li.section:active {
-    opacity: 0.5;
+    width: 50%;
+    padding: 0 1px;
 }
 
 li.selected {
@@ -71,7 +81,7 @@ li.selected {
     margin-top: 3px;
 }
 
-.unselectable {
+.unselectable > * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -81,99 +91,42 @@ li.selected {
 }
 
 /* options */
+
 #view {
     margin: 0 auto;
     text-align: center;
-    padding-bottom: 5px;
-    margin-bottom: 7px;
-    margin-top: 8px;
 }
 
-#viewText {
-    font-size: 13px;
-    font-weight: bold;
+.setting-switch input[type=checkbox] {
+    width: 20px;
 }
 
 .radiobtn {
     margin-right: 8px;
 }
 
-#view:hover {
-    background-color: #d63c24f2 !important;
-    color: white !important;
-}
-
-.switch {
-    color: #555;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 3px 3px #888888;
-    margin: 10px auto 10px auto;
-    padding: 14px 8px 14px 8px;
-    text-align: left;
-}
-
-.switch:active {
-    box-shadow: 0 1px 0 #888888;
-    top: 4px;
-}
-
-.switch:hover {
-    background-color: #d63c24f2;
-    color: white;
-}
-
-.ctx {
-    width: 170px;
-    padding: 8px 5px 8px 5px;
-    margin: 8px auto 8px auto;
-}
-
 label[for=tagcloud] {
     margin-bottom: 5px;
 }
 
-.ctx:hover {
-    background-color: #25a7b0;
-    color: white;
+#back-btn {
+    margin-top: 10px;
 }
 
-/* save button */
+/* tooltips */
 
-#back {
-    margin-top: 5px;
-/*
-    color: #555;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0px 3px 3px #888888;
-    margin-top: 8px;
-    text-align: center;
-    margin: 0 auto;
-*/
-}
-/*
-#back:active {
-    box-shadow: 0 1px 0 #888888;
-    top: 4px;
-}
-*/
-
-button.btn-docs{
+.btn-docs {
     display: inline-block;
-    background-color: gray;
-    color:white;
     border-radius: 60%;
     transform: scale(.7);
     font-size: 12px;
-    margin-bottom: 2px !important;
-  }
+}
 
 .tooltip-inner p{
     margin-bottom: 2px;
     margin-left: 5px;
 }
 
-.setting_tip {
+.setting-tip {
     width: 100px;
 }

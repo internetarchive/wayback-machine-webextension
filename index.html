@@ -15,7 +15,7 @@
 
   <!-- Main Popup Page -->
 
-  <div id='popupPage'>
+  <div id='popup-page'>
 
     <a href="#"><img class="resize-fit-center" src="images/wayback-logo.png" alt="Internet Archive" id="logo-internet-archive" /></a>
 
@@ -52,7 +52,7 @@
 
           <div class="btn-block">
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="first_capture">Oldest</button>
-            <a class="btn-social btn-sm btn-red" id="allbtn"><i class="fa fa-calendar"></i></a>
+            <a class="btn-social btn-sm btn-red" id="allbtn" title="Overview"><i class="fa fa-calendar"></i></a>
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="recent_capture">Newest</button>
           </div>
 
@@ -112,9 +112,9 @@
           <!-- Share -->
 
           <div>
-            <a id="fb_share" class="btn-social btn-sm btn-facebook" style="cursor: pointer"><i class="fa fa-facebook"></i></a>
-            <a id="twit_share" class="btn-social btn-sm btn-twitter" style="cursor: pointer"><i class="fa fa-twitter"></i></a>
-            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin" style="cursor: pointer"><i class="fa fa-linkedin"></i></a>
+            <a id="fb_share" class="btn-social btn-sm btn-facebook" title="Facebook"><i class="fa fa-facebook"></i></a>
+            <a id="twit_share" class="btn-social btn-sm btn-twitter" title="Twitter"><i class="fa fa-twitter"></i></a>
+            <a id="linkedin_share" class="btn-social btn-sm btn-linkedin" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
           </div>
 
           <hr>
@@ -147,75 +147,73 @@
 
   <!-- Settings Page -->
 
-  <div id="settingPage">
+  <div id="setting-page">
 
-    <ul class="nav">
-      <li class="section" id="general_btn"><span class="section unselectable">General</span></li>
-      <li class="section" id="context_btn"><span class="section unselectable">Context</span></li>
-    </ul>
+    <div class="container-fluid unselectable">
 
-    <div class="container unselectable">
+      <ul class="nav">
+        <li><button class="unselectable btn btn-sm btn-medium btn-dark-gray" id="general-btn">General</button></li>
+        <li><button class="unselectable btn btn-sm btn-medium btn-dark-gray" id="context-btn">Contexts</button></li>
+      </ul>
 
-      <div id="general">
-        <label class="switch" for="auto-archive">
+      <div id="general-panel">
+        <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
-          <span class="toggle">Enable auto Save-Page-Now ("S")</span>
+          <span class="toggle">Auto Save Page.</span>
         </label>
-        <br>
-        <label class="switch" for="resource">
+        <label class="setting-switch" for="resource">
           <input type="checkbox" id="resource">
-          <span class="toggle">Enable relevant archived resources ("R")</span>
+          <span class="toggle">Enable Relevant Archived Resources.</span>
         </label>
-        <br>
-        <label class="switch" for="auto-update-context">
+        <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
-          <span class="toggle">Update context windows automatically on new pages</span>
+          <span class="toggle">Auto-update Contexts on New Pages.</span>
         </label>
-        <div class="switch" id="view">
-          <div id="viewText">Show Features in</div>
-            <input type="radio" name="tw" value="tab">
-            <label class="toggle">Tab</label>
-            <input type="radio" name="tw" value="window">
-            <label class="toggle">Window</label>
+        <div class="setting-switch" id="view">
+          <div id="view-text">Show Features In</div>
+          <input type="radio" name="tw" value="tab">
+          <label class="toggle">Tab</label>&nbsp;
+          <input type="radio" name="tw" value="window">
+          <label class="toggle">Window</label>
         </div>
       </div>
 
-      <div id="context">
-        <label class="switch ctx" for="showall">
+      <div id="context-panel">
+        <label class="setting-switch ctx" for="showall">
           <input type="checkbox" id="showall">
-          <span class="enable"><strong>Show All Context Screens</strong></span>
+          <span class="enable">Show All Contexts</span>
         </label>
         <br>
-        <label class="switch ctx" for="alexa">
+        <label class="setting-switch ctx" for="alexa">
           <input type="checkbox" name="context" id="alexa" class="only">
-          <span class="enable"><strong>Alexa Internet</strong></span>
+          <span class="enable">Alexa Internet</span>
         </label>
         <br>
-        <label class="switch ctx" for="domaintools">
+        <label class="setting-switch ctx" for="domaintools">
           <input type="checkbox" name="context" id="domaintools" class="only">
-          <span class="enable"><strong>DomainTools</strong></span>
+          <span class="enable">Domain Tools</span>
         </label>
         <br>
-        <label class="switch ctx" for="wbmsummary">
+        <label class="setting-switch ctx" for="wbmsummary">
           <input type="checkbox" name="context" id="wbmsummary" class="only">
-          <span class="enable"><strong>Wayback Machine Summary</strong></span>
+          <span class="enable">Wayback Machine</span>
         </label>
         <br>
-        <label class="switch ctx" for="annotations">
+        <label class="setting-switch ctx" for="annotations">
           <input type="checkbox" name="context" id="annotations" class="only">
-          <span class="enable"><strong>Annotations with Hypothes.is</strong></span>
+          <span class="enable">Annotations</span>
         </label>
         <br>
-        <label class="switch ctx" for="tagcloud">
+        <label class="setting-switch ctx" for="tagcloud">
           <input type="checkbox" name="context" id="tagcloud" class="only">
-          <span class="enable"><strong>Word Cloud for Sites</strong></span>
+          <span class="enable">Tag Cloud</span>
         </label>
       </div>
 
     </div>
 
     <div style="width:100%; text-align:center">
-      <button class="unselectable btn btn-sm btn-short btn-light-gray" id="back">Back</button>
+      <button class="unselectable btn btn-sm btn-short btn-dark-gray" id="back-btn">Back</button>
     </div>
 
   </div>

@@ -1,3 +1,5 @@
+// popup.js
+
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
@@ -281,8 +283,8 @@ function sitemap() {
 
 function settings() {
   // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
-  $('#popupPage').hide();
-  $('#settingPage').show();
+  $('#popup-page').hide();
+  $('#setting-page').show();
 }
 
 function show_all_screens() {
@@ -392,6 +394,10 @@ function checkExcluded() {
   })
 }
 
+// For removing focus outline around buttons on mouse click, while keeping during keyboard use.
+function clearFocus() {
+  document.activeElement.blur()
+}
 
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
@@ -436,8 +442,10 @@ $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
-$('#settingPage').hide()
+$('#setting-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
+$('.btn').click(clearFocus)
+
