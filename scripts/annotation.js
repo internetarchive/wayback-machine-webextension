@@ -69,9 +69,8 @@ function get_annotations (type = 'url') {
         $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
           .html(error_msg)
       )
-      $('#container-whole-' + type).hide()
-      $('#title-' + type).hide()
-      return 'not found ' + type
+      item.css("display","block")
+      $('#container-whole-' + type).append(item)
     }
   })
 }

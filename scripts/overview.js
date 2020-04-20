@@ -61,7 +61,7 @@ function first_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#first_archive_datetime').text('Data are not available.')
+      $('#first_archive_datetime_error').text('Data are not available')
     } else {
       const ts = data[1][1]
       const dt = timestamp2datetime(ts).toString().split('+')[0]
@@ -77,7 +77,7 @@ function recent_archive_details () {
   var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
-      $('#recent_archive_datetime').text('Data are not available.')
+      $('#recent_archive_datetime_error').text('Data are not available')
     } else {
 	  const ts = data[1][1]
 	  const dt = timestamp2datetime(ts).toString().split('+')[0]
@@ -93,14 +93,18 @@ function get_thumbnail () {
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
-    .then((response) => {
-      if (response.status === 200) {
-        $('#loader_thumbnail').hide()
-        if (response.size != 233) {
-          $('#show_thumbnail').append($('<img>').attr('src', new_url))
-        } else {
-          $('#show_thumbnail').text('Thumbnail not found')
-        }
+    .then(function (response) {
+      $('#loader_thumbnail').hide()
+      if (response.size && response.size != 233) {
+        $('#show_thumbnail').append($('<img>').attr('src', new_url))
+      } else {
+        $('#show_thumbnail').text('Thumbnail not found')
+      }
+    })
+    .catch(function (exception) {
+      $('#loader_thumbnail').hide()
+      if (exception === 'timeout') {
+        $('#show_thumbnail').text('Please refresh the page...Time out!!')
       } else {
         $('#loader_thumbnail').hide()
         if (response.status === 504) {
