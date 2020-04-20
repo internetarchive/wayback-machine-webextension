@@ -1,12 +1,11 @@
-.color_code
-{
-  color:#22c399;
+.color_code{
+    color:#22c399;
 }
 .color_code_whois{
     color: #ffcc66;
 }
 .row{
-  margin: auto;
+    margin: auto;
 }
 body{
     max-height: 100%;
@@ -122,50 +121,62 @@ p{
     float:none;
 }
 .col-sm-12{
-  float:none;
+    float:none;
 }
 /* https://www.w3schools.com/howto/howto_js_tabs.asp */
 /* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+.container-fluid{
+    margin: 0;
+    padding: 0;
 }
 
+.col-tablinks{
+    background-color: #f1f1f1;
+}
 /* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  overflow: wrap;
-  width: 110px;
-  height: 80px;
+.col-tablinks button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    height: 100px;
+    width: 20%;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 /* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
+.col-tablinks button:hover {
+    background-color: #ddd;
 }
 
 /* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
+.col-tablinks button.active {
+    background-color: #ccc;
 }
 
 /* Style the tab content */
 .tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
+    display: none;
+    padding: 6px 12px;
 }
 
 #row_contain-url, #row_contain-domain {
     display: none;
+}
+#Annotations{
+    width: 100%;
+}
+#annotations_url{
+    margin: 0px;
+    float: left;
+}
+#annotations_domain{
+    margin: 0px;
+    float: right;
 }
 
 #container-whole-url, #container-whole-domain {

@@ -22,12 +22,24 @@
 
 <body>
   <!-- Tab links -->
-    <div class="tab">
-      <button class="tablinks" id="Alexa_tab">Alexa Internet</button>
-      <button class="tablinks" id="Domaintools_tab">Domain Tools</button>
-      <button class="tablinks" id="Wbmsummary_tab">Wayback Machine Summary</button>
-      <button class="tablinks" id="Annotations_tab">Annotations (Hypothes.is)</button>
-      <button class="tablinks" id="Tagcloud_tab">Tag Cloud</button>
+    <div class="container-fluid">
+        <div class="row tab">
+            <div class="col-sm col-tablinks">
+                <button id="Alexa_tab">Alexa Internet</button>
+            </div>
+             <div class="col-sm col-tablinks">
+                <button id="Domaintools_tab">Domain Tools</button>
+             </div>
+             <div class="col-sm col-tablinks">
+                <button id="Wbmsummary_tab">Wayback Machine Summary</button>
+             </div>
+             <div class="col-sm col-tablinks">
+                <button id="Annotations_tab">Annotations (Hypothes.is)</button>
+             </div>
+             <div class="col-sm col-tablinks">
+                <button id="Tagcloud_tab">Tag Cloud</button>
+             </div>
+        </div>
     </div>
 
   <!-- Tab contents -->
@@ -81,8 +93,8 @@
             <div class="loader" id="loader_wbmsummary"></div>
             <div class="col-sm-6">
                 <div class="pre title">
-                    <p>First Capture: <a id="first_archive_datetime"></a></p>
-                    <p>Last Capture: <a id="recent_archive_datetime"></a></p>
+                    <p><strong>First Capture: </strong> <a target="_blank" id="first_archive_datetime"></a> <span id="first_archive_datetime_error"></span></p>
+                    <p><strong>Last Capture: </strong> <a target="_blank" id="recent_archive_datetime"></a> <span id="recent_archive_datetime_error"></span></p>
                     <p id="total_captures">Total Number of Captures: <a id="total_archives_number"></a></p>
                     <p id="url_details">The URL is a <strong id="details"></strong></p>
                     <div id="message" style="display:none"></div>
@@ -98,15 +110,16 @@
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h2><strong>Annotations (Hypothes.is)</strong></h2>
-                <div id="annotations_status" style="visibility:hidden;"> No Annotations Found. </div>
-
+                <div id="annotations_status" style="display:none;"> No Annotations Found. </div>
             </div>
+        </div>
+        <div class="row">
             <div class="loader" id="loader_annotations"></div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" id="annotations_url">
                 <h4 class="title" id="title-url">URL</h4>
                 <div class="box" id="container-whole-url"></div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" id="annotations_domain">
                 <h4 class="title" id="title-domain">Domain</h4>
                 <div class="box" id="container-whole-domain"></div>
             </div>
