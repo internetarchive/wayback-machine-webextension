@@ -1,5 +1,7 @@
+// popup.js
+
 function homepage() {
-  openByWindowSetting('https://web.archive.org/web/')
+  openByWindowSetting('https://web.archive.org/')
 }
 
 function remove_port(url) {
@@ -60,7 +62,7 @@ function last_save() {
   checkAuthentication(function(result){
     if(result && result.message && result.message === "You need to be logged in to use Save Page Now."){
       $('#savebox').addClass('flip-inside')
-      $('#last_save').text('Log in to save.')
+      $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
       $('#savebtn').off('click').click(function(){
         openByWindowSetting('https://archive.org/account/login');
@@ -167,7 +169,7 @@ function search_tweet() {
 }
 
 function search_box_activate() {
-  const search_box = document.getElementById('search_input')
+  const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
       openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
@@ -177,7 +179,7 @@ function search_box_activate() {
 
 function arrow_key_access() {
   const list = document.getElementById('suggestion-box')
-  const search_box = document.getElementById('search_input')
+  const search_box = document.getElementById('search-input')
   let index = search_box
 
   search_box.addEventListener('keydown', (e) => {
@@ -225,7 +227,7 @@ function display_list(key_word) {
   $('#suggestion-box').text('').hide()
   $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
-    if (data.hosts.length > 0 && $('#search_input').val() !== '') {
+    if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
       arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
@@ -250,8 +252,8 @@ function display_suggestions(e) {
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(function () {
-      if ($('#search_input').val().length >= 3) {
-        display_list($('#search_input').val())
+      if ($('#search-input').val().length >= 3) {
+        display_list($('#search-input').val())
       } else {
         $('#suggestion-box').text('').hide()
       }
@@ -281,8 +283,8 @@ function sitemap() {
 
 function settings() {
   // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
-  $('#popupPage').hide();
-  $('#settingPage').show();
+  $('#popup-page').hide();
+  $('#setting-page').show();
 }
 
 function show_all_screens() {
@@ -373,7 +375,7 @@ function noContextTip() {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
     for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    $('#context-screen').css({ opacity: 0.5 })
+    /* $('#context-screen').css({ opacity: 0.5 }) */
   })
 }
 
@@ -383,7 +385,7 @@ function checkExcluded() {
     if (isNotExcludedUrl(url)) {
       last_save()
     }else{
-      const idList = ['savebox', 'recentbox', 'firstbox', 'allbox', 'mapbox', 'twitterbox']
+      const idList = ['savebox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
@@ -392,6 +394,10 @@ function checkExcluded() {
   })
 }
 
+// For removing focus outline around buttons on mouse click, while keeping during keyboard use.
+function clearFocus() {
+  document.activeElement.blur()
+}
 
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
@@ -425,19 +431,21 @@ window.onload = function () {
   }
 }
 
-$('#logo_internet_archive').click(homepage)
+$('#logo-internet-archive').click(homepage)
 $('#savebtn').click(save_now)
-$('#recentbtn').click(recent_capture)
-$('#firstbtn').click(first_capture)
+$('#recent_capture').click(recent_capture)
+$('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
 $('#twitterbtn').click(search_tweet)
-$('#about_support_button').click(about_support)
-$('#donate_button').click(open_donations_page)
-$('#settings_button').click(settings)
-$('#settingPage').hide()
-$('.feedback').click(open_feedback_page)
+$('#about-button').click(about_support)
+$('#donate-button').click(open_donations_page)
+$('#settings-button').click(settings)
+$('#setting-page').hide()
+$('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
-$('#search_input').keydown(display_suggestions)
+$('#search-input').keydown(display_suggestions)
+$('.btn').click(clearFocus)
+

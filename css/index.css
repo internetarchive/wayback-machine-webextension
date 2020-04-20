@@ -1,147 +1,283 @@
-body{
+
+/* default light mode */
+
+body {
     width: 200px;
     max-height: 538px;
+    background-color: #eee;
+    color: #222;
 }
-li{
-    margin:0px 0px 0px -18px;
-    padding: 0px;
+
+hr {
+    margin: 0 0 5px 0;
+    border: none;
+    border-top: 1px solid #aaa;
+    height: 1px;
 }
-#horizontal_line{
-    margin: 0px; 
-    padding: 0px; 
-    border: 0px solid rgb(6, 117, 211); 
-    font-size: 19px; font-style: inherit;
-    font-variant: inherit; 
-    font-weight: inherit; 
-    font-stretch: inherit; 
-    line-height: 1; 
-    font-family: sans-serif; 
-    vertical-align: baseline; 
-    box-sizing: content-box; 
-    overflow: unset; 
-    height: 1px; 
-    position: relative; 
-    bottom: 2px;
-    width: auto; 
-    display: flex; 
-    background-color: rgb(9, 150, 248); color: rgb(255, 255, 255); 
-    text-align: left; 
-    align-items: center; 
-    border-radius: 3px; 
-    justify-content: center; 
-    text-decoration: none;
+
+.btn {
+    font-weight: 400;
+    border-radius: 5px;
 }
+
+.tab-bar {
+    padding: 2px 0 5px 0;
+}
+.tab-item {
+    display: inline-block;
+    vertical-align: top;
+    width: 22%;
+    cursor: pointer;
+    opacity: 1.0;
+}
+.tab-item:hover {
+    opacity: 0.7;
+}
+.tab-icon {
+    color: #444;
+}
+
+.donate-icon-outer {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto;
+}
+.donate-icon-inner {
+    /* overflow: hidden; */  /* Chrome bug causes glitch with 'transition' and 'overflow'. */
+    position: fixed;         /* Required to fix Chrome bug with 'clip' below. */
+    /* clip: rect(0px 28px 28px 0px); */
+    clip: rect(0px 28px 28px -1px);
+}
+.donate-icon {
+    /* trick to tint black icons */
+    filter: drop-shadow(28px 0px);
+    margin-left: -28px;
+    display: block;
+    width: 28px;
+    height: 28px;
+}
+
+#search-input {
+    background-color: #fff;
+    border-color: #777;
+    color: #222;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+
+    hr {
+        border-top: 1px solid #555;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    .tab-icon {
+        color: #bbb;
+    }
+
+    #search-input {
+        background-color: #222;
+        border-color: #666;
+        color: #ddd;
+    }
+}
+
+/* general */
+
 .focused {
     background-color: #D3D3D3;
     opacity: 0.7;
 }
-button {
-  display: block;
-  margin-bottom: 10px !important;
-}
-.resize_fit_center {
-  margin: 5px 0 0 0;
-  max-width:100%;
-  max-height:100%;
+
+.resize-fit-center {
+  margin: 0 0 0 0;
+  max-width: 100%;
   vertical-align: middle;
 }
 
-#logo_internet_archive {
+#logo-internet-archive {
     position: relative;
-    top: 2.5px;
+    padding: 5px;
+}
+#logo-internet-archive:hover {
+    opacity: 0.8;
 }
 
-a.btn-social,
-.btn-social
-{
-border-radius: 50%;
-color: #ffffff !important;
-display: inline-block;
-height: 54px;
-line-height: 54px;
-margin: 8px 4px;
-text-align: center;
-text-decoration: none;
-transition: background-color .3s;
-webkit-transition: background-color .3s;
-width: 54px;
-position: relative;
-bottom: 5px;
+/* search box */
+
+#search-input {
+    display: block;
+    position: relative;
+    z-index: 1;
 }
 
-.fa{
-margin-top:6px;
-}
-.btn-social .fa,.btn-social i
-{
-backface-visibility: hidden;
-moz-backface-visibility: hidden;
-ms-transform: scale(1);
-o-transform: scale(1);
-transform: scale(1);
-transition: all .25s;
-webkit-backface-visibility: hidden;
-webkit-transform: scale(1);
-webkit-transition: all .25s;
-}
-.btn-social:hover,.btn-social:focus
-{
-color: #fff;
-outline: none;
-text-decoration: none;
-}
-.btn-social:hover .fa,.btn-social:focus .fa,.btn-social:hover i,.btn-social:focus i
-{
-ms-transform: scale(1.3);
-o-transform: scale(1.3);
-transform: scale(1.3);
-webkit-transform: scale(1.3);
-}
-.btn-social.btn-sm
-{
-font-size: 13px;
-height: 36px;
-line-height: 18px;
-margin: 6px 2px;
-width: 36px;
-}
-.btn-social.btn-lg
-{
-font-size: 22px;
-height: 72px;
-line-height: 4px;
-margin: 10px 6px;
-width: 72px;
-}
-.btn-facebook
-{
-background-color: #3b5998;
-}
-.btn-facebook:hover
-{
-background-color: #4c70ba;
-}
-.btn-twitter
-{
-background-color: #55acee;
-}
-.btn-twitter:hover
-{
-background-color: #83c3f3;
-}
-.btn-linkedin
-{
-background-color: #1E88E5;
-}
-.btn-linkedin:hover
-{
-background-color: #4a8aff;
-}
-.btn{
-    font-weight: 500;
+#suggestion-box {
+    display: none;
+    max-height: 300px;
+    min-width: 100%;
+    overflow: auto;
 }
 
-/* flipping effect rules */
+/* checkboxes */
+
+.chk-options {
+    font-weight: 400;
+    font-size: 12px;
+    padding:0 5px;
+    cursor: pointer;
+}
+.chk-options:hover {
+    background-color: rgba(127, 127, 127, 0.2);
+}
+
+/* buttons */
+
+button {
+    display: block;
+}
+
+.btn:active {
+    outline: none !important;
+}
+
+/* social buttons */
+
+a.btn-social, .btn-social {
+    border-radius: 50%;
+    color: #ffffff !important;
+    display: inline-block;
+    height: 54px;
+    line-height: 54px;
+    margin: 8px 4px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color .3s;
+    webkit-transition: background-color .3s;
+    width: 54px;
+    position: relative;
+    cursor: pointer;
+}
+
+.btn-social .fa, .btn-social i {
+    backface-visibility: hidden;
+    moz-backface-visibility: hidden;
+    ms-transform: scale(1);
+    o-transform: scale(1);
+    transform: scale(1);
+    transition: all .25s;
+    webkit-backface-visibility: hidden;
+    webkit-transform: scale(1);
+    webkit-transition: all .25s;
+}
+.btn-social:hover, .btn-social:focus {
+    color: #fff;
+    outline: none;
+    text-decoration: none;
+}
+.btn-social:hover .fa,.btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i {
+    ms-transform: scale(1.3);
+    o-transform: scale(1.3);
+    transform: scale(1.3);
+    webkit-transform: scale(1.3);
+}
+.btn-social.btn-sm {
+    font-size: 13px;
+    height: 36px;
+    line-height: 25px;
+    margin: 0 2px 8px 2px;
+    width: 36px;
+}
+.btn-social.btn-lg {
+    font-size: 22px;
+    height: 72px;
+    line-height: 4px;
+    margin: 10px 6px;
+    width: 72px;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+}
+.btn-facebook:hover {
+    background-color: #4c70ba;
+}
+
+.btn-twitter {
+    background-color: #55acee;
+}
+.btn-twitter:hover {
+    background-color: #83c3f3;
+}
+
+.btn-linkedin {
+    background-color: #1E88E5;
+}
+.btn-linkedin:hover {
+    background-color: #4a8aff;
+}
+
+/* button sizes */
+
+.btn-wide {
+    width: 170px;
+    height: 30px;
+}
+
+.btn-medium {
+    width: 100%;
+    height: 30px;
+}
+
+.btn-short {
+    width: 60px;
+    height: 30px;
+}
+
+/* button colors */
+
+.btn-red, button.selected {
+    background-color: #9A3B38 !important;
+    border: 1px solid #BF4946 !important;
+    color: #eee !important;
+}
+.btn-red:hover, button.selected:hover {
+    background-color: #AA4B48 !important;
+}
+
+.btn-light-gray {
+    background-color: #737373;
+    color: #eee !important;
+    border: 1px solid #A9A9A9;
+}
+.btn-light-gray:hover {
+    background-color: #838383;
+}
+
+.btn-dark-gray {
+    background-color: #4D4D4D;
+    color: #eee !important;
+    border: 1px solid #737373;
+}
+.btn-dark-gray:hover {
+    background-color: #5D5D5D;
+}
+
+/* other */
+
+#feedback-button {
+    font-size: 185%;
+}
+
+/* flipping effect */
+
 .flip {
     position: relative;
     margin-bottom: 10px;
@@ -154,7 +290,7 @@ background-color: #4a8aff;
     position: relative;
     transition: transform 0.6s;
     transform-style: preserve-3d;
-    transform-origin: left 20px;
+    transform-origin: left 15px;
     width: 100%;
     height: 100%;
 }
@@ -163,56 +299,16 @@ background-color: #4a8aff;
     transform: rotateX(180deg);
 }
 
-.front, .back {
+.flip-front, .flip-back {
     position: absolute;
     backface-visibility: hidden;
 }
 
-.front {
+.flip-front {
     transform: rotateX(0deg);
     z-index: 2;
 }
 
-.back {
+.flip-back {
     transform: rotateX(180deg);
-}
-
-.save {
-    background-color: #489C3E;
-    color: white !important;
-    width: 170px;
-    height: 30px;
-}
-
-.captures{
-    background-color: #d63c24f2;
-    color: white !important;
-    width: 170px;
-    height: 30px;
-}
-.extra_feature{
-    background-color: #444243f7 !important;
-    color: white !important;
-    width: 170px;
-    height: 30px;
-}
-.context_feature{
-    background-color: #25a7b0;
-    color: white !important;
-    width: 170px;
-    height: 30px;
-}
-
-.context_tip{
-    opacity: 0.75;
-    width: 154px;
-    padding-left: 1px;
-    padding-right: 1px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-    margin-bottom: 3px;
-}
-.feedback{
-    cursor: pointer;
-    font-size: 185%;
 }
