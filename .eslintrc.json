@@ -1,0 +1,14 @@
+{
+  "extends": "standard",
+  "env": {
+    "browser": true,
+    "webextensions": true
+  },
+  "rules": {
+    "camelcase": "off",
+    "space-before-function-paren": "off"
+  },
+  "globals": {
+    "$": "readonly"
+  }
+}

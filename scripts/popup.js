@@ -1,5 +1,7 @@
 // popup.js
 
+/* global openByWindowSetting, isNotExcludedUrl */
+
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
@@ -448,4 +450,3 @@ $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
-
