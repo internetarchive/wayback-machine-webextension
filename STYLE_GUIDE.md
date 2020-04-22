@@ -11,7 +11,7 @@ HTML / CSS
 #### General ####
 
  - Indent HTML by **2 spaces, no tabs**.
- - Indent CSS by **4 spaces, no tabs**.
+ - Indent CSS by **2 spaces, no tabs**.
  - Use only lowercase for HTML tags, attributes, CSS ids and properties.
  - Do not close void elements, e.g. use `<br>` over `<br/>`.
  - No space between CSS style and colon, then single space between colon and values: `style: values;`
@@ -30,7 +30,7 @@ HTML / CSS
 
 ```CSS
 .tab-bar {
-    padding: 2px 0 5px 0;
+  padding: 2px 0 5px 0;
 }
 ```
 
@@ -65,7 +65,7 @@ JavaScript
 const FOO = 5
 function fooBarBaz(pos) {
   let fooBar
-  if (pos == FOO) {
+  if (pos === FOO) {
     /* do something */
   } else {
     /* something else */
