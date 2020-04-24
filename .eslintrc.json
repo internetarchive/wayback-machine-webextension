@@ -1,0 +1,15 @@
+{
+  "extends": "standard",
+  "env": {
+    "browser": true,
+    "webextensions": true
+  },
+  "rules": {
+    "indent": ["warn", 2, {"SwitchCase": 1, "MemberExpression": "off"} ],
+    "camelcase": "off",
+    "space-before-function-paren": "off"
+  },
+  "globals": {
+    "$": "readonly"
+  }
+}
