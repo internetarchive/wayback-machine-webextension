@@ -401,11 +401,8 @@ chrome.tabs.onActivated.addListener(function (info) {
       chrome.tabs.get(info.tabId, function (tab) {
         if(tabIdPromise){
           tabIdPromise.then(function (id) {
-            if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
-              // Check the tab URL exist or not
-              if(tab.url){
-                chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
-              }
+            if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
+              chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
             }
           })
         }
