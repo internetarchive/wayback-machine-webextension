@@ -402,7 +402,10 @@ chrome.tabs.onActivated.addListener(function (info) {
         if(tabIdPromise){
           tabIdPromise.then(function (id) {
             if (info.tabId === tab.id && tab.tabId !== id && isNotExcludedUrl(tab.url)) {
-              chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
+              // Check the tab URL exist or not
+              if(tab.url){
+                chrome.tabs.update(id, { url: chrome.runtime.getURL("context.html") + "?url=" + tab.url })
+              }
             }
           })
         }
