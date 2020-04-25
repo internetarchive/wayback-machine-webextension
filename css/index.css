@@ -312,3 +312,7 @@ a.btn-social, .btn-social {
 .flip-back {
     transform: rotateX(180deg);
 }
+.related_archived_resources{
+    margin-bottom: 10px;
+    display: none;
+}
