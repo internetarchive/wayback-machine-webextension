@@ -1,9 +1,6 @@
 .color_code{
     color:#22c399;
 }
-.color_code_whois{
-    color: #ffcc66;
-}
 .row{
     margin: auto;
 }
@@ -13,15 +10,6 @@ body{
 p{
     font-family:Gill Sans Light;
     font-size: 20px;
-}
-#box-twitter{
-    margin-bottom: 12px;
-    padding: 5px 5px 5px 5px;
-    background-color: #fff;
-    border-radius: 5px;
-    overflow: scroll;
-    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
-    border:1px solid black;
 }
 @media screen and (min-width: 700px) {
     .test {
@@ -186,4 +174,27 @@ p{
 
 .title {
     text-align: center;
+}
+
+/* dark mode of context screens*/
+@media (prefers-color-scheme: dark) {
+
+    .container-fluid {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+
+    .col-tablinks button{
+        background-color: #2C2C2C;
+        transition: 0.5s;
+    }
+    /* Create an hover/current tablink class */
+    .col-tablinks button:hover {
+        background-color: #4D4D4D;
+        color: #eee;
+    }
+    /* Create an active/current tablink class */
+    .col-tablinks button.active {
+        background-color: #9A3B38;
+    }
 }
