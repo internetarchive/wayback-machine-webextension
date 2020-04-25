@@ -44,11 +44,12 @@ function URLopener(open_url, url, wmIsAvailable) {
     openByWindowSetting(open_url)
   }
 }
-function save_page_now(page_url, silent = false){
+
+function savePageNow(page_url, silent = false, options = []){
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams();
     data.append('url', encodeURI(page_url))
-
+    options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -74,6 +75,7 @@ function save_page_now(page_url, silent = false){
       })
   }
 }
+
 function auth_check(){
   const timeoutPromise = new Promise(function (resolve, reject) {
     setTimeout(() => {
@@ -267,7 +269,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true)
       } else {
-        save_page_now(page_url)
+        let options = (message.options !== null) ? message.options : []
+        savePageNow(page_url, false, options)
         return true;
       }
     }
@@ -427,7 +430,7 @@ function auto_save(tabId, url) {
           if (!result.includes('S')) {
             chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result },
             function(){
-              save_page_now(page_url, true)
+              savePageNow(page_url, true)
             });
           }
         })

@@ -51,10 +51,21 @@ function get_clean_url(url) {
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
+    let options = ['capture_all']
+    if ($('#chk-outlinks').prop('checked') === true) {
+      options.push('capture_outlinks')
+      if ($('#email-outlinks-setting').prop('checked') === true) {
+        options.push('email_result')
+      }
+    }
+    if ($('#chk-screenshot').prop('checked') === true) {
+      options.push('capture_screenshot')
+    }
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/save/',
       page_url: url,
+      options: options,
       method: 'save'
     })
   })
