@@ -47,7 +47,7 @@ function getDetails (article) {
       message: 'tvnews',
       article: article
     }, function (clips) {
-      if(clips){
+      if(clips.status !== 'error'){
         resolve(clips)
       }else{
         reject(new Error('Clips not found'))
@@ -67,7 +67,6 @@ function getArticles(url){
           }
         }
       } else {
-        console.log("No similar clips found.")
         $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
           $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
         )
@@ -75,7 +74,7 @@ function getArticles(url){
     }
   })
   .catch(function(err){
-    console.log("Something went wrong.")
+    $('.loader').hide()
     $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
       $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })
     )
