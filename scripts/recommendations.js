@@ -59,18 +59,16 @@ function getArticles(url){
   getDetails(url)
   .then(function(clips){
     $('.loader').hide()
-    if (clips.status !== 'error') {
-      if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
-        for (let clip of clips) {
-          if(threshold >= clip['similarity']){
-            $('#RecommendationTray').append(constructArticles(clip))
-          }
+    if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
+      for (let clip of clips) {
+        if(threshold >= clip['similarity']){
+          $('#RecommendationTray').append(constructArticles(clip))
         }
-      } else {
-        $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
-          $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
-        )
       }
+    } else {
+      $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
+        $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
+      )
     }
   })
   .catch(function(err){
