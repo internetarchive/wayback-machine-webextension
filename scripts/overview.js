@@ -1,3 +1,8 @@
+// overview.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
 function get_WBMSummary () {
   get_details()
   first_archive_details()
@@ -95,7 +100,7 @@ function get_thumbnail () {
   fetch(new_url)
     .then(function (response) {
       $('#loader_thumbnail').hide()
-      if (response.size && response.size != 233) {
+      if (response.size && response.size !== 233) {
         $('#show_thumbnail').append($('<img>').attr('src', new_url))
       } else {
         $('#show_thumbnail').text('Thumbnail not found')
@@ -107,7 +112,7 @@ function get_thumbnail () {
         $('#show_thumbnail').text('Please refresh the page...Time out!!')
       } else {
         $('#loader_thumbnail').hide()
-        if (response.status === 504) {
+        if (response.status === 504) {  // TODO: FIXME: response not defined
           $('#show_thumbnail').text('Please refresh the page...Time out!!')
         } else {
           $('#show_thumbnail').text('Thumbnail not found')

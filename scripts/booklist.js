@@ -1,3 +1,15 @@
+// booklist.js
+
+// from 'utils.js'
+/*   global openByWindowSetting */
+
+// from 'wikipedia.js'
+/*   global getWikipediaBooks */
+
+// TODO: FIXME: Is this from wikipedia.js or doi.js ??
+// Must rename one of these functions
+/*   global getMetadata */
+
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
   getWikipediaBooks(url).then(data => {

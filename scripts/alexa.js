@@ -1,3 +1,8 @@
+// alexa.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
 function get_alexa () {
   var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url='
   var url = getUrlByParameter('url')

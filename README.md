@@ -22,11 +22,13 @@ history of the Web!
   Archive.
 - TV news: Present archived TV news clips relevant to the current page.
 
-## Installing and Using Wayback Machine Chrome Extension
+## Installing Wayback Machine Chrome Extension
 
-- Click this [link](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
+- For currently deployed version, go to the [chrome web store](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
 - Click on "Add to Chrome" button.
 - It's done.
+
+If you want to install the latest version, follow the steps below.
 
 ## Developing
 
@@ -70,3 +72,4 @@ AGPL-3
 - Rodden Kerry, @kerryrodden
 - Anish Kumar Sarangi, @anishsarangi
 - Max Reinisch, @MaxReinisch
+- Carl Gorringe, @cgorringe

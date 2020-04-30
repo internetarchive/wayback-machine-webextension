@@ -1,3 +1,5 @@
+// welcome.js
+
 $(document).ready(function () {
   $('#accept').click(function () {
     chrome.storage.sync.set({ 'agreement': true }, function () {

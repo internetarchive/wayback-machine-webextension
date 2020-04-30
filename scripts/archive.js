@@ -1,3 +1,5 @@
+// archive.js
+
 let interval;
 let closeClicked = false;
 let linkClicked = false;
@@ -61,7 +63,7 @@ function popup(url, code) {
     });
 
     const link = shadowRoot.querySelector('#archiveBtn');
-    link.addEventListener('click', function() { 
+    link.addEventListener('click', function(e) {
         linkClicked = true; 
         // Work-around for myspace which hijacks the link
         if (window.location.hostname.indexOf("myspace.com") >= 0) {

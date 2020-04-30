@@ -1,3 +1,5 @@
+// utils.js
+
 /**
  * Checks Wayback Machine API for url snapshot
  */
@@ -22,7 +24,6 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
       }
     })
 }
-
 
 /**
  * Makes sure response is a valid URL to prevent code injection
@@ -171,8 +172,6 @@ function attachTooltip (anchor, tooltip, pos='right', time=200) {
       }, time)
     })
 }
-
-
 
 if (typeof module !== 'undefined') {
   module.exports = {

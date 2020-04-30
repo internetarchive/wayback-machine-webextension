@@ -1,3 +1,8 @@
+// domaintools.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
 function appendToParent (id, item, text_before, parent, show_item, text_after) {
   if (item) {
     if (show_item) {
@@ -13,7 +18,7 @@ function get_domainTool () {
   $.getJSON(domaintools_api, function (data) {
     var parent = $('#show_domaintools_data')
     if(data.status!=='error'){
-      if (data.response.results_count != 0) {
+      if (data.response.results_count !== 0) {
         appendToParent('#domain', data.response.results[0].domain, 'Domain: ', parent, true, '')
         appendToParent('#alexa', data.response.results[0].alexa, 'Alexa Rank: ', parent, true, '')
         appendToParent('#admin_contact_country', data.response.results[0].admin_contact.country.value, 'Country: ', parent, true, '')

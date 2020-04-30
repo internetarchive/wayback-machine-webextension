@@ -1,3 +1,8 @@
+// doi.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
 function getMetadata(entry){
   const MAX_TITLE_LEN = 300
   let title = entry.title;

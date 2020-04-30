@@ -1,3 +1,8 @@
+// annotation.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
 /**
  * Prepare hypothes.is URL to request API.
  */

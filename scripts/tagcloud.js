@@ -1,4 +1,9 @@
-var mynewTags = new Array()
+// tagcloud.js
+
+// from 'index.js'
+/*   global Levenshtein */
+
+var mynewTags = []
 
 function get_tags (url) {
   var hostname = new URL(url).hostname
@@ -20,8 +25,8 @@ function get_tags (url) {
     .then(response => response.json())
     .then(function (data) {
       if (!data.error) {
-        for (var i = 0; i < data.length; i++) {
-          var b = new Object()
+        for (let i = 0; i < data.length; i++) {
+          var b = {}
           if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
             mynewTags[i] = decodeURIComponent(data[i][0])
             b.text = decodeURIComponent(data[i][0])
@@ -29,10 +34,11 @@ function get_tags (url) {
             mynewTags.push(b)
           }
         }
+        var coefOfDistance
         if (data.length < 500) {
-          var coefOfDistance = 1 / 40
+          coefOfDistance = 1 / 40
         } else {
-          var coefOfDistance = 3 / 4
+          coefOfDistance = 3 / 4
         }
         var arr = mynewTags.reduce(function (acc, newTag) {
           var minDistance = void 0
@@ -48,7 +54,7 @@ function get_tags (url) {
           }
           return acc
         }, []).sort()
-        var result = new Array()
+        var result = []
 
         // Filtering out the elements from data which aren't in arr
         data = data.filter(function (el) {
@@ -57,11 +63,11 @@ function get_tags (url) {
 
         // Mapping the weights to higher values
         result = data.map(function (el) {
-          if (el[1] == 1) { el[1] = el[1] * 10 } else if (el[1] == 2) { el[1] = el[1] * 40 } else if (el[1] == 3) { el[1] = el[1] * 60 } else if (el[1] == 4) { el[1] = el[1] * 90 }
+          if (el[1] === 1) { el[1] = el[1] * 10 } else if (el[1] === 2) { el[1] = el[1] * 40 } else if (el[1] === 3) { el[1] = el[1] * 60 } else if (el[1] === 4) { el[1] = el[1] * 90 }
           return { 'text': el[0], 'weight': el[1] }
         })
 
-        for (var i = 0; i < result.length; i++) {
+        for (let i = 0; i < result.length; i++) {
           var span = document.createElement('span')
           span.setAttribute('data-weight', result[i].weight)
           span.appendChild(document.createTextNode(result[i].text))
@@ -95,7 +101,8 @@ function get_tags (url) {
 
 function _toConsumableArray (arr) {
   if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+    let arr2 = Array(arr.length)
+    for (let i = 0; i < arr.length; i++) {
       arr2[i] = arr[i]
     }
     return arr2
