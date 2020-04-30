@@ -77,3 +77,4 @@ AGPL-3
 - Rodden Kerry, @kerryrodden
 - Anish Kumar Sarangi, @anishsarangi
 - Max Reinisch, @MaxReinisch
+- Carl Gorringe, @cgorringe
