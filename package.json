@@ -35,7 +35,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "fast-levenshtein": "^2.0.6",
     "file-loader": "^3.0.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "jsdom": "^12.2.0",
     "jssha": "^2.3.1",
     "mini-css-extract-plugin": "^0.5.0",
