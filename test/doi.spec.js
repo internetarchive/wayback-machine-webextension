@@ -1,4 +1,3 @@
-const dom = require('./setup').jsdom
 const expect = require('chai').expect
 const getMetadata = require('../scripts/doi').getMetadata
 
