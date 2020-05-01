@@ -157,11 +157,11 @@ function social_share(eventObj) {
       sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
     }
     var open_url = ''
-    if (!(url.includes('chrome://') || url.includes('chrome-extension://'))) { // Prevents sharing some unnecessary page
+    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
         open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
       } else if (id.includes('twit')) {
-        open_url = 'https://twitter.com/home?status=' + sharing_url
+        open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
       } else if (id.includes('linkedin')) {
         open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
       }
@@ -185,7 +185,7 @@ function search_tweet() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
-    if ((e.keyCode === 13  || e.which === 13) && search_box.value !== '') {
+    if ((e.keyCode === 13  || e.which === 13) && search_box.value.length > 1) {
       openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
     }
   })

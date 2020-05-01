@@ -49,7 +49,7 @@ function getDetails (article) {
       message: 'tvnews',
       article: article
     }, function (clips) {
-      if(clips){
+      if(clips.status !== 'error'){
         resolve(clips)
       }else{
         reject(new Error('Clips not found'))
@@ -61,23 +61,20 @@ function getArticles(url){
   getDetails(url)
   .then(function(clips){
     $('.loader').hide()
-    if (clips.status !== 'error') {
-      if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
-        for (let clip of clips) {
-          if(threshold >= clip['similarity']){
-            $('#RecommendationTray').append(constructArticles(clip))
-          }
+    if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
+      for (let clip of clips) {
+        if(threshold >= clip['similarity']){
+          $('#RecommendationTray').append(constructArticles(clip))
         }
-      } else {
-        console.log("No similar clips found.")
-        $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
-          $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
-        )
       }
+    } else {
+      $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
+        $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
+      )
     }
   })
   .catch(function(err){
-    console.log("Something went wrong.")
+    $('.loader').hide()
     $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
       $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })
     )
