@@ -68,7 +68,7 @@ function saveOptions () {
 
 function validate () {
   let checkboxes = $('[name="context"]')
-  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length;
+  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if(checkboxes.length === checkedCount) {
     $('#showall').prop('checked', true)
   } else {
