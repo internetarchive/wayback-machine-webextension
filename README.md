@@ -40,7 +40,7 @@ Follow the given steps to install the extension on your local machine.
 - Turn on the switch next to **Developer mode**.
 - Click the **Load unpacked** button and select the `wayback-machine-chrome` directory that contains this code.
 
-See [developer.chrome.com/extensions](https://developer.chrome.com/extensions) for more information on Chrome web extensions.
+See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
 ### Firefox
 
@@ -48,6 +48,8 @@ See [developer.chrome.com/extensions](https://developer.chrome.com/extensions) f
 - Click **This Firefox**.
 - Click **Load Temporary Add-on...**
 - Open the `wayback-machine-chrome` directory and select any file.
+
+See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
 ## Testing
 
