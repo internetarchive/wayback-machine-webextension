@@ -19,7 +19,8 @@ describe('isValidUrl', () => {
     { 'url': 'https://\xc3\xb1', 'result': true },
     { 'url': 'http://\xc3\x28', 'result': true },
     { 'url': '\xc3\xb1', 'result': false },
-    { 'url': '\xc3\x28', 'result': false }
+    { 'url': '\xc3\x28', 'result': false },
+    { 'url': 'about:debugging', 'result': false }
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -43,7 +44,10 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'chrome://newtab', 'result': false },
     { 'url': 'https://example.com', 'result': true },
     { 'url': '\xc3\xb1', 'result': true },
-    { 'url': '\xc3\x28', 'result': true }
+    { 'url': '\xc3\x28', 'result': true },
+    { 'url': 'about:newtab', 'result': false },
+    { 'url': 'about:preferences', 'result': false },
+    { 'url': 'about:debugging', 'result': false }
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
