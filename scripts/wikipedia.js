@@ -1,5 +1,10 @@
+// wikipedia.js
+//
 // This script adds buttons next to isbns on wikipedia pages that will redirect
 // the user to a readable digital copy of the referenced book.
+
+// from 'utils.js'
+/*   global attachTooltip */
 
 // main method
 function addCitations () {
@@ -7,7 +12,7 @@ function addCitations () {
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
       let isbn = book.text.replace(/-/g, '')
-      let id = getIdentifier(data[isbn]) 
+      let id = getIdentifier(data[isbn])
       let metadata = getMetadata(data[isbn])
       let page = getPageFromCitation(book)
       if (id) {

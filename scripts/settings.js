@@ -1,6 +1,10 @@
 // settings.js
 
-/* global isNotExcludedUrl, show_all_screens, attachTooltip */
+// from 'utils.js'
+/*   global attachTooltip, isNotExcludedUrl */
+
+// from 'popup.js'
+/*   global show_all_screens */
 
 $(initializeSettings)
 $('.only').click(validate)

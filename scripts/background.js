@@ -1,7 +1,11 @@
-/*
-* License: AGPL-3
-* Copyright 2016, Internet Archive
-*/
+// background.js
+//
+// License: AGPL-3
+// Copyright 2016-2020, Internet Archive
+
+// from 'utils.js'
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck */
+
 var manifest = chrome.runtime.getManifest();
 //Load version from Manifest.json file
 var VERSION = manifest.version;
@@ -349,14 +353,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   } else if (info.status === "loading") {
     var received_url = tab.url;
     if (isNotExcludedUrl(received_url) && !(received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
-      contextUrl = received_url;
-      tagcloudurl = new URL(contextUrl);
+      let contextUrl = received_url;
+      let tagcloudUrl = new URL(contextUrl);
       received_url = received_url.replace(/^https?:\/\//, '');
       var last_index = received_url.indexOf('/');
       var url = received_url.slice(0, last_index);
       var open_url = received_url;
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudurl]
+      var urlsToAppend = [url, tab.url, open_url, tab.url, tab.url, tagcloudUrl]
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
         if (event.resource === true) {
           chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -414,6 +418,7 @@ chrome.tabs.onActivated.addListener(function (info) {
   })
 })
 
+// TODO: Change icon instead of badge text here
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '');
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {

@@ -1,9 +1,28 @@
+// context.js
+
+// from 'utils.js'
+/*   global getUrlByParameter */
+
+// from 'tagcloud.js'
+/*   global get_tags */
+
+// from 'annotation.js'
+/*   global get_annotations */
+
+// from 'alexa.js'
+/*   global get_alexa */
+
+// from 'domaintools.js'
+/*   global get_domainTool */
+
+// from 'overview.js'
+/*   global get_WBMSummary */
+
 function get_tagCloud() {
   const url = getUrlByParameter('url');
   get_tags(url);
   $("#loader_tagcloud").hide();
 }
-
 
 function get_hypothesis() {
   let hypo_domain = get_annotations('domain');
@@ -25,8 +44,7 @@ function openContextFeature(evt, feature) {
   evt.currentTarget.className += " active";
 }
 
-function singlePageView(){
-
+function singlePageView() {
   const contexts_dic = {
     "alexa": get_alexa,
     "domaintools": get_domainTool,
@@ -64,6 +82,5 @@ function singlePageView(){
     }
   })
 }
-
 
 window.onload = singlePageView;

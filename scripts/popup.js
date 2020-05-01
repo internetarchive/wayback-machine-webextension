@@ -1,6 +1,7 @@
 // popup.js
 
-/* global openByWindowSetting, isNotExcludedUrl */
+// from 'utils.js'
+/*   global isNotExcludedUrl, openByWindowSetting */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
