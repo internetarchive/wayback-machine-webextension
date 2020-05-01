@@ -32,20 +32,22 @@ If you want to install the latest version, follow the steps below.
 
 ## Developing
 
-Follow the given steps to install the extension on your local machine 
-(For Chrome):
+Follow the given steps to install the extension on your local machine.
+
+### Chrome
  
-  - Navigate to chrome://extensions in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over More Tools and selecting Extensions.
-  - Check the box next to Developer Mode.
-  - Click Load Unpacked Extension and select the directory for your "Hello Extensions" extension.
+- Navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over **More Tools**  and selecting **Extensions**.
+- Turn on the switch next to **Developer mode**.
+- Click the **Load unpacked** button and select the `wayback-machine-chrome` directory that contains this code.
 
-(For Firefox):
-  - Open Firefox and navigate to “about:debugging” in the browser
-  - Click “This Firefox”
-  - Click “Load Temporary Add-on”
-  - Open your extension’s directory and select any file inside the extension.
+See [developer.chrome.com/extensions](https://developer.chrome.com/extensions) for more information on Chrome web extensions.
 
-This is a "WebExtension". See https://developer.chrome.com/extensions for more information.
+### Firefox
+
+- Open Firefox and navigate to `about:debugging` in the browser.
+- Click **This Firefox**.
+- Click **Load Temporary Add-on...**
+- Open the `wayback-machine-chrome` directory and select any file.
 
 ## Testing
 
@@ -65,8 +67,7 @@ This has been tested using `node v10.11.0` and `npm 6.4.1`.
 
 ## License
 
-Copyright Internet Archive, 2017
-AGPL-3
+Copyright © 2017-2020 Internet Archive, AGPL-3
 
 ## Credits
 
