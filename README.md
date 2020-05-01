@@ -30,20 +30,22 @@ history of the Web!
 
 ## Developing
 
-Follow the given steps to install the extension on your local machine 
+Follow the given steps to install the extension on your local machine:
+
 (For Chrome):
- 
   - Navigate to chrome://extensions in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over More Tools and selecting Extensions.
   - Check the box next to Developer Mode.
   - Click Load Unpacked Extension and select the directory for your "Hello Extensions" extension.
+
+This is a "WebExtension". See https://developer.chrome.com/extensions for more information.
 
 (For Firefox):
   - Open Firefox and navigate to “about:debugging” in the browser
   - Click “This Firefox”
   - Click “Load Temporary Add-on”
   - Open your extension’s directory and select any file inside the extension.
-
-This is a "WebExtension". See https://developer.chrome.com/extensions for more information.
+  
+This is a "Temporary Add-on". See https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/ for more information.
 
 ## Testing
 
