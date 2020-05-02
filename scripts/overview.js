@@ -111,8 +111,7 @@ function get_thumbnail () {
       if (exception === 'timeout') {
         $('#show_thumbnail').text('Please refresh the page...Time out!!')
       } else {
-        $('#loader_thumbnail').hide()
-        if (response.status === 504) {  // TODO: FIXME: response not defined
+        if (response.status === 504) { // TODO: FIXME: response not defined
           $('#show_thumbnail').text('Please refresh the page...Time out!!')
         } else {
           $('#show_thumbnail').text('Thumbnail not found')
