@@ -1,11 +1,11 @@
 // recommendations.js
 
-const threshold = 0.85;
+const threshold = 0.85
 
 function parseDate (date) {
-  if(typeof date === "string"){
+  if (typeof date === 'string') {
     const dateObject = new Date(date)
-    if(dateObject.toDateString() !== 'Invalid Date'){
+    if (dateObject.toDateString() !== 'Invalid Date') {
       return dateObject.toDateString()
     }
   }
@@ -16,7 +16,7 @@ function constructArticles (clip) {
     $('<p>').text(clip.show).prepend($('<strong>').text(clip.station + ': '))
   )
   let bottomElements = $('<div>').addClass('bottom_elements').append(
-    $("<a>").attr({"href": "#"}).append(
+    $('<a>').attr({ 'href': '#' }).append(
       $('<img>').attr({ 'src': clip.preview_thumb })
     ).click(() => {
       chrome.storage.sync.get(['show_context'], function (event1) {
@@ -44,26 +44,26 @@ function constructArticles (clip) {
 }
 
 function getDetails (article) {
-  return new Promise(function(resolve, reject){
+  return new Promise(function(resolve, reject) {
     chrome.runtime.sendMessage({
       message: 'tvnews',
       article: article
     }, function (clips) {
-      if(clips.status !== 'error'){
+      if (clips.status !== 'error') {
         resolve(clips)
-      }else{
+      } else {
         reject(new Error('Clips not found'))
       }
     })
   })
 }
-function getArticles(url){
+function getArticles(url) {
   getDetails(url)
-  .then(function(clips){
+  .then(function(clips) {
     $('.loader').hide()
-    if (clips.length > 0 && threshold >= clips[0]['similarity'] ) {
+    if (clips.length > 0 && threshold >= clips[0]['similarity']) {
       for (let clip of clips) {
-        if(threshold >= clip['similarity']){
+        if (threshold >= clip['similarity']) {
           $('#RecommendationTray').append(constructArticles(clip))
         }
       }
@@ -73,7 +73,7 @@ function getArticles(url){
       )
     }
   })
-  .catch(function(err){
+  .catch(function(err) {
     $('.loader').hide()
     $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
       $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })
@@ -81,11 +81,8 @@ function getArticles(url){
   })
 }
 
-
-
-
 if (typeof module !== 'undefined') {
   module.exports = {
-    parseDate : parseDate
+    parseDate: parseDate
   }
 }
