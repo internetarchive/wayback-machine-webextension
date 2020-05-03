@@ -20,8 +20,9 @@ function get_alexa () {
     }
     var rl = xml.getElementsByTagName('RL')
     const TITLE_LEN = 26
+    let len = rl.length
     if (rl.length > 0) {
-      for (var i = 0, len = rl.length; i < len && i < 5; i++) {
+      for (let i = 0; i < len && i < 5; i++) {
         var title = rl[i].getAttribute('TITLE')
         var href = rl[i].getAttribute('HREF')
         $('#alexa_list').append(
@@ -33,7 +34,7 @@ function get_alexa () {
                     .text(title.length > TITLE_LEN ? title.substring(0, TITLE_LEN) + '...' : title)
           )
         )
-        $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url);
+        $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url)
       }
     }
     $('#loader_alexa').hide()

@@ -74,7 +74,7 @@ function get_annotations (type = 'url') {
         $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
           .html(error_msg)
       )
-      item.css("display","block")
+      item.css('display', 'block')
       $('#container-whole-' + type).append(item)
     }
   })

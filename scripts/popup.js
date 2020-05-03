@@ -73,15 +73,15 @@ function save_now() {
 }
 
 function last_save() {
-  checkAuthentication(function(result){
-    if(result && result.message && result.message === "You need to be logged in to use Save Page Now."){
+  checkAuthentication(function(result) {
+    if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
-      $('#savebtn').off('click').click(function(){
-        openByWindowSetting('https://archive.org/account/login');
+      $('#savebtn').off('click').click(function() {
+        openByWindowSetting('https://archive.org/account/login')
       })
-    }else{
+    } else {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let url = get_clean_url(tabs[0].url)
@@ -89,8 +89,8 @@ function last_save() {
           message: 'getLastSaveTime',
           page_url: url
         }, function(message) {
-          if (message.message === "last_save") {
-            if($('#last_save').text !== 'URL not supported'){
+          if (message.message === 'last_save') {
+            if ($('#last_save').text !== 'URL not supported') {
               $('#last_save').text(message.time)
             }
             $('#savebox').addClass('flip-inside')
@@ -101,7 +101,7 @@ function last_save() {
   })
 }
 
-function checkAuthentication(callback){
+function checkAuthentication(callback) {
   chrome.runtime.sendMessage({
     message: 'auth_check'
   }, callback)
@@ -185,7 +185,7 @@ function search_tweet() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
-    if ((e.keyCode === 13  || e.which === 13) && search_box.value.length > 1) {
+    if ((e.keyCode === 13 || e.which === 13) && search_box.value.length > 1) {
       openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
     }
   })
@@ -205,9 +205,8 @@ function arrow_key_access() {
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
         search_box.value = index.textContent
       } else if (index === search_box) {
-        return;
-      }
-      else if (index !== search_box && index && index.previousElementSibling) {
+
+      } else if (index !== search_box && index && index.previousElementSibling) {
         if (index.classList.contains('focused')) { index.classList.remove('focused') }
         index = index.previousElementSibling
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
@@ -291,14 +290,14 @@ function about_support() {
 function sitemap() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url)) { openByWindowSetting("https://web.archive.org/web/sitemap/" + url) }
+    if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
 }
 
 function settings() {
   // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
-  $('#popup-page').hide();
-  $('#setting-page').show();
+  $('#popup-page').hide()
+  $('#setting-page').show()
 }
 
 function show_all_screens() {
@@ -385,9 +384,9 @@ function show_wikibooks() {
 }
 
 function noContextTip() {
-  chrome.storage.sync.get(["alexa", "domaintools", "tweets", "wbmsummary", "annotations", "tagcloud"], function (event) {
+  chrome.storage.sync.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) }}
+    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) } }
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
     /* $('#context-screen').css({ opacity: 0.5 }) */
   })
@@ -398,7 +397,7 @@ function checkExcluded() {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
-    }else{
+    } else {
       const idList = ['savebox', 'mapbox', 'twitterbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
       $('#last_save').text('URL not supported')
@@ -456,13 +455,13 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === "save_success") {
+    if (message.message === 'save_success') {
       $('#save_now').text('Save successful')
       $('#last_save').text(message.time)
       $('#savebox').addClass('flip-inside')
     }
-    if (message.message === "save_start"){
-      $("#save_now").text("Saving Snapshot...")
+    if (message.message === 'save_start') {
+      $('#save_now').text('Saving Snapshot...')
     }
     // if(message.message === "save_error"){
     //   $('#save_now').text('Save Failed')
