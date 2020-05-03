@@ -23,6 +23,7 @@ function initializeSettings () {
     show_context: 'tab',
     resource: false,
     auto_update_context: false,
+    wm_count: false,
     auto_archive: false,
     email_outlinks: false,
     spn_outlinks: false,
@@ -40,6 +41,7 @@ function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
+  $('#wm-count-setting').prop('checked', items.wm_count)
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
@@ -57,6 +59,7 @@ function saveOptions () {
     show_context: $('input[name=tw]:checked').val(),
     resource: $('#resource').prop('checked'),
     auto_update_context: $('#auto-update-context').prop('checked'),
+    wm_count: $('#wm-count-setting').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
     spn_outlinks: $('#chk-outlinks').prop('checked'),
@@ -144,6 +147,7 @@ function addDocs () {
     let docs = {
       'resource': 'Enables extension to notify and display archived resources on relevant urls, including Amazon books, Wikipedia, and select News outlets. ',
       'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
+      'wm-count-setting': 'Displays count of snapshots of the current page stored in the Wayback Machine.',
       'auto-archive': 'Enables extension to identify and save URLs that have not previously been saved on the Wayback Machine.',
       'email-outlinks-setting': 'Enable to send an email of results when Outlinks option is selected.',
       'alexa': 'Displays what Alexa Internet knows about the site you are on (traffic data).',

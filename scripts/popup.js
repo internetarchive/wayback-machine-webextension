@@ -413,6 +413,44 @@ function clearFocus() {
   document.activeElement.blur()
 }
 
+function setupWaybackCount() {
+  chrome.storage.sync.get(['wm_count'], function (event) {
+    if (event.wm_count === true) {
+      $('#wayback-count-label').show()
+      showWaybackCount()
+    } else {
+      $('#wayback-count-label').hide()
+      clearWaybackCount()
+    }
+  })
+}
+
+function showWaybackCount() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    getCachedWaybackCount(url, (total) => {
+      // set label
+      let text = ''
+      if (total === 1) {
+        text = 'Saved once.'
+      } else {
+        text = 'Saved ' + total.toLocaleString() + ' times.'
+      }
+      $('#wayback-count-label').text(text)
+    },
+    function(error) {
+      clearWaybackCount()
+    })
+  })
+}
+
+function clearWaybackCount() {
+  $('#wayback-count-label').html('&nbsp;')
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
+  })
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -438,7 +476,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

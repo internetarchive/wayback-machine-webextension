@@ -63,6 +63,11 @@ hr {
     color: #222;
 }
 
+#wayback-count-label {
+    font-size: 9pt;
+    color: #222;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
@@ -87,6 +92,10 @@ hr {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #wayback-count-label {
+        color: #eee;
     }
 }
 

@@ -5,6 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck */
+/*   global getCachedWaybackCount, badgeCountText */
 
 var manifest = chrome.runtime.getManifest();
 //Load version from Manifest.json file
@@ -345,11 +346,20 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
+    // wayback count
+    chrome.storage.sync.get(['wm_count'], function (event) {
+      if (event.wm_count === true) {
+        updateWaybackCountBadge(tab.id, tab.url)
+      } else {
+        updateWaybackCountBadge(tab.id, null)
+      }
+    })
+    // auto save page
     chrome.storage.sync.get(['auto_archive'], function (event) {
       if (event.auto_archive === true) {
-        auto_save(tab.id, tab.url);
+        auto_save(tab.id, tab.url)
       }
-    });
+    })
   } else if (info.status === "loading") {
     var received_url = tab.url;
     if (isNotExcludedUrl(received_url) && !(received_url.includes("alexa.com") || received_url.includes("whois.com") || received_url.includes("twitter.com") || received_url.includes("oauth"))) {
@@ -441,6 +451,20 @@ function auto_save(tabId, url) {
         })
       }
     )
+  }
+}
+
+function updateWaybackCountBadge(tabId, url) {
+  if (!url) {
+    // clear badge
+    chrome.browserAction.setBadgeText({ tabId: tab.id, text: '' })
+  } else {
+    getCachedWaybackCount(url, (total) => {
+      // display badge
+      let text = badgeCountText(total)
+      chrome.browserAction.setBadgeBackgroundColor({color: '#9A3B38'}) // red
+      chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+    })
   }
 }
 

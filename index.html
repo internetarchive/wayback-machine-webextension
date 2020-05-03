@@ -23,6 +23,8 @@
       <div>
         <div class="text-center">
 
+          <div id="wayback-count-label">&nbsp;</div>
+
           <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
             <div class="bootstrap-typeahead clearfix open" style="position: relative;">
               <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
@@ -91,7 +93,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Related Archived Resources -->
 
           <div class="related_archived_resources" id="borrow_books_tr">
@@ -155,21 +157,25 @@
       </ul>
 
       <div id="general-panel">
+        <label class="setting-switch" for="wm-count-setting">
+          <input type="checkbox" id="wm-count-setting">
+          <span class="toggle">Wayback Count</span>
+        </label>
         <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
-          <span class="toggle">Auto Save Page.</span>
+          <span class="toggle">Auto Save Page</span>
         </label>
         <label class="setting-switch" for="email-outlinks-setting">
           <input type="checkbox" id="email-outlinks-setting">
-          <span class="toggle">Email Outlinks.</span>
+          <span class="toggle">Email Outlinks</span>
         </label>
         <label class="setting-switch" for="resource">
           <input type="checkbox" id="resource">
-          <span class="toggle">Enable Relevant Archived Resources.</span>
+          <span class="toggle">Enable Relevant Archived Resources</span>
         </label>
         <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
-          <span class="toggle">Auto-update Contexts on New Pages.</span>
+          <span class="toggle">Auto-update Contexts on New Pages</span>
         </label>
         <div class="setting-switch" id="view">
           <div id="view-text">Show Features In</div>
