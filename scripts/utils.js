@@ -4,23 +4,23 @@
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = 'https://archive.org/wayback/available';
-  var requestParams = 'url=' + encodeURI(url);
+  var requestUrl = 'https://archive.org/wayback/available'
+  var requestParams = 'url=' + encodeURI(url)
   fetch(requestUrl, {
-    method:'POST',
+    method: 'POST',
     headers: new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     }),
-    body:requestParams
+    body: requestParams
   })
     .then(response => response.json())
-    .then(function(json){
-      let wayback_url = getWaybackUrlFromResponse(json);
+    .then(function(json) {
+      let wayback_url = getWaybackUrlFromResponse(json)
       let timestamp = getWaybackTimestampFromResponse(json)
-      if(wayback_url !== null){
-        onsuccess(wayback_url, url, timestamp);
-      }else if(onfail){
-        onfail();
+      if (wayback_url !== null) {
+        onsuccess(wayback_url, url, timestamp)
+      } else if (onfail) {
+        onfail()
       }
     })
 }
@@ -31,16 +31,16 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @return {bool}
  */
 function isValidUrl(url) {
-  return ((typeof url) === "string" &&
-    (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+  return ((typeof url) === 'string' &&
+    (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
-//List of excluded Urls
+// List of excluded Urls
 var excluded_urls = [
-  "localhost",
-  "0.0.0.0",
-  "127.0.0.1",
-  "chrome://",
+  'localhost',
+  '0.0.0.0',
+  '127.0.0.1',
+  'chrome://',
   'chrome://newtab',
   'chrome.google.com/webstore',
   'chrome-extension://',
@@ -48,15 +48,15 @@ var excluded_urls = [
   'about:debugging',
   'about:newtab',
   'about:preferences'
-];
+]
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
   for (var i = 0, len = excluded_urls.length; i < len; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
-      return false;
+    if (url.startsWith('http://' + excluded_urls[i]) || url.startsWith('https://' + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+      return false
     }
   }
-  return true;
+  return true
 }
 
 /**
@@ -70,11 +70,11 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest &&
     response.results[0].archived_snapshots.closest.available &&
     response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
     isValidUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:');
+    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:')
   } else {
-    return null;
+    return null
   }
 }
 
@@ -85,16 +85,16 @@ function getWaybackTimestampFromResponse(response) {
     response.results[0].archived_snapshots.closest &&
     response.results[0].archived_snapshots.closest.available &&
     response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
     isValidUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.timestamp;
+    return response.results[0].archived_snapshots.closest.timestamp
   } else {
-    return null;
+    return null
   }
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 /**
@@ -102,8 +102,8 @@ function sleep(ms) {
  * @param status {string}
  * @return {string}
  */
-function getErrorMessage(req){
-  return "The requested service " + req.url + " failed: " + req.status + ", " + req.statusText
+function getErrorMessage(req) {
+  return 'The requested service ' + req.url + ' failed: ' + req.status + ', ' + req.statusText
 }
 
 function getUrlByParameter (name) {
@@ -111,40 +111,40 @@ function getUrlByParameter (name) {
   return url.searchParams.get(name)
 }
 
-function openByWindowSetting(url, op=null, cb) {
+function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) });
+    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) })
   } else {
-    opener(url, op);
+    opener(url, op)
   }
 }
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
     chrome.tabs.create({ url: url }, function (tab) {
-      if (callback) { callback(tab.id); }
-    });
+      if (callback) { callback(tab.id) }
+    })
   } else {
     chrome.system.display.getInfo(function (displayInfo) {
       let height = displayInfo[0].bounds.height
       let width = displayInfo[0].bounds.width
       chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
-        if (callback) { callback(window.tabs[0].id); }
-      });
+        if (callback) { callback(window.tabs[0].id) }
+      })
     })
   }
 }
-function notify(message, callback){
+function notify(message, callback) {
   var options = {
-    type: "basic",
-    title: "WayBack Machine",
+    type: 'basic',
+    title: 'WayBack Machine',
     message: message,
-    iconUrl:chrome.extension.getURL("images/icon@2x.png")
+    iconUrl: chrome.extension.getURL('images/icon@2x.png')
   }
-  chrome.notifications.create(options, callback);
+  chrome.notifications.create(options, callback)
 }
 
-function attachTooltip (anchor, tooltip, pos='right', time=200) {
+function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
   return anchor.attr({
     'data-toggle': 'tooltip',
@@ -184,6 +184,6 @@ if (typeof module !== 'undefined') {
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
-    attachTooltip: attachTooltip,
+    attachTooltip: attachTooltip
   }
 }
