@@ -344,16 +344,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === "complete") {
-    // wayback count
-    chrome.storage.sync.get(['wm_count'], function (event) {
+    chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
+      // wayback count
       if (event.wm_count === true) {
         updateWaybackCountBadge(tab.id, tab.url)
       } else {
         updateWaybackCountBadge(tab.id, null)
       }
-    })
-    // auto save page
-    chrome.storage.sync.get(['auto_archive'], function (event) {
+      // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
       }
@@ -454,13 +452,18 @@ function auto_save(tabId, url) {
 function updateWaybackCountBadge(tabId, url) {
   if (!url) {
     // clear badge
-    chrome.browserAction.setBadgeText({ tabId: tab.id, text: '' })
+    chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
   } else {
     getCachedWaybackCount(url, (total) => {
-      // display badge
-      let text = badgeCountText(total)
-      chrome.browserAction.setBadgeBackgroundColor({color: '#9A3B38'}) // red
-      chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+      if (total > 0) {
+        // display badge
+        let text = badgeCountText(total)
+        chrome.browserAction.setBadgeBackgroundColor({color: '#9A3B38'}) // red
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+      } else {
+        // clear badge
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+      }
     })
   }
 }

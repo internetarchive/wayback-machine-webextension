@@ -432,8 +432,10 @@ function showWaybackCount() {
       let text = ''
       if (total === 1) {
         text = 'Saved once.'
-      } else {
+      } else if (total > 1) {
         text = 'Saved ' + total.toLocaleString() + ' times.'
+      } else {
+        text = 'This page was never archived.'
       }
       $('#wayback-count-label').text(text)
     },
