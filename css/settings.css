@@ -77,7 +77,6 @@ ul.nav {
 ul.nav li {
     float: left;
     width: 50%;
-    padding: 0 1px;
 }
 
 li.selected {
