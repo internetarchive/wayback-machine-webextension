@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, resetStorage */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -176,6 +176,10 @@ chrome.runtime.onStartup.addListener(function(details) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
+})
+
+chrome.runtime.onInstalled.addListener((details)=>{
+  resetExtensionStorage();
 })
 
 chrome.runtime.onInstalled.addListener(function(details) {

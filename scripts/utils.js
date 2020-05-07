@@ -176,6 +176,25 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     })
 }
 
+function resetExtensionStorage () {
+  chrome.storage.sync.set({
+    agreement:false,
+    show_context: 'tab',
+    resource: false,
+    auto_update_context: false,
+    auto_archive: false,
+    email_outlinks: false,
+    spn_outlinks: false,
+    spn_screenshot: false,
+    alexa: false,
+    domaintools: false,
+    wbmsummary: false,
+    annotations: false,
+    tagcloud: false,
+    showall: false
+  })
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
@@ -184,6 +203,7 @@ if (typeof module !== 'undefined') {
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
-    attachTooltip: attachTooltip
+    attachTooltip: attachTooltip,
+    resetExtensionStorage: resetExtensionStorage
   }
 }
