@@ -29,6 +29,11 @@
     color: #fff;
 }
 
+.btn-container {
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
