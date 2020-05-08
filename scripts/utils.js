@@ -125,12 +125,10 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    chrome.system.display.getInfo(function (displayInfo) {
-      let height = displayInfo[0].bounds.height
-      let width = displayInfo[0].bounds.width
-      chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
-        if (callback) { callback(window.tabs[0].id) }
-      })
+    let width = window.screen.availWidth
+    let height = window.screen.availHeight
+    chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+      if (callback) { callback(window.tabs[0].id) }
     })
   }
 }
