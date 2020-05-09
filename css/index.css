@@ -63,33 +63,6 @@ hr {
     color: #222;
 }
 
-/* dark mode */
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #2C2C2C;
-        color: #eee;
-    }
-
-    hr {
-        border-top: 1px solid #555;
-    }
-
-    .btn {
-        font-weight: 500;
-    }
-
-    .tab-icon {
-        color: #bbb;
-    }
-
-    #search-input {
-        background-color: #222;
-        border-color: #666;
-        color: #ddd;
-    }
-}
-
 /* general */
 
 .focused {
@@ -324,4 +297,40 @@ a.btn-social, .btn-social {
 .related_archived_resources{
     margin-bottom: 10px;
     display: none;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+
+    hr {
+        border-top: 1px solid #555;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    .tab-icon {
+        color: #bbb;
+    }
+
+    #search-input {
+        background-color: #222;
+        border-color: #666;
+        color: #ddd;
+    }
+
+    .btn-lightest-gray {
+        background-color: #737373;
+        border: #A9A9A9;
+    }
+    
+    .btn-lightest-gray:hover {
+        background-color: #838383;
+    }
 }
