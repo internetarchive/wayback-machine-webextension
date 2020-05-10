@@ -125,12 +125,10 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    chrome.system.display.getInfo(function (displayInfo) {
-      let height = displayInfo[0].bounds.height
-      let width = displayInfo[0].bounds.width
-      chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
-        if (callback) { callback(window.tabs[0].id) }
-      })
+    let width = window.screen.availWidth
+    let height = window.screen.availHeight
+    chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+      if (callback) { callback(window.tabs[0].id) }
     })
   }
 }
@@ -176,6 +174,25 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     })
 }
 
+function resetExtensionStorage () {
+  chrome.storage.sync.set({
+    agreement:false,
+    show_context: 'tab',
+    resource: false,
+    auto_update_context: false,
+    auto_archive: false,
+    email_outlinks: false,
+    spn_outlinks: false,
+    spn_screenshot: false,
+    alexa: false,
+    domaintools: false,
+    wbmsummary: false,
+    annotations: false,
+    tagcloud: false,
+    showall: false
+  })
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getUrlByParameter: getUrlByParameter,
@@ -184,6 +201,7 @@ if (typeof module !== 'undefined') {
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
-    attachTooltip: attachTooltip
+    attachTooltip: attachTooltip,
+    resetExtensionStorage: resetExtensionStorage
   }
 }
