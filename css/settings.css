@@ -11,6 +11,11 @@
     font-weight: 500;
 }
 
+.setting-text-box {
+    display: inline-block;
+    width: 105px;
+}
+
 .setting-switch {
     width: 100%;
     border-radius: 5px;
@@ -106,6 +111,8 @@ li.selected {
 
 .setting-switch input[type=checkbox] {
     width: 20px;
+    margin: 2.5px 0 0;
+    float: left;
 }
 
 .radiobtn {
@@ -123,7 +130,7 @@ label[for=tagcloud] {
 /* tooltips */
 
 .btn-docs {
-    display: inline-block;
+    float: right;
     border-radius: 60%;
     transform: scale(.7);
     font-size: 12px;
