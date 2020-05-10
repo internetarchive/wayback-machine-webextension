@@ -63,33 +63,6 @@ hr {
     color: #222;
 }
 
-/* dark mode */
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #2C2C2C;
-        color: #eee;
-    }
-
-    hr {
-        border-top: 1px solid #555;
-    }
-
-    .btn {
-        font-weight: 500;
-    }
-
-    .tab-icon {
-        color: #bbb;
-    }
-
-    #search-input {
-        background-color: #222;
-        border-color: #666;
-        color: #ddd;
-    }
-}
-
 /* general */
 
 .focused {
@@ -243,13 +216,22 @@ a.btn-social, .btn-social {
 
 /* button colors */
 
-.btn-red, button.selected {
+.btn-red {
     background-color: #9A3B38 !important;
     border: 1px solid #BF4946 !important;
     color: #eee !important;
 }
-.btn-red:hover, button.selected:hover {
+.btn-red:hover {
     background-color: #AA4B48 !important;
+}
+
+.btn-lightest-gray {
+    background-color: #ddd;
+    color: #000 !important;
+    border: 1px solid #ddd;
+}
+.btn-lightest-gray:hover {
+    background-color: #ccc;
 }
 
 .btn-light-gray {
@@ -261,12 +243,12 @@ a.btn-social, .btn-social {
     background-color: #838383;
 }
 
-.btn-dark-gray {
+.btn-dark-gray, button.selected {
     background-color: #4D4D4D;
     color: #eee !important;
     border: 1px solid #737373;
 }
-.btn-dark-gray:hover {
+.btn-dark-gray:hover, button.selected:hover {
     background-color: #5D5D5D;
 }
 
@@ -315,4 +297,40 @@ a.btn-social, .btn-social {
 .related_archived_resources{
     margin-bottom: 10px;
     display: none;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+
+    hr {
+        border-top: 1px solid #555;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    .tab-icon {
+        color: #bbb;
+    }
+
+    #search-input {
+        background-color: #222;
+        border-color: #666;
+        color: #ddd;
+    }
+
+    .btn-lightest-gray {
+        background-color: #737373;
+        border: #A9A9A9;
+    }
+    
+    .btn-lightest-gray:hover {
+        background-color: #838383;
+    }
 }

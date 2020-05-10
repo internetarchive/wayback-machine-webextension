@@ -29,6 +29,11 @@
     color: #fff;
 }
 
+.btn-container {
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
@@ -52,6 +57,9 @@
         background-color: #888;
         color: #000;
     }
+    .btn-container {
+        background-color: #737373;
+    }
 }
 
 
@@ -72,7 +80,6 @@ ul.nav {
 ul.nav li {
     float: left;
     width: 50%;
-    padding: 0 1px;
 }
 
 li.selected {
