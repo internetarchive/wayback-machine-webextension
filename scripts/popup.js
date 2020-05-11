@@ -312,7 +312,7 @@ function borrow_books() {
     const url = tabs[0].url
     const tabId = tabs[0].id
     chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result.includes('R') && url.includes('www.amazon') && url.includes('/dp/')) {
+      if (/* result.includes('R') && */ url.includes('www.amazon') && url.includes('/dp/')) {  // TODO: fix
         $('#borrow_books_tr').css({ 'display': 'block' })
         chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
           const stored_url = res.tab_url

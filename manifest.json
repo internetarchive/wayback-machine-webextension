@@ -11,8 +11,10 @@
   "version": "3.1.8",
   "homepage_url": "https://archive.org/",
   "icons": {
-    "48": "images/icon.png",
-    "96": "images/icon@2x.png"
+    "32": "images/app-icon/app-icon32.png",
+    "64": "images/app-icon/app-icon64.png",
+    "128": "images/app-icon/app-icon128.png",
+    "256": "images/app-icon/app-icon256.png"
   },
 
   "permissions": [
@@ -42,13 +44,7 @@
     }
   ],
   "web_accessible_resources": [
-    "images/insetIcon.svg",
-    "images/close.svg",
-    "images/logo.gif",
-    "images/logo-animate.svg",
-    "images/donate-icon.png",
-    "images/icon.png",
-    "images/icon_color.png",
+    "images/*",
     "scripts/build.js",
     "scripts/archive.js",
     "scripts/RTcontent.js",
@@ -59,6 +55,11 @@
     "css/archive.css"
   ],
   "browser_action": {
-    "default_icon": "images/icon.png"
+    "default_icon": {
+      "16": "images/toolbar/toolbar-icon-archive16.png",
+      "24": "images/toolbar/toolbar-icon-archive24.png",
+      "32": "images/toolbar/toolbar-icon-archive32.png",
+      "64": "images/toolbar/toolbar-icon-archive64.png"
+    }
   }
 }

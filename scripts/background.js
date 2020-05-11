@@ -333,7 +333,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
   } else if (message.message === 'changeBadge') {
     // Used to change bage for auto-archive feature
-    chrome.browserAction.setBadgeText({ tabId: message.tabId, text: '\u2713' })
+    chrome.browserAction.setBadgeText({ tabId: message.tabId, text: '\u2713' })  // checkmark
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
     tabIdPromise = new Promise(function (resolve) {
