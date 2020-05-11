@@ -11,8 +11,11 @@
   "version": "3.1.8",
   "homepage_url": "https://archive.org/",
   "icons": {
+    "16": "images/app-icon/app-icon16.png",
     "32": "images/app-icon/app-icon32.png",
+    "48": "images/app-icon/app-icon48.png",
     "64": "images/app-icon/app-icon64.png",
+    "96": "images/app-icon/app-icon96.png",
     "128": "images/app-icon/app-icon128.png",
     "256": "images/app-icon/app-icon256.png"
   },
