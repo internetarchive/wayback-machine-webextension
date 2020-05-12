@@ -1,5 +1,87 @@
 // utils.js
 
+let isArray = (a) => (!!a) && (a.constructor === Array)
+let isObject = (a) => (!!a) && (a.constructor === Object)
+let waybackCountCache = {}
+
+/**
+ * Convert given int to a string with metric suffix, separators localized.
+ * Used for toolbar button badge.
+ * @param count {int}
+ * @return {string}
+ */
+function badgeCountText(count) {
+  let text = ''
+  if (count < 10000) {
+    text = count.toLocaleString()
+  } else if (count < 1000000) {
+    text = Math.trunc(count / 1000) + 'K'
+  } else if (count >= 1000000) {
+    text = (Math.trunc(count / 100000) / 10.0) + 'M'
+  }
+  return text
+}
+
+/**
+ * Retrieves total count of snapshots stored in the Wayback Machine for given url.
+ * @param url {string}
+ * @return Promise
+ */
+function getWaybackCount(url, onSuccess, onFail) {
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    const requestUrl = 'https://web.archive.org/__wb/sparkline'
+    const requestParams = '?collection=web&output=json&url=' + encodeURI(url)
+    const timeoutPromise = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        reject(new Error('timeout'))
+      }, 30000)
+      fetch(requestUrl + requestParams, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(resolve, reject)
+    })
+    return timeoutPromise
+    .then(response => response.json())
+    .then(json => {
+      const years = json.years
+      let total = 0
+      if (isObject(years)) {
+        for (let y in years) {
+          for (let c of years[y]) {
+            total += c
+          }
+        }
+      }
+      onSuccess(total)
+    })
+    .catch(error => {
+      if (onFail) { onFail(error) }
+    })
+  } else {
+    if (onFail) { onFail(null) }
+  }
+}
+
+function getCachedWaybackCount(url, onSuccess, onFail) {
+  let page_url = url.replace(/\?.*/, '')
+  let cacheTotal = waybackCountCache[page_url]
+  if (cacheTotal) {
+    onSuccess(cacheTotal)
+  } else {
+    getWaybackCount(page_url, (total) => {
+      waybackCountCache[page_url] = total
+      onSuccess(total)
+    }, onFail)
+  }
+}
+
+function clearCountCache() {
+  waybackCountCache = {}
+}
+
 /**
  * Checks Wayback Machine API for url snapshot
  */
@@ -35,8 +117,8 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
-// List of excluded Urls
-var excluded_urls = [
+//List of excluded Urls
+const excluded_urls = [
   'localhost',
   '0.0.0.0',
   '127.0.0.1',
@@ -49,10 +131,12 @@ var excluded_urls = [
   'about:newtab',
   'about:preferences'
 ]
+
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
-  for (var i = 0, len = excluded_urls.length; i < len; i++) {
-    if (url.startsWith('http://' + excluded_urls[i]) || url.startsWith('https://' + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+  const len = excluded_urls.length
+  for (let i = 0; i < len; i++) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
       return false
     }
   }
@@ -202,6 +286,10 @@ if (typeof module !== 'undefined') {
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
     attachTooltip: attachTooltip,
+    getWaybackCount: getWaybackCount,
+    getCachedWaybackCount: getCachedWaybackCount,
+    clearCountCache: clearCountCache,
+    badgeCountText: badgeCountText,
     resetExtensionStorage: resetExtensionStorage
   }
 }

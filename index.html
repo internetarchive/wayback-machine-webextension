@@ -23,6 +23,8 @@
       <div>
         <div class="text-center">
 
+          <div id="wayback-count-label">&nbsp;</div>
+
           <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
             <div class="bootstrap-typeahead clearfix open" style="position: relative;">
               <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
@@ -91,20 +93,20 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Related Archived Resources -->
 
           <div class="related_archived_resources" id="borrow_books_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="borrow_books">Read This Book</button>
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="borrow_books">Read This Book</button>
           </div>
           <div class="related_archived_resources" id="news_recommend_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="news_recommend">Related TV Clips</button>
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="news_recommend">Related TV Clips</button>
           </div>
           <div class="related_archived_resources" id="wikibooks_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="wikibooks">Find Cited Books</button>
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="wikibooks">Find Cited Books</button>
           </div>
           <div class="related_archived_resources" id="doi_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="doi">Find Cited Papers</button>
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="doi">Find Cited Papers</button>
           </div>
 
           <!-- Share -->
@@ -157,28 +159,32 @@
       </div>
 
       <div id="general-panel">
+        <label class="setting-switch" for="wm-count-setting">
+          <input type="checkbox" id="wm-count-setting">
+          <span class="toggle">Wayback Count</span>
+        </label>
         <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
           <div class="setting-text-box">
-            <span class="toggle">Auto Save Page.</span>
+            <span class="toggle">Auto Save Page</span>
           </div>
         </label>
         <label class="setting-switch" for="email-outlinks-setting">
           <input type="checkbox" id="email-outlinks-setting">
           <div class="setting-text-box">
-            <span class="toggle">Email Outlinks.</span>
+            <span class="toggle">Email Outlinks</span>
           </div>
         </label>
         <label class="setting-switch" for="resource">
           <input type="checkbox" id="resource">
           <div class="setting-text-box">
-            <span class="toggle">Enable Relevant Archived Resources.</span>
+            <span class="toggle">Enable Relevant Archived Resources</span>
           </div>
         </label>
         <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
           <div class="setting-text-box">
-            <span class="toggle">Auto-update Contexts on New Pages.</span>
+            <span class="toggle">Auto-update Contexts on New Pages</span>
           </div>
         </label>
         <div class="setting-switch" id="view">

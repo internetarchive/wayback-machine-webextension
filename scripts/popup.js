@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, openByWindowSetting */
+/*   global isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -311,22 +311,23 @@ function borrow_books() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     const tabId = tabs[0].id
-    chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result.includes('R') && url.includes('www.amazon') && url.includes('/dp/')) {
-        $('#borrow_books_tr').css({ 'display': 'block' })
-        chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
-          const stored_url = res.tab_url
-          const detail_url = res.detail_url
-          const context = res.show_context
-          // Checking if the tab url is the same as the last stored one
-          if (stored_url === url) {
-            // if same, use the previously fetched url
-            $('#borrow_books_tr').click(function () {
-              openByWindowSetting(detail_url, context)
-            })
-          } else {
-            // if not, fetch it again
-            fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+    if (url.includes('www.amazon') && url.includes('/dp/')) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+        if (result.state === 'R') {
+          $('#borrow_books_tr').css({ 'display': 'block' })
+          chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
+            const stored_url = res.tab_url
+            const detail_url = res.detail_url
+            const context = res.show_context
+            // Checking if the tab url is the same as the last stored one
+            if (stored_url === url) {
+              // if same, use the previously fetched url
+              $('#borrow_books_tr').click(function () {
+                openByWindowSetting(detail_url, context)
+              })
+            } else {
+              // if not, fetch it again
+              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
               .then(res => res.json())
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {
@@ -336,10 +337,11 @@ function borrow_books() {
                   })
                 }
               })
-          }
-        })
-      }
-    })
+            }
+          })
+        }
+      })
+    }
   })
 }
 
@@ -351,14 +353,16 @@ function show_news() {
     chrome.storage.sync.get(['show_context', 'newshosts'], function (event) {
       let set_of_sites = new Set(event.newshosts)
       const option = event.show_context
-      chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-        if (result.includes('R') && set_of_sites.has(news_host)) {
-          $('#news_recommend_tr').show().click(() => {
-            const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
-            openByWindowSetting(URL, option)
-          })
-        }
-      })
+      if (set_of_sites.has(news_host)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+          if (result.state === 'R') {
+            $('#news_recommend_tr').show().click(() => {
+              const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+              openByWindowSetting(URL, option)
+            })
+          }
+        })
+      }
     })
   })
 }
@@ -366,20 +370,22 @@ function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     const tabId = tabs[0].id
-    chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result.includes('R') && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-        // show wikipedia books button
-        $('#wikibooks_tr').show().click(function () {
-          const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
-          openByWindowSetting(URL)
-        })
-        // show wikipedia cited paper button
-        $('#doi_tr').show().click(function () {
-          const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
-          openByWindowSetting(URL)
-        })
-      }
-    })
+    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+        if (result.state === 'R') {
+          // show wikipedia books button
+          $('#wikibooks_tr').show().click(function () {
+            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+            openByWindowSetting(URL)
+          })
+          // show wikipedia cited paper button
+          $('#doi_tr').show().click(function () {
+            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+            openByWindowSetting(URL)
+          })
+        }
+      })
+    }
   })
 }
 
@@ -412,6 +418,46 @@ function clearFocus() {
   document.activeElement.blur()
 }
 
+function setupWaybackCount() {
+  chrome.storage.sync.get(['wm_count'], function (event) {
+    if (event.wm_count === true) {
+      $('#wayback-count-label').show()
+      showWaybackCount()
+    } else {
+      $('#wayback-count-label').hide()
+      clearWaybackCount()
+    }
+  })
+}
+
+function showWaybackCount() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = get_clean_url(tabs[0].url)
+    getCachedWaybackCount(url, (total) => {
+      // set label
+      let text = ''
+      if (total === 1) {
+        text = 'Saved once.'
+      } else if (total > 1) {
+        text = 'Saved ' + total.toLocaleString() + ' times.'
+      } else {
+        text = 'This page was never archived.'
+      }
+      $('#wayback-count-label').text(text)
+    },
+    function(error) {
+      clearWaybackCount()
+    })
+  })
+}
+
+function clearWaybackCount() {
+  $('#wayback-count-label').html('&nbsp;')
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
+  })
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -437,7 +483,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

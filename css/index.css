@@ -63,6 +63,11 @@ hr {
     color: #222;
 }
 
+#wayback-count-label {
+    font-size: 9pt;
+    color: #222;
+}
+
 /* general */
 
 .focused {
@@ -225,6 +230,15 @@ a.btn-social, .btn-social {
     background-color: #AA4B48 !important;
 }
 
+.btn-blue {
+    background-color: #405971 !important;
+    border: 1px solid #668db3 !important;
+    color: #eee !important;
+}
+.btn-blue:hover {
+    background-color: #51708E  !important;
+}
+
 .btn-lightest-gray {
     background-color: #ddd;
     color: #000 !important;
@@ -323,6 +337,10 @@ a.btn-social, .btn-social {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #wayback-count-label {
+        color: #eee;
     }
 
     .btn-lightest-gray {

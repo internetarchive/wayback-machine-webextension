@@ -5,12 +5,14 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, resetStorage */
+/*   global getCachedWaybackCount, badgeCountText */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
 var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = ''
+let toolbarIconState = {}
 let tabIdPromise
 var WB_API_URL = 'https://archive.org/wayback/available'
 var newshosts = [
@@ -336,18 +338,28 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
   } else if (message.message === 'changeBadge') {
     // Used to change bage for auto-archive feature
-    chrome.browserAction.setBadgeText({ tabId: message.tabId, text: '\u2713' })
+    setToolbarState(message.tabId, 'check')
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
     tabIdPromise = new Promise(function (resolve) {
       openByWindowSetting(context_url, null, resolve)
     })
+  } else if (message.message === 'getToolbarState') {
+    // retrieve the toolbar state
+    sendResponse({ state: getToolbarState(message.tabId) })
   }
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-  if (info.status === 'complete') {
-    chrome.storage.sync.get(['auto_archive'], function (event) {
+  if (info.status === "complete") {
+    chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
+      // wayback count
+      if (event.wm_count === true) {
+        updateWaybackCountBadge(tab.id, tab.url)
+      } else {
+        updateWaybackCountBadge(tab.id, null)
+      }
+      // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
       }
@@ -363,8 +375,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
-        if (event.resource === true) {
-          chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          if (event.resource === true) {
             const url = tabs[0].url
             const tabId = tabs[0].id
             const news_host = new URL(url).hostname
@@ -374,20 +386,20 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                    chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
+                    setToolbarState(tabId, 'R')
                     // Storing the tab url as well as the fetched archive url for future use
                     chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, function () {})
                   }
                 })
             // checking resource of wikipedia books and papers
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
+              setToolbarState(tabId, 'R')
             // checking resource of tv news
             } else if (newshosts.includes(news_host)) {
-              chrome.browserAction.setBadgeText({ tabId: tabId, text: 'R' })
+              setToolbarState(tabId, 'R')
             }
-          })
-        }
+          }
+        })
         if (event.auto_update_context === true) {
           if (tabIdPromise) {
             tabIdPromise.then(function (id) {
@@ -404,7 +416,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 // Updating the context page based on every tab the user is selecting
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
+    if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
+      // reset toolbar if resource setting turned off
+      setToolbarState(info.tabId, 'archive')
+    } else {
+      updateToolbarIcon(info.tabId)
+    }
+
     if (event.auto_update_context === true) {
       chrome.tabs.get(info.tabId, function (tab) {
         if (tabIdPromise) {
@@ -419,31 +438,76 @@ chrome.tabs.onActivated.addListener(function (info) {
   })
 })
 
-// TODO: Change icon instead of badge text here
 function auto_save(tabId, url) {
   var page_url = url.replace(/\?.*/, '')
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     wmAvailabilityCheck(page_url,
       function () {
-        chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-          if (result.includes('S')) {
-            chrome.browserAction.setBadgeText({ tabId: tabId, text: result.replace('S', '') })
-          }
-        })
+        // set default toolbar icon if page exists in archive
+        if (getToolbarState(tabId) === 'S') {
+          setToolbarState(tabId, 'archive')
+        }
       },
       function () {
-        chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-          if (!result.includes('S')) {
-            chrome.browserAction.setBadgeText({ tabId: tabId, text: 'S' + result },
-              function() {
-                savePageNow(page_url, true)
-              })
-          }
-        })
+        // set auto-save toolbar icon if page doesn't exist, then save it
+        if (getToolbarState(tabId) !== 'S') {
+          setToolbarState(tabId, 'S')
+          savePageNow(page_url, true)
+        }
       }
     )
   }
 }
+
+function updateWaybackCountBadge(tabId, url) {
+  if (!url) {
+    // clear badge
+    chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+  } else {
+    getCachedWaybackCount(url, (total) => {
+      if (total > 0) {
+        // display badge
+        let text = badgeCountText(total)
+        chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+      } else {
+        // clear badge
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+      }
+    })
+  }
+}
+
+/**
+ * Sets the toolbar icon.
+ * Name string is based on PNG image filename in images/toolbar/
+ * @param name {string} = one of 'archive', 'check', 'R', or 'S'
+ */
+function setToolbarIcon(name) {
+  const path = 'images/toolbar/toolbar-icon-'
+  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name;
+  let details = {
+    '16': (path + n + '16.png'),
+    '24': (path + n + '24.png'),
+    '32': (path + n + '32.png'),
+    '64': (path + n + '64.png')
+  }
+  chrome.browserAction.setIcon({ path: details })
+}
+
+function setToolbarState(tabId, name) {
+  toolbarIconState[tabId] = name
+  setToolbarIcon(name)
+}
+
+function getToolbarState(tabId) {
+  return toolbarIconState[tabId]
+}
+
+function updateToolbarIcon(tabId) {
+  setToolbarIcon(getToolbarState(tabId))
+}
+
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
@@ -496,3 +560,9 @@ chrome.contextMenus.onClicked.addListener(function (click) {
     }
   })
 })
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    getToolbarState: getToolbarState
+  }
+}
