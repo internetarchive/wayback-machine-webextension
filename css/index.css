@@ -261,6 +261,15 @@ a.btn-social, .btn-social {
     background-color: #AA4B48 !important;
 }
 
+.btn-blue {
+    background-color: #405971 !important;
+    border: 1px solid #668db3 !important;
+    color: #eee !important;
+}
+.btn-blue:hover {
+    background-color: #51708E  !important;
+}
+
 .btn-light-gray {
     background-color: #737373;
     color: #eee !important;
