@@ -4,11 +4,15 @@ $(document).ready(function () {
   $('#accept').click(function () {
     chrome.storage.sync.set({ 'agreement': true }, function () {
       chrome.browserAction.setPopup({ popup: 'index.html' }, function () {
-        window.close()
+        chrome.tabs.getCurrent(function(tab) {
+          chrome.tabs.remove(tab.id, function() {})
+        })
       })
     })
   })
   $('#decline').click(function () {
-    window.close()
+    chrome.tabs.getCurrent(function(tab) {
+      chrome.tabs.remove(tab.id, function() {})
+    })
   })
 })

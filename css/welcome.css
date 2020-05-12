@@ -14,6 +14,9 @@ div#content > h1 {
 }
 
 #content {
-    width: 1000px;
-    margin: 0 auto;
+    margin: auto 15vw 10vh 15vw;
+}
+
+p {
+    text-align: justify;
 }

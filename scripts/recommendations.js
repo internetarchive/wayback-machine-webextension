@@ -26,11 +26,9 @@ function constructArticles (clip) {
         if (event1.show_context === 'tab') {
           chrome.tabs.create({ url: clip.preview_url })
         } else {
-          chrome.system.display.getInfo(function (displayInfo) {
-            let height = displayInfo[0].bounds.height
-            let width = displayInfo[0].bounds.width
-            chrome.windows.create({ url: clip.preview_url, width: width / 2, height: height, top: 0, left: 0, focused: true })
-          })
+          let width = window.screen.availWidth
+          let height = window.screen.availHeight
+          chrome.windows.create({ url: clip.preview_url, width: width / 2, height: height, top: 0, left: 0, focused: true })
         }
       })
     }),

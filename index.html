@@ -151,10 +151,12 @@
 
     <div class="container-fluid unselectable">
 
-      <ul class="nav">
-        <li><button class="unselectable btn btn-sm btn-medium btn-dark-gray" id="general-btn">General</button></li>
-        <li><button class="unselectable btn btn-sm btn-medium btn-dark-gray" id="context-btn">Contexts</button></li>
-      </ul>
+      <div class="btn-container">
+        <ul class="nav">
+          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="general-btn">General</button></li>
+          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="context-btn">Contexts</button></li>
+        </ul>
+      </div>
 
       <div id="general-panel">
         <label class="setting-switch" for="wm-count-setting">
@@ -163,19 +165,27 @@
         </label>
         <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
-          <span class="toggle">Auto Save Page</span>
+          <div class="setting-text-box">
+            <span class="toggle">Auto Save Page</span>
+          </div>
         </label>
         <label class="setting-switch" for="email-outlinks-setting">
           <input type="checkbox" id="email-outlinks-setting">
-          <span class="toggle">Email Outlinks</span>
+          <div class="setting-text-box">
+            <span class="toggle">Email Outlinks</span>
+          </div>
         </label>
         <label class="setting-switch" for="resource">
           <input type="checkbox" id="resource">
-          <span class="toggle">Enable Relevant Archived Resources</span>
+          <div class="setting-text-box">
+            <span class="toggle">Enable Relevant Archived Resources</span>
+          </div>
         </label>
         <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
-          <span class="toggle">Auto-update Contexts on New Pages</span>
+          <div class="setting-text-box">
+            <span class="toggle">Auto-update Contexts on New Pages</span>
+          </div>
         </label>
         <div class="setting-switch" id="view">
           <div id="view-text">Show Features In</div>
@@ -189,32 +199,44 @@
       <div id="context-panel">
         <label class="setting-switch ctx" for="showall">
           <input type="checkbox" id="showall">
-          <span class="enable">Show All Contexts</span>
+          <div class="setting-text-box">
+            <span class="enable">Show All Contexts</span>
+          </div>
         </label>
         <br>
         <label class="setting-switch ctx" for="alexa">
           <input type="checkbox" name="context" id="alexa" class="only">
-          <span class="enable">Alexa Internet</span>
+          <div class="setting-text-box">
+            <span class="enable">Alexa Internet</span>
+          </div>
         </label>
         <br>
         <label class="setting-switch ctx" for="domaintools">
           <input type="checkbox" name="context" id="domaintools" class="only">
-          <span class="enable">Domain Tools</span>
+          <div class="setting-text-box">
+            <span class="enable">Domain Tools</span>
+          </div>
         </label>
         <br>
         <label class="setting-switch ctx" for="wbmsummary">
           <input type="checkbox" name="context" id="wbmsummary" class="only">
-          <span class="enable">Wayback Machine</span>
+          <div class="setting-text-box">
+            <span class="enable">Wayback Machine</span>
+          </div>
         </label>
         <br>
         <label class="setting-switch ctx" for="annotations">
           <input type="checkbox" name="context" id="annotations" class="only">
-          <span class="enable">Annotations</span>
+          <div class="setting-text-box">
+            <span class="enable">Annotations</span>
+          </div>
         </label>
         <br>
         <label class="setting-switch ctx" for="tagcloud">
           <input type="checkbox" name="context" id="tagcloud" class="only">
-          <span class="enable">Tag Cloud</span>
+          <div class="setting-text-box">
+            <span class="enable">Tag Cloud</span>
+          </div>
         </label>
       </div>
 
