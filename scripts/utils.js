@@ -38,7 +38,7 @@ function getWaybackCount(url, onSuccess, onFail) {
       fetch(requestUrl + requestParams, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       })
       .then(resolve, reject)
@@ -66,7 +66,7 @@ function getWaybackCount(url, onSuccess, onFail) {
 }
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let page_url = url.replace(/\?.*/, '');
+  let page_url = url.replace(/\?.*/, '')
   let cacheTotal = waybackCountCache[page_url]
   if (cacheTotal) {
     onSuccess(cacheTotal)
@@ -272,6 +272,6 @@ if (typeof module !== 'undefined') {
     getWaybackCount: getWaybackCount,
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
-    badgeCountText: badgeCountText,
+    badgeCountText: badgeCountText
   }
 }

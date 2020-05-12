@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, openByWindowSetting */
+/*   global isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -311,22 +311,23 @@ function borrow_books() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     const tabId = tabs[0].id
-    chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (/* result.includes('R') && */ url.includes('www.amazon') && url.includes('/dp/')) {  // TODO: fix
-        $('#borrow_books_tr').css({ 'display': 'block' })
-        chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
-          const stored_url = res.tab_url
-          const detail_url = res.detail_url
-          const context = res.show_context
-          // Checking if the tab url is the same as the last stored one
-          if (stored_url === url) {
-            // if same, use the previously fetched url
-            $('#borrow_books_tr').click(function () {
-              openByWindowSetting(detail_url, context)
-            })
-          } else {
-            // if not, fetch it again
-            fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+    if (url.includes('www.amazon') && url.includes('/dp/')) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+        if (result.state === 'R') {
+          $('#borrow_books_tr').css({ 'display': 'block' })
+          chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
+            const stored_url = res.tab_url
+            const detail_url = res.detail_url
+            const context = res.show_context
+            // Checking if the tab url is the same as the last stored one
+            if (stored_url === url) {
+              // if same, use the previously fetched url
+              $('#borrow_books_tr').click(function () {
+                openByWindowSetting(detail_url, context)
+              })
+            } else {
+              // if not, fetch it again
+              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
               .then(res => res.json())
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {
@@ -336,10 +337,11 @@ function borrow_books() {
                   })
                 }
               })
-          }
-        })
-      }
-    })
+            }
+          })
+        }
+      })
+    }
   })
 }
 
@@ -351,14 +353,16 @@ function show_news() {
     chrome.storage.sync.get(['show_context', 'newshosts'], function (event) {
       let set_of_sites = new Set(event.newshosts)
       const option = event.show_context
-      chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-        if (result.includes('R') && set_of_sites.has(news_host)) {
-          $('#news_recommend_tr').show().click(() => {
-            const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
-            openByWindowSetting(URL, option)
-          })
-        }
-      })
+      if (set_of_sites.has(news_host)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+          if (result.state === 'R') {
+            $('#news_recommend_tr').show().click(() => {
+              const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+              openByWindowSetting(URL, option)
+            })
+          }
+        })
+      }
     })
   })
 }
@@ -366,20 +370,22 @@ function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const url = tabs[0].url
     const tabId = tabs[0].id
-    chrome.browserAction.getBadgeText({ tabId: tabId }, function (result) {
-      if (result.includes('R') && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-        // show wikipedia books button
-        $('#wikibooks_tr').show().click(function () {
-          const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
-          openByWindowSetting(URL)
-        })
-        // show wikipedia cited paper button
-        $('#doi_tr').show().click(function () {
-          const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
-          openByWindowSetting(URL)
-        })
-      }
-    })
+    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
+        if (result.state === 'R') {
+          // show wikipedia books button
+          $('#wikibooks_tr').show().click(function () {
+            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+            openByWindowSetting(URL)
+          })
+          // show wikipedia cited paper button
+          $('#doi_tr').show().click(function () {
+            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+            openByWindowSetting(URL)
+          })
+        }
+      })
+    }
   })
 }
 
