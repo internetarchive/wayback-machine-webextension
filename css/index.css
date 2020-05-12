@@ -63,6 +63,11 @@ hr {
     color: #222;
 }
 
+#wayback-count-label {
+    font-size: 9pt;
+    color: #222;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
@@ -87,6 +92,10 @@ hr {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #wayback-count-label {
+        color: #eee;
     }
 }
 
@@ -250,6 +259,15 @@ a.btn-social, .btn-social {
 }
 .btn-red:hover, button.selected:hover {
     background-color: #AA4B48 !important;
+}
+
+.btn-blue {
+    background-color: #405971 !important;
+    border: 1px solid #668db3 !important;
+    color: #eee !important;
+}
+.btn-blue:hover {
+    background-color: #51708E  !important;
 }
 
 .btn-light-gray {

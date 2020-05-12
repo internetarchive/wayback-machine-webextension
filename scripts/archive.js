@@ -88,4 +88,5 @@ chrome.runtime.onMessage.addListener(
         refresh(request.wayback_url, request.status_code)
       }
     }
-  })
+  }
+)

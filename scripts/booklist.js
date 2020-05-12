@@ -7,7 +7,6 @@
 /*   global getWikipediaBooks */
 
 // from 'doi.js'
-// Must rename one of these functions
 /*   global getMetadata */
 
 function populateBooks(url) {
