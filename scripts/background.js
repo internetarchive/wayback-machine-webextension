@@ -54,7 +54,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 function savePageNow(page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURI(page_url))
+    data.append('url', encodeURIComponent(page_url))
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -271,7 +271,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
     var page_url = message.page_url
     var wayback_url = message.wayback_url
-    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '').replace(/\?.*/, '')
+    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
@@ -306,7 +306,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
-    let url = host + encodeURI(message.query)
+    let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -439,9 +439,8 @@ chrome.tabs.onActivated.addListener(function (info) {
 })
 
 function auto_save(tabId, url) {
-  var page_url = url.replace(/\?.*/, '')
-  if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    wmAvailabilityCheck(page_url,
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    wmAvailabilityCheck(url,
       function () {
         // set default toolbar icon if page exists in archive
         if (getToolbarState(tabId) === 'S') {
@@ -560,9 +559,3 @@ chrome.contextMenus.onClicked.addListener(function (click) {
     }
   })
 })
-
-if (typeof module !== 'undefined') {
-  module.exports = {
-    getToolbarState: getToolbarState
-  }
-}
