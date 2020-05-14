@@ -44,7 +44,7 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, function () {
       openByWindowSetting(open_url)
     }, function () {
-      alert('URL not found')
+      alert('This page has not been archived.')
     })
   } else {
     openByWindowSetting(open_url)
@@ -54,7 +54,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 function savePageNow(page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURI(page_url))
+    data.append('url', encodeURIComponent(page_url))
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -271,7 +271,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
     var page_url = message.page_url
     var wayback_url = message.wayback_url
-    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '').replace(/\?.*/, '')
+    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
@@ -306,7 +306,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
     let host = 'https://archive.org/services/context/books?url='
-    let url = host + encodeURI(message.query)
+    let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -347,6 +347,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state
     sendResponse({ state: getToolbarState(message.tabId) })
+  } else if (message.message === 'clearCount') {
+    // wayback count settings unchecked
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      updateWaybackCountBadge(tabs[0].id, null)
+    })
+  } else if (message.message === 'clearResource') {
+    // resources settings unchecked
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      clearToolbarState(tabs[0].id)
+    })
   }
 })
 
@@ -366,6 +376,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
+    clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       let tagcloudUrl = new URL(contextUrl)
@@ -416,14 +427,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 // Updating the context page based on every tab the user is selecting
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
-      setToolbarState(info.tabId, 'archive')
+      clearToolbarState(info.tabId)
     } else {
       updateToolbarIcon(info.tabId)
     }
-
+    if (event.wm_count === false) {
+      // clear badge if wayback count setting turned off
+      updateWaybackCountBadge(info.tabId, null)
+    }
     if (event.auto_update_context === true) {
       chrome.tabs.get(info.tabId, function (tab) {
         if (tabIdPromise) {
@@ -439,9 +453,8 @@ chrome.tabs.onActivated.addListener(function (info) {
 })
 
 function auto_save(tabId, url) {
-  var page_url = url.replace(/\?.*/, '')
-  if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    wmAvailabilityCheck(page_url,
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    wmAvailabilityCheck(url,
       function () {
         // set default toolbar icon if page exists in archive
         if (getToolbarState(tabId) === 'S') {
@@ -504,6 +517,13 @@ function getToolbarState(tabId) {
   return toolbarIconState[tabId]
 }
 
+function clearToolbarState(tabId) {
+  if (toolbarIconState[tabId]) {
+    delete toolbarIconState[tabId]
+  }
+  setToolbarIcon('archive')
+}
+
 function updateToolbarIcon(tabId) {
   setToolbarIcon(getToolbarState(tabId))
 }
@@ -560,9 +580,3 @@ chrome.contextMenus.onClicked.addListener(function (click) {
     }
   })
 })
-
-if (typeof module !== 'undefined') {
-  module.exports = {
-    getToolbarState: getToolbarState
-  }
-}

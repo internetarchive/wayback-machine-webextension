@@ -30,7 +30,7 @@ function badgeCountText(count) {
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     const requestUrl = 'https://web.archive.org/__wb/sparkline'
-    const requestParams = '?collection=web&output=json&url=' + encodeURI(url)
+    const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -66,13 +66,12 @@ function getWaybackCount(url, onSuccess, onFail) {
 }
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let page_url = url.replace(/\?.*/, '')
-  let cacheTotal = waybackCountCache[page_url]
+  let cacheTotal = waybackCountCache[url]
   if (cacheTotal) {
     onSuccess(cacheTotal)
   } else {
-    getWaybackCount(page_url, (total) => {
-      waybackCountCache[page_url] = total
+    getWaybackCount(url, (total) => {
+      waybackCountCache[url] = total
       onSuccess(total)
     }, onFail)
   }
@@ -87,7 +86,7 @@ function clearCountCache() {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var requestUrl = 'https://archive.org/wayback/available'
-  var requestParams = 'url=' + encodeURI(url)
+  var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
     headers: new Headers({
@@ -264,6 +263,7 @@ function resetExtensionStorage () {
     show_context: 'tab',
     resource: false,
     auto_update_context: false,
+    wm_count: false,
     auto_archive: false,
     email_outlinks: false,
     spn_outlinks: false,
