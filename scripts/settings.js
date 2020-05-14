@@ -55,11 +55,13 @@ function restoreOptions (items) {
 }
 
 function saveOptions () {
+  let wm_count = $('#wm-count-setting').prop('checked')
+  let resource = $('#resource').prop('checked')
   chrome.storage.sync.set({
     show_context: $('input[name=tw]:checked').val(),
-    resource: $('#resource').prop('checked'),
+    resource: resource,
     auto_update_context: $('#auto-update-context').prop('checked'),
-    wm_count: $('#wm-count-setting').prop('checked'),
+    wm_count: wm_count,
     auto_archive: $('#auto-archive').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
     spn_outlinks: $('#chk-outlinks').prop('checked'),
@@ -71,6 +73,12 @@ function saveOptions () {
     tagcloud: $('#tagcloud').prop('checked'),
     showall: $('#showall').prop('checked')
   })
+  if (wm_count === false) {
+    chrome.runtime.sendMessage({ message: 'clearCount' })
+  }
+  if (resource === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource' })
+  }
 }
 
 function validate () {

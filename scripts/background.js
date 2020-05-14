@@ -347,6 +347,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state
     sendResponse({ state: getToolbarState(message.tabId) })
+  } else if (message.message === 'clearCount') {
+    // wayback count settings unchecked
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      updateWaybackCountBadge(tabs[0].id, null)
+    })
+  } else if (message.message === 'clearResource') {
+    // resources settings unchecked
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      clearToolbarState(tabs[0].id)
+    })
   }
 })
 
@@ -417,14 +427,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 // Updating the context page based on every tab the user is selecting
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
       clearToolbarState(info.tabId)
     } else {
       updateToolbarIcon(info.tabId)
     }
-
+    if (event.wm_count === false) {
+      // clear badge if wayback count setting turned off
+      updateWaybackCountBadge(info.tabId, null)
+    }
     if (event.auto_update_context === true) {
       chrome.tabs.get(info.tabId, function (tab) {
         if (tabIdPromise) {
