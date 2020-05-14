@@ -44,7 +44,7 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, function () {
       openByWindowSetting(open_url)
     }, function () {
-      alert('URL not found')
+      alert('This page has not been archived.')
     })
   } else {
     openByWindowSetting(open_url)
