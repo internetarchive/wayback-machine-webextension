@@ -366,6 +366,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
+    clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       let tagcloudUrl = new URL(contextUrl)
@@ -419,7 +420,7 @@ chrome.tabs.onActivated.addListener(function (info) {
   chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
-      setToolbarState(info.tabId, 'archive')
+      clearToolbarState(info.tabId)
     } else {
       updateToolbarIcon(info.tabId)
     }
@@ -501,6 +502,13 @@ function setToolbarState(tabId, name) {
 
 function getToolbarState(tabId) {
   return toolbarIconState[tabId]
+}
+
+function clearToolbarState(tabId) {
+  if (toolbarIconState[tabId]) {
+    delete toolbarIconState[tabId]
+  }
+  setToolbarIcon('archive')
 }
 
 function updateToolbarIcon(tabId) {
