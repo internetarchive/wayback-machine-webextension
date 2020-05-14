@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -420,34 +420,35 @@ function clearFocus() {
 
 function setupWaybackCount() {
   chrome.storage.sync.get(['wm_count'], function (event) {
-    if (event.wm_count === true) {
-      $('#wayback-count-label').show()
-      showWaybackCount()
-    } else {
-      $('#wayback-count-label').hide()
-      clearWaybackCount()
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      //let url = get_clean_url(tabs[0].url)
+      let url = tabs[0].url
+      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
+        $('#wayback-count-label').show()
+        showWaybackCount(url)
+      } else {
+        $('#wayback-count-label').hide()
+        clearWaybackCount()
+      }
+    })
   })
 }
 
-function showWaybackCount() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
-    getCachedWaybackCount(url, (total) => {
-      // set label
-      let text = ''
-      if (total === 1) {
-        text = 'Saved once.'
-      } else if (total > 1) {
-        text = 'Saved ' + total.toLocaleString() + ' times.'
-      } else {
-        text = 'This page was never archived.'
-      }
-      $('#wayback-count-label').text(text)
-    },
-    function(error) {
-      clearWaybackCount()
-    })
+function showWaybackCount(url) {
+  getCachedWaybackCount(url, (total) => {
+    // set label
+    let text = ''
+    if (total === 1) {
+      text = 'Saved once.'
+    } else if (total > 1) {
+      text = 'Saved ' + total.toLocaleString() + ' times.'
+    } else {
+      text = 'This page was never archived.'
+    }
+    $('#wayback-count-label').text(text)
+  },
+  function(error) {
+    clearWaybackCount()
   })
 }
 

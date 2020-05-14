@@ -263,6 +263,7 @@ function resetExtensionStorage () {
     show_context: 'tab',
     resource: false,
     auto_update_context: false,
+    wm_count: false,
     auto_archive: false,
     email_outlinks: false,
     spn_outlinks: false,
