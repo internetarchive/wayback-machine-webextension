@@ -30,6 +30,7 @@ var newshosts = [
   'www.washingtonpost.com'
 ]
 var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526]
+
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -51,7 +52,7 @@ function URLopener(open_url, url, wmIsAvailable) {
   }
 }
 
-function savePageNow(page_url, silent = false, options = []) {
+function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURIComponent(page_url))
@@ -77,7 +78,8 @@ function savePageNow(page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
         }
-        validate_spn(res.job_id, silent)
+        setToolbarState(tabId, 'S')
+        validate_spn(tabId, res.job_id, silent)
       })
   }
 }
@@ -100,7 +102,8 @@ function auth_check() {
   return timeoutPromise
   .then(response => response.json())
 }
-async function validate_spn(job_id, silent = false) {
+
+async function validate_spn(tabId, job_id, silent = false) {
   let vdata
   let status = 'pending'
   const val_data = new URLSearchParams()
@@ -133,6 +136,7 @@ async function validate_spn(job_id, silent = false) {
       })
   }
   if (vdata.status === 'success') {
+    setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
@@ -148,11 +152,11 @@ async function validate_spn(job_id, silent = false) {
       })
     }
   } else if (!vdata.status) {
+    clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
     })
-
     if (!silent) {
       notify('Error: ' + vdata.message, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
@@ -278,7 +282,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         URLopener(open_url, url, true)
       } else {
         let options = (message.options !== null) ? message.options : []
-        savePageNow(page_url, false, options)
+        savePageNow(null, page_url, false, options)
         return true
       }
     }
@@ -456,16 +460,16 @@ function auto_save(tabId, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
       function () {
-        // set default toolbar icon if page exists in archive
+        // check if page is now in archive after auto-saved
         if (getToolbarState(tabId) === 'S') {
-          setToolbarState(tabId, 'archive')
+          setToolbarState(tabId, 'check')
         }
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          setToolbarState(tabId, 'S')
-          savePageNow(page_url, true)
+          //setToolbarState(tabId, 'S')
+          savePageNow(tabId, page_url, false)  // true
         }
       }
     )
@@ -527,7 +531,6 @@ function clearToolbarState(tabId) {
 function updateToolbarIcon(tabId) {
   setToolbarIcon(getToolbarState(tabId))
 }
-
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
