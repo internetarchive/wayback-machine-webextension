@@ -13,7 +13,7 @@
 
 .setting-text-box {
     display: inline-block;
-    width: 105px;
+    width: calc(100% - 50px);
 }
 
 .setting-switch {
@@ -39,6 +39,17 @@
     background-color: #ddd;
 }
 
+.btn-container .btn {
+    border-radius: 0;
+}
+.btn-container li:first-child .btn {
+    border-radius: 5px 0 0 5px !important;
+}
+.btn-container li:last-child .btn {
+    border-radius: 0 5px 5px 0 !important;
+}
+
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
@@ -62,8 +73,9 @@
         background-color: #888;
         color: #000;
     }
+
     .btn-container {
-        background-color: #737373;
+        background-color: #3C3C3C;
     }
 }
 
@@ -87,12 +99,6 @@ ul.nav li {
     width: 50%;
 }
 
-li.selected {
-    font-size: 12px;
-    border-left: 2px;
-    margin-top: 3px;
-}
-
 .unselectable > * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -110,8 +116,7 @@ li.selected {
 }
 
 .setting-switch input[type=checkbox] {
-    width: 20px;
-    margin: 2.5px 0 0;
+    margin: 3px 7px 0 3px;
     float: left;
 }
 
@@ -131,7 +136,8 @@ label[for=tagcloud] {
 
 .btn-docs {
     float: right;
-    border-radius: 60%;
+    boder: 1px solid #888;
+    border-radius: 50%;
     transform: scale(.7);
     font-size: 12px;
 }

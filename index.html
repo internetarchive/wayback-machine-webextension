@@ -153,15 +153,17 @@
 
       <div class="btn-container">
         <ul class="nav">
-          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="general-btn">General</button></li>
-          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="context-btn">Contexts</button></li>
+          <li><button class="unselectable btn btn-sm btn-medium btn-unselected" id="general-btn">General</button></li>
+          <li><button class="unselectable btn btn-sm btn-medium btn-unselected " id="context-btn">Contexts</button></li>
         </ul>
       </div>
 
       <div id="general-panel">
         <label class="setting-switch" for="wm-count-setting">
           <input type="checkbox" id="wm-count-setting">
-          <span class="toggle">Wayback Count</span>
+          <div class="setting-text-box">
+            <span class="toggle">Wayback Count</span>
+          </div>
         </label>
         <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
@@ -247,10 +249,11 @@
     </div>
 
   </div>
-</body>
 
-</html>
 <script src="scripts/build.js"></script>
 <script src="scripts/utils.js"></script>
 <script src="scripts/popup.js"></script>
 <script src="scripts/settings.js"></script>
+
+</body>
+</html>

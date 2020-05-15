@@ -41,13 +41,18 @@
     max-height:100px;
 }
 */
-h2{
-    font-family: Bebas Neue;
-    font-size: 50px;
-  }
-h2 strong{
-  font-family: 'Oswald', sans-serif;
+
+h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 40px;
+    font-weight: bold;
 }
+
+h3 {
+    font-family: 'Bebas Neue';
+    font-size: 40px;
+}
+
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */

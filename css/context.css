@@ -1,18 +1,19 @@
-.color_code{
-    color:#22c399;
-}
 
-.row{
-    margin: auto;
-}
-
-body{
+body {
     max-height: 100%;
 }
 
-p{
+p {
     font-family:Gill Sans Light;
     font-size: 20px;
+}
+
+.color_code {
+    color:#22c399;
+}
+
+.row {
+    margin: auto;
 }
 
 @media screen and (min-width: 700px) {
@@ -21,8 +22,9 @@ p{
     }
 }
 
-.box{
-    border:1px solid black;
+.box {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
 /*
@@ -31,43 +33,43 @@ p{
     flex-direction: column;
     justify-content: center;
 */
-    margin-bottom: 12px;
+    margin-bottom: 30px;
     overflow: hidden;
     padding: 5px 5px 5px 5px;
 }
 
-.target-selector-exact{
+.target-selector-exact {
     padding: 5px 10px;
-    font-family:'Courier New', Courier, monospace;
+    font-family: 'Courier New', Courier, monospace;
     word-wrap: break-word;
 }
 
-#link-incontext{
+#link-incontext {
     margin-left:40px;
 }
 
-#link-html{
+#link-html {
     margin-left: 70px;
 }
 
-#date{
+#date {
     position: absolute;
     right: 20px;
 }
 
-.source{
+.source {
     padding: 5px 0px;
 }
 
-#text-contain{
+#text-contain {
     padding: 5px 0px;;
 }
 
-#links{
+#links {
     padding: 10px;
 }
 
-.row_main{
+.row_main {
     align-items: stretch;
     display: flex;
     justify-content: center;
@@ -93,12 +95,12 @@ p{
     width: 7in;
 }
 
-#public_on{
+#public_on {
     font-weight: 150%;
     color: #818181;
 }
 
-.pre{
+.pre, pre {
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     display: block;
     padding: 9.5px;
@@ -110,25 +112,25 @@ p{
     word-wrap: break-word;
     background-color: #f5f5f5;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
 .col-sm-6 {
-    margin:auto;
-    width:700px;
-    float:none;
+    margin: auto;
+    width: 700px;
+    float: none;
 }
-.col-sm-12{
-    float:none;
+.col-sm-12 {
+    float: none;
 }
 /* https://www.w3schools.com/howto/howto_js_tabs.asp */
 /* Style the tab */
-.container-fluid{
+.container-fluid {
     margin: 0;
     padding: 0;
 }
 
-.col-tablinks{
+.col-tablinks {
     background-color: #f1f1f1;
 }
 /* Style the buttons that are used to open the tab content */
@@ -153,7 +155,11 @@ p{
 
 /* Create an active/current tablink class */
 .col-tablinks button.active {
-    background-color: #ccc;
+    background-color: #9A3B38;
+    color: #eee;
+}
+.col-tablinks button.active:hover {
+    background-color: #AA4B48;
 }
 
 /* Style the tab content */
@@ -168,7 +174,16 @@ p{
 
 #container-whole-url, #container-whole-domain {
     max-height: 500px;
-    overflow: scroll;
+    overflow-y: auto;
+}
+
+.container-scrollbar::-webkit-scrollbar {
+    background-color: #aaa;
+    width: 10px;
+    height: 10px;
+}
+.container-scrollbar::-webkit-scrollbar-thumb {
+    background: #555;
 }
 
 .row-box {
@@ -179,15 +194,43 @@ p{
     text-align: center;
 }
 
-/* dark mode of context screens*/
+/* dark mode */
 @media (prefers-color-scheme: dark) {
 
-    .container-fluid {
-        background-color: #2C2C2C;
+    body {
+        background-color: #222;
         color: #eee;
     }
 
-    .col-tablinks button{
+    h2, h3, h4 {
+        color: #bbb;
+    }
+
+    .pre, pre {
+        color: #ddd;
+        background-color: #333;
+        border: 1px solid #555;
+    }
+
+    .box {
+        background-color: #333;
+        border: 1px solid #555;
+    }
+
+    a {
+        color: #d66;
+    }
+    a:hover {
+        color: #f88;
+    }
+
+    .container-fluid {
+        background-color: #2C2C2C;
+        /* color: #eee; */
+        color: #aaa;
+    }
+
+    .col-tablinks button {
         background-color: #2C2C2C;
         transition: 0.5s;
     }
@@ -199,5 +242,15 @@ p{
     /* Create an active/current tablink class */
     .col-tablinks button.active {
         background-color: #9A3B38;
+        color: #eee;
+    }
+
+    .container-scrollbar::-webkit-scrollbar {
+        background-color: #555;
+        width: 10px;
+        height: 10px;
+    }
+    .container-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
     }
 }
