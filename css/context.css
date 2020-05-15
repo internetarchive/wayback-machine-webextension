@@ -155,7 +155,11 @@ p {
 
 /* Create an active/current tablink class */
 .col-tablinks button.active {
-    background-color: #ccc;
+    background-color: #9A3B38;
+    color: #eee;
+}
+.col-tablinks button.active:hover {
+    background-color: #AA4B48;
 }
 
 /* Style the tab content */
