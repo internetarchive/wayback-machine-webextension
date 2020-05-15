@@ -39,6 +39,17 @@
     background-color: #ddd;
 }
 
+.btn-container .btn {
+    border-radius: 0;
+}
+.btn-container li:first-child .btn {
+    border-radius: 5px 0 0 5px !important;
+}
+.btn-container li:last-child .btn {
+    border-radius: 0 5px 5px 0 !important;
+}
+
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
@@ -62,8 +73,9 @@
         background-color: #888;
         color: #000;
     }
+
     .btn-container {
-        background-color: #737373;
+        background-color: #3C3C3C;
     }
 }
 
@@ -85,12 +97,6 @@ ul.nav {
 ul.nav li {
     float: left;
     width: 50%;
-}
-
-li.selected {
-    font-size: 12px;
-    border-left: 2px;
-    margin-top: 3px;
 }
 
 .unselectable > * {
