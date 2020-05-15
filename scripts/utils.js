@@ -4,8 +4,8 @@ let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let waybackCountCache = {}
 
-var isFirefox = typeof InstallTrigger !== 'undefined';
-const hostURL = isFirefox ? 'http://firefox-api.archive.org/':'http://chrome-api.archive.org/'
+let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
+const hostURL = isFirefox ? 'http://firefox-api.archive.org/' : 'http://chrome-api.archive.org/'
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -119,7 +119,7 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
-//List of excluded Urls
+// List of excluded Urls
 const excluded_urls = [
   'localhost',
   '0.0.0.0',
@@ -138,7 +138,7 @@ const excluded_urls = [
 function isNotExcludedUrl(url) {
   const len = excluded_urls.length
   for (let i = 0; i < len; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+    if (url.startsWith('http://' + excluded_urls[i]) || url.startsWith('https://' + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
       return false
     }
   }
@@ -262,7 +262,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 function resetExtensionStorage () {
   chrome.storage.sync.set({
-    agreement:false,
+    agreement: false,
     show_context: 'tab',
     resource: false,
     auto_update_context: false,
@@ -294,6 +294,6 @@ if (typeof module !== 'undefined') {
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
     resetExtensionStorage: resetExtensionStorage,
-    hostURL:hostURL
+    hostURL: hostURL
   }
 }
