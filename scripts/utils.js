@@ -4,6 +4,9 @@ let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let waybackCountCache = {}
 
+var isFirefox = typeof InstallTrigger !== 'undefined';
+const hostURL = isFirefox ? 'http://firefox-api.archive.org/':'http://chrome-api.archive.org/'
+
 /**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
@@ -290,6 +293,7 @@ if (typeof module !== 'undefined') {
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
-    resetExtensionStorage: resetExtensionStorage
+    resetExtensionStorage: resetExtensionStorage,
+    hostURL:hostURL
   }
 }
