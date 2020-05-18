@@ -57,7 +57,7 @@ describe('isNotExcludedUrl', () => {
   })
 })
 
-// on firefox, should fit ~4 full letters/digits without punctuation
+// on firefox, fits ~3.5 letters or digits
 describe('badgeCountText', () => {
   let test_cases = [
     { 'count': 1, 'result': '1' },
@@ -68,8 +68,8 @@ describe('badgeCountText', () => {
     { 'count': 12345, 'result': '12K' },
     { 'count': 123456, 'result': '123K' },
     { 'count': 1000000, 'result': '1M' },
-    { 'count': 1234567, 'result': '1.2M' },
-    { 'count': 8765432, 'result': '8.8M' },
+    { 'count': 1234567, 'result': '1M' },
+    { 'count': 8765432, 'result': '9M' },
     { 'count': 12000000, 'result': '12M' },
     { 'count': 12876543, 'result': '13M' },
     { 'count': 123000000, 'result': '123M' },
