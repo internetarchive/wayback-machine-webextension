@@ -71,7 +71,7 @@ function get_annotations (type = 'url') {
       let row = $('#row_contain-' + type)
       let item = row.clone()
       item.html(
-        $('<div>').addClass('col-sm-6 col-sm-offset-3 text-center')
+        $('<div>').addClass('text-center')
           .html(error_msg)
       )
       item.css('display', 'block')
