@@ -57,20 +57,23 @@ describe('isNotExcludedUrl', () => {
   })
 })
 
+// on firefox, fits ~3.5 letters or digits
 describe('badgeCountText', () => {
   let test_cases = [
     { 'count': 1, 'result': '1' },
     { 'count': 12, 'result': '12' },
     { 'count': 123, 'result': '123' },
-    { 'count': 1234, 'result': '1,234' },
+    { 'count': 1234, 'result': '1.2K' },
+    { 'count': 1678, 'result': '1.7K' },
     { 'count': 12345, 'result': '12K' },
     { 'count': 123456, 'result': '123K' },
     { 'count': 1000000, 'result': '1M' },
-    { 'count': 1234567, 'result': '1.2M' },
+    { 'count': 1234567, 'result': '1M' },
+    { 'count': 8765432, 'result': '9M' },
     { 'count': 12000000, 'result': '12M' },
-    { 'count': 12345678, 'result': '12.3M' },
+    { 'count': 12876543, 'result': '13M' },
     { 'count': 123000000, 'result': '123M' },
-    { 'count': 123456789, 'result': '123.4M' },
+    { 'count': 123456789, 'result': '123M' },
   ]
   test_cases.forEach(({ count, result }) => {
     it('should return ' + result + ' on ' + count, () => {
