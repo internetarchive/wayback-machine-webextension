@@ -12,12 +12,16 @@ let waybackCountCache = {}
  */
 function badgeCountText(count) {
   let text = ''
-  if (count < 10000) {
+  if (count < 1000) {
     text = count.toLocaleString()
+  } else if (count < 10000) {
+    text = (Math.round(count / 100) / 10.0).toLocaleString() + 'K'
   } else if (count < 1000000) {
-    text = Math.trunc(count / 1000) + 'K'
-  } else if (count >= 1000000) {
-    text = (Math.trunc(count / 100000) / 10.0) + 'M'
+    text = Math.round(count / 1000).toLocaleString() + 'K'
+  } else if (count < 10000000) {
+    text = (Math.round(count / 100000) / 10.0).toLocaleString() + 'M'
+  } else if (count >= 10000000) {
+    text = Math.round(count / 1000000).toLocaleString() + 'M'
   }
   return text
 }
