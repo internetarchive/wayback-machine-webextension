@@ -34,9 +34,11 @@ function get_alexa () {
                     .text(title.length > TITLE_LEN ? title.substring(0, TITLE_LEN) + '...' : title)
           )
         )
-        $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url)
       }
+    } else {
+      $('.related_sites').hide()
     }
+    $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url)
     $('#loader_alexa').hide()
     $('#show_alexa_data').show()
   })
