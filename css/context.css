@@ -162,11 +162,13 @@ p {
 
 .container-scrollbar::-webkit-scrollbar {
     background-color: #aaa;
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
 }
 .container-scrollbar::-webkit-scrollbar-thumb {
     background: #555;
+    border-radius: 5px;
 }
 
 .row-box {
@@ -225,8 +227,6 @@ p {
 
     .container-scrollbar::-webkit-scrollbar {
         background-color: #555;
-        width: 10px;
-        height: 10px;
     }
     .container-scrollbar::-webkit-scrollbar-thumb {
         background: #888;
