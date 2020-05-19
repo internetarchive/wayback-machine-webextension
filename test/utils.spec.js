@@ -1,9 +1,11 @@
 const dom = require('./setup').jsdom
 const expect = require('chai').expect
+const assert = require('assert').strict
 const getUrlByParameter = require('../scripts/utils').getUrlByParameter
 const isValidUrl = require('../scripts/utils').isValidUrl
 const isNotExcludedUrl = require('../scripts/utils').isNotExcludedUrl
 const badgeCountText = require('../scripts/utils').badgeCountText
+const timestampToDate = require('../scripts/utils').timestampToDate
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -78,6 +80,30 @@ describe('badgeCountText', () => {
   test_cases.forEach(({ count, result }) => {
     it('should return ' + result + ' on ' + count, () => {
       expect(badgeCountText(count)).to.equal(result)
+    })
+  })
+})
+
+describe('timestampToDate', () => {
+  let test_cases = [
+    // timestamp format: 'yyyyMMddHHmmss'
+    { 'timestamp': '19981205021324', 'result': new Date(Date.UTC(1998, 11,  5,  2, 13, 24)) },
+    { 'timestamp': '20010105131425', 'result': new Date(Date.UTC(2001,  0,  5, 13, 14, 25)) },
+    { 'timestamp': '20010905131400', 'result': new Date(Date.UTC(2001,  8,  5, 13, 14,  0)) },
+    { 'timestamp': '20010105130000', 'result': new Date(Date.UTC(2001,  0,  5, 13,  0,  0)) },
+    { 'timestamp': '20011130000000', 'result': new Date(Date.UTC(2001, 10, 30,  0,  0,  0)) },
+    { 'timestamp': '200101050000', 'result': new Date(Date.UTC(2001,  0,  5,  0,  0,  0)) },
+    { 'timestamp': '2001010500', 'result': new Date(Date.UTC(2001,  0,  5,  0,  0,  0)) },
+    { 'timestamp': '19981205', 'result': new Date(Date.UTC(1998, 11, 5)) },
+    { 'timestamp': '199908', 'result': new Date(Date.UTC(1999, 7, 1)) },
+    { 'timestamp': '1999', 'result': new Date(Date.UTC(1999, 0, 1)) },
+    { 'timestamp': '19', 'result': null },
+    { 'timestamp': 'abcdef', 'result': null },
+    // { 'timestamp': '1999abcd', 'result': null }, // skip
+  ]
+  test_cases.forEach(({ timestamp, result }) => {
+    it('should return ' + (result ? result.toUTCString() : 'null') + ' on ' + timestamp, () => {
+      assert.deepStrictEqual(timestampToDate(timestamp), result)
     })
   })
 })

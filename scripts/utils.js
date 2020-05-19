@@ -118,7 +118,7 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
-//List of excluded Urls
+// list of excluded URLs
 const excluded_urls = [
   'localhost',
   '0.0.0.0',
@@ -137,7 +137,7 @@ const excluded_urls = [
 function isNotExcludedUrl(url) {
   const len = excluded_urls.length
   for (let i = 0; i < len; i++) {
-    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+    if (url.startsWith('http://' + excluded_urls[i]) || url.startsWith('https://' + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
       return false
     }
   }
@@ -145,6 +145,7 @@ function isNotExcludedUrl(url) {
 }
 
 /**
+ * Extracts the latest saved Wayback URL from wmAvailabilityCheck() response.
  * @param response {object}
  * @return {string or null}
  */
@@ -157,12 +158,18 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
     isValidUrl(response.results[0].archived_snapshots.closest.url)) {
+    // not sure why we're replacing http: with https: here
     return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:')
   } else {
     return null
   }
 }
 
+/**
+ * Extracts latest saved timestamp from wmAvailabilityCheck() response.
+ * @param response {object}
+ * @return {string or null} as "yyyyMMddHHmmss"
+ */
 function getWaybackTimestampFromResponse(response) {
   if (response.results &&
     response.results[0] &&
@@ -177,6 +184,48 @@ function getWaybackTimestampFromResponse(response) {
     return null
   }
 }
+
+/**
+ * Converts a Wayback timestamp string into a Date object.
+ * @param timestamp {string} as "yyyyMMddHHmmss" in UTC time zone.
+ * @return {Date or null}
+ */
+function timestampToDate(timestamp) {
+  let date = null
+  if (timestamp && timestamp.length >= 4) {
+    date = new Date(Date.UTC(
+      Number(timestamp.substring(0, 4)), // year
+      (Number(timestamp.substring(4, 6)) || 1) - 1, // month
+      (Number(timestamp.substring(6, 8)) || 1), // day
+      Number(timestamp.substring(8, 10)), // hours
+      Number(timestamp.substring(10, 12)), // min
+      Number(timestamp.substring(12, 14)) // sec
+    ))
+    if (isNaN(date)) { return null }
+  }
+  return date
+}
+
+/**
+ * Return localized date string, or time if within last 24 hours.
+ * @param timestamp {string} as "yyyyMMddHHmmss" in UTC time zone.
+ * @return string or ''
+ */
+function viewableTimestamp(timestamp) {
+  let date = timestampToDate(timestamp)
+  let text = ''
+  if (date) {
+    if ((Date.now() - date.getTime()) > 86400000) {
+      // over 24 hours
+      text = date.toLocaleDateString(undefined, {year: 'numeric', month: 'numeric', day: 'numeric'} ); // e.g.'5/2/2020'
+    } else {
+      // under 24 hours
+      text = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) // e.g.'7:00 PM'
+    }
+  }
+  return text
+}
+
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -261,7 +310,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 function resetExtensionStorage () {
   chrome.storage.sync.set({
-    agreement:false,
+    agreement: false,
     show_context: 'tab',
     resource: false,
     auto_update_context: false,
@@ -281,17 +330,24 @@ function resetExtensionStorage () {
 
 if (typeof module !== 'undefined') {
   module.exports = {
+    isArray: isArray,
+    isObject: isObject,
+    getErrorMessage: getErrorMessage,
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
     isValidUrl: isValidUrl,
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
+    sleep: sleep,
+    notify: notify,
     attachTooltip: attachTooltip,
     getWaybackCount: getWaybackCount,
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
+    timestampToDate: timestampToDate,
+    viewableTimestamp: viewableTimestamp,
     resetExtensionStorage: resetExtensionStorage
   }
 }

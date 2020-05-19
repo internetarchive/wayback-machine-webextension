@@ -260,11 +260,8 @@ chrome.webRequest.onCompleted.addListener(function (details) {
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-function getLastSaveTime(date) {
-  const year = date.substring(0, 4)
-  const month = date.substring(4, 6)
-  const day = date.substring(6, 8)
-  return `${year}-${month}-${day}`
+function getLastSaveTime(timestamp) {
+  return viewableTimestamp(timestamp)
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
