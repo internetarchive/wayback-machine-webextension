@@ -324,7 +324,7 @@ a.btn-social, .btn-social {
     visibility: hidden;
 }
 
-.toast.show{
+.show{
     visibility: visible;
 }
 
