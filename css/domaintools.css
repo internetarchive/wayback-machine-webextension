@@ -1,34 +1,42 @@
-.color_code
-{
+
+.color_code {
   color:#22c399;
   padding-bottom: 7px;
   width: 100%;
 }
-body{
+
+body {
     max-height: 100%;
 }
-.container{
+
+.container {
     padding-left: 15px;
     padding-right: 15px;
-    background: white;
+    /* background: white; */
 }
-p{
+
+p {
     font-family:Gill Sans Light;
     font-size: 20px;
     margin: 0px;
     padding: 0px;
 }
-.extra_margin{
-    margin-top:3px
+
+.extra_margin {
+    margin-top: 3px
 }
-.lower_margin{
+
+.lower_margin {
     margin-bottom: 5px;
 }
-#show_domaintools_data{
+
+#show_domaintools_data {
     font-size: 20px;
 }
-#whois{
+#whois {
     float: left;
 }
 
-.title .color_code { float:left }
+.title .color_code {
+    float: left;
+}

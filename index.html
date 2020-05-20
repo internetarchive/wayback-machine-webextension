@@ -153,15 +153,17 @@
 
       <div class="btn-container">
         <ul class="nav">
-          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="general-btn">General</button></li>
-          <li><button class="unselectable btn btn-sm btn-medium btn-lightest-gray" id="context-btn">Contexts</button></li>
+          <li><button class="unselectable btn btn-sm btn-medium btn-unselected" id="general-btn">General</button></li>
+          <li><button class="unselectable btn btn-sm btn-medium btn-unselected " id="context-btn">Contexts</button></li>
         </ul>
       </div>
 
       <div id="general-panel">
         <label class="setting-switch" for="wm-count-setting">
           <input type="checkbox" id="wm-count-setting">
-          <span class="toggle">Wayback Count</span>
+          <div class="setting-text-box">
+            <span class="toggle">Wayback Count</span>
+          </div>
         </label>
         <label class="setting-switch" for="auto-archive">
           <input type="checkbox" id="auto-archive">
@@ -211,6 +213,7 @@
           </div>
         </label>
         <br>
+        <!-- Tagcloud API not working 
         <label class="setting-switch ctx" for="domaintools">
           <input type="checkbox" name="context" id="domaintools" class="only">
           <div class="setting-text-box">
@@ -218,6 +221,7 @@
           </div>
         </label>
         <br>
+        -->
         <label class="setting-switch ctx" for="wbmsummary">
           <input type="checkbox" name="context" id="wbmsummary" class="only">
           <div class="setting-text-box">
@@ -231,6 +235,7 @@
             <span class="enable">Annotations</span>
           </div>
         </label>
+        <!-- Tagcloud API not working 
         <br>
         <label class="setting-switch ctx" for="tagcloud">
           <input type="checkbox" name="context" id="tagcloud" class="only">
@@ -238,6 +243,7 @@
             <span class="enable">Tag Cloud</span>
           </div>
         </label>
+        -->
       </div>
 
     </div>
@@ -247,10 +253,11 @@
     </div>
 
   </div>
-</body>
 
-</html>
 <script src="scripts/build.js"></script>
 <script src="scripts/utils.js"></script>
 <script src="scripts/popup.js"></script>
 <script src="scripts/settings.js"></script>
+
+</body>
+</html>
