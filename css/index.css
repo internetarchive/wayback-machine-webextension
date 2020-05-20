@@ -21,7 +21,7 @@ hr {
 .tab-item {
     display: inline-block;
     vertical-align: top;
-    width: 22%;
+    width: 18%;
     cursor: pointer;
     opacity: 1.0;
 }
@@ -30,25 +30,26 @@ hr {
 }
 .tab-icon {
     color: #444;
+    font-size: 20px;
 }
 
 .donate-icon-outer {
-    width: 28px;
-    height: 28px;
+    width: 27px;
+    height: 25px;
     margin: 0 auto;
 }
 .donate-icon-inner {
     /* overflow: hidden; */  /* Chrome bug causes glitch with 'transition' and 'overflow'. */
     position: fixed;         /* Required to fix Chrome bug with 'clip' below. */
-    clip: rect(0px 28px 28px -1px);
+    clip: rect(0px 27px 27px -1px);
 }
 .donate-icon {
     /* trick to tint black icons */
-    filter: drop-shadow(28px 0px);
-    margin-left: -28px;
+    filter: drop-shadow(27px 0px);
+    margin-left: -27px;
     display: block;
-    width: 28px;
-    height: 28px;
+    width: 27px;
+    height: 25px;
 }
 
 #search-input {
@@ -267,7 +268,7 @@ a.btn-social, .btn-social {
 /* other */
 
 #feedback-button {
-    font-size: 185%;
+    font-size: 165%;
 }
 
 /* flipping effect */

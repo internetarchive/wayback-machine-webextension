@@ -299,6 +299,9 @@ function settings() {
   $('#popup-page').hide()
   $('#setting-page').show()
 }
+function share() {
+
+}
 
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -502,6 +505,7 @@ $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
+$('#share-button').click(share)
 $('#setting-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
