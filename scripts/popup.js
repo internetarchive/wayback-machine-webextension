@@ -409,6 +409,7 @@ function checkExcluded() {
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
       $('#ctxbox').addClass('flip-inside')
+      $('#url_not_supported_message').text('URL not supported')
     }
   })
 }
