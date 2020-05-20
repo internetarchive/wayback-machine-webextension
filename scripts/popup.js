@@ -300,13 +300,21 @@ function settings() {
   $('#setting-page').show()
 }
 
-document.getElementById('webstore-url').style.display = 'none';
-function share(webstoreURL) {
-  let $temp = $('<input>')
-  $('body').append($temp)
-  $temp.val($(webstoreURL).text()).select()
-  document.execCommand('copy')
-  $temp.remove()
+function share(){
+  const webstoreURL = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak'
+  navigator.clipboard.writeText(webstoreURL).then(function() {
+    let toastMsg = document.getElementById('toast-success')
+    toastMsg.classList.add('show')
+    setTimeout(function(){
+      toastMsg.classList.remove('show')
+    }, 1000)
+  }, function() {
+       let toastMsg = document.getElementById('toast-fail')
+       toastMsg.classList.add('show')
+       setTimeout(function(){
+         toastMsg.classList.remove('show')
+       }, 1000)
+  })
 }
 
 function show_all_screens() {
@@ -511,7 +519,7 @@ $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
-$('#share-button').click(share('#webstore-url'))
+$('#share-button').click(share)
 $('#setting-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
