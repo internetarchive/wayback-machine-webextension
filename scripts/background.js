@@ -118,8 +118,8 @@ async function validate_spn(tabId, job_id, silent = false) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/status',
-        {
+      if (status === 'pending') {
+        fetch('https://web.archive.org/save/status', {
           credentials: 'include',
           method: 'POST',
           body: val_data,
@@ -127,6 +127,7 @@ async function validate_spn(tabId, job_id, silent = false) {
             'Accept': 'application/json'
           }
         }).then(resolve, reject)
+      }
     })
     timeoutPromise
       .then(response => response.json())
