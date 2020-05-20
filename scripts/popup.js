@@ -299,8 +299,14 @@ function settings() {
   $('#popup-page').hide()
   $('#setting-page').show()
 }
-function share() {
 
+document.getElementById('webstore-url').style.display = 'none';
+function share(webstoreURL) {
+  let $temp = $('<input>')
+  $('body').append($temp)
+  $temp.val($(webstoreURL).text()).select()
+  document.execCommand('copy')
+  $temp.remove()
 }
 
 function show_all_screens() {
@@ -505,7 +511,7 @@ $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
-$('#share-button').click(share)
+$('#share-button').click(share('#webstore-url'))
 $('#setting-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
