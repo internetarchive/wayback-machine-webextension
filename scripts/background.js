@@ -55,7 +55,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURIComponent(page_url))
+    data.append('url', encodeURI(page_url))
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -142,7 +142,12 @@ async function validate_spn(tabId, job_id, silent = false) {
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
     })
     if (!silent) {
-      notify('Successfully saved! Click to view snapshot.', function(notificationId) {
+      let msg = 'Successfully saved! Click to view snapshot.'
+      // replace message if present in result
+      if (vdata.message && vdata.message.length > 0) {
+        msg = vdata.message
+      }
+      notify(msg, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
           if (notificationId === newNotificationId) {
             let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
@@ -151,7 +156,7 @@ async function validate_spn(tabId, job_id, silent = false) {
         })
       })
     }
-  } else if (!vdata.status) {
+  } else if (!vdata.status || (status === 'error')) {
     clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
@@ -466,7 +471,7 @@ function auto_save(tabId, url) {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
           //setToolbarState(tabId, 'S')
-          savePageNow(tabId, page_url, false)  // true
+          savePageNow(tabId, url, true)
         }
       }
     )
