@@ -20,7 +20,7 @@ function getTotal (captures) {
 }
 function get_details () {
   var url = getUrlByParameter('url')
-  var new_url = 'https://archive.org/services/context/metadata?url=' + url
+  var new_url = hostURL+'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     var type = response.type
     $('#details').text(type)

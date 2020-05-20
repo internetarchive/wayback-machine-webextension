@@ -5,7 +5,7 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let waybackCountCache = {}
 
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
-const hostURL = isFirefox ? 'http://firefox-api.archive.org/' : 'http://chrome-api.archive.org/'
+const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -32,7 +32,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = 'https://web.archive.org/__wb/sparkline'
+    const requestUrl = hostURL+'/__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {

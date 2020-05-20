@@ -327,7 +327,7 @@ function borrow_books() {
               })
             } else {
               // if not, fetch it again
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch(hostURL+'services/context/amazonbooks?url=' + url)
               .then(res => res.json())
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {
