@@ -300,21 +300,21 @@ function settings() {
   $('#setting-page').show()
 }
 
+function showToast(toastMsg){
+  toastMsg.classList.add('show')
+  setTimeout(function(){
+    toastMsg.classList.remove('show')
+  }, 1000)
+}
+
 function share(){
   const webstoreURL = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak'
-  function showToast(toastMsg){
-    toastMsg.classList.add('show')
-    setTimeout(function(){
-      toastMsg.classList.remove('show')
-    }, 1000)
-  }
+  const toastMsg = document.getElementsByClassName('toast')
   navigator.clipboard.writeText(webstoreURL).then(function() {
-    const toastMsg = document.getElementsByClassName('toast')
     toastMsg[0].setAttribute('id', 'toast-success')
     toastMsg[0].innerText = 'Web Store link copied.'
     showToast(toastMsg[0])
   }, function() {
-       const toastMsg = document.getElementsByClassName('toast')
        toastMsg[0].setAttribute('id', 'toast-fail')
        toastMsg[0].innerText = 'Error occurred. Try again.'
        showToast(toastMsg[0])
