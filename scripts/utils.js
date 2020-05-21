@@ -32,7 +32,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = hostURL+'/__wb/sparkline'
+    const requestUrl = hostURL+'__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -88,7 +88,7 @@ function clearCountCache() {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = 'https://archive.org/wayback/available'
+  var requestUrl = hostURL+'wayback/available'
   var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',

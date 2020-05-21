@@ -63,7 +63,7 @@ function timestamp2datetime (timestamp) {
 
 function first_archive_details () {
   var url = getUrlByParameter('url')
-  var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=1&output=json'
+  var new_url = hostURL+'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
       $('#first_archive_datetime_error').text('Data are not available')
@@ -79,7 +79,7 @@ function first_archive_details () {
 
 function recent_archive_details () {
   var url = getUrlByParameter('url')
-  var new_url = 'http://web.archive.org/cdx/search?url=' + url + '&limit=-1&output=json'
+  var new_url = hostURL+'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, function (data) {
     if (data.length == 0) {
       $('#recent_archive_datetime_error').text('Data are not available')

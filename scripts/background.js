@@ -14,7 +14,7 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
-var WB_API_URL = 'https://archive.org/wayback/available'
+var WB_API_URL = hostURL+'wayback/available'
 var newshosts = [
   'www.apnews.com',
   'www.factcheck.org',
@@ -60,7 +60,7 @@ function savePageNow(page_url, silent = false, options = []) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/',
+      fetch(hostURL+'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -87,7 +87,7 @@ function auth_check() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch('https://web.archive.org/save/',
+    fetch(hostURL+'save/',
       {
         credentials: 'include',
         method: 'POST',
@@ -115,7 +115,7 @@ async function validate_spn(job_id, silent = false) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/status',
+      fetch(hostURL+'save/status',
         {
           credentials: 'include',
           method: 'POST',
@@ -567,7 +567,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
           wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url)
+          wayback_url = hostURL+'save/' + encodeURI(page_url)
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
