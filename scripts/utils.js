@@ -15,12 +15,14 @@ const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome
  */
 function badgeCountText(count) {
   let text = ''
-  if (count < 10000) {
+  if (count < 1000) {
     text = count.toLocaleString()
+  } else if (count < 10000) {
+    text = (Math.round(count / 100) / 10.0).toLocaleString() + 'K'
   } else if (count < 1000000) {
-    text = Math.trunc(count / 1000) + 'K'
+    text = Math.round(count / 1000).toLocaleString() + 'K'
   } else if (count >= 1000000) {
-    text = (Math.trunc(count / 100000) / 10.0) + 'M'
+    text = Math.round(count / 1000000).toLocaleString() + 'M'
   }
   return text
 }
@@ -119,7 +121,7 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
-// List of excluded Urls
+// list of excluded URLs
 const excluded_urls = [
   'localhost',
   '0.0.0.0',
@@ -146,6 +148,7 @@ function isNotExcludedUrl(url) {
 }
 
 /**
+ * Extracts the latest saved Wayback URL from wmAvailabilityCheck() response.
  * @param response {object}
  * @return {string or null}
  */
@@ -158,12 +161,18 @@ function getWaybackUrlFromResponse(response) {
     response.results[0].archived_snapshots.closest.available === true &&
     response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
     isValidUrl(response.results[0].archived_snapshots.closest.url)) {
+    // not sure why we're replacing http: with https: here
     return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:')
   } else {
     return null
   }
 }
 
+/**
+ * Extracts latest saved timestamp from wmAvailabilityCheck() response.
+ * @param response {object}
+ * @return {string or null} as "yyyyMMddHHmmss"
+ */
 function getWaybackTimestampFromResponse(response) {
   if (response.results &&
     response.results[0] &&
@@ -178,6 +187,48 @@ function getWaybackTimestampFromResponse(response) {
     return null
   }
 }
+
+/**
+ * Converts a Wayback timestamp string into a Date object.
+ * @param timestamp {string} as "yyyyMMddHHmmss" in UTC time zone.
+ * @return {Date or null}
+ */
+function timestampToDate(timestamp) {
+  let date = null
+  if (timestamp && timestamp.length >= 4) {
+    date = new Date(Date.UTC(
+      Number(timestamp.substring(0, 4)), // year
+      (Number(timestamp.substring(4, 6)) || 1) - 1, // month
+      (Number(timestamp.substring(6, 8)) || 1), // day
+      Number(timestamp.substring(8, 10)), // hours
+      Number(timestamp.substring(10, 12)), // min
+      Number(timestamp.substring(12, 14)) // sec
+    ))
+    if (isNaN(date)) { return null }
+  }
+  return date
+}
+
+/**
+ * Return localized date string, or time if within last 24 hours.
+ * @param timestamp {string} as "yyyyMMddHHmmss" in UTC time zone.
+ * @return string or ''
+ */
+function viewableTimestamp(timestamp) {
+  let date = timestampToDate(timestamp)
+  let text = ''
+  if (date) {
+    if ((Date.now() - date.getTime()) > 86400000) {
+      // over 24 hours
+      text = date.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric'} ); // e.g.'5/2/2020'
+    } else {
+      // under 24 hours
+      text = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) // e.g.'7:00 PM'
+    }
+  }
+  return text
+}
+
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -282,18 +333,29 @@ function resetExtensionStorage () {
 
 if (typeof module !== 'undefined') {
   module.exports = {
+    isArray: isArray,
+    isObject: isObject,
+    getErrorMessage: getErrorMessage,
     getUrlByParameter: getUrlByParameter,
     getWaybackUrlFromResponse: getWaybackUrlFromResponse,
     isValidUrl: isValidUrl,
     isNotExcludedUrl: isNotExcludedUrl,
     wmAvailabilityCheck: wmAvailabilityCheck,
     openByWindowSetting: openByWindowSetting,
+    sleep: sleep,
+    notify: notify,
     attachTooltip: attachTooltip,
     getWaybackCount: getWaybackCount,
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
+<<<<<<< HEAD
     resetExtensionStorage: resetExtensionStorage,
     hostURL: hostURL
+=======
+    timestampToDate: timestampToDate,
+    viewableTimestamp: viewableTimestamp,
+    resetExtensionStorage: resetExtensionStorage
+>>>>>>> ee950cd3904be1358301eb0e9cca394cdbecc3b5
   }
 }

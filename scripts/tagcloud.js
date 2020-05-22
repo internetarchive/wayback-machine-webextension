@@ -24,6 +24,7 @@ function get_tags (url) {
   fetch(new_url)
     .then(response => response.json())
     .then(function (data) {
+      $('#loader_tagcloud').hide()
       if (!data.error) {
         for (let i = 0; i < data.length; i++) {
           var b = {}
@@ -73,8 +74,6 @@ function get_tags (url) {
           span.appendChild(document.createTextNode(result[i].text))
           document.getElementById('container-wordcloud').appendChild(span)
         }
-        $('#loader_tagcloud').hide()
-        $('#container-wordcloud').hide()
         $('#container-wordcloud').awesomeCloud({
           'size': {
             'grid': 1,
@@ -92,7 +91,6 @@ function get_tags (url) {
           'shape': 'square'
         })
       } else {
-        $('#loader_tagcloud').hide()
         $('#container-wordcloud').hide()
         $('#message_tagcloud').show().text('Tags Not found, Please try again later')
       }

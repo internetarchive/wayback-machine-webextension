@@ -30,6 +30,7 @@ var newshosts = [
   'www.washingtonpost.com'
 ]
 var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526]
+
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -51,10 +52,10 @@ function URLopener(open_url, url, wmIsAvailable) {
   }
 }
 
-function savePageNow(page_url, silent = false, options = []) {
+function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURIComponent(page_url))
+    data.append('url', encodeURI(page_url))
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -77,7 +78,8 @@ function savePageNow(page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
         }
-        validate_spn(res.job_id, silent)
+        setToolbarState(tabId, 'S')
+        validate_spn(tabId, res.job_id, silent)
       })
   }
 }
@@ -100,7 +102,8 @@ function auth_check() {
   return timeoutPromise
   .then(response => response.json())
 }
-async function validate_spn(job_id, silent = false) {
+
+async function validate_spn(tabId, job_id, silent = false) {
   let vdata
   let status = 'pending'
   const val_data = new URLSearchParams()
@@ -115,8 +118,8 @@ async function validate_spn(job_id, silent = false) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(hostURL+'save/status',
-        {
+      if (status === 'pending') {
+        fetch('https://web.archive.org/save/status', {
           credentials: 'include',
           method: 'POST',
           body: val_data,
@@ -124,6 +127,7 @@ async function validate_spn(job_id, silent = false) {
             'Accept': 'application/json'
           }
         }).then(resolve, reject)
+      }
     })
     timeoutPromise
       .then(response => response.json())
@@ -133,12 +137,18 @@ async function validate_spn(job_id, silent = false) {
       })
   }
   if (vdata.status === 'success') {
+    setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
     })
     if (!silent) {
-      notify('Successfully saved! Click to view snapshot.', function(notificationId) {
+      let msg = 'Successfully saved! Click to view snapshot.'
+      // replace message if present in result
+      if (vdata.message && vdata.message.length > 0) {
+        msg = vdata.message
+      }
+      notify(msg, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
           if (notificationId === newNotificationId) {
             let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
@@ -147,12 +157,12 @@ async function validate_spn(job_id, silent = false) {
         })
       })
     }
-  } else if (!vdata.status) {
+  } else if (!vdata.status || (status === 'error')) {
+    clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
     })
-
     if (!silent) {
       notify('Error: ' + vdata.message, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
@@ -260,11 +270,8 @@ chrome.webRequest.onCompleted.addListener(function (details) {
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-function getLastSaveTime(date) {
-  const year = date.substring(0, 4)
-  const month = date.substring(4, 6)
-  const day = date.substring(6, 8)
-  return `${year}-${month}-${day}`
+function getLastSaveTime(timestamp) {
+  return viewableTimestamp(timestamp)
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -278,7 +285,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         URLopener(open_url, url, true)
       } else {
         let options = (message.options !== null) ? message.options : []
-        savePageNow(page_url, false, options)
+        savePageNow(null, page_url, false, options)
         return true
       }
     }
@@ -456,16 +463,16 @@ function auto_save(tabId, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
       function () {
-        // set default toolbar icon if page exists in archive
+        // check if page is now in archive after auto-saved
         if (getToolbarState(tabId) === 'S') {
-          setToolbarState(tabId, 'archive')
+          setToolbarState(tabId, 'check')
         }
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          setToolbarState(tabId, 'S')
-          savePageNow(page_url, true)
+          //setToolbarState(tabId, 'S')
+          savePageNow(tabId, url, true)
         }
       }
     )

@@ -136,7 +136,7 @@ label[for=tagcloud] {
 
 .btn-docs {
     float: right;
-    boder: 1px solid #888;
+    border: 1px solid #888;
     border-radius: 50%;
     transform: scale(.7);
     font-size: 12px;
