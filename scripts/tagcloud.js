@@ -20,12 +20,13 @@ function get_tags (url) {
   var not_display3 = not_display4 + ' extension'
   var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
   var new_url = 'https://archive.org/services/context/tagcloud?url=' + toBeUsedAsURL
-  $('#loader_tagcloud').show()
+  $('#container-wordcloud').hide()
   fetch(new_url)
     .then(response => response.json())
     .then(function (data) {
+      $('#container-wordcloud').show()
       $('#loader_tagcloud').hide()
-      if (!data.error) {
+      if (!data.error && data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           var b = {}
           if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
