@@ -349,13 +349,9 @@ if (typeof module !== 'undefined') {
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
-<<<<<<< HEAD
-    resetExtensionStorage: resetExtensionStorage,
-    hostURL: hostURL
-=======
+    hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,
     resetExtensionStorage: resetExtensionStorage
->>>>>>> ee950cd3904be1358301eb0e9cca394cdbecc3b5
   }
 }
