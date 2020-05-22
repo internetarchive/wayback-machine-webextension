@@ -79,9 +79,6 @@ function get_tags (url) {
             'grid': 1,
             'factor': 4
           },
-          'color': {
-            'background': '#036'
-          },
           'options': {
             'color': 'random-light',
             'rotationRatio': 0.5,
