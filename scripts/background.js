@@ -14,7 +14,7 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
-var WB_API_URL = 'https://archive.org/wayback/available'
+var WB_API_URL = hostURL+'wayback/available'
 var newshosts = [
   'www.apnews.com',
   'www.factcheck.org',
@@ -61,7 +61,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/',
+      fetch(hostURL+'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -89,7 +89,7 @@ function auth_check() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch('https://web.archive.org/save/',
+    fetch(hostURL+'save/',
       {
         credentials: 'include',
         method: 'POST',
@@ -190,8 +190,8 @@ chrome.runtime.onStartup.addListener(function(details) {
   })
 })
 
-chrome.runtime.onInstalled.addListener((details)=>{
-  resetExtensionStorage();
+chrome.runtime.onInstalled.addListener((details) => {
+  resetExtensionStorage()
 })
 
 chrome.runtime.onInstalled.addListener(function(details) {
@@ -312,7 +312,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
-    let host = 'https://archive.org/services/context/books?url='
+    let host = hostURL + 'services/context/books?url='
     let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
@@ -326,7 +326,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       .then(data => sendResponse(data))
     return true
   } else if (message.message === 'tvnews') {
-    let url = 'https://archive.org/services/context/tvnews?url=' + message.article
+    let url = hostURL + 'services/context/tvnews?url=' + message.article
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -368,7 +368,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-  if (info.status === "complete") {
+  if (info.status === 'complete') {
     chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
       // wayback count
       if (event.wm_count === true) {
@@ -400,7 +400,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             const news_host = new URL(url).hostname
             // checking resource of amazon books
             if (url.includes('www.amazon')) {
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
@@ -505,7 +505,7 @@ function updateWaybackCountBadge(tabId, url) {
  */
 function setToolbarIcon(name) {
   const path = 'images/toolbar/toolbar-icon-'
-  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name;
+  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
   let details = {
     '16': (path + n + '16.png'),
     '24': (path + n + '24.png'),
@@ -574,7 +574,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
           wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url)
+          wayback_url = hostURL+'save/' + encodeURI(page_url)
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
