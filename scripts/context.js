@@ -42,7 +42,7 @@ function openContextFeature(evt, feature) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show()
   evt.currentTarget.className += ' active'
-  return(feature)
+  return feature
 }
 
 function singlePageView() {
@@ -76,9 +76,6 @@ function singlePageView() {
           })
         })
         if (!first_feature) {
-          chrome.storage.sync.get(['featureTabId'], function(result) {
-            console.log('Value received from storage' + result.featureTabId);
-          })
           first_feature = featureTabId
         }
       }
