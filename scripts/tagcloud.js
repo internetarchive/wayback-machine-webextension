@@ -24,8 +24,8 @@ function get_tags (url) {
   fetch(new_url)
     .then(response => response.json())
     .then(function (data) {
-      $('#container-wordcloud').show()
       $('#loader_tagcloud').hide()
+      $('#container-wordcloud').show()
       if (!data.error && data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           var b = {}
