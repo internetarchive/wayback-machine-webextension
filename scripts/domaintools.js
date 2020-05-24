@@ -14,7 +14,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
 }
 function get_domainTool () {
   var url = getUrlByParameter('url')
-  var domaintools_api = 'https://archive.org/services/context/domaintools?url=' + url
+  var domaintools_api = hostURL+'context/domaintools?url=' + url
   $.getJSON(domaintools_api, function (data) {
     var parent = $('#show_domaintools_data')
     if (data.status !== 'error') {

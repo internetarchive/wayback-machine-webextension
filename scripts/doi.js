@@ -82,7 +82,7 @@ function makeEntry (data) {
 function createPage () {
   let container = $('#container-whole-doi')
   const url = getUrlByParameter('url')
-  $.getJSON('https://archive.org/services/context/papers?url=' + url, function(response) {
+  $.getJSON(hostURL + 'context/papers?url=' + url, function(response) {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
       $('#doi-heading').html(response.message)
