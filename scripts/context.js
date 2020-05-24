@@ -57,7 +57,6 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
-    let first_feature = null
     for (let i = 0; i < features.length; i++) {
       let feature = features[i]
       let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -70,18 +69,20 @@ function singlePageView() {
       } else {
         contexts_dic[feature]()
         $(featureTabId).click(function(event) {
-          let featureTabId = openContextFeature(event, featureId) + '_tab'
-          chrome.storage.sync.set({featureTabId: featureTabId}, function() {
-            console.log('Value is set to ' + featureTabId);
+          let openedFeature = openContextFeature(event, featureId) + '_tab'
+          chrome.storage.sync.set({openedFeature: openedFeature}, function() {
           })
         })
-        if (!first_feature) {
-          first_feature = featureTabId
-        }
+        //Set the default feature to be opened
+        chrome.storage.sync.get(['openedFeature'], function(result) {
+          openedFeature = result.openedFeature
+          if (openedFeature) {
+            $(openedFeature).click()
+          } else {
+            $('#Alexa_tab').click()
+          }
+        })
       }
-    }
-    if (first_feature) {
-      $(first_feature).click()
     }
   })
 }

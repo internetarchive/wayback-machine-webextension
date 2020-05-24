@@ -424,7 +424,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
 // Updating the context page based on every tab the user is selecting
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count', 'featureTabId'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
       clearToolbarState(info.tabId)
@@ -436,7 +436,6 @@ chrome.tabs.onActivated.addListener(function (info) {
       updateWaybackCountBadge(info.tabId, null)
     }
     if (event.auto_update_context === true) {
-      console.log(event.featureTabId + ' from background.js')
       chrome.tabs.get(info.tabId, function (tab) {
         if (tabIdPromise) {
           tabIdPromise.then(function (id) {
