@@ -83,6 +83,7 @@ p {
     padding: 5px;
     width: 680px;
     height: 680px;
+    display: none;
 }
 
 #public_on {
