@@ -4,6 +4,9 @@ let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let waybackCountCache = {}
 
+let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
+const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
+
 /**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
@@ -31,7 +34,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = 'https://web.archive.org/__wb/sparkline'
+    const requestUrl = hostURL+'__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -87,7 +90,7 @@ function clearCountCache() {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = 'https://archive.org/wayback/available'
+  var requestUrl = hostURL+'wayback/available'
   var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
@@ -346,6 +349,7 @@ if (typeof module !== 'undefined') {
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
+    hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,
     resetExtensionStorage: resetExtensionStorage
