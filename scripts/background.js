@@ -14,7 +14,7 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
-var WB_API_URL = hostURL+'wayback/available'
+var WB_API_URL = hostURL + 'wayback/available'
 var newshosts = [
   'www.apnews.com',
   'www.factcheck.org',
@@ -61,7 +61,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(hostURL+'save/',
+      fetch(hostURL + 'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -89,7 +89,7 @@ function auth_check() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch(hostURL+'save/',
+    fetch(hostURL + 'save/',
       {
         credentials: 'include',
         method: 'POST',
@@ -216,14 +216,18 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.sendMessage(details.tabId, {
-        type: 'SHOW_BANNER',
-        wayback_url: wayback_url,
-        page_url: url,
-        status_code: 999
-      })
-    }, function () { })
+    chrome.storage.sync.get(['not_found_popup'], function(event) {
+      if (event.not_found_popup === true) {
+        wmAvailabilityCheck(details.url, function (wayback_url, url) {
+          chrome.tabs.sendMessage(details.tabId, {
+            type: 'SHOW_BANNER',
+            wayback_url: wayback_url,
+            page_url: url,
+            status_code: 999
+          })
+        }, function () { })
+      }
+    })
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
@@ -263,7 +267,11 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
-          tabIsReady(tab.incognito)
+          chrome.storage.sync.get(['not_found_popup'], function(event) {
+            if (event.not_found_popup === true) {
+              tabIsReady(tab.incognito)
+            }
+          })
         })
       }
     })
@@ -471,7 +479,7 @@ function auto_save(tabId, url) {
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          //setToolbarState(tabId, 'S')
+          // setToolbarState(tabId, 'S')
           savePageNow(tabId, url, true)
         }
       }
@@ -574,7 +582,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
           wmIsAvailable = false
-          wayback_url = hostURL+'save/' + encodeURI(page_url)
+          wayback_url = hostURL + 'save/' + encodeURI(page_url)
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)

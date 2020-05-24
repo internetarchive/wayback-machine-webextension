@@ -34,7 +34,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = hostURL+'__wb/sparkline'
+    const requestUrl = hostURL + '__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -90,7 +90,7 @@ function clearCountCache() {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = hostURL+'wayback/available'
+  var requestUrl = hostURL + 'wayback/available'
   var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
@@ -220,7 +220,7 @@ function viewableTimestamp(timestamp) {
   if (date) {
     if ((Date.now() - date.getTime()) > 86400000) {
       // over 24 hours
-      text = date.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric'} ); // e.g.'5/2/2020'
+      text = date.toLocaleDateString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) // e.g.'5/2/2020'
     } else {
       // under 24 hours
       text = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) // e.g.'7:00 PM'
@@ -228,7 +228,6 @@ function viewableTimestamp(timestamp) {
   }
   return text
 }
-
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -327,7 +326,8 @@ function resetExtensionStorage () {
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
-    showall: false
+    showall: false,
+    not_found_popup: true
   })
 }
 
