@@ -130,7 +130,8 @@ const excluded_urls = [
   'web.archive.org',
   'about:debugging',
   'about:newtab',
-  'about:preferences'
+  'about:preferences',
+  'moz-extension://'
 ]
 
 // Function to check whether it is a valid URL or not

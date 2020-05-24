@@ -69,13 +69,13 @@ function singlePageView() {
       } else {
         contexts_dic[feature]()
         $(featureTabId).click(function(event) {
-          let openedFeature = openContextFeature(event, featureId) + '_tab'
-          chrome.storage.sync.set({openedFeature: openedFeature}, function() {
+          let selectedFeature = openContextFeature(event, featureId) + '_tab'
+          chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
           })
         })
         //Set the default feature to be opened
-        chrome.storage.sync.get(['openedFeature'], function(result) {
-          openedFeature = result.openedFeature
+        chrome.storage.sync.get(['selectedFeature'], function(result) {
+          let openedFeature = result.selectedFeature
           if (openedFeature) {
             $(openedFeature).click()
           } else {
