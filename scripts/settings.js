@@ -33,7 +33,8 @@ function initializeSettings () {
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
-    showall: false
+    showall: false,
+    not_found_popup: true
   }, restoreOptions)
 }
 
@@ -52,6 +53,7 @@ function restoreOptions (items) {
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
+  $('#not-found-popup').prop('checked', items.not_found_popup)
 }
 
 function saveOptions () {
@@ -71,7 +73,8 @@ function saveOptions () {
     wbmsummary: $('#wbmsummary').prop('checked'),
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
-    showall: $('#showall').prop('checked')
+    showall: $('#showall').prop('checked'),
+    not_found_popup: $('#not-found-popup').prop('checked')
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCount' })
@@ -156,6 +159,7 @@ function addDocs () {
     let docs = {
       'resource': 'Enables extension to notify and display archived resources on relevant urls, including Amazon books, Wikipedia, and select News outlets. ',
       'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
+      'not-found-popup': 'Enabling this setting will show the popup when you are a 404 page. By default it is enabled',
       'wm-count-setting': 'Displays count of snapshots of the current page stored in the Wayback Machine.',
       'auto-archive': 'Enables extension to identify and save URLs that have not previously been saved on the Wayback Machine.',
       'email-outlinks-setting': 'Enable to send an email of results when Outlinks option is selected.',
