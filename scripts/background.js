@@ -78,7 +78,6 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
         }
-        setToolbarState(tabId, 'S')
         validate_spn(tabId, res.job_id, silent)
       })
   }
@@ -105,20 +104,26 @@ function auth_check() {
 
 async function validate_spn(tabId, job_id, silent = false) {
   let vdata
-  let status = 'pending'
+  let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
 
-  while (status === 'pending') {
+  while ((status === 'start') || (status === 'pending')) {
+
+    // update UI
     chrome.runtime.sendMessage({
       message: 'save_start'
     })
+    if (status === 'pending') {
+      setToolbarState(tabId, 'S')
+    }
+
     await sleep(1000)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      if (status === 'pending') {
+      if ((status === 'start') || (status === 'pending')) {
         fetch('https://web.archive.org/save/status', {
           credentials: 'include',
           method: 'POST',
@@ -136,6 +141,7 @@ async function validate_spn(tabId, job_id, silent = false) {
         vdata = data
       })
   }
+
   if (vdata.status === 'success') {
     setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
@@ -352,8 +358,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
     })
   } else if (message.message === 'changeBadge') {
-    // Used to change bage for auto-archive feature
-    setToolbarState(message.tabId, 'check')
+    // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
     tabIdPromise = new Promise(function (resolve) {
@@ -473,13 +478,11 @@ function auto_save(tabId, url) {
       function () {
         // check if page is now in archive after auto-saved
         if (getToolbarState(tabId) === 'S') {
-          setToolbarState(tabId, 'check')
         }
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          // setToolbarState(tabId, 'S')
           savePageNow(tabId, url, true)
         }
       }
