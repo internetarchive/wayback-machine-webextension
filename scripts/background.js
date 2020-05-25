@@ -222,8 +222,8 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.sync.get(['not_found_popup'], function(event) {
-      if (event.not_found_popup === true) {
+    chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+      if (event.not_found_popup === true && event.agreement === true) {
         wmAvailabilityCheck(details.url, function (wayback_url, url) {
           chrome.tabs.sendMessage(details.tabId, {
             type: 'SHOW_BANNER',
@@ -273,8 +273,8 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
-          chrome.storage.sync.get(['not_found_popup'], function(event) {
-            if (event.not_found_popup === true) {
+          chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+            if (event.not_found_popup === true && event.agreement === true) {
               tabIsReady(tab.incognito)
             }
           })
