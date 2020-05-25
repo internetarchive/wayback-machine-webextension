@@ -41,6 +41,7 @@ function openContextFeature(evt, feature) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show()
   evt.currentTarget.className += ' active'
+  return feature
 }
 
 function singlePageView() {
@@ -55,7 +56,6 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
-    let first_feature = null
     for (let i = 0; i < features.length; i++) {
       let feature = features[i]
       let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -68,15 +68,20 @@ function singlePageView() {
       } else {
         contexts_dic[feature]()
         $(featureTabId).click(function(event) {
-          openContextFeature(event, featureId)
+          let selectedFeature = openContextFeature(event, featureId) + '_tab'
+          chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+          })
         })
-        if (!first_feature) {
-          first_feature = featureTabId
-        }
+        //Set the default feature to be opened
+        chrome.storage.sync.get(['selectedFeature'], function(result) {
+          let openedFeature = result.selectedFeature
+          if (openedFeature) {
+            $(openedFeature).click()
+          } else {
+            $('#Alexa_tab').click()
+          }
+        })
       }
-    }
-    if (first_feature) {
-      $(first_feature).click()
     }
   })
 }
