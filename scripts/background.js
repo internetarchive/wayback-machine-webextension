@@ -16,7 +16,7 @@ let toolbarIconState = {}
 let tabIdPromise
 var WB_API_URL = 'https://archive.org/wayback/available'
 var newshosts = [
-  'www.apnews.com',
+  'apnews.com',
   'www.factcheck.org',
   'www.forbes.com',
   'www.huffpost.com',
