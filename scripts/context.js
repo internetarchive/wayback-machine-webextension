@@ -21,7 +21,6 @@
 function get_tagCloud() {
   const url = getUrlByParameter('url')
   get_tags(url)
-  $('#loader_tagcloud').hide()
 }
 
 function get_hypothesis() {

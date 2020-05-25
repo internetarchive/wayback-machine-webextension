@@ -19,13 +19,15 @@ function get_tags (url) {
   var not_display2 = not_display1 + ' extension'
   var not_display3 = not_display4 + ' extension'
   var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
+
   var new_url = hostURL+ 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())
     .then(function (data) {
       $('#loader_tagcloud').hide()
-      if (!data.error) {
+      if (!data.error && data.length > 0) {
+        $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
           if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
@@ -88,7 +90,6 @@ function get_tags (url) {
           'shape': 'square'
         })
       } else {
-        $('#container-wordcloud').hide()
         $('#message_tagcloud').show().text('Tags Not found, Please try again later')
       }
     })
