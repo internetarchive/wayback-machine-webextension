@@ -38,11 +38,9 @@
              <div class="col-sm col-tablinks">
                 <button id="Annotations_tab">Annotations (Hypothes.is)</button>
              </div>
-             <!-- Tagcloud not working 
              <div class="col-sm col-tablinks">
                 <button id="Tagcloud_tab">Tag Cloud</button>
              </div>
-             -->
         </div>
     </div>
 
@@ -132,9 +130,11 @@
     <div class="container tabcontent" id="Tagcloud">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <h2>Tag-Cloud</h2>
+                <h2>Tag Cloud</h2>
                 <div class="loader" id="loader_tagcloud"></div>
-                <div id="container-wordcloud" class="wordcloud"></div>
+                <div class="wordcloud">
+                    <div id="container-wordcloud"></div>
+                </div>
                 <div id="message_tagcloud" style="display:none;margin:10px 0"></div>
             </div>
         </div>

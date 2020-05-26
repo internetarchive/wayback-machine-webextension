@@ -64,7 +64,7 @@ function save_now() {
     }
     chrome.runtime.sendMessage({
       message: 'openurl',
-      wayback_url: 'https://web.archive.org/save/',
+      wayback_url: hostURL+'save/',
       page_url: url,
       options: options,
       method: 'save'
@@ -238,7 +238,7 @@ function arrow_key_access() {
 
 function display_list(key_word) {
   $('#suggestion-box').text('').hide()
-  $.getJSON('https://web.archive.org/__wb/search/host?q=' + key_word, function (data) {
+  $.getJSON(hostURL+'__wb/search/host?q=' + key_word, function (data) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
@@ -327,7 +327,7 @@ function borrow_books() {
               })
             } else {
               // if not, fetch it again
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch(hostURL+'services/context/amazonbooks?url=' + url)
               .then(res => res.json())
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {
@@ -409,6 +409,7 @@ function checkExcluded() {
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
       $('#ctxbox').addClass('flip-inside')
+      $('#url-not-supported-message').text('URL not supported')
     }
   })
 }

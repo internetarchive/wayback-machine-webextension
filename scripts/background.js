@@ -14,8 +14,8 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
-var WB_API_URL = 'https://archive.org/wayback/available'
-var newshosts = [
+var WB_API_URL = hostURL + 'wayback/available'
+var newshosts = new Set([
   'apnews.com',
   'www.factcheck.org',
   'www.forbes.com',
@@ -28,8 +28,8 @@ var newshosts = [
   'www.usatoday.com',
   'www.vox.com',
   'www.washingtonpost.com'
-]
-var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526]
+])
+
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -51,16 +51,16 @@ function URLopener(open_url, url, wmIsAvailable) {
   }
 }
 
-function savePageNow(page_url, silent = false, options = []) {
+function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURIComponent(page_url))
+    data.append('url', encodeURI(page_url))
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/',
+      fetch(hostURL + 'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -77,7 +77,7 @@ function savePageNow(page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
         }
-        validate_spn(res.job_id, silent)
+        validate_spn(tabId, res.job_id, silent)
       })
   }
 }
@@ -87,7 +87,7 @@ function auth_check() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch('https://web.archive.org/save/',
+    fetch(hostURL + 'save/',
       {
         credentials: 'include',
         method: 'POST',
@@ -100,23 +100,30 @@ function auth_check() {
   return timeoutPromise
   .then(response => response.json())
 }
-async function validate_spn(job_id, silent = false) {
+
+async function validate_spn(tabId, job_id, silent = false) {
   let vdata
-  let status = 'pending'
+  let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
 
-  while (status === 'pending') {
+  while ((status === 'start') || (status === 'pending')) {
+
+    // update UI
     chrome.runtime.sendMessage({
       message: 'save_start'
     })
+    if (status === 'pending') {
+      setToolbarState(tabId, 'S')
+    }
+
     await sleep(1000)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/status',
-        {
+      if ((status === 'start') || (status === 'pending')) {
+        fetch('https://web.archive.org/save/status', {
           credentials: 'include',
           method: 'POST',
           body: val_data,
@@ -124,6 +131,7 @@ async function validate_spn(job_id, silent = false) {
             'Accept': 'application/json'
           }
         }).then(resolve, reject)
+      }
     })
     timeoutPromise
       .then(response => response.json())
@@ -132,13 +140,20 @@ async function validate_spn(job_id, silent = false) {
         vdata = data
       })
   }
+
   if (vdata.status === 'success') {
+    setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
     })
     if (!silent) {
-      notify('Successfully saved! Click to view snapshot.', function(notificationId) {
+      let msg = 'Successfully saved! Click to view snapshot.'
+      // replace message if present in result
+      if (vdata.message && vdata.message.length > 0) {
+        msg = vdata.message
+      }
+      notify(msg, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
           if (notificationId === newNotificationId) {
             let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
@@ -147,12 +162,12 @@ async function validate_spn(job_id, silent = false) {
         })
       })
     }
-  } else if (!vdata.status) {
+  } else if (!vdata.status || (status === 'error')) {
+    clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
     })
-
     if (!silent) {
       notify('Error: ' + vdata.message, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
@@ -180,8 +195,8 @@ chrome.runtime.onStartup.addListener(function(details) {
   })
 })
 
-chrome.runtime.onInstalled.addListener((details)=>{
-  resetExtensionStorage();
+chrome.runtime.onInstalled.addListener((details) => {
+  resetExtensionStorage()
 })
 
 chrome.runtime.onInstalled.addListener(function(details) {
@@ -206,14 +221,18 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.sendMessage(details.tabId, {
-        type: 'SHOW_BANNER',
-        wayback_url: wayback_url,
-        page_url: url,
-        status_code: 999
-      })
-    }, function () { })
+    chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+      if (event.not_found_popup === true && event.agreement === true) {
+        wmAvailabilityCheck(details.url, function (wayback_url, url) {
+          chrome.tabs.sendMessage(details.tabId, {
+            type: 'SHOW_BANNER',
+            wayback_url: wayback_url,
+            page_url: url,
+            status_code: 999
+          })
+        }, function () { })
+      }
+    })
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
@@ -223,7 +242,7 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
-      HTTP_CODE.includes(details.statusCode) && isNotExcludedUrl(details.url)) {
+      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
@@ -253,7 +272,11 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
-          tabIsReady(tab.incognito)
+          chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+            if (event.not_found_popup === true && event.agreement === true) {
+              tabIsReady(tab.incognito)
+            }
+          })
         })
       }
     })
@@ -275,7 +298,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         URLopener(open_url, url, true)
       } else {
         let options = (message.options !== null) ? message.options : []
-        savePageNow(page_url, false, options)
+        savePageNow(null, page_url, false, options)
         return true
       }
     }
@@ -302,7 +325,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
-    let host = 'https://archive.org/services/context/books?url='
+    let host = hostURL + 'services/context/books?url='
     let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
@@ -316,7 +339,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       .then(data => sendResponse(data))
     return true
   } else if (message.message === 'tvnews') {
-    let url = 'https://archive.org/services/context/tvnews?url=' + message.article
+    let url = hostURL + 'services/context/tvnews?url=' + message.article
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -334,8 +357,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
     })
   } else if (message.message === 'changeBadge') {
-    // Used to change bage for auto-archive feature
-    setToolbarState(message.tabId, 'check')
+    // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
     tabIdPromise = new Promise(function (resolve) {
@@ -358,7 +380,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-  if (info.status === "complete") {
+  if (info.status === 'complete') {
     chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
       // wayback count
       if (event.wm_count === true) {
@@ -390,7 +412,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             const news_host = new URL(url).hostname
             // checking resource of amazon books
             if (url.includes('www.amazon')) {
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
@@ -403,7 +425,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
               setToolbarState(tabId, 'R')
             // checking resource of tv news
-            } else if (newshosts.includes(news_host)) {
+            } else if (newshosts.has(news_host)) {
               setToolbarState(tabId, 'R')
             }
           }
@@ -453,16 +475,14 @@ function auto_save(tabId, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
       function () {
-        // set default toolbar icon if page exists in archive
+        // check if page is now in archive after auto-saved
         if (getToolbarState(tabId) === 'S') {
-          setToolbarState(tabId, 'archive')
         }
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          setToolbarState(tabId, 'S')
-          savePageNow(page_url, true)
+          savePageNow(tabId, url, true)
         }
       }
     )
@@ -495,7 +515,7 @@ function updateWaybackCountBadge(tabId, url) {
  */
 function setToolbarIcon(name) {
   const path = 'images/toolbar/toolbar-icon-'
-  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name;
+  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
   let details = {
     '16': (path + n + '16.png'),
     '24': (path + n + '24.png'),
@@ -524,7 +544,6 @@ function clearToolbarState(tabId) {
 function updateToolbarIcon(tabId) {
   setToolbarIcon(getToolbarState(tabId))
 }
-
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
@@ -565,7 +584,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
           wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url)
+          wayback_url = hostURL + 'save/' + encodeURI(page_url)
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)

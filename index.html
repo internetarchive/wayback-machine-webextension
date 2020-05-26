@@ -23,6 +23,8 @@
       <div>
         <div class="text-center">
 
+          <div id ="url-not-supported-message"></div>
+
           <div id="wayback-count-label">&nbsp;</div>
 
           <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
@@ -183,6 +185,12 @@
             <span class="toggle">Enable Relevant Archived Resources</span>
           </div>
         </label>
+        <label class="setting-switch" for="not-found-popup">
+          <input type="checkbox" id="not-found-popup">
+          <div class="setting-text-box">
+            <span class="toggle">Enable Popup for 404 Pages</span>
+          </div>
+        </label>
         <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
           <div class="setting-text-box">
@@ -213,7 +221,7 @@
           </div>
         </label>
         <br>
-        <!-- Tagcloud API not working 
+        <!-- Domaintools API not working 
         <label class="setting-switch ctx" for="domaintools">
           <input type="checkbox" name="context" id="domaintools" class="only">
           <div class="setting-text-box">
@@ -235,7 +243,6 @@
             <span class="enable">Annotations</span>
           </div>
         </label>
-        <!-- Tagcloud API not working 
         <br>
         <label class="setting-switch ctx" for="tagcloud">
           <input type="checkbox" name="context" id="tagcloud" class="only">
@@ -243,7 +250,6 @@
             <span class="enable">Tag Cloud</span>
           </div>
         </label>
-        -->
       </div>
 
     </div>

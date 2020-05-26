@@ -4,6 +4,9 @@ let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let waybackCountCache = {}
 
+let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
+const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
+
 /**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
@@ -31,7 +34,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = 'https://web.archive.org/__wb/sparkline'
+    const requestUrl = hostURL + '__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
@@ -87,7 +90,7 @@ function clearCountCache() {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = 'https://archive.org/wayback/available'
+  var requestUrl = hostURL + 'wayback/available'
   var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
@@ -130,7 +133,8 @@ const excluded_urls = [
   'web.archive.org',
   'about:debugging',
   'about:newtab',
-  'about:preferences'
+  'about:preferences',
+  'moz-extension://'
 ]
 
 // Function to check whether it is a valid URL or not
@@ -217,7 +221,7 @@ function viewableTimestamp(timestamp) {
   if (date) {
     if ((Date.now() - date.getTime()) > 86400000) {
       // over 24 hours
-      text = date.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric'} ); // e.g.'5/2/2020'
+      text = date.toLocaleDateString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) // e.g.'5/2/2020'
     } else {
       // under 24 hours
       text = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) // e.g.'7:00 PM'
@@ -225,7 +229,6 @@ function viewableTimestamp(timestamp) {
   }
   return text
 }
-
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -324,7 +327,8 @@ function resetExtensionStorage () {
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
-    showall: false
+    showall: false,
+    not_found_popup: true
   })
 }
 
@@ -346,6 +350,7 @@ if (typeof module !== 'undefined') {
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
+    hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,
     resetExtensionStorage: resetExtensionStorage

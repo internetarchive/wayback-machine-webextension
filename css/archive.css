@@ -34,6 +34,10 @@
     right: 10px;
 }
 
+#close {
+    cursor: pointer;
+}
+
 #logo {
     display: block;
     position: relative;

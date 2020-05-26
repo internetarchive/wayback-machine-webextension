@@ -19,12 +19,15 @@ function get_tags (url) {
   var not_display2 = not_display1 + ' extension'
   var not_display3 = not_display4 + ' extension'
   var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
-  var new_url = 'https://archive.org/services/context/tagcloud?url=' + toBeUsedAsURL
+
+  var new_url = hostURL+ 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())
     .then(function (data) {
-      if (!data.error) {
+      $('#loader_tagcloud').hide()
+      if (!data.error && data.length > 0) {
+        $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
           if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
@@ -73,15 +76,10 @@ function get_tags (url) {
           span.appendChild(document.createTextNode(result[i].text))
           document.getElementById('container-wordcloud').appendChild(span)
         }
-        $('#loader_tagcloud').hide()
-        $('#container-wordcloud').hide()
         $('#container-wordcloud').awesomeCloud({
           'size': {
             'grid': 1,
             'factor': 4
-          },
-          'color': {
-            'background': '#036'
           },
           'options': {
             'color': 'random-light',
@@ -92,8 +90,6 @@ function get_tags (url) {
           'shape': 'square'
         })
       } else {
-        $('#loader_tagcloud').hide()
-        $('#container-wordcloud').hide()
         $('#message_tagcloud').show().text('Tags Not found, Please try again later')
       }
     })

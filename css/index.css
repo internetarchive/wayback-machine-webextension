@@ -57,7 +57,7 @@ hr {
     color: #222;
 }
 
-#wayback-count-label {
+#wayback-count-label, #url-not-supported-message {
     font-size: 9pt;
     color: #222;
 }
@@ -337,7 +337,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-label {
+    #wayback-count-label,#url-not-supported-message {
         color: #eee;
     }
 
