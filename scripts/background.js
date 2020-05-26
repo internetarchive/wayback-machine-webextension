@@ -15,7 +15,7 @@ var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var newshosts = [
+var newshosts = new Set([
   'www.apnews.com',
   'www.factcheck.org',
   'www.forbes.com',
@@ -28,7 +28,7 @@ var newshosts = [
   'www.usatoday.com',
   'www.vox.com',
   'www.washingtonpost.com'
-]
+])
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -425,7 +425,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
               setToolbarState(tabId, 'R')
             // checking resource of tv news
-            } else if (newshosts.includes(news_host)) {
+            } else if (newshosts.has(news_host)) {
               setToolbarState(tabId, 'R')
             }
           }
