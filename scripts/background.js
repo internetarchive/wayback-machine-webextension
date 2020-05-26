@@ -180,7 +180,7 @@ async function validate_spn(tabId, job_id, silent = false) {
 }
 
 chrome.storage.sync.set({
-  newshosts: newshosts
+  newshosts: Array.from(newshosts)
 })
 /**
  *
