@@ -10,13 +10,23 @@ function get_alexa () {
   $.get(alexa_url + url, function (xml) {
     var name = xml.getElementsByTagName('ALEXA')[0].getAttribute('URL')
     $('#alexa_name').text(name)
-    if (xml.getElementsByTagName('POPULARITY')) {
-      var rank = xml.getElementsByTagName('POPULARITY')[0].getAttribute('TEXT')
-      $('#alexa_rank').text(rank)
-    }
-    if (xml.getElementsByTagName('COUNTRY')[0]) {
-      var country = xml.getElementsByTagName('COUNTRY')[0].getAttribute('NAME')
-      $('#alexa_country').text(country)
+    var details = xml.getElementsByTagName('SD')[0]
+    if (details) {
+      $('.error').hide()
+      let popularity = xml.getElementsByTagName('POPULARITY')
+      let country_exists = xml.getElementsByTagName('COUNTRY')
+      if (popularity) {
+        let rank = popularity[0].getAttribute('TEXT')
+        $('#alexa_rank').text(rank)
+      }
+      if (country_exists) {
+        let country = country_exists[0].getAttribute('NAME')
+        $('#alexa_country').text(country)
+      }
+    } else {
+      $('.error').text('No More Data Found')
+      $('.rank').hide()
+      $('.country').hide()
     }
     var rl = xml.getElementsByTagName('RL')
     const TITLE_LEN = 26
