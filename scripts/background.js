@@ -29,7 +29,6 @@ var newshosts = new Set([
   'www.vox.com',
   'www.washingtonpost.com'
 ])
-var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526]
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -243,7 +242,7 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
-      HTTP_CODE.includes(details.statusCode) && isNotExcludedUrl(details.url)) {
+      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
