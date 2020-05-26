@@ -398,10 +398,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
-      let tagcloudUrl = new URL(contextUrl)
       received_url = received_url.replace(/^https?:\/\//, '')
-      var last_index = received_url.indexOf('/')
-      var url = received_url.slice(0, last_index)
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
