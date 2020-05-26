@@ -178,6 +178,11 @@ a.btn-social, .btn-social {
     margin: 10px 6px;
     width: 72px;
 }
+.btn-social.btn-xs {
+    height: 26px;
+    width: 26px;
+    padding: 1px 7px;
+}
 
 .btn-facebook {
     background-color: #3b5998;
@@ -199,6 +204,21 @@ a.btn-social, .btn-social {
 .btn-linkedin:hover {
     background-color: #4a8aff;
 }
+.btn-copy, #toast-success {
+    background-color: #9dc183;
+    color: #fff;
+}
+
+.btn-copy:hover, #toast-success:hover {
+    background-color: #b3cca1;
+}
+
+.btn-email {
+    background-color: #FF8E5B;
+}
+.btn-email:hover {
+    background-color: #ffab84;
+}
 
 /* button sizes */
 
@@ -219,12 +239,12 @@ a.btn-social, .btn-social {
 
 /* button colors */
 
-.btn-red, button.selected {
+.btn-red, button.selected, #toast-fail {
     background-color: #9A3B38 !important;
     border: 1px solid #BF4946 !important;
     color: #eee !important;
 }
-.btn-red:hover, button.selected:hover {
+.btn-red:hover, button.selected:hover, #toast-fail:hover {
     background-color: #AA4B48 !important;
 }
 
@@ -306,9 +326,26 @@ a.btn-social, .btn-social {
 .flip-back {
     transform: rotateX(180deg);
 }
+
 .related_archived_resources{
     margin-bottom: 10px;
     display: none;
+}
+
+.toast {
+    position: fixed;
+    bottom: 18%;
+    right: 7px;
+    padding: 6px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    z-index: 999;
+    visibility: hidden;
+}
+
+.show{
+    visibility: visible;
 }
 
 /* dark mode */

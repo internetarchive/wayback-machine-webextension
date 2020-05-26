@@ -143,6 +143,13 @@ function view_all() {
   })
 }
 
+function showToast(toastMsg){
+  toastMsg.classList.add('show')
+  setTimeout(function(){
+    toastMsg.classList.remove('show')
+  }, 1000)
+}
+
 function social_share(eventObj) {
   var parent = eventObj.target.parentNode
   var id = parent.getAttribute('id')
@@ -158,14 +165,29 @@ function social_share(eventObj) {
     }
     var open_url = ''
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
-      if (id.includes('fb')) {
-        open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
-      } else if (id.includes('twit')) {
-        open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
-      } else if (id.includes('linkedin')) {
-        open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+      if (id.includes('copy')) {
+        const toastMsg = document.getElementsByClassName('toast')
+        navigator.clipboard.writeText(sharing_url).then(function() {
+          toastMsg[0].setAttribute('id', 'toast-success')
+          toastMsg[0].innerText = 'Page link copied.'
+          showToast(toastMsg[0])
+        }, function() {
+          toastMsg[0].setAttribute('id', 'toast-fail')
+          toastMsg[0].innerText = 'Error occurred. Try again.'
+          showToast(toastMsg[0])
+        })
+      } else {
+        if (id.includes('fb')) {
+          open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
+        } else if (id.includes('twit')) {
+          open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
+        } else if (id.includes('linkedin')) {
+          open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+        } else if (id.includes('email')) {
+          
+        }
+        openByWindowSetting(open_url)
       }
-      openByWindowSetting(open_url)
     }
   })
 }
@@ -498,6 +520,8 @@ $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
+$('#copy-link').click(social_share)
+$('#email-share').click(social_share)
 $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
