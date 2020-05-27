@@ -69,14 +69,21 @@ p {
 }
 
 .wordcloud {
-    border: 1px solid #036;
-    height: 7in;
-    margin: 0.5in auto;
+    background-color: black;
+    border: 1px solid #555;
+    border-radius: 5px;
+    margin: 1em auto;
     padding: 0;
     page-break-after: always;
     page-break-inside: avoid;
     display: inline-block;
-    width: 7in;
+}
+
+#container-wordcloud {
+    padding: 5px;
+    width: 680px;
+    height: 680px;
+    display: none;
 }
 
 #public_on {
@@ -88,7 +95,7 @@ p {
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     display: block;
     padding: 9.5px;
-    margin: 0 0 5vh;
+    margin: 1em 0 5vh;
     font-size: 20px;
     line-height: 1.42857143;
     color: #333;

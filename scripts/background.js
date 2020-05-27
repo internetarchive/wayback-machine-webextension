@@ -14,9 +14,9 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let toolbarIconState = {}
 let tabIdPromise
-var WB_API_URL = 'https://archive.org/wayback/available'
-var newshosts = [
-  'www.apnews.com',
+var WB_API_URL = hostURL + 'wayback/available'
+var newshosts = new Set([
+  'apnews.com',
   'www.factcheck.org',
   'www.forbes.com',
   'www.huffpost.com',
@@ -28,8 +28,7 @@ var newshosts = [
   'www.usatoday.com',
   'www.vox.com',
   'www.washingtonpost.com'
-]
-var HTTP_CODE = [404, 408, 410, 451, 500, 502, 503, 504, 509, 520, 521, 523, 524, 525, 526]
+])
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -61,7 +60,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch('https://web.archive.org/save/',
+      fetch(hostURL + 'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -78,7 +77,6 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
         }
-        setToolbarState(tabId, 'S')
         validate_spn(tabId, res.job_id, silent)
       })
   }
@@ -89,7 +87,7 @@ function auth_check() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch('https://web.archive.org/save/',
+    fetch(hostURL + 'save/',
       {
         credentials: 'include',
         method: 'POST',
@@ -105,20 +103,26 @@ function auth_check() {
 
 async function validate_spn(tabId, job_id, silent = false) {
   let vdata
-  let status = 'pending'
+  let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
 
-  while (status === 'pending') {
+  while ((status === 'start') || (status === 'pending')) {
+
+    // update UI
     chrome.runtime.sendMessage({
       message: 'save_start'
     })
+    if (status === 'pending') {
+      setToolbarState(tabId, 'S')
+    }
+
     await sleep(1000)
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      if (status === 'pending') {
+      if ((status === 'start') || (status === 'pending')) {
         fetch('https://web.archive.org/save/status', {
           credentials: 'include',
           method: 'POST',
@@ -136,6 +140,7 @@ async function validate_spn(tabId, job_id, silent = false) {
         vdata = data
       })
   }
+
   if (vdata.status === 'success') {
     setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
@@ -190,8 +195,8 @@ chrome.runtime.onStartup.addListener(function(details) {
   })
 })
 
-chrome.runtime.onInstalled.addListener((details)=>{
-  resetExtensionStorage();
+chrome.runtime.onInstalled.addListener((details) => {
+  resetExtensionStorage()
 })
 
 chrome.runtime.onInstalled.addListener(function(details) {
@@ -216,14 +221,18 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    wmAvailabilityCheck(details.url, function (wayback_url, url) {
-      chrome.tabs.sendMessage(details.tabId, {
-        type: 'SHOW_BANNER',
-        wayback_url: wayback_url,
-        page_url: url,
-        status_code: 999
-      })
-    }, function () { })
+    chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+      if (event.not_found_popup === true && event.agreement === true) {
+        wmAvailabilityCheck(details.url, function (wayback_url, url) {
+          chrome.tabs.sendMessage(details.tabId, {
+            type: 'SHOW_BANNER',
+            wayback_url: wayback_url,
+            page_url: url,
+            status_code: 999
+          })
+        }, function () { })
+      }
+    })
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
@@ -233,7 +242,7 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 chrome.webRequest.onCompleted.addListener(function (details) {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
-      HTTP_CODE.includes(details.statusCode) && isNotExcludedUrl(details.url)) {
+      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, function (wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
@@ -263,7 +272,11 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
-          tabIsReady(tab.incognito)
+          chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+            if (event.not_found_popup === true && event.agreement === true) {
+              tabIsReady(tab.incognito)
+            }
+          })
         })
       }
     })
@@ -312,7 +325,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
-    let host = 'https://archive.org/services/context/books?url='
+    let host = hostURL + 'services/context/books?url='
     let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise(function (resolve, reject) {
@@ -326,7 +339,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       .then(data => sendResponse(data))
     return true
   } else if (message.message === 'tvnews') {
-    let url = 'https://archive.org/services/context/tvnews?url=' + message.article
+    let url = hostURL + 'services/context/tvnews?url=' + message.article
     const timeoutPromise = new Promise(function (resolve, reject) {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -344,8 +357,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
     })
   } else if (message.message === 'changeBadge') {
-    // Used to change bage for auto-archive feature
-    setToolbarState(message.tabId, 'check')
+    // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
     tabIdPromise = new Promise(function (resolve) {
@@ -368,7 +380,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-  if (info.status === "complete") {
+  if (info.status === 'complete') {
     chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
       // wayback count
       if (event.wm_count === true) {
@@ -400,7 +412,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             const news_host = new URL(url).hostname
             // checking resource of amazon books
             if (url.includes('www.amazon')) {
-              fetch('https://archive.org/services/context/amazonbooks?url=' + url)
+              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
@@ -413,7 +425,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
               setToolbarState(tabId, 'R')
             // checking resource of tv news
-            } else if (newshosts.includes(news_host)) {
+            } else if (newshosts.has(news_host)) {
               setToolbarState(tabId, 'R')
             }
           }
@@ -465,13 +477,11 @@ function auto_save(tabId, url) {
       function () {
         // check if page is now in archive after auto-saved
         if (getToolbarState(tabId) === 'S') {
-          setToolbarState(tabId, 'check')
         }
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (getToolbarState(tabId) !== 'S') {
-          //setToolbarState(tabId, 'S')
           savePageNow(tabId, url, true)
         }
       }
@@ -505,7 +515,7 @@ function updateWaybackCountBadge(tabId, url) {
  */
 function setToolbarIcon(name) {
   const path = 'images/toolbar/toolbar-icon-'
-  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name;
+  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
   let details = {
     '16': (path + n + '16.png'),
     '24': (path + n + '24.png'),
@@ -574,7 +584,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
           wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/save/' + encodeURI(page_url)
+          wayback_url = hostURL + 'save/' + encodeURI(page_url)
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
