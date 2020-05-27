@@ -1,15 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "applications": {
-    "gecko": {
-      "id": "wayback@web.archive.org",
-      "strict_min_version": "42.0"
-    }
-  },
-  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
   "version": "3.1.8",
-  "homepage_url": "https://archive.org/",
+  "default_locale": "en",
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
   "icons": {
     "16": "images/app-icon/app-icon16.png",
     "32": "images/app-icon/app-icon32.png",
@@ -19,7 +13,21 @@
     "128": "images/app-icon/app-icon128.png",
     "256": "images/app-icon/app-icon256.png"
   },
-
+  "browser_action": {
+    "default_icon": {
+      "16": "images/toolbar/toolbar-icon-archive16.png",
+      "24": "images/toolbar/toolbar-icon-archive24.png",
+      "32": "images/toolbar/toolbar-icon-archive32.png",
+      "64": "images/toolbar/toolbar-icon-archive64.png"
+    }
+  },
+  "applications": {
+    "gecko": {
+      "id": "wayback@web.archive.org",
+      "strict_min_version": "42.0"
+    }
+  },
+  "homepage_url": "https://archive.org/",
   "permissions": [
       "notifications",
       "tabs",
@@ -55,13 +63,5 @@
     "css/googlestyle.css",
     "css/radial-tree.css",
     "css/archive.css"
-  ],
-  "browser_action": {
-    "default_icon": {
-      "16": "images/toolbar/toolbar-icon-archive16.png",
-      "24": "images/toolbar/toolbar-icon-archive24.png",
-      "32": "images/toolbar/toolbar-icon-archive32.png",
-      "64": "images/toolbar/toolbar-icon-archive64.png"
-    }
-  }
+  ]
 }
