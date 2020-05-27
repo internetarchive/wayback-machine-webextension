@@ -1,12 +1,12 @@
 /*Common css attributes for all files*/
 
 @font-face {
-    font-family: Bebas Neue;
+    font-family: "Bebas Neue";
     src: url("../fonts/BebasNeue.otf");
 }
 
 @font-face {
-    font-family: Gill Sans Light;
+    font-family: "Gill Sans Light";
     src: url("../fonts/GillSans-Light.ttf");
 }
 /*
@@ -42,15 +42,36 @@
 }
 */
 
+hr {
+    margin: 0 0 5px 0;
+    border: none;
+    border-top: 1px solid #aaa;
+    height: 1px;
+}
+
 h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 40px;
+    font-family: "Oswald", sans-serif;
+    font-size: 34px;
+    font-weight: bold;
+}
+h3 {
+    font-family: "Bebas Neue";
+    font-size: 30px;
+}
+h4 {
+    font-family: "Oswald", sans-serif;
+    font-size: 22px;
     font-weight: bold;
 }
 
-h3 {
-    font-family: 'Bebas Neue';
-    font-size: 40px;
+/* Dark Mode */
+
+@media (prefers-color-scheme: dark) {
+
+    hr {
+        border-top: 1px solid #555;
+    }
+
 }
 
 .loader {
@@ -68,6 +89,7 @@ h3 {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 @media screen and (min-width: 700px) {
     .test {
         text-align: center;

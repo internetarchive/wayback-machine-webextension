@@ -7,14 +7,14 @@ body {
     background-color: #eee;
     color: #222;
 }
-
+/*
 hr {
     margin: 0 0 5px 0;
     border: none;
     border-top: 1px solid #aaa;
     height: 1px;
 }
-
+*/
 .tab-bar {
     padding: 2px 0 5px 0;
 }
@@ -318,11 +318,11 @@ a.btn-social, .btn-social {
         background-color: #2C2C2C;
         color: #eee;
     }
-
+/*
     hr {
         border-top: 1px solid #555;
     }
-
+*/
     .btn {
         font-weight: 500;
     }

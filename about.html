@@ -1,79 +1,132 @@
 <html>
-    <head>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-        <link rel="stylesheet" type="text/css" href="css/common.css">
-        <title>About</title>
-    </head>
-    <body>
-        <div>
-            <h2 style="text-align: center;"><strong>The Official Wayback Machine Extension:</strong></h2>
-        </div>
-        <BR>
-        <BR>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6" style="padding-right: 100px; font-size: 18px;">
-                    <p>In cooperation with Google Summer of Code, The Internet Archive presents The Official WayBack Machine Extension. With the power of the WayBack&nbsp;Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!</p>
-                    <p style="font-family: Bebas Neue; font-size: 30px;"><strong> Features </strong></p>
-                    <ul>
-                        <li>
-                            <strong style="color: green;font-size:22px">Save Page Now</strong>
-                        </li>
-                        <ul>Allows you to instantly save the page you are currently viewing in The WayBack Machine.</ul>
-                        <li>
-                            <strong style="color:#6399C5;font-size: 22px">Recent Version &amp;</strong>
-                            <strong style="color:#EEAC57;font-size: 22px">First Version</strong>
-                        </li>
-                        <ul>View the most recent, and the first version of a page, in the WayBack Machine.</ul>
-                        <li>
-                            <strong style="color: #5bc0de;font-size: 22px">Alexa &amp; Whois</strong>
-                        </li>
-                        <ul>Gives analytical information about the page you are currently viewing, along with interesting facts, such as who owns it and how popular it is.</ul>
-                        <li>
-                            <strong style="color: #55acee;font-size: 22px">Tweets</strong>
-                        </li>
-                        <ul>Searches Twitter For information Regarding your current page.</ul>
-                        <li>
-                                <strong style="font-size: 22px">SiteMap</strong>
-                        </li>
-                        <ul>Make the structure of a website for any year in the past as a sequences sunburst diagram, also known as a radial tree.</ul>
-                    </ul>
-                </div>
-                <div class="col-sm-6" style="padding-left: 100px; font-size: 18px;">
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Version</strong>
-                    <span id="version" style="font-family: Bebas Neue;font-size: 30px;">&nbsp;</span>
-                    <br><br>
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">License</strong>
-                    <p>Copyright Internet Archive, <span id="year"></span> AGPL-3&nbsp;
-                    </p>
-                    <br>
-                    <strong style="font-family: Bebas Neue;font-size: 30px;">Credit</strong>
-                    <p>
-                        Caceres Richard
-                        <a href="https://github.com/rchrd2">&nbsp;@rchrd2<br /></a>
-                        Chinta Rakesh N&nbsp;
-                        <a href="https://github.com/rakesh-chinta">@rakesh-chinta</a><br />
-                        Das&nbsp;Abhishek <a href="http://github.com/abhidas17695">@abhidas17695</a><br />
-                        Mark Graham J.&nbsp;<a href="https://github.com/markjgraham">@markgraham</a><br />
-                        Mandel Benjamin&nbsp;<a href="http://github.com/BenjaminMandel">@BenjaminMandel<br /></a>
-                        Shiryaev Anton&nbsp;<a href="https://github.com/Eagle19243">@Eagle19243<br /></a>
-                        Yogesh&nbsp;Kumar <a href="https://github.com/kumarjyogesh">@kumarjyogesh&nbsp;</a><br/>
-                        Banos&nbsp;Vangelis <a href="https://github.com/vbanos">@vbanos&nbsp;</a><br/>
-                        Max&nbsp;Reinisch <a href="https://github.com/maxreinisch">@MaxReinisch&nbsp;</a><br/>
-                        Rodden Kerry&nbsp;<a href="http://www.rodden.org/kerry">@kerryrodden</a> <br>for sunburst code (used in the Site Map)<br />
-                        Donate icon credit:&nbsp;<a href="https://icon-library.net/icon/donate-icon-png-21.html">Free Icons Library</a> <br>(used in the bottom of popup page)<br>
-                    </p>
-                    <p>
-                        <strong style="font-family: Bebas Neue;;font-size: 30px;">Support</strong>
-                    </p>
-                    <p>info@archive.org</p>
-                </div>
-            </div>
-        </div>
-    </body>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/about.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>About</title>
+</head>
+<body>
+  <div class="container">
+    <div class="about-header">
+      <img src="images/app-icon/app-icon128.png" alt="App Icon" style="height:64px">
+      <h1 class="underlined">The Official Wayback Machine Extension</h1>
+    </div>
+
+    <div class="row about-body">
+      <div class="col-sm-7">
+        <p>
+          In cooperation with <a href="https://summerofcode.withgoogle.com">Google Summer of Code</a>, The <a href="https://archive.org">Internet Archive</a> presents <em>The Official Wayback Machine Extension</em>. With the power of the Wayback Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
+        </p>
+
+        <h3>Features</h3>
+        <ul class="features">
+          <li>
+            <h4>404 Not Found?</h4>
+            <p>Website no longer available? Not a problem! This will popup a link to the archived website, automatically.</p>
+          </li>
+          <li>
+            <h4>Save Page Now</h4>
+            <p>Instantly save the page you are currently viewing in The Wayback Machine. <em>Outlinks</em> saves even more pages and may take longer. Check <em>Email Outlinks</em> in Settings to receive a list of links. Check <em>Auto Save Page</em> to save pages that have yet to be archived, automatically!</p>
+          </li>
+          <li>
+            <h4>Oldest, Overview, &amp; Newest</h4>
+            <p>View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.</p>
+          </li>
+          <li>
+            <h4>Site Map</h4>
+            <p>Draws a sunburst diagram or radial tree structure for every year that the website has been archived.</p>
+          </li>
+          <li>
+            <h4>Related Tweets &amp; Share Links</h4>
+            <p>Searches Twitter for information regarding your current page. Share Wayback links on social media.</p>
+          </li>
+          <li>
+            <h4>Show Contexts</h4>
+            <p>Provides a page of a variety of information regarding the page you are viewing, including analytics from <em>Alexa</em>, capture summary from the Wayback Machine, annotations from <em>Hypothes.is</em>, and a word tag cloud.</p>
+          </li>
+          <li>
+            <h4>Relevant Archived Resources</h4>
+            <p>Display archived resources on relevant URLs, including from Amazon books, Wikipedia, and various news sources. This feature will let you view digitized books and papers cited on the website if the Internet Archive has a copy!</p>
+          </li>
+          <li>
+            <h4>Wayback Count</h4>
+            <p>Display a count of pages that have been archived each time you visit a website.</p>
+          </li>
+        </ul>
+
+      </div>
+
+      <div class="col-sm-5">
+        <h3>Version - <span id="version"></span></h3>
+        <p>
+          <a href="https://web.archive.org">
+            <!-- <img src="images/wayback-logo.png" style="width:180px"><br> -->
+            Wayback Machine Website<br>
+          </a>
+        </p>
+
+        <h3>Support</h3>
+        <p>
+          <a href="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en">Write a Review</a><br>
+          <a href="https://archive.org/about/contact.php">Contact the Archive</a><br>
+          <a href="https://archive.org/donate/">Donate to the Archive</a><br>
+        </p>
+        <p>
+          <strong><em>Questions or Comments?</em></strong><br>
+          Please email us at:<br>
+          <a href="mailto:info@archive.org?subject=Wayback Extension">info@archive.org</a><br>
+        </p>
+        <p>Please note version, browser version, and OS version when reporting bugs.</p>
+
+        <h3>Web Extensions</h3>
+        <p>
+          <img src="images/about/chrome64.png" class="about-app-icon" alt="Chrome Extension">
+          <a href="https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak">Chrome Extension</a><br>
+
+          <img src="images/about/safari64.png" class="about-app-icon" alt="Safari Extension">
+          <a href="https://apps.apple.com/us/app/wayback-machine/id1472432422">Safari Extension</a><br>
+
+          <img src="images/about/firefox64.png" class="about-app-icon" alt="Firefox Add-On">
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/">Firefox Add-On</a><br>
+
+          <h3>Mobile Apps</h3>
+          <a href="https://apps.apple.com/us/app/wayback-machine/id1201888313"><img src="images/about/app-store-badge.svg" class="about-badge" alt="Download on the Apple App Store"></a>
+
+          <a href="https://play.google.com/store/apps/details?id=com.archive.waybackmachine"><img src="images/about/google-play-badge.png" class="about-badge" alt="Get it on Google Play"></a>
+        </p>
+
+        <h3>Credits</h3>
+        <p><a href="https://github.com/internetarchive/wayback-machine-chrome">Source Code on Github</a></p>
+        <p>
+          Richard Caceres <a href="https://github.com/rchrd2">@rchrd2</a><br>
+          Rakesh Naga Chinta <a href="https://github.com/rakesh-chinta">@rakesh-chinta</a><br>
+          Abhishek Das <a href="https://github.com/abhidas17695">@abhidas17695</a><br>
+          Mark Graham <a href="https://github.com/markjgraham">@markjgraham</a><br>
+          Benjamin Mandel <a href="https://github.com/BenjaminMandel">@BenjaminMandel</a><br>
+          Anton Shiryaev <a href="https://github.com/Eagle19243">@Eagle19243</a><br>
+          Kumar Yogesh <a href="https://github.com/kumarjyogesh">@kumarjyogesh</a><br>
+          Vangelis Banos <a href="https://github.com/vbanos">@vbanos</a><br>
+          Max Reinisch <a href="https://github.com/maxreinisch">@MaxReinisch</a><br>
+          Anish Kumar Sarangi <a href="https://github.com/anishsarangi">@anishsarangi</a><br>
+          Pushkit Kapoor <a href="https://github.com/tikhsuP">@tikhsuP</a><br>
+          Carl Gorringe <a href="https://github.com/cgorringe">@cgorringe</a><br>
+          <br>
+          Site Map: <a href="http://www.rodden.org/kerry">Kerry Rodden</a><br>
+          Donate Icon: <a href="https://icon-library.net/icon/donate-icon-png-21.html">Free Icons Library</a><br>
+        </p>
+
+        <h3>License</h3>
+        <p>Copyright &copy; 2017-<span id="year"></span> Internet Archive, AGPL-3</p>
+        <!-- <p>Google Play and the Google Play logo are trademarks of Google LLC.</p> -->
+      </div>
+
+    </div>
+  </div>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/about.js"></script>
+</body>
 </html>
-<script src="scripts/utils.js"></script>
-<script src="scripts/build.js"></script>
-<script src="scripts/about.js"></script>
