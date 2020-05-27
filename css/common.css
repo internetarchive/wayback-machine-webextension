@@ -53,18 +53,18 @@ hr {
 
 .about-header {
     float: left;
-    padding-bottom: 2em;
+    margin-bottom: 2em;
 }
 .about-header * {
     float: left;
 }
 .about-header img {
-    padding: 1em 1em 0 0;
+    margin: 1em 1em 0 0;
 }
 .about-body {
     float: left;
     font-size: 18px;
-    padding-bottom: 2em;
+    margin-bottom: 2em;
 }
 .about-body div {
     padding-right: 3em;
