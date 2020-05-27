@@ -70,6 +70,16 @@ hr {
     padding-right: 3em;
 }
 
+.about-app-icon {
+    width: 32px;
+    height: 32px;
+    margin: 2px 2px 2px 0;
+}
+.about-badge {
+    height: 50px;
+    margin-bottom: 1em;
+}
+
 h1.underlined {
     border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
