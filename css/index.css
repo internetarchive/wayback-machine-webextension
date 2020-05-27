@@ -207,10 +207,13 @@ a.btn-social, .btn-social {
 
 .btn-copy, #toast-success {
     background-color: #9dc183;
-    color: #fff;
+    color: #eee;
 }
 .btn-copy:hover, #toast-success:hover {
     background-color: #b3cca1;
+}
+#toast-success {
+    border: 1px solid #c5e0b1 !important;
 }
 
 .btn-email {
