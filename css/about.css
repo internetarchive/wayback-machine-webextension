@@ -81,10 +81,10 @@ ul.features p {
     }
 
     ul.features li:nth-child(odd) h4 {
-        color: #faa; /* TODO */
+        color: #faa;
     }
     ul.features li:nth-child(even) h4 {
-        color: #d88; /* TODO */
+        color: #d88;
     }
 
 }

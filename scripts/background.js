@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, resetStorage */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
 /*   global getCachedWaybackCount, badgeCountText */
 
 var manifest = chrome.runtime.getManifest()
@@ -108,7 +108,6 @@ async function validate_spn(tabId, job_id, silent = false) {
   val_data.append('job_id', job_id)
 
   while ((status === 'start') || (status === 'pending')) {
-
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_start'
@@ -181,7 +180,7 @@ async function validate_spn(tabId, job_id, silent = false) {
 }
 
 chrome.storage.sync.set({
-  newshosts: newshosts
+  newshosts: Array.from(newshosts)
 })
 /**
  *
@@ -221,7 +220,7 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+    chrome.storage.sync.get(['not_found_popup', 'agreement'], function(event) {
       if (event.not_found_popup === true && event.agreement === true) {
         wmAvailabilityCheck(details.url, function (wayback_url, url) {
           chrome.tabs.sendMessage(details.tabId, {
@@ -272,7 +271,7 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
         chrome.tabs.get(details.tabId, function (tab) {
-          chrome.storage.sync.get(['not_found_popup','agreement'], function(event) {
+          chrome.storage.sync.get(['not_found_popup', 'agreement'], function(event) {
             if (event.not_found_popup === true && event.agreement === true) {
               tabIsReady(tab.incognito)
             }
@@ -398,10 +397,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
-      let tagcloudUrl = new URL(contextUrl)
       received_url = received_url.replace(/^https?:\/\//, '')
-      var last_index = received_url.indexOf('/')
-      var url = received_url.slice(0, last_index)
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
