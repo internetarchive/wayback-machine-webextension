@@ -204,11 +204,11 @@ a.btn-social, .btn-social {
 .btn-linkedin:hover {
     background-color: #4a8aff;
 }
+
 .btn-copy, #toast-success {
     background-color: #9dc183;
     color: #fff;
 }
-
 .btn-copy:hover, #toast-success:hover {
     background-color: #b3cca1;
 }

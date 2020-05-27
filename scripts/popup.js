@@ -176,6 +176,10 @@ function social_share(eventObj) {
           toastMsg[0].innerText = 'Error occurred. Try again.'
           showToast(toastMsg[0])
         })
+      } else if (id.includes('email')) {
+        $(document).ready(function() {
+          $('#email-share').attr('href', `mailto:?subject=Hey, please check out this amazing website.&body=${sharing_url}`)
+        })
       } else {
         if (id.includes('fb')) {
           open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
@@ -183,8 +187,6 @@ function social_share(eventObj) {
           open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
         } else if (id.includes('linkedin')) {
           open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
-        } else if (id.includes('email')) {
-          
         }
         openByWindowSetting(open_url)
       }
