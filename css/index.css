@@ -142,7 +142,7 @@ a.btn-social, .btn-social {
     cursor: pointer;
 }
 
-.btn-social .fa, .btn-social i {
+.btn-social .fas, .btn-social .fab, .btn-social i {
     backface-visibility: hidden;
     moz-backface-visibility: hidden;
     ms-transform: scale(1);
@@ -158,7 +158,7 @@ a.btn-social, .btn-social {
     outline: none;
     text-decoration: none;
 }
-.btn-social:hover .fa,.btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i {
+.btn-social:hover .fas, .btn-social:hover .fab, .btn-social:focus .fas, .btn-social:focus .fab .btn-social:hover i, .btn-social:focus i {
     ms-transform: scale(1.3);
     o-transform: scale(1.3);
     transform: scale(1.3);
