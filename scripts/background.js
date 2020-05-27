@@ -548,13 +548,13 @@ function updateToolbarIcon(tabId) {
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
   'id': 'first',
-  'title': 'First Version',
+  'title': 'Oldest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
 chrome.contextMenus.create({
   'id': 'recent',
-  'title': 'Recent Version',
+  'title': 'Newest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
