@@ -1,6 +1,6 @@
 $(document).ready(function () {
-  const VERSION_NAME = chrome.runtime.getManifest().version_name
+  const VERSION = chrome.runtime.getManifest().version
   const DATE = new Date().getFullYear()
-  $('#version').text(VERSION_NAME)
+  $('#version').text(VERSION)
   $('#year').text(DATE)
 })
