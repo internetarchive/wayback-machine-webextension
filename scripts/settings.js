@@ -157,17 +157,17 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 function addDocs () {
   chrome.storage.sync.get(['newshosts'], function (items) {
     let docs = {
-      'resource': 'Enables extension to notify and display archived resources on relevant urls, including Amazon books, Wikipedia, and select News outlets. ',
-      'auto-update-context': 'Enabling this setting will update context windows when the page they are referencing changes.',
-      'not-found-popup': 'Enabling this setting will show the popup when you are a 404 page. By default it is enabled',
-      'wm-count-setting': 'Displays count of snapshots of the current page stored in the Wayback Machine.',
-      'auto-archive': 'Enables extension to identify and save URLs that have not previously been saved on the Wayback Machine.',
-      'email-outlinks-setting': 'Enable to send an email of results when Outlinks option is selected.',
-      'alexa': 'Displays what Alexa Internet knows about the site you are on (traffic data).',
-      'domaintools': 'Displays what Domaintools.com Internet knows about the site you are on (domain registration).',
-      'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on (captures).',
-      'annotations': 'Displays what Hypothes.is knows about the URL or the Site you are on (annotations).',
-      'tagcloud': 'Show a Word Cloud built from Anchor text (the text associated with links) of links archived in the Wayback Machine, to the web page you are on.'
+      'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets. (R)',
+      'auto-update-context': 'Enable to update context windows when the page they are referencing changes.',
+      'not-found-popup': 'Enable to popup a link to the archived copy when a website is missing.',
+      'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
+      'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine. (S)',
+      'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
+      'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
+      'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
+      'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
+      'annotations': 'Displays what Hypothes.is knows about the site you are on.',
+      'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
     }
     let labels = $('label')
     for (var i = 0; i < labels.length; i++) {
