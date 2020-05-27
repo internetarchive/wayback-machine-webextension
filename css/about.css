@@ -3,15 +3,16 @@
 
 h1.underlined {
     border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
+    padding-bottom: 0.5em;
 }
 
 .about-header {
-    float: left;
-    margin-bottom: 2em;
+    /* float: left; */
+    margin-bottom: 3em;
+    text-align: center;
 }
 .about-header * {
-    float: left;
+    /* float: left; */
 }
 .about-header img {
     margin: 1em 1em 0 0;
@@ -80,10 +81,10 @@ ul.features p {
     }
 
     ul.features li:nth-child(odd) h4 {
-        color: #faa; /* TODO */
+        color: #faa;
     }
     ul.features li:nth-child(even) h4 {
-        color: #d88; /* TODO */
+        color: #d88;
     }
 
 }

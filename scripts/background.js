@@ -544,13 +544,13 @@ function updateToolbarIcon(tabId) {
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
   'id': 'first',
-  'title': 'First Version',
+  'title': 'Oldest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
 chrome.contextMenus.create({
   'id': 'recent',
-  'title': 'Recent Version',
+  'title': 'Newest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
@@ -579,8 +579,19 @@ chrome.contextMenus.onClicked.addListener(function (click) {
         } else if (click.menuItemId === 'recent') {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
-          wmIsAvailable = false
-          wayback_url = hostURL + 'save/' + encodeURI(page_url)
+          // Save Page Now
+          // wmIsAvailable = false
+          // wayback_url = hostURL + 'save/' + encodeURI(page_url)
+          // TODO: FIXME: This isn't working!
+          chrome.runtime.sendMessage({
+            message: 'openurl',
+            wayback_url: hostURL+'save/',
+            page_url: page_url,
+            options: ['capture_all'],
+            method: 'save'
+          })
+          alert('Function not working yet. Use toolbar popup to Save Page Now.')
+          return
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
