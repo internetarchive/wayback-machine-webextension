@@ -49,41 +49,6 @@ hr {
     height: 1px;
 }
 
-/* About Page */
-
-.about-header {
-    float: left;
-    margin-bottom: 2em;
-}
-.about-header * {
-    float: left;
-}
-.about-header img {
-    margin: 1em 1em 0 0;
-}
-.about-body {
-    float: left;
-    font-size: 18px;
-    margin-bottom: 2em;
-}
-.about-body div {
-    padding-right: 3em;
-}
-
-.about-app-icon {
-    width: 32px;
-    height: 32px;
-    margin: 2px 2px 2px 0;
-}
-.about-badge {
-    height: 50px;
-    margin-bottom: 1em;
-}
-
-h1.underlined {
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-}
 h2 {
     font-family: "Oswald", sans-serif;
     font-size: 34px;
@@ -99,36 +64,12 @@ h4 {
     font-weight: bold;
 }
 
-ul.features {
-    list-style-type: none;
-    padding-inline-start: 0;
-}
-ul.features li {
-    padding-bottom: 0.5em;
-}
-ul.features li:nth-child(odd) h4 {
-    color: #733;
-}
-ul.features li:nth-child(even) h4 {
-    color: #522;
-}
-ul.features p {
-    padding-left: 2em;
-}
-
 /* Dark Mode */
 
 @media (prefers-color-scheme: dark) {
 
     hr {
         border-top: 1px solid #555;
-    }
-
-    ul.features li:nth-child(odd) h4 {
-        color: #733; /* TODO */
-    }
-    ul.features li:nth-child(even) h4 {
-        color: #522; /* TODO */
     }
 
 }
