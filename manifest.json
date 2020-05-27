@@ -1,9 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "version": "3.1.8",
-  "default_locale": "en",
-  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
+  "version": "3.0",
+  "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/app-icon16.png",
     "32": "images/app-icon/app-icon32.png",
@@ -21,12 +20,12 @@
       "64": "images/toolbar/toolbar-icon-archive64.png"
     }
   },
-  "applications": {
-    "gecko": {
-      "id": "wayback@web.archive.org",
-      "strict_min_version": "42.0"
-    }
-  },
+//  "applications": {
+//    "gecko": {
+//      "id": "wayback@web.archive.org",
+//      "strict_min_version": "42.0"
+//    }
+//  },
   "homepage_url": "https://archive.org/",
   "permissions": [
       "notifications",
