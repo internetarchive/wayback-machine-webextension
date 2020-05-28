@@ -515,7 +515,7 @@ function emailSharing() {
       } else {
         sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
       }
-      $('#email-share').attr('href', `mailto:?subject=Hey, please check out this amazing website.&body=${sharing_url}`)
+      $('#email-share').attr('href', `mailto:?subject=Hey, Please checkout all archives of this website available in 'web.archive.org'&body=${sharing_url}`)
     }
   })
 }
