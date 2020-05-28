@@ -176,10 +176,6 @@ function social_share(eventObj) {
           toastMsg[0].innerText = 'Error occurred. Try again.'
           showToast(toastMsg[0])
         })
-      } else if (id.includes('email')) {
-        $(document).ready(function() {
-          $('#email-share').attr('href', `mailto:?subject=Hey, please check out this amazing website.&body=${sharing_url}`)
-        })
       } else {
         if (id.includes('fb')) {
           open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
@@ -508,7 +504,23 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
+function emailSharing() {
+  var sharing_url = ''
+  var overview_url = 'https://web.archive.org/web/*/'
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let url = tabs[0].url
+    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
+      if (url.includes('web.archive.org')) {
+        sharing_url = url // If the user is already at a playback page,share that URL
+      } else {
+        sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
+      }
+      $('#email-share').attr('href', `mailto:?subject=Hey, please check out this amazing website.&body=${sharing_url}`)
+    }
+  })
+}
+
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, emailSharing]
 window.onload = function () {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -523,7 +535,6 @@ $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
 $('#copy-link').click(social_share)
-$('#email-share').click(social_share)
 $('#twitterbtn').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
