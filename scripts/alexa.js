@@ -4,7 +4,7 @@
 /*   global getUrlByParameter */
 
 function get_alexa () {
-  var alexa_url = 'http://xml.alexa.com/data?cli=10&dat=n&url='
+  var alexa_url = 'https://xml.alexa.com/data?cli=10&dat=n&url='
   var url = getUrlByParameter('url')
   url = url.replace(/^https?:\/\//, '')
   $.get(alexa_url + url, function (xml) {
