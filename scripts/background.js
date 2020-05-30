@@ -110,7 +110,8 @@ async function validate_spn(tabId, job_id, silent = false) {
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
-      message: 'save_start'
+      message: 'save_start',
+      tabId: tabId
     })
     if (status === 'pending') {
       setToolbarState(tabId, 'S')
@@ -144,7 +145,8 @@ async function validate_spn(tabId, job_id, silent = false) {
     setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
-      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp)
+      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
+      tabId: tabId
     })
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -288,6 +290,7 @@ function getLastSaveTime(timestamp) {
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.message === 'openurl') {
+    let tabId = message.tabId
     var page_url = message.page_url
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
@@ -297,7 +300,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         URLopener(open_url, url, true)
       } else {
         let options = (message.options !== null) ? message.options : []
-        savePageNow(null, page_url, false, options)
+        savePageNow(tabId, page_url, false, options)
         return true
       }
     }

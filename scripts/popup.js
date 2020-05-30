@@ -67,7 +67,8 @@ function save_now() {
       wayback_url: hostURL + 'save/',
       page_url: url,
       options: options,
-      method: 'save'
+      method: 'save',
+      tabId: tabs[0].id
     })
   })
 }
@@ -464,23 +465,27 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === 'save_success') {
-      $('#save_now').text('Save successful')
-      $('#last_save').text(message.time)
-      $('#savebox').addClass('flip-inside')
-    }
-    if (message.message === 'save_start') {
-      $('#save_now').text('Saving Snapshot...')
-    }
-    // if(message.message === "save_error"){
-    //   $('#save_now').text('Save Failed')
-    //   $('#last_save').text(message.error)
-    //   if(message.error === "You need to be logged in to use Save Page Now."){
-    //     $('#savebtn').off('click').click(function(){
-    //       openByWindowSetting('https://archive.org/account/login');
-    //     })
-    //   }
-    // }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs[0].id === message.tabId) {
+        if (message.message === 'save_success') {
+          $('#save_now').text('Save successful')
+          $('#last_save').text(message.time)
+          $('#savebox').addClass('flip-inside')
+        }
+        if (message.message === 'save_start') {
+          $('#save_now').text('Saving Snapshot...')
+        }
+        // if(message.message === "save_error"){
+        //   $('#save_now').text('Save Failed')
+        //   $('#last_save').text(message.error)
+        //   if(message.error === "You need to be logged in to use Save Page Now."){
+        //     $('#savebtn').off('click').click(function(){
+        //       openByWindowSetting('https://archive.org/account/login');
+        //     })
+        //   }
+        // }
+      }
+    })
   }
 )
 
