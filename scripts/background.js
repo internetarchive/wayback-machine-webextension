@@ -512,21 +512,25 @@ function updateWaybackCountBadge(tabId, url) {
  * Name string is based on PNG image filename in images/toolbar/
  * @param name {string} = one of 'archive', 'check', 'R', or 'S'
  */
-function setToolbarIcon(name) {
+function setToolbarIcon(tabId, name) {
   const path = 'images/toolbar/toolbar-icon-'
-  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
-  let details = {
-    '16': (path + n + '16.png'),
-    '24': (path + n + '24.png'),
-    '32': (path + n + '32.png'),
-    '64': (path + n + '64.png')
-  }
-  chrome.browserAction.setIcon({ path: details })
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (tabs[0].id === tabId) {
+      let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
+      let details = {
+        '16': (path + n + '16.png'),
+        '24': (path + n + '24.png'),
+        '32': (path + n + '32.png'),
+        '64': (path + n + '64.png')
+      }
+      chrome.browserAction.setIcon({ path: details })
+    }
+  })
 }
 
 function setToolbarState(tabId, name) {
   toolbarIconState[tabId] = name
-  setToolbarIcon(name)
+  setToolbarIcon(tabId, name)
 }
 
 function getToolbarState(tabId) {
@@ -537,11 +541,11 @@ function clearToolbarState(tabId) {
   if (toolbarIconState[tabId]) {
     delete toolbarIconState[tabId]
   }
-  setToolbarIcon('archive')
+  setToolbarIcon(tabId, 'archive')
 }
 
 function updateToolbarIcon(tabId) {
-  setToolbarIcon(getToolbarState(tabId))
+  setToolbarIcon(tabId, getToolbarState(tabId))
 }
 
 // Right-click context menu "Wayback Machine" inside the page.
