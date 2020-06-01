@@ -525,9 +525,9 @@ function setToolbarIcon(name) {
 }
 
 function setToolbarState(tabId, name) {
-  toolbarIconState[tabId] = name
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs[0].id === tabId) {
+      toolbarIconState[tabId] = name
       setToolbarIcon(name)
     }
   })
