@@ -20,12 +20,12 @@
       "64": "images/toolbar/toolbar-icon-archive64.png"
     }
   },
-//  "applications": {
-//    "gecko": {
-//      "id": "wayback@web.archive.org",
-//      "strict_min_version": "42.0"
-//    }
-//  },
+  "applications": {
+    "gecko": {
+      "id": "wayback@web.archive.org",
+      "strict_min_version": "42.0"
+    }
+  },
   "homepage_url": "https://archive.org/",
   "permissions": [
       "activeTab",
