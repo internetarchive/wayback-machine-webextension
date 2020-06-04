@@ -23,7 +23,8 @@ describe('isValidUrl', () => {
     { 'url': 'http://\xc3\x28', 'result': true },
     { 'url': '\xc3\xb1', 'result': false },
     { 'url': '\xc3\x28', 'result': false },
-    { 'url': 'about:debugging', 'result': false }
+    { 'url': 'about:debugging', 'result': false },
+    { 'url': 'about:home', 'result':false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -49,6 +50,7 @@ describe('isNotExcludedUrl', () => {
     { 'url': '\xc3\xb1', 'result': true },
     { 'url': '\xc3\x28', 'result': true },
     { 'url': 'about:newtab', 'result': false },
+    { 'url': 'about:home', 'result': false },
     { 'url': 'about:preferences', 'result': false },
     { 'url': 'about:debugging', 'result': false }
   ]

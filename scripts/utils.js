@@ -134,7 +134,8 @@ const excluded_urls = [
   'about:debugging',
   'about:newtab',
   'about:preferences',
-  'moz-extension://'
+  'moz-extension://',
+  'about:home'
 ]
 
 // Function to check whether it is a valid URL or not
