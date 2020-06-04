@@ -262,9 +262,9 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    let width = window.screen.availWidth
-    let height = window.screen.availHeight
-    chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+    let width = Math.floor(window.screen.availWidth * 0.75)
+    let height = Math.floor(window.screen.availHeight * 0.90)
+    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, function (window) {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
