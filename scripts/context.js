@@ -56,6 +56,7 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
+    let firstFeature = null
     for (let i = 0; i < features.length; i++) {
       let feature = features[i]
       let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -65,6 +66,24 @@ function singlePageView() {
       if (!event[feature]) {
         $(featureId).hide()
         $(featureTabId).hide()
+
+        //Show first tab if the last clicked tab is hidden
+        chrome.storage.sync.get(['selectedFeature'], function(result) {
+          let openedFeature = result.selectedFeature
+          if (openedFeature === featureTabId) {
+            for (let i = 0; i < features.length; i++) {
+              let feature = features[i]
+              let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
+              let featureTabId = featureId + '_tab'
+              if (event[feature]) {
+                if (!firstFeature) {
+                  firstFeature = featureTabId
+                  $(firstFeature).click()
+                }
+              }
+            }
+          }
+        })
       } else {
         contexts_dic[feature]()
         $(featureTabId).click(function(event) {
@@ -72,18 +91,24 @@ function singlePageView() {
           chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
           })
         })
-        //Set the default feature to be opened
+          
+        //Show the last clicked tab
         chrome.storage.sync.get(['selectedFeature'], function(result) {
           let openedFeature = result.selectedFeature
           if (openedFeature) {
             $(openedFeature).click()
           } else {
-            $('#Alexa_tab').click()
+              
+            //Show first tab if user is accesing Contexts Page for the first time
+            if (!firstFeature) {
+              firstFeature = featureTabId
+              $(firstFeature).click()
+            }
           }
         })
-      }
+      }        
     }
-  })
+  }) 
 }
 
 window.onload = singlePageView
