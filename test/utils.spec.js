@@ -24,7 +24,8 @@ describe('isValidUrl', () => {
     { 'url': '\xc3\xb1', 'result': false },
     { 'url': '\xc3\x28', 'result': false },
     { 'url': 'about:debugging', 'result': false },
-    { 'url': 'about:home', 'result':false}
+    { 'url': 'about:home', 'result':false},
+    { 'url': '192.168.1.251', 'result':false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -52,7 +53,8 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'about:newtab', 'result': false },
     { 'url': 'about:home', 'result': false },
     { 'url': 'about:preferences', 'result': false },
-    { 'url': 'about:debugging', 'result': false }
+    { 'url': 'about:debugging', 'result': false },
+    { 'url': '192.168.1.251', 'result':false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
