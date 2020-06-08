@@ -1,6 +1,6 @@
-# Release Notes
+# CHANGELOG
 
-### 3.1.9
+### 3.0.0.1
 
 * Fix bugs when showing Relevant Archived Reseouces on visiting [apnews.com](https://apnews.com).
 
