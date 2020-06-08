@@ -525,12 +525,8 @@ function setToolbarIcon(name) {
 }
 
 function setToolbarState(tabId, name) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    if (tabs[0].id === tabId) {
-      toolbarIconState[tabId] = name
-      setToolbarIcon(name)
-    }
-  })
+  toolbarIconState[tabId] = name
+  updateToolbarIcon(tabId)
 }
 
 function getToolbarState(tabId) {
@@ -541,11 +537,17 @@ function clearToolbarState(tabId) {
   if (toolbarIconState[tabId]) {
     delete toolbarIconState[tabId]
   }
-  setToolbarIcon('archive')
+  updateToolbarIcon(tabId)
 }
 
+// Only update the toolbar icon if tabId is the currently active tab
 function updateToolbarIcon(tabId) {
-  setToolbarIcon(getToolbarState(tabId))
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (tabs[0].id === tabId) {
+      let name = toolbarIconState[tabId]
+      setToolbarIcon(name ? name : 'archive')
+    }
+  })
 }
 
 // Right-click context menu "Wayback Machine" inside the page.
