@@ -56,7 +56,7 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
-    let firstFeature = null
+    let clickFeature = null
     for (let i = 0; i < features.length; i++) {
       let feature = features[i]
       let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -66,24 +66,6 @@ function singlePageView() {
       if (!event[feature]) {
         $(featureId).hide()
         $(featureTabId).hide()
-
-        //Show first tab if the last clicked tab is hidden
-        chrome.storage.sync.get(['selectedFeature'], function(result) {
-          let openedFeature = result.selectedFeature
-          if (openedFeature === featureTabId) {
-            for (let i = 0; i < features.length; i++) {
-              let feature = features[i]
-              let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
-              let featureTabId = featureId + '_tab'
-              if (event[feature]) {
-                if (!firstFeature) {
-                  firstFeature = featureTabId
-                  $(firstFeature).click()
-                }
-              }
-            }
-          }
-        })
       } else {
         contexts_dic[feature]()
         $(featureTabId).click(function(event) {
@@ -91,22 +73,27 @@ function singlePageView() {
           chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
           })
         })
-          
-        //Show the last clicked tab
         chrome.storage.sync.get(['selectedFeature'], function(result) {
           let openedFeature = result.selectedFeature
-          if (openedFeature) {
-            $(openedFeature).click()
-          } else {
-              
-            //Show first tab if user is accesing Contexts Page for the first time
-            if (!firstFeature) {
-              firstFeature = featureTabId
-              $(firstFeature).click()
-            }
+          //Get first tab
+          if (!clickFeature) {
+            clickFeature = featureTabId
           }
-        })
-      }        
+          if (openedFeature) {
+            //Open the first tab if last selected tab is hidden now
+            if (openedFeature !== featureTabId) {
+              $(clickFeature).click()
+            } else {
+              //Open the last selected tab
+              clickFeature = openedFeature
+              $(clickFeature).click()
+            }
+          } else {
+            //Open first tab if user is accesing Contexts Page for the first time
+            $(clickFeature).click()
+          }
+        })    
+      }
     }
   }) 
 }
