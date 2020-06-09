@@ -56,25 +56,25 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
-    let clickFeature = null
-    for (let i = 0; i < features.length; i++) {
-      let feature = features[i]
-      let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
-      let featureTabId = featureId + '_tab'
+    chrome.storage.sync.get(['selectedFeature'], function(result) {
+      var openedFeature = result.selectedFeature
+      let clickFeature = null
+      for (let i = 0; i < features.length; i++) {
+        let feature = features[i]
+        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
+        let featureTabId = featureId + '_tab'
 
-      // Hide features that weren't selected
-      if (!event[feature]) {
-        $(featureId).hide()
-        $(featureTabId).hide()
-      } else {
-        contexts_dic[feature]()
-        $(featureTabId).click(function(event) {
-          let selectedFeature = openContextFeature(event, featureId) + '_tab'
-          chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+        // Hide features that weren't selected
+        if (!event[feature]) {
+          $(featureId).hide()
+          $(featureTabId).hide()
+        } else {
+          contexts_dic[feature]()
+          $(featureTabId).click(function(event) {
+            let selectedFeature = openContextFeature(event, featureId) + '_tab'
+            chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+            })
           })
-        })
-        chrome.storage.sync.get(['selectedFeature'], function(result) {
-          let openedFeature = result.selectedFeature
           //Get first tab
           if (!clickFeature) {
             clickFeature = featureTabId
@@ -92,9 +92,9 @@ function singlePageView() {
             //Open first tab if user is accesing Contexts Page for the first time
             $(clickFeature).click()
           }
-        })    
+        }
       }
-    }
+    })
   }) 
 }
 
