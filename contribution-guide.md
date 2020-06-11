@@ -15,12 +15,12 @@ To share either bug or features, [create an issue here](https://github.com/inter
 ## How to set up the development environment?
 Before we begin, if you don't already have, download [git](https://git-scm.com/downloads) and [node.js](https://nodejs.org/en/download/) (You may look at relevant tutorials to set them up according to your operating system)
  - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-chrome/), and fork the project
- - Open the terminal and navigate to the directory where you wish to clone the project using
+ - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
- - Clone the project and navigate to working directory by typing the commands
-`git clone https://github.com/<github_account_name>/wayback-machine-chrome.git`
+ - Clone the project and navigate to working directory by typing the commands    
+`git clone https://github.com/<github_account_name>/wayback-machine-chrome.git`   
  `cd wayback-machine-chrome`
- - Install the required packages by typing the command
+ - Install the required packages by typing the command   
 `npm install`
 - Now you have a `node_modules` directory populated with packages
 
@@ -52,21 +52,21 @@ See  [Temporary installation in Firefox](https://extensionworkshop.com/documenta
  - Open an existing file, or create a new file.
  - Make changes and save the files
  - To write tests for `example.js`, create a new file in the test directory as `example.spec.js`
- - Run tests by typing
+ - Run tests by typing  
 `npm test`
 ### Push the changes to Github
  - Open your git terminal
- - Create a new branch for every feature you add, or every set of bugs you fix and more to that branch using
-`git branch <branch-name>` (Please use meaningful branch names)
+ - Create a new branch for every feature you add, or every set of bugs you fix and more to that branch using  
+`git branch <branch-name>` (Please use meaningful branch names)  
 `git checkout <branch-name>`
- - Now add the files which you have made changes to using
+ - Now add the files which you have made changes to using  
 `git add <filename1> <filename2>` or `git add -A` for all the changed files
- - Create a commit and write a meaningful commit message using
+ - Create a commit and write a meaningful commit message using  
 `git commit -m "<commit-message>"`
- - Push the changes to the repository using
+ - Push the changes to the repository using  
 `git push -u origin <branch-name>`
  - Open the main github repository, and create a Pull Request. (You will see an option when you open the repositary)
- - Review the PR title, and make it meaningful. For example
+ - Review the PR title, and make it meaningful. For example  
 `"Fix 399: Popup background now Black"`
 
 ## Recommended standard practices
