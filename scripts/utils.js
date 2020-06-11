@@ -126,13 +126,15 @@ const excluded_urls = [
   'localhost',
   '0.0.0.0',
   '127.0.0.1',
-  'chrome://',
+  'chrome:',
   'chrome.google.com/webstore',
-  'chrome-extension://',
+  'chrome-extension:',
   'web.archive.org',
   'about:',
-  'moz-extension://',
+  'moz-extension:',
   '192.168.',
+  '10.',
+  'file:',
 ]
 
 // Function to check whether it is a valid URL or not
