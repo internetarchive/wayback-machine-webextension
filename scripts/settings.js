@@ -109,6 +109,15 @@ function noneSelected () {
   return true
 }
 
+function openContextMenu () {
+  $('#popup-page').hide()
+  $('#setting-page').show()
+  $('#general-panel').hide()
+  $('#context-panel').show()
+  if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
+  if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
+}
+
 function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
@@ -116,8 +125,9 @@ function goBack () {
   if (noneSelected()) {
     if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
     /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
-    $('#context-screen').off('click')
+    $('#contextBtn').off('click')
     $('#contextBtn').attr('disabled', true)
+    $('#contextTip').click(openContextMenu)
   } else {
     if ($('#ctxbox').hasClass('flip-inside')) {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
