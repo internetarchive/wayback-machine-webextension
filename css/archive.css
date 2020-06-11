@@ -1,6 +1,6 @@
 #error {
     position: fixed;
-    z-index: 100;
+    z-index: 2147483647;
     width: 350px;
     height: 250px;
     top: 10px;
