@@ -393,10 +393,27 @@ function show_wikibooks() {
 function noContextTip() {
   chrome.storage.sync.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) } }
-    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
+    for (const context in event) { 
+      if (event[context]) { 
+        $('#contextBtn').removeAttr('disabled')
+        return $('#contextBtn').click(show_all_screens) 
+      }
+    }
+    if (!$('#ctxbox').hasClass('flip-inside')) {
+      $('#ctxbox').addClass('flip-inside')
+      $('#contextBtn').attr('disabled', true)
+    }
     /* $('#context-screen').css({ opacity: 0.5 }) */
   })
+}
+
+function openContextMenu () {
+  $('#popup-page').hide()
+  $('#setting-page').show()
+  $('#general-panel').hide()
+  $('#context-panel').show()
+  if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
+  if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
 function checkExcluded() {
@@ -404,12 +421,13 @@ function checkExcluded() {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
+      $('#contextTip').click(openContextMenu)
     } else {
-      const idList = ['savebox', 'mapbox', 'twitterbox']
+      const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#contextBtn').attr('disabled', true)
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
-      $('#ctxbox').addClass('flip-inside')
       $('#url-not-supported-message').text('URL not supported')
     }
   })

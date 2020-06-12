@@ -109,39 +109,32 @@ function noneSelected () {
   return true
 }
 
-function openContextMenu () {
-  $('#popup-page').hide()
-  $('#setting-page').show()
-  $('#general-panel').hide()
-  $('#context-panel').show()
-  if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
-  if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
-}
-
 function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
-  // checking contexts selection status
-  if (noneSelected()) {
-    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
-    $('#contextBtn').off('click')
-    $('#contextBtn').attr('disabled', true)
-    $('#contextTip').click(openContextMenu)
-  } else {
-    if ($('#ctxbox').hasClass('flip-inside')) {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    // checking contexts selection status
+    if (noneSelected()) {
+      if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
+      /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
+      $('#contextBtn').off('click')
+      $('#contextBtn').attr('disabled', true)
+      if (isNotExcludedUrl(tabs[0].url)) {
+        $('#contextTip').click(openContextMenu)
+      }
+    } else {
+      if ($('#ctxbox').hasClass('flip-inside')) {
         if (!isNotExcludedUrl(tabs[0].url)) {
           $('#contextTip').text('URL not supported')
         } else {
           $('#ctxbox').removeClass('flip-inside')
         }
-      })
+      }
+      /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
+      $('#contextBtn').off('click').on('click', show_all_screens) /* TODO: check this */
+      $('#contextBtn').removeAttr('disabled')
     }
-    /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
-    $('#context-screen').off('click').on('click', show_all_screens) /* TODO: check this */
-    $('#contextBtn').removeAttr('disabled')
-  }
+  })
 }
 
 function switchSetting() {
