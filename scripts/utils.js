@@ -272,7 +272,7 @@ function notify(message, callback) {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
-    iconUrl: chrome.extension.getURL('images/icon@2x.png')
+    iconUrl: chrome.extension.getURL('images/app-icon/app-icon96.png')
   }
   chrome.notifications.create(options, callback)
 }
