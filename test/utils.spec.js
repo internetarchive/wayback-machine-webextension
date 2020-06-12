@@ -54,7 +54,9 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'about:home', 'result': false },
     { 'url': 'about:preferences', 'result': false },
     { 'url': 'about:debugging', 'result': false },
-    { 'url': '192.168.1.251', 'result':false}
+    { 'url': '192.168.1.251', 'result': false },
+    { 'url': 'http://10.0.0.1', 'result': false },
+    { 'url': 'file://example', 'result': false }
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
