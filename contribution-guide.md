@@ -1,10 +1,11 @@
 
+
 # Contribution guide
 
 ## What do I need to know to help?
 There can be multiple ways in which you can help us improve the project from what it is today. Before you begin, we would encourage you to start exploring the extension, to understand more about the project. Once you are done, you can begin contributing with code, with content or simply by giving us ideas.
 ### Contributing code
-The chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript. Other than that, we use git for version control, so knowledge of git would come handy.
+The chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript and JQuery. Other than that, we use git for version control, so knowledge of git would come handy.
 ### Contributing content / documentation
 In order to add documentation for the project, you need to have some understanding about the project, and decent technical writing skills.
 However, if you do not understand certain things about the project, the community will always be there to help you.
@@ -62,7 +63,8 @@ See  [Temporary installation in Firefox](https://extensionworkshop.com/documenta
  - Now add the files which you have made changes to using  
 `git add <filename1> <filename2>` or `git add -A` for all the changed files
  - Create a commit and write a meaningful commit message using  
-`git commit -m "<commit-message>"`
+`git commit -m "<commit-message>"`  
+To learn how to write a good commit message,please see [https://chris.beams.io/posts/git-commit/](https://chris.beams.io/posts/git-commit/)
  - Push the changes to the repository using  
 `git push -u origin <branch-name>`
  - Open the main github repository, and create a Pull Request. (You will see an option when you open the repositary)
