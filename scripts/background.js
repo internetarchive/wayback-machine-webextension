@@ -588,17 +588,12 @@ chrome.contextMenus.onClicked.addListener(function (click) {
         } else if (click.menuItemId === 'recent') {
           wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
         } else if (click.menuItemId === 'save') {
-          // Save Page Now
-          // wmIsAvailable = false
-          // wayback_url = hostURL + 'save/' + encodeURI(page_url)
-          // TODO: FIXME: This isn't working!
           let tabId = tabs[0].id
           if (isNotExcludedUrl(page_url)) {
               let options = ['capture_all']
               savePageNow(tabId, page_url, false, options)
               return true
           }
-          //alert('Function not working yet. Use toolbar popup to Save Page Now.')
         } else if (click.menuItemId === 'all') {
           wmIsAvailable = false
           wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
