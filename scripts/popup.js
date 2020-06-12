@@ -396,7 +396,7 @@ function noContextTip() {
     for (const context in event) { 
       if (event[context]) { 
         $('#contextBtn').removeAttr('disabled')
-        return $('#contextBtn').click(show_all_screens) 
+        return $('#contextBtn').click(show_all_screens)
       }
     }
     if (!$('#ctxbox').hasClass('flip-inside')) {

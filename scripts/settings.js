@@ -131,7 +131,7 @@ function goBack () {
         }
       }
       /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
-      $('#contextBtn').off('click').on('click', show_all_screens) /* TODO: check this */
+      $('#contextBtn').off('click').on('click', show_all_screens)
       $('#contextBtn').removeAttr('disabled')
     }
   })
