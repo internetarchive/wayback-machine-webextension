@@ -59,6 +59,7 @@ function singlePageView() {
     chrome.storage.sync.get(['selectedFeature'], function(result) {
       var openedFeature = result.selectedFeature
       let clickFeature = null
+      let countFeature = 0
       for (let i = 0; i < features.length; i++) {
         let feature = features[i]
         let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -69,6 +70,7 @@ function singlePageView() {
           $(featureId).hide()
           $(featureTabId).hide()
         } else {
+          countFeature++
           contexts_dic[feature]()
           $(featureTabId).click(function(event) {
             let selectedFeature = openContextFeature(event, featureId) + '_tab'
@@ -93,6 +95,10 @@ function singlePageView() {
             $(clickFeature).click()
           }
         }
+      }
+      //Hide error message if a context is selected
+      if (countFeature > 0) {
+        $('#error-message').hide()
       }
     })
   }) 
