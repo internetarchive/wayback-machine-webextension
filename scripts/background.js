@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
-/*   global getCachedWaybackCount, badgeCountText */
+/*   global getCachedWaybackCount, badgeCountText, incrementCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -162,6 +162,9 @@ async function validate_spn(tabId, job_id, silent = false) {
           }
         })
       })
+      // increment and update wayback count
+      incrementCount(vdata.original_url)
+      chrome.runtime.sendMessage({ message: 'updateCountBadge' })
     }
   } else if (!vdata.status || (status === 'error')) {
     clearToolbarState(tabId)
@@ -388,8 +391,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === 'complete') {
-    chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
-      updateWaybackCountBadge(tab.id, (event.wm_count === true) ? tab.url : null)
+    updateWaybackCountBadge(tab.id, tab.url)
+    chrome.storage.sync.get(['auto_archive'], function (event) {
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
@@ -443,30 +446,27 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   }
 })
 
-// Updating the context page based on every tab the user is selecting
+// Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
       clearToolbarState(info.tabId)
     } else {
       updateToolbarIcon(info.tabId)
     }
-    if (event.wm_count === false) {
-      // clear badge if wayback count setting turned off
-      updateWaybackCountBadge(info.tabId, null)
-    }
-    if (event.auto_update_context === true) {
-      chrome.tabs.get(info.tabId, function (tab) {
-        if (tabIdPromise) {
-          tabIdPromise.then(function (id) {
-            if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
-              chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
-            }
-          })
-        }
-      })
-    }
+    chrome.tabs.get(info.tabId, function (tab) {
+      // update or clear count badge
+      updateWaybackCountBadge(info.tabId, tab.url)
+      // auto update context page
+      if ((event.auto_update_context === true) && tabIdPromise) {
+        tabIdPromise.then(function (id) {
+          if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
+            chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
+          }
+        })
+      }
+    })
   })
 })
 
@@ -489,26 +489,26 @@ function auto_save(tabId, url) {
 }
 
 function updateWaybackCountBadge(tabId, url) {
-  if (!url) {
-    // clear badge
-    chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
-  } else {
-    getCachedWaybackCount(url, (total) => {
-      if (total > 0) {
-        // display badge
-        let text = badgeCountText(total)
-        chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
-        chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
-      } else {
-        // clear badge
+  console.log('updateWaybackCountBadge url: ' + url)  // DEBUG
+  chrome.storage.sync.get(['wm_count'], function (event) {
+    if (url && isValidUrl(url) && isNotExcludedUrl(url) && (event.wm_count === true)) {
+      getCachedWaybackCount(url, (total) => {
+        if (total > 0) {
+          // display badge
+          let text = badgeCountText(total)
+          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
+          chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+        } else {
+          chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+        }
+      },
+      (error) => {
         chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
-      }
-    },
-    (error) => {
-      // clear badge
+      })
+    } else {
       chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
-    })
-  }
+    }
+  })
 }
 
 /**

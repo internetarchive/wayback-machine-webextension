@@ -456,6 +456,8 @@ function setupWaybackCount() {
 }
 
 function showWaybackCount(url) {
+  console.log('showWaybackCount url: ' + url)  // DEBUG
+  // FIXME: This is not grabbing total from the cache, but calling the API each time!
   getCachedWaybackCount(url, (total) => {
     // set label
     let text = ''

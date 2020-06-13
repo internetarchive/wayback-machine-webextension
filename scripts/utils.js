@@ -72,6 +72,7 @@ function getWaybackCount(url, onSuccess, onFail) {
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
   let cacheTotal = waybackCountCache[url]
+  console.log('cacheTotal: ' + cacheTotal + ' for url: ' + url)  // DEBUG
   if (cacheTotal) {
     onSuccess(cacheTotal)
   } else {
@@ -84,6 +85,16 @@ function getCachedWaybackCount(url, onSuccess, onFail) {
 
 function clearCountCache() {
   waybackCountCache = {}
+}
+
+/**
+ * Adds +1 to url in cache, or set to 1 if it doesn't exist.
+ * @param url {string}
+ */
+function incrementCount(url) {
+  console.log('incrementCount url: ' + url)  // DEBUG
+  let cacheTotal = waybackCountCache[url]
+  waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
 }
 
 /**
@@ -349,6 +360,7 @@ if (typeof module !== 'undefined') {
     getWaybackCount: getWaybackCount,
     getCachedWaybackCount: getCachedWaybackCount,
     clearCountCache: clearCountCache,
+    incrementCount: incrementCount,
     badgeCountText: badgeCountText,
     hostURL: hostURL,
     timestampToDate: timestampToDate,
