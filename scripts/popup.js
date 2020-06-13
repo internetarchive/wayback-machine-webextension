@@ -445,9 +445,11 @@ function setupWaybackCount() {
       if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
         $('#wayback-count-label').hide()
         clearWaybackCount()
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
       }
     })
   })
@@ -473,9 +475,9 @@ function showWaybackCount(url) {
 
 function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
-  })
+//  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
+//  })
 }
 
 // make the tab/window option in setting page checked according to previous setting

@@ -368,10 +368,15 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state
     sendResponse({ state: getToolbarState(message.tabId) })
-  } else if (message.message === 'clearCount') {
+  } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       updateWaybackCountBadge(tabs[0].id, null)
+    })
+  } else if (message.message === 'updateCountBadge') {
+    // update wayback count badge
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      updateWaybackCountBadge(tabs[0].id, tabs[0].url)
     })
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
@@ -384,12 +389,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === 'complete') {
     chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
-      // wayback count
-      if (event.wm_count === true) {
-        updateWaybackCountBadge(tab.id, tab.url)
-      } else {
-        updateWaybackCountBadge(tab.id, null)
-      }
+      updateWaybackCountBadge(tab.id, (event.wm_count === true) ? tab.url : null)
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
@@ -503,6 +503,10 @@ function updateWaybackCountBadge(tabId, url) {
         // clear badge
         chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
       }
+    },
+    (error) => {
+      // clear badge
+      chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
     })
   }
 }

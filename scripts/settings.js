@@ -77,7 +77,7 @@ function saveOptions () {
     not_found_popup: $('#not-found-popup').prop('checked')
   })
   if (wm_count === false) {
-    chrome.runtime.sendMessage({ message: 'clearCount' })
+    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })
