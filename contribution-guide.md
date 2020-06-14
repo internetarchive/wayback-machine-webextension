@@ -1,5 +1,4 @@
 
-
 # Contribution guide
 
 ## What do I need to know to help?
@@ -14,8 +13,8 @@ This is the easiest way of helping us with the project. You are encouraged to tr
 To share either bug or features, [create an issue here](https://github.com/internetarchive/wayback-machine-chrome/issues/new/choose), and we can continue the rest of the discussion there.
 
 ## How to set up the development environment?
-Before we begin, if you don't already have, download [git](https://git-scm.com/downloads) and [node.js](https://nodejs.org/en/download/) (You may look at relevant tutorials to set them up according to your operating system)
- - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-chrome/), and fork the project
+Before we begin, if you don't already have, download [git](https://git-scm.com/downloads ) and [node.js](https://nodejs.org/en/download/ ) (You may look at relevant tutorials to set them up according to your operating system)
+ - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-chrome/ ), and fork the project
  - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
  - Clone the project and navigate to working directory by typing the commands    
@@ -26,22 +25,7 @@ Before we begin, if you don't already have, download [git](https://git-scm.com/d
 - Now you have a `node_modules` directory populated with packages
 
 ## How to install developer version of the extension?
-Once you have cloned the repository to your local machine(this would work with both the original and the forked repositories, but if you wish to make changes, you need to clone the forked version), you can follow these steps, to run install the extension on your browser
-### Chrome
--   Navigate to  `chrome://extensions`  in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over  **More Tools**  and selecting  **Extensions**.
--   Turn on the switch next to  **Developer mode**.
--   Click the  **Load unpacked**  button and select the  `wayback-machine-chrome`  directory that contains this code.
-
-See  [What are extensions?](https://developer.chrome.com/extensions)  for more information on Chrome extensions.
-
-### Firefox
-
--   Open Firefox and navigate to  `about:debugging`  in the browser.
--   Click  **This Firefox**.
--   Click  **Load Temporary Add-on...**
--   Open the  `wayback-machine-chrome`  directory and select any file.
-
-See  [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/)  for more information on Firefox extensions.
+Once you have cloned the repository to your local machine(this would work with both the original and the forked repositories, but if you wish to make changes, you need to clone the forked version), you can follow the guide at [readme.md](https://github.com/internetarchive/wayback-machine-chrome/blob/master/README.md )
 ## How to contribute code and docs?
 ### Find / Create an Issue to work on
 
@@ -67,7 +51,7 @@ See  [Temporary installation in Firefox](https://extensionworkshop.com/documenta
 To learn how to write a good commit message,please see [https://chris.beams.io/posts/git-commit/](https://chris.beams.io/posts/git-commit/)
  - Push the changes to the repository using  
 `git push -u origin <branch-name>`
- - Open the main github repository, and create a Pull Request. (You will see an option when you open the repositary)
+ - Open the main github repository, and create a Pull Request. (You will see an option when you open the repository)
  - Review the PR title, and make it meaningful. For example  
 `"Fix 399: Popup background now Black"`
 
@@ -77,6 +61,7 @@ Here are a set of rules, you are advised to follow, to ensure smooth workflow.
  - Inform and talk to the community, before working on an issue
  - Always write meaningful commit messages
  - Only commit complete and well tested code
+ - Follow the [style guide](https://github.com/internetarchive/wayback-machine-chrome/blob/master/STYLE_GUIDE.md)
  - Make small commits - Add different commits for different changes.
  - Don't push straight to master. Create a separate branch(with a meaningful name) for each feature or bug you work on.
  - Avoid working on outdated forks. Follow these tutorials on [configuring a remote](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork), and [syncing a fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
