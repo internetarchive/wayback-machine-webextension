@@ -204,7 +204,7 @@ p {
         border: 1px solid #555;
     }
 
-    a {
+    a, .error b {
         color: #d66;
     }
     a:hover {
