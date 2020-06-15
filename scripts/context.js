@@ -96,9 +96,9 @@ function singlePageView() {
           }
         }
       }
-      //Hide error message if a context is selected
-      if (countFeature > 0) {
-        $('#error-message').hide()
+      //Show error message if no context is selected
+      if (countFeature <= 0) {
+        $('#error-message').removeClass('display-none')
       }
     })
   }) 
