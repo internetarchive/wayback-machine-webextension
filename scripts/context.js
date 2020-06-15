@@ -98,7 +98,7 @@ function singlePageView() {
       }
       //Show error message if no context is selected
       if (countFeature <= 0) {
-        $('#error-message').removeClass('display-none')
+        $('#error-message').show()
       }
     })
   }) 
