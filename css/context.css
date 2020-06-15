@@ -158,7 +158,7 @@ p {
     padding: 6px 12px;
 }
 
-#row_contain-url, #row_contain-domain {
+#row_contain-url, #row_contain-domain, #error-message {
     display: none;
 }
 
@@ -204,7 +204,7 @@ p {
         border: 1px solid #555;
     }
 
-    a {
+    a, .error b {
         color: #d66;
     }
     a:hover {
