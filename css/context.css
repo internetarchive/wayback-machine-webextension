@@ -16,6 +16,10 @@ p {
     margin: auto;
 }
 
+.flex-container {
+    display: flex;
+}
+
 @media screen and (min-width: 700px) {
     .test {
         text-align: center;
@@ -122,18 +126,19 @@ p {
 
 .col-tablinks {
     background-color: #f1f1f1;
+    flex: 1;
 }
+
 /* Style the buttons that are used to open the tab content */
 .col-tablinks button {
     background-color: inherit;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
     height: 100px;
-    width: 25%;
+    width: 100%;
     font-weight: bold;
     font-size: 20px;
 }
