@@ -2,7 +2,6 @@
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
-let waybackCountCache = {}
 
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
@@ -70,22 +69,6 @@ function getWaybackCount(url, onSuccess, onFail) {
   }
 }
 
-function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheTotal = waybackCountCache[url]
-  if (cacheTotal) {
-    onSuccess(cacheTotal)
-  } else {
-    getWaybackCount(url, (total) => {
-      waybackCountCache[url] = total
-      onSuccess(total)
-    }, onFail)
-  }
-}
-
-function clearCountCache() {
-  waybackCountCache = {}
-}
-
 /**
  * Checks Wayback Machine API for url snapshot
  */
@@ -134,7 +117,7 @@ const excluded_urls = [
   'moz-extension:',
   '192.168.',
   '10.',
-  'file:',
+  'file:'
 ]
 
 // Function to check whether it is a valid URL or not
@@ -347,8 +330,6 @@ if (typeof module !== 'undefined') {
     notify: notify,
     attachTooltip: attachTooltip,
     getWaybackCount: getWaybackCount,
-    getCachedWaybackCount: getCachedWaybackCount,
-    clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
     hostURL: hostURL,
     timestampToDate: timestampToDate,
