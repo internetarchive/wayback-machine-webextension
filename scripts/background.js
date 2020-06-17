@@ -13,6 +13,7 @@ var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = ''
 let toolbarIconState = {}
+let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 var newshosts = new Set([
@@ -142,12 +143,17 @@ async function validate_spn(tabId, job_id, silent = false) {
   }
 
   if (vdata.status === 'success') {
+    // update UI
     setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
       tabId: tabId
     })
+    // increment and update wayback count
+    incrementCount(vdata.original_url)
+    chrome.runtime.sendMessage({ message: 'updateCountBadge' })  // not working
+    // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
       // replace message if present in result
@@ -162,16 +168,15 @@ async function validate_spn(tabId, job_id, silent = false) {
           }
         })
       })
-      // increment and update wayback count
-      incrementCount(vdata.original_url)
-      chrome.runtime.sendMessage({ message: 'updateCountBadge' })
     }
   } else if (!vdata.status || (status === 'error')) {
+    // update UI
     clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
     })
+    // notify
     if (!silent) {
       notify('Error: ' + vdata.message, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
@@ -386,7 +391,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       clearToolbarState(tabs[0].id)
     })
+  } else if (message.message === 'getCachedWaybackCount') {
+    // retrive wayback count
+    getCachedWaybackCount(message.url,
+      (total) => { sendResponse({ total: total }) },
+      (error) => { sendResponse({ error: error }) }
+    )
   }
+  return true
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
@@ -488,6 +500,35 @@ function auto_save(tabId, url) {
   }
 }
 
+/*** Wayback Count ***/
+
+function getCachedWaybackCount(url, onSuccess, onFail) {
+  let cacheTotal = waybackCountCache[url]
+  console.log('cacheTotal: ' + cacheTotal + ' for url: ' + url)  // DEBUG
+  if (cacheTotal) {
+    onSuccess(cacheTotal)
+  } else {
+    getWaybackCount(url, (total) => {
+      waybackCountCache[url] = total
+      onSuccess(total)
+    }, onFail)
+  }
+}
+
+function clearCountCache() {
+  waybackCountCache = {}
+}
+
+/**
+ * Adds +1 to url in cache, or set to 1 if it doesn't exist.
+ * @param url {string}
+ */
+function incrementCount(url) {
+  console.log('incrementCount url: ' + url)  // DEBUG
+  let cacheTotal = waybackCountCache[url]
+  waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
+}
+
 function updateWaybackCountBadge(tabId, url) {
   console.log('updateWaybackCountBadge url: ' + url)  // DEBUG
   chrome.storage.sync.get(['wm_count'], function (event) {
@@ -510,6 +551,8 @@ function updateWaybackCountBadge(tabId, url) {
     }
   })
 }
+
+/*** Toolbar ***/
 
 /**
  * Sets the toolbar icon.
@@ -553,6 +596,8 @@ function updateToolbarIcon(tabId) {
     }
   })
 }
+
+/*** Right-click Menu ***/
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({

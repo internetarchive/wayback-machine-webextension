@@ -458,6 +458,24 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   console.log('showWaybackCount url: ' + url)  // DEBUG
   // FIXME: This is not grabbing total from the cache, but calling the API each time!
+
+  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, function(result) { 
+    if (result.total) {
+      // set label
+      let text = ''
+      if (result.total === 1) {
+        text = 'Saved once.'
+      } else if (result.total > 1) {
+        text = 'Saved ' + result.total.toLocaleString() + ' times.'
+      } else {
+        text = 'This page was never archived.'
+      }
+      $('#wayback-count-label').text(text)
+    } else if (result.error) {
+      clearWaybackCount()
+    }
+  })
+/*
   getCachedWaybackCount(url, (total) => {
     // set label
     let text = ''
@@ -473,6 +491,7 @@ function showWaybackCount(url) {
   (error) => {
     clearWaybackCount()
   })
+*/
 }
 
 function clearWaybackCount() {
