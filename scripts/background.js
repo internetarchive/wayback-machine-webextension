@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
-/*   global getCachedWaybackCount, badgeCountText */
+/*   global badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -13,6 +13,7 @@ var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = ''
 let toolbarIconState = {}
+let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 var newshosts = new Set([
@@ -142,12 +143,17 @@ async function validate_spn(tabId, job_id, silent = false) {
   }
 
   if (vdata.status === 'success') {
+    // update UI
     setToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
       tabId: tabId
     })
+    // increment and update wayback count
+    incrementCount(vdata.original_url)
+    chrome.runtime.sendMessage({ message: 'updateCountBadge' }) // not working
+    // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
       // replace message if present in result
@@ -164,11 +170,13 @@ async function validate_spn(tabId, job_id, silent = false) {
       })
     }
   } else if (!vdata.status || (status === 'error')) {
+    // update UI
     clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
     })
+    // notify
     if (!silent) {
       notify('Error: ' + vdata.message, function(notificationId) {
         chrome.notifications.onClicked.addListener(function(newNotificationId) {
@@ -368,28 +376,37 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state
     sendResponse({ state: getToolbarState(message.tabId) })
-  } else if (message.message === 'clearCount') {
+  } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       updateWaybackCountBadge(tabs[0].id, null)
+    })
+  } else if (message.message === 'updateCountBadge') {
+    // update wayback count badge
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      updateWaybackCountBadge(tabs[0].id, tabs[0].url)
     })
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       clearToolbarState(tabs[0].id)
     })
+  } else if (message.message === 'getCachedWaybackCount') {
+    // retrive wayback count
+    getCachedWaybackCount(message.url,
+      (total) => { sendResponse({ total: total }) },
+      (error) => { sendResponse({ error: error }) }
+    )
+  } else if (message.message === 'clearCountCache') {
+    clearCountCache()
   }
+  return true
 })
 
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   if (info.status === 'complete') {
-    chrome.storage.sync.get(['wm_count', 'auto_archive'], function (event) {
-      // wayback count
-      if (event.wm_count === true) {
-        updateWaybackCountBadge(tab.id, tab.url)
-      } else {
-        updateWaybackCountBadge(tab.id, null)
-      }
+    updateWaybackCountBadge(tab.id, tab.url)
+    chrome.storage.sync.get(['auto_archive'], function (event) {
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
@@ -443,30 +460,27 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
   }
 })
 
-// Updating the context page based on every tab the user is selecting
+// Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource', 'wm_count'], function (event) {
+  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
     if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
       // reset toolbar if resource setting turned off
       clearToolbarState(info.tabId)
     } else {
       updateToolbarIcon(info.tabId)
     }
-    if (event.wm_count === false) {
-      // clear badge if wayback count setting turned off
-      updateWaybackCountBadge(info.tabId, null)
-    }
-    if (event.auto_update_context === true) {
-      chrome.tabs.get(info.tabId, function (tab) {
-        if (tabIdPromise) {
-          tabIdPromise.then(function (id) {
-            if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
-              chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
-            }
-          })
-        }
-      })
-    }
+    chrome.tabs.get(info.tabId, function (tab) {
+      // update or clear count badge
+      updateWaybackCountBadge(info.tabId, tab.url)
+      // auto update context page
+      if ((event.auto_update_context === true) && tabIdPromise) {
+        tabIdPromise.then(function (id) {
+          if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
+            chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
+          }
+        })
+      }
+    })
   })
 })
 
@@ -488,24 +502,57 @@ function auto_save(tabId, url) {
   }
 }
 
-function updateWaybackCountBadge(tabId, url) {
-  if (!url) {
-    // clear badge
-    chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+/* * * Wayback Count * * */
+
+function getCachedWaybackCount(url, onSuccess, onFail) {
+  let cacheTotal = waybackCountCache[url]
+  if (cacheTotal) {
+    onSuccess(cacheTotal)
   } else {
-    getCachedWaybackCount(url, (total) => {
-      if (total > 0) {
-        // display badge
-        let text = badgeCountText(total)
-        chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
-        chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
-      } else {
-        // clear badge
-        chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
-      }
-    })
+    getWaybackCount(url, (total) => {
+      waybackCountCache[url] = total
+      onSuccess(total)
+    }, onFail)
   }
 }
+
+function clearCountCache() {
+  waybackCountCache = {}
+}
+
+/**
+ * Adds +1 to url in cache, or set to 1 if it doesn't exist.
+ * @param url {string}
+ */
+function incrementCount(url) {
+  let cacheTotal = waybackCountCache[url]
+  waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
+}
+
+function updateWaybackCountBadge(tabId, url) {
+  chrome.storage.sync.get(['wm_count'], function (event) {
+    if (url && isValidUrl(url) && isNotExcludedUrl(url) && (event.wm_count === true)) {
+      getCachedWaybackCount(url, (total) => {
+        if (total > 0) {
+          // display badge
+          let text = badgeCountText(total)
+          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
+          chrome.browserAction.setBadgeText({ tabId: tabId, text: text })
+        } else {
+          chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+        }
+      },
+      (error) => {
+        console.log('wayback count error: ' + error)
+        chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+      })
+    } else {
+      chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
+    }
+  })
+}
+
+/* * * Toolbar * * */
 
 /**
  * Sets the toolbar icon.
@@ -545,10 +592,12 @@ function updateToolbarIcon(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs[0].id === tabId) {
       let name = toolbarIconState[tabId]
-      setToolbarIcon(name ? name : 'archive')
+      setToolbarIcon(name || 'archive')
     }
   })
 }
+
+/* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
@@ -594,7 +643,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           // TODO: FIXME: This isn't working!
           chrome.runtime.sendMessage({
             message: 'openurl',
-            wayback_url: hostURL+'save/',
+            wayback_url: hostURL + 'save/',
             page_url: page_url,
             options: ['capture_all'],
             method: 'save'
