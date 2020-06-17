@@ -78,6 +78,7 @@ function saveOptions () {
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+    chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })

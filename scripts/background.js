@@ -397,6 +397,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       (total) => { sendResponse({ total: total }) },
       (error) => { sendResponse({ error: error }) }
     )
+  } else if (message.message === 'clearCountCache') {
+    clearCountCache()
   }
   return true
 })
