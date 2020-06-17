@@ -117,7 +117,7 @@ const excluded_urls = [
   'moz-extension:',
   '192.168.',
   '10.',
-  'file:',
+  'file:'
 ]
 
 // Function to check whether it is a valid URL or not

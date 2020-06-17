@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
-/*   global getCachedWaybackCount, badgeCountText, incrementCount */
+/*   global badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -152,7 +152,7 @@ async function validate_spn(tabId, job_id, silent = false) {
     })
     // increment and update wayback count
     incrementCount(vdata.original_url)
-    chrome.runtime.sendMessage({ message: 'updateCountBadge' })  // not working
+    chrome.runtime.sendMessage({ message: 'updateCountBadge' }) // not working
     // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -502,11 +502,10 @@ function auto_save(tabId, url) {
   }
 }
 
-/*** Wayback Count ***/
+/* * * Wayback Count * * */
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
   let cacheTotal = waybackCountCache[url]
-  console.log('cacheTotal: ' + cacheTotal + ' for url: ' + url)  // DEBUG
   if (cacheTotal) {
     onSuccess(cacheTotal)
   } else {
@@ -526,13 +525,11 @@ function clearCountCache() {
  * @param url {string}
  */
 function incrementCount(url) {
-  console.log('incrementCount url: ' + url)  // DEBUG
   let cacheTotal = waybackCountCache[url]
   waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
 }
 
 function updateWaybackCountBadge(tabId, url) {
-  console.log('updateWaybackCountBadge url: ' + url)  // DEBUG
   chrome.storage.sync.get(['wm_count'], function (event) {
     if (url && isValidUrl(url) && isNotExcludedUrl(url) && (event.wm_count === true)) {
       getCachedWaybackCount(url, (total) => {
@@ -546,6 +543,7 @@ function updateWaybackCountBadge(tabId, url) {
         }
       },
       (error) => {
+        console.log('wayback count error: ' + error)
         chrome.browserAction.setBadgeText({ tabId: tabId, text: '' })
       })
     } else {
@@ -554,7 +552,7 @@ function updateWaybackCountBadge(tabId, url) {
   })
 }
 
-/*** Toolbar ***/
+/* * * Toolbar * * */
 
 /**
  * Sets the toolbar icon.
@@ -594,12 +592,12 @@ function updateToolbarIcon(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs[0].id === tabId) {
       let name = toolbarIconState[tabId]
-      setToolbarIcon(name ? name : 'archive')
+      setToolbarIcon(name || 'archive')
     }
   })
 }
 
-/*** Right-click Menu ***/
+/* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.create({
@@ -645,7 +643,7 @@ chrome.contextMenus.onClicked.addListener(function (click) {
           // TODO: FIXME: This isn't working!
           chrome.runtime.sendMessage({
             message: 'openurl',
-            wayback_url: hostURL+'save/',
+            wayback_url: hostURL + 'save/',
             page_url: page_url,
             options: ['capture_all'],
             method: 'save'

@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount, hostURL */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -393,8 +393,8 @@ function show_wikibooks() {
 function noContextTip() {
   chrome.storage.sync.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) { 
-      if (event[context]) { 
+    for (const context in event) {
+      if (event[context]) {
         $('#contextBtn').removeAttr('disabled')
         return $('#contextBtn').click(show_all_screens)
       }
@@ -403,7 +403,6 @@ function noContextTip() {
       $('#ctxbox').addClass('flip-inside')
       $('#contextBtn').attr('disabled', true)
     }
-    /* $('#context-screen').css({ opacity: 0.5 }) */
   })
 }
 
@@ -456,10 +455,7 @@ function setupWaybackCount() {
 }
 
 function showWaybackCount(url) {
-  console.log('showWaybackCount url: ' + url)  // DEBUG
-  // FIXME: This is not grabbing total from the cache, but calling the API each time!
-
-  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, function(result) { 
+  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, function(result) {
     if (result.total) {
       // set label
       let text = ''
@@ -475,30 +471,10 @@ function showWaybackCount(url) {
       clearWaybackCount()
     }
   })
-/*
-  getCachedWaybackCount(url, (total) => {
-    // set label
-    let text = ''
-    if (total === 1) {
-      text = 'Saved once.'
-    } else if (total > 1) {
-      text = 'Saved ' + total.toLocaleString() + ' times.'
-    } else {
-      text = 'This page was never archived.'
-    }
-    $('#wayback-count-label').text(text)
-  },
-  (error) => {
-    clearWaybackCount()
-  })
-*/
 }
 
 function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
-//  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
-//  })
 }
 
 // make the tab/window option in setting page checked according to previous setting

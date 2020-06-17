@@ -4,7 +4,7 @@
 /*   global attachTooltip, isNotExcludedUrl */
 
 // from 'popup.js'
-/*   global show_all_screens */
+/*   global show_all_screens, openContextMenu */
 
 $(initializeSettings)
 $('.only').click(validate)
