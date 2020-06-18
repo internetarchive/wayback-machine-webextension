@@ -627,7 +627,6 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(function (click) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g
       const page_url = tabs[0].url
       let wayback_url
       let wmIsAvailable = true
