@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox, resetExtensionStorage, viewableTimestamp */
 /*   global badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
@@ -45,7 +45,11 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, function () {
       openByWindowSetting(open_url)
     }, function () {
-      alert('This page has not been archived.')
+      if(isFirefox){
+        notify('This page has not been archived.')
+      }else{
+        alert('This page has not been archived.')
+      }
     })
   } else {
     openByWindowSetting(open_url)
