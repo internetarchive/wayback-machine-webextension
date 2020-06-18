@@ -51,7 +51,7 @@ function get_clean_url(url) {
 
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
       options.push('capture_outlinks')
@@ -85,7 +85,7 @@ function last_save() {
     } else {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        let url = get_clean_url(tabs[0].url)
+        let url = tabs[0].url
         chrome.runtime.sendMessage({
           message: 'getLastSaveTime',
           page_url: url
@@ -110,7 +110,7 @@ function checkAuthentication(callback) {
 
 function recent_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -122,7 +122,7 @@ function recent_capture() {
 
 function first_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -134,7 +134,7 @@ function first_capture() {
 
 function view_all() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
