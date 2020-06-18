@@ -331,7 +331,7 @@ if (typeof module !== 'undefined') {
     attachTooltip: attachTooltip,
     getWaybackCount: getWaybackCount,
     badgeCountText: badgeCountText,
-    isFirefox:isFirefox,
+    isFirefox: isFirefox,
     hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,

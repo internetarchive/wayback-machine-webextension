@@ -45,9 +45,9 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, function () {
       openByWindowSetting(open_url)
     }, function () {
-      if(isFirefox){
+      if (isFirefox) {
         notify('This page has not been archived.')
-      }else{
+      } else {
         alert('This page has not been archived.')
       }
     })
