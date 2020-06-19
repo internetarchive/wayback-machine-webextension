@@ -488,18 +488,10 @@ chrome.runtime.onMessage.addListener(
           $('#save_now').text('Save successful')
           $('#last_save').text(message.time)
           $('#savebox').addClass('flip-inside')
-        }
-        if (message.message === 'save_start') {
+        } else if (message.message === 'save_start') {
           $('#save_now').text('Saving Snapshot...')
-        }
-        if(message.message === "save_error"){
+        } else if (message.message === 'save_error') {
           $('#save_now').text('Save Failed')
-          $('#last_save').text(message.error)
-          if(message.error === "You need to be logged in to use Save Page Now."){
-            $('#savebtn').off('click').click(function(){
-              openByWindowSetting('https://archive.org/account/login');
-            })
-          }
         }
       }
     })
