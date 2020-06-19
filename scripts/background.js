@@ -424,7 +424,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
-    removeToolbarState(tab.id, 'R')
+    clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
