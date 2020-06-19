@@ -12,7 +12,8 @@ var manifest = chrome.runtime.getManifest()
 var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = ''
-let toolbarIconState = {}
+//let toolbarIconState = {} // REMOVE
+let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
@@ -115,7 +116,7 @@ async function validate_spn(tabId, job_id, silent = false) {
       tabId: tabId
     })
     if (status === 'pending') {
-      setToolbarState(tabId, 'S')
+      addToolbarState(tabId, 'S')
     }
 
     await sleep(1000)
@@ -141,10 +142,12 @@ async function validate_spn(tabId, job_id, silent = false) {
         vdata = data
       })
   }
+  // update when done
+  removeToolbarState(tabId, 'S')
 
   if (vdata.status === 'success') {
     // update UI
-    setToolbarState(tabId, 'check')
+    addToolbarState(tabId, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
@@ -171,7 +174,6 @@ async function validate_spn(tabId, job_id, silent = false) {
     }
   } else if (!vdata.status || (status === 'error')) {
     // update UI
-    clearToolbarState(tabId)
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message
@@ -374,7 +376,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       openByWindowSetting(context_url, null, resolve)
     })
   } else if (message.message === 'getToolbarState') {
-    // retrieve the toolbar state
+    // retrieve the toolbar state set
     sendResponse({ state: getToolbarState(message.tabId) })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
@@ -389,7 +391,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      clearToolbarState(tabs[0].id)
+      removeToolbarState(tabs[0].id, 'R')
     })
   } else if (message.message === 'getCachedWaybackCount') {
     // retrive wayback count
@@ -414,7 +416,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
-    clearToolbarState(tab.id)
+    removeToolbarState(tab.id, 'R')
     if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
@@ -432,17 +434,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                 .then(resp => resp.json())
                 .then(resp => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                    setToolbarState(tabId, 'R')
+                    addToolbarState(tabId, 'R')
                     // Storing the tab url as well as the fetched archive url for future use
                     chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, function () {})
                   }
                 })
             // checking resource of wikipedia books and papers
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-              setToolbarState(tabId, 'R')
+              addToolbarState(tabId, 'R')
             // checking resource of tv news
             } else if (newshosts.has(news_host)) {
-              setToolbarState(tabId, 'R')
+              addToolbarState(tabId, 'R')
             }
           }
         })
@@ -463,11 +465,11 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener(function (info) {
   chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
-    if ((event.resource === false) && (getToolbarState(info.tabId) === 'R')) {
+    if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
       // reset toolbar if resource setting turned off
-      clearToolbarState(info.tabId)
+      removeToolbarState(info.tabId, 'R')
     } else {
-      updateToolbarIcon(info.tabId)
+      updateToolbar(info.tabId)
     }
     chrome.tabs.get(info.tabId, function (tab) {
       // update or clear count badge
@@ -489,12 +491,11 @@ function auto_save(tabId, url) {
     wmAvailabilityCheck(url,
       function () {
         // check if page is now in archive after auto-saved
-        if (getToolbarState(tabId) === 'S') {
-        }
+        // (don't do anything)
       },
       function () {
         // set auto-save toolbar icon if page doesn't exist, then save it
-        if (getToolbarState(tabId) !== 'S') {
+        if (!getToolbarState(tabId).has('S')) {
           savePageNow(tabId, url, true)
         }
       }
@@ -571,6 +572,61 @@ function setToolbarIcon(name) {
   chrome.browserAction.setIcon({ path: details })
 }
 
+// Add state to the state set for given tabId.
+// state is 'S', 'R', or 'check'
+function addToolbarState(tabId, state) {
+  if (!gToolbarStates[tabId]) {
+    gToolbarStates[tabId] = new Set()
+  }
+  gToolbarStates[tabId].add(state)
+}
+
+// Remove state from the state set for given tabId.
+function removeToolbarState(tabId, state) {
+  if (gToolbarStates[tabId]) {
+    gToolbarStates[tabId].delete(state)
+  }
+}
+
+// Returns a Set of toolbar states, or an empty set.
+function getToolbarState(tabId) {
+  return (gToolbarStates[tabId]) ? gToolbarStates[tabId] : new Set()
+}
+
+// Clears state for given tabId and update toolbar icon.
+function clearToolbar(tabId) {
+  if (gToolbarStates[tabId]) {
+    gToolbarStates[tabId].clear()
+    delete gToolbarStates[tabId]
+  }
+  updateToolbar(tabId)
+}
+
+/**
+ * Updates the toolbar icon using the state set stored in gToolbarStates.
+ * Only updates icon if tabId is the currently active tab, else does nothing.
+ * @param tabId {integer}
+ */
+function updateToolbar(tabId) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (tabs[0].id === tabId) {
+      let state = gToolbarStates[tabId]
+      // this order defines the priority of what icon to display
+      if (state && state.has('S')) {
+        setToolbarIcon('S')
+      } else if (state && state.has('R')) {
+        setToolbarIcon('R')
+      } else if (state && state.has('check')) {
+        setToolbarIcon('check')
+      } else {
+        setToolbarIcon('archive')
+      }
+    }
+  })
+}
+
+// REMOVE
+/*
 function setToolbarState(tabId, name) {
   toolbarIconState[tabId] = name
   updateToolbarIcon(tabId)
@@ -596,6 +652,7 @@ function updateToolbarIcon(tabId) {
     }
   })
 }
+*/
 
 /* * * Right-click Menu * * */
 
