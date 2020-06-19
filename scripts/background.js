@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, resetExtensionStorage, viewableTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox, resetExtensionStorage, viewableTimestamp */
 /*   global badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
@@ -46,7 +46,11 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, function () {
       openByWindowSetting(open_url)
     }, function () {
-      alert('This page has not been archived.')
+      if (isFirefox) {
+        notify('This page has not been archived.')
+      } else {
+        alert('This page has not been archived.')
+      }
     })
   } else {
     openByWindowSetting(open_url)
@@ -684,8 +688,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(function (click) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g
-      const page_url = tabs[0].url.replace(pattern, '')
+      const page_url = tabs[0].url
       let wayback_url
       let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
