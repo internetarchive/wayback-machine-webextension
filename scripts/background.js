@@ -12,7 +12,6 @@ var manifest = chrome.runtime.getManifest()
 var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
 var globalStatusCode = ''
-//let toolbarIconState = {} // REMOVE
 let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
@@ -381,10 +380,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set
-    //sendResponse({ state: getToolbarState(message.tabId) })
     let state = getToolbarState(message.tabId)
-    console.log('getToolbarState: ', state) // DEBUG
-    // FIXME: sending state won't work unless it's JSON compatible (which Set() isn't)
     sendResponse({ stateArray: Array.from(state) })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
@@ -634,35 +630,6 @@ function updateToolbar(tabId) {
     }
   })
 }
-
-// REMOVE
-/*
-function setToolbarState(tabId, name) {
-  toolbarIconState[tabId] = name
-  updateToolbarIcon(tabId)
-}
-
-function getToolbarState(tabId) {
-  return toolbarIconState[tabId]
-}
-
-function clearToolbarState(tabId) {
-  if (toolbarIconState[tabId]) {
-    delete toolbarIconState[tabId]
-  }
-  updateToolbarIcon(tabId)
-}
-
-// Only update the toolbar icon if tabId is the currently active tab
-function updateToolbarIcon(tabId) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    if (tabs[0].id === tabId) {
-      let name = toolbarIconState[tabId]
-      setToolbarIcon(name || 'archive')
-    }
-  })
-}
-*/
 
 /* * * Right-click Menu * * */
 

@@ -376,7 +376,6 @@ function show_wikibooks() {
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
-        console.log('show_wikibooks() state: ', state) // DEBUG
         if (state.has('R')) {
           // show wikipedia books button
           $('#wikibooks_tr').show().click(function () {
