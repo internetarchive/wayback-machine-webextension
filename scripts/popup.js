@@ -314,7 +314,8 @@ function borrow_books() {
     const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state && result.state.has('R')) {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
           $('#borrow_books_tr').css({ 'display': 'block' })
           chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
             const stored_url = res.tab_url
@@ -356,7 +357,8 @@ function show_news() {
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-          if (result.state && result.state.has('R')) {
+          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
             $('#news_recommend_tr').show().click(() => {
               const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
@@ -373,7 +375,9 @@ function show_wikibooks() {
     const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state && result.state.has('R')) {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        console.log('show_wikibooks() state: ', state) // DEBUG
+        if (state.has('R')) {
           // show wikipedia books button
           $('#wikibooks_tr').show().click(function () {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url

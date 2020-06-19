@@ -381,7 +381,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set
-    sendResponse({ state: getToolbarState(message.tabId) })
+    //sendResponse({ state: getToolbarState(message.tabId) })
+    let state = getToolbarState(message.tabId)
+    console.log('getToolbarState: ', state) // DEBUG
+    // FIXME: sending state won't work unless it's JSON compatible (which Set() isn't)
+    sendResponse({ stateArray: Array.from(state) })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -576,20 +580,22 @@ function setToolbarIcon(name) {
   chrome.browserAction.setIcon({ path: details })
 }
 
-// Add state to the state set for given tabId.
+// Add state to the state set for given tabId, and update toolbar.
 // state is 'S', 'R', or 'check'
 function addToolbarState(tabId, state) {
   if (!gToolbarStates[tabId]) {
     gToolbarStates[tabId] = new Set()
   }
   gToolbarStates[tabId].add(state)
+  updateToolbar(tabId)
 }
 
-// Remove state from the state set for given tabId.
+// Remove state from the state set for given tabId, and update toolbar.
 function removeToolbarState(tabId, state) {
   if (gToolbarStates[tabId]) {
     gToolbarStates[tabId].delete(state)
   }
+  updateToolbar(tabId)
 }
 
 // Returns a Set of toolbar states, or an empty set.
@@ -598,7 +604,7 @@ function getToolbarState(tabId) {
 }
 
 // Clears state for given tabId and update toolbar icon.
-function clearToolbar(tabId) {
+function clearToolbarState(tabId) {
   if (gToolbarStates[tabId]) {
     gToolbarStates[tabId].clear()
     delete gToolbarStates[tabId]
