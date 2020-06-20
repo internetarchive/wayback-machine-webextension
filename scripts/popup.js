@@ -7,48 +7,6 @@ function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
 
-function remove_port(url) {
-  if (url.substr(-4) === ':80/') {
-    url = url.substring(0, url.length - 4)
-  }
-  return url
-}
-
-function remove_wbm(url) {
-  var pos = url.indexOf('/http')
-  var new_url = ''
-  if (pos !== -1) {
-    new_url = url.substring(pos + 1)
-  } else {
-    pos = url.indexOf('/www')
-    new_url = url.substring(pos + 1)
-  }
-  return remove_port(new_url)
-}
-
-function remove_alexa(url) {
-  var pos = url.indexOf('/siteinfo/')
-  var new_url = url.substring(pos + 10)
-  return remove_port(new_url)
-}
-
-function remove_whois(url) {
-  var pos = url.indexOf('/whois/')
-  var new_url = url.substring(pos + 7)
-  return remove_port(new_url)
-}
-
-function get_clean_url(url) {
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
-  }
-  return url
-}
-
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = tabs[0].url
@@ -153,9 +111,9 @@ function social_share(eventObj) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = tabs[0].url
     if (url.includes('web.archive.org')) {
-      sharing_url = url // If the user is already at a playback page,share that URL
+      sharing_url = url // If the user is already at a playback page, share that URL
     } else {
-      sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
+      sharing_url = overview_url + url // When not on a playback page, share the overview version of that URL
     }
     var open_url = ''
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
@@ -173,7 +131,7 @@ function social_share(eventObj) {
 
 function search_tweet() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
@@ -290,7 +248,7 @@ function about_support() {
 
 function sitemap() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
 }
@@ -303,7 +261,7 @@ function settings() {
 
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
