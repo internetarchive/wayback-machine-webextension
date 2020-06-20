@@ -4,8 +4,8 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox, resetExtensionStorage, viewableTimestamp */
-/*   global badgeCountText, getWaybackCount */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global initDefaultOptions, viewableTimestamp, badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -212,7 +212,7 @@ chrome.runtime.onStartup.addListener((details) => {
 
 // Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
-  resetExtensionStorage()
+  initDefaultOptions()
   chrome.storage.sync.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
       chrome.browserAction.setPopup({ popup: 'index.html' })

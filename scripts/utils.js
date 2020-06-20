@@ -294,23 +294,25 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     })
 }
 
-function resetExtensionStorage () {
+function initDefaultOptions () {
   chrome.storage.sync.set({
-    show_context: 'tab',
-    resource: false,
-    auto_update_context: false,
-    wm_count: false,
-    auto_archive: false,
-    email_outlinks: false,
     spn_outlinks: false,
     spn_screenshot: false,
+    /* General */
+    wm_count: true,
+    resource: true,
+    auto_archive: true,
+    email_outlinks: true,
+    not_found_popup: true,
+    auto_update_context: true,
+    show_context: 'tab',
+    /* Contexts */
+    showall: false,
     alexa: false,
     domaintools: false,
     wbmsummary: false,
     annotations: false,
-    tagcloud: false,
-    showall: false,
-    not_found_popup: true
+    tagcloud: false
   })
 }
 
@@ -334,6 +336,6 @@ if (typeof module !== 'undefined') {
     hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,
-    resetExtensionStorage: resetExtensionStorage
+    initDefaultOptions: initDefaultOptions
   }
 }
