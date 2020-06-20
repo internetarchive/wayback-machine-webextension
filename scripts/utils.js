@@ -296,7 +296,6 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 function resetExtensionStorage () {
   chrome.storage.sync.set({
-    agreement: false,
     show_context: 'tab',
     resource: false,
     auto_update_context: false,

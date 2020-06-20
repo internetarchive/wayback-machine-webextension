@@ -56,6 +56,8 @@ function URLopener(open_url, url, wmIsAvailable) {
   }
 }
 
+/* * * API Calls * * */
+
 function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
@@ -193,27 +195,25 @@ async function validate_spn(tabId, job_id, silent = false) {
   }
 }
 
+/* * * Startup related * * */
+
 chrome.storage.sync.set({
   newshosts: Array.from(newshosts)
 })
-/**
- *
- * Installed callback
- */
-chrome.runtime.onStartup.addListener(function(details) {
-  chrome.storage.sync.get(['agreement'], function(result) {
+
+// Runs whenever extension starts up, except during incognito mode.
+chrome.runtime.onStartup.addListener((details) => {
+  chrome.storage.sync.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
 })
 
+// Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
   resetExtensionStorage()
-})
-
-chrome.runtime.onInstalled.addListener(function(details) {
-  chrome.storage.sync.get(['agreement'], function(result) {
+  chrome.storage.sync.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
