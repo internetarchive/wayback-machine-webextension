@@ -110,11 +110,7 @@ function social_share(eventObj) {
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = tabs[0].url
-    if (url.includes('web.archive.org')) {
-      sharing_url = url // If the user is already at a playback page, share that URL
-    } else {
-      sharing_url = overview_url + url // When not on a playback page, share the overview version of that URL
-    }
+    sharing_url = overview_url + url // Share the overview version of that URL
     var open_url = ''
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
@@ -254,7 +250,6 @@ function sitemap() {
 }
 
 function settings() {
-  // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
   $('#popup-page').hide()
   $('#setting-page').show()
 }
