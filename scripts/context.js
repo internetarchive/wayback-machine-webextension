@@ -41,7 +41,6 @@ function openContextFeature(evt, feature) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show()
   evt.currentTarget.children[0].className += ' active'
-  return feature
 }
 
 function singlePageView() {
@@ -57,7 +56,7 @@ function singlePageView() {
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
     chrome.storage.sync.get(['selectedFeature'], function(result) {
-      var openedFeature = result.selectedFeature
+      let openedFeature = result.selectedFeature
       let clickFeature = null
       let countFeature = 0
       for (let i = 0; i < features.length; i++) {
@@ -73,35 +72,38 @@ function singlePageView() {
           countFeature++
           contexts_dic[feature]()
           $(featureTabId).click(function(event) {
-            let selectedFeature = openContextFeature(event, featureId) + '_tab'
-            chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+            // When clicked on a context tab, open that tab and set that tab as selectedFeature
+            openContextFeature(event, featureId)
+            let selectedFeature = featureTabId
+            chrome.storage.sync.set({ selectedFeature }, function() {
             })
           })
-          //Get first tab
+          // Get first tab
           if (!clickFeature) {
             clickFeature = featureTabId
           }
+          // Open the selected tab if it is there
           if (openedFeature) {
-            //Open the first tab if last selected tab is hidden now
+            // Open the first tab if last selected tab is hidden now
             if (openedFeature !== featureTabId) {
               $(clickFeature).click()
             } else {
-              //Open the last selected tab
+              // Open the last selected tab
               clickFeature = openedFeature
               $(clickFeature).click()
             }
           } else {
-            //Open first tab if user is accesing Contexts Page for the first time
+            // Open first tab if user is accesing Contexts Page for the first time
             $(clickFeature).click()
           }
         }
       }
-      //Show error message if no context is selected
+      // Show error message if no context is selected
       if (countFeature <= 0) {
         $('#error-message').show()
       }
     })
-  }) 
+  })
 }
 
 window.onload = singlePageView
