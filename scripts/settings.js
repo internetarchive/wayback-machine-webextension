@@ -4,7 +4,7 @@
 /*   global attachTooltip, isNotExcludedUrl */
 
 // from 'popup.js'
-/*   global show_all_screens */
+/*   global show_all_screens, openContextMenu */
 
 $(initializeSettings)
 $('.only').click(validate)
@@ -77,7 +77,8 @@ function saveOptions () {
     not_found_popup: $('#not-found-popup').prop('checked')
   })
   if (wm_count === false) {
-    chrome.runtime.sendMessage({ message: 'clearCount' })
+    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+    chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })
@@ -112,26 +113,29 @@ function noneSelected () {
 function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
-  // checking contexts selection status
-  if (noneSelected()) {
-    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
-    $('#context-screen').off('click')
-    $('#contextBtn').attr('disabled', true)
-  } else {
-    if ($('#ctxbox').hasClass('flip-inside')) {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    // checking contexts selection status
+    if (noneSelected()) {
+      if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
+      /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
+      $('#contextBtn').off('click')
+      $('#contextBtn').attr('disabled', true)
+      if (isNotExcludedUrl(tabs[0].url)) {
+        $('#contextTip').click(openContextMenu)
+      }
+    } else {
+      if ($('#ctxbox').hasClass('flip-inside')) {
         if (!isNotExcludedUrl(tabs[0].url)) {
           $('#contextTip').text('URL not supported')
         } else {
           $('#ctxbox').removeClass('flip-inside')
         }
-      })
+      }
+      /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
+      $('#contextBtn').off('click').on('click', show_all_screens)
+      $('#contextBtn').removeAttr('disabled')
     }
-    /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
-    $('#context-screen').off('click').on('click', show_all_screens) /* TODO: check this */
-    $('#contextBtn').removeAttr('disabled')
-  }
+  })
 }
 
 function switchSetting() {

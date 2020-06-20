@@ -2,7 +2,6 @@
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
-let waybackCountCache = {}
 
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
@@ -70,22 +69,6 @@ function getWaybackCount(url, onSuccess, onFail) {
   }
 }
 
-function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheTotal = waybackCountCache[url]
-  if (cacheTotal) {
-    onSuccess(cacheTotal)
-  } else {
-    getWaybackCount(url, (total) => {
-      waybackCountCache[url] = total
-      onSuccess(total)
-    }, onFail)
-  }
-}
-
-function clearCountCache() {
-  waybackCountCache = {}
-}
-
 /**
  * Checks Wayback Machine API for url snapshot
  */
@@ -126,15 +109,15 @@ const excluded_urls = [
   'localhost',
   '0.0.0.0',
   '127.0.0.1',
-  'chrome://',
-  'chrome://newtab',
+  'chrome:',
   'chrome.google.com/webstore',
-  'chrome-extension://',
+  'chrome-extension:',
   'web.archive.org',
-  'about:debugging',
-  'about:newtab',
-  'about:preferences',
-  'moz-extension://'
+  'about:',
+  'moz-extension:',
+  '192.168.',
+  '10.',
+  'file:'
 ]
 
 // Function to check whether it is a valid URL or not
@@ -262,9 +245,9 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    let width = window.screen.availWidth
-    let height = window.screen.availHeight
-    chrome.windows.create({ url: url, width: width / 2, height, top: 0, left: width / 2, focused: true }, function (window) {
+    let width = Math.floor(window.screen.availWidth * 0.75)
+    let height = Math.floor(window.screen.availHeight * 0.90)
+    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, function (window) {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
@@ -274,7 +257,7 @@ function notify(message, callback) {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
-    iconUrl: chrome.extension.getURL('images/icon@2x.png')
+    iconUrl: chrome.extension.getURL('images/app-icon/app-icon96.png')
   }
   chrome.notifications.create(options, callback)
 }
@@ -347,9 +330,8 @@ if (typeof module !== 'undefined') {
     notify: notify,
     attachTooltip: attachTooltip,
     getWaybackCount: getWaybackCount,
-    getCachedWaybackCount: getCachedWaybackCount,
-    clearCountCache: clearCountCache,
     badgeCountText: badgeCountText,
+    isFirefox: isFirefox,
     hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,

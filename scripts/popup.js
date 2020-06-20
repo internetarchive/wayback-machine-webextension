@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, getCachedWaybackCount, hostURL */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -51,7 +51,7 @@ function get_clean_url(url) {
 
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
       options.push('capture_outlinks')
@@ -67,7 +67,8 @@ function save_now() {
       wayback_url: hostURL + 'save/',
       page_url: url,
       options: options,
-      method: 'save'
+      method: 'save',
+      tabId: tabs[0].id
     })
   })
 }
@@ -84,7 +85,7 @@ function last_save() {
     } else {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        let url = get_clean_url(tabs[0].url)
+        let url = tabs[0].url
         chrome.runtime.sendMessage({
           message: 'getLastSaveTime',
           page_url: url
@@ -109,7 +110,7 @@ function checkAuthentication(callback) {
 
 function recent_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -121,7 +122,7 @@ function recent_capture() {
 
 function first_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -133,7 +134,7 @@ function first_capture() {
 
 function view_all() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -313,7 +314,8 @@ function borrow_books() {
     const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state === 'R') {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
           $('#borrow_books_tr').css({ 'display': 'block' })
           chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
             const stored_url = res.tab_url
@@ -355,7 +357,8 @@ function show_news() {
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-          if (result.state === 'R') {
+          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
             $('#news_recommend_tr').show().click(() => {
               const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
@@ -372,7 +375,8 @@ function show_wikibooks() {
     const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state === 'R') {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
           // show wikipedia books button
           $('#wikibooks_tr').show().click(function () {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
@@ -392,10 +396,26 @@ function show_wikibooks() {
 function noContextTip() {
   chrome.storage.sync.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], function (event) {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) { if (event[context]) { return $('#context-screen').click(show_all_screens) } }
-    if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-    /* $('#context-screen').css({ opacity: 0.5 }) */
+    for (const context in event) {
+      if (event[context]) {
+        $('#contextBtn').removeAttr('disabled')
+        return $('#contextBtn').click(show_all_screens)
+      }
+    }
+    if (!$('#ctxbox').hasClass('flip-inside')) {
+      $('#ctxbox').addClass('flip-inside')
+      $('#contextBtn').attr('disabled', true)
+    }
   })
+}
+
+function openContextMenu () {
+  $('#popup-page').hide()
+  $('#setting-page').show()
+  $('#general-panel').hide()
+  $('#context-panel').show()
+  if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
+  if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
 function checkExcluded() {
@@ -403,12 +423,13 @@ function checkExcluded() {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
+      $('#contextTip').click(openContextMenu)
     } else {
-      const idList = ['savebox', 'mapbox', 'twitterbox']
+      const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#contextBtn').attr('disabled', true)
       $('#last_save').text('URL not supported')
       $('#contextTip').text('URL not supported')
-      $('#ctxbox').addClass('flip-inside')
       $('#url-not-supported-message').text('URL not supported')
     }
   })
@@ -426,37 +447,37 @@ function setupWaybackCount() {
       if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
         $('#wayback-count-label').hide()
         clearWaybackCount()
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
       }
     })
   })
 }
 
 function showWaybackCount(url) {
-  getCachedWaybackCount(url, (total) => {
-    // set label
-    let text = ''
-    if (total === 1) {
-      text = 'Saved once.'
-    } else if (total > 1) {
-      text = 'Saved ' + total.toLocaleString() + ' times.'
-    } else {
-      text = 'This page was never archived.'
+  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, function(result) {
+    if (result.total) {
+      // set label
+      let text = ''
+      if (result.total === 1) {
+        text = 'Saved once.'
+      } else if (result.total > 1) {
+        text = 'Saved ' + result.total.toLocaleString() + ' times.'
+      } else {
+        text = 'This page was never archived.'
+      }
+      $('#wayback-count-label').text(text)
+    } else if (result.error) {
+      clearWaybackCount()
     }
-    $('#wayback-count-label').text(text)
-  },
-  (error) => {
-    clearWaybackCount()
   })
 }
 
 function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.browserAction.setBadgeText({ tabId: tabs[0].id, text: '' })
-  })
 }
 
 // make the tab/window option in setting page checked according to previous setting
@@ -464,23 +485,19 @@ chrome.storage.sync.get(['show_context'], function(event) { $(`input[name=tw][va
 
 chrome.runtime.onMessage.addListener(
   function(message) {
-    if (message.message === 'save_success') {
-      $('#save_now').text('Save successful')
-      $('#last_save').text(message.time)
-      $('#savebox').addClass('flip-inside')
-    }
-    if (message.message === 'save_start') {
-      $('#save_now').text('Saving Snapshot...')
-    }
-    // if(message.message === "save_error"){
-    //   $('#save_now').text('Save Failed')
-    //   $('#last_save').text(message.error)
-    //   if(message.error === "You need to be logged in to use Save Page Now."){
-    //     $('#savebtn').off('click').click(function(){
-    //       openByWindowSetting('https://archive.org/account/login');
-    //     })
-    //   }
-    // }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs[0].id === message.tabId) {
+        if (message.message === 'save_success') {
+          $('#save_now').text('Save successful')
+          $('#last_save').text(message.time)
+          $('#savebox').addClass('flip-inside')
+        } else if (message.message === 'save_start') {
+          $('#save_now').text('Saving Snapshot...')
+        } else if (message.message === 'save_error') {
+          $('#save_now').text('Save Failed')
+        }
+      }
+    })
   }
 )
 

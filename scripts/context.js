@@ -40,7 +40,7 @@ function openContextFeature(evt, feature) {
   $('.col-tablinks button').removeClass('active')
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show()
-  evt.currentTarget.className += ' active'
+  evt.currentTarget.children[0].className += ' active'
   return feature
 }
 
@@ -56,34 +56,52 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.sync.get(features, function (event) {
-    for (let i = 0; i < features.length; i++) {
-      let feature = features[i]
-      let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
-      let featureTabId = featureId + '_tab'
+    chrome.storage.sync.get(['selectedFeature'], function(result) {
+      var openedFeature = result.selectedFeature
+      let clickFeature = null
+      let countFeature = 0
+      for (let i = 0; i < features.length; i++) {
+        let feature = features[i]
+        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
+        let featureTabId = featureId + '_tab'
 
-      // Hide features that weren't selected
-      if (!event[feature]) {
-        $(featureId).hide()
-        $(featureTabId).hide()
-      } else {
-        contexts_dic[feature]()
-        $(featureTabId).click(function(event) {
-          let selectedFeature = openContextFeature(event, featureId) + '_tab'
-          chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+        // Hide features that weren't selected
+        if (!event[feature]) {
+          $(featureId).hide()
+          $(featureTabId).hide()
+        } else {
+          countFeature++
+          contexts_dic[feature]()
+          $(featureTabId).click(function(event) {
+            let selectedFeature = openContextFeature(event, featureId) + '_tab'
+            chrome.storage.sync.set({selectedFeature: selectedFeature}, function() {
+            })
           })
-        })
-        //Set the default feature to be opened
-        chrome.storage.sync.get(['selectedFeature'], function(result) {
-          let openedFeature = result.selectedFeature
-          if (openedFeature) {
-            $(openedFeature).click()
-          } else {
-            $('#Alexa_tab').click()
+          //Get first tab
+          if (!clickFeature) {
+            clickFeature = featureTabId
           }
-        })
+          if (openedFeature) {
+            //Open the first tab if last selected tab is hidden now
+            if (openedFeature !== featureTabId) {
+              $(clickFeature).click()
+            } else {
+              //Open the last selected tab
+              clickFeature = openedFeature
+              $(clickFeature).click()
+            }
+          } else {
+            //Open first tab if user is accesing Contexts Page for the first time
+            $(clickFeature).click()
+          }
+        }
       }
-    }
-  })
+      //Show error message if no context is selected
+      if (countFeature <= 0) {
+        $('#error-message').show()
+      }
+    })
+  }) 
 }
 
 window.onload = singlePageView
