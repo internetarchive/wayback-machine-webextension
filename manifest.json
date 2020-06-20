@@ -40,7 +40,8 @@
       "http://web.archive.org/*",
       "http://crawl-services.us.archive.org:8200/*",
       "https://xml.alexa.com/*",
-      "https://hypothes.is/*"
+      "https://hypothes.is/*",
+      "<all_urls>"
   ],
   "background": {
     "scripts": ["scripts/utils.js",
