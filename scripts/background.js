@@ -144,6 +144,8 @@ async function validate_spn(tabId, job_id, silent = false) {
         status = data.status
         vdata = data
       })
+      .catch((err)=>{
+      })
   }
 
   if (vdata.status === 'success') {
