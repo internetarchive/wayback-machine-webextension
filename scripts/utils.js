@@ -311,7 +311,8 @@ function resetExtensionStorage () {
     annotations: false,
     tagcloud: false,
     showall: false,
-    not_found_popup: true
+    not_found_popup: true,
+    selectedFeature: null
   })
 }
 
