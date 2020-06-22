@@ -81,6 +81,8 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       .then(function(res) {
         if (!silent) {
           notify('Saving ' + page_url)
+          const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id
+          openByWindowSetting(resource_list_url)
         }
         validate_spn(tabId, res.job_id, silent)
       })
