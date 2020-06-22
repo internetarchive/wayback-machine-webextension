@@ -304,15 +304,15 @@ function initDefaultOptions () {
     auto_archive: true,
     email_outlinks: true,
     not_found_popup: true,
-    auto_update_context: true,
+    auto_update_context: false,
     show_context: 'tab',
     /* Contexts */
-    showall: false,
-    alexa: false,
-    domaintools: false,
-    wbmsummary: false,
-    annotations: false,
-    tagcloud: false
+    showall: true,
+    alexa: true,
+    domaintools: true,
+    wbmsummary: true,
+    annotations: true,
+    tagcloud: true
   })
 }
 
