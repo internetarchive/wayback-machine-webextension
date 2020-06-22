@@ -298,6 +298,7 @@ function initDefaultOptions () {
   chrome.storage.sync.set({
     spn_outlinks: false,
     spn_screenshot: false,
+    selectedFeature: null,
     /* General */
     wm_count: true,
     resource: true,

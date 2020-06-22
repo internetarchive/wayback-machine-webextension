@@ -1,7 +1,7 @@
 // overview.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, hostURL */
 
 function get_WBMSummary () {
   get_details()
@@ -18,15 +18,21 @@ function getTotal (captures) {
   }
   return total
 }
+
 function get_details () {
   var url = getUrlByParameter('url')
-  var new_url = hostURL+'services/context/metadata?url=' + url
+  var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
-    var type = response.type
-    $('#details').text(type)
-    var captures = response.captures
-    $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
-      .text(getTotal(captures).toLocaleString())
+    if ('type' in response) {
+      var type = response.type
+      $('#details').text(type)
+      var captures = response.captures
+      $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
+        .text(getTotal(captures).toLocaleString())
+    } else {
+      $('#url_details').hide()
+      $('#total_archives_number').text(0)
+    }
   }).fail(() => {
     $('#url_details').hide()
     $('#total_captures').hide()
@@ -63,26 +69,27 @@ function timestamp2datetime (timestamp) {
 
 function first_archive_details () {
   var url = getUrlByParameter('url')
-  var new_url = hostURL+'cdx/search?url=' + url + '&limit=1&output=json'
+  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, function (data) {
-    if (data.length == 0) {
-      $('#first_archive_datetime_error').text('Data are not available')
+    if (data.length === 0) {
+      $('#first_archive_datetime_error').text('Data not available')
     } else {
       const ts = data[1][1]
       const dt = timestamp2datetime(ts).toString().split('+')[0]
       $('#first_archive_datetime')
         .text(dt)
-    		.attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
+        .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
+  .fail(() => $('#first_archive_datetime_error').text('Data not available'))
 }
 
 function recent_archive_details () {
   var url = getUrlByParameter('url')
-  var new_url = hostURL+'cdx/search?url=' + url + '&limit=-1&output=json'
+  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, function (data) {
-    if (data.length == 0) {
-      $('#recent_archive_datetime_error').text('Data are not available')
+    if (data.length === 0) {
+      $('#recent_archive_datetime_error').text('Data not available')
     } else {
 	  const ts = data[1][1]
 	  const dt = timestamp2datetime(ts).toString().split('+')[0]
@@ -91,6 +98,7 @@ function recent_archive_details () {
         .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
+  .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
 }
 // Function used to get the thumbnail of the URL
 function get_thumbnail () {
@@ -100,18 +108,14 @@ function get_thumbnail () {
   fetch(new_url)
     .then(function (response) {
       $('#loader_thumbnail').hide()
-      if (response.size && response.size !== 233) {
-        $('#show_thumbnail').append($('<img>').attr('src', new_url))
-      } else {
-        $('#show_thumbnail').text('Thumbnail not found')
-      }
+      $('#show_thumbnail').append($('<img>').attr('src', new_url))
     })
     .catch(function (exception) {
       $('#loader_thumbnail').hide()
       if (exception === 'timeout') {
         $('#show_thumbnail').text('Please refresh the page...Time out!!')
       } else {
-        if (response.status === 504) { // TODO: FIXME: response not defined
+        if (exception.status === 504) {
           $('#show_thumbnail').text('Please refresh the page...Time out!!')
         } else {
           $('#show_thumbnail').text('Thumbnail not found')

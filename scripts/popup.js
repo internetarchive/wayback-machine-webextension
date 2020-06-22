@@ -7,48 +7,6 @@ function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
 
-function remove_port(url) {
-  if (url.substr(-4) === ':80/') {
-    url = url.substring(0, url.length - 4)
-  }
-  return url
-}
-
-function remove_wbm(url) {
-  var pos = url.indexOf('/http')
-  var new_url = ''
-  if (pos !== -1) {
-    new_url = url.substring(pos + 1)
-  } else {
-    pos = url.indexOf('/www')
-    new_url = url.substring(pos + 1)
-  }
-  return remove_port(new_url)
-}
-
-function remove_alexa(url) {
-  var pos = url.indexOf('/siteinfo/')
-  var new_url = url.substring(pos + 10)
-  return remove_port(new_url)
-}
-
-function remove_whois(url) {
-  var pos = url.indexOf('/whois/')
-  var new_url = url.substring(pos + 7)
-  return remove_port(new_url)
-}
-
-function get_clean_url(url) {
-  if (url.includes('web.archive.org')) {
-    url = remove_wbm(url)
-  } else if (url.includes('www.alexa.com')) {
-    url = remove_alexa(url)
-  } else if (url.includes('www.whois.com')) {
-    url = remove_whois(url)
-  }
-  return url
-}
-
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = tabs[0].url
@@ -152,11 +110,7 @@ function social_share(eventObj) {
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let url = tabs[0].url
-    if (url.includes('web.archive.org')) {
-      sharing_url = url // If the user is already at a playback page,share that URL
-    } else {
-      sharing_url = overview_url + get_clean_url(url) // When not on a playback page,share the overview version of that URL
-    }
+    sharing_url = overview_url + url // Share the overview version of that URL
     var open_url = ''
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
@@ -173,7 +127,7 @@ function social_share(eventObj) {
 
 function search_tweet() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
@@ -290,20 +244,19 @@ function about_support() {
 
 function sitemap() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
 }
 
 function settings() {
-  // window.open('settings.html', 'newwindow', 'width=600, height=700,left=0,top=30');
   $('#popup-page').hide()
   $('#setting-page').show()
 }
 
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = get_clean_url(tabs[0].url)
+    let url = tabs[0].url
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
@@ -314,7 +267,8 @@ function borrow_books() {
     const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state === 'R') {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
           $('#borrow_books_tr').css({ 'display': 'block' })
           chrome.storage.sync.get(['tab_url', 'detail_url', 'show_context'], function (res) {
             const stored_url = res.tab_url
@@ -356,7 +310,8 @@ function show_news() {
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-          if (result.state === 'R') {
+          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
             $('#news_recommend_tr').show().click(() => {
               const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
@@ -373,7 +328,8 @@ function show_wikibooks() {
     const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
-        if (result.state === 'R') {
+        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
           // show wikipedia books button
           $('#wikibooks_tr').show().click(function () {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
@@ -488,19 +444,11 @@ chrome.runtime.onMessage.addListener(
           $('#save_now').text('Save successful')
           $('#last_save').text(message.time)
           $('#savebox').addClass('flip-inside')
-        }
-        if (message.message === 'save_start') {
+        } else if (message.message === 'save_start') {
           $('#save_now').text('Saving Snapshot...')
+        } else if (message.message === 'save_error') {
+          $('#save_now').text('Save Failed')
         }
-        // if(message.message === "save_error"){
-        //   $('#save_now').text('Save Failed')
-        //   $('#last_save').text(message.error)
-        //   if(message.error === "You need to be logged in to use Save Page Now."){
-        //     $('#savebtn').off('click').click(function(){
-        //       openByWindowSetting('https://archive.org/account/login');
-        //     })
-        //   }
-        // }
       }
     })
   }

@@ -90,6 +90,7 @@ function get_tags (url) {
           'shape': 'square'
         })
       } else {
+        $('.wordcloud').hide()
         $('#message_tagcloud').show().text('Tags Not found, Please try again later')
       }
     })
