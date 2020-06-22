@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "version": "3.0.0.1",
+  "version": "3.0.0.2",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/app-icon16.png",
@@ -20,24 +20,27 @@
       "64": "images/toolbar/toolbar-icon-archive64.png"
     }
   },
- "applications": {
-   "gecko": {
-     "id": "wayback@web.archive.org",
-     "strict_min_version": "42.0"
-   }
- },
+  "applications": {
+    "gecko": {
+      "id": "wayback@web.archive.org",
+      "strict_min_version": "42.0"
+    }
+  },
   "homepage_url": "https://archive.org/",
   "permissions": [
-      "notifications",
-      "tabs",
       "activeTab",
+      "contextMenus",
+      "notifications",
       "storage",
+      "tabs",
       "webRequest",
       "webRequestBlocking",
-      "contextMenus",
-      "http://*/*",
-      "https://*/*",
-      "*://*/*",
+      "https://archive.org/*",
+      "https://*.archive.org/*",
+      "http://web.archive.org/*",
+      "http://crawl-services.us.archive.org:8200/*",
+      "https://xml.alexa.com/*",
+      "https://hypothes.is/*",
       "<all_urls>"
   ],
   "background": {
