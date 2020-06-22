@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -229,8 +229,7 @@ function display_suggestions(e) {
   }
 }
 function open_feedback_page() {
-  var feedback_url = 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
-  openByWindowSetting(feedback_url)
+  openByWindowSetting(feedbackPageURL)
 }
 
 function open_donations_page() {
