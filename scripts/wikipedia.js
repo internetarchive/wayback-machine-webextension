@@ -64,7 +64,8 @@ function createDonateToolTip (isbn) {
   return $('<a>')
     .attr({
       'class': 'popup_box popup_donate',
-      'href': 'https://www.archive.org/donate?isbn=' + isbn
+      'href': 'https://www.archive.org/donate?isbn=' + isbn,
+      'target': '_blank'
     })
     .append(
       $('<div>')
@@ -86,7 +87,7 @@ function createDonateToolTip (isbn) {
 
 function createReadToolTip (id, metadata) {
   return $('<a>')
-    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id })
+    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank'  })
     .append(
       $('<div>')
         .addClass('text_elements')
@@ -107,7 +108,8 @@ function createDonateAnchor (isbn) {
     .attr({
       'href': 'https://archive.org/donate',
       'class': 'btn-archive',
-      'style': 'padding: 5px;'
+      'style': 'padding: 5px;',
+      'target': '_blank'
     })
     .prepend(
       $('<img>')
@@ -119,7 +121,8 @@ function createArchiveAnchor (id) {
     .attr({
       'href': 'https://archive.org/details/' + id,
       'class': 'btn-archive',
-      'style': 'padding: 5px;'
+      'style': 'padding: 5px;',
+      'target': '_blank'
     })
     .prepend(
       $('<img>')
