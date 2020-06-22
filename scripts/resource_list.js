@@ -1,15 +1,17 @@
 window.onload = function () {
     var url = new URL(window.location.href)
     var tab_id = url.searchParams.get('job_id')
-    show_resource_data(tab_id)
+    var url_name = url.searchParams.get('url')
+    show_resource_data(tab_id,url_name)
   }
 
-  async function show_resource_data(job_id) {
+  async function show_resource_data(job_id,url_name) {
     let vdata
     let status = 'start'
     const val_data = new URLSearchParams()
     val_data.append('job_id', job_id)
-  
+    var current_url = document.getElementById('current_url')
+    current_url.innerHTML = url_name + '....'
     while ((status === 'start') || (status === 'pending')) {
       var dom_status = document.getElementById('current_status');
       dom_status.innerHTML = 'Pending'
