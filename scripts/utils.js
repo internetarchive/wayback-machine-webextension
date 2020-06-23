@@ -5,6 +5,7 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
+const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
