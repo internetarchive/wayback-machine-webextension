@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, viewableTimestamp, badgeCountText, getWaybackCount */
+/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -218,6 +218,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   initDefaultOptions()
   chrome.storage.sync.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
+      afterAcceptOptions()
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })

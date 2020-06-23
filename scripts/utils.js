@@ -294,6 +294,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     })
 }
 
+// Default Settings prior to accepting terms.
 function initDefaultOptions () {
   chrome.storage.sync.set({
     agreement: false, // needed for firefox
@@ -301,11 +302,11 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* General */
-    wm_count: true,
-    resource: true,
-    auto_archive: true,
-    email_outlinks: true,
-    not_found_popup: true,
+    wm_count: false,
+    resource: false,
+    auto_archive: false,
+    email_outlinks: false,
+    not_found_popup: false,
     auto_update_context: false,
     show_context: 'tab',
     /* Contexts */
@@ -315,6 +316,18 @@ function initDefaultOptions () {
     wbmsummary: true,
     annotations: true,
     tagcloud: true
+  })
+}
+
+// Turn on these Settings after accepting terms.
+function afterAcceptOptions () {
+  chrome.storage.sync.set({
+    /* General */
+    wm_count: true,
+    resource: true,
+    auto_archive: true,
+    email_outlinks: true,
+    not_found_popup: true
   })
 }
 
@@ -338,6 +351,7 @@ if (typeof module !== 'undefined') {
     hostURL: hostURL,
     timestampToDate: timestampToDate,
     viewableTimestamp: viewableTimestamp,
-    initDefaultOptions: initDefaultOptions
+    initDefaultOptions: initDefaultOptions,
+    afterAcceptOptions: afterAcceptOptions
   }
 }
