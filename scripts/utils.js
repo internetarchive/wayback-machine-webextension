@@ -296,6 +296,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 function initDefaultOptions () {
   chrome.storage.sync.set({
+    agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
