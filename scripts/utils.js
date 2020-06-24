@@ -313,7 +313,7 @@ function initDefaultOptions () {
     /* Contexts */
     showall: true,
     alexa: true,
-    domaintools: true,
+    domaintools: false,
     wbmsummary: true,
     annotations: true,
     tagcloud: true
