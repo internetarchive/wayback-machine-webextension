@@ -4,8 +4,8 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox, resetExtensionStorage, viewableTimestamp */
-/*   global badgeCountText, getWaybackCount */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -55,6 +55,8 @@ function URLopener(open_url, url, wmIsAvailable) {
     openByWindowSetting(open_url)
   }
 }
+
+/* * * API Calls * * */
 
 function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
@@ -196,28 +198,27 @@ async function validate_spn(tabId, job_id, silent = false) {
   }
 }
 
+/* * * Startup related * * */
+
 chrome.storage.local.set({
   newshosts: Array.from(newshosts)
 })
-/**
- *
- * Installed callback
- */
+
+// Runs whenever extension starts up, except during incognito mode.
 chrome.runtime.onStartup.addListener((details) => {
-  chrome.storage.local.get(['agreement'], (result) => {
+  chrome.storage.local.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
 })
 
+// Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
-  resetExtensionStorage()
-})
-
-chrome.runtime.onInstalled.addListener((details) => {
-  chrome.storage.local.get(['agreement'], (result) => {
+  initDefaultOptions()
+  chrome.storage.local.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
+      afterAcceptOptions()
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })

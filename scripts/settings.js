@@ -19,23 +19,7 @@ switchSetting()
 addDocs()
 
 function initializeSettings () {
-  chrome.storage.local.get({
-    show_context: 'tab',
-    resource: false,
-    auto_update_context: false,
-    wm_count: false,
-    auto_archive: false,
-    email_outlinks: false,
-    spn_outlinks: false,
-    spn_screenshot: false,
-    alexa: false,
-    domaintools: false,
-    wbmsummary: false,
-    annotations: false,
-    tagcloud: false,
-    showall: false,
-    not_found_popup: true
-  }, restoreOptions)
+  chrome.storage.local.get(null, restoreOptions)
 }
 
 function restoreOptions (items) {

@@ -1,3 +1,4 @@
+
 # Wayback Machine Google Chrome Extension
 
 In cooperation with Google Summer of Code, The Internet Archive presents
@@ -35,7 +36,7 @@ If you want to install the latest version, follow the steps below.
 Follow the given steps to install the extension on your local machine.
 
 ### Chrome
- 
+
 - Navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over **More Tools**  and selecting **Extensions**.
 - Turn on the switch next to **Developer mode**.
 - Click the **Load unpacked** button and select the `wayback-machine-chrome` directory that contains this code.
@@ -63,6 +64,8 @@ named `example.spec.js`.
 
 This has been tested using `node v10.11.0` and `npm 6.4.1`.
 
+## Contributing code
+To contribute code and docs to Wayback Machine Chrome extension, take a look at our [contribution guide](https://github.com/internetarchive/wayback-machine-chrome/blob/master/contribution-guide.md)
 ## Places to update the version
 
 - manifest.json - update version
