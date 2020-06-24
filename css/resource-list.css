@@ -1,6 +1,28 @@
-#resource_list{
-    width: 100%;
-    height: 200px;
-    white-space: pre-wrap;
-    overflow: auto;
+#resource_list_container {
+    border: 1px solid rgb(118, 118, 118) !important;
+    color: #767676;
+    height: 300px;
+    margin: 40px auto 0 auto;
+    overflow-x: hidden;
+    width: 70%;
+}
+
+p {
+    padding: 0 5px;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.text-right{
+    width: 85%;
+    display: none;
+    text-align: right;
+}
+
+.live_status{
+    text-align: center;
+}
+
+h2{
+    font-size: 30px;
 }

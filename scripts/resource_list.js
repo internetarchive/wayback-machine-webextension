@@ -12,8 +12,7 @@ window.onload = function () {
     let old_resource_length = 0;
     const val_data = new URLSearchParams()
     val_data.append('job_id', job_id)
-    var current_url = document.getElementById('current_url')
-    current_url.innerHTML = url_name + '....'
+    $('#current_url').append(url_name+'.....')
     while ((status === 'start') || (status === 'pending')) {
       var dom_status = document.getElementById('current_status')
       dom_status.innerHTML = 'Pending'
@@ -29,8 +28,8 @@ window.onload = function () {
         old_resource_length = new_resource_length
         console.log("hey")
         for (let item of resource_list_data){
-          $('#resource_list').append(
-            $('<li>').append(item)
+          $('#resource_list_container').append(
+            $('<p>').append(item)
           );   
         }
       }
@@ -63,15 +62,17 @@ window.onload = function () {
   
     if (vdata.status === 'success') {
       dom_status.innerHTML = 'Success'
+      $(".text-right").show();
       new_resource_length = vdata.resources.length
+      $("#spn-elements-counter").append(new_resource_length)
       vdata.resources.forEach( (element) => {
         resource_list_data.add(element)
       });
       if(new_resource_length>old_resource_length){
         old_resource_length = new_resource_length
         for (let item of resource_list_data){
-          $('#resource_list').append(
-            $('<li>').append(item)
+          $('#resource_list_container').append(
+            $('<p>').append(item)
           );   
         }
       }
