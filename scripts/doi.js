@@ -50,15 +50,15 @@ function makeEntry (data) {
   if (data.url !== '#') {
     bottom_details.append(
       $('<button>').attr({ 'class': 'btn btn-success' }).text('Read Paper')
-        .click(function () {
-          chrome.storage.sync.get(['show_context'], function (event1) {
+        .click(() => {
+          chrome.storage.local.get(['show_context'], (event1) => {
             if (event1.show_context === undefined) {
               event1.show_context = 'tab'
             }
             if (event1.show_context === 'tab') {
               chrome.tabs.create({ url: data.url })
             } else {
-              chrome.windows.getCurrent(function (window) {
+              chrome.windows.getCurrent((window) => {
                 const height = window.height
                 const width = window.width
                 chrome.windows.create({ url: data.url,
@@ -82,7 +82,7 @@ function makeEntry (data) {
 function createPage () {
   let container = $('#container-whole-doi')
   const url = getUrlByParameter('url')
-  $.getJSON(hostURL + 'context/papers?url=' + url, function(response) {
+  $.getJSON(hostURL + 'context/papers?url=' + url, (response) => {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
       $('#doi-heading').html(response.message)

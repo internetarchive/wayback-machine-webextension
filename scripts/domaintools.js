@@ -15,7 +15,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
 function get_domainTool () {
   var url = getUrlByParameter('url')
   var domaintools_api = hostURL+'context/domaintools?url=' + url
-  $.getJSON(domaintools_api, function (data) {
+  $.getJSON(domaintools_api, (data) => {
     var parent = $('#show_domaintools_data')
     if (data.status !== 'error') {
       if (data.response.results_count !== 0) {
@@ -39,7 +39,7 @@ function get_domainTool () {
     $('#loader_domaintools').hide()
     $('#show_domaintools_data').show()
   })
-  .fail(function() {
+  .fail(() => {
     parent.text('No data found!!')
   })
 }

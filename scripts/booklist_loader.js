@@ -6,7 +6,7 @@
 // from 'booklist.js'
 /*   global populateBooks */
 
-window.onload = function() {
+window.onload = () => {
   var url = getUrlByParameter('url')
   populateBooks(url)
 }

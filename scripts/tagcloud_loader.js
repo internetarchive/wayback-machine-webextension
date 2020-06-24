@@ -6,7 +6,7 @@
 // from 'tagcloud.js'
 /*   global get_tags */
 
-window.onload = function () {
+window.onload = () => {
   var url = getUrlByParameter('url')
   get_tags(url)
 }
