@@ -143,7 +143,6 @@ function switchSetting() {
 function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
 
 function addDocs () {
-  chrome.storage.sync.get(['newshosts'], function (items) {
     let docs = {
       'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
       'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
@@ -166,5 +165,4 @@ function addDocs () {
         $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
       }
     }
-  })
 }

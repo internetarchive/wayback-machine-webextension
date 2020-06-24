@@ -7,6 +7,21 @@ let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
 const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
 
+const newshosts = new Set([
+  'apnews.com',
+  'www.factcheck.org',
+  'www.forbes.com',
+  'www.huffpost.com',
+  'www.nytimes.com',
+  'www.politico.com',
+  'www.politifact.com',
+  'www.snopes.com',
+  'www.theverge.com',
+  'www.usatoday.com',
+  'www.vox.com',
+  'www.washingtonpost.com'
+])
+
 /**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
@@ -334,25 +349,27 @@ function afterAcceptOptions () {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    isArray: isArray,
-    isObject: isObject,
-    getErrorMessage: getErrorMessage,
-    getUrlByParameter: getUrlByParameter,
-    getWaybackUrlFromResponse: getWaybackUrlFromResponse,
-    isValidUrl: isValidUrl,
-    isNotExcludedUrl: isNotExcludedUrl,
-    wmAvailabilityCheck: wmAvailabilityCheck,
-    openByWindowSetting: openByWindowSetting,
-    sleep: sleep,
-    notify: notify,
-    attachTooltip: attachTooltip,
-    getWaybackCount: getWaybackCount,
-    badgeCountText: badgeCountText,
-    isFirefox: isFirefox,
-    hostURL: hostURL,
-    timestampToDate: timestampToDate,
-    viewableTimestamp: viewableTimestamp,
-    initDefaultOptions: initDefaultOptions,
-    afterAcceptOptions: afterAcceptOptions
+    isArray,
+    isObject,
+    getErrorMessage,
+    getUrlByParameter,
+    getWaybackUrlFromResponse,
+    isValidUrl,
+    isNotExcludedUrl,
+    wmAvailabilityCheck,
+    openByWindowSetting,
+    sleep,
+    notify,
+    attachTooltip,
+    getWaybackCount,
+    badgeCountText,
+    isFirefox,
+    hostURL,
+    timestampToDate,
+    viewableTimestamp,
+    initDefaultOptions,
+    afterAcceptOptions,
+    feedbackPageURL,
+    newshosts
   }
 }

@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -304,8 +304,8 @@ function show_news() {
     const url = tabs[0].url
     const tabId = tabs[0].id
     const news_host = new URL(url).hostname
-    chrome.storage.sync.get(['show_context', 'newshosts'], function (event) {
-      let set_of_sites = new Set(event.newshosts)
+    chrome.storage.sync.get(['show_context'], function (event) {
+      let set_of_sites = newshosts
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, function(result) {
