@@ -12,9 +12,9 @@ window.onload = function () {
     let old_resource_length = 0;
     const val_data = new URLSearchParams()
     val_data.append('job_id', job_id)
-    $('#current_url').append(url_name+'.....')
+    $('#current-url').append(url_name+'.....')
     while ((status === 'start') || (status === 'pending')) {
-      var dom_status = document.getElementById('current_status')
+      var dom_status = document.getElementById('current-status')
       dom_status.innerHTML = 'Pending'
       // update UI
       var new_resource_length
@@ -28,7 +28,7 @@ window.onload = function () {
         old_resource_length = new_resource_length
         console.log("hey")
         for (let item of resource_list_data){
-          $('#resource_list_container').append(
+          $('#resource-list-container').append(
             $('<p>').append(item)
           );   
         }
@@ -71,7 +71,7 @@ window.onload = function () {
       if(new_resource_length>old_resource_length){
         old_resource_length = new_resource_length
         for (let item of resource_list_data){
-          $('#resource_list_container').append(
+          $('#resource-list-container').append(
             $('<p>').append(item)
           );   
         }

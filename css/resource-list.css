@@ -1,4 +1,4 @@
-#resource_list_container {
+#resource-list-container {
     border: 1px solid rgb(118, 118, 118) !important;
     color: #767676;
     height: 300px;
@@ -19,7 +19,7 @@ p {
     text-align: right;
 }
 
-.live_status{
+.live-status{
     text-align: center;
 }
 
