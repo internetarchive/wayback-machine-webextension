@@ -36,7 +36,7 @@ function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     const requestUrl = hostURL + '__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -84,7 +84,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     body: requestParams
   })
     .then(response => response.json())
-    .then(function(json) {
+    .then((json) => {
       let wayback_url = getWaybackUrlFromResponse(json)
       let timestamp = getWaybackTimestampFromResponse(json)
       if (wayback_url !== null) {
@@ -227,14 +227,14 @@ function getErrorMessage(req) {
   return 'The requested service ' + req.url + ' failed: ' + req.status + ', ' + req.statusText
 }
 
-function getUrlByParameter (name) {
+function getUrlByParameter(name) {
   const url = new URL(window.location.href)
   return url.searchParams.get(name)
 }
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) })
+    chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
   } else {
     opener(url, op)
   }
@@ -242,13 +242,13 @@ function openByWindowSetting(url, op = null, cb) {
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url }, function (tab) {
+    chrome.tabs.create({ url: url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
   } else {
     let width = Math.floor(window.screen.availWidth * 0.75)
     let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, function (window) {
+    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
@@ -276,18 +276,18 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
       trigger: 'manual'
     })
   // Handles staying open
-    .on('mouseenter', function () {
+    .on('mouseenter', () => {
       $(anchor).tooltip('show')
-      $('.popup_box').on('mouseleave', function () {
-        setTimeout(function () {
+      $('.popup_box').on('mouseleave', () => {
+        setTimeout(() => {
           if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
             $(anchor).tooltip('hide')
           }
         }, time)
       })
     })
-    .on('mouseleave', function () {
-      setTimeout(function () {
+    .on('mouseleave', () => {
+      setTimeout(() => {
         if (!$('.popup_box:hover').length) {
           $(anchor).tooltip('hide')
         }
@@ -297,7 +297,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
-  chrome.storage.sync.set({
+  chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
@@ -313,7 +313,7 @@ function initDefaultOptions () {
     /* Contexts */
     showall: true,
     alexa: true,
-    domaintools: true,
+    domaintools: false,
     wbmsummary: true,
     annotations: true,
     tagcloud: true
@@ -322,11 +322,10 @@ function initDefaultOptions () {
 
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
-  chrome.storage.sync.set({
+  chrome.storage.local.set({
     /* General */
     wm_count: true,
     resource: true,
-    auto_archive: true,
     email_outlinks: true,
     not_found_popup: true
   })

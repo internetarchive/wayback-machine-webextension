@@ -19,7 +19,7 @@ function constructArticles (clip) {
     $('<a>').attr({ 'href': '#' }).append(
       $('<img>').attr({ 'src': clip.preview_thumb })
     ).click(() => {
-      chrome.storage.sync.get(['show_context'], function (event1) {
+      chrome.storage.local.get(['show_context'], (event1) => {
         if (event1.show_context === undefined) {
           event1.show_context = 'tab'
         }
@@ -42,11 +42,11 @@ function constructArticles (clip) {
 }
 
 function getDetails (article) {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({
       message: 'tvnews',
       article: article
-    }, function (clips) {
+    }, (clips) => {
       if (clips.status !== 'error') {
         resolve(clips)
       } else {
@@ -57,7 +57,7 @@ function getDetails (article) {
 }
 function getArticles(url) {
   getDetails(url)
-  .then(function(clips) {
+  .then((clips) => {
     $('.loader').hide()
     if (clips.length > 0 && threshold >= clips[0]['similarity']) {
       for (let clip of clips) {
@@ -71,7 +71,7 @@ function getArticles(url) {
       )
     }
   })
-  .catch(function(err) {
+  .catch((err) => {
     $('.loader').hide()
     $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
       $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })

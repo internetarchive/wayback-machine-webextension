@@ -3,7 +3,7 @@
 // from 'wikipedia.js'
 /*   global addCitations */
 
-chrome.storage.sync.get(['resource'], function (event) {
+chrome.storage.local.get(['resource'], (event) => {
   if (event.resource) {
     addCitations()
   }

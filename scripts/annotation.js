@@ -25,7 +25,7 @@ function hypothesis_api_url (url, type) {
 function get_annotations (type = 'url') {
   const url = getUrlByParameter('url')
   const new_url = hypothesis_api_url(url, type)
-  $.getJSON(new_url, function (data) {
+  $.getJSON(new_url, (data) => {
     const length = data.rows.length
     if (length > 0) {
       for (let i = 0; i < length; i++) {
@@ -87,7 +87,7 @@ function showAnnotations (type) {
   $('#' + type).show()
 }
 
-$('.tablink').click(function () {
+$('.tablink').click(() => {
   showAnnotations($(this).attr('value'))
 })
 

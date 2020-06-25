@@ -12,11 +12,12 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
     }
   }
 }
+
 function get_domainTool () {
-  var url = getUrlByParameter('url')
-  var domaintools_api = hostURL+'context/domaintools?url=' + url
-  $.getJSON(domaintools_api, function (data) {
-    var parent = $('#show_domaintools_data')
+  let url = getUrlByParameter('url')
+  let domaintools_api = hostURL+'context/domaintools?url=' + url
+  $.getJSON(domaintools_api, (data) => {
+    let parent = $('#show_domaintools_data')
     if (data.status !== 'error') {
       if (data.response.results_count !== 0) {
         appendToParent('#domain', data.response.results[0].domain, 'Domain: ', parent, true, '')
@@ -31,16 +32,16 @@ function get_domainTool () {
         appendToParent('#whois', data.response.results[0].whois_url, 'Click to see the Whois URL', parent, false, '')
         $('#whois').attr('href', data.response.results[0].whois_url)
       } else {
-        parent.text('No data found!!')
+        parent.text('Data not available')
       }
     } else {
-      parent.text('No data found!!')
+      parent.text('Data not available')
     }
     $('#loader_domaintools').hide()
     $('#show_domaintools_data').show()
   })
-  .fail(function() {
-    parent.text('No data found!!')
+  .fail(() => {
+    $('#show_domaintools_data').text('Data not available')
   })
 }
 if (typeof module !== 'undefined') { module.exports = { appendToParent: appendToParent } }

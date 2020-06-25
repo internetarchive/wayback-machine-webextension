@@ -24,7 +24,7 @@ function get_tags (url) {
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())
-    .then(function (data) {
+    .then((data) => {
       $('#loader_tagcloud').hide()
       if (!data.error && data.length > 0) {
         $('#container-wordcloud').show()
@@ -43,10 +43,10 @@ function get_tags (url) {
         } else {
           coefOfDistance = 3 / 4
         }
-        var arr = mynewTags.reduce(function (acc, newTag) {
+        var arr = mynewTags.reduce((acc, newTag) => {
           var minDistance = void 0
           if (acc.length > 0) {
-            minDistance = Math.min.apply(Math, _toConsumableArray(acc.map(function (oldTag) {
+            minDistance = Math.min.apply(Math, _toConsumableArray(acc.map((oldTag) => {
               return Levenshtein.get(oldTag, newTag)
             })))
           } else {
@@ -60,12 +60,12 @@ function get_tags (url) {
         var result = []
 
         // Filtering out the elements from data which aren't in arr
-        data = data.filter(function (el) {
+        data = data.filter((el) => {
           return arr.indexOf(el[0]) >= 0
         }).sort()
 
         // Mapping the weights to higher values
-        result = data.map(function (el) {
+        result = data.map((el) => {
           if (el[1] === 1) { el[1] = el[1] * 10 } else if (el[1] === 2) { el[1] = el[1] * 40 } else if (el[1] === 3) { el[1] = el[1] * 60 } else if (el[1] === 4) { el[1] = el[1] * 90 }
           return { 'text': el[0], 'weight': el[1] }
         })
