@@ -12,11 +12,12 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
     }
   }
 }
+
 function get_domainTool () {
-  var url = getUrlByParameter('url')
-  var domaintools_api = hostURL+'context/domaintools?url=' + url
+  let url = getUrlByParameter('url')
+  let domaintools_api = hostURL+'context/domaintools?url=' + url
   $.getJSON(domaintools_api, (data) => {
-    var parent = $('#show_domaintools_data')
+    let parent = $('#show_domaintools_data')
     if (data.status !== 'error') {
       if (data.response.results_count !== 0) {
         appendToParent('#domain', data.response.results[0].domain, 'Domain: ', parent, true, '')
@@ -40,7 +41,7 @@ function get_domainTool () {
     $('#show_domaintools_data').show()
   })
   .fail(() => {
-    parent.text('No data found!!')
+    $('#show_domaintools_data').text('No data found!!')
   })
 }
 if (typeof module !== 'undefined') { module.exports = { appendToParent: appendToParent } }
