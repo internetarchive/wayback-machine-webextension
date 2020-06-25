@@ -32,16 +32,16 @@ function get_domainTool () {
         appendToParent('#whois', data.response.results[0].whois_url, 'Click to see the Whois URL', parent, false, '')
         $('#whois').attr('href', data.response.results[0].whois_url)
       } else {
-        parent.text('No data found!!')
+        parent.text('Data not available')
       }
     } else {
-      parent.text('No data found!!')
+      parent.text('Data not available')
     }
     $('#loader_domaintools').hide()
     $('#show_domaintools_data').show()
   })
   .fail(() => {
-    $('#show_domaintools_data').text('No data found!!')
+    $('#show_domaintools_data').text('Data not available')
   })
 }
 if (typeof module !== 'undefined') { module.exports = { appendToParent: appendToParent } }

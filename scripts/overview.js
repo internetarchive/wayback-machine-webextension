@@ -113,12 +113,12 @@ function get_thumbnail () {
     .catch((exception) => {
       $('#loader_thumbnail').hide()
       if (exception === 'timeout') {
-        $('#show_thumbnail').text('Please refresh the page...Time out!!')
+        $('#show_thumbnail').text('Please refresh the page.')
       } else {
         if (exception.status === 504) {
-          $('#show_thumbnail').text('Please refresh the page...Time out!!')
+          $('#show_thumbnail').text('Please refresh the page.')
         } else {
-          $('#show_thumbnail').text('Thumbnail not found')
+          $('#show_thumbnail').text('Thumbnail not found.')
         }
       }
     })
