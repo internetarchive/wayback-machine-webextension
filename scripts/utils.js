@@ -326,7 +326,6 @@ function afterAcceptOptions () {
     /* General */
     wm_count: true,
     resource: true,
-    auto_archive: true,
     email_outlinks: true,
     not_found_popup: true
   })
