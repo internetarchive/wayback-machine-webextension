@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const _toConsumableArray = require('../scripts/tagcloud')._toConsumableArray
+const _toConsumableArray = require('../webextension/scripts/tagcloud')._toConsumableArray
 
 describe('tagcloud', () => {
   it('should execute the _toConsumableArray function correctly by checking the array', () => {

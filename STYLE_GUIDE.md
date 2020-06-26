@@ -94,8 +94,10 @@ npx eslint
 
 #### Example to examine JS file: ####
 
+Run this from root directory where `package.json` is located:
+
 ```
-npx eslint scripts/settings.js 
+npx eslint webextension/scripts/settings.js
 ```
 
 To avoid `no-undef` errors that may occur with external global variables or functions, add it to a comment around the top of the file, like so:
