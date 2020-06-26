@@ -12,9 +12,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      _: 'lodash',
-      d3: 'd3',
-      wb: 'radial-tree'
     })
     ,
     new MiniCssExtractPlugin({
