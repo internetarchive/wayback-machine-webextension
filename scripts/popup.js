@@ -103,15 +103,18 @@ function view_all() {
 }
 
 function social_share(eventObj) {
-  var parent = eventObj.target.parentNode
-  var id = parent.getAttribute('id')
-  var sharing_url = ''
-  var overview_url = 'https://web.archive.org/web/*/'
+  let parent = eventObj.target.parentNode
+  let id = eventObj.target.getAttribute('id')
+  if (id === null) {
+    id = parent.getAttribute('id')
+  }
+  let sharing_url = ''
+  const overview_url = 'https://web.archive.org/web/*/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     sharing_url = overview_url + url // Share the overview version of that URL
-    var open_url = ''
+    let open_url = ''
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
         open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
