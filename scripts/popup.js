@@ -304,7 +304,7 @@ function show_news() {
     const url = tabs[0].url
     const tabId = tabs[0].id
     const news_host = new URL(url).hostname
-    chrome.storage.sync.get(['show_context'], function (event) {
+    chrome.storage.local.get(['show_context'], function (event) {
       let set_of_sites = newshosts
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
