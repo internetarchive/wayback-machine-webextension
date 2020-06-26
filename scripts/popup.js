@@ -414,7 +414,7 @@ function setupWaybackCount() {
 
 function showWaybackCount(url) {
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (result.total) {
+    if (result.total >= 0) {
       // set label
       let text = ''
       if (result.total === 1) {
