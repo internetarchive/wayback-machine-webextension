@@ -64,8 +64,9 @@ named `example.spec.js`.
 
 This has been tested using `node v10.11.0` and `npm 6.4.1`.
 
-## Contributing code
-To contribute code and docs to Wayback Machine Chrome extension, take a look at our [contribution guide](https://github.com/internetarchive/wayback-machine-chrome/blob/master/contribution-guide.md)
+## Contributing Code
+To contribute code and docs to Wayback Machine Chrome extension, take a look at our [contribution guide](./CONTRIBUTION_GUIDE.md).
+
 ## Places to update the version
 
 - manifest.json - update version
