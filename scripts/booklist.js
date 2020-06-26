@@ -27,7 +27,7 @@ function populateBooks(url) {
         $('<div>').html(data.message)
       )
     }
-  }).catch(function (error) {
+  }).catch((error) => {
     $('.loader').hide()
     $('#resultsTray').css('grid-template-columns', 'none').append(
       $('<div>').html(error)
@@ -42,7 +42,7 @@ function addBook (metadata) {
   )
   let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
     metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : $('<p>').attr({ 'class': 'cover-img' }).text('No cover available'),
-    $('<button>').attr({ 'class': metadata.button_class }).text(metadata.button_text).click(function () {
+    $('<button>').attr({ 'class': metadata.button_class }).text(metadata.button_text).click(() => {
       openByWindowSetting(metadata.link)
     })
   )

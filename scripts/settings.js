@@ -11,7 +11,7 @@ $('.only').click(validate)
 $('#showall').click(selectall)
 // use capture instead of bubbling
 document.getElementById('view').addEventListener('click', switchTabWindow, true)
-$('input[type="radio"]').click(function () { $(this).prop('checked', true) })
+$('input[type="radio"]').click(() => { $(this).prop('checked', true) })
 $('input').change(saveOptions)
 $('#show_context').change(saveOptions)
 $('#back-btn').click(goBack)
@@ -19,7 +19,7 @@ switchSetting()
 addDocs()
 
 function initializeSettings () {
-  chrome.storage.sync.get(null, restoreOptions)
+  chrome.storage.local.get(null, restoreOptions)
 }
 
 function restoreOptions (items) {
@@ -43,7 +43,7 @@ function restoreOptions (items) {
 function saveOptions () {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
-  chrome.storage.sync.set({
+  chrome.storage.local.set({
     show_context: $('input[name=tw]:checked').val(),
     resource: resource,
     auto_update_context: $('#auto-update-context').prop('checked'),
@@ -97,7 +97,7 @@ function noneSelected () {
 function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
@@ -126,13 +126,13 @@ function switchSetting() {
   if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
   $('#context-panel').hide()
   // switching pressed effect of tab button
-  $('#general-btn').click(function () {
+  $('#general-btn').click(() => {
     $('#context-panel').hide()
     $('#general-panel').show()
     if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
     if ($('#context-btn').hasClass('selected')) { $('#context-btn').removeClass('selected') }
   })
-  $('#context-btn').click(function () {
+  $('#context-btn').click(() => {
     $('#general-panel').hide()
     $('#context-panel').show()
     if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
@@ -143,26 +143,25 @@ function switchSetting() {
 function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
 
 function addDocs () {
-    let docs = {
-      'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
-      'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
-      'not-found-popup': 'Check if an archived copy is available when an error occurs.',
-      'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-      'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
-      'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-      'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
-      'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
-      'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
-      'annotations': 'Displays what Hypothes.is knows about the site you are on.',
-      'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
-    }
-    let labels = $('label')
-    for (var i = 0; i < labels.length; i++) {
-      let docFor = $(labels[i]).attr('for')
-      if (docs[docFor]) {
-        let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML
-        let docBtn = $('<button>').addClass('btn-docs').text('?')
-        $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
-      }
+  let docs = {
+    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
+    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
+    'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
+    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
+    'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
+    'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
+    'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
+    'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
+    'annotations': 'Displays what Hypothes.is knows about the site you are on.',
+    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
+  }
+  let labels = $('label')
+  for (var i = 0; i < labels.length; i++) {
+    let docFor = $(labels[i]).attr('for')
+    if (docs[docFor]) {
+      let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML
+      let docBtn = $('<button>').addClass('btn-docs').text('?')
+      $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
     }
 }

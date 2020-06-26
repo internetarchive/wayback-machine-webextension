@@ -26,7 +26,7 @@ function addCitations () {
         book.parentElement.append(icon[0])
       }
     }
-  }).catch(function (error) {
+  }).catch((error) => {
     console.log(error)
   })
 }
@@ -150,11 +150,11 @@ function getPageFromCitation (book) {
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
   // Encapsulate the chrome message sender with a promise object
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({
       message: 'getWikipediaBooks',
       query: url
-    }, function (books) {
+    }, (books) => {
       if (books) {
         resolve(books)
       } else {
