@@ -414,7 +414,7 @@ function setupWaybackCount() {
 
 function showWaybackCount(url) {
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (result.total >= 0) {
+    if ('total' in result) {
       // set label
       let text = ''
       if (result.total === 1) {
@@ -425,7 +425,7 @@ function showWaybackCount(url) {
         text = 'This page was never archived.'
       }
       $('#wayback-count-label').text(text)
-    } else if (result.error) {
+    } else {
       clearWaybackCount()
     }
   })
