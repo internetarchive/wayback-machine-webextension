@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const getTotal = require('../scripts/overview').getTotal
+const getTotal = require('../webextension/scripts/overview').getTotal
 describe('overview', () => {
   it('should get total number of captures', () => {
     var captures = {
