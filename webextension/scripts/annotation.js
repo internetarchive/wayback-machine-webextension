@@ -8,7 +8,7 @@
  */
 function hypothesis_api_url (url, type) {
   if (!/^https?:\/\//i.test(url)) {
-    url = 'https://' + url
+    url = 'http://' + url
   }
   if (type === 'domain') {
     const url_obj = new URL(url)

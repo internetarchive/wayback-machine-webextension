@@ -1,11 +1,11 @@
 const dom = require('./setup').jsdom
 const expect = require('chai').expect
 const assert = require('assert').strict
-const getUrlByParameter = require('../scripts/utils').getUrlByParameter
-const isValidUrl = require('../scripts/utils').isValidUrl
-const isNotExcludedUrl = require('../scripts/utils').isNotExcludedUrl
-const badgeCountText = require('../scripts/utils').badgeCountText
-const timestampToDate = require('../scripts/utils').timestampToDate
+const getUrlByParameter = require('../webextension/scripts/utils').getUrlByParameter
+const isValidUrl = require('../webextension/scripts/utils').isValidUrl
+const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedUrl
+const badgeCountText = require('../webextension/scripts/utils').badgeCountText
+const timestampToDate = require('../webextension/scripts/utils').timestampToDate
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {

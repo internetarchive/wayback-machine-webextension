@@ -3,10 +3,10 @@ var webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: './scripts/index.js',
+  entry: './webextension/scripts/index.js',
   output: {
-    path: path.resolve(__dirname, ''),
-    filename: 'scripts/build.js'
+    path: path.resolve(__dirname, 'webextension/scripts'),
+    filename: 'build.js'
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -15,8 +15,8 @@ module.exports = {
     })
     ,
     new MiniCssExtractPlugin({
-      filename: "css/style.css",
-      chunkFilename: "css/style.css"
+      filename: "./webextension/css/style.css",
+      chunkFilename: "./webextension/css/style.css"
     })
   ],
   stats: {
@@ -39,7 +39,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
               name: '[name].[ext]',   
-              outputPath: './images/'
+              outputPath: './webextension/images/'
           }
       }]
       },
@@ -50,7 +50,7 @@ module.exports = {
           options: {
               name: '[name].[ext]',
               publicPath: '../fonts/',
-              outputPath: './fonts/'
+              outputPath: './webextension/fonts/'
           }
       }]
       }
