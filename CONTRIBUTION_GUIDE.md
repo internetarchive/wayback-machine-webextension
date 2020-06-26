@@ -67,6 +67,6 @@ Here are a set of rules, you are advised to follow, to ensure smooth workflow.
  - Avoid working on outdated forks. Follow these tutorials on [configuring a remote](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork), and [syncing a fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
  - For major changes, increment the version number on `manifest.json`
  - Make sure all tests pass, if you work on related code
- - You can lint your code: `eslint scripts/settings.js --fix`
+ - You can lint your code: `eslint webextension/scripts/settings.js --fix`
 
 If you have any queries, feel free to create issues to discuss about them. Looking forward to your contribution.

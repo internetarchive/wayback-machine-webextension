@@ -39,7 +39,7 @@ Follow the given steps to install the extension on your local machine.
 
 - Navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over **More Tools**  and selecting **Extensions**.
 - Turn on the switch next to **Developer mode**.
-- Click the **Load unpacked** button and select the `wayback-machine-chrome` directory that contains this code.
+- Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
 
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
@@ -48,7 +48,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 - Open Firefox and navigate to `about:debugging` in the browser.
 - Click **This Firefox**.
 - Click **Load Temporary Add-on...**
-- Open the `wayback-machine-chrome` directory and select any file.
+- Open the `wayback-machine-chrome/webextension` directory and select any file.
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
