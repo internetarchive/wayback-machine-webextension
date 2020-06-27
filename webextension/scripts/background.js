@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount */
+/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -16,20 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var newshosts = new Set([
-  'apnews.com',
-  'www.factcheck.org',
-  'www.forbes.com',
-  'www.huffpost.com',
-  'www.nytimes.com',
-  'www.politico.com',
-  'www.politifact.com',
-  'www.snopes.com',
-  'www.theverge.com',
-  'www.usatoday.com',
-  'www.vox.com',
-  'www.washingtonpost.com'
-])
+
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -199,10 +186,6 @@ async function validate_spn(tabId, job_id, silent = false) {
 }
 
 /* * * Startup related * * */
-
-chrome.storage.local.set({
-  newshosts: Array.from(newshosts)
-})
 
 // Runs whenever extension starts up, except during incognito mode.
 chrome.runtime.onStartup.addListener((details) => {
