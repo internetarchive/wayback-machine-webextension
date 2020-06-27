@@ -164,4 +164,5 @@ function addDocs () {
       let docBtn = $('<button>').addClass('btn-docs').text('?')
       $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
     }
+  }
 }
