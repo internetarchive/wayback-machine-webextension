@@ -143,28 +143,26 @@ function switchSetting() {
 function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
 
 function addDocs () {
-  chrome.storage.local.get(['newshosts'], (items) => {
-    let docs = {
-      'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
-      'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
-      'not-found-popup': 'Check if an archived copy is available when an error occurs.',
-      'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-      'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
-      'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-      'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
-      'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
-      'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
-      'annotations': 'Displays what Hypothes.is knows about the site you are on.',
-      'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
+  let docs = {
+    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
+    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
+    'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
+    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
+    'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
+    'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
+    'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
+    'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
+    'annotations': 'Displays what Hypothes.is knows about the site you are on.',
+    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
+  }
+  let labels = $('label')
+  for (var i = 0; i < labels.length; i++) {
+    let docFor = $(labels[i]).attr('for')
+    if (docs[docFor]) {
+      let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML
+      let docBtn = $('<button>').addClass('btn-docs').text('?')
+      $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
     }
-    let labels = $('label')
-    for (var i = 0; i < labels.length; i++) {
-      let docFor = $(labels[i]).attr('for')
-      if (docs[docFor]) {
-        let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML
-        let docBtn = $('<button>').addClass('btn-docs').text('?')
-        $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
-      }
-    }
-  })
+  }
 }
