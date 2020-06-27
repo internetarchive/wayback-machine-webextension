@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const dom = require('./setup').jsdom
-const appendToParent = require('../scripts/domaintools').appendToParent
+const appendToParent = require('../webextension/scripts/domaintools').appendToParent
 describe('domaintools', () => {
   function htmlToElement(html) {
     var template = document.createElement('template')
