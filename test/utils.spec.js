@@ -6,6 +6,7 @@ const isValidUrl = require('../scripts/utils').isValidUrl
 const isNotExcludedUrl = require('../scripts/utils').isNotExcludedUrl
 const badgeCountText = require('../scripts/utils').badgeCountText
 const timestampToDate = require('../scripts/utils').timestampToDate
+const dateToTimestamp = require('../scripts/utils').dateToTimestamp
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -110,6 +111,27 @@ describe('timestampToDate', () => {
   test_cases.forEach(({ timestamp, result }) => {
     it('should return ' + (result ? result.toUTCString() : 'null') + ' on ' + timestamp, () => {
       assert.deepStrictEqual(timestampToDate(timestamp), result)
+    })
+  })
+})
+
+describe('dateToTimestamp', () => {
+  let test_cases = [
+    // result format: 'yyyyMMddHHmmss'
+    { 'result': '19981205021324', 'date': new Date(Date.UTC(1998, 11,  5,  2, 13, 24)) },
+    { 'result': '20010105131425', 'date': new Date(Date.UTC(2001,  0,  5, 13, 14, 25)) },
+    { 'result': '20010905131400', 'date': new Date(Date.UTC(2001,  8,  5, 13, 14,  0)) },
+    { 'result': '20010105130000', 'date': new Date(Date.UTC(2001,  0,  5, 13,  0,  0)) },
+    { 'result': '20011130000000', 'date': new Date(Date.UTC(2001, 10, 30,  0,  0,  0)) },
+    { 'result': '20010105000000', 'date': new Date(Date.UTC(2001,  0,  5,  0,  0,  0)) },
+    { 'result': '20010105000000', 'date': new Date(Date.UTC(2001,  0,  5,  0,  0,  0)) },
+    { 'result': '19981205000000', 'date': new Date(Date.UTC(1998, 11, 5)) },
+    { 'result': null, 'date': 'NOT A DATE' },
+    { 'result': null, 'date': null },
+  ]
+  test_cases.forEach(({ date, result }) => {
+    it('should return ' + (result ? result : 'null') + ' on ' + date, () => {
+      assert.deepStrictEqual(dateToTimestamp(date), result)
     })
   })
 })

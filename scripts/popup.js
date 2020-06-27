@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, dateToTimestamp */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -108,22 +108,21 @@ function social_share(eventObj) {
   if (id === null) {
     id = parent.getAttribute('id')
   }
-  let sharing_url = ''
-  const overview_url = 'https://web.archive.org/web/*/'
+  // Share wayback link to the most recent snapshot of URL at the time this is called.
+  let timestamp = dateToTimestamp(new Date())
+  let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    sharing_url = overview_url + url // Share the overview version of that URL
-    let open_url = ''
-    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
+    let sharing_url = recent_url + url
+    if (isNotExcludedUrl(url)) {
       if (id.includes('fb')) {
-        open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
+        openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
       } else if (id.includes('twit')) {
-        open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
+        openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
       } else if (id.includes('linkedin')) {
-        open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+        openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
       }
-      openByWindowSetting(open_url)
     }
   })
 }
