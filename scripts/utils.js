@@ -312,7 +312,8 @@ function resetExtensionStorage () {
     tagcloud: false,
     showall: false,
     not_found_popup: true,
-    selectedFeature: null
+    selectedFeature: null,
+    show_resource_list: false
   })
 }
 
