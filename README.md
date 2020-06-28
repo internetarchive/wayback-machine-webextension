@@ -1,3 +1,4 @@
+
 # Wayback Machine Google Chrome Extension
 
 In cooperation with Google Summer of Code, The Internet Archive presents
@@ -35,10 +36,10 @@ If you want to install the latest version, follow the steps below.
 Follow the given steps to install the extension on your local machine.
 
 ### Chrome
- 
+
 - Navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over **More Tools**  and selecting **Extensions**.
 - Turn on the switch next to **Developer mode**.
-- Click the **Load unpacked** button and select the `wayback-machine-chrome` directory that contains this code.
+- Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
 
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
@@ -47,7 +48,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 - Open Firefox and navigate to `about:debugging` in the browser.
 - Click **This Firefox**.
 - Click **Load Temporary Add-on...**
-- Open the `wayback-machine-chrome` directory and select any file.
+- Open the `wayback-machine-chrome/webextension` directory and select any file.
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
@@ -62,6 +63,9 @@ When writing a test for `example.js`, create a new file in the test directory
 named `example.spec.js`.
 
 This has been tested using `node v10.11.0` and `npm 6.4.1`.
+
+## Contributing Code
+To contribute code and docs to Wayback Machine Chrome extension, take a look at our [contribution guide](./CONTRIBUTION_GUIDE.md).
 
 ## Places to update the version
 

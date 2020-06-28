@@ -4,8 +4,8 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox, resetExtensionStorage, viewableTimestamp */
-/*   global badgeCountText, getWaybackCount */
+/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -16,20 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var newshosts = new Set([
-  'apnews.com',
-  'www.factcheck.org',
-  'www.forbes.com',
-  'www.huffpost.com',
-  'www.nytimes.com',
-  'www.politico.com',
-  'www.politifact.com',
-  'www.snopes.com',
-  'www.theverge.com',
-  'www.usatoday.com',
-  'www.vox.com',
-  'www.washingtonpost.com'
-])
+
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -42,9 +29,9 @@ function rewriteUserAgentHeader(e) {
 
 function URLopener(open_url, url, wmIsAvailable) {
   if (wmIsAvailable === true) {
-    wmAvailabilityCheck(url, function () {
+    wmAvailabilityCheck(url, () => {
       openByWindowSetting(open_url)
-    }, function () {
+    }, () => {
       if (isFirefox) {
         notify('This page has not been archived.')
       } else {
@@ -56,12 +43,14 @@ function URLopener(open_url, url, wmIsAvailable) {
   }
 }
 
+/* * * API Calls * * */
+
 function savePageNow(tabId, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURI(page_url))
     options.forEach(opt => data.append(opt, '1'))
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -78,7 +67,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
     })
     return timeoutPromise
       .then(response => response.json())
-      .then(function(res) {
+      .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.sync.get(['show_resource_list'], function(result) {
@@ -94,7 +83,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
 }
 
 function auth_check() {
-  const timeoutPromise = new Promise(function (resolve, reject) {
+  const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
@@ -129,7 +118,7 @@ async function validate_spn(tabId, job_id, silent = false) {
     }
 
     await sleep(1000)
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -146,7 +135,7 @@ async function validate_spn(tabId, job_id, silent = false) {
     })
     timeoutPromise
       .then(response => response.json())
-      .then(function(data) {
+      .then((data) => {
         status = data.status
         vdata = data
         chrome.runtime.sendMessage({
@@ -182,8 +171,8 @@ async function validate_spn(tabId, job_id, silent = false) {
       if (vdata.message && vdata.message.length > 0) {
         msg = vdata.message
       }
-      notify(msg, function(notificationId) {
-        chrome.notifications.onClicked.addListener(function(newNotificationId) {
+      notify(msg, (notificationId) => {
+        chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
             openByWindowSetting(snapshot_url)
@@ -199,8 +188,8 @@ async function validate_spn(tabId, job_id, silent = false) {
     })
     // notify
     if (!silent) {
-      notify('Error: ' + vdata.message, function(notificationId) {
-        chrome.notifications.onClicked.addListener(function(newNotificationId) {
+      notify('Error: ' + vdata.message, (notificationId) => {
+        chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             openByWindowSetting('https://archive.org/account/login')
           }
@@ -210,34 +199,29 @@ async function validate_spn(tabId, job_id, silent = false) {
   }
 }
 
-chrome.storage.sync.set({
-  newshosts: Array.from(newshosts)
-})
-/**
- *
- * Installed callback
- */
-chrome.runtime.onStartup.addListener(function(details) {
-  chrome.storage.sync.get(['agreement'], function(result) {
+/* * * Startup related * * */
+
+// Runs whenever extension starts up, except during incognito mode.
+chrome.runtime.onStartup.addListener((details) => {
+  chrome.storage.local.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
 })
 
+// Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
-  resetExtensionStorage()
-})
-
-chrome.runtime.onInstalled.addListener(function(details) {
-  chrome.storage.sync.get(['agreement'], function(result) {
+  initDefaultOptions()
+  chrome.storage.local.get({ agreement: false }, (result) => {
     if (result.agreement === true) {
+      afterAcceptOptions()
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
 })
 
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.browserAction.onClicked.addListener((tab) => {
   openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
 })
 
@@ -247,20 +231,20 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ['blocking', 'requestHeaders']
 )
 
-chrome.webRequest.onErrorOccurred.addListener(function (details) {
+chrome.webRequest.onErrorOccurred.addListener((details) => {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.sync.get(['not_found_popup', 'agreement'], function(event) {
+    chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
       if (event.not_found_popup === true && event.agreement === true) {
-        wmAvailabilityCheck(details.url, function (wayback_url, url) {
+        wmAvailabilityCheck(details.url, (wayback_url, url) => {
           chrome.tabs.sendMessage(details.tabId, {
             type: 'SHOW_BANNER',
             wayback_url: wayback_url,
             page_url: url,
             status_code: 999
           })
-        }, function () { })
+        }, () => {})
       }
     })
   }
@@ -269,15 +253,15 @@ chrome.webRequest.onErrorOccurred.addListener(function (details) {
 /**
 * Header callback
 */
-chrome.webRequest.onCompleted.addListener(function (details) {
+chrome.webRequest.onCompleted.addListener((details) => {
   function tabIsReady(isIncognito) {
     if (isIncognito === false && details.frameId === 0 &&
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
-      wmAvailabilityCheck(details.url, function (wayback_url, url) {
+      wmAvailabilityCheck(details.url, (wayback_url, url) => {
         chrome.tabs.executeScript(details.tabId, {
           file: 'scripts/archive.js'
-        }, function () {
+        }, () => {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
             chrome.tabs.sendMessage(details.tabId, {
               type: 'SHOW_BANNER',
@@ -294,15 +278,15 @@ chrome.webRequest.onCompleted.addListener(function (details) {
             })
           }
         })
-      }, function() {})
+      }, () => {})
     }
   }
   if (details.tabId > 0) {
-    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
       var tabsArr = tabs.map(tab => tab.id)
       if (tabsArr.indexOf(details.tabId) >= 0) {
-        chrome.tabs.get(details.tabId, function (tab) {
-          chrome.storage.sync.get(['not_found_popup', 'agreement'], function(event) {
+        chrome.tabs.get(details.tabId, (tab) => {
+          chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
             if (event.not_found_popup === true && event.agreement === true) {
               tabIsReady(tab.incognito)
             }
@@ -317,7 +301,7 @@ function getLastSaveTime(timestamp) {
   return viewableTimestamp(timestamp)
 }
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.message === 'openurl') {
     let tabId = message.tabId
     var page_url = message.page_url
@@ -337,13 +321,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // get most recent saved time, remove hash for some sites
     const url = message.page_url.split('#')[0]
     wmAvailabilityCheck(url,
-      function(wb_url, url, timestamp) {
+      (wb_url, url, timestamp) => {
         sendResponse({
           message: 'last_save',
           time: 'Last saved: ' + getLastSaveTime(timestamp)
         })
       },
-      function() {
+      () => {
         sendResponse({
           message: 'last_save',
           time: "Page hasn't been saved"
@@ -359,7 +343,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     let host = hostURL + 'services/context/books?url='
     let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -371,7 +355,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     return true
   } else if (message.message === 'tvnews') {
     let url = hostURL + 'services/context/tvnews?url=' + message.article
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -379,19 +363,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     })
     timeoutPromise
       .then(response => response.json())
-      .then(function (clips) {
+      .then((clips) => {
         sendResponse(clips)
       })
     return true
   } else if (message.message === 'sendurl') {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
     })
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
-    tabIdPromise = new Promise(function (resolve) {
+    tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
     })
   } else if (message.message === 'getToolbarState') {
@@ -400,17 +384,17 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     sendResponse({ stateArray: Array.from(state) })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       updateWaybackCountBadge(tabs[0].id, null)
     })
   } else if (message.message === 'updateCountBadge') {
     // update wayback count badge
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       updateWaybackCountBadge(tabs[0].id, tabs[0].url)
     })
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       removeToolbarState(tabs[0].id, 'R')
     })
   } else if (message.message === 'getCachedWaybackCount') {
@@ -425,10 +409,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   return true
 })
 
-chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
+chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab.id, tab.url)
-    chrome.storage.sync.get(['auto_archive'], function (event) {
+    chrome.storage.local.get(['auto_archive'], (event) => {
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
@@ -442,8 +426,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.sync.get(['auto_update_context', 'show_context', 'resource'], function (event) {
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.storage.local.get(['auto_update_context', 'show_context', 'resource'], (event) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (event.resource === true) {
             const url = tabs[0].url
             const tabId = tabs[0].id
@@ -456,7 +440,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
                     addToolbarState(tabId, 'R')
                     // Storing the tab url as well as the fetched archive url for future use
-                    chrome.storage.sync.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, function () {})
+                    chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
                   }
                 })
             // checking resource of wikipedia books and papers
@@ -470,7 +454,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
         })
         if (event.auto_update_context === true) {
           if (tabIdPromise) {
-            tabIdPromise.then(function (id) {
+            tabIdPromise.then((id) => {
               if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
                 chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + contextUrl })
               }
@@ -483,20 +467,20 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 })
 
 // Called whenever a browser tab is selected
-chrome.tabs.onActivated.addListener(function (info) {
-  chrome.storage.sync.get(['auto_update_context', 'resource'], function (event) {
+chrome.tabs.onActivated.addListener((info) => {
+  chrome.storage.local.get(['auto_update_context', 'resource'], (event) => {
     if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
       // reset toolbar if resource setting turned off
       removeToolbarState(info.tabId, 'R')
     } else {
       updateToolbar(info.tabId)
     }
-    chrome.tabs.get(info.tabId, function (tab) {
+    chrome.tabs.get(info.tabId, (tab) => {
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
       // auto update context page
       if ((event.auto_update_context === true) && tabIdPromise) {
-        tabIdPromise.then(function (id) {
+        tabIdPromise.then((id) => {
           if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
             chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
           }
@@ -509,11 +493,11 @@ chrome.tabs.onActivated.addListener(function (info) {
 function auto_save(tabId, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
-      function () {
+      () => {
         // check if page is now in archive after auto-saved
         // (don't do anything)
       },
-      function () {
+      () => {
         // set auto-save toolbar icon if page doesn't exist, then save it
         if (!getToolbarState(tabId).has('S')) {
           savePageNow(tabId, url, true)
@@ -551,7 +535,7 @@ function incrementCount(url) {
 }
 
 function updateWaybackCountBadge(tabId, url) {
-  chrome.storage.sync.get(['wm_count'], function (event) {
+  chrome.storage.local.get(['wm_count'], (event) => {
     if (url && isValidUrl(url) && isNotExcludedUrl(url) && (event.wm_count === true)) {
       getCachedWaybackCount(url, (total) => {
         if (total > 0) {
@@ -630,7 +614,7 @@ function clearToolbarState(tabId) {
  * @param tabId {integer}
  */
 function updateToolbar(tabId) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0].id === tabId) {
       let state = gToolbarStates[tabId]
       // this order defines the priority of what icon to display
@@ -674,8 +658,8 @@ chrome.contextMenus.create({
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
-chrome.contextMenus.onClicked.addListener(function (click) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+chrome.contextMenus.onClicked.addListener((click) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
       const page_url = tabs[0].url
       let wayback_url

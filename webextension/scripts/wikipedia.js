@@ -26,7 +26,7 @@ function addCitations () {
         book.parentElement.append(icon[0])
       }
     }
-  }).catch(function (error) {
+  }).catch((error) => {
     console.log(error)
   })
 }
@@ -64,7 +64,8 @@ function createDonateToolTip (isbn) {
   return $('<a>')
     .attr({
       'class': 'popup_box popup_donate',
-      'href': 'https://www.archive.org/donate?isbn=' + isbn
+      'href': 'https://www.archive.org/donate?isbn=' + isbn,
+      'target': '_blank'
     })
     .append(
       $('<div>')
@@ -86,7 +87,7 @@ function createDonateToolTip (isbn) {
 
 function createReadToolTip (id, metadata) {
   return $('<a>')
-    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id })
+    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank'  })
     .append(
       $('<div>')
         .addClass('text_elements')
@@ -107,7 +108,8 @@ function createDonateAnchor (isbn) {
     .attr({
       'href': 'https://archive.org/donate',
       'class': 'btn-archive',
-      'style': 'padding: 5px;'
+      'style': 'padding: 5px;',
+      'target': '_blank'
     })
     .prepend(
       $('<img>')
@@ -119,7 +121,8 @@ function createArchiveAnchor (id) {
     .attr({
       'href': 'https://archive.org/details/' + id,
       'class': 'btn-archive',
-      'style': 'padding: 5px;'
+      'style': 'padding: 5px;',
+      'target': '_blank'
     })
     .prepend(
       $('<img>')
@@ -147,11 +150,11 @@ function getPageFromCitation (book) {
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
   // Encapsulate the chrome message sender with a promise object
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({
       message: 'getWikipediaBooks',
       query: url
-    }, function (books) {
+    }, (books) => {
       if (books) {
         resolve(books)
       } else {

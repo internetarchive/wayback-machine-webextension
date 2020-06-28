@@ -55,14 +55,14 @@ function popup(url, code) {
 
   // Adding functionality to close and archive button
   const closeBtn = shadowRoot.querySelector('#close')
-  closeBtn.addEventListener('click', function() {
+  closeBtn.addEventListener('click', () => {
     closeClicked = true
     const popup = shadowRoot.querySelector('#error')
     popup.style.display = 'none'
   })
 
   const link = shadowRoot.querySelector('#archiveBtn')
-  link.addEventListener('click', function(e) {
+  link.addEventListener('click', (e) => {
     linkClicked = true
     // Work-around for myspace which hijacks the link
     if (window.location.hostname.indexOf('myspace.com') >= 0) {
@@ -82,7 +82,7 @@ function refresh(url, code) {
 }
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
+  (request, sender, sendResponse) => {
     if (request.type === 'SHOW_BANNER') {
       if (request.wayback_url) {
         refresh(request.wayback_url, request.status_code)

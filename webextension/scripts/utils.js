@@ -5,6 +5,22 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
+const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
+
+const newshosts = new Set([
+  'apnews.com',
+  'www.factcheck.org',
+  'www.forbes.com',
+  'www.huffpost.com',
+  'www.nytimes.com',
+  'www.politico.com',
+  'www.politifact.com',
+  'www.snopes.com',
+  'www.theverge.com',
+  'www.usatoday.com',
+  'www.vox.com',
+  'www.washingtonpost.com'
+])
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -35,7 +51,7 @@ function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     const requestUrl = hostURL + '__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
-    const timeoutPromise = new Promise(function (resolve, reject) {
+    const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
@@ -83,7 +99,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     body: requestParams
   })
     .then(response => response.json())
-    .then(function(json) {
+    .then((json) => {
       let wayback_url = getWaybackUrlFromResponse(json)
       let timestamp = getWaybackTimestampFromResponse(json)
       if (wayback_url !== null) {
@@ -226,14 +242,14 @@ function getErrorMessage(req) {
   return 'The requested service ' + req.url + ' failed: ' + req.status + ', ' + req.statusText
 }
 
-function getUrlByParameter (name) {
+function getUrlByParameter(name) {
   const url = new URL(window.location.href)
   return url.searchParams.get(name)
 }
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.sync.get(['show_context'], function (event) { opener(url, event.show_context, cb) })
+    chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
   } else {
     opener(url, op)
   }
@@ -241,13 +257,13 @@ function openByWindowSetting(url, op = null, cb) {
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url }, function (tab) {
+    chrome.tabs.create({ url: url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
   } else {
     let width = Math.floor(window.screen.availWidth * 0.75)
     let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, function (window) {
+    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
@@ -275,18 +291,18 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
       trigger: 'manual'
     })
   // Handles staying open
-    .on('mouseenter', function () {
+    .on('mouseenter', () => {
       $(anchor).tooltip('show')
-      $('.popup_box').on('mouseleave', function () {
-        setTimeout(function () {
+      $('.popup_box').on('mouseleave', () => {
+        setTimeout(() => {
           if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
             $(anchor).tooltip('hide')
           }
         }, time)
       })
     })
-    .on('mouseleave', function () {
-      setTimeout(function () {
+    .on('mouseleave', () => {
+      setTimeout(() => {
         if (!$('.popup_box:hover').length) {
           $(anchor).tooltip('hide')
         }
@@ -294,49 +310,68 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     })
 }
 
-function resetExtensionStorage () {
-  chrome.storage.sync.set({
-    agreement: false,
-    show_context: 'tab',
-    resource: false,
-    auto_update_context: false,
-    wm_count: false,
-    auto_archive: false,
-    email_outlinks: false,
+// Default Settings prior to accepting terms.
+function initDefaultOptions () {
+  chrome.storage.local.set({
+    agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
-    alexa: false,
+    selectedFeature: null,
+    /* General */
+    wm_count: false,
+    resource: false,
+    auto_archive: false,
+    email_outlinks: false,
+    not_found_popup: false,
+    auto_update_context: false,
+    show_context: 'tab',
+    /* Contexts */
+    showall: true,
+    alexa: true,
     domaintools: false,
     wbmsummary: false,
     annotations: false,
     tagcloud: false,
     showall: false,
-    not_found_popup: true,
     selectedFeature: null,
     show_resource_list: false
   })
 }
 
+// Turn on these Settings after accepting terms.
+function afterAcceptOptions () {
+  chrome.storage.local.set({
+    /* General */
+    wm_count: true,
+    resource: true,
+    email_outlinks: true,
+    not_found_popup: true
+  })
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
-    isArray: isArray,
-    isObject: isObject,
-    getErrorMessage: getErrorMessage,
-    getUrlByParameter: getUrlByParameter,
-    getWaybackUrlFromResponse: getWaybackUrlFromResponse,
-    isValidUrl: isValidUrl,
-    isNotExcludedUrl: isNotExcludedUrl,
-    wmAvailabilityCheck: wmAvailabilityCheck,
-    openByWindowSetting: openByWindowSetting,
-    sleep: sleep,
-    notify: notify,
-    attachTooltip: attachTooltip,
-    getWaybackCount: getWaybackCount,
-    badgeCountText: badgeCountText,
-    isFirefox: isFirefox,
-    hostURL: hostURL,
-    timestampToDate: timestampToDate,
-    viewableTimestamp: viewableTimestamp,
-    resetExtensionStorage: resetExtensionStorage
+    isArray,
+    isObject,
+    getErrorMessage,
+    getUrlByParameter,
+    getWaybackUrlFromResponse,
+    isValidUrl,
+    isNotExcludedUrl,
+    wmAvailabilityCheck,
+    openByWindowSetting,
+    sleep,
+    notify,
+    attachTooltip,
+    getWaybackCount,
+    badgeCountText,
+    isFirefox,
+    hostURL,
+    timestampToDate,
+    viewableTimestamp,
+    initDefaultOptions,
+    afterAcceptOptions,
+    feedbackPageURL,
+    newshosts
   }
 }

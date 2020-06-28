@@ -19,7 +19,7 @@
 
     <a href="#"><img class="resize-fit-center" src="images/wayback-logo.png" alt="Internet Archive" id="logo-internet-archive" /></a>
 
-    <div class="container-fluid">
+    <div class="container-fluid unselectable">
       <div>
         <div class="text-center">
 
@@ -51,8 +51,8 @@
             </div>
           </div>
 
-          <label class="unselectable chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
-          <label class="unselectable chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+          <label class="chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
+          <label class="chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
 
           <div class="btn-block">
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="first_capture">Oldest</button>
@@ -155,8 +155,8 @@
 
       <div class="btn-container">
         <ul class="nav">
-          <li><button class="unselectable btn btn-sm btn-medium btn-unselected" id="general-btn">General</button></li>
-          <li><button class="unselectable btn btn-sm btn-medium btn-unselected " id="context-btn">Contexts</button></li>
+          <li><button class="btn btn-sm btn-medium btn-unselected" id="general-btn">General</button></li>
+          <li><button class="btn btn-sm btn-medium btn-unselected " id="context-btn">Contexts</button></li>
         </ul>
       </div>
 
@@ -165,6 +165,12 @@
           <input type="checkbox" id="wm-count-setting">
           <div class="setting-text-box">
             <span class="toggle">Wayback Count</span>
+          </div>
+        </label>
+        <label class="setting-switch" for="resource">
+          <input type="checkbox" id="resource">
+          <div class="setting-text-box">
+            <span class="toggle">Relevant Archived Resources</span>
           </div>
         </label>
         <label class="setting-switch" for="auto-archive">
@@ -179,22 +185,16 @@
             <span class="toggle">Email Outlinks</span>
           </div>
         </label>
-        <label class="setting-switch" for="resource">
-          <input type="checkbox" id="resource">
-          <div class="setting-text-box">
-            <span class="toggle">Relevant Archived Resources</span>
-          </div>
-        </label>
         <label class="setting-switch" for="not-found-popup">
           <input type="checkbox" id="not-found-popup">
           <div class="setting-text-box">
-            <span class="toggle">404 Not Found?</span>
+            <span class="toggle">404 Not Found</span>
           </div>
         </label>
         <label class="setting-switch" for="auto-update-context">
           <input type="checkbox" id="auto-update-context">
           <div class="setting-text-box">
-            <span class="toggle">Auto-update Contexts</span>
+            <span class="toggle">Auto-Update Contexts</span>
           </div>
         </label>
         <label class="setting-switch" for="show-resource-list">
@@ -261,7 +261,7 @@
     </div>
 
     <div style="width:100%; text-align:center">
-      <button class="unselectable btn btn-sm btn-short btn-dark-gray" id="back-btn">Back</button>
+      <button class="btn btn-sm btn-short btn-dark-gray" id="back-btn">Back</button>
     </div>
 
   </div>

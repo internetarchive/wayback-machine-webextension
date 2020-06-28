@@ -70,7 +70,7 @@ function timestamp2datetime (timestamp) {
 function first_archive_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
-  $.getJSON(new_url, function (data) {
+  $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#first_archive_datetime_error').text('Data not available')
     } else {
@@ -87,7 +87,7 @@ function first_archive_details () {
 function recent_archive_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
-  $.getJSON(new_url, function (data) {
+  $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#recent_archive_datetime_error').text('Data not available')
     } else {
@@ -106,19 +106,19 @@ function get_thumbnail () {
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
-    .then(function (response) {
+    .then((response) => {
       $('#loader_thumbnail').hide()
       $('#show_thumbnail').append($('<img>').attr('src', new_url))
     })
-    .catch(function (exception) {
+    .catch((exception) => {
       $('#loader_thumbnail').hide()
       if (exception === 'timeout') {
-        $('#show_thumbnail').text('Please refresh the page...Time out!!')
+        $('#show_thumbnail').text('Please refresh the page.')
       } else {
         if (exception.status === 504) {
-          $('#show_thumbnail').text('Please refresh the page...Time out!!')
+          $('#show_thumbnail').text('Please refresh the page.')
         } else {
-          $('#show_thumbnail').text('Thumbnail not found')
+          $('#show_thumbnail').text('Thumbnail not found.')
         }
       }
     })
