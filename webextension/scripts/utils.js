@@ -346,17 +346,15 @@ function initDefaultOptions () {
     email_outlinks: false,
     not_found_popup: false,
     auto_update_context: false,
+    show_resource_list: false,
     show_context: 'tab',
     /* Contexts */
     showall: true,
     alexa: true,
     domaintools: false,
-    wbmsummary: false,
-    annotations: false,
-    tagcloud: false,
-    showall: false,
-    selectedFeature: null,
-    show_resource_list: false
+    wbmsummary: true,
+    annotations: true,
+    tagcloud: true
   })
 }
 

@@ -146,12 +146,12 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
-    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets. (R)',
-    'auto-update-context': 'Enable to update context windows when the page they are referencing changes.',
-    'show-resource-list': 'Enable to display a list of resources during Save Page Now.',
-    'not-found-popup': 'Enable to popup a link to the archived copy when a website is missing.',
+    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
+    'show-resource-list': 'Display a list of resources during Save Page Now.',
+    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine. (S)',
+    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
