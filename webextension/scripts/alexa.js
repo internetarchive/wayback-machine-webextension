@@ -15,11 +15,11 @@ function get_alexa () {
       $('.error').hide()
       let popularity = xml.getElementsByTagName('POPULARITY')
       let country_exists = xml.getElementsByTagName('COUNTRY')
-      if (popularity) {
+      if (popularity.length>0) {
         let rank = popularity[0].getAttribute('TEXT')
         $('#alexa_rank').text(rank)
       }
-      if (country_exists) {
+      if (country_exists.length>0) {
         let country = country_exists[0].getAttribute('NAME')
         $('#alexa_country').text(country)
       }
