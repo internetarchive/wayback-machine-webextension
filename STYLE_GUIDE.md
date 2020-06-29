@@ -50,8 +50,6 @@ JavaScript
  - Place any external globals used in a comment for ESLint like this:
    `/* global var1, var2 */`
 
- - *(optional)* Try to keep text that the user sees in HTML rather than embed in JS code, if possible. For example, rather than output an error message contained in JS code, you could show / hide a *span* containing the error message instead. Another example would be tooltips. Might not apply to URLs.
-
 #### Naming ####
 
  - Function names should be in `lowerCamelCase`.
