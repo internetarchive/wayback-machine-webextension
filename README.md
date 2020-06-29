@@ -5,20 +5,14 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Features
 
-- Save Page Now: Instantly save the page you are currently viewing   in The
-  WayBack Machine.
-- Recent Version & First Version: Present the most recent, and the first
-  version of a page, in the WayBack Machine.
-- Alexa & Whois: Get analytical information about the page you are currently
-  viewing, along with interesting facts, such as who owns it and how popular
-  it is.
-- Tweets: Search Twitter for information regarding your current page.
-- Sitemap: Present a sunburst diagram for the domain you are currently viewing.
-- Books: Check if referenced books are available to read in the Internet
-  Archive.
-- Papers: Check if referenced papers are available to read in the Internet
-  Archive.
-- TV news: Present archived TV news clips relevant to the current page.
+- **Save Page Now** - Instantly save the page you are currently viewing in The WayBack Machine. Can auto-save pages that have yet to be archived.
+- **Oldest, Newest, Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
+- **Sitemap** - Present a sunburst diagram for the domain you are currently viewing.
+- **Related Tweets** & **Share Links** - Search Twitter for information regarding your current page. Share archived links on social media.
+- **Show Contexts** - Provides a variety of information regarding the page you are viewing, including analytics from *Alexa*, capture summary from the Wayback Machine, annotations from *Hypothes.is*, and a word tag cloud.
+- **404 Not Found** - Check if an archived copy is available if an error occurs while visiting a URL.
+- **Wayback Count** - Display a count of pages that have been archived each time you visit a website.
+- **Relevant Archived Resources** - Display archived resources on relevant URLs, including from Amazon books, Wikipedia, and various news sources. View digitized books and papers which are cited on the website, and present archived TV news clips relevant to the current page.
 
 
 ## Installing the Extension
