@@ -140,8 +140,10 @@ function search_tweet() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
-    if ((e.keyCode === 13 || e.which === 13) && search_box.value.length > 1) {
-      openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
+    if (isNotExcludedUrl(search_box.value)) {
+      if ((e.keyCode === 13 || e.which === 13) && search_box.value.length > 1) {
+        openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
+      }
     }
   })
 }
