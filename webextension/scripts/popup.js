@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -103,24 +103,26 @@ function view_all() {
 }
 
 function social_share(eventObj) {
-  var parent = eventObj.target.parentNode
-  var id = parent.getAttribute('id')
-  var sharing_url = ''
-  var overview_url = 'https://web.archive.org/web/*/'
+  let parent = eventObj.target.parentNode
+  let id = eventObj.target.getAttribute('id')
+  if (id === null) {
+    id = parent.getAttribute('id')
+  }
+  // Share wayback link to the most recent snapshot of URL at the time this is called.
+  let timestamp = dateToTimestamp(new Date())
+  let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    sharing_url = overview_url + url // Share the overview version of that URL
-    var open_url = ''
-    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
+    let sharing_url = recent_url + url
+    if (isNotExcludedUrl(url)) {
       if (id.includes('fb')) {
-        open_url = 'https://www.facebook.com/sharer/sharer.php?u=' + sharing_url // Share the wayback machine's overview of the URL
+        openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
       } else if (id.includes('twit')) {
-        open_url = 'https://twitter.com/intent/tweet?url=' + sharing_url
+        openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
       } else if (id.includes('linkedin')) {
-        open_url = 'https://www.linkedin.com/shareArticle?url=' + sharing_url
+        openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
       }
-      openByWindowSetting(open_url)
     }
   })
 }
@@ -411,7 +413,7 @@ function setupWaybackCount() {
 
 function showWaybackCount(url) {
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (result.total) {
+    if ('total' in result) {
       // set label
       let text = ''
       if (result.total === 1) {
@@ -422,7 +424,7 @@ function showWaybackCount(url) {
         text = 'This page was never archived.'
       }
       $('#wayback-count-label').text(text)
-    } else if (result.error) {
+    } else {
       clearWaybackCount()
     }
   })
