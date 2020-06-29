@@ -1,16 +1,19 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "version": "3.0.0.2",
+  "version": "3.0.0.3",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
-    "16": "images/app-icon/app-icon16.png",
-    "32": "images/app-icon/app-icon32.png",
-    "48": "images/app-icon/app-icon48.png",
+    "16": "images/app-icon/mini-icon16.png",
+    "24": "images/app-icon/mini-icon24.png",
+    "32": "images/app-icon/mini-icon32.png",
+    "48": "images/app-icon/mini-icon48.png",
     "64": "images/app-icon/app-icon64.png",
     "96": "images/app-icon/app-icon96.png",
     "128": "images/app-icon/app-icon128.png",
-    "256": "images/app-icon/app-icon256.png"
+    "256": "images/app-icon/app-icon256.png",
+    "512": "images/app-icon/app-icon512.png",
+    "1024": "images/app-icon/app-icon1024.png"
   },
   "browser_action": {
     "default_icon": {
