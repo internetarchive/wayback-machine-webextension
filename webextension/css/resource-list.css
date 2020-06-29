@@ -13,16 +13,24 @@ p {
     word-break: break-all;
 }
 
-.text-right{
+.text-right {
     width: 85%;
     display: none;
     text-align: right;
 }
 
-.live-status{
+.live-status {
     text-align: center;
 }
 
-h2{
+h2 {
     font-size: 30px;
+}
+
+.row {
+    display: none;
+}
+
+.error {
+    text-align: center;
 }
