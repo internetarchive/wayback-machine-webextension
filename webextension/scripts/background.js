@@ -70,7 +70,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
-          chrome.storage.sync.get(['show_resource_list'], function(result) {
+          chrome.storage.local.get(['show_resource_list'], function(result) {
             if(result.show_resource_list === true){
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id
               openByWindowSetting(resource_list_url)
