@@ -210,6 +210,28 @@ function timestampToDate(timestamp) {
 }
 
 /**
+ * Converts a Date object into a Wayback timestamp string.
+ * @param {Date}
+ * @return timestamp {string} as "yyyyMMddHHmmss" in UTC time zone, or null.
+ */
+function dateToTimestamp(date) {
+  let timestamp = null
+  function pad(num) {
+    return (num < 10) ? ('0' + num) : ('' + num)
+  }
+  if (date instanceof Date) {
+    let yyyy = date.getUTCFullYear()
+    let MM = date.getUTCMonth() + 1
+    let dd = date.getUTCDate()
+    let HH = date.getUTCHours()
+    let mm = date.getUTCMinutes()
+    let ss = date.getUTCSeconds()
+    timestamp = yyyy + pad(MM) + pad(dd) + pad(HH) + pad(mm) + pad(ss)
+  }
+  return timestamp
+}
+
+/**
  * Return localized date string, or time if within last 24 hours.
  * @param timestamp {string} as "yyyyMMddHHmmss" in UTC time zone.
  * @return string or ''
@@ -365,6 +387,7 @@ if (typeof module !== 'undefined') {
     isFirefox,
     hostURL,
     timestampToDate,
+    dateToTimestamp,
     viewableTimestamp,
     initDefaultOptions,
     afterAcceptOptions,
