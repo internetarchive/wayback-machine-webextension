@@ -19,24 +19,6 @@ switchSetting()
 addDocs()
 
 function initializeSettings () {
-  chrome.storage.sync.get({
-    show_context: 'tab',
-    resource: false,
-    auto_update_context: false,
-    wm_count: false,
-    auto_archive: false,
-    email_outlinks: false,
-    spn_outlinks: false,
-    spn_screenshot: false,
-    alexa: false,
-    domaintools: false,
-    wbmsummary: false,
-    annotations: false,
-    tagcloud: false,
-    showall: false,
-    not_found_popup: true,
-    show_resource_list: false
-  }, restoreOptions)
   chrome.storage.local.get(null, restoreOptions)
 }
 
@@ -166,7 +148,7 @@ function addDocs () {
   let docs = {
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets. (R)',
     'auto-update-context': 'Enable to update context windows when the page they are referencing changes.',
-    'show-resource-list': 'Enable user to see the resource list in a new-tab',
+    'show-resource-list': 'Enable to display a list of resources during Save Page Now.',
     'not-found-popup': 'Enable to popup a link to the archived copy when a website is missing.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
     'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine. (S)',
