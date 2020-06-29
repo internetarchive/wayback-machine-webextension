@@ -2,10 +2,10 @@
 
 In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official WayBack Machine Extension*. With the power of the WayBack Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
 
+![screenshot](graphics/screenshots/popups.png)
+
 
 ## Features
-
-![screenshot](graphics/screenshots/popups.png)
 
 - **Save Page Now** - Instantly save the page you are currently viewing in The WayBack Machine. Can auto-save pages that have yet to be archived.
 - **Oldest, Newest, Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
