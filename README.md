@@ -5,6 +5,8 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Features
 
+![screenshot](graphics/screenshots/popups.png)
+
 - **Save Page Now** - Instantly save the page you are currently viewing in The WayBack Machine. Can auto-save pages that have yet to be archived.
 - **Oldest, Newest, Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
 - **Sitemap** - Present a sunburst diagram for the domain you are currently viewing.
