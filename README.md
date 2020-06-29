@@ -45,7 +45,7 @@ Follow the steps below to install the latest build on your local machine.
 
 ### Chrome
 
-1. Open Chrome and navigate to [chrome://extensions](chrome://extensions) in your browser. You can also access this page by clicking on the 3 vertical dots menu on the top-right, hovering over **More Tools**, then selecting **Extensions**.
+1. Open Chrome and navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the 3 vertical dots menu on the top-right, hovering over **More Tools**, then selecting **Extensions**.
 2. Turn on the switch next to **Developer mode**.
 3. Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
 4. Click on the *Extensions* puzzle-like icon in the toolbar.
@@ -57,7 +57,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 
 ### Firefox
 
-1. Open Firefox and navigate to [about:debugging](about:debugging) in the browser. You can also access this page by clicking on the hamburger menu on the top-right, select **Add-ons**, then the **Gear Tools button** on the top-right, then **Debug Add-ons**.
+1. Open Firefox and navigate to `about:debugging` in the browser. You can also access this page by clicking on the hamburger menu on the top-right, select **Add-ons**, then the **Gear Tools button** on the top-right, then **Debug Add-ons**.
 2. Click **This Firefox** on the left.
 3. Click **Load Temporary Add-on...**
 4. Open the `wayback-machine-chrome/webextension` directory and select any file.
