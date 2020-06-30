@@ -9,6 +9,7 @@ function show_resource_data(url_name) {
   let status = 'start'
   let resource_list_data = new Set()
   let old_resource_length = 0
+  let new_resource_length
   $('#current-url').text(url_name + '.....')
   chrome.runtime.onMessage.addListener(
     (message) => {
@@ -18,7 +19,6 @@ function show_resource_data(url_name) {
         status = message.data.status
         $('#current-status').text(status.charAt(0).toUpperCase() + status.slice(1))
         if (status === 'pending' || status === 'start') {
-          let new_resource_length
           if ('resources' in vdata) {
             new_resource_length = vdata.resources.length
             vdata.resources.forEach((element) => {
