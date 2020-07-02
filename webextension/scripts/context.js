@@ -35,7 +35,6 @@ function get_hypothesis() {
 function openContextFeature(evt, feature) {
   // Get all elements with class="tabcontent" and hide them
   $('.tabcontent').hide()
-
   // Get all elements with class="tablinks" and remove the class "active"
   $('.col-tablinks button').removeClass('active')
   // Show the current tab, and add an "active" class to the button that opened the tab
@@ -64,12 +63,12 @@ function singlePageView() {
         let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
         let featureTabId = featureId + '_tab'
 
-        // Hide features that weren't selected
-        if (!event[feature]) {
-          $(featureId).hide()
-          $(featureTabId).hide()
-        } else {
+        if (event[feature]) {
           countFeature++
+          // Show navbar
+          $('#side-nav-bar').show()
+          // Show selected features in navbar
+          $(featureTabId).show()
           contexts_dic[feature]()
           $(featureTabId).click((event) => {
             // When clicked on a context tab, open that tab and set that tab as selectedFeature
