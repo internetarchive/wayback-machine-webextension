@@ -162,11 +162,14 @@ ul {
     width: 70vw;
     float: none;
 }
+
 .col-sm-12 {
     float: none;
 }
+
 /* https://www.w3schools.com/howto/howto_js_tabs.asp */
 /* Style the tab */
+
 .container-fluid {
     margin: 0;
     padding: 0;
@@ -249,10 +252,18 @@ ul {
         color: #bbb;
     }
 
+    .color-dark {
+        color: #eee;
+    }
+
     .pre {
         color: #ddd;
-        background-color: #333;
+    }
+
+    .annotations-container {
         border: 1px solid #555;
+        background-color: #333;
+        border-radius: 5px;
     }
 
     a, .error b {
@@ -281,6 +292,19 @@ ul {
     .col-tablinks button.active {
         background-color: #9A3B38;
         color: #eee;
+    }
+
+    .sidebar-tabs {
+        color: #fff;
+    }
+
+    .col-sm {
+        border: none;
+        border-top: 1px solid #9A3B38;
+    }
+
+    .col-tablinks button.active:hover {
+        background-color: #d66;
     }
 
     .container-scrollbar::-webkit-scrollbar {
