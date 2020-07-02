@@ -244,3 +244,7 @@ p {
         background: #888;
     }
 }
+
+#show_thumbnail{
+    text-align: center;
+}
