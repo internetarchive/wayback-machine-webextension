@@ -19,13 +19,13 @@ function get_alexa () {
         let rank = popularity[0].getAttribute('TEXT')
         $('#alexa_rank').text(rank)
       } else {
-        $('.rank').hide()
+        $(".rank").hide()
       }
       if (country_exists && country_exists.length > 0) {
         let country = country_exists[0].getAttribute('NAME')
         $('#alexa_country').text(country)
       } else {
-        $('.country').hide()
+        $(".country").hide()
       }
     } else {
       $('.error').text('No More Data Found')
