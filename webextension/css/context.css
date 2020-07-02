@@ -1,9 +1,9 @@
 body, h4 {
     max-height: 100%;
-    font-family: 'Abhaya Libre', serif;
 }
 
 h1 {
+    font-weight: bold;
     font-family: sans-serif;
 }
 
@@ -142,14 +142,16 @@ ul {
 }
 
 .pre {
-    /* font-family: Menlo,Monaco,Consolas,"Courier New",monospace; */
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     display: block;
-    padding: 9.5px;
-    margin: 1em 0 5vh;
+    padding: 1em 1em 2em;
     font-size: 23px;
     line-height: 1.42857143;
     color: #333;
     word-wrap: break-word;
+    background-color: #f5f5f5;
+    border-radius: 5px;	
+    border: 1px solid #ccc;
 }
 
 .annotations-container {
@@ -240,6 +242,19 @@ ul {
     text-align: center;
 }
 
+.tag-cloud-show {
+    text-align: center;
+}
+
+.rl-list {
+    margin-left: 10px;
+}
+
+#show_thumbnail {
+    text-align: center;
+    margin-top: 20px;
+}
+
 /* dark mode */
 @media (prefers-color-scheme: dark) {
 
@@ -257,6 +272,7 @@ ul {
     }
 
     .pre {
+        background-color: #222;
         color: #ddd;
     }
 
