@@ -4,9 +4,7 @@ body, h4 {
 }
 
 h1 {
-    font-size: 55px;
-    font-weight: 525;
-    margin: 5vh auto;
+    font-family: sans-serif;
 }
 
 h4 {
@@ -47,7 +45,12 @@ h4 {
 
 .wb-logo {
     width: 100%;
-    padding: 1em;
+    padding-top: 1em;
+}
+
+.wb-logo-error {
+    height: 100px;
+    padding-top: 1em;
 }
 
 .flex-container {
@@ -180,6 +183,11 @@ ul {
     height: 100px;
     width: 100%;
     font-size: 25px;
+}
+
+.col-sm {
+    border: none;
+    border-top: 1px solid #fff;
 }
 
 /* Change background color of buttons on hover */

@@ -80,6 +80,8 @@ function singlePageView() {
           // Get first tab
           if (!clickFeature) {
             clickFeature = featureTabId
+            //Remove border from the first tab in navbar
+            $(clickFeature).css('border', 'none')
           }
           // Open the selected tab if it is there
           if (openedFeature) {
