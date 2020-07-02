@@ -145,7 +145,7 @@ async function validate_spn(tabId, job_id, silent = false) {
       })
       .catch((err)=>{
         chrome.runtime.sendMessage({
-          message: 'resource_list_show_error',
+          message: 'resource_list_show',
           data: err
         })
       })

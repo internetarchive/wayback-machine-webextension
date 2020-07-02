@@ -9,7 +9,7 @@ function show_resource_data(url_name) {
   let status = 'start'
   let resource_list_data = new Set()
   let new_resource_length
-  $('#current-url').text(url_name + '.....')
+  $('#current-url').text(url_name)
   chrome.runtime.onMessage.addListener(
     (message) => {
       $('.error').hide()
