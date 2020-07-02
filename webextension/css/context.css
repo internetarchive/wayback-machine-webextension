@@ -25,7 +25,7 @@ h4 {
     border-right: 3px solid #9A3B38;
 }
 
-.main-content {
+.tab-content-container {
     margin-left: 26vw;
 
 }
@@ -46,7 +46,8 @@ h4 {
 }
 
 .wb-logo {
-    height: 100px;
+    width: 100%;
+    padding: 1em;
 }
 
 .flex-container {
@@ -166,10 +167,6 @@ ul {
 .container-fluid {
     margin: 0;
     padding: 0;
-}
-
-.col-tablinks {
-    flex: 1;
 }
 
 /* Style the buttons that are used to open the tab content */
