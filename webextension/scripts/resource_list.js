@@ -12,8 +12,8 @@ function show_resource_data(url_name) {
   $('#current-url').text(url_name)
   chrome.runtime.onMessage.addListener(
     (message) => {
-      $('.error').hide()
       if (message.message === 'resource_list_show') {
+        $('.error').hide()
         vdata = message.data
         status = message.data.status
         $('#current-status').text(status.charAt(0).toUpperCase() + status.slice(1))

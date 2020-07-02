@@ -10,7 +10,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow-y: auto;
-    height: 500px;
+    height: 420px;
 }
 
 .col-sm-6 {
@@ -19,12 +19,34 @@
     float: none;
 }
 
+#current-url {
+    font-size: 28px;
+}
+
+.spn-head {
+    display: inline-block;
+}
+
 p {
-    font-family:Gill Sans Light;
+    font-family: Gill Sans Light;
     font-size: 20px;
     padding: 0 5px;
     white-space: normal;
     word-break: break-all;
+}
+
+.logo {
+    margin: 1.5vh auto;
+    text-align: center;
+}
+
+.ia-logo {
+    height: 60px;
+}
+
+.wb-logo {
+    height: 90px;
+    padding-top: 1em;
 }
 
 .color-code {
@@ -33,8 +55,7 @@ p {
 
 .container-scrollbar::-webkit-scrollbar {
     background-color: #aaa;
-    width: 20px;
-    height: 20px;
+    width: 16px;
     border-radius: 5px;
 }
 .container-scrollbar::-webkit-scrollbar-thumb {
@@ -52,6 +73,7 @@ p {
 }
 
 h2 {
+    margin-top: 10px;
     font-size: 30px;
 }
 
