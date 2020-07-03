@@ -144,7 +144,7 @@ ul {
 }
 
 .pre {
-    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     display: block;
     padding: 1em;
     margin: 2em auto;
@@ -251,7 +251,11 @@ ul {
 
 #show_thumbnail {
     text-align: center;
-    margin-top: 20px;
+}
+
+.thumbnail-box {
+    border-radius: 5px;	
+    border: 1px solid #ccc;
 }
 
 @media screen and (max-width: 1000px) {
@@ -309,8 +313,12 @@ ul {
 
     .pre {
         border: 1px solid #555;
-        background-color: #333;        
+        background-color: #333;
         color: #ddd;
+    }
+
+    .thumbnail-box {
+        border: 1px solid #555;
     }
 
     a, .error b {

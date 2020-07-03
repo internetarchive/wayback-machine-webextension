@@ -108,7 +108,7 @@ function get_thumbnail () {
   fetch(new_url)
     .then((response) => {
       $('#loader_thumbnail').hide()
-      $('#show_thumbnail').append($('<img>').attr('src', new_url))
+      $('#show_thumbnail').append($('<img class="thumbnail-box">').attr('src', new_url))
     })
     .catch((exception) => {
       $('#loader_thumbnail').hide()
