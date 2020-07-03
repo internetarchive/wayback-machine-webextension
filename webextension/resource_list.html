@@ -1,40 +1,38 @@
 <!doctype html>
 <html>
 <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/common.css">
-    <link rel="stylesheet" type="text/css" href="css/resource-list.css">
-    <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
-    <script src="scripts/build.js"></script>
-    <script src="scripts/utils.js"></script>
-    <title>Resource List and Save Status</title>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/resource-list.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>Resource List and Save Status</title>
 </head>
 <body>
   <div class="container">
     <div class="live-status">
-      <h2>Saving Page: &nbsp;</h2>
-      <h4><span class="color-code" id="current-url"></span></h4>
       <div class="logo">
-        <img src="images/app-icon/app-icon128.png" class="ia-logo">
-        <br>
-        <img src="images/logo.gif" class="wb-logo">
+        <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
       </div>
+      <h2>Saving Page...</h2>
+      <h4><span class="highlight-color" id="current-url"></span></h4>
       <p id="current-status"></p>
     </div>
-    <div class="col-sm-6">
+    <div>
       <div class="container-scrollbar" id="resource-list-container">
         <div class="error">
-          <h2>Error</h2>
+          <h3 class="error-color">Error</h3>
           <p>Looks like you have reloaded the page, please close the tab and try again!</p>
         </div>
       </div>
-      <div class="text-right">
-        <p>Downloaded elements: <b class="color-code" id="spn-elements-counter"></b></p>
+      <div id="counter-container">
+        <p>Downloaded elements: <b class="highlight-color" id="spn-elements-counter"></b></p>
       </div>
     </div>
   </div>
-<script src="scripts/resource_list.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/resource_list.js"></script>
 </body>
 </html>

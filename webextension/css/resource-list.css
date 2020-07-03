@@ -13,14 +13,8 @@
     height: 420px;
 }
 
-.col-sm-6 {
-    margin: auto;
-    width: 70vw;
-    float: none;
-}
-
 #current-url {
-    font-size: 28px;
+    font-weight: normal;
 }
 
 .spn-head {
@@ -41,16 +35,12 @@ p {
 }
 
 .ia-logo {
-    height: 60px;
+    height: 64px;
 }
 
 .wb-logo {
     height: 90px;
     padding-top: 1em;
-}
-
-.color-code {
-    color:#22c399;
 }
 
 .container-scrollbar::-webkit-scrollbar {
@@ -63,7 +53,7 @@ p {
     border-radius: 5px;
 }
 
-.text-right {
+#counter-container {
     display: none;
     text-align: right;
 }
@@ -72,13 +62,16 @@ p {
     text-align: center;
 }
 
-h2 {
-    margin-top: 10px;
-    font-size: 30px;
-}
-
 .error {
     text-align: center;
+}
+
+.error-color {
+    color: #733;
+}
+
+.highlight-color {
+    color: #733;
 }
 
 /* dark mode */
@@ -95,10 +88,14 @@ h2 {
         border: 1px solid #555;
     }
 
-    .text-right, h2 {
+    .error-color {
         color: #d66;
     }
-    
+
+    .highlight-color {
+        color: #d88;
+    }
+
     .container-scrollbar::-webkit-scrollbar {
         background-color: #555;
     }

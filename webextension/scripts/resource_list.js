@@ -28,7 +28,7 @@ function show_resource_data(url_name) {
           )
         }
         if (status === 'success') {
-          $('.text-right').show()
+          $('#counter-container').show()
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
         } else if (!status || (status === 'error')) {
