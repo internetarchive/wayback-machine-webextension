@@ -64,6 +64,7 @@ p {
 
 .error {
     text-align: center;
+    display: none;
 }
 
 .error-color {

@@ -8,13 +8,12 @@ function show_resource_data(url_name) {
   let vdata = {}
   let status = 'start'
   let resource_list_data = new Set()
-  let old_resource_length = 0;
+  let old_resource_length = 0
   let new_resource_length
   $('#current-url').text(url_name)
   chrome.runtime.onMessage.addListener(
     (message) => {
       if (message.message === 'resource_list_show' && message.url === url_name) {
-        $('.error').hide()
         vdata = message.data
         status = message.data.status
         $('#current-status').text(status.charAt(0).toUpperCase() + status.slice(1))
