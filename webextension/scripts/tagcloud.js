@@ -110,6 +110,7 @@ function _toConsumableArray (arr) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    _toConsumableArray: _toConsumableArray
+    _toConsumableArray,
+    get_tags
   }
 }
