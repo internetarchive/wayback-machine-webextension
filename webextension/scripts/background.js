@@ -73,11 +73,11 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
           chrome.storage.local.get(['show_resource_list'], function(result) {
             if(result.show_resource_list === true){
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id
-              openByWindowSetting(resource_list_url)
+              openByWindowSetting(resource_list_url,'windows')
             }
           })
         }
-        validate_spn(tabId, res.job_id, silent)
+        validate_spn(tabId, res.job_id, silent, page_url)
       })
   }
 }
@@ -101,7 +101,7 @@ function auth_check() {
   .then(response => response.json())
 }
 
-async function validate_spn(tabId, job_id, silent = false) {
+async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
   const val_data = new URLSearchParams()
@@ -140,13 +140,15 @@ async function validate_spn(tabId, job_id, silent = false) {
         vdata = data
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
-          data: data
+          data: data,
+          url: page_url
         })
       })
       .catch((err)=>{
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
-          data: err
+          data: err,
+          url: page_url
         })
       })
   }
