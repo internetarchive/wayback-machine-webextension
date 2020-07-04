@@ -89,7 +89,7 @@ This has been tested using `node v10.11.0` and `npm 6.4.1`.
 
 ## Contributing Code
 
-To contribute code and docs to Wayback Machine Chrome extension, take a look at our [Contribution Guide](CONTRIBUTION_GUIDE.md) and [Style Guide](STYLE_GUIDE.md).
+To contribute code and docs to Wayback Machine Chrome extension, take a look at our [Contribution Guide](CONTRIBUTING.md) and [Style Guide](STYLE_GUIDE.md).
 
 
 ## Credits
