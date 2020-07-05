@@ -43,14 +43,6 @@ h4 {
     color: #333;
 }
 
-.sidebar-tabs div:first-child button {
-    border-radius: 5px 5px 0 0 !important;
-}
-.sidebar-tabs div:last-child button {
-    border-radius: 0 0 5px 5px !important;
-}
-
-
 .ia-logo {
     height: 64px;
 }
@@ -162,7 +154,7 @@ ul {
     display: block;
     padding: 1em;
     margin: 1em auto 1.8em auto;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.42857143;
     color: #333;
     word-wrap: break-word;
@@ -201,10 +193,6 @@ ul {
     width: 100%;
     font-size: 25px;
 }
-
-/* .col-sm {
-    border-top: 1px solid #9A3B38;
-} */
 
 /* Change background color of buttons on hover */
 .col-tablinks button:hover {

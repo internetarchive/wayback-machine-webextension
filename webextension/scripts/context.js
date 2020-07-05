@@ -35,7 +35,7 @@ function get_hypothesis() {
 function openContextFeature(evt, feature) {
   // Get all elements with class="tabcontent" and hide them
   $('.tabcontent').hide()
-  // Get all elements with class="tablinks" and remove the class "active"
+  // Get all button elements inside elements with class="col-tablinks" and remove the class "active"
   $('.col-tablinks button').removeClass('active')
   // Show the current tab, and add an "active" class to the button that opened the tab
   $(feature).show()
@@ -58,6 +58,7 @@ function singlePageView() {
       let openedFeature = result.selectedFeature
       let clickFeature = null
       let countFeature = 0
+      let lastFeatureTab = null
       for (let i = 0; i < features.length; i++) {
         let feature = features[i]
         let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
@@ -65,9 +66,10 @@ function singlePageView() {
 
         if (event[feature]) {
           countFeature++
-          // Show navbar
+          lastFeatureTab = featureTabId
+          // Show sidebar menu
           $('#side-nav-bar').show()
-          // Show selected features in navbar
+          // Show selected features in menu
           $(featureTabId).show()
           contexts_dic[feature]()
           $(featureTabId).click((event) => {
@@ -80,6 +82,8 @@ function singlePageView() {
           // Get first tab
           if (!clickFeature) {
             clickFeature = featureTabId
+            //Set border for the first tab
+            $(clickFeature).children(0).css({'border-radius': '5px 5px 0 0'})
           }
           // Open the selected tab if it is there
           if (openedFeature) {
@@ -87,7 +91,7 @@ function singlePageView() {
             if (openedFeature !== featureTabId) {
               $(clickFeature).click()
             } else {
-              // Open the last selected tab
+              // Open the previously selected tab
               clickFeature = openedFeature
               $(clickFeature).click()
             }
@@ -97,6 +101,8 @@ function singlePageView() {
           }
         }
       }
+      //Set border for the last tab
+      $(lastFeatureTab).children(0).css({'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px'})
       // Show error message if no context is selected
       if (countFeature <= 0) {
         $('#error-message').show()
