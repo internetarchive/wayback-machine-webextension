@@ -78,11 +78,28 @@ h4 {
 }
 
 #link-incontext {
-    margin-left:40px;
+    margin:10px 0 10px 40px;
+
 }
 
 #link-html {
-    margin-left: 70px;
+    margin:10px 0 10px 70px;
+}
+
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+    padding: 5px;
+    background-color: #a94442;
+}
+a.button:hover{
+    color: #333;
+    background-color: #a94442;
 }
 
 #date {
