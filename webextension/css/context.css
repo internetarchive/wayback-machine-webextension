@@ -43,6 +43,14 @@ h4 {
     color: #333;
 }
 
+.sidebar-tabs div:first-child button {
+    border-radius: 5px 5px 0 0 !important;
+}
+.sidebar-tabs div:last-child button {
+    border-radius: 0 0 5px 5px !important;
+}
+
+
 .ia-logo {
     height: 64px;
 }
