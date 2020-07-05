@@ -17,7 +17,7 @@ h4 {
 }
 
 #side-nav-bar {
-    background-color: #ffffff75;
+    background-color: #ddd;
     display: none;
     position: fixed;
     height: 100%;
@@ -37,10 +37,10 @@ h4 {
 }
 
 .sidebar-tabs {
-    background-color: #ddd;
+    background-color: #ccc;
     border: 1px solid transparent;
     border-radius: 5px;
-    color: #000;
+    color: #333;
 }
 
 .ia-logo {
@@ -200,7 +200,8 @@ ul {
 
 /* Change background color of buttons on hover */
 .col-tablinks button:hover {
-    background-color: #88888822;
+    background-color: #b0b0b0;
+    color: #000;
 }
 
 /* Create an active/current tablink class */
@@ -331,7 +332,6 @@ ul {
 
     .container-fluid {
         background-color: #2C2C2C;
-        /* color: #eee; */
         color: #aaa;
     }
 
@@ -350,7 +350,7 @@ ul {
     }
 
     .col-tablinks button.active:hover {
-        background-color: #d66;
+        background-color: #AA4B48;
     }
 
     .container-scrollbar::-webkit-scrollbar {
