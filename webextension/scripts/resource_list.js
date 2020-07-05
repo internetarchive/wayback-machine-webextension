@@ -5,6 +5,11 @@ window.onload = () => {
 }
 
 function show_resource_data(url_name) {
+  const status_list = {
+    pending:'Processing !',
+    success: 'Successfully archived the URL !',
+    error: 'Error occcured, please try again later !'
+  }
   let vdata = {}
   let status = 'start'
   let resource_list_data = new Set()
@@ -16,7 +21,10 @@ function show_resource_data(url_name) {
       if (message.message === 'resource_list_show' && message.url === url_name) {
         vdata = message.data
         status = message.data.status
-        $('#current-status').text(status.charAt(0).toUpperCase() + status.slice(1))
+        $('#current-status').text(status_list[status])
+        if ('message' in vdata) {
+          $('#message').text(vdata.message)
+        }
         if ('resources' in vdata) {
           new_resource_length = vdata.resources.length
           vdata.resources.forEach((element) => {
@@ -24,6 +32,7 @@ function show_resource_data(url_name) {
           })
         }
         if(new_resource_length>old_resource_length){
+          $('.loader').hide()
           for (let item of Array.from([...resource_list_data]).slice(old_resource_length,new_resource_length)) {
             $('#resource-list-container').append(
               $('<p>').append(item)
@@ -36,6 +45,7 @@ function show_resource_data(url_name) {
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
         } else if (!status || (status === 'error')) {
+          $('.loader').hide()
           $('#resource-list-container').hide()
         }
       }
