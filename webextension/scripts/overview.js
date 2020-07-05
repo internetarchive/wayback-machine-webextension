@@ -124,4 +124,4 @@ function get_thumbnail () {
     })
 }
 
-if (typeof module !== 'undefined') { module.exports = { getTotal: getTotal } }
+if (typeof module !== 'undefined') { module.exports = { getTotal } }

@@ -92,6 +92,8 @@ $('.tablink').click(() => {
 })
 
 if (typeof module !== 'undefined') {
-  module.exports = { hypothesis_api_url: hypothesis_api_url,
-    get_annotations: get_annotations }
+  module.exports = { 
+    hypothesis_api_url,
+    get_annotations 
+  }
 }
