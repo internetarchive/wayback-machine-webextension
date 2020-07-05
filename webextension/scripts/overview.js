@@ -23,20 +23,18 @@ function get_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
+    $('#total_captures').show()
     if ('type' in response) {
       var type = response.type
       $('#details').text(type)
+      $('#url_details').show()
       var captures = response.captures
       $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
         .text(getTotal(captures).toLocaleString())
     } else {
-      $('#url_details').hide()
       $('#total_archives_number').text(0)
     }
-  }).fail(() => {
-    $('#url_details').hide()
-    $('#total_captures').hide()
-  })
+  }).fail(() => {})
 }
 
 function _splitTimestamp (timestamp) {

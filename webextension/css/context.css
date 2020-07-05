@@ -216,7 +216,7 @@ ul {
     display: none;
 }
 
-#row_contain-url, #row_contain-domain, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
+#row_contain-url, #row_contain-domain, #url_details, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
     display: none;
 }
 
