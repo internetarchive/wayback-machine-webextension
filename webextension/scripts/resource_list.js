@@ -8,7 +8,7 @@ function show_resource_data(url_name) {
   const status_list = {
     pending:'Processing...',
     success: 'Save Succeeded.',
-    error: 'An Error Occurred. Please Try Again !'
+    error: 'An Error Occurred. Please Try Again.'
   }
   let vdata = {}
   let status = 'start'
@@ -31,8 +31,8 @@ function show_resource_data(url_name) {
             resource_list_data.add(element)
           })
         }
-        if(new_resource_length>old_resource_length){
-          for (let item of Array.from([...resource_list_data]).slice(old_resource_length,new_resource_length)) {
+        if (new_resource_length > old_resource_length) {
+          for (let item of Array.from([...resource_list_data]).slice(old_resource_length, new_resource_length)) {
             $('#resource-list-container').append(
               $('<p>').append(item)
             )
