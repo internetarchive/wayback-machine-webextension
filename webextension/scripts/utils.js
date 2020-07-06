@@ -347,6 +347,7 @@ function initDefaultOptions () {
     not_found_popup: false,
     auto_update_context: false,
     show_context: 'tab',
+    private_mode: false,
     /* Contexts */
     showall: true,
     alexa: true,

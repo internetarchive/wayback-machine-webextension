@@ -9,6 +9,8 @@
 $(initializeSettings)
 $('.only').click(validate)
 $('#showall').click(selectall)
+$('.private').click(validatePrivateMode)
+$('#private-mode').click(togglePrivateMode)
 // use capture instead of bubbling
 document.getElementById('view').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
@@ -38,6 +40,7 @@ function restoreOptions (items) {
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
+  $('#private-mode').prop('checked', items.private_mode)
 }
 
 function saveOptions () {
@@ -58,7 +61,8 @@ function saveOptions () {
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
     showall: $('#showall').prop('checked'),
-    not_found_popup: $('#not-found-popup').prop('checked')
+    not_found_popup: $('#not-found-popup').prop('checked'),
+    private_mode: $('#private-mode').prop('checked')
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
@@ -83,6 +87,23 @@ function selectall () {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
+  }
+}
+
+function validatePrivateMode () {
+  let checkboxes = $('[name="private-inlude"]')
+  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
+  if (checkedCount >0 ) {
+    $('#private-mode').prop('checked', false)
+  } else {
+    $('#private-mode').prop('checked', true)
+  }
+}
+ 
+function togglePrivateMode () {
+  let checkboxes = $('[name="private-inlude"]')
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = !$(this).prop('checked')
   }
 }
 
@@ -144,6 +165,7 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
+    'private-mode': 'Extension will not support any feature!', 
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
