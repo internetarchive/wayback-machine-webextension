@@ -1,208 +1,227 @@
 <!doctype html>
 <html>
 <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/common.css">
-    <link rel="stylesheet" type="text/css" href="css/context.css">
-    <link rel="stylesheet" type="text/css" href="css/domaintools.css">
-    <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
-    <script src="scripts/build.js"></script>
-    <script src="scripts/utils.js"></script>
-    <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
-    <script src="scripts/alexa.js"></script>
-    <script src="scripts/domaintools.js"></script>
-    <script src="scripts/overview.js"></script>
-    <script src="scripts/annotation.js"></script>
-    <script src="scripts/tagcloud.js"></script>
-    <title>Show Contexts</title>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/context.css">
+  <link rel="stylesheet" type="text/css" href="css/domaintools.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <script src="scripts/build.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/jquery.awesomeCloud-0.2.js"></script>
+  <script src="scripts/alexa.js"></script>
+  <script src="scripts/domaintools.js"></script>
+  <script src="scripts/overview.js"></script>
+  <script src="scripts/annotation.js"></script>
+  <script src="scripts/tagcloud.js"></script>
+  <title>Show Contexts</title>
 </head>
 <body>
-    <!-- Error message -->
-    <div class="container" id="error-message">
-        <div>
-            <div class="col-sm-12 text-center">
-                <h2>Error</h2>
-            </div>
-            <div class="col-sm-6">
-                <div class="pre">
-                    <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
-                    <div class="error">
-                        <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
-                        <ul>
-                            <li>Go to the <b>Settings</b> menu in the extension</li>
-                            <li>Switch to <b>Contexts</b> menu</li>
-                            <li>Select features to be displayed on this page</li>
-                            <li>Refresh this page</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <!-- Error message -->
+  <div id="error-message">
+    <div>
+      <div class="col-sm-12 text-center">
+        <div class="logo">
+          <img src="images/app-icon/app-icon128.png" class="ia-logo">
         </div>
+        <h1 class="error-header">Error</h1>
+      </div>
+      <div class="col-sm-6">
+        <div class="pre">
+          <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
+          <div class="error">
+            <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
+            <ul>
+              <li><span class="color-dark">Go to the <b>Settings</b> menu in the extension</span></li>
+              <li><span class="color-dark">Switch to <b>Contexts</b> menu</span></li>
+              <li><span class="color-dark">Select features to be displayed on this page</span></li>
+              <li><span class="color-dark">Refresh this page</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <div class="flex-container">
   <!-- Tab links -->
-    <div class="container-fluid">
-        <div class="row tab flex-container">
-            <div class="col-sm col-tablinks" id="Alexa_tab">
-                <button>Alexa Internet</button>
-            </div>
-            <!-- DomainTools not working 
-             <div class="col-sm col-tablinks" id="Domaintools_tab">
-                <button>Domain Tools</button>
-             </div>
-             -->
-             <div class="col-sm col-tablinks" id="Wbmsummary_tab">
-                <button>Wayback Machine</button>
-             </div>
-             <div class="col-sm col-tablinks" id="Annotations_tab">
-                <button>Annotations (Hypothes.is)</button>
-             </div>
-             <div class="col-sm col-tablinks" id="Tagcloud_tab">
-                <button>Tag Cloud</button>
-             </div>
+    <div class="container-fluid" id="side-nav-bar">
+      <div class="logo">
+        <img src="images/app-icon/app-icon128.png" class="ia-logo">
+        <picture>
+          <source
+            srcset="images/wayback-dark.png"
+            media="(prefers-color-scheme: dark)">
+          <img src="images/wayback-light.png" class="wb-logo">
+        </picture>
+      </div>
+      <div class="sidebar-tabs">
+        <div class="col-tablinks" id="Alexa_tab">
+          <button>Alexa Internet</button>
         </div>
+        <!-- DomainTools not working 
+        <div class="col-tablinks" id="Domaintools_tab">
+          <button>Domain Tools</button>
+        </div>
+        -->
+        <div class="col-tablinks" id="Wbmsummary_tab">
+          <button>Wayback Machine</button>
+        </div>
+        <div class="col-tablinks" id="Annotations_tab">
+          <button>Annotations (Hypothes.is)</button>
+        </div>
+        <div class="col-tablinks" id="Tagcloud_tab">
+          <button>Tag Cloud</button>
+        </div>
+      </div>
     </div>
 
-  <!-- Tab contents -->
-    <div class="container tabcontent" id="Alexa">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2>Alexa Overview</h2>
-            </div>
-            <div class="loader" id="loader_alexa"></div>
-            <div class="col-sm-6">
-                <div class="pre" id="show_alexa_data" style="display:none;">
-                    <div class="color_code"><b id="alexa_name"></b></div>
-                    <div class="rank"><b>Alexa Rank: <span class="color_code" id="alexa_rank"></span></b></div>
-                    <div class="country"><b>Country: <span class="color_code" id="alexa_country"></span></b></div>
-                    <div class="error"></div>
-                    <br />
-                    <span class="related_sites">
-                        <span class="glyphicon glyphicon-globe red" aria-hidden="true"></span>&nbsp;&nbsp;<b>Related sites:</b>
-                        <ul id="alexa_list" class="rl-list rl-link"></ul>
-                    </span>
-                    
-                    <a id="alexa_page" target="_blank">Click to see more in alexa</a>
-                </div>
-            </div>
+    <!-- Tab contents -->
+    <div class="tab-content-container">
+      <!-- Alexa tab -->
+      <div class="tabcontent" id="Alexa">
+        <div class="col-sm-12 text-center">
+          <h1>Alexa Overview</h1>
         </div>
-    </div>
-    <div class="container tabcontent" id="Domaintools">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2>DomainTools Overview</h2>
-            </div>
-            <div class="loader" id="loader_domaintools"></div>
-            <div class="col-sm-6">
-                <div id="show_domaintools_data" class="title pre" style="display:none;"></div>
-                <span class="color_code" id="domain"></span>
-                <span class="color_code" id="alexa"></span>
-                <span class="color_code" id="admin_contact_state"></span>
-                <span class="color_code" id="admin_contact_country"></span>
-                <a id="whois"></a>
-                <span class="color_code" id="create_date"></span>
-                <span class="color_code" id=""></span>
-                <span class="color_code" id="expiration_date"></span>
-                <span class="color_code" id="email_domain"></span>
-                <span class="color_code" id="registrant_org"></span>
-                <span class="color_code" id="website_response"></span>
-            </div>
+        <div class="loader" id="loader_alexa"></div>
+        <div class="col-sm-6">
+          <div class="pre" id="show_alexa_data" style="display:none;">
+            <div><b>URL: </b><span class="color_code" id="alexa_name"></span></div>
+            <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
+            <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
+            <div class="error"></div>
+            <br>
+            <span class="related_sites">
+              <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;<b>Related sites:</b>
+              <ul id="alexa_list" class="rl-list rl-link"></ul>
+            </span>
+            <span>
+              <a id="alexa_page" target="_blank">Click to see more in alexa</a>
+            </span>
+          </div>
         </div>
-    </div>
-    <div class="container tabcontent" id="Wbmsummary">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2>Wayback Captures Overview</h2>
-            </div>
-            <div class="loader" id="loader_wbmsummary"></div>
-            <div class="col-sm-6">
-                <div class="pre title">
-                    <p><strong>First Capture: </strong> <a target="_blank" id="first_archive_datetime"></a> <span id="first_archive_datetime_error"></span></p>
-                    <p><strong>Last Capture: </strong> <a target="_blank" id="recent_archive_datetime"></a> <span id="recent_archive_datetime_error"></span></p>
-                    <p id="total_captures">Total Number of Captures: <a id="total_archives_number"></a></p>
-                    <p id="url_details">The URL is a <strong id="details"></strong></p>
-                    <div id="message" style="display:none"></div>
-                </div>
-            </div>
-            <div class="loader" id="loader_thumbnail"></div>
-            <div class="col-sm-6">
-                <div id="show_thumbnail"></div>
-            </div>
+      </div>
+
+      <!-- Domaintools tab -->
+      <div class="tabcontent" id="Domaintools">
+        <div class="col-sm-12 text-center">
+          <h1>DomainTools Overview</h1>
         </div>
-    </div>
-    <div class="container tabcontent" id="Annotations">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2>Annotations (Hypothes.is)</h2>
-                <div id="annotations_status" style="display:none;"> No Annotations Found. </div>
-            </div>
+        <div class="loader" id="loader_domaintools"></div>
+        <div class="col-sm-6">
+          <div id="show_domaintools_data" class="pre" style="display:none;"></div>
+          <span class="color_code" id="domain"></span>
+          <span class="color_code" id="alexa"></span>
+          <span class="color_code" id="admin_contact_state"></span>
+          <span class="color_code" id="admin_contact_country"></span>
+          <a id="whois"></a>
+          <span class="color_code" id="create_date"></span>
+          <span class="color_code" id=""></span>
+          <span class="color_code" id="expiration_date"></span>
+          <span class="color_code" id="email_domain"></span>
+          <span class="color_code" id="registrant_org"></span>
+          <span class="color_code" id="website_response"></span>
+        </div>
+      </div>
+      
+      <!-- Wbmsummary tab -->
+      <div class="tabcontent" id="Wbmsummary">
+        <div class="col-sm-12 text-center">
+          <h1>Wayback Captures Overview</h1>
+        </div>
+        <div class="loader" id="loader_wbmsummary"></div>
+        <div class="col-sm-6">
+          <div class="pre">
+            <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
+            <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
+            <div id="total_captures"><b>Total Number of Captures: </b><a id="total_archives_number"></a></div>
+            <div class="color_code" id="url_details">The URL is a <strong id="details"></strong></div>
+            <div id="message" style="display:none"></div>
+          </div>
+        </div>
+        <div class="loader" id="loader_thumbnail"></div>
+        <div class="col-sm-6">
+          <div id="show_thumbnail"></div>
+        </div>
+      </div>
+
+      <!-- Annotations tab -->
+      <div class="tabcontent" id="Annotations">
+        <div class="col-sm-12 text-center">
+          <h1>Annotations (Hypothes.is)</h1>
+          <div id="annotations_status" style="display:none;">No Annotations Found.</div>
         </div>
         <div class="loader" id="loader_annotations"></div>
         <div class="col-sm-6" id="annotations_url">
-            <h4 class="title" id="title-url">URL</h4>
-            <div class="pre container-scrollbar" id="container-whole-url"></div>
+          <h4 class="title" id="title-url">URL</h4>
+          <div class="pre annotations-container container-scrollbar" id="container-whole-url"></div>
         </div>
         <div class="col-sm-6" id="annotations_domain">
-            <h4 class="title" id="title-domain">Domain</h4>
-            <div class="pre container-scrollbar" id="container-whole-domain"></div>
+          <h4 class="title" id="title-domain">Domain</h4>
+          <div class="pre annotations-container container-scrollbar" id="container-whole-domain"></div>
         </div>
-    </div>
-    <div class="container tabcontent" id="Tagcloud">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h2>Tag Cloud</h2>
-                <div class="loader" id="loader_tagcloud"></div>
-                <div class="wordcloud">
-                    <div id="container-wordcloud"></div>
-                </div>
-                <div id="message_tagcloud" style="display:none;margin:10px 0"></div>
-            </div>
-        </div>
-    </div>
+      </div>
 
-<!-- HTML Templates for annotation url -->
-    <div class="row row-box" id="row_contain-url">
-        <div class="col-sm-12">
-            <div>
-                <div>
-                    <strong class="userinfo"></strong>
-                    <span class="date"></span>
-                </div>
-                <div class="source" id="source-">
-                    <span class="glyphicon glyphicon-globe"></span>
-                    <span class="public_on">Public on</span>
-                    <span class="title text-danger"></span>
-                    <span id="source-contain"> </span>
-                </div>
-                <div class="target-selector-exact"></div>
-                <div class="text" id="text-contain"></div>
-                <div class="links"></div>
-            </div>
+      <!-- Tagcloud tab -->
+      <div class="tabcontent" id="Tagcloud">
+        <div class="col-sm-12 text-center">
+          <h1>Tag Cloud</h1>
         </div>
-    </div>
-<!-- HTML Templates for annotation domain -->
-    <div class="row row-box" id="row_contain-domain">
-        <div class="col-sm-12">
-            <div>
-                <div>
-                    <strong class="userinfo"></strong>
-                    <span class="date"></span>
-                </div>
-                <div class="source" id="source-">
-                    <span class="glyphicon glyphicon-globe"></span>
-                    <span class="public_on">Public on</span>
-                    <span class="title text-danger"></span>
-                    <span id="source-contain"> </span>
-                </div>
-                <div class="target-selector-exact"></div>
-                <div class="text" id="text-contain"></div>
-                <div class="links"></div>
-            </div>
+        <div class="loader" id="loader_tagcloud"></div>
+        <div class="col-sm-6 title">
+          <div class="wordcloud">
+            <div id="container-wordcloud"></div>
+          </div>
         </div>
-    </div>
+        <div id="message_tagcloud" style="display:none;margin:10px 0"></div>
+      </div>
 
-    <script src="scripts/context.js"></script>
+      <!-- HTML Templates for annotation url -->
+      <div class="row-box" id="row_contain-url">
+        <div class="col-sm-12">
+          <div>
+            <div>
+              <strong class="userinfo"></strong>
+              <span class="date"></span>
+            </div>
+            <div class="source" id="source-">
+              <span class="glyphicon glyphicon-globe"></span>
+              <span class="public_on">Public on</span>
+              <span class="title text-danger"></span>
+              <span id="source-contain"> </span>
+            </div>
+            <div class="target-selector-exact"></div>
+            <div class="text" id="text-contain"></div>
+            <div class="links"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HTML Templates for annotation domain -->
+      <div class="row-box" id="row_contain-domain">
+        <div class="col-sm-12">
+          <div>
+            <div>
+              <strong class="userinfo"></strong>
+              <span class="date"></span>
+            </div>
+            <div class="source" id="source-">
+              <span class="glyphicon glyphicon-globe"></span>
+              <span class="public_on">Public on</span>
+              <span class="title text-danger"></span>
+              <span id="source-contain"> </span>
+            </div>
+            <div class="target-selector-exact"></div>
+            <div class="text" id="text-contain"></div>
+            <div class="links"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/context.js"></script>
 </body>
 </html>
