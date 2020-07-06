@@ -2,16 +2,16 @@ window.onload = () => {
   var url = new URL(window.location.href)
   var url_name = url.searchParams.get('url')
   console.log(document.location.hash)
-  if(document.location.hash == '#not_refreshed'){
+  if (document.location.hash === '#not_refreshed') {
     show_resource_data(url_name)
-  }else{
-    show_error();
+  } else {
+    show_error()
   }
 }
 
 function show_resource_data(url_name) {
   const status_list = {
-    pending:'Processing...',
+    pending: 'Processing...',
     success: 'Save Succeeded.',
     error: 'An Error Occurred. Please Try Again.'
   }
@@ -54,7 +54,6 @@ function show_resource_data(url_name) {
           $('.loader').hide()
           $('#resource-list-container').hide()
           document.location.hash = '#refreshed'
-
         }
       }
     }
