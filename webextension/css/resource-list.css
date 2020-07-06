@@ -74,6 +74,9 @@ p {
 .highlight-color {
     color: #733;
 }
+#message {
+    word-break: normal;
+}
 
 /* dark mode */
 @media (prefers-color-scheme: dark) {

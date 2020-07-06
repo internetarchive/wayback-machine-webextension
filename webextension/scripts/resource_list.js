@@ -6,9 +6,9 @@ window.onload = () => {
 
 function show_resource_data(url_name) {
   const status_list = {
-    pending:'Processing !',
-    success: 'Successfully archived the URL !',
-    error: 'Error occcured, please try again later !'
+    pending:'Processing...',
+    success: 'Save Succeeded.',
+    error: 'An Error Occurred. Please Try Again !'
   }
   let vdata = {}
   let status = 'start'
@@ -32,7 +32,6 @@ function show_resource_data(url_name) {
           })
         }
         if(new_resource_length>old_resource_length){
-          $('.loader').hide()
           for (let item of Array.from([...resource_list_data]).slice(old_resource_length,new_resource_length)) {
             $('#resource-list-container').append(
               $('<p>').append(item)
@@ -41,10 +40,11 @@ function show_resource_data(url_name) {
           old_resource_length = new_resource_length
         }
         if (status === 'success') {
+          $('.loader').hide()
           $('#counter-container').show()
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
-        } else if (!status || (status === 'error')) {
+        } else if (status === 'error') {
           $('.loader').hide()
           $('#resource-list-container').hide()
         }
