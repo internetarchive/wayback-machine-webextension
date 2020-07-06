@@ -77,29 +77,23 @@ h4 {
     word-wrap: break-word;
 }
 
-#link-incontext {
-    margin:10px 0 10px 40px;
-
-}
-
-#link-html {
-    margin:10px 0 10px 70px;
+#link-incontext, #link-html {
+    margin: 10px 0 10px 10%;
 }
 
 a.button {
     -webkit-appearance: button;
     -moz-appearance: button;
     appearance: button;
-
     text-decoration: none;
     border-radius: 5px;
-    color: white;
+    color: #fff;
     padding: 5px;
     background-color: #a94442;
 }
-a.button:hover{
+a.button:hover {
     color: #333;
-    background-color: #a94442;
+    background-color: #AA4B48;
 }
 
 #date {
