@@ -4,7 +4,6 @@ window.onload = () => {
   console.log(document.location.hash)
   if(document.location.hash == '#not_refreshed'){
     show_resource_data(url_name)
-    document.location.hash = '#refreshed'
   }else{
     show_error();
   }
@@ -50,9 +49,12 @@ function show_resource_data(url_name) {
           $('#counter-container').show()
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
+          document.location.hash = '#refreshed'
         } else if (status === 'error') {
           $('.loader').hide()
           $('#resource-list-container').hide()
+          document.location.hash = '#refreshed'
+
         }
       }
     }
