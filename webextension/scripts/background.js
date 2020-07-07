@@ -78,7 +78,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
           })
         }
         if (('job_id' in res) && (res.job_id !== 'undefined')) {
-          validate_spn(tabId, res.job_id, silent)
+          validate_spn(tabId, res.job_id, silent, page_url)
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
