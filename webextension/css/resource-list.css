@@ -1,8 +1,16 @@
 
+body {
+    background-color: #eee;
+}
+
 .container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+}
+
+.loader {
+    flex: none;
 }
 
 .outer-list-container {
@@ -112,8 +120,12 @@ p {
 @media (prefers-color-scheme: dark) {
 
     body {
-        background-color: #222;
+        background-color: #2C2C2C;
         color: #eee;
+    }
+
+    h2, h3, h4 {
+        color: #bbb;
     }
 
     #resource-list-container {
