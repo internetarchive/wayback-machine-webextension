@@ -11,13 +11,14 @@ function parseDate (date) {
   }
   return ''
 }
+
 function constructArticles (clip) {
   let topElements = $('<div>').addClass('top_elements').append(
     $('<p>').text(clip.show).prepend($('<strong>').text(clip.station + ': '))
   )
   let bottomElements = $('<div>').addClass('bottom_elements').append(
     $('<a>').attr({ 'href': '#' }).append(
-      $('<img>').attr({ 'src': clip.preview_thumb })
+      $('<img class="preview-clips">').attr({ 'src': clip.preview_thumb })
     ).click(() => {
       chrome.storage.local.get(['show_context'], (event1) => {
         if (event1.show_context === undefined) {
@@ -34,14 +35,13 @@ function constructArticles (clip) {
     }),
     $('<p>').text(parseDate(clip.show_date))
   )
-
   return $('<div>').append(
     topElements,
     bottomElements
   )
 }
 
-function getDetails (article) {
+function getDetails(article) {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({
       message: 'tvnews',
@@ -55,6 +55,7 @@ function getDetails (article) {
     })
   })
 }
+
 function getArticles(url) {
   getDetails(url)
   .then((clips) => {
@@ -67,14 +68,14 @@ function getArticles(url) {
       }
     } else {
       $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
-        $('<p>').text('No Related Clips Found...').css({ 'width': '300px', 'margin': 'auto' })
+        $('<p>').text('No Related Clips Found...').css({ 'margin': 'auto' })
       )
     }
   })
   .catch((err) => {
     $('.loader').hide()
     $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
-      $('<p>').text(err).css({ 'width': '300px', 'margin': 'auto' })
+      $('<p>').text(err).css({ 'margin': 'auto' })
     )
   })
 }
