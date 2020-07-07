@@ -23,20 +23,18 @@ function get_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
+    $('#total_captures').show()
     if ('type' in response) {
       var type = response.type
       $('#details').text(type)
+      $('#url_details').show()
       var captures = response.captures
       $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
         .text(getTotal(captures).toLocaleString())
     } else {
-      $('#url_details').hide()
       $('#total_archives_number').text(0)
     }
-  }).fail(() => {
-    $('#url_details').hide()
-    $('#total_captures').hide()
-  })
+  }).fail(() => {})
 }
 
 function _splitTimestamp (timestamp) {
@@ -108,7 +106,7 @@ function get_thumbnail () {
   fetch(new_url)
     .then((response) => {
       $('#loader_thumbnail').hide()
-      $('#show_thumbnail').append($('<img>').attr('src', new_url))
+      $('#show_thumbnail').append($('<img class="thumbnail-box">').attr('src', new_url))
     })
     .catch((exception) => {
       $('#loader_thumbnail').hide()
@@ -124,4 +122,4 @@ function get_thumbnail () {
     })
 }
 
-if (typeof module !== 'undefined') { module.exports = { getTotal: getTotal } }
+if (typeof module !== 'undefined') { module.exports = { getTotal } }

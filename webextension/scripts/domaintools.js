@@ -44,4 +44,4 @@ function get_domainTool () {
     $('#show_domaintools_data').text('Data not available')
   })
 }
-if (typeof module !== 'undefined') { module.exports = { appendToParent: appendToParent } }
+if (typeof module !== 'undefined') { module.exports = { appendToParent } }

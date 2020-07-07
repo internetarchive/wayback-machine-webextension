@@ -81,6 +81,6 @@ function getArticles(url) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    parseDate: parseDate
+    parseDate
   }
 }

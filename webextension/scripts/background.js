@@ -77,7 +77,16 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
             }
           })
         }
-        validate_spn(tabId, res.job_id, silent, page_url)
+        if (('job_id' in res) && (res.job_id !== 'undefined')) {
+          validate_spn(tabId, res.job_id, silent)
+        } else {
+          // handle error
+          let msg = res.message || 'Please Try Again'
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg })
+          if (!silent) {
+            notify('Error: ' + msg)
+          }
+        }
       })
   }
 }
@@ -123,7 +132,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
         reject(new Error('timeout'))
       }, 30000)
       if ((status === 'start') || (status === 'pending')) {
-        fetch('https://web.archive.org/save/status', {
+        fetch(hostURL + 'save/status', {
           credentials: 'include',
           method: 'POST',
           body: val_data,

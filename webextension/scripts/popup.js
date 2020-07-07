@@ -142,7 +142,7 @@ function search_tweet() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
-    if ((e.keyCode === 13 || e.which === 13) && search_box.value.length > 1) {
+    if ((e.keyCode === 13 || e.which === 13) && (search_box.value.length > 1) && isNotExcludedUrl(search_box.value)) {
       openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
     }
   })

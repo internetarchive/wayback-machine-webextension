@@ -105,7 +105,7 @@ function createPage () {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    getMetadata: getMetadata,
-    makeEntry: makeEntry
+    getMetadata,
+    makeEntry
   }
 }

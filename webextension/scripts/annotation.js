@@ -47,9 +47,9 @@ function get_annotations (type = 'url') {
         item.find('#text-contain').html(exactData)
         item.find('.title').html(title)
         item.find('.links').append(
-          $('<a>').attr({ 'href': rowData.links.incontext, 'id': 'link-incontext', 'target': '_blank' })
+          $('<a>').attr({ 'href': rowData.links.incontext, 'id': 'link-incontext', 'class': 'button', 'target': '_blank' })
             .html('Click to see in context'),
-          $('<a>').attr({ 'href': rowData.links.html, 'id': 'link-html', 'target': '_blank' })
+          $('<a>').attr({ 'href': rowData.links.html, 'id': 'link-html',  'class': 'button', 'target': '_blank' })
             .html('Click to see the HTML')
         )
         if (rowData.target[0].hasOwnProperty('selector')) {
@@ -92,6 +92,8 @@ $('.tablink').click(() => {
 })
 
 if (typeof module !== 'undefined') {
-  module.exports = { hypothesis_api_url: hypothesis_api_url,
-    get_annotations: get_annotations }
+  module.exports = { 
+    hypothesis_api_url,
+    get_annotations 
+  }
 }
