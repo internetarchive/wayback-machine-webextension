@@ -12,7 +12,7 @@ window.onload = () => {
 function show_resource_data(url_name) {
   const status_list = {
     pending: 'Processing...',
-    success: 'Save Succeeded.',
+    success: 'Save Successful.',
     error: 'An Error Occurred. Please Try Again.'
   }
   let vdata = {}
@@ -51,10 +51,13 @@ function show_resource_data(url_name) {
           $('.loader').hide()
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
+          $('#status-title').text('Done.')
           document.location.hash = '#refreshed'
         } else if (status === 'error') {
           $('.loader').hide()
           $('#resource-list-container').hide()
+          $('#counter-container').hide()
+          $('#status-title').text('Error')
           document.location.hash = '#refreshed'
         }
       }
