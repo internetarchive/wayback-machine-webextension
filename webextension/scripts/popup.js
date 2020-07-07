@@ -113,8 +113,13 @@ function social_share(eventObj) {
   let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = get_clean_url(tabs[0].url)
-    let sharing_url = recent_url + url
+    let url = tabs[0].url
+    let sharing_url
+    if (url.includes('web.archive.org')) {
+      sharing_url = url // If the user is already at a playback page,share that URL
+    } else {
+      sharing_url = recent_url + get_clean_url(url) // When not on a playback page,share the recent archived version of that URL
+    }
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
         openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
