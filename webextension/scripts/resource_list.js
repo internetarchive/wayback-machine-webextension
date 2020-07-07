@@ -53,6 +53,8 @@ function show_resource_data(url_name) {
           $('#spn-elements-counter').text(new_resource_length)
           $('#status-title').text('Done.')
           document.location.hash = '#refreshed'
+          let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
+          $('#snapshot-url').text('Click to view snapshot.').attr('href', snapshot_url).show()
         } else if (status === 'error') {
           showError()
           document.location.hash = '#refreshed'

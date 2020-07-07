@@ -34,6 +34,8 @@ body {
 
 #current-url {
     font-weight: normal;
+    margin: 0 1em;
+    word-break: break-all;
 }
 
 .spn-head {
@@ -53,11 +55,6 @@ p {
 }
 #resource-list-container p:nth-child(even) {
     color: #666;
-}
-
-#current-url {
-    margin: 0 1em;
-    word-break: break-all;
 }
 
 .logo {
@@ -110,6 +107,11 @@ p {
 }
 
 #message {
+    display: none;
+    margin-top: 1em;
+}
+
+#snapshot-url {
     display: none;
     margin-top: 1em;
 }
