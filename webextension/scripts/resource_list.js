@@ -5,7 +5,7 @@ window.onload = () => {
   if (document.location.hash === '#not_refreshed') {
     show_resource_data(url_name)
   } else {
-    show_error()
+    showError('Looks like you have reloaded the page. Please close and try again!')
   }
 }
 
@@ -42,7 +42,7 @@ function show_resource_data(url_name) {
         if (new_resource_length > old_resource_length) {
           for (let item of Array.from([...resource_list_data]).slice(old_resource_length, new_resource_length)) {
             $('#resource-list-container').append(
-              $('<p class="resource-list">').append(item)
+              $('<p>').append(item)
             )
           }
           old_resource_length = new_resource_length
@@ -54,10 +54,7 @@ function show_resource_data(url_name) {
           $('#status-title').text('Done.')
           document.location.hash = '#refreshed'
         } else if (status === 'error') {
-          $('.loader').hide()
-          $('#resource-list-container').hide()
-          $('#counter-container').hide()
-          $('#status-title').text('Error')
+          showError()
           document.location.hash = '#refreshed'
         }
       }
@@ -65,7 +62,13 @@ function show_resource_data(url_name) {
   )
 }
 
-function show_error() {
+function showError(text = null) {
   $('.loader').hide()
-  $('.error').show()
+  $('#resource-list-container').hide()
+  $('#counter-container').hide()
+  $('#status-title').text('Error')
+  if (text !== null) {
+    $('#message').text(text)
+    $('#message').show()
+  }
 }
