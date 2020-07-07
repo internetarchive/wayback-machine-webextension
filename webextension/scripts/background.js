@@ -626,7 +626,7 @@ function clearToolbarState(tabId) {
  */
 function updateToolbar(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0].id === tabId) {
+    if (tabs && tabs[0] && (tabs[0].id === tabId)) {
       let state = gToolbarStates[tabId]
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
