@@ -1,16 +1,27 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.outer-list-container {
+    display: contents;
+}
+
 #resource-list-container {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    color: #000;
     display: block;
-    padding: 9.5px;
-    margin: 1em 0 5vh;
+    padding: 0.5em;
+    margin: 1em 0;
     font-size: 20px;
-    line-height: 1.42857143;
+    line-height: 1.5;
     color: #333;
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 5px;
-    overflow-y: auto;
-    height: 420px;
+    overflow-y: scroll;
 }
 
 #current-url {
@@ -24,13 +35,21 @@
 p {
     font-family: Gill Sans Light;
     font-size: 20px;
+}
+
+#resource-list-container p {
     padding: 0 5px;
     white-space: normal;
     word-break: break-all;
+    margin: 0;
+}
+
+#resource-list-container p:nth-child(even) {
+    color: #666;
 }
 
 .logo {
-    margin: 1.5vh auto;
+    margin: 1em auto;
     text-align: center;
 }
 
@@ -56,6 +75,7 @@ p {
 #counter-container {
     display: none;
     text-align: right;
+    margin-bottom: 1em;
 }
 
 .live-status {
@@ -63,6 +83,7 @@ p {
 }
 
 .error {
+    padding-bottom: 1em;
     text-align: center;
     display: none;
 }
@@ -74,8 +95,10 @@ p {
 .highlight-color {
     color: #733;
 }
+
 #message {
-    word-break: normal;
+    display: none;
+    margin-top: 1em;
 }
 
 /* dark mode */
@@ -90,6 +113,10 @@ p {
         color: #ddd;
         background-color: #333;
         border: 1px solid #555;
+    }
+
+    #resource-list-container p:nth-child(even) {
+        color: #aaa;
     }
 
     .error-color {

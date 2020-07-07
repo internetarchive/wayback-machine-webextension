@@ -29,12 +29,15 @@ function show_resource_data(url_name) {
         $('#current-status').text(status_list[status])
         if ('message' in vdata) {
           $('#message').text(vdata.message)
+          $('#message').show()
         }
         if ('resources' in vdata) {
           new_resource_length = vdata.resources.length
           vdata.resources.forEach((element) => {
             resource_list_data.add(element)
           })
+          $('#spn-elements-counter').text(new_resource_length)
+          $('#counter-container').show()
         }
         if (new_resource_length > old_resource_length) {
           for (let item of Array.from([...resource_list_data]).slice(old_resource_length, new_resource_length)) {
@@ -46,7 +49,6 @@ function show_resource_data(url_name) {
         }
         if (status === 'success') {
           $('.loader').hide()
-          $('#counter-container').show()
           new_resource_length = vdata.resources.length
           $('#spn-elements-counter').text(new_resource_length)
           document.location.hash = '#refreshed'
