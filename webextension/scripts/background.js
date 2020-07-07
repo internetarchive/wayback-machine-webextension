@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, get_clean_url, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
@@ -364,7 +364,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
+      let url = get_clean_url(tabs[0].url)
+      chrome.tabs.sendMessage(tabs[0].id, { url: url })
     })
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
@@ -385,7 +386,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'updateCountBadge') {
     // update wayback count badge
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      updateWaybackCountBadge(tabs[0].id, tabs[0].url)
+      let url = get_clean_url(tabs[0].url)
+      updateWaybackCountBadge(tabs[0].id, url)
     })
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
@@ -424,7 +426,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       chrome.storage.local.get(['auto_update_context', 'show_context', 'resource'], (event) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (event.resource === true) {
-            const url = tabs[0].url
+            const url = get_clean_url(tabs[0].url)
             const tabId = tabs[0].id
             const news_host = new URL(url).hostname
             // checking resource of amazon books
@@ -653,10 +655,11 @@ chrome.contextMenus.create({
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
+
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const page_url = tabs[0].url
+      const page_url = get_clean_url(tabs[0].url)
       let wayback_url
       let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
