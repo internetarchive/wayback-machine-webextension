@@ -70,9 +70,15 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
+          chrome.storage.local.get(['show_resource_list'], (result) => {
+            if(result.show_resource_list === true){
+              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id +'#not_refreshed'
+              openByWindowSetting(resource_list_url,'windows')
+            }
+          })
         }
         if (('job_id' in res) && (res.job_id !== 'undefined')) {
-          validate_spn(tabId, res.job_id, silent)
+          validate_spn(tabId, res.job_id, silent, page_url)
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
@@ -104,7 +110,7 @@ function auth_check() {
   .then(response => response.json())
 }
 
-async function validate_spn(tabId, job_id, silent = false) {
+async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
   const val_data = new URLSearchParams()
@@ -141,8 +147,18 @@ async function validate_spn(tabId, job_id, silent = false) {
       .then((data) => {
         status = data.status
         vdata = data
+        chrome.runtime.sendMessage({
+          message: 'resource_list_show',
+          data: data,
+          url: page_url
+        })
       })
       .catch((err)=>{
+        chrome.runtime.sendMessage({
+          message: 'resource_list_show',
+          data: err,
+          url: page_url
+        })
       })
   }
   // update when done
@@ -610,7 +626,7 @@ function clearToolbarState(tabId) {
  */
 function updateToolbar(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0].id === tabId) {
+    if (tabs && tabs[0] && (tabs[0].id === tabId)) {
       let state = gToolbarStates[tabId]
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
