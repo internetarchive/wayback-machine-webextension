@@ -40,12 +40,19 @@ p {
 #resource-list-container p {
     padding: 0 5px;
     white-space: normal;
-    word-break: break-all;
     margin: 0;
 }
-
 #resource-list-container p:nth-child(even) {
     color: #666;
+}
+
+.resource-list {
+    word-break: break-all;
+}
+
+#current-url {
+    margin: 0 1em;
+    word-break: break-all;
 }
 
 .logo {

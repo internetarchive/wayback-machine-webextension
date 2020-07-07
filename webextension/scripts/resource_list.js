@@ -42,7 +42,7 @@ function show_resource_data(url_name) {
         if (new_resource_length > old_resource_length) {
           for (let item of Array.from([...resource_list_data]).slice(old_resource_length, new_resource_length)) {
             $('#resource-list-container').append(
-              $('<p>').append(item)
+              $('<p class="resource-list">').append(item)
             )
           }
           old_resource_length = new_resource_length
