@@ -90,7 +90,12 @@ function selectall () {
   }
 }
 
-function validatePrivateMode () {
+function validatePrivateMode (event) {
+  if($(event.target).hasClass('selected-prior')){
+    $(event.target).removeClass('selected-prior')
+  }else {
+    $(event.target).addClass('selected-prior')
+  }
   let checkboxes = $('[name="private-inlude"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount >0 ) {
@@ -101,8 +106,9 @@ function validatePrivateMode () {
 }
  
 function togglePrivateMode () {
-  let checkboxes = $('[name="private-inlude"]')
+  let checkboxes = $('.selected-prior')
   for (var i = 0; i < checkboxes.length; i++) {
+    console.log(checkboxes[i])
     checkboxes[i].checked = !$(this).prop('checked')
   }
 }
