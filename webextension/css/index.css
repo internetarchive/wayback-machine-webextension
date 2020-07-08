@@ -7,14 +7,7 @@ body {
     background-color: #eee;
     color: #222;
 }
-/*
-hr {
-    margin: 0 0 5px 0;
-    border: none;
-    border-top: 1px solid #aaa;
-    height: 1px;
-}
-*/
+
 .tab-bar {
     padding: 2px 0 5px 0;
 }
@@ -103,11 +96,29 @@ hr {
 .chk-options {
     font-weight: 400;
     font-size: 12px;
-    padding:0 5px;
+    padding: 0 5px;
+    margin-bottom: 3px;
     cursor: pointer;
 }
 .chk-options:hover {
     background-color: rgba(127, 127, 127, 0.2);
+    border-radius: 5px;
+}
+
+.chk-frame {
+    position: relative;
+    width: 100%;
+    border-radius: 5px;
+    top: -15px;
+    padding-top: 17px;
+    margin-bottom: -8px;
+    border: 1px solid #ddd;
+    background-color: #ddd;
+}
+
+#savebtn {
+    /* to cover over the chk-frame */
+    z-index: 5;
 }
 
 /* buttons */
@@ -276,10 +287,13 @@ a.btn-social, .btn-social {
 
 .flip {
     position: relative;
-    margin-bottom: 10px;
     perspective: 1000px;
     width: 170px;
     height: 30px;
+}
+
+.flip-margin {
+    margin-bottom: 10px;
 }
 
 .flip-inside {
@@ -316,15 +330,21 @@ a.btn-social, .btn-social {
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
+
     body {
         background-color: #2C2C2C;
         color: #eee;
     }
-/*
-    hr {
-        border-top: 1px solid #555;
+
+    .chk-options:hover {
+        background-color: #503838;
     }
-*/
+
+    .chk-frame {
+        border: 1px solid #744;
+        background-color: #3c2c2c;
+    }
+
     .btn {
         font-weight: 500;
     }
@@ -350,4 +370,5 @@ a.btn-social, .btn-social {
     .btn-unselected:hover {
         color: #eee !important;
     }
+
 }
