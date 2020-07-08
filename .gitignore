@@ -1,2 +1,8 @@
 node_modules/
 .DS_Store
+xcuserdata
+xuserdata
+profile
+build/
+*~
+.*~
