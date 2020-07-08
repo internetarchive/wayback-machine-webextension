@@ -65,7 +65,8 @@ function makeEntry (data) {
                   width: width / 2,
                   height: height,
                   top: 0,
-                  left: 0 })
+                  left: 0 
+                })
               })
             }
           })

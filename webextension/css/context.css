@@ -92,7 +92,7 @@ a.button {
     background-color: #a94442;
 }
 a.button:hover {
-    color: #333;
+    color: #eee;
     background-color: #AA4B48;
 }
 
@@ -366,8 +366,4 @@ ul {
     .container-scrollbar::-webkit-scrollbar-thumb {
         background: #888;
     }
-}
-
-#show_thumbnail{
-    text-align: center;
 }

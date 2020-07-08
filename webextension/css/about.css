@@ -17,6 +17,7 @@ h1.underlined {
 .about-header img {
     margin: 1em 1em 0 0;
 }
+
 .about-body {
     float: left;
     font-size: 18px;
@@ -54,7 +55,6 @@ ul.features p {
 }
 
 /* Dark Mode */
-
 @media (prefers-color-scheme: dark) {
 
     body {
@@ -69,6 +69,7 @@ ul.features p {
     h1 {
         color: #ddd;
     }
+
     h2, h3, h4 {
         color: #dcc;
     }
