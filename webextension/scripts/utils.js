@@ -126,7 +126,6 @@ const excluded_urls = [
   '0.0.0.0',
   '127.0.0.1',
   'chrome:',
-  'chrome.google.com/webstore',
   'chrome-extension:',
   'about:',
   'moz-extension:',

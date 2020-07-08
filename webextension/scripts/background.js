@@ -418,7 +418,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   } else if (info.status === 'loading') {
     var received_url = tab.url
     clearToolbarState(tab.id)
-    if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
+    if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url

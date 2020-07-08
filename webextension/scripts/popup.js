@@ -403,8 +403,8 @@ function clearFocus() {
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count'], (event) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      let url = get_clean_url(tabs[0].url)
-      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
+      let url = tabs[0].url
+      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !url.includes('web.archive.org')) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
