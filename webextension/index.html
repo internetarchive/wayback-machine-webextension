@@ -51,8 +51,10 @@
             </div>
           </div>
 
-          <label class="chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
-          <label class="chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+          <div class="chk-frame">
+            <label class="chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
+            <label class="chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+          </div>
 
           <div class="btn-block">
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="first_capture">Oldest</button>
@@ -60,7 +62,7 @@
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="recent_capture">Newest</button>
           </div>
 
-          <div class="flip" id="mapbtn">
+          <div class="flip flip-margin" id="mapbtn">
             <div id="mapbox">
               <div class="flip-front">
                 <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="site_map">Site Map</button>
@@ -73,7 +75,7 @@
 
           <!-- 3rd Party -->
 
-          <div class="flip" id="twitterbtn">
+          <div class="flip flip-margin" id="twitterbtn">
             <div id="twitterbox">
               <div class="flip-front">
                 <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="search_tweet">
@@ -85,7 +87,7 @@
             </div>
           </div>
 
-          <div class="flip" id="context-screen">
+          <div class="flip flip-margin" id="context-screen">
             <div id="ctxbox">
               <div class="flip-front">
                 <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn">Show Contexts</button>
