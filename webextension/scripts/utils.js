@@ -3,6 +3,7 @@
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 
+let searchValue = ''
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
 const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
@@ -290,6 +291,7 @@ function opener(url, option, callback) {
     })
   }
 }
+
 function notify(message, callback) {
   var options = {
     type: 'basic',
@@ -392,6 +394,7 @@ if (typeof module !== 'undefined') {
     initDefaultOptions,
     afterAcceptOptions,
     feedbackPageURL,
-    newshosts
+    newshosts,
+    searchValue
   }
 }
