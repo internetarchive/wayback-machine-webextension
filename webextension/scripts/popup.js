@@ -215,13 +215,17 @@ function display_list(key_word) {
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
   if (e.keyCode === 38 || e.keyCode === 40) { return false }
-
   $('#suggestion-box').text('').hide()
   if (e.keyCode === 13) {
     e.preventDefault()
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(() => {
+      if ($('#search-input').val().length >= 1) {
+        $('#url-not-supported-message').hide()
+      } else {
+        $('#url-not-supported-message').show()
+      }
       if ($('#search-input').val().length >= 3) {
         display_list($('#search-input').val())
       } else {
