@@ -223,7 +223,7 @@ function display_suggestions(e) {
     window.setTimeout(() => {
       if ($('#search-input').val().length >= 1) {
         $('#url-not-supported-message').hide()
-      }else {
+      } else {
         $('#url-not-supported-message').show()
       }
       if ($('#search-input').val().length >= 3) {
