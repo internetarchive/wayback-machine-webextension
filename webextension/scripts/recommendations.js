@@ -19,16 +19,16 @@ function constructArticles (clip) {
     $('<a>').attr({ 'href': '#' }).append(
       $('<img>').attr({ 'src': clip.preview_thumb })
     ).click(() => {
-      chrome.storage.local.get(['show_context'], (event1) => {
+      browser.storage.local.get(['show_context'], (event1) => {
         if (event1.show_context === undefined) {
           event1.show_context = 'tab'
         }
         if (event1.show_context === 'tab') {
-          chrome.tabs.create({ url: clip.preview_url })
+          browser.tabs.create({ url: clip.preview_url })
         } else {
           let width = window.screen.availWidth
           let height = window.screen.availHeight
-          chrome.windows.create({ url: clip.preview_url, width: width / 2, height: height, top: 0, left: 0, focused: true })
+          browser.windows.create({ url: clip.preview_url, width: width / 2, height: height, top: 0, left: 0, focused: true })
         }
       })
     }),
@@ -43,7 +43,7 @@ function constructArticles (clip) {
 
 function getDetails (article) {
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'tvnews',
       article: article
     }, (clips) => {

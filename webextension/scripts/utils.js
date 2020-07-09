@@ -271,7 +271,7 @@ function getUrlByParameter(name) {
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
+    browser.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
   } else {
     opener(url, op)
   }
@@ -279,13 +279,13 @@ function openByWindowSetting(url, op = null, cb) {
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url }, (tab) => {
+    browser.tabs.create({ url: url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
   } else {
     let width = Math.floor(window.screen.availWidth * 0.75)
     let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
+    browser.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
@@ -295,9 +295,9 @@ function notify(message, callback) {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
-    iconUrl: chrome.extension.getURL('images/app-icon/app-icon96.png')
+    iconUrl: browser.extension.getURL('images/app-icon/app-icon96.png')
   }
-  chrome.notifications.create(options, callback)
+  browser.notifications.create(options, callback)
 }
 
 function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
@@ -334,7 +334,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
-  chrome.storage.local.set({
+  browser.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
@@ -360,7 +360,7 @@ function initDefaultOptions () {
 
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
-  chrome.storage.local.set({
+  browser.storage.local.set({
     /* General */
     wm_count: true,
     resource: true,

@@ -19,7 +19,7 @@ switchSetting()
 addDocs()
 
 function initializeSettings () {
-  chrome.storage.local.get(null, restoreOptions)
+  browser.storage.local.get(null, restoreOptions)
 }
 
 function restoreOptions (items) {
@@ -44,7 +44,7 @@ function restoreOptions (items) {
 function saveOptions () {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
-  chrome.storage.local.set({
+  browser.storage.local.set({
     show_context: $('input[name=tw]:checked').val(),
     resource: resource,
     auto_update_context: $('#auto-update-context').prop('checked'),
@@ -63,11 +63,11 @@ function saveOptions () {
     show_resource_list: $('#show-resource-list').prop('checked')
   })
   if (wm_count === false) {
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearCountCache' })
+    browser.runtime.sendMessage({ message: 'clearCountBadge' })
+    browser.runtime.sendMessage({ message: 'clearCountCache' })
   }
   if (resource === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource' })
+    browser.runtime.sendMessage({ message: 'clearResource' })
   }
 }
 
@@ -99,7 +99,7 @@ function noneSelected () {
 function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }

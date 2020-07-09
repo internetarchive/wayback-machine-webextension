@@ -21,7 +21,7 @@ function show_resource_data(url_name) {
   let old_resource_length = 0
   let new_resource_length
   $('#current-url').text(url_name)
-  chrome.runtime.onMessage.addListener(
+  browser.runtime.onMessage.addListener(
     (message) => {
       if (message.message === 'resource_list_show' && message.url === url_name) {
         vdata = message.data

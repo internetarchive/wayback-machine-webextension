@@ -53,8 +53,8 @@ function singlePageView() {
 
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
-  chrome.storage.local.get(features, (event) => {
-    chrome.storage.local.get(['selectedFeature'], (result) => {
+  browser.storage.local.get(features, (event) => {
+    browser.storage.local.get(['selectedFeature'], (result) => {
       let openedFeature = result.selectedFeature
       let clickFeature = null
       let countFeature = 0
@@ -76,7 +76,7 @@ function singlePageView() {
             // When clicked on a context tab, open that tab and set that tab as selectedFeature
             openContextFeature(event, featureId)
             let selectedFeature = featureTabId
-            chrome.storage.local.set({ selectedFeature }, () => {
+            browser.storage.local.set({ selectedFeature }, () => {
             })
           })
           // Get first tab

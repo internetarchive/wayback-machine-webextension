@@ -8,7 +8,7 @@ function homepage() {
 }
 
 function save_now() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
@@ -20,7 +20,7 @@ function save_now() {
     if ($('#chk-screenshot').prop('checked') === true) {
       options.push('capture_screenshot')
     }
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: hostURL + 'save/',
       page_url: url,
@@ -42,9 +42,9 @@ function last_save() {
       })
     } else {
       $('#save_now').removeAttr('disabled')
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let url = tabs[0].url
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           message: 'getLastSaveTime',
           page_url: url
         }, (message) => {
@@ -61,15 +61,15 @@ function last_save() {
 }
 
 function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     message: 'auth_check'
   }, callback)
 }
 
 function recent_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
       page_url: url,
@@ -79,9 +79,9 @@ function recent_capture() {
 }
 
 function first_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
       page_url: url,
@@ -91,9 +91,9 @@ function first_capture() {
 }
 
 function view_all() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
       page_url: url,
@@ -112,7 +112,7 @@ function social_share(eventObj) {
   let timestamp = dateToTimestamp(new Date())
   let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     let sharing_url = recent_url + url
     if (isNotExcludedUrl(url)) {
@@ -128,7 +128,7 @@ function social_share(eventObj) {
 }
 
 function search_tweet() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
@@ -244,7 +244,7 @@ function about_support() {
 }
 
 function sitemap() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
@@ -256,22 +256,22 @@ function settings() {
 }
 
 function show_all_screens() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    chrome.runtime.sendMessage({ message: 'showall', url: url })
+    browser.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
 
 function borrow_books() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      browser.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#borrow_books_tr').css({ 'display': 'block' })
-          chrome.storage.local.get(['tab_url', 'detail_url', 'show_context'], (res) => {
+          browser.storage.local.get(['tab_url', 'detail_url', 'show_context'], (res) => {
             const stored_url = res.tab_url
             const detail_url = res.detail_url
             const context = res.show_context
@@ -302,19 +302,19 @@ function borrow_books() {
 }
 
 function show_news() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const tabId = tabs[0].id
     const news_host = new URL(url).hostname
-    chrome.storage.local.get(['show_context'], function (event) {
+    browser.storage.local.get(['show_context'], function (event) {
       let set_of_sites = newshosts
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+        browser.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             $('#news_recommend_tr').show().click(() => {
-              const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+              const URL = browser.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
             })
           }
@@ -324,21 +324,21 @@ function show_news() {
   })
 }
 function show_wikibooks() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      browser.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia books button
           $('#wikibooks_tr').show().click(() => {
-            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+            const URL = browser.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
           // show wikipedia cited paper button
           $('#doi_tr').show().click(() => {
-            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+            const URL = browser.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })
         }
@@ -348,7 +348,7 @@ function show_wikibooks() {
 }
 
 function noContextTip() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+  browser.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
     for (const context in event) {
       if (event[context]) {
@@ -373,7 +373,7 @@ function openContextMenu () {
 }
 
 function checkExcluded() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
@@ -395,24 +395,24 @@ function clearFocus() {
 }
 
 function setupWaybackCount() {
-  chrome.storage.local.get(['wm_count'], (event) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.storage.local.get(['wm_count'], (event) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
       if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+        browser.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
         $('#wayback-count-label').hide()
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+        browser.runtime.sendMessage({ message: 'clearCountBadge' })
       }
     })
   })
 }
 
 function showWaybackCount(url) {
-  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
+  browser.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
     if ('total' in result) {
       // set label
       let text = ''
@@ -435,11 +435,11 @@ function clearWaybackCount() {
 }
 
 // make the tab/window option in setting page checked according to previous setting
-chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
+browser.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
-chrome.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
   (message) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0].id === message.tabId) {
         if (message.message === 'save_success') {
           $('#save_now').text('Save successful')

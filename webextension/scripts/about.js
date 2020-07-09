@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global feedbackPageURL */
-const VERSION = chrome.runtime.getManifest().version
+const VERSION = browser.runtime.getManifest().version
 const DATE = new Date().getFullYear()
 $('#version').text(VERSION)
 $('#year').text(DATE)

@@ -25,14 +25,14 @@ console.log('client inject')
 
 // appending css to the popup
 function appendStyle() {
-  const url = chrome.extension.getURL('css/archive.css')
+  const url = browser.extension.getURL('css/archive.css')
   return `<link rel="stylesheet" type="text/css" href=${url}>`
 }
 
 // appending the actual dom of popup
 function appendHTML(url, code) {
-  const logo = chrome.extension.getURL('images/logo.gif')
-  const close = chrome.extension.getURL('images/close.svg')
+  const logo = browser.extension.getURL('images/logo.gif')
+  const close = browser.extension.getURL('images/close.svg')
   const info = ERROR_CODE_DIC[code]
   return `
         <div id="error">
@@ -81,7 +81,7 @@ function refresh(url, code) {
   }
 }
 
-chrome.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
     if (request.type === 'SHOW_BANNER') {
       if (request.wayback_url) {

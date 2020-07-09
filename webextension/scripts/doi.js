@@ -51,17 +51,17 @@ function makeEntry (data) {
     bottom_details.append(
       $('<button>').attr({ 'class': 'btn btn-success' }).text('Read Paper')
         .click(() => {
-          chrome.storage.local.get(['show_context'], (event1) => {
+          browser.storage.local.get(['show_context'], (event1) => {
             if (event1.show_context === undefined) {
               event1.show_context = 'tab'
             }
             if (event1.show_context === 'tab') {
-              chrome.tabs.create({ url: data.url })
+              browser.tabs.create({ url: data.url })
             } else {
-              chrome.windows.getCurrent((window) => {
+              browser.windows.getCurrent((window) => {
                 const height = window.height
                 const width = window.width
-                chrome.windows.create({ url: data.url,
+                browser.windows.create({ url: data.url,
                   width: width / 2,
                   height: height,
                   top: 0,
