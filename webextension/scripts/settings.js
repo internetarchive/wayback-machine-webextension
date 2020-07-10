@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl */
+/*   global attachTooltip, isNotExcludedUrl, searchValue */
 
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu */
@@ -98,18 +98,19 @@ function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue ? searchValue : tabs[0].url
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
       /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
       $('#contextBtn').off('click')
       $('#contextBtn').attr('disabled', true)
-      if (isNotExcludedUrl(tabs[0].url)) {
+      if (isNotExcludedUrl(url)) {
         $('#contextTip').click(openContextMenu)
       }
     } else {
       if ($('#ctxbox').hasClass('flip-inside')) {
-        if (!isNotExcludedUrl(tabs[0].url)) {
+        if (!isNotExcludedUrl(url)) {
           $('#contextTip').text('URL not supported')
         } else {
           $('#ctxbox').removeClass('flip-inside')

@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp, searchValue, useSearchValue */
+/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -9,7 +9,7 @@ function homepage() {
 
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
       options.push('capture_outlinks')
@@ -43,7 +43,7 @@ function last_save() {
     } else {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = useSearchValue ? searchValue : tabs[0].url
+        let url = searchValue ? searchValue : tabs[0].url
         chrome.runtime.sendMessage({
           message: 'getLastSaveTime',
           page_url: url
@@ -68,7 +68,7 @@ function checkAuthentication(callback) {
 
 function recent_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -80,7 +80,7 @@ function recent_capture() {
 
 function first_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -92,7 +92,7 @@ function first_capture() {
 
 function view_all() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -113,7 +113,7 @@ function social_share(eventObj) {
   let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     let sharing_url = recent_url + url
     if (isNotExcludedUrl(url)) {
       if (id.includes('fb')) {
@@ -129,7 +129,7 @@ function social_share(eventObj) {
 
 function search_tweet() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
@@ -147,16 +147,27 @@ function makeValidURL() {
 
 function useSearchBoxValue() {
   if (isValidUrl(searchValue)) {
-    useSearchValue = true
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearResource' })
-    checkExcluded()
-    $('#suggestion-box').text('').hide()
-    $('#wayback-count-label').hide()
-    $('#borrow_books').hide()
-    $('#news_recommend').hide()
-    $('#wikibooks').hide()
-    $('#doi').hide()
+    chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+      for (const context in event) {
+        if (event[context]) {
+          $('#ctxbox').removeClass('flip-inside')
+          $('#contextBtn').removeAttr('disabled')
+        }
+      }
+      chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+      chrome.runtime.sendMessage({ message: 'clearResource' })
+      $('#mapbox').removeClass('flip-inside')
+      $('#twitterbox').removeClass('flip-inside')
+      last_save()
+      $('#contextTip').text('Enable in Settings')
+      $('#contextTip').click(openContextMenu)
+      $('#suggestion-box').text('').hide()
+      $('#wayback-count-label').hide()
+      $('#borrow_books').hide()
+      $('#news_recommend').hide()
+      $('#wikibooks').hide()
+      $('#doi').hide()
+    })
   } else if (searchValue.includes('.')) {
     makeValidURL()
     useSearchBoxValue()
@@ -272,7 +283,7 @@ function about_support() {
 
 function sitemap() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
 }
@@ -284,7 +295,7 @@ function settings() {
 
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
@@ -401,7 +412,7 @@ function openContextMenu () {
 
 function checkExcluded() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = useSearchValue ? searchValue : tabs[0].url
+    let url = searchValue ? searchValue : tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
       $('#contextTip').click(openContextMenu)
