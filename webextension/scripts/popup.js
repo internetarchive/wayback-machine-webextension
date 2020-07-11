@@ -139,14 +139,14 @@ function search_tweet() {
   })
 }
 
-function makeValidURL() {
-  if (!isValidUrl(searchValue)) {
-    searchValue = 'https://' + searchValue
-  }
+function makeValidURL(invalidURL) {
+  let validURL = 'https://' + invalidURL
+  useSearchBoxValue(validURL)
 }
 
-function useSearchBoxValue() {
-  if (isValidUrl(searchValue)) {
+function useSearchBoxValue(sValue) {
+  if (isValidUrl(sValue)) {
+    searchValue = sValue
     chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
       for (const context in event) {
         if (event[context]) {
@@ -168,9 +168,8 @@ function useSearchBoxValue() {
       $('#wikibooks').hide()
       $('#doi').hide()
     })
-  } else if (searchValue.includes('.')) {
-    makeValidURL()
-    useSearchBoxValue()
+  } else if (sValue.includes('.')) {
+    makeValidURL(sValue)
   }
 }
 
@@ -178,8 +177,7 @@ function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13 || e.which === 13) && (search_box.value.length >= 3) && isNotExcludedUrl(search_box.value)) {
-      searchValue = search_box.value
-      useSearchBoxValue()
+      useSearchBoxValue(search_box.value)
     }
   })
 }
@@ -239,9 +237,8 @@ function display_list(key_word) {
       for (var i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append($('<li>').append(
           $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
-            searchValue = event.target.innerHTML
-            document.getElementById('search-input').value = searchValue
-            useSearchBoxValue()
+            document.getElementById('search-input').value = event.target.innerHTML
+            useSearchBoxValue(event.target.innerHTML)
           })
         ))
       }
