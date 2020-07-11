@@ -41,6 +41,25 @@ function restoreOptions (items) {
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#private-mode').prop('checked', items.private_mode)
+  // Reset the 'selected-prior' class automatically, when the extension opens'
+  if (items.resource === true) {
+    $('#resource').addClass('selected-prior')
+  }
+  if (items.auto_update_context === true) {
+    $('#auto-update-context').addClass('selected-prior')
+  }
+  if (items.wm_count === true) {
+    $('#wm-count-setting').addClass('selected-prior')
+  }
+  if (items.auto_archive === true) {
+    $('#auto-archive').addClass('selected-prior')
+  }
+  if (items.email_outlinks === true) {
+    $('#email-outlinks-setting').addClass('selected-prior')
+  }
+  if (items.not_found_popup === true) {
+    $('#not-found-popup').addClass('selected-prior')
+  }
 }
 
 function saveOptions () {
@@ -91,24 +110,43 @@ function selectall () {
 }
 
 function validatePrivateMode (event) {
-  if($(event.target).hasClass('selected-prior')){
-    $(event.target).removeClass('selected-prior')
-  }else {
-    $(event.target).addClass('selected-prior')
-  }
   let checkboxes = $('[name="private-inlude"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
-  if (checkedCount >0 ) {
+  if (checkedCount > 0) {
     $('#private-mode').prop('checked', false)
   } else {
     $('#private-mode').prop('checked', true)
   }
+
+  // Checking previous state when the only one item is checked and remove 'selected-prior' class from everywhere
+  if (checkedCount === 0 && $('.selected-prior').length === 1) {
+    $('.selected-prior').removeClass('selected-prior')
+  }
+
+  // If the event.taget.checked is true,then check if it the checkbox is only item, then remove 'selected-prior' from all
+  // And add class 'selected-prior' to the event.taget, if it is NOT there
+  // Else If the event.taget.checked is false, check if the check-box is NOT the only item, then remove class 'selected-prior'
+  if (event.target.checked === true) {
+    if (checkedCount === 1) {
+      $('.selected-prior').removeClass('selected-prior')
+    }
+    if (!$(event.target).hasClass('selected-prior')) {
+      $(event.target).addClass('selected-prior')
+    }
+  } else if (event.target.checked === false) {
+    if (!(checkedCount === 0)) {
+      $(event.target).removeClass('selected-prior')
+    } else {
+      if (!$(event.target).hasClass('selected-prior')) {
+        $(event.target).addClass('selected-prior')
+      }
+    }
+  }
 }
- 
+
 function togglePrivateMode () {
   let checkboxes = $('.selected-prior')
   for (var i = 0; i < checkboxes.length; i++) {
-    console.log(checkboxes[i])
     checkboxes[i].checked = !$(this).prop('checked')
   }
 }
@@ -171,7 +209,7 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
-    'private-mode': 'Extension will not support any feature!', 
+    'private-mode': 'Extension will not support any feature!',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
