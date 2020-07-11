@@ -139,14 +139,13 @@ function search_tweet() {
   })
 }
 
-function makeValidURL(invalidURL) {
-  let validURL = 'https://' + invalidURL
-  useSearchBoxValue(validURL)
+function makeValidURL(url) {
+  return isValidUrl(url) ? url : url.includes('.') ? 'https://' + url : false
 }
 
 function useSearchBoxValue(sValue) {
-  if (isValidUrl(sValue)) {
-    searchValue = sValue
+  searchValue = makeValidURL(sValue)
+  if (searchValue) {
     chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
       for (const context in event) {
         if (event[context]) {
@@ -168,8 +167,6 @@ function useSearchBoxValue(sValue) {
       $('#wikibooks').hide()
       $('#doi').hide()
     })
-  } else if (sValue.includes('.')) {
-    makeValidURL(sValue)
   }
 }
 
