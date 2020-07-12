@@ -66,6 +66,14 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
+### Edge
+
+1. Open Edge and navigate to `edge://extensions` in your browser. You can also access this page by clicking on the 3 horizontal dots menu on the top-right, then clicking **Extensions**.
+2. Turn on the switch next to **Developer mode**.
+3. Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
+4. Click on the newly added icon in the toolbar.
+5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
+
 
 ## Provide Feedback
 
