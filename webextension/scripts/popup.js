@@ -33,7 +33,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
+    if (result === false) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)

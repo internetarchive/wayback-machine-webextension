@@ -16,7 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-
+var isLoggedIn = false
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -92,7 +92,10 @@ function auth_check() {
     .then(resolve, reject)
   })
   return timeoutPromise
-  .then(response => response.json())
+  .then((response) => {
+    isLoggedIn = true
+    return isLoggedIn
+  })
 }
 
 async function validate_spn(tabId, job_id, silent = false) {
@@ -133,7 +136,7 @@ async function validate_spn(tabId, job_id, silent = false) {
         status = data.status
         vdata = data
       })
-      .catch((err)=>{
+      .catch((err) => {
       })
   }
   // update when done
@@ -321,8 +324,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     return true
   } else if (message.message === 'auth_check') {
-    auth_check()
+    if (!isLoggedIn) {
+      auth_check()
       .then(resp => sendResponse(resp))
+    } else {
+      sendResponse(isLoggedIn)
+    }
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
