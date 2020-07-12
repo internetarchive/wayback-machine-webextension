@@ -40,6 +40,7 @@ function restoreOptions (items) {
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
+  $('#show-resource-list').prop('checked',items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
   // Reset the 'selected-prior' class automatically, when the extension opens'
   if (items.resource === true) {
@@ -60,6 +61,7 @@ function restoreOptions (items) {
   if (items.not_found_popup === true) {
     $('#not-found-popup').addClass('selected-prior')
   }
+
 }
 
 function saveOptions () {
@@ -81,7 +83,8 @@ function saveOptions () {
     tagcloud: $('#tagcloud').prop('checked'),
     showall: $('#showall').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
-    private_mode: $('#private-mode').prop('checked')
+    private_mode: $('#private-mode').prop('checked'),
+    show_resource_list: $('#show-resource-list').prop('checked')
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
@@ -212,6 +215,7 @@ function addDocs () {
     'private-mode': 'Extension will not support any feature!',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
+    'show-resource-list': 'Display a list of resources during Save Page Now.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
     'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
