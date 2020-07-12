@@ -40,7 +40,7 @@ function restoreOptions (items) {
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
-  $('#show-resource-list').prop('checked',items.show_resource_list)
+  $('#show-resource-list').prop('checked', items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
   // Reset the 'selected-prior' class automatically, when the extension opens'
   if (items.resource === true) {
@@ -61,7 +61,9 @@ function restoreOptions (items) {
   if (items.not_found_popup === true) {
     $('#not-found-popup').addClass('selected-prior')
   }
-
+  if (items.show_resource_list === true) {
+    $('#show-resource-list').addClass('selected-prior')
+  }
 }
 
 function saveOptions () {
