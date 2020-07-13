@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, get_clean_url, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
@@ -70,9 +70,15 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
+          chrome.storage.local.get(['show_resource_list'], (result) => {
+            if(result.show_resource_list === true){
+              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id +'#not_refreshed'
+              openByWindowSetting(resource_list_url,'windows')
+            }
+          })
         }
         if (('job_id' in res) && (res.job_id !== 'undefined')) {
-          validate_spn(tabId, res.job_id, silent)
+          validate_spn(tabId, res.job_id, silent, page_url)
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
@@ -104,7 +110,7 @@ function auth_check() {
   .then(response => response.json())
 }
 
-async function validate_spn(tabId, job_id, silent = false) {
+async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
   const val_data = new URLSearchParams()
@@ -141,8 +147,18 @@ async function validate_spn(tabId, job_id, silent = false) {
       .then((data) => {
         status = data.status
         vdata = data
+        chrome.runtime.sendMessage({
+          message: 'resource_list_show',
+          data: data,
+          url: page_url
+        })
       })
       .catch((err)=>{
+        chrome.runtime.sendMessage({
+          message: 'resource_list_show',
+          data: err,
+          url: page_url
+        })
       })
   }
   // update when done
@@ -364,7 +380,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { url: tabs[0].url })
+      let url = get_clean_url(tabs[0].url)
+      chrome.tabs.sendMessage(tabs[0].id, { url: url })
     })
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
@@ -385,7 +402,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'updateCountBadge') {
     // update wayback count badge
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      updateWaybackCountBadge(tabs[0].id, tabs[0].url)
+      let url = get_clean_url(tabs[0].url)
+      updateWaybackCountBadge(tabs[0].id, url)
     })
   } else if (message.message === 'clearResource') {
     // resources settings unchecked
@@ -416,7 +434,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   } else if (info.status === 'loading') {
     var received_url = tab.url
     clearToolbarState(tab.id)
-    if (isNotExcludedUrl(received_url) && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
+    if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
@@ -424,7 +442,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       chrome.storage.local.get(['auto_update_context', 'show_context', 'resource'], (event) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (event.resource === true) {
-            const url = tabs[0].url
+            const url = get_clean_url(tabs[0].url)
             const tabId = tabs[0].id
             const news_host = new URL(url).hostname
             // checking resource of amazon books
@@ -610,7 +628,7 @@ function clearToolbarState(tabId) {
  */
 function updateToolbar(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0].id === tabId) {
+    if (tabs && tabs[0] && (tabs[0].id === tabId)) {
       let state = gToolbarStates[tabId]
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
@@ -653,10 +671,11 @@ chrome.contextMenus.create({
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
 })
+
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const page_url = tabs[0].url
+      const page_url = get_clean_url(tabs[0].url)
       let wayback_url
       let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
