@@ -151,6 +151,7 @@ function makeValidURL(url) {
 function useSearchBoxValue(sValue) {
   searchValue = makeValidURL(sValue)
   if (searchValue) {
+    searchValue = get_clean_url(searchValue)
     chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
       for (const context in event) {
         if (event[context]) {
