@@ -178,8 +178,8 @@ function useSearchBoxValue(sValue) {
 
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
-  search_box.addEventListener('keydown', (e) => {
-    if ((e.keyCode === 13 || e.which === 13) && (search_box.value.length >= 3) && isNotExcludedUrl(search_box.value)) {
+  search_box.addEventListener('keyup', (e) => {
+    if ((search_box.value.length > 0) && isNotExcludedUrl(search_box.value)) {
       useSearchBoxValue(search_box.value)
     }
   })
