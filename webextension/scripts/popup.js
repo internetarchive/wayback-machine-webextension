@@ -145,40 +145,39 @@ function search_tweet() {
   })
 }
 
-function useSearchBoxValue(sValue) {
-  searchValue = makeValidURL(sValue)
-  if (searchValue) {
-    searchValue = get_clean_url(searchValue)
-    chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-      for (const context in event) {
-        if (event[context]) {
-          $('#ctxbox').removeClass('flip-inside')
-          $('#contextBtn').removeAttr('disabled')
-        }
+
+// Update the UI when user is using the Search Box.
+function useSearchBox() {
+  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+    for (let context in event) {
+      if (event[context]) {
+        $('#ctxbox').removeClass('flip-inside')
+        $('#contextBtn').removeAttr('disabled')
       }
-      chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-      chrome.runtime.sendMessage({ message: 'clearResource' })
-      $('#mapbox').removeClass('flip-inside')
-      $('#twitterbox').removeClass('flip-inside')
-      last_save()
-      $('#contextTip').text('Enable in Settings')
-      $('#contextTip').click(openContextMenu)
-      $('#suggestion-box').text('').hide()
-      $('#wayback-count-label').hide()
-      $('#using-search-url').show()
-      $('#borrow_books').hide()
-      $('#news_recommend').hide()
-      $('#wikibooks').hide()
-      $('#doi').hide()
-    })
-  }
+    }
+    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+    chrome.runtime.sendMessage({ message: 'clearResource' })
+    $('#mapbox').removeClass('flip-inside')
+    $('#twitterbox').removeClass('flip-inside')
+    $('#contextTip').text('Enable in Settings')
+    $('#contextTip').click(openContextMenu)
+    $('#suggestion-box').text('').hide()
+    $('#wayback-count-label').hide()
+    $('#using-search-url').show()
+    $('#borrow_books').hide()
+    $('#news_recommend').hide()
+    $('#wikibooks').hide()
+    $('#doi').hide()
+    last_save()
+  })
 }
 
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     if ((search_box.value.length > 0) && isNotExcludedUrl(search_box.value)) {
-      useSearchBoxValue(search_box.value)
+      searchValue = get_clean_url(makeValidURL(search_box.value))
+      if (searchValue) { useSearchBox() }
     }
   })
 }
@@ -239,7 +238,8 @@ function display_list(key_word) {
         $('#suggestion-box').append($('<li>').append(
           $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
-            useSearchBoxValue(event.target.innerHTML)
+            searchValue = get_clean_url(makeValidURL(event.target.innerHTML))
+            if (searchValue) { useSearchBox() }
           })
         ))
       }

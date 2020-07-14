@@ -176,7 +176,7 @@ function remove_wbm(url) {
 
 // Function to clean the URL if the user is on 'web.archive.org'
 function get_clean_url(url) {
-  if (url.includes('web.archive.org')) {
+  if (url && url.includes('web.archive.org')) {
     url = remove_wbm(url)
   }
   return url
