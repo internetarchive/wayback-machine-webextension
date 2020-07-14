@@ -40,38 +40,38 @@ function restoreOptions (items) {
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
-  $('#show-resource-list').prop('checked',items.show_resource_list)
+  $('#show-resource-list').prop('checked', items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
   // Reset the 'selected-prior' class automatically, when the extension opens'
-  var private_mode_default = true 
+  var private_mode_default = true
   if (items.resource === true) {
     $('#resource').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   if (items.auto_update_context === true) {
     $('#auto-update-context').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   if (items.wm_count === true) {
     $('#wm-count-setting').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   if (items.auto_archive === true) {
     $('#auto-archive').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   if (items.email_outlinks === true) {
     $('#email-outlinks-setting').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   if (items.not_found_popup === true) {
     $('#not-found-popup').addClass('selected-prior')
-    private_mode_default = false 
+    private_mode_default = false
   }
   // TODO to store the previous state in chrome storage
   // Now setting the private-mode true by defaul when other options are not checked
-  if(private_mode_default === true){
-    chrome.storage.local.set({private_mode:true},()=>{
+  if (private_mode_default === true) {
+    chrome.storage.local.set({ private_mode: true }, () => {
       $('#private-mode').prop('checked', true)
     })
   }
@@ -161,7 +161,7 @@ function validatePrivateMode (event) {
 }
 
 function togglePrivateMode () {
-  if($("#private-mode").is(':checked')) {
+  if ($('#private-mode').is(':checked')) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }

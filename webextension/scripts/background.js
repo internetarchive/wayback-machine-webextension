@@ -70,9 +70,9 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
-            if(result.show_resource_list === true){
-              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id +'#not_refreshed'
-              openByWindowSetting(resource_list_url,'windows')
+            if (result.show_resource_list === true) {
+              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+              openByWindowSetting(resource_list_url, 'windows')
             }
           })
         }
@@ -88,23 +88,6 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         }
       })
   }
-}
-
-function auth_check() {
-  const timeoutPromise = new Promise((resolve, reject) => {
-    chrome.cookies.get({ url: 'https://archive.org',name: 'logged-in-sig' }, (result) => {
-      if(result!== null){
-        resolve(true)
-      }else{
-        reject(false)
-      }
-    })
-  })
-  return timeoutPromise
-  .then((response) => {
-    console.log(response)
-    return response
-  })
 }
 
 async function validate_spn(tabId, job_id, silent = false, page_url) {
@@ -151,7 +134,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
         })
       })
 
-      .catch((err)=>{
+      .catch((err) => {
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
           data: err,
@@ -344,10 +327,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     return true
   } else if (message.message === 'auth_check') {
-    chrome.cookies.get({ url: 'https://archive.org',name: 'logged-in-sig' }, (result) => {
-      if(result!== null){
+    chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
+      if (result !== null) {
         sendResponse(true)
-      }else{
+      } else {
         sendResponse(false)
       }
     })
