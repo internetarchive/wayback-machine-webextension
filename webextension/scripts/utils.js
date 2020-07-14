@@ -121,6 +121,15 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
+/**
+ * Returns a URL, adding 'https' if schema part missing, else null.
+ * @param url {string}
+ * @return {string} or null
+ */
+function makeValidURL(url) {
+  return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
+}
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
@@ -404,6 +413,7 @@ if (typeof module !== 'undefined') {
     getUrlByParameter,
     getWaybackUrlFromResponse,
     isValidUrl,
+    makeValidURL,
     isNotExcludedUrl,
     get_clean_url,
     wmAvailabilityCheck,

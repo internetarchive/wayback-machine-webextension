@@ -1,7 +1,8 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp, searchValue */
+/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
+/*   global feedbackPageURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -142,10 +143,6 @@ function search_tweet() {
       openByWindowSetting(open_url)
     }
   })
-}
-
-function makeValidURL(url) {
-  return isValidUrl(url) ? url : url.includes('.') ? 'https://' + url : false
 }
 
 function useSearchBoxValue(sValue) {
