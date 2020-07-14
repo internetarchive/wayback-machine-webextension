@@ -38,7 +38,7 @@ function restoreOptions (items) {
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
-  $('#show-resource-list').prop('checked',items.show_resource_list)
+  $('#show-resource-list').prop('checked', items.show_resource_list)
 }
 
 function saveOptions () {
@@ -100,7 +100,7 @@ function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue ? searchValue : tabs[0].url
+    let url = searchValue || tabs[0].url
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
