@@ -16,7 +16,6 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var isLoggedIn = false
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -93,23 +92,18 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
 
 function auth_check() {
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('timeout'))
-    }, 30000)
-    fetch(hostURL + 'save/',
-      {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
-    .then(resolve, reject)
+    chrome.cookies.get({ url: 'https://archive.org',name: 'logged-in-sig' }, (result) => {
+      if(result!== null){
+        resolve(true)
+      }else{
+        reject(false)
+      }
+    })
   })
   return timeoutPromise
   .then((response) => {
-    isLoggedIn = true
-    return isLoggedIn
+    console.log(response)
+    return response
   })
 }
 
@@ -350,12 +344,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     return true
   } else if (message.message === 'auth_check') {
-    if (!isLoggedIn) {
-      auth_check()
-      .then(resp => sendResponse(resp))
-    } else {
-      sendResponse(isLoggedIn)
-    }
+    chrome.cookies.get({ url: 'https://archive.org',name: 'logged-in-sig' }, (result) => {
+      if(result!== null){
+        sendResponse(true)
+      }else{
+        sendResponse(false)
+      }
+    })
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener

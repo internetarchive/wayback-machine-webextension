@@ -33,6 +33,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
+    console.log(result)
     if (result === false) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
@@ -44,15 +45,20 @@ function last_save() {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let url = tabs[0].url
-        chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
-        }, (message) => {
-          if (message.message === 'last_save') {
-            if ($('#last_save').text !== 'URL not supported') {
-              $('#last_save').text(message.time)
-            }
-            $('#savebox').addClass('flip-inside')
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                if ($('#last_save').text !== 'URL not supported') {
+                  $('#last_save').text(message.time)
+                }
+                $('#savebox').addClass('flip-inside')
+              }
+            })
           }
         })
       })
