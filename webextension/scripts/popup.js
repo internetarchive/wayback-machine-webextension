@@ -168,6 +168,7 @@ function useSearchBoxValue(sValue) {
       $('#contextTip').click(openContextMenu)
       $('#suggestion-box').text('').hide()
       $('#wayback-count-label').hide()
+      $('#using-search-url').show()
       $('#borrow_books').hide()
       $('#news_recommend').hide()
       $('#wikibooks').hide()
@@ -262,6 +263,7 @@ function display_suggestions(e) {
         $('#url-not-supported-message').hide()
       } else {
         $('#url-not-supported-message').show()
+        $('#using-search-url').hide()
       }
       if ($('#search-input').val().length >= 3) {
         display_list($('#search-input').val())
