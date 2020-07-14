@@ -68,6 +68,9 @@ function restoreOptions (items) {
     $('#not-found-popup').addClass('selected-prior')
     private_mode_default = false
   }
+  if (items.show_resource_list === true) {
+    $('#show-resource-list').addClass('selected-prior')
+  }
   // TODO to store the previous state in chrome storage
   // Now setting the private-mode true by defaul when other options are not checked
   if (private_mode_default === true) {
