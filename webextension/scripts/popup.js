@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, isNotExcludedUrl, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp */
+/*   global isValidUrl, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL, feedbackPageURL, newshosts, dateToTimestamp */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -9,7 +9,7 @@ function homepage() {
 
 function save_now() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
       options.push('capture_outlinks')
@@ -33,7 +33,6 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    console.log(result)
     if (result === false) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
@@ -74,7 +73,7 @@ function checkAuthentication(callback) {
 
 function recent_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -86,7 +85,7 @@ function recent_capture() {
 
 function first_capture() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -98,7 +97,7 @@ function first_capture() {
 
 function view_all() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -120,8 +119,13 @@ function social_share(eventObj) {
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = tabs[0].url
-    let sharing_url = recent_url + url
-    if (isNotExcludedUrl(url)) {
+    let sharing_url
+    if (url.includes('web.archive.org')) {
+      sharing_url = url // If the user is already at a playback page,share that URL
+    } else {
+      sharing_url = recent_url + get_clean_url(url) // When not on a playback page,share the recent archived version of that URL
+    }
+    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('fb')) {
         openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
       } else if (id.includes('twit')) {
@@ -135,7 +139,7 @@ function social_share(eventObj) {
 
 function search_tweet() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
@@ -149,7 +153,8 @@ function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keydown', (e) => {
     if ((e.keyCode === 13 || e.which === 13) && (search_box.value.length > 1) && isNotExcludedUrl(search_box.value)) {
-      openByWindowSetting('https://web.archive.org/web/*/' + search_box.value)
+      let searchValue = get_clean_url(search_box.value)
+      openByWindowSetting('https://web.archive.org/web/*/' + searchValue)
     }
   })
 }
@@ -255,7 +260,7 @@ function about_support() {
 
 function sitemap() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
 }
@@ -267,7 +272,7 @@ function settings() {
 
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = tabs[0].url
+    let url = get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
@@ -408,7 +413,7 @@ function setupWaybackCount() {
   chrome.storage.local.get(['wm_count'], (event) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
-      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
+      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !url.includes('web.archive.org')) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })

@@ -126,9 +126,7 @@ const excluded_urls = [
   '0.0.0.0',
   '127.0.0.1',
   'chrome:',
-  'chrome.google.com/webstore',
   'chrome-extension:',
-  'web.archive.org',
   'about:',
   'moz-extension:',
   '192.168.',
@@ -145,6 +143,33 @@ function isNotExcludedUrl(url) {
     }
   }
   return true
+}
+
+function remove_port(url) {
+  if (url.substr(-4) === ':80/') {
+    url = url.substring(0, url.length - 4)
+  }
+  return url
+}
+
+function remove_wbm(url) {
+  let pos = url.indexOf('/http')
+  let new_url = ''
+  if (pos !== -1) {
+    new_url = url.substring(pos + 1)
+  } else {
+    pos = url.indexOf('/www')
+    new_url = url.substring(pos + 1)
+  }
+  return remove_port(new_url)
+}
+
+// Function to clean the URL if the user is on 'web.archive.org'
+function get_clean_url(url) {
+  if (url.includes('web.archive.org')) {
+    url = remove_wbm(url)
+  }
+  return url
 }
 
 /**
@@ -379,6 +404,7 @@ if (typeof module !== 'undefined') {
     getWaybackUrlFromResponse,
     isValidUrl,
     isNotExcludedUrl,
+    get_clean_url,
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
