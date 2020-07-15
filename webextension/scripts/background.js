@@ -17,6 +17,13 @@ let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 
+var private_before_default = new Set([
+  'wm-count-setting',
+  'resource',
+  'email-outlinks-setting',
+  'not-found-popup'
+])
+
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -328,11 +335,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'auth_check') {
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      if (result !== null) {
-        sendResponse(true)
-      } else {
-        sendResponse(false)
-      }
+        sendResponse(result !== null)
     })
     return true
   } else if (message.message === 'getWikipediaBooks') {

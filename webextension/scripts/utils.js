@@ -22,6 +22,11 @@ const newshosts = new Set([
   'www.washingtonpost.com'
 ])
 
+var private_before_state 
+chrome.storage.local.get(['private_before_state'], (event) => {
+  private_before_state= new Set(event.private_before_state)
+})
+
 /**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
@@ -380,7 +385,8 @@ function initDefaultOptions () {
     domaintools: false,
     wbmsummary: true,
     annotations: true,
-    tagcloud: true
+    tagcloud: true,
+    private_before_state:Array.from(private_before_default)
   })
 }
 
@@ -420,6 +426,7 @@ if (typeof module !== 'undefined') {
     initDefaultOptions,
     afterAcceptOptions,
     feedbackPageURL,
-    newshosts
+    newshosts,
+    private_before_state
   }
 }

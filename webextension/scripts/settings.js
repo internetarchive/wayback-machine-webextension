@@ -42,41 +42,10 @@ function restoreOptions (items) {
   $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#show-resource-list').prop('checked', items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
-  // Reset the 'selected-prior' class automatically, when the extension opens'
-  var private_mode_default = true
-  if (items.resource === true) {
-    $('#resource').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.auto_update_context === true) {
-    $('#auto-update-context').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.wm_count === true) {
-    $('#wm-count-setting').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.auto_archive === true) {
-    $('#auto-archive').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.email_outlinks === true) {
-    $('#email-outlinks-setting').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.not_found_popup === true) {
-    $('#not-found-popup').addClass('selected-prior')
-    private_mode_default = false
-  }
-  if (items.show_resource_list === true) {
-    $('#show-resource-list').addClass('selected-prior')
-  }
-  // TODO to store the previous state in chrome storage
-  // Now setting the private-mode true by defaul when other options are not checked
-  if (private_mode_default === true) {
-    chrome.storage.local.set({ private_mode: true }, () => {
-      $('#private-mode').prop('checked', true)
-    })
+
+  //Set 'selected-prior' class to the previous state
+  for (let item of private_before_state) {
+    $('#'+item).addClass('selected-prior')
   }
 }
 
@@ -129,7 +98,7 @@ function selectall () {
 }
 
 function validatePrivateMode (event) {
-  let checkboxes = $('[name="private-inlude"]')
+  let checkboxes = $('[name="private-include"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
     $('#private-mode').prop('checked', false)
@@ -147,13 +116,16 @@ function validatePrivateMode (event) {
   // Else If the event.taget.checked is false, check if the check-box is NOT the only item, then remove class 'selected-prior'
   if (event.target.checked === true) {
     if (checkedCount === 1) {
+      private_before_state.clear()
       $('.selected-prior').removeClass('selected-prior')
     }
     if (!$(event.target).hasClass('selected-prior')) {
+      private_before_state.add(event.target.id)
       $(event.target).addClass('selected-prior')
     }
   } else if (event.target.checked === false) {
     if (!(checkedCount === 0)) {
+      private_before_state.delete(event.target.id)
       $(event.target).removeClass('selected-prior')
     } else {
       if (!$(event.target).hasClass('selected-prior')) {
@@ -161,6 +133,8 @@ function validatePrivateMode (event) {
       }
     }
   }
+  // Set the final previous state
+  chrome.storage.local.set({private_before_state:Array.from(private_before_state)},()=>{})
 }
 
 function togglePrivateMode () {
