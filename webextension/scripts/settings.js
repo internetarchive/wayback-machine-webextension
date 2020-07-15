@@ -124,6 +124,14 @@ function validatePrivateMode (event) {
       $(event.target).addClass('selected-prior')
     }
   } else if (event.target.checked === false) {
+    if(event.target.id === 'resource') {
+      $('#borrow_books').hide()
+      $('#news_recommend').hide()
+      $('#wikibooks').hide()
+      $('#doi').hide()
+    }else if (event.target.id === 'wayback-count-label') {
+      $('#wayback-count-label').hide()
+    }
     if (!(checkedCount === 0)) {
       private_before_state.delete(event.target.id)
       $(event.target).removeClass('selected-prior')
