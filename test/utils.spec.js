@@ -26,8 +26,11 @@ describe('isValidUrl', () => {
     { 'url': '\xc3\xb1', 'result': false },
     { 'url': '\xc3\x28', 'result': false },
     { 'url': 'about:debugging', 'result': false },
-    { 'url': 'about:home', 'result':false},
-    { 'url': '192.168.1.251', 'result':false}
+    { 'url': 'about:home', 'result': false},
+    { 'url': '192.168.1.251', 'result': false},
+    { 'url': 'edge://extensions', 'result': false},
+    { 'url': 'edge://about', 'result': false},
+    { 'url': 'extension://', 'result': false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -85,7 +88,11 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'about:debugging', 'result': false },
     { 'url': '192.168.1.251', 'result': false },
     { 'url': 'http://10.0.0.1', 'result': false },
-    { 'url': 'file://example', 'result': false }
+    { 'url': 'file://example', 'result': false },
+    { 'url': 'edge://newtab', 'result': false},
+    { 'url': 'edge://about', 'result': false},
+    { 'url': 'edge://favorites', 'result': false},
+    { 'url': 'extension://', 'result': false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
