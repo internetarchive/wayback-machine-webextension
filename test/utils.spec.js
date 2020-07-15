@@ -185,7 +185,7 @@ describe('makeValidURL', () => {
     { 'url': 'http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
     { 'url': 'purl.oclc.org/docs/inet96.html', 'result': 'https://purl.oclc.org/docs/inet96.html' },
     { 'url': 'purl.oclc.org', 'result': 'https://purl.oclc.org' },
-    { 'url': 'purl', 'result': null },
+    { 'url': 'purl', 'result': null }
 ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
