@@ -335,7 +335,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'auth_check') {
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-        sendResponse(result !== null)
+      sendResponse(result !== null)
     })
     return true
   } else if (message.message === 'getWikipediaBooks') {

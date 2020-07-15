@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl */
+/*   global attachTooltip, isNotExcludedUrl, private_before_state */
 
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu */
@@ -43,9 +43,9 @@ function restoreOptions (items) {
   $('#show-resource-list').prop('checked', items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
 
-  //Set 'selected-prior' class to the previous state
+  // Set 'selected-prior' class to the previous state
   for (let item of private_before_state) {
-    $('#'+item).addClass('selected-prior')
+    $('#' + item).addClass('selected-prior')
   }
 }
 
@@ -134,10 +134,17 @@ function validatePrivateMode (event) {
     }
   }
   // Set the final previous state
-  chrome.storage.local.set({private_before_state:Array.from(private_before_state)},()=>{})
+  chrome.storage.local.set({ private_before_state: Array.from(private_before_state) }, () => {})
 }
 
 function togglePrivateMode () {
+  if ($('#private-mode').is(':checked')) {
+    $('#wayback-count-label').hide()
+    $('#borrow_books').hide()
+    $('#news_recommend').hide()
+    $('#wikibooks').hide()
+    $('#doi').hide()
+  }
   let checkboxes = $('.selected-prior')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = !$(this).prop('checked')

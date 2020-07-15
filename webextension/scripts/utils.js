@@ -1,5 +1,8 @@
 // utils.js
 
+// from 'background.js'
+/*   global private_before_default */
+
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 
@@ -22,9 +25,9 @@ const newshosts = new Set([
   'www.washingtonpost.com'
 ])
 
-var private_before_state 
+var private_before_state;
 chrome.storage.local.get(['private_before_state'], (event) => {
-  private_before_state= new Set(event.private_before_state)
+  private_before_state = new Set(event.private_before_state)
 })
 
 /**
@@ -386,7 +389,7 @@ function initDefaultOptions () {
     wbmsummary: true,
     annotations: true,
     tagcloud: true,
-    private_before_state:Array.from(private_before_default)
+    private_before_state: Array.from(private_before_default)
   })
 }
 
