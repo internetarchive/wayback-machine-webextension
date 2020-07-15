@@ -138,10 +138,6 @@ function validatePrivateMode (event) {
 }
 
 function togglePrivateMode () {
-  if ($('#private-mode').is(':checked')) {
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearCountCache' })
-  }
   let checkboxes = $('.selected-prior')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = !$(this).prop('checked')
