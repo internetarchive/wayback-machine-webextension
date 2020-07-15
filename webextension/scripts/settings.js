@@ -129,7 +129,7 @@ function validatePrivateMode (event) {
       $('#news_recommend').hide()
       $('#wikibooks').hide()
       $('#doi').hide()
-    }else if (event.target.id === 'wayback-count-label') {
+    }else if (event.target.id === 'wm-count-setting') {
       $('#wayback-count-label').hide()
     }
     if (!(checkedCount === 0)) {
