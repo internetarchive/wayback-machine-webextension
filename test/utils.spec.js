@@ -8,6 +8,7 @@ const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedU
 const badgeCountText = require('../webextension/scripts/utils').badgeCountText
 const timestampToDate = require('../webextension/scripts/utils').timestampToDate
 const dateToTimestamp = require('../webextension/scripts/utils').dateToTimestamp
+const makeValidURL = require('../webextension/scripts/utils').makeValidURL
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -167,6 +168,28 @@ describe('dateToTimestamp', () => {
   test_cases.forEach(({ date, result }) => {
     it('should return ' + (result ? result : 'null') + ' on ' + date, () => {
       assert.deepStrictEqual(dateToTimestamp(date), result)
+    })
+  })
+})
+
+describe('makeValidURL', () => {
+  var test_cases = [
+    { 'url': 'https://www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'google.com', 'result': 'https://google.com' },
+    { 'url': 'google', 'result': null },
+    { 'url': 'https://www.alexa.com/', 'result': 'https://www.alexa.com/' },
+    { 'url': 'www.alexa.com/', 'result': 'https://www.alexa.com/' },
+    { 'url': 'alexa.com/', 'result': 'https://alexa.com/' },
+    { 'url': 'alexa', 'result': null },
+    { 'url': 'http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'purl.oclc.org/docs/inet96.html', 'result': 'https://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'purl.oclc.org', 'result': 'https://purl.oclc.org' },
+    { 'url': 'purl', 'result': null }
+]
+  test_cases.forEach(({ url, result }) => {
+    it('should return ' + result + ' on ' + url, () => {
+      expect(makeValidURL(url)).to.equal(result)
     })
   })
 })
