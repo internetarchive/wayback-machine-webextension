@@ -23,7 +23,7 @@ Follow the steps below for the currently deployed version.
 
 ### Chrome
 
-1. Go to our page on the [Chrome Web Store](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
+1. Go to our page on the [Chrome Web Store](https://chrome.google.com/webstore/detail/wayback-machine/nbkhjdgdpjdebcniehkeigmdfeiokegh).
 2. Click the **Add to Chrome** button, then **Add extension**.
 3. Click on the *Extensions* puzzle-like icon in the toolbar.
 4. Now click on the **Pin** icon next to *Wayback Machine*.
