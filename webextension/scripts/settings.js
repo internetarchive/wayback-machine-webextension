@@ -3,6 +3,7 @@
 // from 'utils.js'
 /*   global attachTooltip, isNotExcludedUrl, private_before_state */
 
+
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu */
 
@@ -47,6 +48,7 @@ function restoreOptions (items) {
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
   }
+
 }
 
 function saveOptions () {
@@ -171,18 +173,19 @@ function goBack () {
   $('#setting-page').hide()
   $('#popup-page').show()
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || tabs[0].url
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
       /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
       $('#contextBtn').off('click')
       $('#contextBtn').attr('disabled', true)
-      if (isNotExcludedUrl(tabs[0].url)) {
+      if (isNotExcludedUrl(url)) {
         $('#contextTip').click(openContextMenu)
       }
     } else {
       if ($('#ctxbox').hasClass('flip-inside')) {
-        if (!isNotExcludedUrl(tabs[0].url)) {
+        if (!isNotExcludedUrl(url)) {
           $('#contextTip').text('URL not supported')
         } else {
           $('#ctxbox').removeClass('flip-inside')

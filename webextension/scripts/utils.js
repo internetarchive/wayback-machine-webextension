@@ -6,6 +6,7 @@
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 
+let searchValue
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
 const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
@@ -128,6 +129,15 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
+/**
+ * Returns a URL, adding 'https' if schema part missing, else null.
+ * @param url {string}
+ * @return {string} or null
+ */
+function makeValidURL(url) {
+  return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
+}
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
@@ -139,7 +149,9 @@ const excluded_urls = [
   'moz-extension:',
   '192.168.',
   '10.',
-  'file:'
+  'file:',
+  'edge:',
+  'extension:'
 ]
 
 // Function to check whether it is a valid URL or not
@@ -174,7 +186,7 @@ function remove_wbm(url) {
 
 // Function to clean the URL if the user is on 'web.archive.org'
 function get_clean_url(url) {
-  if (url.includes('web.archive.org')) {
+  if (url && url.includes('web.archive.org')) {
     url = remove_wbm(url)
   }
   return url
@@ -323,6 +335,7 @@ function opener(url, option, callback) {
     })
   }
 }
+
 function notify(message, callback) {
   var options = {
     type: 'basic',
@@ -412,6 +425,7 @@ if (typeof module !== 'undefined') {
     getUrlByParameter,
     getWaybackUrlFromResponse,
     isValidUrl,
+    makeValidURL,
     isNotExcludedUrl,
     get_clean_url,
     wmAvailabilityCheck,
@@ -430,6 +444,7 @@ if (typeof module !== 'undefined') {
     afterAcceptOptions,
     feedbackPageURL,
     newshosts,
-    private_before_state
+    private_before_state,
+    searchValue
   }
 }
