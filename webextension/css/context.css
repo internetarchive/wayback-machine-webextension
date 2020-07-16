@@ -67,7 +67,6 @@ h4 {
 
 .url {
     font-size: 21px;
-    color: #733;
     font-weight: 300;
     word-break: break-all;
 }
@@ -331,10 +330,6 @@ ul {
     .sidebar-tabs {
         background-color: #3c3c3c;
         color: #aaa;
-    }
-
-    .url {
-        color: #d88;
     }
 
     .pre, .thumbnail-box {
