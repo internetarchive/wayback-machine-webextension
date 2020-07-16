@@ -21,6 +21,7 @@
 function get_tagCloud() {
   const url = getUrlByParameter('url')
   get_tags(url)
+  $('.url').text(getUrlByParameter('url'))
 }
 
 function get_hypothesis() {
