@@ -1,7 +1,7 @@
 // overview.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, hostURL, getWaybackCount */
+/*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
 
 function get_WBMSummary () {
   get_details()
@@ -35,34 +35,6 @@ function get_details () {
   })
 }
 
-function _splitTimestamp (timestamp) {
-  if (typeof timestamp === 'number') {
-    timestamp = timestamp.toString()
-  }
-  return [
-    // year
-    timestamp.slice(-14, -10),
-    // month
-    timestamp.slice(-10, -8),
-    // day
-    timestamp.slice(-8, -6),
-    // hour
-    timestamp.slice(-6, -4),
-    // minute
-    timestamp.slice(-4, -2),
-    // seconds
-    timestamp.slice(-2)
-  ]
-}
-
-function timestamp2datetime (timestamp) {
-  const tsArray = _splitTimestamp(timestamp)
-  return new Date(Date.UTC(
-    tsArray[0], tsArray[1] - 1, tsArray[2],
-    tsArray[3], tsArray[4], tsArray[5]
-  ))
-}
-
 function first_archive_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
@@ -71,7 +43,7 @@ function first_archive_details () {
       $('#first_archive_datetime_error').text('Data not available')
     } else {
       const ts = data[1][1]
-      const dt = timestamp2datetime(ts).toString().split('+')[0]
+      const dt = timestampToDate(ts).toString().split('+')[0]
       $('#first_archive_datetime')
         .text(dt)
         .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
@@ -87,11 +59,11 @@ function recent_archive_details () {
     if (data.length === 0) {
       $('#recent_archive_datetime_error').text('Data not available')
     } else {
-	  const ts = data[1][1]
-	  const dt = timestamp2datetime(ts).toString().split('+')[0]
-	  $('#recent_archive_datetime')
-        .text(dt)
-        .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
+      const ts = data[1][1]
+      const dt = timestampToDate(ts).toString().split('+')[0]
+      $('#recent_archive_datetime')
+      .text(dt)
+      .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
   .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
