@@ -1,40 +1,38 @@
 // overview.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, hostURL */
+/*   global getUrlByParameter, hostURL, getWaybackCount */
 
 function get_WBMSummary () {
   get_details()
   first_archive_details()
   recent_archive_details()
-  get_thumbnail()
   $('#loader_wbmsummary').hide()
-}
-
-function getTotal (captures) {
-  var total = 0
-  for (var key in captures) {
-    total += captures[key]['text/html']
-  }
-  return total
 }
 
 function get_details () {
   var url = getUrlByParameter('url')
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
-    $('#total_captures').show()
     if ('type' in response) {
       var type = response.type
       $('#details').text(type)
       $('#url_details').show()
-      var captures = response.captures
-      $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
-        .text(getTotal(captures).toLocaleString())
-    } else {
-      $('#total_archives_number').text(0)
     }
   }).fail(() => {})
+  var captures
+  getWaybackCount(url, (total) => {
+    captures = total
+    $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
+    .text(captures.toLocaleString())
+    if (captures > 0) {
+      $('#total_captures').show()
+      get_thumbnail()
+    } else {
+      $('#loader_thumbnail').hide()
+      $('#show_thumbnail').text('Thumbnail not found.')
+    }
+  })
 }
 
 function _splitTimestamp (timestamp) {
@@ -121,5 +119,3 @@ function get_thumbnail () {
       }
     })
 }
-
-if (typeof module !== 'undefined') { module.exports = { getTotal } }
