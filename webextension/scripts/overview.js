@@ -24,7 +24,7 @@ function get_details () {
   getWaybackCount(url, (total) => {
     captures = total
     $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
-    .text(captures)
+    .text(captures.toLocaleString())
     if (captures > 0) {
       $('#total_captures').show()
       get_thumbnail()
