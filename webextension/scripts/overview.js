@@ -28,7 +28,7 @@ function get_details () {
     if (captures > 0) {
       $('#total_captures').show()
       get_thumbnail()
-    }else{
+    } else {
       $('#loader_thumbnail').hide()
       $('#show_thumbnail').text('Thumbnail not found.')
     }
