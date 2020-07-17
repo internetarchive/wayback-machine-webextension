@@ -29,6 +29,7 @@
       "contextMenus",
       "notifications",
       "storage",
+      "bookmarks",
       "tabs",
       "webRequest",
       "webRequestBlocking",

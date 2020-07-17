@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/bulk-save.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>Bulk Save URLs</title>
+</head>
+<body>
+  <div class="container">
+    <div class="live-status">
+      <div class="logo">
+        <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
+      </div>
+      <h2 id="status-title">Bulk Save</h2>
+      <h4><span class="highlight-color" id="current-url"></span></h4>
+      <p id="current-status"></p>
+      <p id="message" class="error-color"></p>
+    </div>
+
+    <div class="outer-list-container">
+      <div class="container-scrollbar" id="list-container">
+      </div>
+      <p class="total-saved">Total Elements Saved: <b class="highlight-color" id="total-elements"></b></p>
+      <div  class="flex-container">
+        <button id="import-bookmarks" class="btn">Import All Bookmarks</button>
+        <div class="add">
+          <input type="text" id="add-url">
+          <button class="btn" id="add-to-bulk">Add to List</button>
+        </div>
+      </div>
+      <!-- <div class="save-box"> -->
+        <button class="btn btn-red" id="start-bulk-save">Save All</button>
+      <!-- </div> -->
+    </div>
+  </div>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/bulk-save.js"></script>
+</body>
+</html>

@@ -438,6 +438,10 @@ function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
 }
 
+function bulkSave() {
+  openByWindowSetting('../bulk-save.html','windows')
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -483,3 +487,4 @@ $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
+$('#bulk-save').click(bulkSave)
