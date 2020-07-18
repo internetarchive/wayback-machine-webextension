@@ -254,20 +254,17 @@ function display_suggestions(e) {
   if (e.keyCode === 13) {
     e.preventDefault()
   } else {
-    // setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(() => { 
-      if ($('#search-input').val().length >= 1) {
-        $('#url-not-supported-message').hide()
-      } else {
-        $('#url-not-supported-message').show()
-        $('#using-search-url').hide()
-      }
-      clearTimeout(timer)
-      //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
-      timer = setTimeout(()=>{
-        display_list($('#search-input').val())
-      },300)
-    }, 0.1)
+    if ($('#search-input').val().length >= 1) {
+      $('#url-not-supported-message').hide()
+    } else {
+      $('#url-not-supported-message').show()
+      $('#using-search-url').hide()
+    }
+    clearTimeout(timer)
+    //Call display_list function if the difference between keypress is greater than 300ms (B) 
+    timer = setTimeout(()=>{
+      display_list($('#search-input').val())
+    },300)
   }
 }
 
