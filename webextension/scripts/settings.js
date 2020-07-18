@@ -102,60 +102,42 @@ function validatePrivateMode (event) {
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
     $('#private-mode').prop('checked', false)
-  } else {
-    $('#private-mode').prop('checked', true)
   }
 
-  // Checking previous state when the only one item is checked and remove 'selected-prior' class from everywhere
-  if (checkedCount === 0 && $('.selected-prior').length === 1) {
-    $('.selected-prior').removeClass('selected-prior')
-  }
-
-  // If the event.taget.checked is true,then check if it the checkbox is only item, then remove 'selected-prior' from all
-  // And add class 'selected-prior' to the event.taget, if it is NOT there
-  // Else If the event.taget.checked is false, check if the check-box is NOT the only item, then remove class 'selected-prior'
+  // If the event.taget.checked is true, add class 'selected-prior' to the event.taget, if it is NOT there
+  // Else if the event.taget.checked is false, then remove class 'selected-prior'
   if (event.target.checked === true) {
-    if (checkedCount === 1) {
-      private_before_state.clear()
-      $('.selected-prior').removeClass('selected-prior')
-    }
     if (!$(event.target).hasClass('selected-prior')) {
       private_before_state.add(event.target.id)
       $(event.target).addClass('selected-prior')
     }
   } else if (event.target.checked === false) {
-    if(event.target.id === 'resource') {
-      $('#borrow_books').hide()
-      $('#news_recommend').hide()
-      $('#wikibooks').hide()
-      $('#doi').hide()
-    }else if (event.target.id === 'wm-count-setting') {
-      $('#wayback-count-label').hide()
-    }
-    if (!(checkedCount === 0)) {
-      private_before_state.delete(event.target.id)
-      $(event.target).removeClass('selected-prior')
-    } else {
-      if (!$(event.target).hasClass('selected-prior')) {
-        $(event.target).addClass('selected-prior')
-      }
-    }
+    private_before_state.delete(event.target.id)
+    $(event.target).removeClass('selected-prior')
   }
   // Set the final previous state
   chrome.storage.local.set({ private_before_state: Array.from(private_before_state) }, () => {})
+  hideUiButtons()
 }
 
 function togglePrivateMode () {
-  if ($('#private-mode').is(':checked')) {
+  let checkboxes = $('.selected-prior.private')
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = !$(this).prop('checked')
+  }
+  hideUiButtons()
+}
+
+function hideUiButtons() {
+  if ($('#wm-count-setting').is(':not(:checked)')) {
     $('#wayback-count-label').hide()
+  }
+
+  if ($('#resource').is(':not(:checked)')) {
     $('#borrow_books').hide()
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
-  }
-  let checkboxes = $('.selected-prior')
-  for (var i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = !$(this).prop('checked')
   }
 }
 
