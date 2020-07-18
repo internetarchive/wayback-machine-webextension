@@ -50,7 +50,7 @@ body {
     color: #222;
 }
 
-#wayback-count-label, #url-not-supported-message {
+#wayback-count-label, #url-not-supported-message, #using-search-url {
     font-size: 9pt;
     color: #222;
 }
@@ -74,6 +74,10 @@ body {
 }
 #logo-internet-archive:hover {
     opacity: 0.8;
+}
+
+#using-search-url {
+    display: none;
 }
 
 /* search box */
@@ -361,7 +365,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-label,#url-not-supported-message {
+    #wayback-count-label, #url-not-supported-message, #using-search-url {
         color: #eee;
     }
 
