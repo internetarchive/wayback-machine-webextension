@@ -675,7 +675,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const page_url = get_clean_url(tabs[0].url)
+      const page_url = click.linkUrl || get_clean_url(tabs[0].url)
       let wayback_url
       let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
