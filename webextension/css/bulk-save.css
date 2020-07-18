@@ -17,8 +17,9 @@ body {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     color: #000;
     display: block;
-    padding: 0.5em;
+    padding: 0.5em 0;
     margin: 1em 0;
+    word-break: break-all;
     font-size: 20px;
     line-height: 1.5;
     color: #333;
@@ -42,11 +43,27 @@ body {
     flex: 2;
 }
 
+.delete-btn {
+    font-size: 10px;
+    color: #fff;
+    background-color: #9A3B38;
+    border-radius: 5px;
+    margin: auto 0;
+    padding-top: 4px;
+    text-align: center;
+    height: 20px;
+    min-width: 20px;
+}
+
+.url-item {
+    /* width: 95%; */
+    margin-left: 1%;
+}
+
 .add {
     display: flex;
     margin-left: 1em;
     flex: 6;
-    justify-content: flex-end;
 }
 
 #add-url {
@@ -75,14 +92,13 @@ p {
     font-size: 20px;
 }
 
-#resource-list-container p {
-    padding: 0 5px;
-    white-space: normal;
-    word-break: break-all;
+.url-list {
     margin: 0;
+    padding: 0.2em 0.5em;
 }
-#resource-list-container p:nth-child(even) {
-    color: #666;
+
+#list-container .url-list:nth-child(even) {
+    background-color: #fff;
 }
 
 .logo {
@@ -172,14 +188,14 @@ p {
         color: #bbb;
     }
 
-    #resource-list-container {
+    #list-container {
         color: #ddd;
         background-color: #333;
         border: 1px solid #555;
     }
-
-    #resource-list-container p:nth-child(even) {
-        color: #aaa;
+    #list-container .url-list:nth-child(even) {
+        color: #333;
+        background-color: #ddd;
     }
 
     .error-color {

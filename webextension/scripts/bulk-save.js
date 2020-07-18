@@ -6,8 +6,12 @@ function displayList() {
   newSetLength = bookmarksList.size
   if (newSetLength > oldSetLength) {
     for (let item of Array.from([...bookmarksList]).slice(oldSetLength, newSetLength)) {
+      let row = $('<div class="url-list flex-container">')
+      let del = $('<div class="delete-btn">').text('X')
+      let span = $('<div class="url-item">').append(item)
+
       $('#list-container').append(
-        $('<p>').append(item)
+        row.append(del, span)
       )
     }
     oldSetLength = newSetLength
@@ -42,11 +46,19 @@ function addToBulkList() {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     bookmarksList.add(url)
     displayList()
-  }
-  else {
+  } else {
     alert(`The Wayback Machine cannot archive '${url}'.`)
   }
   document.getElementById('add-url').value = ''
+}
+
+function deleteFromBulkList(e) {
+  if (e.target.classList.contains('delete-btn')) {
+    let delUrl = e.target.nextElementSibling.innerText
+    bookmarksList.delete(delUrl)
+    e.target.parentElement.remove()
+    oldSetLength--
+  }
 }
 
 function initiateBulkSave() {
@@ -55,3 +67,4 @@ function initiateBulkSave() {
 $('#import-bookmarks').click(importBookmarks)
 $('#start-bulk-save').click(initiateBulkSave)
 $('#add-to-bulk').click(addToBulkList)
+$('#list-container').click(deleteFromBulkList)
