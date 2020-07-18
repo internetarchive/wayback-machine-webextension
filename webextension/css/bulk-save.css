@@ -17,7 +17,8 @@ body {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     color: #000;
     display: block;
-    padding: 0.5em 0;
+    /* padding: 0.5em 0; */
+    min-height: 1em;
     margin: 1em 0;
     word-break: break-all;
     font-size: 20px;
@@ -53,10 +54,13 @@ body {
     text-align: center;
     height: 20px;
     min-width: 20px;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    background-color: #AA4B48;
 }
 
 .url-item {
-    /* width: 95%; */
     margin-left: 1%;
 }
 

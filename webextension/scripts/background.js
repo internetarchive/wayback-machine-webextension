@@ -71,7 +71,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
-            if(result.show_resource_list === true){
+            if (result.show_resource_list === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id +'#not_refreshed'
               openByWindowSetting(resource_list_url,'windows')
             }
@@ -153,7 +153,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
           url: page_url
         })
       })
-      .catch((err)=>{
+      .catch((err) => {
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
           data: err,

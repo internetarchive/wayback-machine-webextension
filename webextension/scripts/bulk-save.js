@@ -1,3 +1,8 @@
+// bulk-save.js
+
+// from 'utils.js'
+/*   global isNotExcludedUrl, isValidUrl, hostURL */
+
 let bookmarksList = new Set()
 let newSetLength = 0
 let oldSetLength = 0
@@ -24,7 +29,7 @@ function processNode(node) {
     node.children.forEach((child) => { processNode(child) })
   }
 
-  // acces leaf nodes URLs
+  // access leaf nodes: Bookmarked URLs
   if (node.url) {
     if (isValidUrl(node.url) && isNotExcludedUrl(node.url)) {
       bookmarksList.add(node.url)
@@ -62,6 +67,18 @@ function deleteFromBulkList(e) {
 }
 
 function initiateBulkSave() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    for (let item of Array.from([...bookmarksList])) {
+      let url = item
+      chrome.runtime.sendMessage({
+        message: 'openurl',
+        wayback_url: hostURL + 'save/',
+        page_url: url,
+        method: 'save',
+        tabId: tabs[0].id
+      })
+    }
+  })
 }
 
 $('#import-bookmarks').click(importBookmarks)
