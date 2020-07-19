@@ -105,4 +105,8 @@ button:hover {
   h2, h3, h4 {
       color: #bbb;
   }
+
+  #container-whole-doi > div {
+      background-color: #333;
+  }
 }
