@@ -5,7 +5,7 @@
 
 function get_alexa () {
   var alexa_url = 'https://xml.alexa.com/data?cli=10&dat=n&url='
-  var url = new URL(getUrlByParameter('url'))
+  var url = new URL(decodeURIComponent(getUrlByParameter('url')))
   $.get(alexa_url + url.hostname, (xml) => {
     var name = xml.getElementsByTagName('ALEXA')[0].getAttribute('URL')
     $('#alexa_name').text(name)

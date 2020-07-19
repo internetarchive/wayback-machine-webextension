@@ -7,6 +7,6 @@
 /*   global get_tags */
 
 window.onload = () => {
-  var url = getUrlByParameter('url')
+  var url = decodeURIComponent(getUrlByParameter('url'))
   get_tags(url)
 }

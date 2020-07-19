@@ -4,14 +4,14 @@
 /*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
 
 function get_WBMSummary () {
-  get_details()
-  first_archive_details()
-  recent_archive_details()
+  var url = decodeURIComponent(getUrlByParameter('url'))
+  get_details(url)
+  first_archive_details(url)
+  recent_archive_details(url)
   $('#loader_wbmsummary').hide()
 }
 
-function get_details () {
-  var url = getUrlByParameter('url')
+function get_details (url) {
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     if ('type' in response) {
@@ -35,8 +35,7 @@ function get_details () {
   })
 }
 
-function first_archive_details () {
-  var url = getUrlByParameter('url')
+function first_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
@@ -52,8 +51,7 @@ function first_archive_details () {
   .fail(() => $('#first_archive_datetime_error').text('Data not available'))
 }
 
-function recent_archive_details () {
-  var url = getUrlByParameter('url')
+function recent_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
@@ -69,8 +67,7 @@ function recent_archive_details () {
   .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
 }
 // Function used to get the thumbnail of the URL
-function get_thumbnail () {
-  var url = getUrlByParameter('url')
+function get_thumbnail (url) {
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
