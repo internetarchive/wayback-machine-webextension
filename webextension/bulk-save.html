@@ -11,23 +11,25 @@
 </head>
 <body>
   <div class="container">
-    <div class="live-status">
+    <div class="header-container">
       <div class="logo">
         <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
       </div>
       <h2 id="status-title">Bulk Save</h2>
-      <h4><span class="highlight-color" id="current-url"></span></h4>
-      <p id="current-status"></p>
-      <p id="message" class="error-color"></p>
+      <p id="empty-list-err">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
     </div>
-
+    <div class="loader"></div>
     <div class="outer-list-container">
       <div class="container-scrollbar" id="list-container">
       </div>
-      <p class="total-saved">Total Elements Saved: <b class="highlight-color" id="total-elements"></b></p>
+      <div id="total-saved">
+        <p>Total Elements: <b class="highlight-color" id="total-elements"></b></p>
+        <p id="saved">Saved: <b class="highlight-color"></b></p>
+        <p id="failed">Failed: <b class="highlight-color"></b></p>
+      </div>
       <div  class="flex-container">
         <button id="import-bookmarks" class="btn">Import All Bookmarks</button>
-        <div class="add">
+        <div id="add">
           <input type="text" id="add-url">
           <button class="btn" id="add-to-bulk">Add to List</button>
         </div>

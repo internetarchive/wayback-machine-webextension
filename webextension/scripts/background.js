@@ -120,7 +120,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_start',
-      tabId: tabId
+      tabId: tabId,
+      url: page_url
     })
     if (status === 'pending') {
       addToolbarState(tabId, 'S')
@@ -170,7 +171,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     chrome.runtime.sendMessage({
       message: 'save_success',
       time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
-      tabId: tabId
+      tabId: tabId,
+      url: page_url
     })
     // increment and update wayback count
     incrementCount(vdata.original_url)
@@ -195,7 +197,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_error',
-      error: vdata.message
+      error: vdata.message,
+      url: page_url
     })
     // notify
     if (!silent) {
