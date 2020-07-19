@@ -106,16 +106,19 @@ function trackStatus() {
       for (let i = 0; i < items.length; i++) {
         let listItemUrl = items[i].innerText
         if (msg === 'save_start' && url && listItemUrl === url) {
+          console.log(msg + '    for    ' + url) // To verify the status
           items[i].previousElementSibling.innerText = ''
           items[i].previousElementSibling.style.backgroundColor = 'yellow'
         } else if (msg === 'save_success' && url && listItemUrl === url) {
+          console.log(msg + '    for    ' + url) // To verify the status
           saveSuccessCount++
           $('#saved').show().children().text(saveSuccessCount)
           items[i].previousElementSibling.innerText = '✓'
           items[i].previousElementSibling.style.backgroundColor = 'green'
         } else if (msg === 'save_error' && url && listItemUrl === url) {
-        saveFailedCount++
-        $('#failed').show().children().text(saveFailedCount)
+          console.log(msg + '    for    ' + url) // To verify the status
+          saveFailedCount++
+          $('#failed').show().children().text(saveFailedCount)
           items[i].previousElementSibling.innerText = '!'
           items[i].previousElementSibling.style.backgroundColor = 'red'
         }
