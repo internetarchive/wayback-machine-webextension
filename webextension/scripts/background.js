@@ -126,7 +126,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
       addToolbarState(tabId, 'S')
     }
 
-    await sleep(1000)
+    await sleep(6000)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
