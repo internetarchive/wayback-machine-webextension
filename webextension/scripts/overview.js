@@ -27,7 +27,7 @@ function get_details (url) {
     .text(captures.toLocaleString())
     if (captures > 0) {
       $('#total_captures').show()
-      get_thumbnail()
+      get_thumbnail(url)
     } else {
       $('#loader_thumbnail').hide()
       $('#show_thumbnail').text('Thumbnail not found.')
