@@ -39,7 +39,7 @@ function first_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
-      $('#first_archive_datetime_error').text('Data not available')
+      $('#first_archive_datetime_error').text('URL has not been archived')
     } else {
       const ts = data[1][1]
       const dt = timestampToDate(ts).toString().split('+')[0]
@@ -55,7 +55,7 @@ function recent_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
-      $('#recent_archive_datetime_error').text('Data not available')
+      $('#recent_archive_datetime_error').text('URL has not been archived')
     } else {
       const ts = data[1][1]
       const dt = timestampToDate(ts).toString().split('+')[0]
