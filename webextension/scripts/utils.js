@@ -5,8 +5,23 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 
 let searchValue
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
-const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : (navigator.userAgent.indexOf('Edg') !== -1 ? 'https://edge-api.archive.org/' : 'https://chrome-api.archive.org/')
-const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
+let isEdge = (navigator.userAgent.indexOf('Edg') !== -1)
+
+const hosts = {
+  firefox: 'https://firefox-api.archive.org/',
+  edge: 'https://edge-api.archive.org/',
+  chrome: 'https://chrome-api.archive.org/'
+}
+
+const feedbackUrls = {
+  firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
+  chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  edge: ''
+}
+
+const hostURL = isFirefox ? hosts['firefox'] : isEdge ? hosts['edge'] : hosts['chrome']
+
+const feedbackPageURL = isFirefox ? feedbackUrls['firefox'] : isEdge ? feedbackUrls['edge'] : feedbackUrls['chrome']
 
 const newshosts = new Set([
   'apnews.com',
