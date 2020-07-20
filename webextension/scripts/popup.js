@@ -261,7 +261,7 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    //Call display_list function if the difference between keypress is greater than 300ms (B) 
+    //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
     timer = setTimeout(()=>{
       display_list($('#search-input').val())
     },300)
