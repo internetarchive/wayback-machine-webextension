@@ -174,9 +174,11 @@ function useSearchBox() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
-    if ((search_box.value.length > 0) && isNotExcludedUrl(search_box.value)) {
+    // exclude UP and DOWN keys from event
+    if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       searchValue = get_clean_url(makeValidURL(search_box.value))
-      if (searchValue) { useSearchBox() }
+      // use searchValue if it is valid, else update UI
+      searchValue ? useSearchBox() : $('#using-search-url').hide()
     }
   })
 }
@@ -255,17 +257,8 @@ function display_suggestions(e) {
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(() => {
-      if ($('#search-input').val().length >= 1) {
-        $('#url-not-supported-message').hide()
-      } else {
-        $('#url-not-supported-message').show()
-        $('#using-search-url').hide()
-      }
-      if ($('#search-input').val().length >= 3) {
-        display_list($('#search-input').val())
-      } else {
-        $('#suggestion-box').text('').hide()
-      }
+      $('#search-input').val().length >= 1 ? $('#url-not-supported-message').hide() : $('#url-not-supported-message').show()
+      $('#search-input').val().length >= 3 ? display_list($('#search-input').val()) : $('#suggestion-box').text('').hide()
     }, 0.1)
   }
 }
