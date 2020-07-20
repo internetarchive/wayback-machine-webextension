@@ -246,7 +246,7 @@ function display_list(key_word) {
   })
 }
 
-let timer;
+let timer
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
   if (e.keyCode === 38 || e.keyCode === 40) { return false }
@@ -264,7 +264,7 @@ function display_suggestions(e) {
     //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
     timer = setTimeout(()=>{
       display_list($('#search-input').val())
-    },300)
+    }, 300)
   }
 }
 
