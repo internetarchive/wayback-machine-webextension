@@ -3,6 +3,7 @@
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 
+let searchValue
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
 const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
 const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
@@ -120,20 +121,29 @@ function isValidUrl(url) {
     (url.indexOf('http://') === 0 || url.indexOf('https://') === 0))
 }
 
+/**
+ * Returns a URL, adding 'https' if schema part missing, else null.
+ * @param url {string}
+ * @return {string} or null
+ */
+function makeValidURL(url) {
+  return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
+}
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
   '0.0.0.0',
   '127.0.0.1',
   'chrome:',
-  'chrome.google.com/webstore',
   'chrome-extension:',
-  'web.archive.org',
   'about:',
   'moz-extension:',
   '192.168.',
   '10.',
-  'file:'
+  'file:',
+  'edge:',
+  'extension:'
 ]
 
 // Function to check whether it is a valid URL or not
@@ -145,6 +155,33 @@ function isNotExcludedUrl(url) {
     }
   }
   return true
+}
+
+function remove_port(url) {
+  if (url.substr(-4) === ':80/') {
+    url = url.substring(0, url.length - 4)
+  }
+  return url
+}
+
+function remove_wbm(url) {
+  let pos = url.indexOf('/http')
+  let new_url = ''
+  if (pos !== -1) {
+    new_url = url.substring(pos + 1)
+  } else {
+    pos = url.indexOf('/www')
+    new_url = url.substring(pos + 1)
+  }
+  return remove_port(new_url)
+}
+
+// Function to clean the URL if the user is on 'web.archive.org'
+function get_clean_url(url) {
+  if (url && url.includes('web.archive.org')) {
+    url = remove_wbm(url)
+  }
+  return url
 }
 
 /**
@@ -290,6 +327,7 @@ function opener(url, option, callback) {
     })
   }
 }
+
 function notify(message, callback) {
   var options = {
     type: 'basic',
@@ -377,7 +415,9 @@ if (typeof module !== 'undefined') {
     getUrlByParameter,
     getWaybackUrlFromResponse,
     isValidUrl,
+    makeValidURL,
     isNotExcludedUrl,
+    get_clean_url,
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
@@ -393,6 +433,7 @@ if (typeof module !== 'undefined') {
     initDefaultOptions,
     afterAcceptOptions,
     feedbackPageURL,
-    newshosts
+    newshosts,
+    searchValue
   }
 }

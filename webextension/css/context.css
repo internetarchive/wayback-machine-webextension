@@ -65,6 +65,12 @@ h4 {
     display: flex;
 }
 
+.url {
+    font-size: 21px;
+    font-weight: 300;
+    word-break: break-all;
+}
+
 @media screen and (min-width: 700px) {
     .test {
         text-align: center;

@@ -3,10 +3,12 @@ const expect = require('chai').expect
 const assert = require('assert').strict
 const getUrlByParameter = require('../webextension/scripts/utils').getUrlByParameter
 const isValidUrl = require('../webextension/scripts/utils').isValidUrl
+const get_clean_url = require('../webextension/scripts/utils').get_clean_url
 const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedUrl
 const badgeCountText = require('../webextension/scripts/utils').badgeCountText
 const timestampToDate = require('../webextension/scripts/utils').timestampToDate
 const dateToTimestamp = require('../webextension/scripts/utils').dateToTimestamp
+const makeValidURL = require('../webextension/scripts/utils').makeValidURL
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -25,8 +27,11 @@ describe('isValidUrl', () => {
     { 'url': '\xc3\xb1', 'result': false },
     { 'url': '\xc3\x28', 'result': false },
     { 'url': 'about:debugging', 'result': false },
-    { 'url': 'about:home', 'result':false},
-    { 'url': '192.168.1.251', 'result':false}
+    { 'url': 'about:home', 'result': false},
+    { 'url': '192.168.1.251', 'result': false},
+    { 'url': 'edge://extensions', 'result': false},
+    { 'url': 'edge://about', 'result': false},
+    { 'url': 'extension://', 'result': false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -39,13 +44,40 @@ describe('isValidUrl', () => {
   })
 })
 
+describe('get_clean_url', () => {
+  var test_cases = [
+    //Test Case when the URL is https://web.archive.org
+    { 'url': 'https://web.archive.org', 'result': 'https://web.archive.org' },
+
+    //Test Cases when the URL does not includes 'web.archive.org'
+    { 'url': 'https://www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
+    { 'url': 'http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'https://apnews.com/', 'result': 'https://apnews.com/' },
+
+    //Test Cases when the URL includes 'web.archive.org'
+    { 'url': 'https://web.archive.org/web/*/https://www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'https://web.archive.org/web/*/https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
+    { 'url': 'https://web.archive.org/web/*/http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'https://web.archive.org/web/*/https://apnews.com/', 'result': 'https://apnews.com/' },
+    { 'url': 'https://web.archive.org/web/20200205001304/https://www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'https://web.archive.org/web/20200602155930/https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
+    { 'url': 'https://web.archive.org/web/20200215123917/http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'https://web.archive.org/web/20200308013652/https://apnews.com/', 'result': 'https://apnews.com/' },
+  ]
+  test_cases.forEach(({ url, result }) => {
+    it('should return ' + result + ' on ' + url, () => {
+      expect(get_clean_url(url)).to.equal(result)
+    })
+  })
+})
+
 describe('isNotExcludedUrl', () => {
   var test_cases = [
     { 'url': 'https://0.0.0.0', 'result': false },
     { 'url': 'https://localhost', 'result': false },
     { 'url': 'https://127.0.0.1', 'result': false },
     { 'url': 'chrome-extension://efppkbphbfgoiaadblijkcdkdmajikhd/singleWindow.html?url=https://www.google.com/', 'result': false },
-    { 'url': 'https://chrome.google.com/webstore/category/extensions', 'result': false },
     { 'url': 'chrome://extensions', 'result': false },
     { 'url': 'chrome://newtab', 'result': false },
     { 'url': 'https://example.com', 'result': true },
@@ -57,7 +89,11 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'about:debugging', 'result': false },
     { 'url': '192.168.1.251', 'result': false },
     { 'url': 'http://10.0.0.1', 'result': false },
-    { 'url': 'file://example', 'result': false }
+    { 'url': 'file://example', 'result': false },
+    { 'url': 'edge://newtab', 'result': false},
+    { 'url': 'edge://about', 'result': false},
+    { 'url': 'edge://favorites', 'result': false},
+    { 'url': 'extension://', 'result': false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
@@ -132,6 +168,28 @@ describe('dateToTimestamp', () => {
   test_cases.forEach(({ date, result }) => {
     it('should return ' + (result ? result : 'null') + ' on ' + date, () => {
       assert.deepStrictEqual(dateToTimestamp(date), result)
+    })
+  })
+})
+
+describe('makeValidURL', () => {
+  var test_cases = [
+    { 'url': 'https://www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'www.google.com/', 'result': 'https://www.google.com/' },
+    { 'url': 'google.com', 'result': 'https://google.com' },
+    { 'url': 'google', 'result': null },
+    { 'url': 'https://www.alexa.com/', 'result': 'https://www.alexa.com/' },
+    { 'url': 'www.alexa.com/', 'result': 'https://www.alexa.com/' },
+    { 'url': 'alexa.com/', 'result': 'https://alexa.com/' },
+    { 'url': 'alexa', 'result': null },
+    { 'url': 'http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'purl.oclc.org/docs/inet96.html', 'result': 'https://purl.oclc.org/docs/inet96.html' },
+    { 'url': 'purl.oclc.org', 'result': 'https://purl.oclc.org' },
+    { 'url': 'purl', 'result': null }
+]
+  test_cases.forEach(({ url, result }) => {
+    it('should return ' + result + ' on ' + url, () => {
+      expect(makeValidURL(url)).to.equal(result)
     })
   })
 })
