@@ -5,7 +5,7 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 
 let searchValue
 let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
-const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
+const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : (navigator.userAgent.indexOf('Edg') !== -1 ? 'https://edge-api.archive.org/' : 'https://chrome-api.archive.org/')
 const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
 
 const newshosts = new Set([
