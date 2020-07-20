@@ -174,7 +174,7 @@ function useSearchBox() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
-    // exclude UP and DOWN keys from event
+    // exclude UP and DOWN keys from keyup event
     if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       searchValue = get_clean_url(makeValidURL(search_box.value))
       // use searchValue if it is valid, else update UI
@@ -257,7 +257,9 @@ function display_suggestions(e) {
   } else {
     // setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(() => {
-      $('#search-input').val().length >= 1 ? $('#url-not-supported-message').hide() : $('#url-not-supported-message').show()
+      // hide 'URL Not Supported' text when anything is entered in search box
+      $('#search-input').val().length >= 1 ? $('#url-not-supported-message').hide() : ( $('#url-not-supported-message').show(), $('#using-search-url').hide() )
+      // display suggestions list
       $('#search-input').val().length >= 3 ? display_list($('#search-input').val()) : $('#suggestion-box').text('').hide()
     }, 0.1)
   }
