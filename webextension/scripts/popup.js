@@ -236,13 +236,13 @@ function display_list(key_word) {
       $('#suggestion-box').show()
       arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
-        $('#suggestion-box').append($('<li>').append(
-          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+        $('#suggestion-box').append(
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             searchValue = get_clean_url(makeValidURL(event.target.innerHTML))
             if (searchValue) { useSearchBox() }
           })
-        ))
+        )
       }
     }
   })
