@@ -97,6 +97,7 @@ body {
     border-radius: 5px;
     word-break: break-all;
 }
+
 #suggestion-box div {
     padding: 3px 10px;
 }
@@ -370,6 +371,16 @@ a.btn-social, .btn-social {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #suggestion-box {
+        background-color: #2C2C2C;
+        color: #eee;
+        border: 1px solid #666;
+    }
+
+    #suggestion-box div:hover, .focused {
+        background-color: #666;
     }
 
     #wayback-count-label, #url-not-supported-message, #using-search-url {
