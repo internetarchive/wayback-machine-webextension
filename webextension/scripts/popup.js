@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
+/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, checkAuthentication, hostURL */
 /*   global feedbackPageURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
@@ -59,12 +59,6 @@ function last_save() {
       })
     }
   })
-}
-
-function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
-    message: 'auth_check'
-  }, callback)
 }
 
 function recent_capture() {

@@ -23,8 +23,8 @@
       <div class="container-scrollbar" id="list-container">
       </div>
       <div id="total-saved">
-        <p>Total Elements: <b class="highlight-color" id="total-elements"></b></p>
-        <p id="saved">Saved: <b class="highlight-color"></b></p>
+        <p id="total-elements">Total Elements Being Saved: <b class="highlight-color"></b></p>
+        <p id="saved">Successfully Saved: <b class="highlight-color"></b></p>
         <p id="failed">Failed: <b class="highlight-color"></b></p>
       </div>
       <div  class="flex-container">
@@ -34,9 +34,18 @@
           <button class="btn" id="add-to-bulk">Add to List</button>
         </div>
       </div>
-      <!-- <div class="save-box"> -->
-        <button class="btn btn-red" id="start-bulk-save">Save All</button>
-      <!-- </div> -->
+      <div class="save-box">
+        <div class="save-options-container">
+          <label class="save-options" for="never-saved"><input type="checkbox" id="never-saved"> Save only URLs that have never been saved.</label>
+          <!-- <label class="save-options" for=""><input type="checkbox" id=""> </label> -->
+        </div>
+        <div class="flip">
+          <div id="save-all-box">
+            <div class="flip-front"><button class="btn btn-red" id="start-bulk-save">Save All</button></div>
+            <div class="flip-back"><button class="btn btn-red" id="login-to-save" tabindex="-1">Login to Save Page</button></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <script src="scripts/utils.js"></script>

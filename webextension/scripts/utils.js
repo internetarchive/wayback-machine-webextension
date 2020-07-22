@@ -407,6 +407,12 @@ function afterAcceptOptions () {
   })
 }
 
+function checkAuthentication(callback) {
+  chrome.runtime.sendMessage({
+    message: 'auth_check'
+  }, callback)
+}
+
 if (typeof module !== 'undefined') {
   module.exports = {
     isArray,
@@ -432,6 +438,7 @@ if (typeof module !== 'undefined') {
     viewableTimestamp,
     initDefaultOptions,
     afterAcceptOptions,
+    checkAuthentication,
     feedbackPageURL,
     newshosts,
     searchValue
