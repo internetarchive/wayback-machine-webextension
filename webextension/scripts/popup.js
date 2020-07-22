@@ -248,6 +248,7 @@ function display_list(key_word) {
   })
 }
 
+let timer
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
   if (e.keyCode === 38 || e.keyCode === 40) { return false }
@@ -255,13 +256,17 @@ function display_suggestions(e) {
   if (e.keyCode === 13) {
     e.preventDefault()
   } else {
-    // setTimeout is used to get the text in the text field after key has been pressed
-    window.setTimeout(() => {
-      // hide 'URL Not Supported' text when anything is entered in search box
-      $('#search-input').val().length >= 1 ? $('#url-not-supported-message').hide() : ( $('#url-not-supported-message').show(), $('#using-search-url').hide() )
-      // display suggestions list
-      $('#search-input').val().length >= 3 ? display_list($('#search-input').val()) : $('#suggestion-box').text('').hide()
-    }, 0.1)
+    if ($('#search-input').val().length >= 1) {
+      $('#url-not-supported-message').hide()
+    } else {
+      $('#url-not-supported-message').show()
+      $('#using-search-url').hide()
+    }
+    clearTimeout(timer)
+    //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
+    timer = setTimeout(()=>{
+      display_list($('#search-input').val())
+    }, 300)
   }
 }
 
