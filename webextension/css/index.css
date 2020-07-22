@@ -44,7 +44,7 @@ body {
     height: 28px;
 }
 
-#search-input {
+#search-input, .login-input{
     background-color: #fff;
     border-color: #777;
     color: #222;
@@ -357,7 +357,7 @@ a.btn-social, .btn-social {
         color: #bbb;
     }
 
-    #search-input {
+    #search-input, .login-input{
         background-color: #222;
         border-color: #666;
         color: #ddd;

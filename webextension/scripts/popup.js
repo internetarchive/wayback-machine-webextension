@@ -39,7 +39,7 @@ function last_save() {
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
       $('#savebtn').off('click').click(() => {
-        openByWindowSetting('https://archive.org/account/login')
+        show_login_page()
       })
     } else {
       $('#save_now').removeAttr('disabled')
@@ -290,7 +290,14 @@ function sitemap() {
 
 function settings() {
   $('#popup-page').hide()
+  $('#login-page').hide()
   $('#setting-page').show()
+}
+
+function show_login_page() {
+  $('#popup-page').hide()
+  $('#setting-page').hide()
+  $('#login-page').show()
 }
 
 function show_all_screens() {
@@ -512,6 +519,7 @@ $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
 $('#setting-page').hide()
+$('#login-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
