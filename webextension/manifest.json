@@ -32,6 +32,7 @@
       "tabs",
       "webRequest",
       "webRequestBlocking",
+      "cookies",
       "https://archive.org/*",
       "https://*.archive.org/*",
       "http://web.archive.org/*",

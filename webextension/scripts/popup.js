@@ -42,6 +42,7 @@ function last_save() {
         show_login_page()
       })
     } else {
+      $('#logout').show()
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let url = searchValue || get_clean_url(tabs[0].url)

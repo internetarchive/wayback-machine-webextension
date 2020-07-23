@@ -331,6 +331,17 @@ a.btn-social, .btn-social {
     display: none;
 }
 
+#error_message{
+    display: none;
+    color: #d4312c;
+    font-size: 12px;
+}
+
+#logout{
+    display: none;
+    margin: 10px 0;
+}
+
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
