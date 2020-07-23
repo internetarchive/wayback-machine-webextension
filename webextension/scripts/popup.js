@@ -363,6 +363,7 @@ function show_news() {
     })
   })
 }
+
 function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
@@ -384,6 +385,25 @@ function show_wikibooks() {
         }
       })
     }
+  })
+}
+
+function factCheck() {
+  chrome.storage.local.get(['fact_check'], (event) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const url = tabs[0].url
+      if ((event.fact_check === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
+        chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (result) => {
+          if (result && result.error.message !== 'Error') {
+            // show fact-check button
+            $('#fact-check-btn').show().click(() => {
+              const url = chrome.runtime.getURL('../fact-check.html') + '?url=' + url
+              openByWindowSetting(url, 'windows')
+            })
+          }
+        })
+      }
+    })
   })
 }
 
@@ -495,7 +515,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, factCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

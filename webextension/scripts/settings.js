@@ -24,7 +24,7 @@ function initializeSettings () {
 
 function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
-  $('#fact-check').prop('checked', items.fact-check)
+  $('#fact-check').prop('checked', items.fact_check)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#wm-count-setting').prop('checked', items.wm_count)

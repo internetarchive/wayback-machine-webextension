@@ -425,6 +425,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     )
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
+  } else if (message.message === 'getFactCheckResults') {
+    getFactCheckResults(message.url)
   }
   return true
 })
@@ -653,6 +655,8 @@ function updateToolbar(tabId) {
   })
 }
 
+function getFactCheckResults(url) {
+}
 /* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
