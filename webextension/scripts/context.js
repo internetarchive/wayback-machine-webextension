@@ -18,7 +18,7 @@
 // from 'overview.js'
 /*   global get_WBMSummary */
 
-const url = getUrlByParameter('url')
+const url = decodeURIComponent(getUrlByParameter('url'))
 
 function get_tagCloud() {
   get_tags(url)

@@ -387,7 +387,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
-    const context_url = chrome.runtime.getURL('context.html') + '?url=' + message.url
+    const context_url = chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(message.url)
     tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
     })
@@ -478,7 +478,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (tabIdPromise) {
             tabIdPromise.then((id) => {
               if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
-                chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + contextUrl })
+                chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(contextUrl) })
               }
             })
           }
@@ -504,7 +504,7 @@ chrome.tabs.onActivated.addListener((info) => {
       if ((event.auto_update_context === true) && tabIdPromise) {
         tabIdPromise.then((id) => {
           if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
-            chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + tab.url })
+            chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(tab.url) })
           }
         })
       }
