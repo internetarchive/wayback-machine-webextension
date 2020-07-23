@@ -174,9 +174,11 @@ function useSearchBox() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
-    if ((search_box.value.length > 0) && isNotExcludedUrl(search_box.value)) {
+    // exclude UP and DOWN keys from keyup event
+    if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       searchValue = get_clean_url(makeValidURL(search_box.value))
-      if (searchValue) { useSearchBox() }
+      // use searchValue if it is valid, else update UI
+      searchValue ? useSearchBox() : $('#using-search-url').hide()
     }
   })
 }
@@ -234,13 +236,13 @@ function display_list(key_word) {
       $('#suggestion-box').show()
       arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
-        $('#suggestion-box').append($('<li>').append(
-          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+        $('#suggestion-box').append(
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             searchValue = get_clean_url(makeValidURL(event.target.innerHTML))
             if (searchValue) { useSearchBox() }
           })
-        ))
+        )
       }
     }
   })
