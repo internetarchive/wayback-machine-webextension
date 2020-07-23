@@ -458,10 +458,31 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                 })
             // checking resource of wikipedia books and papers
             } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-              addToolbarState(tabId, 'R')
+              // checking resource of wikipedia books
+              fetch(hostURL + 'services/context/books?url=' + url)
+                .then(response => response.json())
+                .then(data => {
+                  if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
+                    addToolbarState(tabId, 'R')
+                  }
+                })
+                // checking resource of wikipedia papers
+              fetch(hostURL + 'services/context/papers?url=' + url)
+                .then(response => response.json())
+                .then(papers => {
+                  if (papers && papers.status !== 'error') {
+                    addToolbarState(tabId, 'R')
+                  }
+                })
             // checking resource of tv news
             } else if (newshosts.has(news_host)) {
-              addToolbarState(tabId, 'R')
+              fetch(hostURL + 'services/context/tvnews?url=' + url)
+                .then(resp => resp.json())
+                .then(clips => {
+                  if (clips && clips.status !== 'error') {
+                    addToolbarState(tabId, 'R')
+                  }
+                })
             }
           }
         })
