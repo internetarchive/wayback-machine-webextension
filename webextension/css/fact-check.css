@@ -21,7 +21,7 @@ body {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     color: #000;
     display: block;
-    padding: 0.5em;
+    min-height: 1em;
     margin: 1em 0;
     font-size: 20px;
     line-height: 1.5;
@@ -39,27 +39,18 @@ body {
 }
 
 .fact-checks-list {
-    margin-bottom: 2em;
-}
-
-.spn-head {
-    display: inline-block;
-}
-
-p {
-    font-family: Gill Sans Light;
-    font-size: 20px;
-}
-
-#results-container p {
-    padding: 0 5px;
-    white-space: normal;
-    word-break: break-all;
     margin: 0;
+    padding: 0.5em;
 }
-/* #results-container p:nth-child(even) {
-    color: #666;
-} */
+
+#results-container .fact-checks-list:nth-child(even) {
+    background-color: #fff;
+}
+
+.name {
+    font-size: 21px;
+    font-weight: 800;
+}
 
 .logo {
     margin: 1em auto;
@@ -68,11 +59,6 @@ p {
 
 .ia-logo {
     height: 64px;
-}
-
-.wb-logo {
-    height: 90px;
-    padding-top: 1em;
 }
 
 .container-scrollbar::-webkit-scrollbar {
@@ -85,43 +71,16 @@ p {
     border-radius: 5px;
 }
 
-#counter-container {
-    display: none;
-    text-align: right;
-    margin-bottom: 1em;
-}
-
 .header-container {
     text-align: center;
-}
-
-.error {
-    padding-bottom: 1em;
-    text-align: center;
-    display: none;
-}
-
-.error-color {
-    color: #733;
-    font-weight: 700;
 }
 
 .highlight-color {
     color: #733;
 }
 
-.snapshot-color {
-    font-weight: normal;
-    /* color: #faa; */
-}
-
-#message {
-    display: none;
-    margin-top: 1em;
-}
-
-#snapshot-url {
-    display: none;
+.highlight {
+    color: #22c399;
 }
 
 /* dark mode */
@@ -142,23 +101,13 @@ p {
         border: 1px solid #555;
     }
 
-    /* #results-container p:nth-child(even) {
-        color: #aaa;
-    } */
-
-    .error-color {
-        color: #f66;
+    #results-container .fact-checks-list:nth-child(even) {
+        color: #333;
+        background-color: #ddd;
     }
 
     .highlight-color {
         color: #d88;
-    }
-
-    .snapshot-color {
-        color: #7ac;
-    }
-    .snapshot-color:hover {
-        color: #9cf;
     }
 
     .container-scrollbar::-webkit-scrollbar {
