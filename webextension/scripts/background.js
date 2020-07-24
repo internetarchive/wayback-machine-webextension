@@ -433,12 +433,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       fetch('https://data.our.news/api/?factcheck=' + encodeURIComponent(message.url))
       .then(resp => resp.json())
       .then((resp) => {
-        // If already the length of fact_checked_data is greater than 2, delete the first key,value pair of dictionary
-        if(Object.keys(fact_checked_data).length > 2){
-          delete fact_checked_data[Object.keys(fact_checked_data)[0]]
+        if (resp && resp.results) {
+          // If already the length of fact_checked_data is greater than 2, delete the first key,value pair of dictionary
+          if(Object.keys(fact_checked_data).length > 2){
+            delete fact_checked_data[Object.keys(fact_checked_data)[0]]
+          }
+          fact_checked_data[message.url]=resp;
+          sendResponse(resp);
         }
-        fact_checked_data[message.url]=resp;
-        sendResponse(resp);
       })
     }else{
       sendResponse(fact_checked_data[message.url])
