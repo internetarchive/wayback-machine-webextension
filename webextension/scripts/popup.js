@@ -38,6 +38,7 @@ function last_save() {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
+      $('#bulk-save').hide()
       $('#savebtn').off('click').click(() => {
         openByWindowSetting('https://archive.org/account/login')
       })

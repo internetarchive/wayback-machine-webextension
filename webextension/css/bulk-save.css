@@ -91,10 +91,6 @@ body {
     flex: 2;
 }
 
-/* .save-box {
-    text-align: center;
-} */
-
 .save-box {
     width: auto;
     margin: 1em 0 2em;
@@ -232,8 +228,7 @@ p {
         border: 1px solid #555;
     }
     #list-container .url-list:nth-child(even) {
-        color: #333;
-        background-color: #ddd;
+        background-color: rgb(61, 61, 61);
     }
 
     #empty-list-err {
