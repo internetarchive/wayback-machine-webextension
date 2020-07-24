@@ -16,6 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
+var fact_checked_data = {}
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -427,9 +428,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
-    fetch('https://data.our.news/api/?factcheck=' + encodeURIComponent(message.url))
-    .then(resp => resp.json())
-    .then(resp => sendResponse(resp))
+    // IF the key(url) doesn't exist in local data
+    if(!fact_checked_data[message.url]){
+      fetch('https://data.our.news/api/?factcheck=' + encodeURIComponent(message.url))
+      .then(resp => resp.json())
+      .then((resp) => {
+        // If already the length of fact_checked_data is greater than 2, delete the first key,value pair of dictionary
+        if(Object.keys(fact_checked_data).length > 2){
+          delete fact_checked_data[Object.keys(fact_checked_data)[0]]
+        }
+        fact_checked_data[message.url]=resp;
+        sendResponse(resp);
+      })
+    }else{
+      sendResponse(fact_checked_data[message.url])
+    }
   }
   return true
 })
