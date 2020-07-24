@@ -66,7 +66,8 @@ body {
 }
 
 .branding img {
-    padding-top: 10px;
+    padding-top: 8px;
+    margin-left: 4px;
     width: 110px;
 }
 
@@ -111,12 +112,19 @@ body {
     }
 
     #results-container .fact-checks-list:nth-child(even) {
-        color: #333;
-        background-color: #ddd;
+        background-color: rgb(61, 61, 61);
     }
 
     .highlight-color {
         color: #d88;
+    }
+
+    .branding {
+        color: #bbb;
+    }
+
+    .branding img {
+        background-color: #eee;
     }
 
     .container-scrollbar::-webkit-scrollbar {
