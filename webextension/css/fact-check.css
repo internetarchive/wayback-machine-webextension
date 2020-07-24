@@ -61,6 +61,15 @@ body {
     height: 64px;
 }
 
+.branding {
+    font-size: 15px;
+}
+
+.branding img {
+    padding-top: 10px;
+    width: 110px;
+}
+
 .container-scrollbar::-webkit-scrollbar {
     background-color: #aaa;
     width: 16px;
