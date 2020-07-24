@@ -430,7 +430,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve fact check results
     // IF the key(url) doesn't exist in local data
     if(!fact_checked_data[message.url]){
-      fetch('https://data.our.news/api/?factcheck=' + encodeURIComponent(message.url))
+      fetch('https://data.our.news/api/?partner=wayback&factcheck=' + encodeURIComponent(message.url))
       .then(resp => resp.json())
       .then((resp) => {
         if (resp && resp.results) {
