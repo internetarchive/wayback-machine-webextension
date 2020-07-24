@@ -397,7 +397,8 @@ function factCheck() {
           if (resp && resp.results) {
             // show fact-check button
             $('#fact-check-btn').show().click(() => {
-              openByWindowSetting('../fact-check.html', 'windows')
+              factCheckUrl = chrome.runtime.getURL('../fact-check.html') + '?url=' + url
+              openByWindowSetting(factCheckUrl, 'windows')
             })
           }
         })

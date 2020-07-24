@@ -427,7 +427,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
-    fetch('https://data.our.news/api/?factcheck=' + message.url)
+    fetch('https://data.our.news/api/?factcheck=' + encodeURIComponent(message.url))
     .then(resp => resp.json())
     .then(resp => sendResponse(resp))
   }
