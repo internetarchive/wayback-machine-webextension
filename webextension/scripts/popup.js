@@ -393,12 +393,11 @@ function factCheck() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0].url
       if ((event.fact_check === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
-        chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (result) => {
-          if (result && result.error.message !== 'Error') {
+        chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
+          if (resp && resp.results) {
             // show fact-check button
             $('#fact-check-btn').show().click(() => {
-              const url = chrome.runtime.getURL('../fact-check.html') + '?url=' + url
-              openByWindowSetting(url, 'windows')
+              openByWindowSetting('../fact-check.html', 'windows')
             })
           }
         })

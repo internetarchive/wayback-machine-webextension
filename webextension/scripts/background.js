@@ -418,7 +418,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
   } else if (message.message === 'getCachedWaybackCount') {
-    // retrive wayback count
+    // retrieve wayback count
     getCachedWaybackCount(message.url,
       (total) => { sendResponse({ total: total }) },
       (error) => { sendResponse({ error: error }) }
@@ -426,7 +426,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
-    getFactCheckResults(message.url)
+    // retrieve fact check results
+    fetch('https://data.our.news/api/?factcheck=' + message.url)
+    .then(resp => resp.json())
+    .then(resp => sendResponse(resp))
   }
   return true
 })
@@ -655,8 +658,6 @@ function updateToolbar(tabId) {
   })
 }
 
-function getFactCheckResults(url) {
-}
 /* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
