@@ -9,7 +9,7 @@
 #container-whole-doi > div {
     background-color: #eee;
     border-radius: 5px;
-    border: 1px solid black;
+    border: 1px solid #888;
     margin: 10px auto;
     padding: 5px;
     justify-content: space-between;
@@ -104,5 +104,9 @@ button:hover {
 
   h2, h3, h4 {
       color: #bbb;
+  }
+
+  #container-whole-doi > div {
+      background-color: #333;
   }
 }
