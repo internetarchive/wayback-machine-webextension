@@ -123,10 +123,6 @@ body {
         color: #bbb;
     }
 
-    .branding img {
-        background-color: #eee;
-    }
-
     .container-scrollbar::-webkit-scrollbar {
         background-color: #555;
     }
