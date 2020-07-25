@@ -265,8 +265,8 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
-    timer = setTimeout(()=>{
+    // call display_list function if the difference between keypress is greater than 300ms (debouncing)
+    timer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
   }
@@ -394,41 +394,18 @@ function showFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const tabId = tabs[0].id
-    chrome.storage.local.get(['fact_check'], (event) => {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
-          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
-          if (state.has('F')) {
-            // show fact-check button
-            $('#fact-check-btn').show().click(() => {
-              const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-              openByWindowSetting(factCheckUrl)
-            })
-          }
-        })
-    })
-  })
-}
-
-// TODO: REMOVE
-function factCheck() {
-  chrome.storage.local.get(['fact_check'], (event) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const url = tabs[0].url
-      if ((event.fact_check === true) && isValidUrl(url) && isNotExcludedUrl(url)) {
-        chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
-          if (resp && resp.results) {
-            // show fact-check button
-            $('#fact-check-btn').show().click(() => {
-              factCheckUrl = chrome.runtime.getURL('../fact-check.html') + '?url=' + url
-              openByWindowSetting(factCheckUrl, 'windows')
-            })
-          }
+    chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+      if (state.has('F')) {
+        // show fact-check button
+        $('#fact-check-btn').show().click(() => {
+          const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+          openByWindowSetting(factCheckUrl)
         })
       }
     })
   })
 }
-
 
 function noContextTip() {
   chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
