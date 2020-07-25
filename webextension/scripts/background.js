@@ -255,14 +255,13 @@ function getCachedFactCheck(url, onSuccess, onFail) {
   } else {
     getFactCheck(url, (json) => {
       // remove older cached data
-      // FIXME: need a circular array, not an object
+      // TODO: should use a queue (array), not an object here
       if (Object.keys(fact_checked_data).length > 2) {
         delete fact_checked_data[Object.keys(fact_checked_data)[0]]
       }
       fact_checked_data[url] = json
       onSuccess(json)
     }, onFail)
-    // TODO fail: sendResponse(fact_checked_data[message.url]) ??
   }
 }
 
