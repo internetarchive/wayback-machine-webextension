@@ -563,7 +563,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'resource', 'fact-check'], (event) => {
+  chrome.storage.local.get(['auto_update_context', 'resource', 'fact_check'], (event) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
