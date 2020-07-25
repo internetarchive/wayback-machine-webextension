@@ -22,5 +22,6 @@ if (isValidUrl(url) && isNotExcludedUrl(url)) {
         )
       }
     }
+    // TODO: handle error (resp.error)
   })
 }

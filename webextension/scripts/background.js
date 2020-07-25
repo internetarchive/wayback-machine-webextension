@@ -210,6 +210,62 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   }
 }
 
+/**
+ * Retrieves data from our.news Fack Check API for given url.
+ * @param url {string}
+ * @param onSuccess(json): json = root object from API call.
+ * @param onFail(error): error = Error object or null.
+ * @return Promise
+ */
+function getFactCheck(url, onSuccess, onFail) {
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    const requestUrl = 'https://data.our.news/api/'
+    const requestParams = '?partner=wayback&factcheck=' + encodeURIComponent(url)
+    const timeoutPromise = new Promise((resolve, reject) => {
+      setTimeout(() => { reject(new Error('timeout')) }, 5000)
+      fetch(requestUrl + requestParams, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(resolve, reject)
+    })
+    return timeoutPromise
+    .then(response => response.json())
+    .then(json => {
+      if (json && json.results) {
+        onSuccess(json)
+      } else {
+        if (onFail) { onFail(null) }
+      }
+    })
+    .catch(error => {
+      if (onFail) { onFail(error) }
+    })
+  } else {
+    if (onFail) { onFail(null) }
+  }
+}
+
+function getCachedFactCheck(url, onSuccess, onFail) {
+  let cacheData = fact_checked_data[url]
+  if (cacheData) {
+    onSuccess(cacheData)
+  } else {
+    getFactCheck(url, (json) => {
+      // remove older cached data
+      // FIXME: need a circular array, not an object
+      if (Object.keys(fact_checked_data).length > 2) {
+        delete fact_checked_data[Object.keys(fact_checked_data)[0]]
+      }
+      fact_checked_data[url] = json
+      onSuccess(json)
+    }, onFail)
+    // TODO fail: sendResponse(fact_checked_data[message.url]) ??
+  }
+}
+
 /* * * Startup related * * */
 
 // Runs whenever extension starts up, except during incognito mode.
@@ -428,23 +484,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
-    // IF the key(url) doesn't exist in local data
-    if(!fact_checked_data[message.url]){
-      fetch('https://data.our.news/api/?partner=wayback&factcheck=' + encodeURIComponent(message.url))
-      .then(resp => resp.json())
-      .then((resp) => {
-        if (resp && resp.results) {
-          // If already the length of fact_checked_data is greater than 2, delete the first key,value pair of dictionary
-          if(Object.keys(fact_checked_data).length > 2){
-            delete fact_checked_data[Object.keys(fact_checked_data)[0]]
-          }
-          fact_checked_data[message.url]=resp;
-          sendResponse(resp);
-        }
-      })
-    }else{
-      sendResponse(fact_checked_data[message.url])
-    }
+    getCachedFactCheck(message.url,
+      (json) => { sendResponse(json) },
+      (error) => { sendResponse({ error: error }) }
+    )
   }
   return true
 })
@@ -601,6 +644,8 @@ function updateWaybackCountBadge(tabId, url) {
 
 /* * * Toolbar * * */
 
+const validToolbarIcons = new Set(['R', 'S', 'F', 'check', 'archive'])
+
 /**
  * Sets the toolbar icon.
  * Name string is based on PNG image filename in images/toolbar/
@@ -608,7 +653,7 @@ function updateWaybackCountBadge(tabId, url) {
  */
 function setToolbarIcon(name) {
   const path = 'images/toolbar/toolbar-icon-'
-  let n = ((name !== 'R') && (name !== 'S') && (name !== 'check')) ? 'archive' : name
+  let n = validToolbarIcons.has(name) ? name : 'archive'
   let details = {
     '16': (path + n + '16.png'),
     '24': (path + n + '24.png'),
@@ -662,6 +707,8 @@ function updateToolbar(tabId) {
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
         setToolbarIcon('S')
+      } else if (state && state.has('F')) {
+        setToolbarIcon('F')
       } else if (state && state.has('R')) {
         setToolbarIcon('R')
       } else if (state && state.has('check')) {
