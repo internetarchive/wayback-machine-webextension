@@ -4,14 +4,14 @@
 /*   global openByWindowSetting */
 
 // from 'wikipedia.js'
-/*   global getWikipediaBooks */
+/*   global wikipediaBooks */
 
 // from 'doi.js'
 /*   global getMetadata */
 
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
-  getWikipediaBooks(url).then(data => {
+  wikipediaBooks(url).then(data => {
     $('.loader').hide()
     if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
       for (let isbn of Object.keys(data)) {

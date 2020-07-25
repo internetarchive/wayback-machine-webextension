@@ -8,7 +8,7 @@
 
 // main method
 function addCitations () {
-  getWikipediaBooks(location.href).then((data) => {
+  wikipediaBooks(location.href).then((data) => {
     let books = $("a[title^='Special:BookSources']")
     for (let book of books) {
       let isbn = book.text.replace(/-/g, '')
@@ -148,7 +148,7 @@ function getPageFromCitation (book) {
 
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
-function getWikipediaBooks (url) {
+function wikipediaBooks (url) {
   // Encapsulate the chrome message sender with a promise object
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({

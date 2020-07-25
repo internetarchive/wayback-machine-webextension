@@ -14,6 +14,8 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
+let wikipediaBooksCache = {}
+let tvNewsCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 
@@ -209,6 +211,74 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   }
 }
 
+function getWikipediaBooks(Url, onSuccess, onFail) {
+  const requestUrl = hostURL + 'services/context/books?url='
+  const url = requestUrl + encodeURIComponent(Url)
+  // Encapsulate fetch with a timeout promise object
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => { reject(new Error('timeout')) }, 5000)
+    fetch(url).then(resolve, reject)
+  })
+  return timeoutPromise
+    .then(response => response.json())
+    .then(data => {
+      if (data) {
+        onSuccess(data)
+      } else {
+        if (onFail) { onFail(null) }
+      }
+    })
+    .catch(error => {
+      if (onFail) { onFail(error) }
+    })
+}
+
+function getTvNews(Url, onSuccess, onFail) {
+  const requestUrl = hostURL + 'services/context/tvnews?url='
+  const url =  requestUrl +  encodeURIComponent(Url)
+  // Encapsulate fetch with a timeout promise object
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => { reject(new Error('timeout')) }, 5000)
+    fetch(url).then(resolve, reject)
+  })
+  return timeoutPromise
+    .then(response => response.json())
+    .then(clips => {
+      if (clips) {
+        onSuccess(clips)
+      } else {
+        if (onFail) { onFail(null) }
+      }
+    })
+    .catch(error => {
+      if (onFail) { onFail(error) }
+    })
+}
+
+function getCachedWikipediaBooks(url, onSuccess, onFail) {
+  let cacheWikipediaBooks = wikipediaBooksCache[url]
+  if (cacheWikipediaBooks) {
+    onSuccess(cacheWikipediaBooks)
+  } else {
+    getWikipediaBooks(url, (json) => {
+      wikipediaBooksCache[url] = json
+      onSuccess(json)
+    }, onFail)
+  }
+}
+
+function getCachedTvNews(url, onSuccess, onFail) {
+  let cacheTvNews = tvNewsCache[url]
+  if (cacheTvNews) {
+    onSuccess(cacheTvNews)
+  } else {
+    getTvNews(url, (json) => {
+      tvNewsCache[url] = json
+      onSuccess(json)
+    }, onFail)
+  }
+}
+
 /* * * Startup related * * */
 
 // Runs whenever extension starts up, except during incognito mode.
@@ -349,34 +419,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then(resp => sendResponse(resp))
     return true
   } else if (message.message === 'getWikipediaBooks') {
-    // wikipedia message listener
-    let host = hostURL + 'services/context/books?url='
-    let url = host + encodeURIComponent(message.query)
-    // Encapsulate fetch with a timeout promise object
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error('timeout'))
-      }, 30000)
-      fetch(url).then(resolve, reject)
-    })
-    timeoutPromise
-      .then(response => response.json())
-      .then(data => sendResponse(data))
-    return true
+    // retrieve wikipedia books
+    getCachedWikipediaBooks(message.query,
+      (json) => { sendResponse(json) },
+      (error) => { sendResponse({ error: error }) }
+    )
   } else if (message.message === 'tvnews') {
-    let url = hostURL + 'services/context/tvnews?url=' + message.article
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error('timeout'))
-      }, 30000)
-      fetch(url).then(resolve, reject)
-    })
-    timeoutPromise
-      .then(response => response.json())
-      .then((clips) => {
-        sendResponse(clips)
-      })
-    return true
+    // retrieve tv news clips
+    getCachedTvNews(message.article,
+      (json) => { sendResponse(json) },
+      (error) => { sendResponse({ error: error }) }
+    )
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
@@ -466,31 +519,22 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                   })
               // checking resource of wikipedia books and papers
               } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-                // checking resource of wikipedia books
-                fetch(hostURL + 'services/context/books?url=' + url)
-                  .then(response => response.json())
-                  .then(data => {
+                getCachedWikipediaBooks(url,
+                  (data) => {
                     if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
                       addToolbarState(tabId, 'R')
                     }
-                  })
-                  // checking resource of wikipedia papers
-                fetch(hostURL + 'services/context/papers?url=' + url)
-                  .then(response => response.json())
-                  .then(papers => {
-                    if (papers && papers.status !== 'error') {
-                      addToolbarState(tabId, 'R')
-                    }
-                  })
+                  }, () => {}
+                )
               // checking resource of tv news
               } else if (newshosts.has(news_host)) {
-                fetch(hostURL + 'services/context/tvnews?url=' + url)
-                  .then(resp => resp.json())
-                  .then(clips => {
+                getCachedTvNews(url,
+                  (clips) => {
                     if (clips && clips.status !== 'error') {
                       addToolbarState(tabId, 'R')
                     }
-                  })
+                  }, () => {}
+                )
               }
             }
           }
