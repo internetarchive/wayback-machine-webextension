@@ -495,10 +495,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab.id, tab.url)
-    chrome.storage.local.get(['auto_archive'], (event) => {
+    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
+      }
+      // fact check
+      if (event.fact_check === true) {
+        factCheckPage(tab.id, tab.url)
       }
     })
   } else if (info.status === 'loading') {
@@ -587,6 +591,22 @@ function auto_save(tabId, url) {
         if (!getToolbarState(tabId).has('S')) {
           savePageNow(tabId, url, true)
         }
+      }
+    )
+  }
+}
+
+function factCheckPage(tabId, url) {
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    // retrieve fact check results
+    getCachedFactCheck(url,
+      (json) => {
+        if (json && json.results) {
+          addToolbarState(tabId, 'F')
+        }
+      },
+      (error) => {
+        console.log('error: ', error) // DEBUG
       }
     )
   }
