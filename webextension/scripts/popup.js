@@ -388,6 +388,26 @@ function show_wikibooks() {
   })
 }
 
+function showFactCheck() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = tabs[0].url
+    const tabId = tabs[0].id
+    chrome.storage.local.get(['fact_check'], (event) => {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('F')) {
+            // show fact-check button
+            $('#fact-check-btn').show().click(() => {
+              const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+              openByWindowSetting(factCheckUrl, option)
+            })
+          }
+        })
+    })
+  })
+}
+
+// TODO: REMOVE
 function factCheck() {
   chrome.storage.local.get(['fact_check'], (event) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -406,6 +426,7 @@ function factCheck() {
     })
   })
 }
+
 
 function noContextTip() {
   chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
@@ -515,7 +536,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, factCheck]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, showFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
