@@ -156,6 +156,7 @@ function useSearchBox() {
     }
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearResource' })
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     $('#mapbox').removeClass('flip-inside')
     $('#twitterbox').removeClass('flip-inside')
     $('#contextTip').text('Enable in Settings')
@@ -167,6 +168,7 @@ function useSearchBox() {
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
+    $('#fact-check-btn').hide()
     last_save()
   })
 }
@@ -399,7 +401,7 @@ function showFactCheck() {
             // show fact-check button
             $('#fact-check-btn').show().click(() => {
               const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-              openByWindowSetting(factCheckUrl, option)
+              openByWindowSetting(factCheckUrl)
             })
           }
         })

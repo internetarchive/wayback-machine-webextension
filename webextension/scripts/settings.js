@@ -45,6 +45,7 @@ function restoreOptions (items) {
 function saveOptions () {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
+  let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
     fact_check: $('#fact-check').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
@@ -70,6 +71,9 @@ function saveOptions () {
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })
+  }
+  if (fact_check === false) {
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
 }
 

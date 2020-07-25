@@ -473,6 +473,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         removeToolbarState(tabs[0].id, 'R')
       }
     })
+  } else if (message.message === 'clearFactCheck') {
+    // fact check settings unchecked
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0]) {
+        removeToolbarState(tabs[0].id, 'F')
+      }
+    })
   } else if (message.message === 'getCachedWaybackCount') {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
@@ -556,13 +563,15 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'resource'], (event) => {
+  chrome.storage.local.get(['auto_update_context', 'resource', 'fact-check'], (event) => {
+    if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
+      removeToolbarState(info.tabId, 'F')
+    }
     if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
       // reset toolbar if resource setting turned off
       removeToolbarState(info.tabId, 'R')
-    } else {
-      updateToolbar(info.tabId)
     }
+    updateToolbar(info.tabId)
     chrome.tabs.get(info.tabId, (tab) => {
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
