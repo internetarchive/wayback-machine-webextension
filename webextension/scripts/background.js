@@ -14,8 +14,8 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
-let wikipediaBooksCache = {}
-let tvNewsCache = {}
+let wikipediaBooksCache = new Map()
+let tvNewsCache = new Map()
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 
@@ -256,24 +256,32 @@ function getTvNews(Url, onSuccess, onFail) {
 }
 
 function getCachedWikipediaBooks(url, onSuccess, onFail) {
-  let cacheWikipediaBooks = wikipediaBooksCache[url]
+  let cacheWikipediaBooks = wikipediaBooksCache.get(url)
   if (cacheWikipediaBooks) {
     onSuccess(cacheWikipediaBooks)
   } else {
     getWikipediaBooks(url, (json) => {
-      wikipediaBooksCache[url] = json
+      if (wikipediaBooksCache.size > 2) {
+        let first_key = wikipediaBooksCache.entries().next().value[0]
+        wikipediaBooksCache.delete(first_key)
+      }
+      wikipediaBooksCache.set(url, json)
       onSuccess(json)
     }, onFail)
   }
 }
 
 function getCachedTvNews(url, onSuccess, onFail) {
-  let cacheTvNews = tvNewsCache[url]
+  let cacheTvNews = tvNewsCache.get(url)
   if (cacheTvNews) {
     onSuccess(cacheTvNews)
   } else {
     getTvNews(url, (json) => {
-      tvNewsCache[url] = json
+      if (tvNewsCache.size > 2) {
+        let first_key = tvNewsCache.entries().next().value[0]
+        tvNewsCache.delete(first_key)
+      }
+      tvNewsCache.set(url, json)
       onSuccess(json)
     }, onFail)
   }
