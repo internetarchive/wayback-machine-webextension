@@ -17,19 +17,21 @@
       </div>
       <h2 id="status-title">Bulk Save</h2>
       <p id="empty-list-err">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
+      <p id="not-logged-in">Looks like you aren't logged in. Please log in and try again.</p>
     </div>
     <div class="loader"></div>
     <div class="outer-list-container">
       <div class="container-scrollbar" id="list-container">
       </div>
       <div id="total-saved">
-        <p id="total-elements">Total Elements Being Saved: <b class="highlight-color"></b></p>
+        <p id="total-elements">Total Elements To Save: <b class="highlight-color"></b></p>
         <p id="saved">Successfully Saved: <b class="highlight-color"></b></p>
         <p id="failed">Failed: <b class="highlight-color"></b></p>
       </div>
       <div  class="flex-container">
         <button id="import-bookmarks" class="btn">Import All Bookmarks</button>
         <div id="add">
+          <!-- <textarea id="add-url"rows="4" cols="50"></textarea> -->
           <input type="text" id="add-url">
           <button class="btn" id="add-to-bulk">Add to List</button>
         </div>

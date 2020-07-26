@@ -22,7 +22,7 @@ body {
     display: none;
 }
 
-#empty-list-err {
+#empty-list-err, #not-logged-in {
     color: #733;
     font-weight: 700;
     display: none;
@@ -231,7 +231,7 @@ p {
         background-color: rgb(61, 61, 61);
     }
 
-    #empty-list-err {
+    #empty-list-err, #not-logged-in {
         color: #f66;
     }
 

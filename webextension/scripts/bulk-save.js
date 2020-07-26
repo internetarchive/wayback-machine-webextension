@@ -6,18 +6,9 @@
 let urlList = new Set()
 let newSetLength = 0
 let oldSetLength = 0
+let saveSuccessCount = 0
+let saveFailedCount = 0
 let totalUrlCount = 0
-
-// check if the user is Logged in, if not, prompt to Login
-checkAuthentication((result) => {
-  if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
-    $('#save-all-box').addClass('flip-inside')
-    $('#start-bulk-save').attr('disabled', true)
-    $('#login-to-save').click(() => {
-      openByWindowSetting('https://archive.org/account/login')
-    })
-  }
-})
 
 function displayList(list) {
   newSetLength = list.size
@@ -92,27 +83,66 @@ function clearUI() {
   $('.loader').show()
 }
 
+function wmCheck(url, index) {
+  new Promise((resolve, reject) => {
+    wmAvailabilityCheck(url, () => {
+    }, () => {
+      initiateBulkSave(url, index)
+    })
+  })
+}
+
 // filter out URLs if any checkbox is selected
 function setUpBulkSave() {
   if (urlList && urlList.size > 0) {
+    let i = 0
+    let j = 5
     clearUI()
-    for (let item of Array.from([...urlList])) {
-      if ($('#never-saved').prop('checked') === true) {
-        wmAvailabilityCheck(item, () => {
-        }, () => {
-          initiateBulkSave(item)
-        })
-      } else {
-        initiateBulkSave(item)
+    let urlListArray = Array.from([...urlList])
+    for (i = 0; i < j; i++) {
+      if (urlListArray[i]) {
+        let saveUrl = urlListArray[i]
+        if ($('#never-saved').prop('checked') === true) {
+          wmCheck(saveUrl, i)
+        } else {
+          initiateBulkSave(saveUrl, i)
+        }
       }
     }
+    chrome.runtime.onMessage.addListener(
+      (message) => {
+        // cancel save if user is not logged in
+        if (message && message.error && message.error === 'You need to be logged in to use Save Page Now.') {
+          $('.loader').hide()
+          $('.save-box').show()
+          $('#not-logged-in').show()
+        } else {
+          // continue save
+          msg = message.message
+          if (msg === 'save_success' ||  msg === 'save_error') {
+            if (i < urlListArray.length) {
+              let saveUrl = urlListArray[i]
+              if ($('#never-saved').prop('checked') === true) {
+                wmAvailabilityCheck(saveUrl, () => {
+                }, () => {
+                  initiateBulkSave(saveUrl, i)
+                })
+              } else {
+                initiateBulkSave(saveUrl, i)
+              }
+              i++
+            }
+          }
+        }
+      }
+    )
   } else {
     $('#empty-list-err').show()
   }
 }
 
 // save the URLs
-function initiateBulkSave(url) {
+function initiateBulkSave(url, index) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -122,19 +152,17 @@ function initiateBulkSave(url) {
       // tabId: tabs[0].id
     })
   })
-  trackStatus()
+  trackStatus(index)
 }
 
 // show the save status (saving, success, error) in UI
-function updateStatus(index, symbol, bgcolor) {
-  index.previousElementSibling.innerText = symbol
-  index.previousElementSibling.style.backgroundColor = bgcolor
+function updateStatus(urlIndex, symbol, bgcolor) {
+  urlIndex.previousElementSibling.innerText = symbol
+  urlIndex.previousElementSibling.style.backgroundColor = bgcolor
 }
 
 // track the save status
-function trackStatus() {
-  let saveSuccessCount = 0
-  let saveFailedCount = 0
+function trackStatus(index) {
   totalUrlCount++
   $('#total-elements').children().text(totalUrlCount)
   $('#total-saved').show()
@@ -143,18 +171,18 @@ function trackStatus() {
       msg = message.message
       url = message.url
       let items = $('.url-item')
-      for (let i = 0; i < items.length; i++) {
-        let listItemUrl = items[i].innerText
+      if (items[index]) {
+        let listItemUrl = items[index].innerText
         if (msg === 'save_start' && listItemUrl === url) {
-          updateStatus(items[i], '', 'yellow')
+          updateStatus(items[index], '', 'yellow')
         } else if (msg === 'save_success' && listItemUrl === url) {
           saveSuccessCount++
           $('#saved').show().children().text(saveSuccessCount)
-          updateStatus(items[i], '✓', 'green')
+          updateStatus(items[index], '✓', 'green')
         } else if (msg === 'save_error' && listItemUrl === url) {
           saveFailedCount++
           $('#failed').show().children().text(saveFailedCount)
-          updateStatus(items[i], '!', 'red')
+          updateStatus(items[index], '!', 'red')
         }
       }
       if (saveSuccessCount + saveFailedCount === totalUrlCount) {
