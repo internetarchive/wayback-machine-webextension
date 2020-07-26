@@ -249,7 +249,7 @@ function getFactCheck(url, onSuccess, onFail) {
 }
 
 function getCachedFactCheck(url, onSuccess, onFail) {
-  let cacheData = fact_checked_data[url]
+  let cacheData = fact_checked_data.get(url)
   if (cacheData) {
     onSuccess(cacheData)
   } else {
