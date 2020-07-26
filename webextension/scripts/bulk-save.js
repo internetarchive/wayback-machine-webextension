@@ -117,7 +117,7 @@ function setUpBulkSave() {
           $('.save-box').show()
           $('#not-logged-in').show()
         } else {
-          ('#not-logged-in').hide()
+          $('#not-logged-in').hide()
           // continue save
           msg = message.message
           if (msg === 'save_success' ||  msg === 'save_error') {
