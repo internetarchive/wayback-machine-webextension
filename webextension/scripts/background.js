@@ -16,7 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var fact_checked_data = {}
+var fact_checked_data = new Map()
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -255,11 +255,11 @@ function getCachedFactCheck(url, onSuccess, onFail) {
   } else {
     getFactCheck(url, (json) => {
       // remove older cached data
-      // TODO: should use a queue (array), not an object here
-      if (Object.keys(fact_checked_data).length > 2) {
-        delete fact_checked_data[Object.keys(fact_checked_data)[0]]
+      if (fact_checked_data.size > 2) {
+        let first_key = fact_checked_data.entries().next().value[0]
+        fact_checked_data.delete(first_key)
       }
-      fact_checked_data[url] = json
+      fact_checked_data.set(url, json)
       onSuccess(json)
     }, onFail)
   }
@@ -613,9 +613,7 @@ function factCheckPage(tabId, url) {
           addToolbarState(tabId, 'F')
         }
       },
-      (error) => {
-        console.log('error: ', error) // DEBUG
-      }
+      (error) => {}
     )
   }
 }
