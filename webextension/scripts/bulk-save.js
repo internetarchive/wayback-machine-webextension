@@ -1,14 +1,14 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, openByWindowSetting, checkAuthentication, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, isValidUrl, wmAvailabilityCheck, hostURL */
 
 let urlList = new Set()
 let newSetLength = 0
 let oldSetLength = 0
-let saveSuccessCount = 0
-let saveFailedCount = 0
-let totalUrlCount = 0
+let saveSuccessCount
+let saveFailedCount
+let totalUrlCount
 
 function displayList(list) {
   newSetLength = list.size
@@ -44,11 +44,13 @@ function processNode(node) {
 // import all bookmarked URLs
 function importBookmarks() {
   $('#empty-list-err').hide()
-  chrome.bookmarks.getTree((itemTree) => {
-    itemTree.forEach((item) => {
-        processNode(item)
+  if (chrome.bookmarks) {
+    chrome.bookmarks.getTree((itemTree) => {
+      itemTree.forEach((item) => {
+          processNode(item)
+      })
     })
-  })
+  }
 }
 
 // add URL to the list
@@ -80,31 +82,36 @@ function clearUI() {
   $('#import-bookmarks').hide()
   $('.save-box').hide()
   $('#add').hide()
-  $('.loader').show()
 }
 
 function wmCheck(url, index) {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     wmAvailabilityCheck(url, () => {
     }, () => {
       initiateBulkSave(url, index)
     })
+    resolve()
   })
 }
 
-// filter out URLs if any checkbox is selected
 function setUpBulkSave() {
+  saveSuccessCount = 0
+  saveFailedCount = 0
+  totalUrlCount = 0
   if (urlList && urlList.size > 0) {
     let i = 0
-    let j = 5
     clearUI()
     let urlListArray = Array.from([...urlList])
-    for (i = 0; i < j; i++) {
+    for (i = 0; i < 5; i++) {
       if (urlListArray[i]) {
         let saveUrl = urlListArray[i]
+        // filter and save if saving only never saved URLs
         if ($('#never-saved').prop('checked') === true) {
-          wmCheck(saveUrl, i)
+          let checkAvailability = wmCheck(saveUrl, i)
+          checkAvailability.then(() => {})
+          checkAvailability.catch(() => {})
         } else {
+          // save all URLs
           initiateBulkSave(saveUrl, i)
         }
       }
@@ -117,17 +124,17 @@ function setUpBulkSave() {
           $('.save-box').show()
           $('#not-logged-in').show()
         } else {
-          $('#not-logged-in').hide()
           // continue save
+          $('#not-logged-in').hide()
           msg = message.message
+          // save next URL only when previous saving job is terminated (success/fail)
           if (msg === 'save_success' ||  msg === 'save_error') {
-            if (i < urlListArray.length) {
+            if (urlListArray[i]) {
               let saveUrl = urlListArray[i]
               if ($('#never-saved').prop('checked') === true) {
-                wmAvailabilityCheck(saveUrl, () => {
-                }, () => {
-                  initiateBulkSave(saveUrl, i)
-                })
+                let checkAvailability = wmCheck(saveUrl, i)
+                checkAvailability.then(() => {})
+                checkAvailability.catch(() => {})
               } else {
                 initiateBulkSave(saveUrl, i)
               }
@@ -175,6 +182,7 @@ function trackStatus(index) {
       if (items[index]) {
         let listItemUrl = items[index].innerText
         if (msg === 'save_start' && listItemUrl === url) {
+          $('.loader').show()
           updateStatus(items[index], '', 'yellow')
         } else if (msg === 'save_success' && listItemUrl === url) {
           saveSuccessCount++

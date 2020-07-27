@@ -38,12 +38,12 @@ function last_save() {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
-      $('#bulk-save').hide()
       $('#savebtn').off('click').click(() => {
         openByWindowSetting('https://archive.org/account/login')
       })
     } else {
       $('#save_now').removeAttr('disabled')
+      $('#bulk-save').show()
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let url = searchValue || get_clean_url(tabs[0].url)
         chrome.runtime.sendMessage({
