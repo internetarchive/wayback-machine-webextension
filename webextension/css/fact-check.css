@@ -93,6 +93,26 @@ body {
     color: #22c399;
 }
 
+.score-label {
+    margin-left: 1em;
+    padding: 3px 7px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.High {
+    background-color: green;
+}
+
+.Medium {
+    color: #000;
+    background-color: yellow;
+}
+
+.Low {
+    background-color: red;
+}
+
 /* dark mode */
 @media (prefers-color-scheme: dark) {
 
