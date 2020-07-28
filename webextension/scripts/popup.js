@@ -474,6 +474,23 @@ function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
 }
 
+function setupSaveButton() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0].id
+    chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+      if (state.has('S')) {
+        showSaving()
+      }
+    })
+  })
+}
+
+function showSaving() {
+  $('#save-progress-bar').show()
+  $('#save_now').text('Archiving URL...')
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -487,8 +504,7 @@ chrome.runtime.onMessage.addListener(
           $('#last_save').text(message.time)
           $('#savebox').addClass('flip-inside')
         } else if (message.message === 'save_start') {
-          $('#save-progress-bar').show()
-          $('#save_now').text('Archiving URL')
+          showSaving()
         } else if (message.message === 'save_error') {
           $('#save-progress-bar').hide()
           $('#save_now').text('Save Failed')
@@ -498,7 +514,8 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip,
+  setupWaybackCount, setupSaveButton]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()

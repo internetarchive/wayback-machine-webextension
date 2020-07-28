@@ -121,9 +121,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
       message: 'save_start',
       tabId: tabId
     })
-    if (status === 'pending') {
-      addToolbarState(tabId, 'S')
-    }
+    addToolbarState(tabId, 'S')
 
     await sleep(6000)
     const timeoutPromise = new Promise((resolve, reject) => {
