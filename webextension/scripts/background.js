@@ -262,7 +262,7 @@ function getCachedWikipediaBooks(url, onSuccess, onFail) {
   } else {
     getWikipediaBooks(url, (json) => {
       if (wikipediaBooksCache.size > 2) {
-        let first_key = wikipediaBooksCache.entries().next().value[0]
+        let first_key = wikipediaBooksCache.keys().next().value
         wikipediaBooksCache.delete(first_key)
       }
       wikipediaBooksCache.set(url, json)
@@ -278,7 +278,7 @@ function getCachedTvNews(url, onSuccess, onFail) {
   } else {
     getTvNews(url, (json) => {
       if (tvNewsCache.size > 2) {
-        let first_key = tvNewsCache.entries().next().value[0]
+        let first_key = tvNewsCache.keys().next().value
         tvNewsCache.delete(first_key)
       }
       tvNewsCache.set(url, json)
