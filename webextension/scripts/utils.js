@@ -1,5 +1,8 @@
 // utils.js
 
+// from 'background.js'
+/*   global private_before_default */
+
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
@@ -18,6 +21,12 @@ const newshosts = new Set([
   'www.vox.com',
   'www.washingtonpost.com'
 ])
+
+var private_before_state
+
+chrome.storage.local.get(['private_before_state'], (event) => {
+  private_before_state = new Set(event.private_before_state)
+})
 
 /* * * Browser Detection * * */
 
@@ -426,13 +435,15 @@ function initDefaultOptions () {
     auto_update_context: false,
     show_resource_list: false,
     show_context: 'tab',
+    private_mode: false,
     /* Contexts */
     showall: true,
     alexa: true,
     domaintools: false,
     wbmsummary: true,
     annotations: true,
-    tagcloud: true
+    tagcloud: true,
+    private_before_state: Array.from(private_before_default)
   })
 }
 
@@ -474,6 +485,7 @@ if (typeof module !== 'undefined') {
     afterAcceptOptions,
     feedbackURL,
     newshosts,
+    private_before_state,
     searchValue
   }
 }
