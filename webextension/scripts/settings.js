@@ -200,7 +200,7 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
-    'private-mode': 'Extension will not support any feature!',
+    'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',
