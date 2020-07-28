@@ -84,6 +84,7 @@ function clearUI() {
   $('#add').hide()
 }
 
+// check availability
 function wmCheck(url, index) {
   return new Promise((resolve, reject) => {
     wmAvailabilityCheck(url, () => {
@@ -94,62 +95,68 @@ function wmCheck(url, index) {
   })
 }
 
+// listen to messages then save more URLs
+function messageListener(urlArray, index) {
+  chrome.runtime.onMessage.addListener(
+    (message) => {
+      // cancel save if user is not logged in
+      if (message && message.error && message.error === 'You need to be logged in to use Save Page Now.') {
+        $('.loader').hide()
+        $('.save-box').show()
+        $('#not-logged-in').show()
+      } else {
+        // continue save
+        $('#not-logged-in').hide()
+        msg = message.message
+        // save next URL only when previous saving job is terminated (success/fail)
+        if (msg === 'save_success' ||  msg === 'save_error') {
+          if (urlArray[index]) {
+            let saveUrl = urlArray[index]
+            if ($('#never-saved').prop('checked') === true) {
+              wmCheck(saveUrl, index)
+                .then(() => {})
+                .catch(() => {})
+            } else {
+              initiateBulkSave(saveUrl, index)
+            }
+            index++
+          }
+        }
+      }
+    }
+  )
+}
+
 function setUpBulkSave() {
   saveSuccessCount = 0
   saveFailedCount = 0
   totalUrlCount = 0
   if (urlList && urlList.size > 0) {
     let i = 0
+    let j = 5
     clearUI()
     let urlListArray = Array.from([...urlList])
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < j; i++) {
       if (urlListArray[i]) {
         let saveUrl = urlListArray[i]
         // filter and save if saving only never saved URLs
         if ($('#never-saved').prop('checked') === true) {
-          let checkAvailability = wmCheck(saveUrl, i)
-          checkAvailability.then(() => {})
-          checkAvailability.catch(() => {})
+          wmCheck(saveUrl, i)
+            .then(() => {})
+            .catch(() => {})
         } else {
           // save all URLs
           initiateBulkSave(saveUrl, i)
         }
       }
     }
-    chrome.runtime.onMessage.addListener(
-      (message) => {
-        // cancel save if user is not logged in
-        if (message && message.error && message.error === 'You need to be logged in to use Save Page Now.') {
-          $('.loader').hide()
-          $('.save-box').show()
-          $('#not-logged-in').show()
-        } else {
-          // continue save
-          $('#not-logged-in').hide()
-          msg = message.message
-          // save next URL only when previous saving job is terminated (success/fail)
-          if (msg === 'save_success' ||  msg === 'save_error') {
-            if (urlListArray[i]) {
-              let saveUrl = urlListArray[i]
-              if ($('#never-saved').prop('checked') === true) {
-                let checkAvailability = wmCheck(saveUrl, i)
-                checkAvailability.then(() => {})
-                checkAvailability.catch(() => {})
-              } else {
-                initiateBulkSave(saveUrl, i)
-              }
-              i++
-            }
-          }
-        }
-      }
-    )
+    messageListener(urlListArray, i)
   } else {
     $('#empty-list-err').show()
   }
 }
 
-// save the URLs
+// save the URL
 function initiateBulkSave(url, index) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({
