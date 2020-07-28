@@ -108,13 +108,12 @@ function auth_check() {
   return timeoutPromise
   .then(response => response.json())
 }
-
 async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
-
+  let wait_time = 1000;
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
@@ -123,7 +122,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     })
     addToolbarState(tabId, 'S')
 
-    await sleep(6000)
+    await sleep(wait_time)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -140,7 +139,12 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
       }
     })
     timeoutPromise
-      .then(response => response.json())
+      .then((response) => {
+        if(response.headers.get('retry-after') != null){
+          wait_time = 6000
+        }
+        return response.json()
+      })
       .then((data) => {
         status = data.status
         vdata = data
