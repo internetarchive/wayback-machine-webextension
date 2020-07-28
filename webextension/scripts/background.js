@@ -97,6 +97,22 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
   }
 }
 
+function authCheckAPI() {
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 30000)
+    fetch(hostURL + 'save/', {
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(resolve, reject)
+  })
+  return timeoutPromise
+  .then(response => response.json())
+}
+
 async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
@@ -333,8 +349,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     return true
   } else if (message.message === 'auth_check') {
+    // auth check using cookies
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      sendResponse(result !== null)
+      let loggedIn = (result && result.value && (result.value.length > 0))
+      sendResponse({ auth_check: loggedIn })
     })
     return true
   } else if (message.message === 'getWikipediaBooks') {

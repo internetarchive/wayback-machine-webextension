@@ -34,7 +34,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    if (result === false) {
+    if (result && result.auth_check) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
@@ -268,8 +268,8 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
-    timer = setTimeout(()=>{
+    // call display_list function if the difference between keypress is greater than 300ms (Debouncing)
+    timer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
   }

@@ -1,8 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl, private_before_state */
-
+/*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue */
 
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu */
@@ -48,7 +47,6 @@ function restoreOptions (items) {
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
   }
-
 }
 
 function saveOptions () {

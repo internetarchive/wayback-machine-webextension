@@ -26,7 +26,8 @@ const newshosts = new Set([
   'www.washingtonpost.com'
 ])
 
-var private_before_state;
+var private_before_state
+
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
 })
