@@ -172,7 +172,7 @@ button {
     background-color: #9A3B38;
 }
 
-.progress-bar .active {
+.progress-bar.active {
     -webkit-animation: progress-bar-stripes 0.5s linear infinite;
     -o-animation: progress-bar-stripes 0.5s linear infinite;
     animation: progress-bar-stripes 0.5s linear infinite;
