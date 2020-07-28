@@ -482,12 +482,15 @@ chrome.runtime.onMessage.addListener(
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0].id === message.tabId) {
         if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
           $('#save_now').text('Save successful')
           $('#last_save').text(message.time)
           $('#savebox').addClass('flip-inside')
         } else if (message.message === 'save_start') {
-          $('#save_now').text('Saving Snapshot...')
+          $('#save-progress-bar').show()
+          $('#save_now').text('Archiving URL')
         } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
           $('#save_now').text('Save Failed')
         }
       }
