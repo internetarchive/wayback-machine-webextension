@@ -34,7 +34,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    if (result && result.auth_check) {
+    if (!(result && result.auth_check)) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
