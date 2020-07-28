@@ -83,7 +83,7 @@ function makeEntry (data) {
 function createPage () {
   let container = $('#container-whole-doi')
   const url = getUrlByParameter('url')
-  $.getJSON(hostURL + 'context/papers?url=' + url, (response) => {
+  $.getJSON(hostURL + 'services/context/papers?url=' + url, (response) => {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
       $('#doi-heading').html(response.message)

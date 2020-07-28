@@ -58,8 +58,7 @@ body {
 /* general */
 
 .focused {
-    background-color: #D3D3D3;
-    opacity: 0.7;
+    background-color: #eee;
 }
 
 .resize-fit-center {
@@ -85,14 +84,25 @@ body {
 #search-input {
     display: block;
     position: relative;
+    border-radius: 5px;
     z-index: 1;
 }
 
+/* suggestions box */
+
 #suggestion-box {
     display: none;
-    max-height: 300px;
-    min-width: 100%;
-    overflow: auto;
+    max-height: 350px;
+    width: 166px;
+    border-radius: 5px;
+    word-break: break-all;
+}
+
+#suggestion-box div {
+    padding: 3px 10px;
+}
+#suggestion-box div:hover {
+    background-color: #eee;
 }
 
 /* checkboxes */
@@ -363,6 +373,16 @@ a.btn-social, .btn-social {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #suggestion-box {
+        background-color: #2C2C2C;
+        color: #eee;
+        border: 1px solid #666;
+    }
+
+    #suggestion-box div:hover, .focused {
+        background-color: #666;
     }
 
     #wayback-count-label, #url-not-supported-message, #using-search-url {

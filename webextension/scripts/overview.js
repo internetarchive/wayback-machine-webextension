@@ -1,79 +1,48 @@
 // overview.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, hostURL */
+/*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
 
 function get_WBMSummary () {
-  get_details()
-  first_archive_details()
-  recent_archive_details()
-  get_thumbnail()
+  var url = decodeURIComponent(getUrlByParameter('url'))
+  get_details(url)
+  first_archive_details(url)
+  recent_archive_details(url)
   $('#loader_wbmsummary').hide()
 }
 
-function getTotal (captures) {
-  var total = 0
-  for (var key in captures) {
-    total += captures[key]['text/html']
-  }
-  return total
-}
-
-function get_details () {
-  var url = getUrlByParameter('url')
+function get_details (url) {
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
-    $('#total_captures').show()
     if ('type' in response) {
       var type = response.type
       $('#details').text(type)
       $('#url_details').show()
-      var captures = response.captures
-      $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
-        .text(getTotal(captures).toLocaleString())
-    } else {
-      $('#total_archives_number').text(0)
     }
   }).fail(() => {})
+  var captures
+  getWaybackCount(url, (total) => {
+    captures = total
+    $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
+    .text(captures.toLocaleString())
+    if (captures > 0) {
+      $('#total_captures').show()
+      get_thumbnail(url)
+    } else {
+      $('#loader_thumbnail').hide()
+      $('#show_thumbnail').text('Thumbnail not found.')
+    }
+  })
 }
 
-function _splitTimestamp (timestamp) {
-  if (typeof timestamp === 'number') {
-    timestamp = timestamp.toString()
-  }
-  return [
-    // year
-    timestamp.slice(-14, -10),
-    // month
-    timestamp.slice(-10, -8),
-    // day
-    timestamp.slice(-8, -6),
-    // hour
-    timestamp.slice(-6, -4),
-    // minute
-    timestamp.slice(-4, -2),
-    // seconds
-    timestamp.slice(-2)
-  ]
-}
-
-function timestamp2datetime (timestamp) {
-  const tsArray = _splitTimestamp(timestamp)
-  return new Date(Date.UTC(
-    tsArray[0], tsArray[1] - 1, tsArray[2],
-    tsArray[3], tsArray[4], tsArray[5]
-  ))
-}
-
-function first_archive_details () {
-  var url = getUrlByParameter('url')
+function first_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
-      $('#first_archive_datetime_error').text('Data not available')
+      $('#first_archive_datetime_error').text('URL has not been archived')
     } else {
       const ts = data[1][1]
-      const dt = timestamp2datetime(ts).toString().split('+')[0]
+      const dt = timestampToDate(ts).toString().split('+')[0]
       $('#first_archive_datetime')
         .text(dt)
         .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
@@ -82,25 +51,23 @@ function first_archive_details () {
   .fail(() => $('#first_archive_datetime_error').text('Data not available'))
 }
 
-function recent_archive_details () {
-  var url = getUrlByParameter('url')
+function recent_archive_details (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
-      $('#recent_archive_datetime_error').text('Data not available')
+      $('#recent_archive_datetime_error').text('URL has not been archived')
     } else {
-	  const ts = data[1][1]
-	  const dt = timestamp2datetime(ts).toString().split('+')[0]
-	  $('#recent_archive_datetime')
-        .text(dt)
-        .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
+      const ts = data[1][1]
+      const dt = timestampToDate(ts).toString().split('+')[0]
+      $('#recent_archive_datetime')
+      .text(dt)
+      .attr('href', 'https://web.archive.org/web/' + ts + '/' + url)
     }
   })
   .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
 }
 // Function used to get the thumbnail of the URL
-function get_thumbnail () {
-  var url = getUrlByParameter('url')
+function get_thumbnail (url) {
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
@@ -121,5 +88,3 @@ function get_thumbnail () {
       }
     })
 }
-
-if (typeof module !== 'undefined') { module.exports = { getTotal } }
