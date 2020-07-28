@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackPageURL, newshosts, dateToTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -276,7 +276,7 @@ function display_suggestions(e) {
 }
 
 function open_feedback_page() {
-  openByWindowSetting(feedbackPageURL)
+  openByWindowSetting(feedbackURL)
 }
 
 function open_donations_page() {
