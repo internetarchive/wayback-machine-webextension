@@ -2,11 +2,7 @@
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
-
 let searchValue
-let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
-const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
-const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
 
 const newshosts = new Set([
   'apnews.com',
@@ -22,6 +18,50 @@ const newshosts = new Set([
   'www.vox.com',
   'www.washingtonpost.com'
 ])
+
+/* * * Browser Detection * * */
+
+function getBrowser() {
+  // the order of these is important!
+  if (navigator.brave) { return 'brave' }
+  else if (navigator.userAgent.indexOf('Edg') !== -1) { return 'edge' }
+  else if (navigator.userAgent.indexOf('OPR') !== -1) { return 'opera' }
+  else if (navigator.userAgent.indexOf('Firefox') !== -1) { return 'firefox' }
+  else if (navigator.userAgent.indexOf('Chromium') !== -1) { return 'chromium' }
+  else if (navigator.userAgent.indexOf('Chrome') !== -1) { return 'chrome' }
+  else if (navigator.userAgent.indexOf('Safari') !== -1) { return 'safari' }
+  else if ((navigator.userAgent.indexOf('Trident') !== -1) || (navigator.userAgent.indexOf('MSIE'))) { return 'ie' }
+  else { return '' }
+}
+
+const hostURLs = {
+  chrome: 'https://chrome-api.archive.org/',
+  chromium: 'https://chrome-api.archive.org/',
+  firefox: 'https://firefox-api.archive.org/',
+  safari: 'https://safari-api.archive.org/',
+  brave: 'https://brave-api.archive.org/',
+  edge: 'https://edge-api.archive.org/',
+  ie: 'https://edge-api.archive.org/',
+  opera: 'https://opera-api.archive.org/'
+}
+
+const feedbackURLs = {
+  chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  chromium: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
+  safari: 'https://apps.apple.com/us/app/wayback-machine/id1201888313'
+}
+
+const gBrowser = getBrowser()
+const isChrome = (gBrowser === 'chrome') || (gBrowser === 'chromium')
+const isFirefox = (gBrowser === 'firefox')
+const isEdge = (gBrowser === 'edge')
+const isSafari = (gBrowser === 'safari')
+
+const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
+const feedbackURL = feedbackURLs[gBrowser] || '#'
+
+/* * * Wayback functions * * */
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -407,12 +447,6 @@ function afterAcceptOptions () {
   })
 }
 
-function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
-    message: 'auth_check'
-  }, callback)
-}
-
 if (typeof module !== 'undefined') {
   module.exports = {
     isArray,
@@ -438,8 +472,7 @@ if (typeof module !== 'undefined') {
     viewableTimestamp,
     initDefaultOptions,
     afterAcceptOptions,
-    checkAuthentication,
-    feedbackPageURL,
+    feedbackURL,
     newshosts,
     searchValue
   }
