@@ -24,7 +24,7 @@ const newshosts = new Set([
 function getBrowser() {
   // the order of these is important!
   if (navigator.brave) { return 'brave' }
-  else if (navigator.userAgent.indexOf('Edg') !== -1) { return 'edge' }
+  else if ((navigator.userAgent.indexOf('Edge') !== -1) || (navigator.userAgent.indexOf('Edg') !== -1)) { return 'edge' }
   else if (navigator.userAgent.indexOf('OPR') !== -1) { return 'opera' }
   else if (navigator.userAgent.indexOf('Firefox') !== -1) { return 'firefox' }
   else if (navigator.userAgent.indexOf('Chromium') !== -1) { return 'chromium' }
