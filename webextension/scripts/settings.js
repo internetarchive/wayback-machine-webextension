@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl, searchValue */
+/*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue */
 
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu */
@@ -9,6 +9,8 @@
 $(initializeSettings)
 $('.only').click(validate)
 $('#showall').click(selectall)
+$('.private').click(validatePrivateMode)
+$('#private-mode').click(togglePrivateMode)
 // use capture instead of bubbling
 document.getElementById('view').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
@@ -39,6 +41,12 @@ function restoreOptions (items) {
   $('#showall').prop('checked', items.showall)
   $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#show-resource-list').prop('checked', items.show_resource_list)
+  $('#private-mode').prop('checked', items.private_mode)
+
+  // Set 'selected-prior' class to the previous state
+  for (let item of private_before_state) {
+    $('#' + item).addClass('selected-prior')
+  }
 }
 
 function saveOptions () {
@@ -60,6 +68,7 @@ function saveOptions () {
     tagcloud: $('#tagcloud').prop('checked'),
     showall: $('#showall').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
+    private_mode: $('#private-mode').prop('checked'),
     show_resource_list: $('#show-resource-list').prop('checked')
   })
   if (wm_count === false) {
@@ -85,6 +94,50 @@ function selectall () {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
+  }
+}
+
+function validatePrivateMode (event) {
+  let checkboxes = $('[name="private-include"]')
+  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
+  if (checkedCount > 0) {
+    $('#private-mode').prop('checked', false)
+  }
+
+  // If the event.taget.checked is true, add class 'selected-prior' to the event.taget, if it is NOT there
+  // Else if the event.taget.checked is false, then remove class 'selected-prior'
+  if (event.target.checked === true) {
+    if (!$(event.target).hasClass('selected-prior')) {
+      private_before_state.add(event.target.id)
+      $(event.target).addClass('selected-prior')
+    }
+  } else if (event.target.checked === false) {
+    private_before_state.delete(event.target.id)
+    $(event.target).removeClass('selected-prior')
+  }
+  // Set the final previous state
+  chrome.storage.local.set({ private_before_state: Array.from(private_before_state) }, () => {})
+  hideUiButtons()
+}
+
+function togglePrivateMode () {
+  let checkboxes = $('.selected-prior.private')
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = !$(this).prop('checked')
+  }
+  hideUiButtons()
+}
+
+function hideUiButtons() {
+  if ($('#wm-count-setting').is(':not(:checked)')) {
+    $('#wayback-count-label').hide()
+  }
+
+  if ($('#resource').is(':not(:checked)')) {
+    $('#borrow_books').hide()
+    $('#news_recommend').hide()
+    $('#wikibooks').hide()
+    $('#doi').hide()
   }
 }
 
@@ -147,6 +200,7 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
+    'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',

@@ -17,6 +17,13 @@ let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 
+var private_before_default = new Set([
+  'wm-count-setting',
+  'resource',
+  'email-outlinks-setting',
+  'not-found-popup'
+])
+
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -90,19 +97,16 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
   }
 }
 
-function auth_check() {
+function authCheckAPI() {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch(hostURL + 'save/',
-      {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
+    fetch(hostURL + 'save/', {
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json' }
+    })
     .then(resolve, reject)
   })
   return timeoutPromise
@@ -348,8 +352,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     return true
   } else if (message.message === 'auth_check') {
-    auth_check()
-      .then(resp => sendResponse(resp))
+    // auth check using cookies
+    chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
+      let loggedIn = (result && result.value && (result.value.length > 0))
+      sendResponse({ auth_check: loggedIn })
+    })
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
