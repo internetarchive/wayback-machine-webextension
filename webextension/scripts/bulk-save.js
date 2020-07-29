@@ -54,16 +54,22 @@ function importBookmarks() {
 }
 
 // add URL to the list
-function addToBulkList() {
-  url = document.getElementById('add-url').value
-  $('#empty-list-err').hide()
-  if (url.includes('.') && isNotExcludedUrl(url)) {
-    urlList.add(makeValidURL(url))
-    displayList(urlList)
-  } else {
-    alert(`The Wayback Machine cannot archive '${url}'.`)
+function addToBulkList(e) {
+  if ((e.keyCode === 13 || e.which === 13)) {
+    let urls = document.getElementById('add-url').value
+    $('#empty-list-err').hide()
+    if (urls.includes('.')) {
+      let addedURLs = []
+      if (urls.includes('\n')) { addedURLs = urls.split('\n') }
+      for (let elem of addedURLs) {
+        if (elem !== ''  && isNotExcludedUrl(elem)) { urlList.add(makeValidURL(elem)) }
+      }
+      displayList(urlList)
+    } else {
+      alert(`The Wayback Machine cannot archive '${urls}'.`)
+    }
+    document.getElementById('add-url').value = ''
   }
-  document.getElementById('add-url').value = ''
 }
 
 // delete URL from the list
@@ -210,5 +216,5 @@ function trackStatus(index) {
 
 $('#import-bookmarks').click(importBookmarks)
 $('#start-bulk-save').click(setUpBulkSave)
-$('#add-to-bulk').click(addToBulkList)
 $('#list-container').click(deleteFromBulkList)
+$('#add-url').keyup(addToBulkList)

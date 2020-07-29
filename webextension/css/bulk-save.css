@@ -80,16 +80,13 @@ body {
 }
 
 #add-url {
+    padding: 0.5em;
     color: #333;
     border: 1px solid #737373;
-    border-radius: 5px 0 0 5px;
+    border-radius: 5px;
     flex: 5;
 }
 
-#add-to-bulk {
-    border-radius: 0 5px 5px 0;
-    flex: 2;
-}
 
 .save-box {
     width: auto;
