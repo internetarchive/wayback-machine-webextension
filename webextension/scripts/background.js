@@ -16,6 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
+const SPN_RETRY = 6000
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -108,6 +109,7 @@ function auth_check() {
   return timeoutPromise
   .then(response => response.json())
 }
+
 async function validate_spn(tabId, job_id, silent = false, page_url) {
   let vdata
   let status = 'start'
@@ -140,9 +142,9 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     })
     timeoutPromise
       .then((response) => {
-        if(response.headers.get('retry-after') != null){
-          wait_time = 6000
-        }
+        let value = response.headers.get('Retry-After')
+        let secs = (value) ? parseInt(value, 10) : null
+        wait_time = (secs) ? (secs * 1000) : SPN_RETRY
         return response.json()
       })
       .then((data) => {
