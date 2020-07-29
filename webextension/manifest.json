@@ -26,6 +26,7 @@
   "homepage_url": "https://archive.org/",
   "permissions": [
       "activeTab",
+      "cookies",
       "contextMenus",
       "notifications",
       "storage",

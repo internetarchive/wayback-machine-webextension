@@ -170,14 +170,20 @@
       </div>
 
       <div id="general-panel">
+      <label class="setting-switch" for="private-mode">
+          <input type="checkbox" id="private-mode">
+          <div class="setting-text-box">
+            <span class="toggle">Private Mode</span>
+          </div>
+        </label>
         <label class="setting-switch" for="wm-count-setting">
-          <input type="checkbox" id="wm-count-setting">
+          <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
           <div class="setting-text-box">
             <span class="toggle">Wayback Count</span>
           </div>
         </label>
         <label class="setting-switch" for="resource">
-          <input type="checkbox" id="resource">
+          <input type="checkbox" name="private-include" class="private" id="resource">
           <div class="setting-text-box">
             <span class="toggle">Relevant Archived Resources</span>
             <img src="images/toolbar/toolbar-icon-R32.png" alt="R" style="width:16px">
@@ -191,7 +197,7 @@
           </div>
         </label>
         <label class="setting-switch" for="auto-archive">
-          <input type="checkbox" id="auto-archive">
+          <input type="checkbox" name="private-include" class="private" id="auto-archive">
           <div class="setting-text-box">
             <span class="toggle">Auto Save Page</span>
             <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
@@ -204,13 +210,13 @@
           </div>
         </label>
         <label class="setting-switch" for="not-found-popup">
-          <input type="checkbox" id="not-found-popup">
+          <input type="checkbox" name="private-include" class="private" id="not-found-popup">
           <div class="setting-text-box">
             <span class="toggle">404 Not Found</span>
           </div>
         </label>
         <label class="setting-switch" for="auto-update-context">
-          <input type="checkbox" id="auto-update-context">
+          <input type="checkbox" name="private-include" class="private" id="auto-update-context">
           <div class="setting-text-box">
             <span class="toggle">Auto-Update Contexts</span>
           </div>

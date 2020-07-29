@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackPageURL, newshosts, dateToTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -34,7 +34,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
+    if (!(result && result.auth_check)) {
       $('#savebox').addClass('flip-inside')
       $('#last_save').text('Login to Save Page')
       $('#save_now').attr('disabled', true)
@@ -45,15 +45,20 @@ function last_save() {
       $('#save_now').removeAttr('disabled')
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let url = searchValue || get_clean_url(tabs[0].url)
-        chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
-        }, (message) => {
-          if (message.message === 'last_save') {
-            if ($('#last_save').text !== 'URL not supported') {
-              $('#last_save').text(message.time)
-            }
-            $('#savebox').addClass('flip-inside')
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                if ($('#last_save').text !== 'URL not supported') {
+                  $('#last_save').text(message.time)
+                }
+                $('#savebox').addClass('flip-inside')
+              }
+            })
           }
         })
       })
@@ -265,7 +270,7 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    // call display_list function if the difference between keypress is greater than 300ms (debouncing)
+    // call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     timer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
@@ -273,7 +278,7 @@ function display_suggestions(e) {
 }
 
 function open_feedback_page() {
-  openByWindowSetting(feedbackPageURL)
+  openByWindowSetting(feedbackURL)
 }
 
 function open_donations_page() {
