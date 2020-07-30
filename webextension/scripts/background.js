@@ -254,36 +254,47 @@ function getTvNews(Url, onSuccess, onFail) {
       if (onFail) { onFail(error) }
     })
 }
-
+var check_wiki_api_call = false
 function getCachedWikipediaBooks(url, onSuccess, onFail) {
-  let cacheWikipediaBooks = wikipediaBooksCache.get(url)
-  if (cacheWikipediaBooks) {
-    onSuccess(cacheWikipediaBooks)
-  } else {
-    getWikipediaBooks(url, (json) => {
-      if (wikipediaBooksCache.size > 2) {
-        let first_key = wikipediaBooksCache.keys().next().value
-        wikipediaBooksCache.delete(first_key)
-      }
-      wikipediaBooksCache.set(url, json)
-      onSuccess(json)
-    }, onFail)
+  if(check_wiki_api_call == false){
+    check_wiki_api_call = true
+    let cacheWikipediaBooks = wikipediaBooksCache.get(url)
+    if (cacheWikipediaBooks) {
+      check_wiki_api_call = false
+      onSuccess(cacheWikipediaBooks)
+    } else {
+      getWikipediaBooks(url, (json) => {
+        if (wikipediaBooksCache.size > 2) {
+          let first_key = wikipediaBooksCache.keys().next().value
+          wikipediaBooksCache.delete(first_key)
+        }
+        check_wiki_api_call = false
+        wikipediaBooksCache.set(url, json)
+        onSuccess(json)
+      }, onFail)
+    }
   }
 }
 
+var check_tv_api_call = false
 function getCachedTvNews(url, onSuccess, onFail) {
-  let cacheTvNews = tvNewsCache.get(url)
-  if (cacheTvNews) {
-    onSuccess(cacheTvNews)
-  } else {
-    getTvNews(url, (json) => {
-      if (tvNewsCache.size > 2) {
-        let first_key = tvNewsCache.keys().next().value
-        tvNewsCache.delete(first_key)
-      }
-      tvNewsCache.set(url, json)
-      onSuccess(json)
-    }, onFail)
+  if(check_tv_api_call == false){
+    check_tv_api_call = true
+    let cacheTvNews = tvNewsCache.get(url)
+    if (cacheTvNews) {
+      check_tv_api_call = false
+      onSuccess(cacheTvNews)
+    } else {
+      getTvNews(url, (json) => {
+        if (tvNewsCache.size > 2) {
+          let first_key = tvNewsCache.keys().next().value
+          tvNewsCache.delete(first_key)
+        }
+        check_tv_api_call = false
+        tvNewsCache.set(url, json)
+        onSuccess(json)
+      }, onFail)
+    }
   }
 }
 
