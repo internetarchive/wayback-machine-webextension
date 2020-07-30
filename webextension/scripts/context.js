@@ -18,6 +18,9 @@
 // from 'overview.js'
 /*   global get_WBMSummary */
 
+// from 'fact-check.js'
+/*   global get_factCheck */
+
 const url = decodeURIComponent(getUrlByParameter('url'))
 
 function get_tagCloud() {
@@ -47,13 +50,14 @@ function singlePageView() {
   const contexts_dic = {
     'alexa': get_alexa,
     'domaintools': get_domainTool,
+    'factCheck': get_factCheck,
     'wbmsummary': get_WBMSummary,
     'annotations': get_hypothesis,
     'tagcloud': get_tagCloud
   }
 
   // Check settings for features
-  let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
+  let features = ['alexa', 'domaintools', 'factCheck', 'wbmsummary', 'annotations', 'tagcloud']
   chrome.storage.local.get(features, (event) => {
     chrome.storage.local.get(['selectedFeature'], (result) => {
       let openedFeature = result.selectedFeature

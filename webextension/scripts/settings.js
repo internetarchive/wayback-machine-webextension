@@ -26,7 +26,6 @@ function initializeSettings () {
 
 function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
-  $('#fact-check').prop('checked', items.fact_check)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#wm-count-setting').prop('checked', items.wm_count)
@@ -36,6 +35,7 @@ function restoreOptions (items) {
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#alexa').prop('checked', items.alexa)
   $('#domaintools').prop('checked', items.domaintools)
+  $('#factCheck').prop('checked', items.factCheck)
   $('#wbmsummary').prop('checked', items.wbmsummary)
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
@@ -53,9 +53,7 @@ function restoreOptions (items) {
 function saveOptions () {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
-  let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
-    fact_check: $('#fact-check').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     resource: resource,
     auto_update_context: $('#auto-update-context').prop('checked'),
@@ -66,6 +64,7 @@ function saveOptions () {
     spn_screenshot: $('#chk-screenshot').prop('checked'),
     alexa: $('#alexa').prop('checked'),
     domaintools: $('#domaintools').prop('checked'),
+    factCheck: $('#factCheck').prop('checked'),
     wbmsummary: $('#wbmsummary').prop('checked'),
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
@@ -80,9 +79,6 @@ function saveOptions () {
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })
-  }
-  if (fact_check === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
 }
 
@@ -206,7 +202,6 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
-    'fact-check': 'Display fact-check results if the page has been fact-checked.',
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
@@ -217,6 +212,7 @@ function addDocs () {
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
+    'factCheck': 'Display fact-check results if the page has been fact-checked.',
     'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
     'annotations': 'Displays what Hypothes.is knows about the site you are on.',
     'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'

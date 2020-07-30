@@ -21,27 +21,33 @@ function cScore(score) {
   return confidenceScoreDict[value]
 }
 
-const url = getUrlByParameter('url')
-$('#fact-check-url').text(url)
-if (isValidUrl(url) && isNotExcludedUrl(url)) {
-  chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
-    if (resp && resp.results) {
-      $('.loader').hide()
-      let item = resp.results.meta
-      for (let i = 0; i < item.indicators.length; i++) {
-        let row = $('<div class="fact-checks-list flex-container">')
-        let checkedBy = $('<div class="name">').text(item.indicators[i].name)
-        let relatedAnalysis = $('<a target="_blank">').text(item.indicators[i].url).attr('href', item.indicators[i].url)
-        let scoreValue = $('<span class="highlight">').text((Math.round((item.indicators[i].confidence)*100)))
-        let sRating = cScore(item.indicators[i].confidence)
-        let scoreLabel = $(`<span class="score-label ${sRating}">`).text(sRating)
-        let confidenceScore = $('<div>').text('Confidence Score: ').append(scoreValue, scoreLabel)
+function get_factCheck() {
+  const url = decodeURIComponent(getUrlByParameter('url'))
+  $('#fact-check-url').text(url)
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
+      $('#loader_factCheck').hide()
+      $('.facts').show()
+      if (resp && resp.results) {
+        let item = resp.results.meta
+        for (let i = 0; i < item.indicators.length; i++) {
+          let row = $('<div class="fact-checks-list">')
+          let checkedBy = $('<div class="name">').text(item.indicators[i].name)
+          let relatedAnalysis = $('<a target="_blank">').text(item.indicators[i].url).attr('href', item.indicators[i].url)
+          let scoreValue = $('<span class="color_code">').text((Math.round((item.indicators[i].confidence)*100)))
+          let sRating = cScore(item.indicators[i].confidence)
+          let scoreLabel = $(`<span class="score-label ${sRating}">`).text(sRating)
+          let confidenceScore = $('<div>').text('Confidence Score: ').append(scoreValue, scoreLabel)
 
-        $('#results-container').append(
-          row.append(checkedBy, relatedAnalysis, confidenceScore)
-        )
+          $('#results-container').append(
+            row.append(checkedBy, relatedAnalysis, confidenceScore)
+          )
+        }
+      } else {
+        let row = $('<div class="pre-container title">')
+        $('#results-container').append(row.text('No fact checks found for the current URL.'))
       }
-    }
-    // TODO: handle error (resp.error)
-  })
+      // TODO: handle error (resp.error)
+    })
+  }
 }

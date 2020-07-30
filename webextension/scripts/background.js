@@ -16,7 +16,6 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var fact_checked_data = new Map()
 
 var private_before_default = new Set([
   'wm-count-setting',
@@ -252,23 +251,6 @@ function getFactCheck(url, onSuccess, onFail) {
   }
 }
 
-function getCachedFactCheck(url, onSuccess, onFail) {
-  let cacheData = fact_checked_data.get(url)
-  if (cacheData) {
-    onSuccess(cacheData)
-  } else {
-    getFactCheck(url, (json) => {
-      // remove older cached data
-      if (fact_checked_data.size > 2) {
-        let first_key = fact_checked_data.entries().next().value[0]
-        fact_checked_data.delete(first_key)
-      }
-      fact_checked_data.set(url, json)
-      onSuccess(json)
-    }, onFail)
-  }
-}
-
 /* * * Startup related * * */
 
 // Runs whenever extension starts up, except during incognito mode.
@@ -480,13 +462,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         removeToolbarState(tabs[0].id, 'R')
       }
     })
-  } else if (message.message === 'clearFactCheck') {
-    // fact check settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs && tabs[0]) {
-        removeToolbarState(tabs[0].id, 'F')
-      }
-    })
   } else if (message.message === 'getCachedWaybackCount') {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
@@ -497,7 +472,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
-    getCachedFactCheck(message.url,
+    getFactCheck(message.url,
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
     )
@@ -508,14 +483,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab.id, tab.url)
-    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
+    chrome.storage.local.get(['auto_archive'], (event) => {
       // auto save page
       if (event.auto_archive === true) {
         auto_save(tab.id, tab.url)
-      }
-      // fact check
-      if (event.fact_check === true) {
-        factCheckPage(tab.id, tab.url)
       }
     })
   } else if (info.status === 'loading') {
@@ -570,10 +541,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'resource', 'fact_check'], (event) => {
-    if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
-      removeToolbarState(info.tabId, 'F')
-    }
+  chrome.storage.local.get(['auto_update_context', 'resource'], (event) => {
     if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
       // reset toolbar if resource setting turned off
       removeToolbarState(info.tabId, 'R')
@@ -607,20 +575,6 @@ function auto_save(tabId, url) {
           savePageNow(tabId, url, true)
         }
       }
-    )
-  }
-}
-
-function factCheckPage(tabId, url) {
-  if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    // retrieve fact check results
-    getCachedFactCheck(url,
-      (json) => {
-        if (json && json.results) {
-          addToolbarState(tabId, 'F')
-        }
-      },
-      (error) => {}
     )
   }
 }
@@ -677,7 +631,7 @@ function updateWaybackCountBadge(tabId, url) {
 
 /* * * Toolbar * * */
 
-const validToolbarIcons = new Set(['R', 'S', 'F', 'check', 'archive'])
+const validToolbarIcons = new Set(['R', 'S', 'check', 'archive'])
 
 /**
  * Sets the toolbar icon.
@@ -740,8 +694,6 @@ function updateToolbar(tabId) {
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
         setToolbarIcon('S')
-      } else if (state && state.has('F')) {
-        setToolbarIcon('F')
       } else if (state && state.has('R')) {
         setToolbarIcon('R')
       } else if (state && state.has('check')) {

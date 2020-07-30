@@ -16,6 +16,34 @@ h4 {
     color: #22c399;
 }
 
+.fact-check-heading {
+    margin: 1em 0 0;
+}
+
+.branding {
+    margin: 0 0 1em;
+}
+
+.score-label {
+    margin-left: 1em;
+    padding: 3px 7px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.High {
+    background-color: green;
+}
+
+.Medium {
+    color: #000;
+    background-color: yellow;
+}
+
+.Low {
+    background-color: red;
+}
+
 #side-nav-bar {
     background-color: #ddd;
     display: none;
@@ -169,15 +197,38 @@ ul {
 .pre {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     display: block;
-    padding: 1em;
+    min-height: 1em;
     margin: 1em auto 1.8em auto;
     font-size: 18px;
-    line-height: 1.42857143;
+    line-height: 1.5;
     color: #333;
     word-wrap: break-word;
     background-color: #ffffff75;
     border-radius: 5px;	
     border: 1px solid #888;
+}
+
+.pre-container {
+    margin: 0.7em;
+}
+
+.fact-checks-list {
+    margin: 0;
+    padding: 0.7em;
+}
+
+.name {
+    font-weight: 800;
+}
+
+.facts {
+    display: none;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+#results-container .fact-checks-list:nth-child(even) {
+    background-color: #fff;
 }
 
 .col-sm-6 {
@@ -233,7 +284,12 @@ ul {
     display: none;
 }
 
-#row_contain-url, #row_contain-domain, #url_details, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
+#message_tagcloud {
+    text-align: center;
+    margin: auto;
+}
+
+#row_contain-url, #row_contain-domain, #url_details, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #FactCheck_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
     display: none;
 }
 
@@ -256,7 +312,7 @@ ul {
     margin : 10px 0;
 }
 
-.title {
+.title, #show_thumbnail {
     text-align: center;
 }
 
@@ -264,13 +320,15 @@ ul {
     margin-left: 10px;
 }
 
-#show_thumbnail {
-    text-align: center;
-}
-
 .thumbnail-box {
     border-radius: 5px;	
     border: 1px solid #888;
+}
+
+.branding img {
+    padding-top: 8px;
+    margin-left: 4px;
+    width: 110px;
 }
 
 @media screen and (max-width: 1000px) {
@@ -334,6 +392,10 @@ ul {
 
     .pre, .thumbnail-box {
         border: 1px solid #666;
+    }
+
+    #results-container .fact-checks-list:nth-child(even) {
+        background-color: rgb(61, 61, 61);
     }
 
     a, .error b {
