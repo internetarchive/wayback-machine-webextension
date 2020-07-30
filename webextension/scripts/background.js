@@ -16,6 +16,7 @@ let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
+const SPN_RETRY = 6000
 
 var private_before_default = new Set([
   'wm-count-setting',
@@ -118,18 +119,16 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
-
+  let wait_time = 1000;
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_start',
       tabId: tabId
     })
-    if (status === 'pending') {
-      addToolbarState(tabId, 'S')
-    }
+    addToolbarState(tabId, 'S')
 
-    await sleep(6000)
+    await sleep(wait_time)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -146,7 +145,12 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
       }
     })
     timeoutPromise
-      .then(response => response.json())
+      .then((response) => {
+        let value = response.headers.get('Retry-After')
+        let secs = (value) ? parseInt(value, 10) : null
+        wait_time = (secs) ? (secs * 1000) : SPN_RETRY
+        return response.json()
+      })
       .then((data) => {
         status = data.status
         vdata = data
