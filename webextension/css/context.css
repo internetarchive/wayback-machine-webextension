@@ -51,6 +51,7 @@ h4 {
     height: 100%;
     width: 23%;
     border-right: 3px solid #9A3B38;
+    overflow: auto;
 }
 
 .tab-content-container {
