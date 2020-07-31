@@ -65,7 +65,9 @@ function doLogin(e) {
             $('#login-page').hide()
             $('#setting-page').hide()
             $('#popup-page').show()
+            $('#login_message').hide()
           }, 500)
+          $('#log_in').val('Login')
         }
       })
       .catch(e => console.log(e))

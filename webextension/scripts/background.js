@@ -355,7 +355,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'auth_check') {
     // auth check using cookies
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0))
+      let loggedIn = (result && result.value && (result.value.length > 0)) || false
       sendResponse({ auth_check: loggedIn })
     })
     return true
