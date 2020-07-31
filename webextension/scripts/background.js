@@ -89,7 +89,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url })
           if (!silent) {
             notify('Error: ' + msg)
           }

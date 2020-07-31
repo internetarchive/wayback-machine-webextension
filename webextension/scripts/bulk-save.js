@@ -223,21 +223,9 @@ function trackStatus(index) {
     (message) => {
       let msg = message.message
       let url = message.url
-      let err = message.error
       let items = $('.url-item')
       if (items[index]) {
         let listItemUrl = items[index].innerText
-        let posUrl
-        let posHost
-        let errorUrl
-        if (listItemUrl.includes('://')) {
-          posUrl = listItemUrl.indexOf('://')
-          errorUrl = listItemUrl.slice(posUrl + 3)
-          if (errorUrl.includes('/')) {
-            posHost = errorUrl.indexOf('/')
-          }
-        }
-        let errorHost = errorUrl.slice(0, posHost)
         if (msg === 'save_start' && listItemUrl === url) {
           $('.loader').show()
           updateStatus(items[index], '', 'yellow')
@@ -245,7 +233,7 @@ function trackStatus(index) {
           saveSuccessCount++
           $('#saved').show().children().text(saveSuccessCount)
           updateStatus(items[index], '✓', 'green')
-        } else if (msg === 'save_error' && (listItemUrl === url || err.includes(errorUrl))) {
+        } else if (msg === 'save_error' && (listItemUrl === url)) {
           saveFailedCount++
           $('#failed').show().children().text(saveFailedCount)
           updateStatus(items[index], '!', 'red')
