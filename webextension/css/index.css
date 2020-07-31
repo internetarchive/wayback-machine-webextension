@@ -3,7 +3,6 @@
 
 body {
     width: 200px;
-    max-height: 538px;
     background-color: #eee;
     color: #222;
 }
@@ -58,8 +57,7 @@ body {
 /* general */
 
 .focused {
-    background-color: #D3D3D3;
-    opacity: 0.7;
+    background-color: #eee;
 }
 
 .resize-fit-center {
@@ -76,7 +74,7 @@ body {
     opacity: 0.8;
 }
 
-#using-search-url {
+#using-search-url, #save-progress-bar {
     display: none;
 }
 
@@ -85,14 +83,25 @@ body {
 #search-input {
     display: block;
     position: relative;
+    border-radius: 5px;
     z-index: 1;
 }
 
+/* suggestions box */
+
 #suggestion-box {
     display: none;
-    max-height: 300px;
-    min-width: 100%;
-    overflow: auto;
+    max-height: 350px;
+    width: 166px;
+    border-radius: 5px;
+    word-break: break-all;
+}
+
+#suggestion-box div {
+    padding: 3px 10px;
+}
+#suggestion-box div:hover {
+    background-color: #eee;
 }
 
 /* checkboxes */
@@ -117,6 +126,7 @@ body {
     padding-top: 17px;
     margin-bottom: -8px;
     border: 1px solid #ddd;
+    border-top: none;
     background-color: #ddd;
 }
 
@@ -137,6 +147,35 @@ button {
 }
 .btn:active {
     outline: none !important;
+}
+
+.spn-btn {
+    width: 100%;
+    position: absolute;
+    bottom: 6px;
+    text-align: center;
+    margin: auto;
+}
+
+.progress-container {
+    padding: 0px;
+}
+
+.progress {
+    height: 28px;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.progress-bar {
+    background-color: #9A3B38;
+}
+
+.progress-bar.active {
+    -webkit-animation: progress-bar-stripes 0.5s linear infinite;
+    -o-animation: progress-bar-stripes 0.5s linear infinite;
+    animation: progress-bar-stripes 0.5s linear infinite;
 }
 
 /* social buttons */
@@ -357,6 +396,7 @@ a.btn-social, .btn-social {
 
     .chk-frame {
         border: 1px solid #744;
+        border-top: none;
         background-color: #3c2c2c;
     }
 
@@ -375,7 +415,17 @@ a.btn-social, .btn-social {
     }
 
     #wayback-count-label, #url-not-supported-message, #using-search-url, #login-status {
+       color: #eee;
+    }
+
+    #suggestion-box {
+        background-color: #2C2C2C;
         color: #eee;
+        border: 1px solid #666;
+    }
+
+    #suggestion-box div:hover, .focused {
+        background-color: #666;
     }
 
     .btn-unselected {

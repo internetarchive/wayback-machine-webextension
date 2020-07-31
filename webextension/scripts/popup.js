@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackPageURL, newshosts, dateToTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -34,7 +34,7 @@ function save_now() {
 
 function last_save() {
   checkAuthentication((result) => {
-    if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
+    if (!(result && result.auth_check)) {
       loginError()
     } else {
       loginSuccess()
@@ -58,15 +58,20 @@ function loginSuccess() {
   $('#save_now').removeAttr('disabled')
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
-      message: 'getLastSaveTime',
-      page_url: url
-    }, (message) => {
-      if (message.message === 'last_save') {
-        if ($('#last_save').text !== 'URL not supported') {
-          $('#last_save').text(message.time)
-        }
-        $('#savebox').addClass('flip-inside')
+    chrome.storage.local.get(['private_mode'], (event) => {
+      // auto save page
+      if (!event.private_mode) {
+        chrome.runtime.sendMessage({
+          message: 'getLastSaveTime',
+          page_url: url
+        }, (message) => {
+          if (message.message === 'last_save') {
+            if ($('#last_save').text !== 'URL not supported') {
+              $('#last_save').text(message.time)
+            }
+            $('#savebox').addClass('flip-inside')
+          }
+        })
       }
     })
   })
@@ -185,9 +190,11 @@ function useSearchBox() {
 function search_box_activate() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
-    if ((search_box.value.length > 0) && isNotExcludedUrl(search_box.value)) {
+    // exclude UP and DOWN keys from keyup event
+    if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       searchValue = get_clean_url(makeValidURL(search_box.value))
-      if (searchValue) { useSearchBox() }
+      // use searchValue if it is valid, else update UI
+      searchValue ? useSearchBox() : $('#using-search-url').hide()
     }
   })
 }
@@ -245,13 +252,13 @@ function display_list(key_word) {
       $('#suggestion-box').show()
       arrow_key_access()
       for (var i = 0; i < data.hosts.length; i++) {
-        $('#suggestion-box').append($('<li>').append(
-          $('<a>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+        $('#suggestion-box').append(
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             searchValue = get_clean_url(makeValidURL(event.target.innerHTML))
             if (searchValue) { useSearchBox() }
           })
-        ))
+        )
       }
     }
   })
@@ -280,7 +287,7 @@ function display_suggestions(e) {
 }
 
 function open_feedback_page() {
-  openByWindowSetting(feedbackPageURL)
+  openByWindowSetting(feedbackURL)
 }
 
 function open_donations_page() {
@@ -490,6 +497,23 @@ function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
 }
 
+function setupSaveButton() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0].id
+    chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+      if (state.has('S')) {
+        showSaving()
+      }
+    })
+  })
+}
+
+function showSaving() {
+  $('#save-progress-bar').show()
+  $('#save_now').text('Archiving URL...')
+}
+
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
@@ -498,12 +522,14 @@ chrome.runtime.onMessage.addListener(
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0].id === message.tabId) {
         if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
           $('#save_now').text('Save successful')
           $('#last_save').text(message.time)
           $('#savebox').addClass('flip-inside')
         } else if (message.message === 'save_start') {
-          $('#save_now').text('Saving Snapshot...')
+          showSaving()
         } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
           $('#save_now').text('Save Failed')
         }
       }
@@ -511,7 +537,8 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip,
+  setupWaybackCount, setupSaveButton]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
