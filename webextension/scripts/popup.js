@@ -35,30 +35,40 @@ function save_now() {
 function last_save() {
   checkAuthentication((result) => {
     if (result && result.message && result.message === 'You need to be logged in to use Save Page Now.') {
-      $('#savebox').addClass('flip-inside')
-      $('#last_save').text('Login to Save Page')
-      $('#save_now').attr('disabled', true)
-      $('#savebtn').off('click').click(() => {
-        show_login_page()
-      })
+      loginError()
     } else {
-      $('#logout').show()
-      $('#save_now').removeAttr('disabled')
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = searchValue || get_clean_url(tabs[0].url)
-        chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
-        }, (message) => {
-          if (message.message === 'last_save') {
-            if ($('#last_save').text !== 'URL not supported') {
-              $('#last_save').text(message.time)
-            }
-            $('#savebox').addClass('flip-inside')
-          }
-        })
-      })
+      loginSuccess()
     }
+  })
+}
+
+function loginError() {
+  $('#login-status').text('Wayback logged out')
+  $('#savebox').addClass('flip-inside')
+  $('#last_save').text('Login to Save Page')
+  $('#save_now').attr('disabled', true)
+  $('#savebtn').off('click').click(() => {
+    show_login_page()
+  })
+}
+
+function loginSuccess() {
+  $('#login-status').text('Wayback logged in')
+  $('#logout').show()
+  $('#save_now').removeAttr('disabled')
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || get_clean_url(tabs[0].url)
+    chrome.runtime.sendMessage({
+      message: 'getLastSaveTime',
+      page_url: url
+    }, (message) => {
+      if (message.message === 'last_save') {
+        if ($('#last_save').text !== 'URL not supported') {
+          $('#last_save').text(message.time)
+        }
+        $('#savebox').addClass('flip-inside')
+      }
+    })
   })
 }
 
@@ -262,8 +272,8 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    //Call display_list function if the difference between keypress is greater than 300ms (Debouncing) 
-    timer = setTimeout(()=>{
+    // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
+    timer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
   }

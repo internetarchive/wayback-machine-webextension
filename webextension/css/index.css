@@ -50,7 +50,7 @@ body {
     color: #222;
 }
 
-#wayback-count-label, #url-not-supported-message, #using-search-url {
+#wayback-count-label, #url-not-supported-message, #using-search-url, #login-status {
     font-size: 9pt;
     color: #222;
 }
@@ -374,7 +374,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-label, #url-not-supported-message, #using-search-url {
+    #wayback-count-label, #url-not-supported-message, #using-search-url, #login-status {
         color: #eee;
     }
 
