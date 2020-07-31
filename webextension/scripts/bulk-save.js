@@ -35,8 +35,10 @@ function processNode(node) {
   // access leaf nodes: Bookmarked URLs
   if (node.url) {
     if (isValidUrl(node.url) && isNotExcludedUrl(node.url)) {
-      urlList.add(node.url)
-      displayList(urlList)
+      if(!isDuplicateURL(node.url)) {
+        urlList.add(node.url)
+        displayList(urlList)
+      }
     }
   }
 }
@@ -62,7 +64,9 @@ function addToBulkList(e) {
       let addedURLs = []
       if (urls.includes('\n')) { addedURLs = urls.split('\n') }
       for (let elem of addedURLs) {
-        if (elem !== ''  && isNotExcludedUrl(elem)) { urlList.add(makeValidURL(elem)) }
+        if (elem !== ''  && isNotExcludedUrl(elem)) {
+          if (!isDuplicateURL(elem)) { urlList.add(makeValidURL(elem)) }
+        }
       }
       displayList(urlList)
     } else {
@@ -88,6 +92,34 @@ function clearUI() {
   $('#import-bookmarks').hide()
   $('.save-box').hide()
   $('#add').hide()
+}
+
+// crop URL
+function cropURL(url) {
+  let pos = 0
+  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
+  if (url.includes('://')) {
+    if (url.includes('://www.')) {
+      pos = url.indexOf('://www.')
+      return url.substring(pos + 7)
+    } else pos = url.indexOf('://')
+    return url.substring(pos + 3)
+  } else if (!url.includes('://')) {
+    if (url.includes('www.')) {
+      pos = url.indexOf('www.')
+      return url.substring(pos + 4)
+    } else return url
+  }
+}
+
+// check for duplicate URLs
+function isDuplicateURL(url, list = urlList) {
+  let newURL = cropURL(url)
+  for (let elem of list) {
+    let newElem = cropURL(elem)
+    if (newURL === newElem) { return true}
+  }
+  return false
 }
 
 // check availability
@@ -169,7 +201,7 @@ function initiateBulkSave(url, index) {
       message: 'openurl',
       wayback_url: hostURL + 'save/',
       page_url: url,
-      method: 'save',
+      method: 'save'
       // tabId: tabs[0].id
     })
   })
@@ -189,11 +221,23 @@ function trackStatus(index) {
   $('#total-saved').show()
   chrome.runtime.onMessage.addListener(
     (message) => {
-      msg = message.message
-      url = message.url
+      let msg = message.message
+      let url = message.url
+      let err = message.error
       let items = $('.url-item')
       if (items[index]) {
         let listItemUrl = items[index].innerText
+        let posUrl
+        let posHost
+        let errorUrl
+        if (listItemUrl.includes('://')) {
+          posUrl = listItemUrl.indexOf('://')
+          errorUrl = listItemUrl.slice(posUrl + 3)
+          if (errorUrl.includes('/')) {
+            posHost = errorUrl.indexOf('/')
+          }
+        }
+        let errorHost = errorUrl.slice(0, posHost)
         if (msg === 'save_start' && listItemUrl === url) {
           $('.loader').show()
           updateStatus(items[index], '', 'yellow')
@@ -201,7 +245,7 @@ function trackStatus(index) {
           saveSuccessCount++
           $('#saved').show().children().text(saveSuccessCount)
           updateStatus(items[index], '✓', 'green')
-        } else if (msg === 'save_error' && listItemUrl === url) {
+        } else if (msg === 'save_error' && (listItemUrl === url || err.includes(errorUrl))) {
           saveFailedCount++
           $('#failed').show().children().text(saveFailedCount)
           updateStatus(items[index], '!', 'red')
