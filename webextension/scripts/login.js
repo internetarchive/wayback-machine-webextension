@@ -74,9 +74,13 @@ function doLogin(e) {
 }
 
 function doLogout() {
-  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' }, () => {})
-  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' }, () => {
+  chrome.cookies.getAll({domain: '.archive.org'}, function(cookies) {
+    for(var i=0; i<cookies.length;i++) {
+      if(cookies[i].name !== 'test-cookie'){
+        chrome.cookies.remove({url: 'https://archive.org', name: cookies[i].name});
+      }
+    }
     $('#logout').hide()
     loginError()
-  })
+  });
 }
