@@ -569,7 +569,7 @@ function incrementCount(url) {
 
 function updateWaybackCountBadge(tabId, url) {
   chrome.storage.local.get(['wm_count'], (event) => {
-    if (url && isValidUrl(url) && isNotExcludedUrl(url) && (event.wm_count === true)) {
+    if (url && isValidUrl(url) && isNotExcludedUrl(url) && !url.includes('web.archive.org') && (event.wm_count === true)) {
       getCachedWaybackCount(url, (total) => {
         if (total > 0) {
           // display badge
