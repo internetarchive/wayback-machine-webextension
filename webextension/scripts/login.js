@@ -59,7 +59,7 @@ function doLogin(e) {
           $('#login_message').show().text('Incorrect Email or Password')
           $('#log_in').val('Login')
         } else {
-          $('#login_message').show().text('Success')
+          $('#login_message').show().css('color', 'green').text('Success')
           loginSuccess()
           setTimeout(() => {
             $('#login-page').hide()
@@ -74,7 +74,8 @@ function doLogin(e) {
 }
 
 function doLogout() {
-  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' }, () => {
+  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' }, () => {})
+  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' }, () => {
     $('#logout').hide()
     loginError()
   })
