@@ -33,37 +33,47 @@ function save_now() {
 }
 
 function last_save() {
-  checkAuthentication((result) => {
-    if (!(result && result.auth_check)) {
-      $('#savebox').addClass('flip-inside')
-      $('#last_save').text('Login to Save Page')
-      $('#save_now').attr('disabled', true)
-      $('#savebtn').off('click').click(() => {
-        openByWindowSetting('https://archive.org/account/login')
-      })
-    } else {
-      $('#save_now').removeAttr('disabled')
-      $('#bulk-save').show()
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = searchValue || get_clean_url(tabs[0].url)
-        chrome.storage.local.get(['private_mode'], (event) => {
-          // auto save page
-          if (!event.private_mode) {
-            chrome.runtime.sendMessage({
-              message: 'getLastSaveTime',
-              page_url: url
-            }, (message) => {
-              if (message.message === 'last_save') {
-                if ($('#last_save').text !== 'URL not supported') {
-                  $('#last_save').text(message.time)
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || get_clean_url(tabs[0].url)
+    checkAuthentication((result) => {
+      if (!(result && result.auth_check)) {
+        if (isNotExcludedUrl(url)) {
+          $('#last_save').text('Login to Save Page')
+          $('#contextTip').click(openContextMenu)
+          $('#savebox').addClass('flip-inside')
+          $('#savebtn').off('click').click(() => {
+            openByWindowSetting('https://archive.org/account/login')
+          })
+        } else {
+          setExcluded()
+        }
+        $('#save_now').attr('disabled', true)
+      } else {
+        $('#bulk-save').show()
+        if (isNotExcludedUrl(url)) {
+          $('#save_now').removeAttr('disabled')
+          $('#contextTip').click(openContextMenu)
+          chrome.storage.local.get(['private_mode'], (event) => {
+            // auto save page
+            if (!event.private_mode) {
+              chrome.runtime.sendMessage({
+                message: 'getLastSaveTime',
+                page_url: url
+              }, (message) => {
+                if (message.message === 'last_save') {
+                  if ($('#last_save').text !== 'URL not supported') {
+                    $('#last_save').text(message.time)
+                  }
+                  $('#savebox').addClass('flip-inside')
                 }
-                $('#savebox').addClass('flip-inside')
-              }
-            })
-          }
-        })
-      })
-    }
+              })
+            }
+          })
+        } else {
+          setExcluded()
+        }
+      }
+    })
   })
 }
 
@@ -418,21 +428,12 @@ function openContextMenu () {
   if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
-function checkExcluded() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || tabs[0].url
-    if (isNotExcludedUrl(url)) {
-      last_save()
-      $('#contextTip').click(openContextMenu)
-    } else {
-      const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
-      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-      $('#contextBtn').attr('disabled', true)
-      $('#last_save').text('URL not supported')
-      $('#contextTip').text('URL not supported')
-      $('#url-not-supported-message').text('URL not supported')
-    }
-  })
+function setExcluded() {
+  const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
+  idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+  $('#last_save').text('URL not supported')
+  $('#contextTip').text('URL not supported')
+  $('#url-not-supported-message').text('URL not supported')
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -524,8 +525,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip,
-  setupWaybackCount, setupSaveButton]
+window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
