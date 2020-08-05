@@ -164,16 +164,18 @@ function useSearchBox() {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     $('#mapbox').removeClass('flip-inside')
     $('#twitterbox').removeClass('flip-inside')
+    $('#fact-check-box').removeClass('flip-inside')
+    $('#fact-check-btn').removeClass('btn-purple')
     $('#contextTip').text('Enable in Settings')
     $('#contextTip').click(openContextMenu)
     $('#suggestion-box').text('').hide()
     $('#wayback-count-label').hide()
+    $('#url-not-supported-message').hide()
     $('#using-search-url').show()
     $('#borrow_books').hide()
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
-    $('#fact-check-screen').hide()
     last_save()
   })
 }
@@ -395,11 +397,11 @@ function show_wikibooks() {
   })
 }
 
-function showFactCheck() {
+function setUpFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
+    const url = get_clean_url(tabs[0].url)
     const tabId = tabs[0].id
-    if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    if (isNotExcludedUrl(url)) {
       chrome.storage.local.get(['fact_check'], (event) => {
         if (event.fact_check) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
@@ -410,12 +412,16 @@ function showFactCheck() {
             }
           })
         }
-        $('#fact-check-btn').click(() => {
-          const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-          openByWindowSetting(factCheckUrl)
-        })
       })
     }
+  })
+}
+
+function showFactCheck() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+    openByWindowSetting(factCheckUrl)
   })
 }
 
@@ -547,7 +553,7 @@ chrome.runtime.onMessage.addListener(
 )
 
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, showFactCheck]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -571,3 +577,4 @@ $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
+$('#fact-check-btn').click(showFactCheck)
