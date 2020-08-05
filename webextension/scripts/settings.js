@@ -26,6 +26,7 @@ function initializeSettings () {
 
 function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
+  $('#fact-check').prop('checked', items.fact_check)
   $('#resource').prop('checked', items.resource)
   $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#wm-count-setting').prop('checked', items.wm_count)
@@ -52,7 +53,9 @@ function restoreOptions (items) {
 function saveOptions () {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
+  let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
+    fact_check: $('#fact-check').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     resource: resource,
     auto_update_context: $('#auto-update-context').prop('checked'),
@@ -77,6 +80,9 @@ function saveOptions () {
   }
   if (resource === false) {
     chrome.runtime.sendMessage({ message: 'clearResource' })
+  }
+  if (fact_check === false) {
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
 }
 
@@ -129,15 +135,20 @@ function togglePrivateMode () {
 }
 
 function hideUiButtons() {
+  // hide wayback machine count label
   if ($('#wm-count-setting').is(':not(:checked)')) {
     $('#wayback-count-label').hide()
   }
-
+  // hide relevant resources buttons
   if ($('#resource').is(':not(:checked)')) {
     $('#borrow_books').hide()
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
+  }
+  // change color of fact check button
+  if ($('#fact-check').is(':not(:checked)')) {
+    $('#fact-check-btn').removeClass('btn-purple')
   }
 }
 
@@ -200,6 +211,7 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs () {
   let docs = {
+    'fact-check': 'Auto detect fact-checks and show purple button if fact checks are available.',
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
