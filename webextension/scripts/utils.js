@@ -427,6 +427,7 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* General */
+    fact_check: false,
     wm_count: false,
     resource: false,
     auto_archive: false,
@@ -440,7 +441,6 @@ function initDefaultOptions () {
     showall: true,
     alexa: true,
     domaintools: false,
-    factCheck: true,
     wbmsummary: true,
     annotations: true,
     tagcloud: true,
@@ -452,6 +452,7 @@ function initDefaultOptions () {
 function afterAcceptOptions () {
   chrome.storage.local.set({
     /* General */
+    fact_check: true,
     wm_count: true,
     resource: true,
     email_outlinks: true,

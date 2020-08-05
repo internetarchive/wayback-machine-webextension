@@ -152,7 +152,7 @@ function search_tweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'factCheck', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
     for (let context in event) {
       if (event[context]) {
         $('#ctxbox').removeClass('flip-inside')
@@ -161,6 +161,7 @@ function useSearchBox() {
     }
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearResource' })
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     $('#mapbox').removeClass('flip-inside')
     $('#twitterbox').removeClass('flip-inside')
     $('#contextTip').text('Enable in Settings')
@@ -172,6 +173,7 @@ function useSearchBox() {
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
+    $('#fact-check-screen').hide()
     last_save()
   })
 }
@@ -393,8 +395,32 @@ function show_wikibooks() {
   })
 }
 
+function showFactCheck() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = tabs[0].url
+    const tabId = tabs[0].id
+    if (isValidUrl(url) && isNotExcludedUrl(url)) {
+      chrome.storage.local.get(['fact_check'], (event) => {
+        if (event.fact_check) {
+          chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+            let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+            if (state.has('F')) {
+              // show purple fact-check button
+              $('#fact-check-btn').addClass('btn-purple')
+            }
+          })
+        }
+        $('#fact-check-btn').click(() => {
+          const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+          openByWindowSetting(factCheckUrl)
+        })
+      })
+    }
+  })
+}
+
 function noContextTip() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'factCheck', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
     for (const context in event) {
       if (event[context]) {
@@ -425,7 +451,7 @@ function checkExcluded() {
       last_save()
       $('#contextTip').click(openContextMenu)
     } else {
-      const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
+      const idList = ['savebox', 'fact-check-box', 'mapbox', 'twitterbox', 'ctxbox']
       idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
       $('#contextBtn').attr('disabled', true)
       $('#last_save').text('URL not supported')
@@ -521,7 +547,7 @@ chrome.runtime.onMessage.addListener(
 )
 
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, showFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
