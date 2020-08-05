@@ -172,12 +172,16 @@ function useSearchBox() {
     }
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearResource' })
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     $('#mapbox').removeClass('flip-inside')
     $('#twitterbox').removeClass('flip-inside')
+    $('#fact-check-box').removeClass('flip-inside')
+    $('#fact-check-btn').removeClass('btn-purple')
     $('#contextTip').text('Enable in Settings')
     $('#contextTip').click(openContextMenu)
     $('#suggestion-box').text('').hide()
     $('#wayback-count-label').hide()
+    $('#url-not-supported-message').hide()
     $('#using-search-url').show()
     $('#borrow_books').hide()
     $('#news_recommend').hide()
@@ -379,6 +383,7 @@ function show_news() {
     })
   })
 }
+
 function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
@@ -400,6 +405,34 @@ function show_wikibooks() {
         }
       })
     }
+  })
+}
+
+function setUpFactCheck() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = get_clean_url(tabs[0].url)
+    const tabId = tabs[0].id
+    if (isNotExcludedUrl(url)) {
+      chrome.storage.local.get(['fact_check'], (event) => {
+        if (event.fact_check) {
+          chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+            let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+            if (state.has('F')) {
+              // show purple fact-check button
+              $('#fact-check-btn').addClass('btn-purple')
+            }
+          })
+        }
+      })
+    }
+  })
+}
+
+function showFactCheck() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+    openByWindowSetting(factCheckUrl)
   })
 }
 
@@ -428,12 +461,21 @@ function openContextMenu () {
   if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
-function setExcluded() {
-  const idList = ['savebox', 'mapbox', 'twitterbox', 'ctxbox']
-  idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-  $('#last_save').text('URL not supported')
-  $('#contextTip').text('URL not supported')
-  $('#url-not-supported-message').text('URL not supported')
+function checkExcluded() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || tabs[0].url
+    if (isNotExcludedUrl(url)) {
+      last_save()
+      $('#contextTip').click(openContextMenu)
+    } else {
+      const idList = ['savebox', 'fact-check-box', 'mapbox', 'twitterbox', 'ctxbox']
+      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+      $('#contextBtn').attr('disabled', true)
+      $('#last_save').text('URL not supported')
+      $('#contextTip').text('URL not supported')
+      $('#url-not-supported-message').text('URL not supported')
+    }
+  })
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -525,7 +567,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -550,3 +592,4 @@ $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
 $('#bulk-save').click(bulkSave)
+$('#fact-check-btn').click(showFactCheck)

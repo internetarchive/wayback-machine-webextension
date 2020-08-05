@@ -127,6 +127,19 @@
             <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="doi">Find Cited Papers</button>
           </div>
 
+          <!-- Fact Check -->
+
+          <div class="flip flip-margin" id="fact-check-screen">
+            <div id="fact-check-box">
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-btn">Fact Check</button>
+              </div>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-tip" tabindex="-1">URL not supported</button>
+              </div>
+            </div>
+          </div>
+
           <!-- Share -->
 
           <div>
@@ -187,6 +200,13 @@
           <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
           <div class="setting-text-box">
             <span class="toggle">Wayback Count</span>
+          </div>
+        </label>
+        <label class="setting-switch" for="fact-check">
+          <input type="checkbox" name="private-include" class="private" id="fact-check">
+          <div class="setting-text-box">
+            <span class="toggle">Fact Check</span>
+            <img src="images/toolbar/toolbar-icon-F32.png" alt="F" style="width:16px">
           </div>
         </label>
         <label class="setting-switch" for="resource">

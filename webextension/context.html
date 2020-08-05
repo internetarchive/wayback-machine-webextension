@@ -30,15 +30,17 @@
       </div>
       <div class="col-sm-6">
         <div class="pre">
-          <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
-          <div class="error">
-            <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
-            <ul>
-              <li><span class="color-dark">Go to the <b>Settings</b> menu in the extension</span></li>
-              <li><span class="color-dark">Switch to <b>Contexts</b> menu</span></li>
-              <li><span class="color-dark">Select features to be displayed on this page</span></li>
-              <li><span class="color-dark">Refresh this page</span></li>
-            </ul>
+          <div class="pre-container">
+            <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
+            <div class="error">
+              <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
+              <ul>
+                <li><span class="color-dark">Go to the <b>Settings</b> menu in the extension</span></li>
+                <li><span class="color-dark">Switch to <b>Contexts</b> menu</span></li>
+                <li><span class="color-dark">Select features to be displayed on this page</span></li>
+                <li><span class="color-dark">Refresh this page</span></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -89,18 +91,20 @@
         <div class="loader" id="loader_alexa"></div>
         <div class="col-sm-6">
           <div class="pre" id="show_alexa_data" style="display:none;">
-            <div><b>Domain: </b><span class="color_code" id="alexa_name"></span></div>
-            <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
-            <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
-            <div class="error"></div>
-            <br>
-            <span class="related_sites">
-              <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;<b>Related sites:</b>
-              <ul id="alexa_list" class="rl-list rl-link"></ul>
-            </span>
-            <span>
+            <div class="pre-container">
+              <div><b>Domain: </b><span class="color_code" id="alexa_name"></span></div>
+              <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
+              <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
+              <div class="error"></div>
+              <br>
+              <span class="related_sites">
+                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;<b>Related sites:</b>
+                  <ul id="alexa_list" class="rl-list rl-link"></ul>
+                </span>
+              <span>
               <a id="alexa_page" target="_blank">Click to see more in alexa</a>
-            </span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -127,7 +131,7 @@
           <span class="color_code" id="website_response"></span>
         </div>
       </div>
-      
+
       <!-- Wbmsummary tab -->
       <div class="tabcontent" id="Wbmsummary">
         <div class="col-sm-12 text-center">
@@ -137,11 +141,13 @@
         <div class="loader" id="loader_wbmsummary"></div>
         <div class="col-sm-6">
           <div class="pre">
-            <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
-            <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
-            <div id="total_captures"><b>Total Number of Captures: </b><a target="_blank" id="total_archives_number"></a></div>
-            <div class="color_code" id="url_details">The URL is a <strong id="details"></strong></div>
-            <div id="message" style="display:none"></div>
+            <div class="pre-container">
+              <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
+              <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
+              <div id="total_captures"><b>Total Number of Captures: </b><a target="_blank" id="total_archives_number"></a></div>
+              <div class="color_code" id="url_details">The URL is a <strong id="details"></strong></div>
+              <div id="message" style="display:none"></div>
+            </div>
           </div>
         </div>
         <div class="loader" id="loader_thumbnail"></div>
@@ -180,7 +186,13 @@
             <div id="container-wordcloud"></div>
           </div>
         </div>
-        <div id="message_tagcloud" style="display:none;margin:10px 0"></div>
+        <div class="col-sm-6">
+          <div class="pre" id="tagcloud-not-found">
+            <div class="pre-container">
+              <div id="message_tagcloud" style="margin:10px 0"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- HTML Templates for annotation url -->

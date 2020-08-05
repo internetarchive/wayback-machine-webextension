@@ -91,7 +91,8 @@ function get_tags (url) {
         })
       } else {
         $('.wordcloud').hide()
-        $('#message_tagcloud').show().text('Tags Not found, Please try again later')
+        $('#tagcloud-not-found').show()
+        $('#message_tagcloud').text('Tags not found. Please try again later.')
       }
     })
 }
