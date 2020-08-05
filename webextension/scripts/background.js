@@ -20,6 +20,7 @@ var fact_checked_data = new Map()
 const SPN_RETRY = 6000
 
 var private_before_default = new Set([
+  'fact-check',
   'wm-count-setting',
   'resource',
   'email-outlinks-setting',

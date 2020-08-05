@@ -135,15 +135,20 @@ function togglePrivateMode () {
 }
 
 function hideUiButtons() {
+  // hide wayback machine count label
   if ($('#wm-count-setting').is(':not(:checked)')) {
     $('#wayback-count-label').hide()
   }
-
+  // hide relevant resources buttons
   if ($('#resource').is(':not(:checked)')) {
     $('#borrow_books').hide()
     $('#news_recommend').hide()
     $('#wikibooks').hide()
     $('#doi').hide()
+  }
+  // hide fact check button
+  if ($('#fact-check').is(':not(:checked)')) {
+    $('#fact-check-btn').removeClass('btn-purple')
   }
 }
 
