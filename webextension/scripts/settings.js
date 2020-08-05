@@ -146,7 +146,7 @@ function hideUiButtons() {
     $('#wikibooks').hide()
     $('#doi').hide()
   }
-  // hide fact check button
+  // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {
     $('#fact-check-btn').removeClass('btn-purple')
   }
