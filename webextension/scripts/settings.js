@@ -28,7 +28,6 @@ function restoreOptions (items) {
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   $('#fact-check').prop('checked', items.fact_check)
   $('#resource').prop('checked', items.resource)
-  $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#wm-count-setting').prop('checked', items.wm_count)
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
@@ -40,6 +39,7 @@ function restoreOptions (items) {
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
   $('#showall').prop('checked', items.showall)
+  $('#auto-update-context').prop('checked', items.auto_update_context)
   $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#show-resource-list').prop('checked', items.show_resource_list)
   $('#private-mode').prop('checked', items.private_mode)
@@ -58,7 +58,6 @@ function saveOptions () {
     fact_check: $('#fact-check').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     resource: resource,
-    auto_update_context: $('#auto-update-context').prop('checked'),
     wm_count: wm_count,
     auto_archive: $('#auto-archive').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
@@ -70,6 +69,7 @@ function saveOptions () {
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
     showall: $('#showall').prop('checked'),
+    auto_update_context: $('#auto-update-context').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
     private_mode: $('#private-mode').prop('checked'),
     show_resource_list: $('#show-resource-list').prop('checked')
@@ -214,7 +214,6 @@ function addDocs () {
     'fact-check': 'Auto detect fact-checks and show purple button if fact checks are available.',
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
-    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
@@ -224,7 +223,8 @@ function addDocs () {
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
     'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
     'annotations': 'Displays what Hypothes.is knows about the site you are on.',
-    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
+    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.'
   }
   let labels = $('label')
   for (var i = 0; i < labels.length; i++) {
