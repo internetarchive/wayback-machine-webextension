@@ -219,18 +219,18 @@ function addDocs() {
     /* General */
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'fact-check': 'Auto detect fact-checks and show purple button if fact checks are available.',
-    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
+    'fact-check': 'Check to see if the page you are on has been Fact Checked.',
+    'resource': 'Provide archived Books, Papers, and TV Clips on relevant pages from Amazon, Wikipedia, and News outlets.',
     'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',
     /* Contexts */
-    'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
+    'alexa': 'Displays what Alexa Internet knows about the site you are on.',
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
-    'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
-    'annotations': 'Displays what Hypothes.is knows about the site you are on.',
-    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.',
+    'wbmsummary': 'Displays what the Wayback Machine knows about the page you are on.',
+    'annotations': 'Displays Annotations from Hypothes.is for the page you are on.',
+    'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.'
   }
   let labels = $('label')
