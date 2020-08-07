@@ -3,9 +3,21 @@
 // from 'background.js'
 /*   global private_before_default */
 
-let isArray = (a) => (!!a) && (a.constructor === Array)
-let isObject = (a) => (!!a) && (a.constructor === Object)
-let searchValue
+// list of excluded URLs
+const excluded_urls = [
+  'localhost',
+  '0.0.0.0',
+  '127.0.0.1',
+  'chrome:',
+  'chrome-extension:',
+  'about:',
+  'moz-extension:',
+  '192.168.',
+  '10.',
+  'file:',
+  'edge:',
+  'extension:'
+]
 
 const newshosts = new Set([
   'apnews.com',
@@ -22,7 +34,10 @@ const newshosts = new Set([
   'www.washingtonpost.com'
 ])
 
-var private_before_state
+let isArray = (a) => (!!a) && (a.constructor === Array)
+let isObject = (a) => (!!a) && (a.constructor === Object)
+let searchValue
+let private_before_state
 
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
@@ -178,22 +193,6 @@ function isValidUrl(url) {
 function makeValidURL(url) {
   return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
 }
-
-// list of excluded URLs
-const excluded_urls = [
-  'localhost',
-  '0.0.0.0',
-  '127.0.0.1',
-  'chrome:',
-  'chrome-extension:',
-  'about:',
-  'moz-extension:',
-  '192.168.',
-  '10.',
-  'file:',
-  'edge:',
-  'extension:'
-]
 
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
@@ -393,30 +392,30 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     'data-toggle': 'tooltip',
     'title': tooltip
   })
-    .tooltip({
-      animated: false,
-      placement: `${pos} auto`,
-      html: true,
-      trigger: 'manual'
-    })
+  .tooltip({
+    animated: false,
+    placement: `${pos} auto`,
+    html: true,
+    trigger: 'manual'
+  })
   // Handles staying open
-    .on('mouseenter', () => {
-      $(anchor).tooltip('show')
-      $('.popup_box').on('mouseleave', () => {
-        setTimeout(() => {
-          if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
-            $(anchor).tooltip('hide')
-          }
-        }, time)
-      })
-    })
-    .on('mouseleave', () => {
+  .on('mouseenter', () => {
+    $(anchor).tooltip('show')
+    $('.popup_box').on('mouseleave', () => {
       setTimeout(() => {
-        if (!$('.popup_box:hover').length) {
+        if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
           $(anchor).tooltip('hide')
         }
       }, time)
     })
+  })
+  .on('mouseleave', () => {
+    setTimeout(() => {
+      if (!$('.popup_box:hover').length) {
+        $(anchor).tooltip('hide')
+      }
+    }, time)
+  })
 }
 
 // Default Settings prior to accepting terms.
@@ -427,12 +426,12 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* General */
+    fact_check: false,
     wm_count: false,
     resource: false,
     auto_archive: false,
     email_outlinks: false,
     not_found_popup: false,
-    auto_update_context: false,
     show_resource_list: false,
     show_context: 'tab',
     private_mode: false,
@@ -443,6 +442,7 @@ function initDefaultOptions () {
     wbmsummary: true,
     annotations: true,
     tagcloud: true,
+    auto_update_context: false,
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -451,6 +451,7 @@ function initDefaultOptions () {
 function afterAcceptOptions () {
   chrome.storage.local.set({
     /* General */
+    fact_check: true,
     wm_count: true,
     resource: true,
     email_outlinks: true,
