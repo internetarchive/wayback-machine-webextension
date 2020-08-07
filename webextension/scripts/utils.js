@@ -3,9 +3,21 @@
 // from 'background.js'
 /*   global private_before_default */
 
-let isArray = (a) => (!!a) && (a.constructor === Array)
-let isObject = (a) => (!!a) && (a.constructor === Object)
-let searchValue
+// list of excluded URLs
+const excluded_urls = [
+  'localhost',
+  '0.0.0.0',
+  '127.0.0.1',
+  'chrome:',
+  'chrome-extension:',
+  'about:',
+  'moz-extension:',
+  '192.168.',
+  '10.',
+  'file:',
+  'edge:',
+  'extension:'
+]
 
 const newshosts = new Set([
   'apnews.com',
@@ -22,7 +34,10 @@ const newshosts = new Set([
   'www.washingtonpost.com'
 ])
 
-var private_before_state
+let isArray = (a) => (!!a) && (a.constructor === Array)
+let isObject = (a) => (!!a) && (a.constructor === Object)
+let searchValue
+let private_before_state
 
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
@@ -178,22 +193,6 @@ function isValidUrl(url) {
 function makeValidURL(url) {
   return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
 }
-
-// list of excluded URLs
-const excluded_urls = [
-  'localhost',
-  '0.0.0.0',
-  '127.0.0.1',
-  'chrome:',
-  'chrome-extension:',
-  'about:',
-  'moz-extension:',
-  '192.168.',
-  '10.',
-  'file:',
-  'edge:',
-  'extension:'
-]
 
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
