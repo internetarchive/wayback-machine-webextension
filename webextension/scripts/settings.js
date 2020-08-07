@@ -20,59 +20,64 @@ $('#back-btn').click(goBack)
 switchSetting()
 addDocs()
 
-function initializeSettings () {
+function initializeSettings() {
   chrome.storage.local.get(null, restoreOptions)
 }
 
-function restoreOptions (items) {
-  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
+function restoreOptions(items) {
+  /* SPN */
+  $('#chk-screenshot').prop('checked', items.spn_screenshot)
+  $('#chk-outlinks').prop('checked', items.spn_outlinks)
+  /* General */
+  $('#private-mode').prop('checked', items.private_mode)
+  $('#wm-count-setting').prop('checked', items.wm_count)
   $('#fact-check').prop('checked', items.fact_check)
   $('#resource').prop('checked', items.resource)
-  $('#auto-update-context').prop('checked', items.auto_update_context)
-  $('#wm-count-setting').prop('checked', items.wm_count)
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
-  $('#chk-outlinks').prop('checked', items.spn_outlinks)
-  $('#chk-screenshot').prop('checked', items.spn_screenshot)
+  $('#not-found-popup').prop('checked', items.not_found_popup)
+  $('#show-resource-list').prop('checked', items.show_resource_list)
+  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
+  /* Contexts */
+  $('#showall').prop('checked', items.showall)
   $('#alexa').prop('checked', items.alexa)
   $('#domaintools').prop('checked', items.domaintools)
   $('#wbmsummary').prop('checked', items.wbmsummary)
   $('#annotations').prop('checked', items.annotations)
   $('#tagcloud').prop('checked', items.tagcloud)
-  $('#showall').prop('checked', items.showall)
-  $('#not-found-popup').prop('checked', items.not_found_popup)
-  $('#show-resource-list').prop('checked', items.show_resource_list)
-  $('#private-mode').prop('checked', items.private_mode)
-
-  // Set 'selected-prior' class to the previous state
+  $('#auto-update-context').prop('checked', items.auto_update_context)
+  /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
   }
 }
 
-function saveOptions () {
+function saveOptions() {
   let wm_count = $('#wm-count-setting').prop('checked')
   let resource = $('#resource').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
-    fact_check: $('#fact-check').prop('checked'),
-    show_context: $('input[name=tw]:checked').val(),
-    resource: resource,
-    auto_update_context: $('#auto-update-context').prop('checked'),
-    wm_count: wm_count,
-    auto_archive: $('#auto-archive').prop('checked'),
-    email_outlinks: $('#email-outlinks-setting').prop('checked'),
+    /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
+    /* General */
+    private_mode: $('#private-mode').prop('checked'),
+    wm_count: wm_count,
+    fact_check: fact_check,
+    resource: resource,
+    auto_archive: $('#auto-archive').prop('checked'),
+    email_outlinks: $('#email-outlinks-setting').prop('checked'),
+    not_found_popup: $('#not-found-popup').prop('checked'),
+    show_resource_list: $('#show-resource-list').prop('checked'),
+    show_context: $('input[name=tw]:checked').val(),
+    /* Contexts */
+    showall: $('#showall').prop('checked'),
     alexa: $('#alexa').prop('checked'),
     domaintools: $('#domaintools').prop('checked'),
     wbmsummary: $('#wbmsummary').prop('checked'),
     annotations: $('#annotations').prop('checked'),
     tagcloud: $('#tagcloud').prop('checked'),
-    showall: $('#showall').prop('checked'),
-    not_found_popup: $('#not-found-popup').prop('checked'),
-    private_mode: $('#private-mode').prop('checked'),
-    show_resource_list: $('#show-resource-list').prop('checked')
+    auto_update_context: $('#auto-update-context').prop('checked')
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
@@ -86,7 +91,7 @@ function saveOptions () {
   }
 }
 
-function validate () {
+function validate() {
   let checkboxes = $('[name="context"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkboxes.length === checkedCount) {
@@ -96,14 +101,14 @@ function validate () {
   }
 }
 
-function selectall () {
+function selectall() {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
   }
 }
 
-function validatePrivateMode (event) {
+function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
@@ -126,7 +131,7 @@ function validatePrivateMode (event) {
   hideUiButtons()
 }
 
-function togglePrivateMode () {
+function togglePrivateMode() {
   let checkboxes = $('.selected-prior.private')
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = !$(this).prop('checked')
@@ -152,7 +157,7 @@ function hideUiButtons() {
   }
 }
 
-function noneSelected () {
+function noneSelected() {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) { return false }
@@ -160,7 +165,7 @@ function noneSelected () {
   return true
 }
 
-function goBack () {
+function goBack() {
   $('#setting-page').hide()
   $('#popup-page').show()
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -209,22 +214,24 @@ function switchSetting() {
 
 function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
 
-function addDocs () {
+function addDocs() {
   let docs = {
-    'fact-check': 'Auto detect fact-checks and show purple button if fact checks are available.',
+    /* General */
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
-    'resource': 'Provide archived resources on relevant URLs, including Amazon books, Wikipedia, and select News outlets.',
-    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
-    'show-resource-list': 'Display a list of resources during Save Page Now.',
-    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
+    'fact-check': 'Check to see if the page you are on has been Fact Checked.',
+    'resource': 'Provide archived Books, Papers, and TV Clips on relevant pages from Amazon, Wikipedia, and News outlets.',
     'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'alexa': 'Displays what Traffic Data that Alexa knows about the site you are on.',
+    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
+    'show-resource-list': 'Display a list of resources during Save Page Now.',
+    /* Contexts */
+    'alexa': 'Displays what Alexa Internet knows about the site you are on.',
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
-    'wbmsummary': 'Displays what the Wayback Machine knows about the site you are on.',
-    'annotations': 'Displays what Hypothes.is knows about the site you are on.',
-    'tagcloud': 'Show a Word Cloud built from Anchor text of links archived in the Wayback Machine.'
+    'wbmsummary': 'Displays what the Wayback Machine knows about the page you are on.',
+    'annotations': 'Displays Annotations from Hypothes.is for the page you are on.',
+    'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.'
   }
   let labels = $('label')
   for (var i = 0; i < labels.length; i++) {
