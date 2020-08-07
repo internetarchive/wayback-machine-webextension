@@ -60,13 +60,12 @@ body {
     height: 64px;
 }
 
-.branding {
+.ournews-branding {
     font-size: 15px;
 }
 
-.branding img {
-    padding-top: 8px;
-    margin-left: 4px;
+.ournews-branding img {
+    margin: 8px 0 0 4px;
     width: 110px;
 }
 

@@ -5,11 +5,20 @@ body {
 h1 {
     font-weight: bold;
     font-family: sans-serif;
-    margin: 1em 0;
+    margin: 1em 0 0.5em 0;
 }
 
 h4 {
     font-size: 23px;
+}
+
+.hyp-branding {
+    font-size: 15px;
+}
+.hyp-branding img {
+    margin-left: 1em;
+    width: 170px;
+    height: 35px;
 }
 
 .color_code, .glyphicon-globe {
@@ -212,9 +221,9 @@ ul {
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
-    min-height: 100px;
+    min-height: 80px;
     width: 100%;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 /* Change background color of buttons on hover */
@@ -287,14 +296,14 @@ ul {
 
     .col-tablinks button {
         padding: 0 7px;
-        font-size: 23px;
+        font-size: 20px;
     }
 }
 
 @media screen and (max-width: 800px) {
     .col-tablinks button {
         padding: 0 2px;
-        font-size: 21px;
+        font-size: 17px;
     }
 
     h4 {
@@ -304,7 +313,7 @@ ul {
 
 @media screen and (max-width: 700px) {
     .col-tablinks button {
-        font-size: 20px;
+        font-size: 16px;
         word-wrap: break-word;
     }
 }
