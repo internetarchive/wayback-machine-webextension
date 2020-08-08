@@ -191,7 +191,6 @@ ul {
 }
 
 .pre-container {
-    text-align: justify;
     margin: 0.7em;
 }
 
@@ -253,14 +252,17 @@ ul {
     margin: auto;
 }
 
-#row_contain-url, #row_contain-domain, #url_details, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
+#row_contain-url, #row_contain-domain, #url_details, #show_thumbnail, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
     display: none;
 }
 
 #container-whole-url, #container-whole-domain {
-    text-align: justify;
     max-height: 500px;
     overflow-y: auto;
+}
+
+#text-contain, .target-selector-exact {
+    text-align: justify;
 }
 
 .container-scrollbar::-webkit-scrollbar {

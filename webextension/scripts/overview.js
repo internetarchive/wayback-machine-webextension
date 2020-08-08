@@ -30,7 +30,7 @@ function get_details (url) {
       get_thumbnail(url)
     } else {
       $('#loader_thumbnail').hide()
-      $('#show_thumbnail').text('Thumbnail not found.')
+      $('#show_thumbnail').text('Thumbnail not found.').show()
     }
   })
 }
@@ -73,17 +73,18 @@ function get_thumbnail (url) {
   fetch(new_url)
     .then((response) => {
       $('#loader_thumbnail').hide()
-      $('#show_thumbnail').append($('<img class="thumbnail-box">').attr('src', new_url))
+      let thumbnail = $(`<img class="thumbnail-box" src="${new_url}">`)
+      $('#show_thumbnail').append(thumbnail).show()
     })
     .catch((exception) => {
       $('#loader_thumbnail').hide()
       if (exception === 'timeout') {
-        $('#show_thumbnail').text('Please refresh the page.')
+        $('#show_thumbnail').text('Please refresh the page.').show()
       } else {
         if (exception.status === 504) {
-          $('#show_thumbnail').text('Please refresh the page.')
+          $('#show_thumbnail').text('Please refresh the page.').show()
         } else {
-          $('#show_thumbnail').text('Thumbnail not found.')
+          $('#show_thumbnail').text('Thumbnail not found.').show()
         }
       }
     })
