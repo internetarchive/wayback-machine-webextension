@@ -152,7 +152,7 @@ a.button:hover {
     padding: 0;
     page-break-after: always;
     page-break-inside: avoid;
-    display: inline-block;
+    display: none;
 }
 
 #container-wordcloud {

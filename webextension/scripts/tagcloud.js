@@ -27,6 +27,7 @@ function get_tags (url) {
     .then((data) => {
       $('#loader_tagcloud').hide()
       if (!data.error && data.length > 0) {
+        $('.wordcloud').css( 'display', 'inline-block' )
         $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
