@@ -18,6 +18,7 @@
 
 .setting-switch {
     width: 100%;
+    min-height: 36px;
     border-radius: 5px;
     border: 1px solid #888;
     margin: 5px auto 5px auto;
@@ -81,7 +82,6 @@
 
 
 #setting-page {
-    /* max-height: 458px; */
     overflow: hidden;
     margin: 10px 0;
 }
@@ -135,15 +135,16 @@ label[for=tagcloud] {
 
 .btn-docs {
     float: right;
+    width: 16px;
+    height: 16px;
     border: 1px solid #888;
     border-radius: 50%;
-    transform: scale(.7);
-    font-size: 12px;
+    font-size: 10px;
+    padding: 0;
 }
 
-.tooltip-inner p{
-    margin-bottom: 2px;
-    margin-left: 5px;
+.tooltip-inner p {
+    margin: 5px;
 }
 
 .setting-tip {

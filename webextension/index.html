@@ -48,14 +48,22 @@
 
           <div class="flip" id="savebtn">
             <div id="savebox">
-              <div class="flip-front"><button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="save_now">Save Page Now</button></div>
-              <div class="flip-back"><button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="last_save" tabindex="-1">URL not supported</button></div>
+              <div class="flip-front">
+                <div type="button" class="btn btn-sm btn-block btn-wide btn-red progress-container">
+                  <div class="progress" id="save-progress-bar">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+                    </div>
+                  </div>
+                  <p class="spn-btn" id="save_now">Save Page Now</p>
+                </div>
+              </div>
+              <div class="flip-back"><div type="button" class="btn btn-sm btn-block btn-wide btn-red" id="last_save" tabindex="-1">URL not supported</div></div>
             </div>
           </div>
 
           <div class="chk-frame">
-            <label class="chk-options" for="chk-outlinks"><input type="checkbox" id="chk-outlinks"> Outlinks</label>
-            <label class="chk-options" for="chk-screenshot"><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+            <label class="chk-options" for="chk-outlinks" title="Takes longer to save more."><input type="checkbox" id="chk-outlinks"> Outlinks</label>
+            <label class="chk-options" for="chk-screenshot" title="Includes page image."><input type="checkbox" id="chk-screenshot"> Screenshot</label>
           </div>
 
           <div class="btn-block">
@@ -96,6 +104,19 @@
               </div>
               <div class="flip-back">
                 <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fact Check -->
+
+          <div class="flip flip-margin" id="fact-check-screen">
+            <div id="fact-check-box">
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-btn">Fact Check</button>
+              </div>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-tip" tabindex="-1">URL not supported</button>
               </div>
             </div>
           </div>
@@ -165,21 +186,40 @@
       </div>
 
       <div id="general-panel">
-        <label class="setting-switch" for="wm-count-setting">
-          <input type="checkbox" id="wm-count-setting">
+        <label class="setting-switch" for="private-mode">
+          <input type="checkbox" id="private-mode">
           <div class="setting-text-box">
-            <span class="toggle">Wayback Count</span>
+            <span class="toggle">Private Mode</span>
+          </div>
+        </label>
+        <label class="setting-switch" for="not-found-popup">
+          <input type="checkbox" name="private-include" class="private" id="not-found-popup">
+          <div class="setting-text-box">
+            <span class="toggle">Replace 404s</span>
+          </div>
+        </label>
+        <label class="setting-switch" for="wm-count-setting">
+          <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
+          <div class="setting-text-box">
+            <span class="toggle">Archived Count</span>
+          </div>
+        </label>
+        <label class="setting-switch" for="fact-check">
+          <input type="checkbox" name="private-include" class="private" id="fact-check">
+          <div class="setting-text-box">
+            <span class="toggle">Fact Checks</span>
+            <img src="images/toolbar/toolbar-icon-F32.png" alt="F" style="width:16px">
           </div>
         </label>
         <label class="setting-switch" for="resource">
-          <input type="checkbox" id="resource">
+          <input type="checkbox" name="private-include" class="private" id="resource">
           <div class="setting-text-box">
-            <span class="toggle">Relevant Archived Resources</span>
+            <span class="toggle">Relevant Archive Resources</span>
             <img src="images/toolbar/toolbar-icon-R32.png" alt="R" style="width:16px">
           </div>
         </label>
         <label class="setting-switch" for="auto-archive">
-          <input type="checkbox" id="auto-archive">
+          <input type="checkbox" name="private-include" class="private" id="auto-archive">
           <div class="setting-text-box">
             <span class="toggle">Auto Save Page</span>
             <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
@@ -189,18 +229,6 @@
           <input type="checkbox" id="email-outlinks-setting">
           <div class="setting-text-box">
             <span class="toggle">Email Outlinks</span>
-          </div>
-        </label>
-        <label class="setting-switch" for="not-found-popup">
-          <input type="checkbox" id="not-found-popup">
-          <div class="setting-text-box">
-            <span class="toggle">404 Not Found</span>
-          </div>
-        </label>
-        <label class="setting-switch" for="auto-update-context">
-          <input type="checkbox" id="auto-update-context">
-          <div class="setting-text-box">
-            <span class="toggle">Auto-Update Contexts</span>
           </div>
         </label>
         <label class="setting-switch" for="show-resource-list">
@@ -260,6 +288,13 @@
           <input type="checkbox" name="context" id="tagcloud" class="only">
           <div class="setting-text-box">
             <span class="enable">Tag Cloud</span>
+          </div>
+        </label>
+        <br>
+        <label class="setting-switch ctx" for="auto-update-context">
+          <input type="checkbox" id="auto-update-context" class="only">
+          <div class="setting-text-box">
+            <span class="enable">Auto-Update Contexts</span>
           </div>
         </label>
       </div>

@@ -3,7 +3,6 @@
 
 body {
     width: 200px;
-    max-height: 538px;
     background-color: #eee;
     color: #222;
 }
@@ -75,7 +74,7 @@ body {
     opacity: 0.8;
 }
 
-#using-search-url {
+#using-search-url, #save-progress-bar {
     display: none;
 }
 
@@ -127,6 +126,7 @@ body {
     padding-top: 17px;
     margin-bottom: -8px;
     border: 1px solid #ddd;
+    border-top: none;
     background-color: #ddd;
 }
 
@@ -149,6 +149,35 @@ button {
     outline: none !important;
 }
 
+.spn-btn {
+    width: 100%;
+    position: absolute;
+    bottom: 6px;
+    text-align: center;
+    margin: auto;
+}
+
+.progress-container {
+    padding: 0px;
+}
+
+.progress {
+    height: 28px;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.progress-bar {
+    background-color: #9A3B38;
+}
+
+.progress-bar.active {
+    -webkit-animation: progress-bar-stripes 0.5s linear infinite;
+    -o-animation: progress-bar-stripes 0.5s linear infinite;
+    animation: progress-bar-stripes 0.5s linear infinite;
+}
+
 /* social buttons */
 
 a.btn-social, .btn-social {
@@ -161,7 +190,7 @@ a.btn-social, .btn-social {
     text-align: center;
     text-decoration: none;
     transition: background-color .3s;
-    webkit-transition: background-color .3s;
+    -webkit-transition: background-color .3s;
     width: 54px;
     position: relative;
     cursor: pointer;
@@ -169,14 +198,14 @@ a.btn-social, .btn-social {
 
 .btn-social .fa, .btn-social i {
     backface-visibility: hidden;
-    moz-backface-visibility: hidden;
-    ms-transform: scale(1);
-    o-transform: scale(1);
+    -moz-backface-visibility: hidden;
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
     transform: scale(1);
     transition: all .25s;
-    webkit-backface-visibility: hidden;
-    webkit-transform: scale(1);
-    webkit-transition: all .25s;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: scale(1);
+    -webkit-transition: all .25s;
 }
 .btn-social:hover, .btn-social:focus {
     color: #fff;
@@ -184,10 +213,10 @@ a.btn-social, .btn-social {
     text-decoration: none;
 }
 .btn-social:hover .fa,.btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i {
-    ms-transform: scale(1.3);
-    o-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    -o-transform: scale(1.3);
     transform: scale(1.3);
-    webkit-transform: scale(1.3);
+    -webkit-transform: scale(1.3);
 }
 .btn-social.btn-sm {
     font-size: 13px;
@@ -263,6 +292,15 @@ a.btn-social, .btn-social {
     background-color: #51708E  !important;
 }
 
+.btn-purple {
+    background-color: #694071 !important;
+    border: 1px solid #A766B3 !important;
+    color: #eee !important;
+}
+.btn-purple:hover {
+    background-color: #85518E  !important;
+}
+
 .btn-unselected {
     background-color: transparent;
     color: #333 !important;
@@ -336,7 +374,8 @@ a.btn-social, .btn-social {
 .flip-back {
     transform: rotateX(180deg);
 }
-.related_archived_resources{
+
+.related_archived_resources {
     margin-bottom: 10px;
     display: none;
 }
@@ -356,6 +395,7 @@ a.btn-social, .btn-social {
 
     .chk-frame {
         border: 1px solid #744;
+        border-top: none;
         background-color: #3c2c2c;
     }
 

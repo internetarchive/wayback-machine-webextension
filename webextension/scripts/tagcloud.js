@@ -27,6 +27,7 @@ function get_tags (url) {
     .then((data) => {
       $('#loader_tagcloud').hide()
       if (!data.error && data.length > 0) {
+        $('.wordcloud').css( 'display', 'inline-block' )
         $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
@@ -91,7 +92,8 @@ function get_tags (url) {
         })
       } else {
         $('.wordcloud').hide()
-        $('#message_tagcloud').show().text('Tags Not found, Please try again later')
+        $('#tagcloud-not-found').show()
+        $('#message_tagcloud').text('Tags not found. Please try again later.')
       }
     })
 }

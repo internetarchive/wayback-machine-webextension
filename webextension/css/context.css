@@ -5,11 +5,20 @@ body {
 h1 {
     font-weight: bold;
     font-family: sans-serif;
-    margin: 1em 0;
+    margin: 1em 0 0.5em 0;
 }
 
 h4 {
     font-size: 23px;
+}
+
+.hyp-branding {
+    font-size: 15px;
+}
+.hyp-branding img {
+    margin-left: 1em;
+    width: 170px;
+    height: 35px;
 }
 
 .color_code, .glyphicon-globe {
@@ -23,6 +32,7 @@ h4 {
     height: 100%;
     width: 23%;
     border-right: 3px solid #9A3B38;
+    overflow: auto;
 }
 
 .tab-content-container {
@@ -142,7 +152,7 @@ a.button:hover {
     padding: 0;
     page-break-after: always;
     page-break-inside: avoid;
-    display: inline-block;
+    display: none;
 }
 
 #container-wordcloud {
@@ -169,15 +179,19 @@ ul {
 .pre {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     display: block;
-    padding: 1em;
+    min-height: 1em;
     margin: 1em auto 1.8em auto;
     font-size: 18px;
-    line-height: 1.42857143;
+    line-height: 1.5;
     color: #333;
     word-wrap: break-word;
     background-color: #ffffff75;
     border-radius: 5px;	
     border: 1px solid #888;
+}
+
+.pre-container {
+    margin: 0.7em;
 }
 
 .col-sm-6 {
@@ -206,9 +220,9 @@ ul {
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
-    min-height: 100px;
+    min-height: 80px;
     width: 100%;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 /* Change background color of buttons on hover */
@@ -233,13 +247,22 @@ ul {
     display: none;
 }
 
-#row_contain-url, #row_contain-domain, #url_details, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
+#message_tagcloud {
+    text-align: center;
+    margin: auto;
+}
+
+#row_contain-url, #row_contain-domain, #url_details, #show_thumbnail, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
     display: none;
 }
 
 #container-whole-url, #container-whole-domain {
     max-height: 500px;
     overflow-y: auto;
+}
+
+#text-contain, .target-selector-exact {
+    text-align: justify;
 }
 
 .container-scrollbar::-webkit-scrollbar {
@@ -256,16 +279,12 @@ ul {
     margin : 10px 0;
 }
 
-.title {
+.title, #show_thumbnail {
     text-align: center;
 }
 
 .rl-list {
     margin-left: 10px;
-}
-
-#show_thumbnail {
-    text-align: center;
 }
 
 .thumbnail-box {
@@ -280,14 +299,14 @@ ul {
 
     .col-tablinks button {
         padding: 0 7px;
-        font-size: 23px;
+        font-size: 20px;
     }
 }
 
 @media screen and (max-width: 800px) {
     .col-tablinks button {
         padding: 0 2px;
-        font-size: 21px;
+        font-size: 17px;
     }
 
     h4 {
@@ -297,7 +316,7 @@ ul {
 
 @media screen and (max-width: 700px) {
     .col-tablinks button {
-        font-size: 20px;
+        font-size: 16px;
         word-wrap: break-word;
     }
 }

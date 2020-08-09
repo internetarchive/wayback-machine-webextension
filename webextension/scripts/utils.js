@@ -1,12 +1,23 @@
 // utils.js
 
-let isArray = (a) => (!!a) && (a.constructor === Array)
-let isObject = (a) => (!!a) && (a.constructor === Object)
+// from 'background.js'
+/*   global private_before_default */
 
-let searchValue
-let isFirefox = (navigator.userAgent.indexOf('Firefox') !== -1)
-const hostURL = isFirefox ? 'https://firefox-api.archive.org/' : 'https://chrome-api.archive.org/'
-const feedbackPageURL = isFirefox ? 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/' : 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
+// list of excluded URLs
+const excluded_urls = [
+  'localhost',
+  '0.0.0.0',
+  '127.0.0.1',
+  'chrome:',
+  'chrome-extension:',
+  'about:',
+  'moz-extension:',
+  '192.168.',
+  '10.',
+  'file:',
+  'edge:',
+  'extension:'
+]
 
 const newshosts = new Set([
   'apnews.com',
@@ -22,6 +33,59 @@ const newshosts = new Set([
   'www.vox.com',
   'www.washingtonpost.com'
 ])
+
+let isArray = (a) => (!!a) && (a.constructor === Array)
+let isObject = (a) => (!!a) && (a.constructor === Object)
+let searchValue
+let private_before_state
+
+chrome.storage.local.get(['private_before_state'], (event) => {
+  private_before_state = new Set(event.private_before_state)
+})
+
+/* * * Browser Detection * * */
+
+function getBrowser() {
+  // the order of these is important!
+  if (navigator.brave) { return 'brave' }
+  else if (navigator.userAgent.indexOf('Edg') !== -1) { return 'edge' }
+  else if (navigator.userAgent.indexOf('OPR') !== -1) { return 'opera' }
+  else if (navigator.userAgent.indexOf('Firefox') !== -1) { return 'firefox' }
+  else if (navigator.userAgent.indexOf('Chromium') !== -1) { return 'chromium' }
+  else if (navigator.userAgent.indexOf('Chrome') !== -1) { return 'chrome' }
+  else if (navigator.userAgent.indexOf('Safari') !== -1) { return 'safari' }
+  else if ((navigator.userAgent.indexOf('Trident') !== -1) || (navigator.userAgent.indexOf('MSIE'))) { return 'ie' }
+  else { return '' }
+}
+
+const hostURLs = {
+  chrome: 'https://chrome-api.archive.org/',
+  chromium: 'https://chrome-api.archive.org/',
+  firefox: 'https://firefox-api.archive.org/',
+  safari: 'https://safari-api.archive.org/',
+  brave: 'https://brave-api.archive.org/',
+  edge: 'https://edge-api.archive.org/',
+  ie: 'https://edge-api.archive.org/',
+  opera: 'https://opera-api.archive.org/'
+}
+
+const feedbackURLs = {
+  chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  chromium: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
+  safari: 'https://apps.apple.com/us/app/wayback-machine/id1201888313'
+}
+
+const gBrowser = getBrowser()
+const isChrome = (gBrowser === 'chrome') || (gBrowser === 'chromium')
+const isFirefox = (gBrowser === 'firefox')
+const isEdge = (gBrowser === 'edge')
+const isSafari = (gBrowser === 'safari')
+
+const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
+const feedbackURL = feedbackURLs[gBrowser] || '#'
+
+/* * * Wayback functions * * */
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -129,22 +193,6 @@ function isValidUrl(url) {
 function makeValidURL(url) {
   return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
 }
-
-// list of excluded URLs
-const excluded_urls = [
-  'localhost',
-  '0.0.0.0',
-  '127.0.0.1',
-  'chrome:',
-  'chrome-extension:',
-  'about:',
-  'moz-extension:',
-  '192.168.',
-  '10.',
-  'file:',
-  'edge:',
-  'extension:'
-]
 
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
@@ -344,30 +392,30 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     'data-toggle': 'tooltip',
     'title': tooltip
   })
-    .tooltip({
-      animated: false,
-      placement: `${pos} auto`,
-      html: true,
-      trigger: 'manual'
-    })
+  .tooltip({
+    animated: false,
+    placement: `${pos} auto`,
+    html: true,
+    trigger: 'manual'
+  })
   // Handles staying open
-    .on('mouseenter', () => {
-      $(anchor).tooltip('show')
-      $('.popup_box').on('mouseleave', () => {
-        setTimeout(() => {
-          if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
-            $(anchor).tooltip('hide')
-          }
-        }, time)
-      })
-    })
-    .on('mouseleave', () => {
+  .on('mouseenter', () => {
+    $(anchor).tooltip('show')
+    $('.popup_box').on('mouseleave', () => {
       setTimeout(() => {
-        if (!$('.popup_box:hover').length) {
+        if (!$(`.${anchor.attr('class')}[href*="${anchor.attr('href')}"]:hover`).length) {
           $(anchor).tooltip('hide')
         }
       }, time)
     })
+  })
+  .on('mouseleave', () => {
+    setTimeout(() => {
+      if (!$('.popup_box:hover').length) {
+        $(anchor).tooltip('hide')
+      }
+    }, time)
+  })
 }
 
 // Default Settings prior to accepting terms.
@@ -378,21 +426,24 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* General */
+    fact_check: false,
     wm_count: false,
     resource: false,
     auto_archive: false,
     email_outlinks: false,
     not_found_popup: false,
-    auto_update_context: false,
     show_resource_list: false,
     show_context: 'tab',
+    private_mode: false,
     /* Contexts */
     showall: true,
     alexa: true,
     domaintools: false,
     wbmsummary: true,
     annotations: true,
-    tagcloud: true
+    tagcloud: true,
+    auto_update_context: false,
+    private_before_state: Array.from(private_before_default)
   })
 }
 
@@ -400,6 +451,7 @@ function initDefaultOptions () {
 function afterAcceptOptions () {
   chrome.storage.local.set({
     /* General */
+    fact_check: true,
     wm_count: true,
     resource: true,
     email_outlinks: true,
@@ -432,8 +484,9 @@ if (typeof module !== 'undefined') {
     viewableTimestamp,
     initDefaultOptions,
     afterAcceptOptions,
-    feedbackPageURL,
+    feedbackURL,
     newshosts,
+    private_before_state,
     searchValue
   }
 }

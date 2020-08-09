@@ -30,15 +30,17 @@
       </div>
       <div class="col-sm-6">
         <div class="pre">
-          <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
-          <div class="error">
-            <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
-            <ul>
-              <li><span class="color-dark">Go to the <b>Settings</b> menu in the extension</span></li>
-              <li><span class="color-dark">Switch to <b>Contexts</b> menu</span></li>
-              <li><span class="color-dark">Select features to be displayed on this page</span></li>
-              <li><span class="color-dark">Refresh this page</span></li>
-            </ul>
+          <div class="pre-container">
+            <div class="text-center"><h4 class="color_code">No Context Selected</h4></div>
+            <div class="error">
+              <span>Looks like you didn't make any selection in the <b>Contexts</b> menu. Please follow the steps given below:</span>
+              <ul>
+                <li><span class="color-dark">Go to the <b>Settings</b> menu in the extension</span></li>
+                <li><span class="color-dark">Switch to <b>Contexts</b> menu</span></li>
+                <li><span class="color-dark">Select features to be displayed on this page</span></li>
+                <li><span class="color-dark">Refresh this page</span></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -70,7 +72,7 @@
           <button>Wayback Machine</button>
         </div>
         <div class="col-tablinks" id="Annotations_tab">
-          <button>Annotations (Hypothes.is)</button>
+          <button>Anno&shy;tations</button>
         </div>
         <div class="col-tablinks" id="Tagcloud_tab">
           <button>Tag Cloud</button>
@@ -83,24 +85,26 @@
       <!-- Alexa tab -->
       <div class="tabcontent" id="Alexa">
         <div class="col-sm-12 text-center">
-          <h1>Alexa Overview</h1>
+          <h1>Alexa Internet</h1>
           <h4>URL: <a class="url" target="_blank"></a></h4>
         </div>
         <div class="loader" id="loader_alexa"></div>
         <div class="col-sm-6">
           <div class="pre" id="show_alexa_data" style="display:none;">
-            <div><b>Domain: </b><span class="color_code" id="alexa_name"></span></div>
-            <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
-            <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
-            <div class="error"></div>
-            <br>
-            <span class="related_sites">
-              <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;<b>Related sites:</b>
-              <ul id="alexa_list" class="rl-list rl-link"></ul>
-            </span>
-            <span>
+            <div class="pre-container">
+              <div><b>Domain: </b><span class="color_code" id="alexa_name"></span></div>
+              <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
+              <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
+              <div class="error"></div>
+              <br>
+              <span class="related_sites">
+                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;<b>Related sites:</b>
+                  <ul id="alexa_list" class="rl-list rl-link"></ul>
+                </span>
+              <span>
               <a id="alexa_page" target="_blank">Click to see more in alexa</a>
-            </span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -127,21 +131,23 @@
           <span class="color_code" id="website_response"></span>
         </div>
       </div>
-      
+
       <!-- Wbmsummary tab -->
       <div class="tabcontent" id="Wbmsummary">
         <div class="col-sm-12 text-center">
-          <h1>Wayback Captures Overview</h1>
+          <h1>Wayback Machine</h1>
           <h4>URL: <a class="url" target="_blank"></a></h4>
         </div>
         <div class="loader" id="loader_wbmsummary"></div>
         <div class="col-sm-6">
           <div class="pre">
-            <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
-            <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
-            <div id="total_captures"><b>Total Number of Captures: </b><a target="_blank" id="total_archives_number"></a></div>
-            <div class="color_code" id="url_details">The URL is a <strong id="details"></strong></div>
-            <div id="message" style="display:none"></div>
+            <div class="pre-container">
+              <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
+              <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
+              <div id="total_captures"><b>Total Number of Captures: </b><a target="_blank" id="total_archives_number"></a></div>
+              <div class="color_code" id="url_details">The URL is a <strong id="details"></strong></div>
+              <div id="message" style="display:none"></div>
+            </div>
           </div>
         </div>
         <div class="loader" id="loader_thumbnail"></div>
@@ -153,13 +159,13 @@
       <!-- Annotations tab -->
       <div class="tabcontent" id="Annotations">
         <div class="col-sm-12 text-center">
-          <h1>Annotations (Hypothes.is)</h1>
+          <h1>Annotations</h1>
+          <p class="hyp-branding"><i>powered by<a href="https://web.hypothes.is" target="_blank"><img src="images/hypothesis-logo.png" alt="Hypothes.is"></a></i></p>
           <h4>URL: <a class="url" target="_blank"></a></h4>
           <div id="annotations_status" style="display:none;">No Annotations Found.</div>
         </div>
         <div class="loader" id="loader_annotations"></div>
         <div class="col-sm-6" id="annotations_url">
-          <h4 class="title" id="title-url">URL</h4>
           <div class="pre annotations-container container-scrollbar" id="container-whole-url"></div>
         </div>
         <div class="col-sm-6" id="annotations_domain">
@@ -180,7 +186,13 @@
             <div id="container-wordcloud"></div>
           </div>
         </div>
-        <div id="message_tagcloud" style="display:none;margin:10px 0"></div>
+        <div class="col-sm-6">
+          <div class="pre" id="tagcloud-not-found">
+            <div class="pre-container">
+              <div id="message_tagcloud" style="margin:10px 0"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- HTML Templates for annotation url -->
