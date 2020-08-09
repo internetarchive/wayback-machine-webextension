@@ -91,7 +91,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, tabId: tabId })
           if (!silent) {
             notify('Error: ' + msg)
           }
@@ -121,7 +121,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
-  let wait_time = 1000;
+  let wait_time = 1000
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
@@ -204,7 +204,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_error',
-      error: vdata.message
+      error: vdata.message,
+      tabId: tabId
     })
     // notify
     if (!silent) {
