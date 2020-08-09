@@ -235,7 +235,7 @@ function getWikipediaBooks(Url, onSuccess, onFail) {
 
 function getTvNews(Url, onSuccess, onFail) {
   const requestUrl = hostURL + 'services/context/tvnews?url='
-  const url =  requestUrl +  encodeURIComponent(Url)
+  const url = requestUrl + encodeURIComponent(Url)
   // Encapsulate fetch with a timeout promise object
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, 5000)
@@ -256,11 +256,13 @@ function getTvNews(Url, onSuccess, onFail) {
 }
 var check_wiki_api_call = false
 function getCachedWikipediaBooks(url, onSuccess, onFail) {
-  if(check_wiki_api_call == false){
+  if (check_wiki_api_call === false) {
     check_wiki_api_call = true
+    setTimeout(() => {
+      check_wiki_api_call = false
+    }, 1000)
     let cacheWikipediaBooks = wikipediaBooksCache.get(url)
     if (cacheWikipediaBooks) {
-      check_wiki_api_call = false
       onSuccess(cacheWikipediaBooks)
     } else {
       getWikipediaBooks(url, (json) => {
@@ -268,7 +270,6 @@ function getCachedWikipediaBooks(url, onSuccess, onFail) {
           let first_key = wikipediaBooksCache.keys().next().value
           wikipediaBooksCache.delete(first_key)
         }
-        check_wiki_api_call = false
         wikipediaBooksCache.set(url, json)
         onSuccess(json)
       }, onFail)
@@ -278,11 +279,13 @@ function getCachedWikipediaBooks(url, onSuccess, onFail) {
 
 var check_tv_api_call = false
 function getCachedTvNews(url, onSuccess, onFail) {
-  if(check_tv_api_call == false){
+  if (check_tv_api_call === false) {
     check_tv_api_call = true
+    setTimeout(() => {
+      check_tv_api_call = false
+    }, 1000)
     let cacheTvNews = tvNewsCache.get(url)
     if (cacheTvNews) {
-      check_tv_api_call = false
       onSuccess(cacheTvNews)
     } else {
       getTvNews(url, (json) => {
@@ -290,7 +293,6 @@ function getCachedTvNews(url, onSuccess, onFail) {
           let first_key = tvNewsCache.keys().next().value
           tvNewsCache.delete(first_key)
         }
-        check_tv_api_call = false
         tvNewsCache.set(url, json)
         onSuccess(json)
       }, onFail)
