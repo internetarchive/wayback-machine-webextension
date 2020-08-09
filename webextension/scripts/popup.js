@@ -57,6 +57,7 @@ function loginSuccess() {
   $('.tab-item').css('width', '18%')
   $('#logout-button').css('display', 'inline-block')
   $('#save_now').removeAttr('disabled')
+  $('#savebtn').off('click').click(save_now)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.storage.local.get(['private_mode'], (event) => {
