@@ -54,7 +54,8 @@ function loginError() {
 
 function loginSuccess() {
   $('#login-status').text('Wayback logged in')
-  $('#logout').show()
+  $('.tab-item').css('width', '18%')
+  $('#logout-button').css('display', 'inline-block')
   $('#save_now').removeAttr('disabled')
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)

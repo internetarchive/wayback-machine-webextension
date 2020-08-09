@@ -9,7 +9,7 @@
 $('#sign_up').click(signUp)
 $('#forgot_password').click(forgotPassword)
 $('#log_in').click(doLogin)
-$('#logout').click(doLogout)
+$('#logout-button').click(doLogout)
 
 function signUp() {
   openByWindowSetting('https://archive.org/account/signup')
@@ -80,7 +80,8 @@ function doLogout() {
         chrome.cookies.remove({url: 'https://archive.org', name: cookies[i].name})
       }
     }
-    $('#logout').hide()
+    $('#logout-button').hide()
+    $('.tab-item').css('width', '22%')
     loginError()
   })
 }

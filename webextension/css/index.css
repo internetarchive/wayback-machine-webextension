@@ -20,6 +20,11 @@ body {
 .tab-item:hover {
     opacity: 0.7;
 }
+
+.tab-item .glyphicon {
+    font-size: 25px;
+}
+
 .tab-icon {
     color: #444;
 }
@@ -332,7 +337,18 @@ a.btn-social, .btn-social {
 /* other */
 
 #feedback-button {
-    font-size: 185%;
+    font-size: 190%;
+}
+
+#logout-button {
+    display: none;
+    margin-top: -2px;
+}
+
+#login_message {
+    display: none;
+    color: #d4312c;
+    font-size: 12px;
 }
 
 /* flipping effect */
@@ -378,17 +394,6 @@ a.btn-social, .btn-social {
 .related_archived_resources {
     margin-bottom: 10px;
     display: none;
-}
-
-#login_message {
-    display: none;
-    color: #d4312c;
-    font-size: 12px;
-}
-
-#logout{
-    display: none;
-    margin: 10px 0;
 }
 
 /* dark mode */
@@ -446,4 +451,3 @@ a.btn-social, .btn-social {
         color: #eee !important;
     }
 }
-
