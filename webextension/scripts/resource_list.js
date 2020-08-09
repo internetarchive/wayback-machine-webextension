@@ -1,7 +1,6 @@
 window.onload = () => {
   var url = new URL(window.location.href)
   var url_name = url.searchParams.get('url')
-  console.log(document.location.hash)
   if (document.location.hash === '#not_refreshed') {
     show_resource_data(url_name)
   } else {
@@ -23,7 +22,9 @@ function show_resource_data(url_name) {
   $('#current-url').text(url_name)
   chrome.runtime.onMessage.addListener(
     (message) => {
+      console.log('received message')
       if (message.message === 'resource_list_show' && message.url === url_name) {
+        console.log('here')
         vdata = message.data
         status = message.data.status
         $('#current-status').text(status_list[status])
@@ -59,6 +60,9 @@ function show_resource_data(url_name) {
           showError()
           document.location.hash = '#refreshed'
         }
+      } else {
+        console.log('hey')
+        showError(message.data.message)
       }
     }
   )
