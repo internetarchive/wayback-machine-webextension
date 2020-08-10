@@ -256,32 +256,6 @@ function getTvNews(Url, onSuccess, onFail) {
     .then(clips => {
       if (clips) {
         onSuccess(clips)
-/**
- * Retrieves data from our.news Fack Check API for given url.
- * @param url {string}
- * @param onSuccess(json): json = root object from API call.
- * @param onFail(error): error = Error object or null.
- * @return Promise
- */
-function getFactCheck(url, onSuccess, onFail) {
-  if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = 'https://data.our.news/api/'
-    const requestParams = '?partner=wayback&factcheck=' + encodeURIComponent(url)
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => { reject(new Error('timeout')) }, 5000)
-      fetch(requestUrl + requestParams, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(resolve, reject)
-    })
-    return timeoutPromise
-    .then(response => response.json())
-    .then(json => {
-      if (json && json.results) {
-        onSuccess(json)
       } else {
         if (onFail) { onFail(null) }
       }
@@ -290,6 +264,7 @@ function getFactCheck(url, onSuccess, onFail) {
       if (onFail) { onFail(error) }
     })
 }
+
 var check_wiki_api_call = false
 function getCachedWikipediaBooks(url, onSuccess, onFail) {
   if (check_wiki_api_call === false) {
@@ -333,6 +308,44 @@ function getCachedTvNews(url, onSuccess, onFail) {
         onSuccess(json)
       }, onFail)
     }
+  } else {
+    if (onFail) { onFail(null) }
+  }
+}
+
+/**
+ * Retrieves data from our.news Fack Check API for given url.
+ * @param url {string}
+ * @param onSuccess(json): json = root object from API call.
+ * @param onFail(error): error = Error object or null.
+ * @return Promise
+ */
+function getFactCheck(url, onSuccess, onFail) {
+  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+    const requestUrl = 'https://data.our.news/api/'
+    const requestParams = '?partner=wayback&factcheck=' + encodeURIComponent(url)
+    const timeoutPromise = new Promise((resolve, reject) => {
+      setTimeout(() => { reject(new Error('timeout')) }, 5000)
+      fetch(requestUrl + requestParams, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(resolve, reject)
+    })
+    return timeoutPromise
+    .then(response => response.json())
+    .then(json => {
+      if (json && json.results) {
+        onSuccess(json)
+      } else {
+        if (onFail) { onFail(null) }
+      }
+    })
+    .catch(error => {
+      if (onFail) { onFail(error) }
+    })
   } else {
     if (onFail) { onFail(null) }
   }
