@@ -20,6 +20,11 @@ body {
 .tab-item:hover {
     opacity: 0.7;
 }
+
+.tab-item .glyphicon {
+    font-size: 25px;
+}
+
 .tab-icon {
     color: #444;
 }
@@ -43,7 +48,7 @@ body {
     height: 28px;
 }
 
-#search-input {
+#search-input, .login-input {
     background-color: #fff;
     border-color: #777;
     color: #222;
@@ -66,21 +71,26 @@ body {
   vertical-align: middle;
 }
 
-#logo-internet-archive {
+.logo-wayback-machine {
     position: relative;
     padding: 10px;
 }
-#logo-internet-archive:hover {
+.logo-wayback-machine:hover {
     opacity: 0.8;
+}
+
+.ia-logo {
+    width: 64px;
+    height: 64px;
 }
 
 #using-search-url, #save-progress-bar {
     display: none;
 }
 
-/* search box */
+/* search and login boxes */
 
-#search-input {
+#search-input, .login-input {
     display: block;
     position: relative;
     border-radius: 5px;
@@ -332,7 +342,18 @@ a.btn-social, .btn-social {
 /* other */
 
 #feedback-button {
-    font-size: 185%;
+    font-size: 190%;
+}
+
+#logout-button {
+    display: none;
+    margin-top: -2px;
+}
+
+#login-message {
+    display: none;
+    color: #d4312c;
+    font-size: 12px;
 }
 
 /* flipping effect */
@@ -407,10 +428,14 @@ a.btn-social, .btn-social {
         color: #bbb;
     }
 
-    #search-input {
+    #search-input, .login-input {
         background-color: #222;
         border-color: #666;
         color: #ddd;
+    }
+
+    #wayback-count-label, #url-not-supported-message, #using-search-url {
+       color: #eee;
     }
 
     #suggestion-box {
@@ -423,10 +448,6 @@ a.btn-social, .btn-social {
         background-color: #666;
     }
 
-    #wayback-count-label, #url-not-supported-message, #using-search-url {
-        color: #eee;
-    }
-
     .btn-unselected {
         color: #aaa !important;
         border: 1px solid transparent;
@@ -434,5 +455,4 @@ a.btn-social, .btn-social {
     .btn-unselected:hover {
         color: #eee !important;
     }
-
 }

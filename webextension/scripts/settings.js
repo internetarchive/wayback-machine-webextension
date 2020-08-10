@@ -16,7 +16,7 @@ document.getElementById('view').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
 $('input').change(saveOptions)
 $('#show_context').change(saveOptions)
-$('#back-btn').click(goBack)
+$('.back-btn').click(goBack)
 switchSetting()
 addDocs()
 
@@ -165,7 +165,8 @@ function noneSelected() {
   return true
 }
 
-function goBack() {
+function goBack () {
+  $('#login-page').hide()
   $('#setting-page').hide()
   $('#popup-page').show()
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
