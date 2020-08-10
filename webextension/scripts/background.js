@@ -83,6 +83,15 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
             if (result.show_resource_list === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
+              if (res.status === 'error') {
+                setTimeout(() => {
+                  chrome.runtime.sendMessage({
+                    message: 'resource_list_show_error',
+                    data: res,
+                    url: page_url
+                  })
+                }, 3000)
+              }
             }
           })
         }
