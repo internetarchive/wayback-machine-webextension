@@ -43,7 +43,6 @@ function last_save() {
 }
 
 function loginError() {
-  $('#login-status').text('Wayback logged out')
   $('#savebox').addClass('flip-inside')
   $('#last_save').text('Login to Save Page')
   $('#save_now').attr('disabled', true)
@@ -53,7 +52,6 @@ function loginError() {
 }
 
 function loginSuccess() {
-  $('#login-status').text('Wayback logged in')
   $('.tab-item').css('width', '18%')
   $('#logout-button').css('display', 'inline-block')
   $('#save_now').removeAttr('disabled')
