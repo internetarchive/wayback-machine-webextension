@@ -319,6 +319,7 @@ function settings() {
 function show_login_page() {
   $('#popup-page').hide()
   $('#setting-page').hide()
+  $('#login_message').hide()
   $('#login-page').show()
 }
 
