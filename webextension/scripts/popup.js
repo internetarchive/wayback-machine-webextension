@@ -295,7 +295,7 @@ function open_feedback_page() {
 }
 
 function open_donations_page() {
-  var donation_url = 'https://archive.org/donate/'
+  let donation_url = 'https://archive.org/donate/'
   openByWindowSetting(donation_url)
 }
 
@@ -319,7 +319,7 @@ function settings() {
 function show_login_page() {
   $('#popup-page').hide()
   $('#setting-page').hide()
-  $('#login_message').hide()
+  $('#login-message').hide()
   $('#login-page').show()
 }
 

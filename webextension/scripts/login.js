@@ -6,9 +6,9 @@
 // from 'popup.js'
 /* loginSuccess, loginError */
 
-$('#sign_up').click(signUp)
-$('#forgot_password').click(forgotPassword)
-$('#log_in').click(doLogin)
+$('#sign-up').click(signUp)
+$('#forgot-password').click(forgotPassword)
+$('#log-in').click(doLogin)
 $('#logout-button').click(doLogout)
 
 function signUp() {
@@ -21,18 +21,18 @@ function forgotPassword() {
 
 function doLogin(e) {
   e.preventDefault()
-  $('#login_message').hide()
+  $('#login-message').hide()
   let email = $('#email-address').val()
   let password = $('#password').val()
   if (email.length === 0) {
-    $('#login_message').show().text('Please type an email')
+    $('#login-message').show().text('Please type an email')
     return
   }
   if (password.length === 0) {
-    $('#login_message').show().text('Please type a password')
+    $('#login-message').show().text('Please type a password')
     return
   }
-  $('#log_in').val('Please Wait...')
+  $('#log-in').val('Please Wait...')
   const data = new URLSearchParams()
   data.append('username', email)
   data.append('password', password)
@@ -53,24 +53,24 @@ function doLogin(e) {
         .then(resolve, reject)
   })
   loginPromise
-      .then(response => response.json())
-      .then((res) => {
-        if (res.status === 'bad_login') {
-          $('#login_message').show().text('Incorrect Email or Password')
-          $('#log_in').val('Login')
-        } else {
-          $('#login_message').show().css('color', 'green').text('Success')
-          loginSuccess()
-          setTimeout(() => {
-            $('#login-page').hide()
-            $('#setting-page').hide()
-            $('#popup-page').show()
-            $('#login_message').hide()
-          }, 500)
-          $('#log_in').val('Login')
-        }
-      })
-      .catch(e => console.log(e))
+    .then(response => response.json())
+    .then((res) => {
+      if (res.status === 'bad_login') {
+        $('#login-message').show().text('Incorrect Email or Password')
+        $('#log-in').val('Login')
+      } else {
+        $('#login-message').show().css('color', 'green').text('Success')
+        loginSuccess()
+        setTimeout(() => {
+          $('#login-page').hide()
+          $('#setting-page').hide()
+          $('#popup-page').show()
+          $('#login-message').hide()
+        }, 500)
+        $('#log-in').val('Login')
+      }
+    })
+    .catch(e => console.log(e))
 }
 
 function doLogout() {
