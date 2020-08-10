@@ -580,7 +580,7 @@ window.onload = () => {
   }
 }
 
-$('#logo-internet-archive').click(homepage)
+$('.logo-wayback-machine').click(homepage)
 $('#savebtn').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)

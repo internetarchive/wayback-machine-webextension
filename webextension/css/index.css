@@ -71,12 +71,17 @@ body {
   vertical-align: middle;
 }
 
-#logo-internet-archive {
+.logo-wayback-machine {
     position: relative;
     padding: 10px;
 }
-#logo-internet-archive:hover {
+.logo-wayback-machine:hover {
     opacity: 0.8;
+}
+
+.ia-logo {
+    width: 64px;
+    height: 64px;
 }
 
 #using-search-url, #save-progress-bar {
