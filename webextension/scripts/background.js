@@ -564,7 +564,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                 addToolbarState(tabId, 'R')
               // checking resource of tv news
               } else if (newshosts.has(news_host)) {
-                // addToolbarState(tabId, 'R')  // TODO: uncomment this to enable TV News check
+                addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
               }
             }
           }
