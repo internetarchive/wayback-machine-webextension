@@ -85,6 +85,15 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
             if (result.show_resource_list === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
+              if (res.status === 'error') {
+                setTimeout(() => {
+                  chrome.runtime.sendMessage({
+                    message: 'resource_list_show_error',
+                    data: res,
+                    url: page_url
+                  })
+                }, 3000)
+              }
             }
           })
         }
@@ -93,7 +102,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, tabId: tabId })
           if (!silent) {
             notify('Error: ' + msg)
           }
@@ -123,7 +132,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
-  let wait_time = 1000;
+  let wait_time = 1000
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
@@ -206,7 +215,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     // update UI
     chrome.runtime.sendMessage({
       message: 'save_error',
-      error: vdata.message
+      error: vdata.message,
+      tabId: tabId
     })
     // notify
     if (!silent) {
@@ -506,7 +516,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'auth_check') {
     // auth check using cookies
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0))
+      let loggedIn = (result && result.value && (result.value.length > 0)) || false
       sendResponse({ auth_check: loggedIn })
     })
     return true
@@ -644,7 +654,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                     }
                   }, () => {}
                 )
-                // addToolbarState(tabId, 'R')  // TODO: uncomment this to enable TV News check
+                addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
               }
             }
           }

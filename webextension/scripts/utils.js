@@ -31,7 +31,8 @@ const newshosts = new Set([
   'www.theverge.com',
   'www.usatoday.com',
   'www.vox.com',
-  'www.washingtonpost.com'
+  'www.washingtonpost.com',
+  'edition.cnn.com'
 ])
 
 let isArray = (a) => (!!a) && (a.constructor === Array)

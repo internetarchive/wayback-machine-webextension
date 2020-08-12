@@ -1,7 +1,6 @@
 window.onload = () => {
   var url = new URL(window.location.href)
   var url_name = url.searchParams.get('url')
-  console.log(document.location.hash)
   if (document.location.hash === '#not_refreshed') {
     show_resource_data(url_name)
   } else {
@@ -59,6 +58,8 @@ function show_resource_data(url_name) {
           showError()
           document.location.hash = '#refreshed'
         }
+      } else if (message.message === 'resource_list_show_error' && message.url === url_name) {
+        showError(message.data.message)
       }
     }
   )

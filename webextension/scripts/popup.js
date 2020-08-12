@@ -35,34 +35,45 @@ function save_now() {
 function last_save() {
   checkAuthentication((result) => {
     if (!(result && result.auth_check)) {
-      $('#savebox').addClass('flip-inside')
-      $('#last_save').text('Login to Save Page')
-      $('#save_now').attr('disabled', true)
-      $('#savebtn').off('click').click(() => {
-        openByWindowSetting('https://archive.org/account/login')
-      })
+      loginError()
     } else {
-      $('#save_now').removeAttr('disabled')
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = searchValue || get_clean_url(tabs[0].url)
-        chrome.storage.local.get(['private_mode'], (event) => {
-          // auto save page
-          if (!event.private_mode) {
-            chrome.runtime.sendMessage({
-              message: 'getLastSaveTime',
-              page_url: url
-            }, (message) => {
-              if (message.message === 'last_save') {
-                if ($('#last_save').text !== 'URL not supported') {
-                  $('#last_save').text(message.time)
-                }
-                $('#savebox').addClass('flip-inside')
-              }
-            })
+      loginSuccess()
+    }
+  })
+}
+
+function loginError() {
+  $('#savebox').addClass('flip-inside')
+  $('#last_save').text('Login to Save Page')
+  $('#save_now').attr('disabled', true)
+  $('#savebtn').off('click').click(() => {
+    show_login_page()
+  })
+}
+
+function loginSuccess() {
+  $('.tab-item').css('width', '18%')
+  $('#logout-button').css('display', 'inline-block')
+  $('#save_now').removeAttr('disabled')
+  $('#savebtn').off('click').click(save_now)
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || get_clean_url(tabs[0].url)
+    chrome.storage.local.get(['private_mode'], (event) => {
+      // auto save page
+      if (!event.private_mode) {
+        chrome.runtime.sendMessage({
+          message: 'getLastSaveTime',
+          page_url: url
+        }, (message) => {
+          if (message.message === 'last_save') {
+            if ($('#last_save').text !== 'URL not supported') {
+              $('#last_save').text(message.time)
+            }
+            $('#savebox').addClass('flip-inside')
           }
         })
-      })
-    }
+      }
+    })
   })
 }
 
@@ -272,7 +283,7 @@ function display_suggestions(e) {
       $('#using-search-url').hide()
     }
     clearTimeout(timer)
-    // call display_list function if the difference between keypress is greater than 300ms (Debouncing)
+    // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     timer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
@@ -284,7 +295,7 @@ function open_feedback_page() {
 }
 
 function open_donations_page() {
-  var donation_url = 'https://archive.org/donate/'
+  let donation_url = 'https://archive.org/donate/'
   openByWindowSetting(donation_url)
 }
 
@@ -301,7 +312,15 @@ function sitemap() {
 
 function settings() {
   $('#popup-page').hide()
+  $('#login-page').hide()
   $('#setting-page').show()
+}
+
+function show_login_page() {
+  $('#popup-page').hide()
+  $('#setting-page').hide()
+  $('#login-message').hide()
+  $('#login-page').show()
 }
 
 function show_all_screens() {
@@ -560,7 +579,7 @@ window.onload = () => {
   }
 }
 
-$('#logo-internet-archive').click(homepage)
+$('.logo-wayback-machine').click(homepage)
 $('#savebtn').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
@@ -572,6 +591,7 @@ $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
 $('#setting-page').hide()
+$('#login-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
