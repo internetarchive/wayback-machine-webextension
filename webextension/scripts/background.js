@@ -358,11 +358,10 @@ chrome.webRequest.onCompleted.addListener((details) => {
     }
   }
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let tabId = tabs[0].id
-    if(tabs && tabs[0]){
+    if (tabs && tabs[0]) {
       chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
         if (event.not_found_popup === true && event.agreement === true) {
-          tabIsReady(tabId)
+          tabIsReady(tabs[0].id)
         }
       })
     }
