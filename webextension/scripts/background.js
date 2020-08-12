@@ -330,8 +330,8 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 * Header callback
 */
 chrome.webRequest.onCompleted.addListener((details) => {
-  function tabIsReady(isIncognito) {
-    if (isIncognito === false && details.frameId === 0 &&
+  function tabIsReady() {
+    if (details.frameId === 0 &&
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
@@ -357,20 +357,11 @@ chrome.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  if (details.tabId > 0) {
-    chrome.tabs.query({ currentWindow: true }, (tabs) => {
-      var tabsArr = tabs.map(tab => tab.id)
-      if (tabsArr.indexOf(details.tabId) >= 0) {
-        chrome.tabs.get(details.tabId, (tab) => {
-          chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-            if (event.not_found_popup === true && event.agreement === true) {
-              tabIsReady(tab.incognito)
-            }
-          })
-        })
-      }
-    })
-  }
+  chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
+    if (event.not_found_popup === true && event.agreement === true) {
+      tabIsReady()
+    }
+  })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 function getLastSaveTime(timestamp) {
