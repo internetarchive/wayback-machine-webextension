@@ -330,23 +330,23 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 * Header callback
 */
 chrome.webRequest.onCompleted.addListener((details) => {
-  function tabIsReady() {
+  function tabIsReady(tabId) {
     if (details.frameId === 0 &&
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(details.tabId, {
+        chrome.tabs.executeScript(tabId, {
           file: 'scripts/archive.js'
         }, () => {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.sendMessage(details.tabId, {
+            chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
               page_url: url,
               status_code: 999
             })
           } else {
-            chrome.tabs.sendMessage(details.tabId, {
+            chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
               page_url: details.url,
@@ -357,9 +357,14 @@ chrome.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-    if (event.not_found_popup === true && event.agreement === true) {
-      tabIsReady()
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let tabId = tabs[0].id
+    if(tabs && tabs[0]){
+      chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
+        if (event.not_found_popup === true && event.agreement === true) {
+          tabIsReady(tabId)
+        }
+      })
     }
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
