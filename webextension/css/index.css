@@ -84,7 +84,7 @@ body {
     height: 64px;
 }
 
-#using-search-url, #save-progress-bar {
+#using-search-url, #save-progress-bar, #context-screen-alexa, #context-screen-wbmsummary, #context-screen-annotations, #context-screen-tagcloud {
     display: none;
 }
 

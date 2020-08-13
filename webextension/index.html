@@ -96,13 +96,47 @@
             </div>
           </div>
 
-          <div class="flip flip-margin" id="context-screen">
-            <div id="ctxbox">
+          <!-- Contexts -->
+          <div class="flip flip-margin" id="context-screen-alexa">
+            <div id="ctxbox-alexa">
               <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn">Show Contexts</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn-alexa">Alexa Internet</button>
               </div>
               <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip-alexa" tabindex="-1">URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip flip-margin" id="context-screen-wbmsummary">
+            <div id="ctxbox-wbmsummary">
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn-wayback">Wayback Machine</button>
+              </div>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip-wayback" tabindex="-1">URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip flip-margin" id="context-screen-annotations">
+            <div id="ctxbox-annotations">
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn-annotations">Annotations</button>
+              </div>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip-annotations" tabindex="-1">URL not supported</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip flip-margin" id="context-screen-tagcloud">
+            <div id="ctxbox-tagcloud">
+              <div class="flip-front">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn-tags">Tag Cloud</button>
+              </div>
+              <div class="flip-back">
+                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip-tags" tabindex="-1">URL not supported</button>
               </div>
             </div>
           </div>
@@ -294,13 +328,13 @@
           </div>
         </label>
         <br>
-        <label class="setting-switch ctx" for="auto-update-context">
+        <!-- <label class="setting-switch ctx" for="auto-update-context">
           <input type="checkbox" id="auto-update-context" class="only">
           <div class="setting-text-box">
             <span class="enable">Auto-Update Contexts</span>
           </div>
         </label>
-      </div>
+      </div> -->
 
     </div>
 

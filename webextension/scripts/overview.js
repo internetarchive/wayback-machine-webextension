@@ -89,3 +89,8 @@ function get_thumbnail (url) {
       }
     })
 }
+
+const url = decodeURIComponent(getUrlByParameter('url'))
+$('.url').text(url).attr('href', url)
+
+window.onload = get_WBMSummary

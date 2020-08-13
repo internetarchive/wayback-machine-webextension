@@ -241,12 +241,6 @@ ul {
     background-color: #AA4B48;
 }
 
-/* Style the tab content */
-.tabcontent {
-    margin: auto;
-    display: none;
-}
-
 #message_tagcloud {
     text-align: center;
     margin: auto;
