@@ -536,16 +536,27 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab.id, tab.url)
     chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
-      // auto save page
-      if (event.auto_archive === true) {
-        auto_save(tab.id, tab.url)
-      }
       // fact check
       if (event.fact_check === true) {
         factCheckPage(tab.id, tab.url)
       }
+      // auto save page
+      if (event.auto_archive === true) {
+        auto_save(tab.id, tab.url)
+      }
     })
   } else if (info.status === 'loading') {
+    updateWaybackCountBadge(tab.id, tab.url)
+    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
+      // fact check
+      if (event.fact_check === true) {
+        factCheckPage(tab.id, tab.url)
+      }
+      // auto save page
+      if (event.auto_archive === true) {
+        auto_save(tab.id, tab.url)
+      }
+    })
     var received_url = tab.url
     clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {

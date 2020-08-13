@@ -35,6 +35,7 @@ const newshosts = new Set([
   'edition.cnn.com'
 ])
 
+
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
