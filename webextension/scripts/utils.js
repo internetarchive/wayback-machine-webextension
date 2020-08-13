@@ -58,15 +58,15 @@ function getBrowser() {
   else { return '' }
 }
 
-const hostURLs = {
-  chrome: 'https://chrome-api.archive.org/',
-  chromium: 'https://chrome-api.archive.org/',
-  firefox: 'https://firefox-api.archive.org/',
-  safari: 'https://safari-api.archive.org/',
-  brave: 'https://brave-api.archive.org/',
-  edge: 'https://edge-api.archive.org/',
-  ie: 'https://edge-api.archive.org/',
-  opera: 'https://opera-api.archive.org/'
+const hostBrowsers = {
+  chrome: 'chrome',
+  chromium: 'chrome',
+  firefox: 'firefox',
+  safari: 'safari',
+  brave: 'brave',
+  edge: 'edge',
+  ie: 'edge',
+  opera: 'opera'
 }
 
 const feedbackURLs = {
@@ -82,7 +82,7 @@ const isFirefox = (gBrowser === 'firefox')
 const isEdge = (gBrowser === 'edge')
 const isSafari = (gBrowser === 'safari')
 
-const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
+const hostBrowser = hostBrowsers[gBrowser] || hostBrowsers['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
 /* * * Wayback functions * * */
@@ -114,7 +114,7 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = hostURL + '__wb/sparkline'
+    const requestUrl = 'https://' + hostBrowser + '-api.archive.org/' + '__wb/sparkline'
     const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -154,7 +154,7 @@ function getWaybackCount(url, onSuccess, onFail) {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = hostURL + 'wayback/available'
+  var requestUrl = 'https://' + hostBrowser + '-api.archive.org/' + 'wayback/available'
   var requestParams = 'url=' + encodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
@@ -478,7 +478,7 @@ if (typeof module !== 'undefined') {
     getWaybackCount,
     badgeCountText,
     isFirefox,
-    hostURL,
+    hostBrowser,
     timestampToDate,
     dateToTimestamp,
     viewableTimestamp,

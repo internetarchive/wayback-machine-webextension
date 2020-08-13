@@ -1,7 +1,7 @@
 // overview.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
+/*   global getUrlByParameter, hostBrowser, getWaybackCount, timestampToDate */
 
 function get_WBMSummary () {
   var url = decodeURIComponent(getUrlByParameter('url'))
@@ -12,7 +12,7 @@ function get_WBMSummary () {
 }
 
 function get_details (url) {
-  var new_url = hostURL + 'services/context/metadata?url=' + url
+  var new_url = 'https://' + hostBrowser + '-api.archive.org/' + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     if ('type' in response) {
       var type = response.type
@@ -36,7 +36,7 @@ function get_details (url) {
 }
 
 function first_archive_details (url) {
-  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
+  var new_url = 'https://' + hostBrowser + '-api.archive.org/' + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#first_archive_datetime_error').text('URL has not been archived')
@@ -52,7 +52,7 @@ function first_archive_details (url) {
 }
 
 function recent_archive_details (url) {
-  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
+  var new_url = 'https://' + hostBrowser + '-api.archive.org/' + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#recent_archive_datetime_error').text('URL has not been archived')

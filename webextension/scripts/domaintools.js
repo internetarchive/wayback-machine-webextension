@@ -1,7 +1,7 @@
 // domaintools.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, hostBrowser */
 
 function appendToParent (id, item, text_before, parent, show_item, text_after) {
   if (item) {
@@ -15,7 +15,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
 
 function get_domainTool () {
   let url = decodeURIComponent(getUrlByParameter('url'))
-  let domaintools_api = hostURL+'context/domaintools?url=' + url
+  let domaintools_api = 'https://' + hostBrowser + '-api.archive.org/' + 'context/domaintools?url=' + url
   $.getJSON(domaintools_api, (data) => {
     let parent = $('#show_domaintools_data')
     if (data.status !== 'error') {

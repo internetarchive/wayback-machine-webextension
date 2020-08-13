@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, hostBrowser */
 
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
@@ -83,7 +83,7 @@ function makeEntry (data) {
 function createPage () {
   let container = $('#container-whole-doi')
   const url = getUrlByParameter('url')
-  $.getJSON(hostURL + 'services/context/papers?url=' + url, (response) => {
+  $.getJSON('https://' + hostBrowser + '-api.archive.org/' + 'services/context/papers?url=' + url, (response) => {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
       $('#doi-heading').html(response.message)

@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
+/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostBrowser */
 /*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
@@ -23,7 +23,7 @@ function save_now() {
     }
     chrome.runtime.sendMessage({
       message: 'openurl',
-      wayback_url: hostURL + 'save/',
+      wayback_url: 'https://' + hostBrowser + '-api.archive.org/' + 'save/',
       page_url: url,
       options: options,
       method: 'save',
@@ -250,7 +250,7 @@ function arrow_key_access() {
 
 function display_list(key_word) {
   $('#suggestion-box').text('').hide()
-  $.getJSON(hostURL + '__wb/search/host?q=' + key_word, (data) => {
+  $.getJSON('https://' + hostBrowser + '-api.archive.org/' + '__wb/search/host?q=' + key_word, (data) => {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
@@ -351,7 +351,7 @@ function borrow_books() {
               })
             } else {
               // if not, fetch it again
-              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+              fetch('https://' + hostBrowser + '-api.archive.org/' + 'services/context/amazonbooks?url=' + url)
               .then(res => res.json())
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {

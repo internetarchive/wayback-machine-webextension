@@ -1,5 +1,8 @@
 // tagcloud.js
 
+// from 'utils.js'
+/*   global hostBrowser */
+
 // from 'index.js'
 /*   global Levenshtein */
 
@@ -20,7 +23,7 @@ function get_tags (url) {
   var not_display3 = not_display4 + ' extension'
   var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
 
-  var new_url = hostURL+ 'services/context/tagcloud?url=' + toBeUsedAsURL
+  var new_url = 'https://' + hostBrowser + '-api.archive.org/' + 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())

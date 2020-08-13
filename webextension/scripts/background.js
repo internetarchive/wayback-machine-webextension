@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, get_clean_url, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, get_clean_url, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostBrowser, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
@@ -15,7 +15,7 @@ var globalStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let tabIdPromise
-var WB_API_URL = hostURL + 'wayback/available'
+var WB_API_URL = 'https://' + hostBrowser + '-api.archive.org/' + 'wayback/available'
 var fact_checked_data = new Map()
 const SPN_RETRY = 6000
 
@@ -63,7 +63,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(hostURL + 'save/',
+      fetch('https://' + hostBrowser + '-api.archive.org/' + 'save/',
         {
           credentials: 'include',
           method: 'POST',
@@ -114,7 +114,7 @@ function authCheckAPI() {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 30000)
-    fetch(hostURL + 'save/', {
+    fetch('https://' + hostBrowser + '-api.archive.org/' + 'save/', {
       credentials: 'include',
       method: 'POST',
       headers: { 'Accept': 'application/json' }
@@ -145,7 +145,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
         reject(new Error('timeout'))
       }, 30000)
       if ((status === 'start') || (status === 'pending')) {
-        fetch(hostURL + 'save/status', {
+        fetch('https://' + hostBrowser + '-api.archive.org/' + 'save/status', {
           credentials: 'include',
           method: 'POST',
           body: val_data,
@@ -428,7 +428,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // wikipedia message listener
-    let host = hostURL + 'services/context/books?url='
+    let host = 'https://' + hostBrowser + '-api.archive.org/' + 'services/context/books?url='
     let url = host + encodeURIComponent(message.query)
     // Encapsulate fetch with a timeout promise object
     const timeoutPromise = new Promise((resolve, reject) => {
@@ -442,7 +442,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then(data => sendResponse(data))
     return true
   } else if (message.message === 'tvnews') {
-    let url = hostURL + 'services/context/tvnews?url=' + message.article
+    let url = 'https://' + hostBrowser + '-api.archive.org/' + 'services/context/tvnews?url=' + message.article
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -550,7 +550,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
               const news_host = new URL(url).hostname
               // checking resource of amazon books
               if (url.includes('www.amazon')) {
-                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+                fetch('https://' + hostBrowser + '-api.archive.org/' + 'services/context/amazonbooks?url=' + url)
                   .then(resp => resp.json())
                   .then(resp => {
                     if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
