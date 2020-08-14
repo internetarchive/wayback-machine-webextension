@@ -28,7 +28,8 @@ body {
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 5px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    word-break: break-all;
 }
 
 #fact-check-url {
@@ -60,13 +61,12 @@ body {
     height: 64px;
 }
 
-.branding {
+.ournews-branding {
     font-size: 15px;
 }
 
-.branding img {
-    padding-top: 8px;
-    margin-left: 4px;
+.ournews-branding img {
+    margin: 8px 0 0 4px;
     width: 110px;
 }
 
@@ -147,5 +147,9 @@ body {
     }
     .container-scrollbar::-webkit-scrollbar-thumb {
         background: #888;
+    }
+
+    a:hover {
+        color: #438ac9;
     }
 }

@@ -5,11 +5,20 @@ body {
 h1 {
     font-weight: bold;
     font-family: sans-serif;
-    margin: 1em 0;
+    margin: 1em 0 0.5em 0;
 }
 
 h4 {
     font-size: 23px;
+}
+
+.hyp-branding {
+    font-size: 15px;
+}
+.hyp-branding img {
+    margin-left: 1em;
+    width: 170px;
+    height: 35px;
 }
 
 .color_code, .glyphicon-globe {
@@ -143,7 +152,7 @@ a.button:hover {
     padding: 0;
     page-break-after: always;
     page-break-inside: avoid;
-    display: inline-block;
+    display: none;
 }
 
 #container-wordcloud {
@@ -211,9 +220,9 @@ ul {
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
-    min-height: 100px;
+    min-height: 80px;
     width: 100%;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 /* Change background color of buttons on hover */
@@ -243,13 +252,17 @@ ul {
     margin: auto;
 }
 
-#row_contain-url, #row_contain-domain, #url_details, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
+#row_contain-url, #row_contain-domain, #url_details, #show_thumbnail, #tagcloud-not-found, #total_captures, #error-message, #Alexa_tab, #Domaintools_tab, #Wbmsummary_tab, #Annotations_tab, #Tagcloud_tab {
     display: none;
 }
 
 #container-whole-url, #container-whole-domain {
     max-height: 500px;
     overflow-y: auto;
+}
+
+#text-contain, .target-selector-exact {
+    text-align: justify;
 }
 
 .container-scrollbar::-webkit-scrollbar {
@@ -286,14 +299,14 @@ ul {
 
     .col-tablinks button {
         padding: 0 7px;
-        font-size: 23px;
+        font-size: 20px;
     }
 }
 
 @media screen and (max-width: 800px) {
     .col-tablinks button {
         padding: 0 2px;
-        font-size: 21px;
+        font-size: 17px;
     }
 
     h4 {
@@ -303,7 +316,7 @@ ul {
 
 @media screen and (max-width: 700px) {
     .col-tablinks button {
-        font-size: 20px;
+        font-size: 16px;
         word-wrap: break-word;
     }
 }

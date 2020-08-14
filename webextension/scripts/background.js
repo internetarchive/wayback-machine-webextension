@@ -81,8 +81,17 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
             if (result.show_resource_list === true) {
-              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id +'#not_refreshed'
-              openByWindowSetting(resource_list_url,'windows')
+              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+              openByWindowSetting(resource_list_url, 'windows')
+              if (res.status === 'error') {
+                setTimeout(() => {
+                  chrome.runtime.sendMessage({
+                    message: 'resource_list_show_error',
+                    data: res,
+                    url: page_url
+                  })
+                }, 3000)
+              }
             }
           })
         }
@@ -91,7 +100,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, tabId: tabId })
           if (!silent) {
             notify('Error: ' + msg)
           }
@@ -121,7 +130,7 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
   let status = 'start'
   const val_data = new URLSearchParams()
   val_data.append('job_id', job_id)
-  let wait_time = 1000;
+  let wait_time = 1000
   while ((status === 'start') || (status === 'pending')) {
     // update UI
     chrome.runtime.sendMessage({
@@ -207,7 +216,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
     chrome.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message,
-      url: page_url
+      url: page_url,
+      tabId: tabId
     })
     // notify
     if (!silent) {
@@ -332,23 +342,23 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 * Header callback
 */
 chrome.webRequest.onCompleted.addListener((details) => {
-  function tabIsReady(isIncognito) {
-    if (isIncognito === false && details.frameId === 0 &&
+  function tabIsReady(tabId) {
+    if (details.frameId === 0 &&
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(details.tabId, {
+        chrome.tabs.executeScript(tabId, {
           file: 'scripts/archive.js'
         }, () => {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.sendMessage(details.tabId, {
+            chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
               page_url: url,
               status_code: 999
             })
           } else {
-            chrome.tabs.sendMessage(details.tabId, {
+            chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
               page_url: details.url,
@@ -359,20 +369,15 @@ chrome.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  if (details.tabId > 0) {
-    chrome.tabs.query({ currentWindow: true }, (tabs) => {
-      var tabsArr = tabs.map(tab => tab.id)
-      if (tabsArr.indexOf(details.tabId) >= 0) {
-        chrome.tabs.get(details.tabId, (tab) => {
-          chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-            if (event.not_found_popup === true && event.agreement === true) {
-              tabIsReady(tab.incognito)
-            }
-          })
-        })
-      }
-    })
-  }
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
+        if (event.not_found_popup === true && event.agreement === true) {
+          tabIsReady(tabs[0].id)
+        }
+      })
+    }
+  })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 function getLastSaveTime(timestamp) {
@@ -415,7 +420,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'auth_check') {
     // auth check using cookies
     chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0))
+      let loggedIn = (result && result.value && (result.value.length > 0)) || false
       sendResponse({ auth_check: loggedIn })
     })
     return true
@@ -557,7 +562,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                 addToolbarState(tabId, 'R')
               // checking resource of tv news
               } else if (newshosts.has(news_host)) {
-                addToolbarState(tabId, 'R')
+                addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
               }
             }
           }
