@@ -185,8 +185,8 @@ function useSearchBox() {
     $('#using-search-url').show()
     $('#borrow_books').hide()
     $('#news_recommend').hide()
-//    $('#wikibooks-btn').hide()
-//    $('#wikipapers-btn').hide()
+    //    $('#wikibooks-btn').hide()
+    //    $('#wikipapers-btn').hide()
     $('#wiki-block').hide()
     last_save()
   })
@@ -437,51 +437,28 @@ function setUpFactCheck() {
     }
   })
 }
-
-function showFactCheck() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = searchValue || get_clean_url(tabs[0].url)
-    const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-    openByWindowSetting(factCheckUrl)
-  })
-}
-
-function showAlexa() {
+// Common function to show different context
+function showContext(eventObj) {
+  let id = eventObj.target.getAttribute('id')
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
-      openByWindowSetting(alexaUrl)
-    }
-  })
-}
-
-function showAnnotations() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = searchValue || get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
-      openByWindowSetting(annotationsUrl)
-    }
-  })
-}
-
-function showWayback() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = searchValue || get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
-      openByWindowSetting(wbmsummaryUrl)
-    }
-  })
-}
-
-function showTags() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = searchValue || get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
-      openByWindowSetting(tagsUrl)
+      if (id.includes('fact-check')) {
+        const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+        openByWindowSetting(factCheckUrl)
+      } else if (id.includes('alexa')) {
+        const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+        openByWindowSetting(alexaUrl)
+      } else if (id.includes('annotations')) {
+        const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+        openByWindowSetting(annotationsUrl)
+      } else if (id.includes('more-info')) {
+        const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+        openByWindowSetting(wbmsummaryUrl)
+      } else if (id.includes('tag-cloud')) {
+        const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+        openByWindowSetting(tagsUrl)
+      }
     }
   })
 }
@@ -613,7 +590,6 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-
 window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
@@ -639,8 +615,8 @@ $('#allbtn').click(view_all)
 $('#site-map').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
-$('#fact-check-btn').click(showFactCheck)
-$('#alexa').click(showAlexa)
-$('#annotations').click(showAnnotations)
-$('#more-info').click(showWayback)
-$('#tag-cloud').click(showTags)
+$('#fact-check-btn').click(showContext)
+$('#alexa').click(showContext)
+$('#annotations').click(showContext)
+$('#more-info').click(showContext)
+$('#tag-cloud').click(showContext)
