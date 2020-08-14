@@ -185,8 +185,9 @@ function useSearchBox() {
     $('#using-search-url').show()
     $('#borrow_books').hide()
     $('#news_recommend').hide()
-    $('#wikibooks').hide()
-    $('#doi').hide()
+//    $('#wikibooks-btn').hide()
+//    $('#wikipapers-btn').hide()
+    $('#wiki-block').hide()
     last_save()
   })
 }
@@ -401,12 +402,13 @@ function show_wikibooks() {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia books button
-          $('#wikibooks_tr').show().click(() => {
+          $('#wiki-block').show()
+          $('#wikibooks-btn').click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
           // show wikipedia cited paper button
-          $('#doi_tr').show().click(() => {
+          $('#wikipapers-btn').click(() => {
             const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })

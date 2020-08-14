@@ -148,8 +148,9 @@ function hideUiButtons() {
   if ($('#resource').is(':not(:checked)')) {
     $('#borrow_books').hide()
     $('#news_recommend').hide()
-    $('#wikibooks').hide()
-    $('#doi').hide()
+//    $('#wikibooks-btn').hide()
+//    $('#wikipapers-btn').hide()
+    $('#wiki-block').hide()
   }
   // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {
