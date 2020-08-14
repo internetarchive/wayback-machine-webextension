@@ -185,8 +185,8 @@ function useSearchBox() {
     $('#using-search-url').show()
     $('#borrow_books').hide()
     $('#news_recommend').hide()
-    //    $('#wikibooks-btn').hide()
-    //    $('#wikipapers-btn').hide()
+    // $('#wikibooks-btn').hide()
+    // $('#wikipapers-btn').hide()
     $('#wiki-block').hide()
     last_save()
   })
@@ -437,6 +437,7 @@ function setUpFactCheck() {
     }
   })
 }
+
 // Common function to show different context
 function showContext(eventObj) {
   let id = eventObj.target.getAttribute('id')

@@ -22,7 +22,9 @@ const SPN_RETRY = 6000
 var private_before_default = new Set([
   'fact-check',
   'wm-count-setting',
-  'resource',
+  'wiki-resource',
+  'amazon-books',
+  'tv-news',
   'email-outlinks-setting',
   'not-found-popup'
 ])
@@ -536,13 +538,13 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['auto_update_context', 'show_context', 'resource'], (event) => {
+      chrome.storage.local.get(['auto_update_context', 'show_context',  'wiki_resource', 'amazon_books', 'tv_news'], (event) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
-            if (event.resource === true) {
-              const url = get_clean_url(tabs[0].url)
-              const tabId = tabs[0].id
-              const news_host = new URL(url).hostname
+            const url = get_clean_url(tabs[0].url)
+            const tabId = tabs[0].id
+            const news_host = new URL(url).hostname
+            if (event.amazon_books === true) {
               // checking resource of amazon books
               if (url.includes('www.amazon')) {
                 fetch(hostURL + 'services/context/amazonbooks?url=' + url)
@@ -554,13 +556,15 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                       chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
                     }
                   })
-              // checking resource of wikipedia books and papers
-              } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-                addToolbarState(tabId, 'R')
-              // checking resource of tv news
-              } else if (newshosts.has(news_host)) {
-                addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
               }
+            }
+            // checking resource of wikipedia books and papers
+            if (event.wiki_resource === true) {
+              if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { addToolbarState(tabId, 'R') }
+            }
+            // checking resource of tv news
+            if (event.tv_news === true) {
+              if (newshosts.has(news_host)) { addToolbarState(tabId, 'R') }
             }
           }
         })
@@ -580,14 +584,13 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'resource', 'fact_check'], (event) => {
+  chrome.storage.local.get(['auto_update_context', 'wiki_resource', 'amazon_books', 'tv_news', 'fact_check'], (event) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
-    if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
-      // reset toolbar if resource setting turned off
-      removeToolbarState(info.tabId, 'R')
-    }
+
+    // TODO: Remove 'R' icon from ToolbarState
+
     updateToolbar(info.tabId)
     chrome.tabs.get(info.tabId, (tab) => {
       // update or clear count badge

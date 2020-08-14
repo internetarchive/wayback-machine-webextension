@@ -426,24 +426,20 @@ function initDefaultOptions () {
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    /* General */
-    fact_check: false,
-    wm_count: false,
-    resource: false,
-    auto_archive: false,
-    email_outlinks: false,
-    not_found_popup: false,
-    show_resource_list: false,
-    show_context: 'tab',
+    /* Features */
     private_mode: false,
-    /* Contexts */
-    showall: true,
-    alexa: true,
-    domaintools: false,
-    wbmsummary: true,
-    annotations: true,
-    tagcloud: true,
+    not_found_popup: false,
+    wm_count: false,
+    auto_archive: false,
+    fact_check: false,
+    wiki_resource: false,
+    amazon_books: false,
+    tv_news: false,
+    /* General */
+    show_resource_list: false,
+    email_outlinks: false,
     auto_update_context: false,
+    show_context: 'tab',
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -451,12 +447,15 @@ function initDefaultOptions () {
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
   chrome.storage.local.set({
-    /* General */
-    fact_check: true,
+    /* Features */
+    not_found_popup: true,
     wm_count: true,
-    resource: true,
-    email_outlinks: true,
-    not_found_popup: true
+    fact_check: true,
+    wiki_resource: true,
+    amazon_books: true,
+    tv_news: true,
+    /* General */
+    email_outlinks: true
   })
 }
 

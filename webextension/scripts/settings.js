@@ -7,8 +7,8 @@
 /*   global show_all_screens, openContextMenu */
 
 $(initializeSettings)
-$('.only').click(validate)
-$('#showall').click(selectall)
+// $('.only').click(validate)
+// $('#showall').click(selectall)
 $('.private').click(validatePrivateMode)
 $('#private-mode').click(togglePrivateMode)
 // use capture instead of bubbling
@@ -28,24 +28,20 @@ function restoreOptions(items) {
   /* SPN */
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
-  /* General */
+  /* Features */
   $('#private-mode').prop('checked', items.private_mode)
-  $('#wm-count-setting').prop('checked', items.wm_count)
-  $('#fact-check').prop('checked', items.fact_check)
-  $('#resource').prop('checked', items.resource)
-  $('#auto-archive').prop('checked', items.auto_archive)
-  $('#email-outlinks-setting').prop('checked', items.email_outlinks)
   $('#not-found-popup').prop('checked', items.not_found_popup)
+  $('#wm-count-setting').prop('checked', items.wm_count)
+  $('#auto-archive').prop('checked', items.auto_archive)
+  $('#fact-check').prop('checked', items.fact_check)
+  $('#wiki-resource').prop('checked', items.wiki_resource)
+  $('#amazon-books').prop('checked', items.amazon_books)
+  $('#tv-news').prop('checked', items.tv_news)
+  /* General */
+  $('#email-outlinks-setting').prop('checked', items.email_outlinks)
   $('#show-resource-list').prop('checked', items.show_resource_list)
-  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
-  /* Contexts */
-  $('#showall').prop('checked', items.showall)
-  $('#alexa').prop('checked', items.alexa)
-  $('#domaintools').prop('checked', items.domaintools)
-  $('#wbmsummary').prop('checked', items.wbmsummary)
-  $('#annotations').prop('checked', items.annotations)
-  $('#tagcloud').prop('checked', items.tagcloud)
   $('#auto-update-context').prop('checked', items.auto_update_context)
+  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
@@ -54,44 +50,40 @@ function restoreOptions(items) {
 
 function saveOptions() {
   let wm_count = $('#wm-count-setting').prop('checked')
-  let resource = $('#resource').prop('checked')
+  let wiki_resource = $('#wiki-resource').prop('checked')
+  let amazon_books = $('#amazon-books').prop('checked')
+  let tv_news = $('#tv-news').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
-    /* General */
+    /* Features */
     private_mode: $('#private-mode').prop('checked'),
-    wm_count: wm_count,
-    fact_check: fact_check,
-    resource: resource,
-    auto_archive: $('#auto-archive').prop('checked'),
-    email_outlinks: $('#email-outlinks-setting').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
-    show_resource_list: $('#show-resource-list').prop('checked'),
+    wm_count: wm_count,
+    auto_archive: $('#auto-archive').prop('checked'),
+    fact_check: fact_check,
+    wiki_resource: wiki_resource,
+    amazon_books: amazon_books,
+    tv_news: tv_news,
     show_context: $('input[name=tw]:checked').val(),
-    /* Contexts */
-    showall: $('#showall').prop('checked'),
-    alexa: $('#alexa').prop('checked'),
-    domaintools: $('#domaintools').prop('checked'),
-    wbmsummary: $('#wbmsummary').prop('checked'),
-    annotations: $('#annotations').prop('checked'),
-    tagcloud: $('#tagcloud').prop('checked'),
-    auto_update_context: $('#auto-update-context').prop('checked')
+    /* General */
+    show_resource_list: $('#show-resource-list').prop('checked'),
+    email_outlinks: $('#email-outlinks-setting').prop('checked'),
+    auto_update_context: $('#auto-update-context').prop('checked'),
+    show_context: $('input[name=tw]:checked').val()
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
-  }
-  if (resource === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource' })
   }
   if (fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
 }
 
-function validate() {
+/*function validate() {
   let checkboxes = $('[name="context"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkboxes.length === checkedCount) {
@@ -106,7 +98,7 @@ function selectall() {
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
   }
-}
+}*/
 
 function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
