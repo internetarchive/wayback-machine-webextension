@@ -449,32 +449,40 @@ function showFactCheck() {
 function showAlexa() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
-    const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
-    openByWindowSetting(alexaUrl)
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+      openByWindowSetting(alexaUrl)
+    }
   })
 }
 
 function showAnnotations() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
-    const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
-    openByWindowSetting(annotationsUrl)
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+      openByWindowSetting(annotationsUrl)
+    }
   })
 }
 
 function showWayback() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
-    const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
-    openByWindowSetting(wbmsummaryUrl)
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+      openByWindowSetting(wbmsummaryUrl)
+    }
   })
 }
 
 function showTags() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
-    const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
-    openByWindowSetting(tagsUrl)
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+      openByWindowSetting(tagsUrl)
+    }
   })
 }
 
