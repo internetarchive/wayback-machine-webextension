@@ -5,12 +5,14 @@
 
 var mynewTags = []
 
-function get_tags (url) {
+function get_tags() {
+  const url = decodeURIComponent(getUrlByParameter('url'))
   var hostname = new URL(url).hostname
   var toBeUsedAsURL = hostname.replace(/^www./, '')
   var y = hostname.split('.')
   var not_display4 = y.join(' ')
   var not_display1 = y.join(' ')
+  $('.url').text(url).attr('href', url)
   if (url.includes('https')) {
     not_display1 = 'https ' + not_display1
   } else {
@@ -110,9 +112,4 @@ function _toConsumableArray (arr) {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = {
-    _toConsumableArray,
-    get_tags
-  }
-}
+window.onload = get_tags

@@ -3,9 +3,10 @@
 // from 'utils.js'
 /*   global getUrlByParameter */
 
-function get_alexa () {
+function get_alexa() {
   var alexa_url = 'https://xml.alexa.com/data?cli=10&dat=n&url='
   var url = new URL(decodeURIComponent(getUrlByParameter('url')))
+  $('.url').text(url).attr('href', url)
   $.get(alexa_url + url.hostname, (xml) => {
     var name = xml.getElementsByTagName('ALEXA')[0].getAttribute('URL')
     $('#alexa_name').text(name)
@@ -56,3 +57,5 @@ function get_alexa () {
     $('#show_alexa_data').show()
   })
 }
+
+window.onload = get_alexa()

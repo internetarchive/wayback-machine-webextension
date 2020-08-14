@@ -446,6 +446,38 @@ function showFactCheck() {
   })
 }
 
+function showAlexa() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+    openByWindowSetting(alexaUrl)
+  })
+}
+
+function showAnnotations() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+    openByWindowSetting(annotationsUrl)
+  })
+}
+
+function showWayback() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+    openByWindowSetting(wbmsummaryUrl)
+  })
+}
+
+function showTags() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = searchValue || get_clean_url(tabs[0].url)
+    const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+    openByWindowSetting(tagsUrl)
+  })
+}
+
 function noContextTip() {
   chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
     // If none of the context is selected, grey out the button and adding tip when the user hovers
@@ -588,7 +620,7 @@ $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
-$('#twitterbtn').click(search_tweet)
+$('#tweets').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
@@ -596,7 +628,11 @@ $('#setting-page').hide()
 $('#login-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
-$('#mapbtn').click(sitemap)
+$('#site-map').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
 $('#fact-check-btn').click(showFactCheck)
+$('#alexa').click(showAlexa)
+$('#annotations').click(showAnnotations)
+$('#more-info').click(showWayback)
+$('#tag-cloud').click(showTags)
