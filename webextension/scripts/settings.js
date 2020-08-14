@@ -221,7 +221,7 @@ function addDocs() {
     /* General */
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'fact-check': 'Check to see if the page you are on has been Fact Checked.',
+    'fact-check': 'Automatically check to see if the page you are on has been Fact Checked.',
     'resource': 'Provide archived Books, Papers, and TV Clips on relevant pages from Amazon, Wikipedia, and News outlets.',
     'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
