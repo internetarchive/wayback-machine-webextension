@@ -46,11 +46,13 @@ function last_save() {
 }
 
 function loginError(url) {
+  $('#bulk-save-btn').attr('disabled', true)
+  $('#bulk-save-btn').off('click')
   if (isNotExcludedUrl(url)) {
     $('#contextTip').click(openContextMenu)
-    $('#ctxbox').addClass('flip-inside')
-    $('#last_save').text('Login to Save Page')
     $('#savebox').addClass('flip-inside')
+    $('#last_save').text('Login to Save Page')
+    $('#save_now').attr('disabled', true)
     $('#savebtn').off('click').click(() => {
       show_login_page()
     })
@@ -58,7 +60,6 @@ function loginError(url) {
 }
 
 function loginSuccess(url) {
-  $('#bulk-save').show()
   $('.tab-item').css('width', '18%')
   $('#logout-button').css('display', 'inline-block')
 
@@ -66,7 +67,6 @@ function loginSuccess(url) {
     $('#save_now').removeAttr('disabled')
     $('#savebtn').off('click').click(save_now)
     $('#contextTip').click(openContextMenu)
-    $('#ctxbox').addClass('flip-inside')
     chrome.storage.local.get(['private_mode'], (event) => {
       // auto save page
       if (!event.private_mode) {
@@ -600,5 +600,5 @@ $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
-$('#bulk-save').click(bulkSave)
+$('#bulk-save-btn').click(bulkSave)
 $('#fact-check-btn').click(showFactCheck)
