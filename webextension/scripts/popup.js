@@ -33,57 +33,66 @@ function save_now() {
 }
 
 function last_save() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
-    checkAuthentication((result) => {
-      if (!(result && result.auth_check)) {
-        loginError(url)
-      } else {
-        loginSuccess(url)
-      }
-    })
+  checkAuthentication((result) => {
+    if (!(result && result.auth_check)) {
+      loginError()
+    } else {
+      loginSuccess()
+    }
   })
 }
 
-function loginError(url) {
-  $('#bulk-save-btn').attr('disabled', true)
-  $('#bulk-save-btn').off('click')
-  if (isNotExcludedUrl(url)) {
-    $('#contextTip').click(openContextMenu)
-    $('#savebox').addClass('flip-inside')
-    $('#last_save').text('Login to Save Page')
-    $('#save_now').attr('disabled', true)
-    $('#savebtn').off('click').click(() => {
-      show_login_page()
-    })
-  } else { setExcluded() }
+function loginError() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      let url = searchValue || get_clean_url(tabs[0].url)
+      $('#bulk-save-btn').attr('disabled', true)
+      $('#bulk-save-btn').off('click')
+      if (isNotExcludedUrl(url)) {
+        $('#contextTip').click(openContextMenu)
+        $('#savebox').addClass('flip-inside')
+        $('#last_save').text('Login to Save Page')
+        $('#save_now').attr('disabled', true)
+        $('#savebtn').off('click').click(() => {
+          show_login_page()
+        })
+      } else { setExcluded() }
+    }
+  })
 }
 
-function loginSuccess(url) {
-  $('.tab-item').css('width', '18%')
-  $('#logout-button').css('display', 'inline-block')
+function loginSuccess() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      let url = searchValue || get_clean_url(tabs[0].url)
+      $('.tab-item').css('width', '18%')
+      $('#logout-button').css('display', 'inline-block')
 
-  if (isNotExcludedUrl(url)) {
-    $('#save_now').removeAttr('disabled')
-    $('#savebtn').off('click').click(save_now)
-    $('#contextTip').click(openContextMenu)
-    chrome.storage.local.get(['private_mode'], (event) => {
-      // auto save page
-      if (!event.private_mode) {
-        chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
-        }, (message) => {
-          if (message.message === 'last_save') {
-            if ($('#last_save').text !== 'URL not supported') {
-              $('#last_save').text(message.time)
-            }
-            $('#savebox').addClass('flip-inside')
+      if (isNotExcludedUrl(url)) {
+        $('#save_now').removeAttr('disabled')
+        $('#savebtn').off('click').click(save_now)
+        $('#contextTip').click(openContextMenu)
+        $('#bulk-save-btn').removeAttr('disabled')
+        $('#bulk-save-btn').off('click').click(bulkSave)
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                if ($('#last_save').text !== 'URL not supported') {
+                  $('#last_save').text(message.time)
+                }
+                $('#savebox').addClass('flip-inside')
+              }
+            })
           }
         })
-      }
-    })
-  } else { setExcluded() }
+      } else { setExcluded() }
+    }
+  })
 }
 
 function checkAuthentication(callback) {
