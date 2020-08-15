@@ -43,19 +43,19 @@ function last_save() {
 }
 
 function loginError() {
+  $('#bulk-save-btn').attr('disabled', true)
+  $('#bulk-save-btn').off('click')
+  $('#savebox').addClass('flip-inside')
+  $('#last_save').text('Login to Save Page')
+  $('#save_now').attr('disabled', true)
+  $('#savebtn').off('click').click(() => {
+    show_login_page()
+  })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
-      $('#bulk-save-btn').attr('disabled', true)
-      $('#bulk-save-btn').off('click')
       if (isNotExcludedUrl(url)) {
         $('#contextTip').click(openContextMenu)
-        $('#savebox').addClass('flip-inside')
-        $('#last_save').text('Login to Save Page')
-        $('#save_now').attr('disabled', true)
-        $('#savebtn').off('click').click(() => {
-          show_login_page()
-        })
       } else { setExcluded() }
     }
   })
@@ -67,13 +67,14 @@ function loginSuccess() {
       let url = searchValue || get_clean_url(tabs[0].url)
       $('.tab-item').css('width', '18%')
       $('#logout-button').css('display', 'inline-block')
+      $('#bulk-save-btn').removeAttr('disabled')
+      $('#bulk-save-btn').click(bulkSave)
+      $('#savebtn').off('click')
 
       if (isNotExcludedUrl(url)) {
         $('#save_now').removeAttr('disabled')
-        $('#savebtn').off('click').click(save_now)
+        $('#savebtn').click(save_now)
         $('#contextTip').click(openContextMenu)
-        $('#bulk-save-btn').removeAttr('disabled')
-        $('#bulk-save-btn').off('click').click(bulkSave)
         chrome.storage.local.get(['private_mode'], (event) => {
           // auto save page
           if (!event.private_mode) {
@@ -90,7 +91,10 @@ function loginSuccess() {
             })
           }
         })
-      } else { setExcluded() }
+      } else {
+        setExcluded()
+        $('#last_save').text('URL not supported')
+      }
     }
   })
 }
@@ -490,7 +494,6 @@ function openContextMenu () {
 function setExcluded() {
   const idList = ['savebox', 'mapbox', 'fact-check-box', 'twitterbox', 'ctxbox']
   idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-  $('#last_save').text('URL not supported')
   $('#contextTip').text('URL not supported')
   $('#url-not-supported-message').text('URL not supported')
 }
@@ -592,7 +595,6 @@ window.onload = () => {
 }
 
 $('.logo-wayback-machine').click(homepage)
-$('#savebtn').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
@@ -609,5 +611,4 @@ $('#allbtn').click(view_all)
 $('#mapbtn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
-$('#bulk-save-btn').click(bulkSave)
 $('#fact-check-btn').click(showFactCheck)
