@@ -54,6 +54,7 @@ function saveOptions() {
   let amazon_books = $('#amazon-books').prop('checked')
   let tv_news = $('#tv-news').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
+  auto_update_context = $('#auto-update-context').prop('checked')
   chrome.storage.local.set({
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
@@ -71,7 +72,7 @@ function saveOptions() {
     /* General */
     show_resource_list: $('#show-resource-list').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    auto_update_context: $('#auto-update-context').prop('checked'),
+    auto_update_context: auto_update_context,
     show_context: $('input[name=tw]:checked').val()
   })
   if (wm_count === false) {
@@ -136,13 +137,19 @@ function hideUiButtons() {
   if ($('#wm-count-setting').is(':not(:checked)')) {
     $('#wayback-count-label').hide()
   }
-  // hide relevant resources buttons
-  if ($('#resource').is(':not(:checked)')) {
-    $('#borrow_books').hide()
-    $('#news_recommend').hide()
-//    $('#wikibooks-btn').hide()
-//    $('#wikipapers-btn').hide()
+  // hide wikipedia resources buttons
+  if ($('#wiki-resource').is(':not(:checked)')) {
+  //$('#wikibooks-btn').hide()
+  //$('#wikipapers-btn').hide()
     $('#wiki-block').hide()
+  }
+  // hide 'Read Book' button
+  if ($('#amazon-books').is(':not(:checked)')) {
+    $('#borrow_books').hide()
+  }
+  // hide 'TV News Clips' button
+  if ($('#tv-news').is(':not(:checked)')) {
+    $('#news_recommend').hide()
   }
   // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {

@@ -163,13 +163,13 @@ function search_tweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-    for (let context in event) {
-      if (event[context]) {
-        $('#ctxbox').removeClass('flip-inside')
-        $('#contextBtn').removeAttr('disabled')
-      }
-    }
+  // chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+    // for (let context in event) {
+    //   if (event[context]) {
+        // $('#ctxbox').removeClass('flip-inside')
+        // $('#contextBtn').removeAttr('disabled')
+      // }
+    // }
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearResource' })
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
@@ -189,7 +189,7 @@ function useSearchBox() {
     // $('#wikipapers-btn').hide()
     $('#wiki-block').hide()
     last_save()
-  })
+  // })
 }
 
 function search_box_activate() {
@@ -464,21 +464,21 @@ function showContext(eventObj) {
   })
 }
 
-function noContextTip() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-    // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) {
-      if (event[context]) {
-        $('#contextBtn').removeAttr('disabled')
-        return $('#contextBtn').click(show_all_screens)
-      }
-    }
-    if (!$('#ctxbox').hasClass('flip-inside')) {
-      $('#ctxbox').addClass('flip-inside')
-      $('#contextBtn').attr('disabled', true)
-    }
-  })
-}
+// function noContextTip() {
+//   chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+//     // If none of the context is selected, grey out the button and adding tip when the user hovers
+//     for (const context in event) {
+//       if (event[context]) {
+//         $('#contextBtn').removeAttr('disabled')
+//         return $('#contextBtn').click(show_all_screens)
+//       }
+//     }
+//     if (!$('#ctxbox').hasClass('flip-inside')) {
+//       $('#ctxbox').addClass('flip-inside')
+//       $('#contextBtn').attr('disabled', true)
+//     }
+//   })
+// }
 
 function openContextMenu () {
   $('#popup-page').hide()
@@ -494,13 +494,11 @@ function checkExcluded() {
     let url = searchValue || tabs[0].url
     if (isNotExcludedUrl(url)) {
       last_save()
-      $('#contextTip').click(openContextMenu)
     } else {
-      const idList = ['savebox', 'fact-check-box', 'mapbox', 'twitterbox', 'ctxbox']
-      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-      $('#contextBtn').attr('disabled', true)
+      $('#savebox').addClass('flip-inside')
+      // $('#contextBtn').attr('disabled', true)
       $('#last_save').text('URL not supported')
-      $('#contextTip').text('URL not supported')
+      // $('#contextTip').text('URL not supported')
       $('#url-not-supported-message').text('URL not supported')
     }
   })
@@ -591,7 +589,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
