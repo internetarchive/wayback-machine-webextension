@@ -163,33 +163,23 @@ function search_tweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  // chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-    // for (let context in event) {
-    //   if (event[context]) {
-        // $('#ctxbox').removeClass('flip-inside')
-        // $('#contextBtn').removeAttr('disabled')
-      // }
-    // }
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearResource' })  // TO REMOVE: , resource: 'all'
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-    $('#mapbox').removeClass('flip-inside')
-    $('#twitterbox').removeClass('flip-inside')
-    $('#fact-check-box').removeClass('flip-inside')
-    $('#fact-check-btn').removeClass('btn-purple')
-    $('#contextTip').text('Enable in Settings')
-    $('#contextTip').click(openContextMenu)
-    $('#suggestion-box').text('').hide()
-    $('#wayback-count-label').hide()
-    $('#url-not-supported-message').hide()
-    $('#using-search-url').show()
-    $('#borrow_books').hide()
-    $('#news_recommend').hide()
-    // $('#wikibooks-btn').hide()
-    // $('#wikipapers-btn').hide()
-    $('#wiki-block').hide()
-    last_save()
-  // })
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+  chrome.runtime.sendMessage({ message: 'clearResource' })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  $('#mapbox').removeClass('flip-inside')
+  $('#twitterbox').removeClass('flip-inside')
+  $('#fact-check-box').removeClass('flip-inside')
+  $('#fact-check-btn').removeClass('btn-purple')
+  $('#contextTip').text('Enable in Settings')
+  $('#contextTip').click(openContextMenu)
+  $('#suggestion-box').text('').hide()
+  $('#wayback-count-label').hide()
+  $('#url-not-supported-message').hide()
+  $('#using-search-url').show()
+  $('#borrow_books').hide()
+  $('#news_recommend').hide()
+  $('#wiki-block').hide()
+  last_save()
 }
 
 function search_box_activate() {

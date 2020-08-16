@@ -501,25 +501,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           // clear 'R' if settings not provided
           removeToolbarState(tabs[0].id, 'R')
         }
-// TO REMOVE
-/*
-        // wiki_setting settings unchecked
-        if (message.resource === 'wikiResource') {
-          if (tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tabs[0].id, 'R') }
-        }
-        // amazon_setting settings unchecked
-        else if (message.resource === 'amazonResource') {
-          if (tabs[0].url.includes('www.amazon')) { removeToolbarState(tabs[0].id, 'R') }
-        }
-        // tvnews_setting settings unchecked
-        else if (message.resource === 'tvnewsResource') {
-          const news_host = new URL(tabs[0].url).hostname
-          if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
-        }
-        // clear toolbar icon when using Search URL
-        if (message.resource === 'all') { removeToolbarState(tabs[0].id, 'R') }
-*/
-
       }
     })
   } else if (message.message === 'clearFactCheck') {

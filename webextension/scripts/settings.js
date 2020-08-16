@@ -80,18 +80,6 @@ function saveOptions() {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
-// TO REMOVE
-/*
-  if (settings.wiki_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'wikiResource' })
-  }
-  if (settings.amazon_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonResource' })
-  }
-  if (settings.tvnews_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'tvnewsResourse' })
-  }
-*/
 }
 
 /*function validate() {
