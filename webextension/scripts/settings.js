@@ -54,7 +54,7 @@ function saveOptions() {
   let amazon_books = $('#amazon-books').prop('checked')
   let tv_news = $('#tv-news').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
-  auto_update_context = $('#auto-update-context').prop('checked')
+  let auto_update_context = $('#auto-update-context').prop('checked')
   chrome.storage.local.set({
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
@@ -78,6 +78,15 @@ function saveOptions() {
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
+  }
+  if (wiki_resource === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'wikiResource' })
+  }
+  if (amazon_books === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonBooks' })
+  }
+  if (tv_news === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'tvNews' })
   }
   if (fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
