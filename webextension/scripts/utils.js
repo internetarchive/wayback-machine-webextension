@@ -429,7 +429,9 @@ function initDefaultOptions () {
     /* General */
     fact_check: false,
     wm_count: false,
-    resource: false,
+    wiki_setting: false,
+    amazon_setting: false,
+    newstv_setting: false,
     auto_archive: false,
     email_outlinks: false,
     not_found_popup: false,
@@ -454,7 +456,9 @@ function afterAcceptOptions () {
     /* General */
     fact_check: true,
     wm_count: true,
-    resource: true,
+    wiki_setting: true,
+    amazon_setting: true,
+    newstv_setting: true,
     email_outlinks: true,
     not_found_popup: true
   })

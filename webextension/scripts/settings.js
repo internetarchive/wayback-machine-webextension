@@ -32,7 +32,9 @@ function restoreOptions(items) {
   $('#private-mode').prop('checked', items.private_mode)
   $('#wm-count-setting').prop('checked', items.wm_count)
   $('#fact-check').prop('checked', items.fact_check)
-  $('#resource').prop('checked', items.resource)
+  $('#wiki-setting').prop('checked', items.wiki_setting)
+  $('#amazon-setting').prop('checked', items.amazon_setting)
+  $('#newstv-setting').prop('checked', items.newstv_setting)
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
   $('#not-found-popup').prop('checked', items.not_found_popup)
@@ -54,7 +56,6 @@ function restoreOptions(items) {
 
 function saveOptions() {
   let wm_count = $('#wm-count-setting').prop('checked')
-  let resource = $('#resource').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
   chrome.storage.local.set({
     /* SPN */
@@ -64,7 +65,9 @@ function saveOptions() {
     private_mode: $('#private-mode').prop('checked'),
     wm_count: wm_count,
     fact_check: fact_check,
-    resource: resource,
+    wiki_setting: $('#wiki-setting').prop('checked'),
+    amazon_setting: $('#amazon-setting').prop('checked'),
+    newstv_setting: $('#newstv-setting').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
@@ -83,9 +86,10 @@ function saveOptions() {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
-  if (resource === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource' })
-  }
+  // TODO: needs to be rethought
+  //if (resource === false) {
+  //  chrome.runtime.sendMessage({ message: 'clearResource' })
+  //}
   if (fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
@@ -145,13 +149,10 @@ function hideUiButtons() {
     $('#wayback-count-label').hide()
   }
   // hide relevant resources buttons
-  if ($('#resource').is(':not(:checked)')) {
-    $('#borrow_books').hide()
-    $('#news_recommend').hide()
-//    $('#wikibooks-btn').hide()
-//    $('#wikipapers-btn').hide()
-    $('#wiki-block').hide()
-  }
+  if ($('#amazon-setting').is(':not(:checked)')) { $('#borrow_books').hide() }
+  if ($('#newstv-setting').is(':not(:checked)')) { $('#news_recommend').hide() }
+  if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-block').hide() }
+
   // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {
     $('#fact-check-btn').removeClass('btn-purple')
@@ -218,22 +219,25 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs() {
   let docs = {
-    /* General */
+    /* Tab 1 */
     'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
-    'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'fact-check': 'Automatically check to see if the page you are on has been Fact Checked.',
-    'resource': 'Provide archived Books, Papers, and TV Clips on relevant pages from Amazon, Wikipedia, and News outlets.',
-    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
-    'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'not-found-popup': 'Check if an archived copy is available when an error occurs.',
+    'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
+    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
+    'fact-check': 'Auto check to see if the page you are on has been Fact Checked.',
+    'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
+    'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
+    'newstv-setting': 'Auto check for Recommended TV Clips while visiting news websites.',
+    /* Tab 2 */
+    'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',
+    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     /* Contexts */
     'alexa': 'Displays what Alexa Internet knows about the site you are on.',
     'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
     'wbmsummary': 'Displays what the Wayback Machine knows about the page you are on.',
     'annotations': 'Displays Annotations from Hypothes.is for the page you are on.',
-    'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.',
-    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.'
+    'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.'
   }
   let labels = $('label')
   for (var i = 0; i < labels.length; i++) {
