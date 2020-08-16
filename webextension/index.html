@@ -71,12 +71,12 @@
             <button type="button" class="btn btn-sm btn-short btn-light-gray" id="recent_capture">Newest</button>
           </div>
 
-<!-- TODO: IMPLEMENT THIS -->
-
           <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="more-info">More Info</button><!-- Wayback Machine context -->
-            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="bulk-save">Bulk Save</button><!-- dim this when disabled -->
+            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="more-info" title="Wayback Machine Summary">More Info</button>
+            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="bulk-save">Bulk Save</button>
           </div>
+
+          <!-- Contexts -->
 
           <div class="btn-block">
             <button type="button" class="btn btn-sm btn-half btn-light-gray" id="site-map">Site Map</button>
@@ -90,71 +90,9 @@
 
           <div class="btn-block">
             <button type="button" class="btn btn-sm btn-half btn-light-gray" id="fact-check-btn">Fact Check</button>
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="annotations">Annotate</button>
+            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="annotations" title="Annotations">Annotate</button>
           </div>
 
-<!-- TO REMOVE -->
-<!--
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="news_recommend">Read Book</button>
-          </div>
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikibooks">Books</button>
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="doi">Papers</button>
-          </div>
--->
-
-<!-- PRIOR CODE -->
-<!--
-          <div class="flip flip-margin" id="mapbtn">
-            <div id="mapbox">
-              <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="site_map">Site Map</button>
-              </div>
-              <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray" id="site_map_error" tabindex="-1">URL not supported</button>
-              </div>
-            </div>
-          </div>
--->
-          <!-- 3rd Party -->
-<!--
-          <div class="flip flip-margin" id="twitterbtn">
-            <div id="twitterbox">
-              <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="search_tweet">
-                  <i class="fa fa-twitter"></i> Related Tweets</button>
-              </div>
-              <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="search_tweet_error" tabindex="-1">URL not supported</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flip flip-margin" id="context-screen">
-            <div id="ctxbox">
-              <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextBtn">Show Contexts</button>
-              </div>
-              <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-dark-gray context_feature" id="contextTip" tabindex="-1">Enable in Settings</button>
-              </div>
-            </div>
-          </div>
--->
-          <!-- Fact Check -->
-<!--
-          <div class="flip flip-margin" id="fact-check-screen">
-            <div id="fact-check-box">
-              <div class="flip-front">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-btn">Fact Check</button>
-              </div>
-              <div class="flip-back">
-                <button type="button" class="btn btn-sm btn-block btn-wide btn-light-gray" id="fact-check-tip" tabindex="-1">URL not supported</button>
-              </div>
-            </div>
-          </div>
--->
           <!-- Related Archived Resources -->
 
           <div class="btn-block related-resources" id="borrow_books_tr">
@@ -164,8 +102,8 @@
             <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="news_recommend">TV News Clips</button>
           </div>
           <div class="btn-block related-resources" id="wiki-block">
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikibooks-btn">Books</button>
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikipapers-btn">Papers</button>
+            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikibooks-btn" title="Find Cited Books">Books</button>
+            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikipapers-btn" title="Find Cited Papers">Papers</button>
           </div>
 
           <!-- Share -->
@@ -176,11 +114,9 @@
             <a id="linkedin_share" class="btn-social btn-sm btn-linkedin" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
           </div>
 
-          <hr>
-          
-
           <!-- Tabbar -->
 
+          <hr>
           <div class="tab-bar">
             <div class="tab-item">
               <i class="tab-icon glyphicon glyphicon-cog" id="settings-button" title="Settings" alt="Settings"></i>
