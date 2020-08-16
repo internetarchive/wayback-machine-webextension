@@ -54,7 +54,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(tabId, page_url, silent = false, options = []) {
+function savePageNow(tabId, page_url, silent = false, options = [], isBulkSave = false) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURI(page_url))
@@ -80,7 +80,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
-            if (result.show_resource_list === true) {
+            if (result.show_resource_list === true && isBulkSave === false) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
@@ -100,7 +100,7 @@ function savePageNow(tabId, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, tabId: tabId })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, tabId: tabId })
           if (!silent) {
             notify('Error: ' + msg)
           }
@@ -391,12 +391,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
+    let isBulkSave = message.isBulkSave
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true)
       } else {
         let options = (message.options !== null) ? message.options : []
-        savePageNow(tabId, page_url, false, options)
+        savePageNow(tabId, page_url, false, options, isBulkSave)
         return true
       }
     }

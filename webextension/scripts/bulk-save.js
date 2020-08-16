@@ -201,7 +201,8 @@ function initiateBulkSave(url, index) {
       message: 'openurl',
       wayback_url: hostURL + 'save/',
       page_url: url,
-      method: 'save'
+      method: 'save',
+      isBulkSave: 'true'
       // tabId: tabs[0].id
     })
   })
