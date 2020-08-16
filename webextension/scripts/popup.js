@@ -45,7 +45,7 @@ function last_save() {
 function loginError() {
   $('#savebox').addClass('flip-inside')
   $('#last_save').text('Login to Save Page')
-  $('#save_now').attr('disabled', true)
+  $('#save_now').parent().attr('disabled', true)
   $('#savebtn').off('click').click(() => {
     show_login_page()
   })
@@ -54,7 +54,7 @@ function loginError() {
 function loginSuccess() {
   $('.tab-item').css('width', '18%')
   $('#logout-button').css('display', 'inline-block')
-  $('#save_now').removeAttr('disabled')
+  $('#save_now').parent().removeAttr('disabled')
   $('#savebtn').off('click').click(save_now)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
