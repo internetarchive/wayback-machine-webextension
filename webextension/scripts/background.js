@@ -24,7 +24,7 @@ var private_before_default = new Set([
   'wm-count-setting',
   'wiki-setting',
   'amazon-setting',
-  'newstv-setting',
+  'tvnews-setting',
   'email-outlinks-setting',
   'not-found-popup'
 ])
@@ -489,11 +489,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
         if (message.settings) {
-          // clear 'R' state if wiki, amazon, or newstv settings have been cleared
+          // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
           const news_host = new URL(tabs[0].url).hostname
           if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
-              ((message.settings.newstv_setting === false) && newshosts.has(news_host))) {
+              ((message.settings.tvnews === false) && newshosts.has(news_host))) {
             removeToolbarState(tabs[0].id, 'R')
           }
         }
@@ -511,8 +511,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         else if (message.resource === 'amazonResource') {
           if (tabs[0].url.includes('www.amazon')) { removeToolbarState(tabs[0].id, 'R') }
         }
-        // newstv_setting settings unchecked
-        else if (message.resource === 'newstvResource') {
+        // tvnews_setting settings unchecked
+        else if (message.resource === 'tvnewsResource') {
           const news_host = new URL(tabs[0].url).hostname
           if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
         }
@@ -568,7 +568,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['auto_update_context', 'wiki_setting', 'amazon_setting', 'newstv_setting'], (event) => {
+      chrome.storage.local.get(['auto_update_context', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
         // checking resources
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
@@ -589,7 +589,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             } else if (event.wiki_setting && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
               // show button for Wikipedia books and papers
               addToolbarState(tabId, 'R')
-            } else if (event.newstv_setting && newshosts.has(news_host)) {
+            } else if (event.tvnews_setting && newshosts.has(news_host)) {
               // show button for TV news
               addToolbarState(tabId, 'R')
             }
@@ -612,7 +612,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'fact_check', 'wiki_setting', 'amazon_setting', 'newstv_setting'], (event) => {
+  chrome.storage.local.get(['auto_update_context', 'fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
@@ -625,8 +625,8 @@ chrome.tabs.onActivated.addListener((info) => {
       if (event.amazon_setting === false && getToolbarState(info.tabId).has('R')) {
         if (tab.url.includes('www.amazon')) { removeToolbarState(tab.id, 'R') }
       }
-      // newstv_setting settings unchecked
-      if (event.newstv_setting === false && getToolbarState(info.tabId).has('R')) {
+      // tvnews_setting settings unchecked
+      if (event.tvnews_setting === false && getToolbarState(info.tabId).has('R')) {
         const news_host = new URL(tab.url).hostname
         if (newshosts.has(news_host)) { removeToolbarState(tab.id, 'R') }
       }

@@ -432,7 +432,7 @@ function initDefaultOptions () {
     wm_count: false,
     wiki_setting: false,
     amazon_setting: false,
-    newstv_setting: false,
+    tvnews_setting: false,
     auto_archive: false,
     fact_check: false,
     /* General */
@@ -452,7 +452,7 @@ function afterAcceptOptions () {
     wm_count: true,
     wiki_setting: true,
     amazon_setting: true,
-    newstv_setting: true,
+    tvnews_setting: true,
     fact_check: true,
     /* General */
     email_outlinks: true

@@ -35,7 +35,7 @@ function restoreOptions(items) {
   $('#fact-check').prop('checked', items.fact_check)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
-  $('#newstv-setting').prop('checked', items.newstv_setting)
+  $('#tvnews-setting').prop('checked', items.tvnews_setting)
   $('#auto-archive').prop('checked', items.auto_archive)
   $('#fact-check').prop('checked', items.fact_check)
   /* General */
@@ -61,7 +61,7 @@ function saveOptions() {
     fact_check: $('#fact-check').prop('checked'),
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
-    newstv_setting: $('#newstv-setting').prop('checked'),
+    tvnews_setting: $('#tvnews-setting').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     /* General */
@@ -88,8 +88,8 @@ function saveOptions() {
   if (settings.amazon_setting === false) {
     chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonResource' })
   }
-  if (settings.newstv_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'newstvResourse' })
+  if (settings.tvnews_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'tvnewsResourse' })
   }
 */
 }
@@ -149,7 +149,7 @@ function hideUiButtons() {
   }
   // hide relevant resources buttons
   if ($('#amazon-setting').is(':not(:checked)')) { $('#borrow_books').hide() }
-  if ($('#newstv-setting').is(':not(:checked)')) { $('#news_recommend').hide() }
+  if ($('#tvnews-setting').is(':not(:checked)')) { $('#news_recommend').hide() }
   if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-block').hide() }
   // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {
@@ -225,7 +225,7 @@ function addDocs() {
     'fact-check': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
     'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
-    'newstv-setting': 'Auto check for Recommended TV Clips while visiting news websites.',
+    'tvnews-setting': 'Auto check for Recommended TV News Clips while visiting news websites.',
     /* Tab 2 */
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'show-resource-list': 'Display a list of resources during Save Page Now.',
