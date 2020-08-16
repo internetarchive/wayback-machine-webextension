@@ -426,26 +426,20 @@ function initDefaultOptions () {
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    /* General */
-    fact_check: false,
+    /* Features */
+    private_mode: false,
+    not_found_popup: false,
     wm_count: false,
     wiki_setting: false,
     amazon_setting: false,
     newstv_setting: false,
     auto_archive: false,
-    email_outlinks: false,
-    not_found_popup: false,
+    fact_check: false,
+    /* General */
     show_resource_list: false,
-    show_context: 'tab',
-    private_mode: false,
-    /* Contexts */
-    showall: true,
-    alexa: true,
-    domaintools: false,
-    wbmsummary: true,
-    annotations: true,
-    tagcloud: true,
+    email_outlinks: false,
     auto_update_context: false,
+    show_context: 'tab',
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -453,14 +447,15 @@ function initDefaultOptions () {
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
   chrome.storage.local.set({
-    /* General */
-    fact_check: true,
+    /* Features */
+    not_found_popup: true,
     wm_count: true,
     wiki_setting: true,
     amazon_setting: true,
     newstv_setting: true,
-    email_outlinks: true,
-    not_found_popup: true
+    fact_check: true,
+    /* General */
+    email_outlinks: true
   })
 }
 

@@ -7,8 +7,8 @@
 /*   global show_all_screens, openContextMenu */
 
 $(initializeSettings)
-$('.only').click(validate)
-$('#showall').click(selectall)
+// $('.only').click(validate)
+// $('#showall').click(selectall)
 $('.private').click(validatePrivateMode)
 $('#private-mode').click(togglePrivateMode)
 // use capture instead of bubbling
@@ -28,26 +28,21 @@ function restoreOptions(items) {
   /* SPN */
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
-  /* General */
+  /* Features */
   $('#private-mode').prop('checked', items.private_mode)
+  $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#wm-count-setting').prop('checked', items.wm_count)
   $('#fact-check').prop('checked', items.fact_check)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#newstv-setting').prop('checked', items.newstv_setting)
   $('#auto-archive').prop('checked', items.auto_archive)
+  $('#fact-check').prop('checked', items.fact_check)
+  /* General */
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
-  $('#not-found-popup').prop('checked', items.not_found_popup)
   $('#show-resource-list').prop('checked', items.show_resource_list)
-  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
-  /* Contexts */
-  $('#showall').prop('checked', items.showall)
-  $('#alexa').prop('checked', items.alexa)
-  $('#domaintools').prop('checked', items.domaintools)
-  $('#wbmsummary').prop('checked', items.wbmsummary)
-  $('#annotations').prop('checked', items.annotations)
-  $('#tagcloud').prop('checked', items.tagcloud)
   $('#auto-update-context').prop('checked', items.auto_update_context)
+  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
@@ -57,30 +52,26 @@ function restoreOptions(items) {
 function saveOptions() {
   let wm_count = $('#wm-count-setting').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
+  let auto_update_context = $('#auto-update-context').prop('checked')
   chrome.storage.local.set({
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
-    /* General */
+    /* Features */
     private_mode: $('#private-mode').prop('checked'),
+    not_found_popup: $('#not-found-popup').prop('checked'),
     wm_count: wm_count,
     fact_check: fact_check,
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     newstv_setting: $('#newstv-setting').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
-    email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    not_found_popup: $('#not-found-popup').prop('checked'),
-    show_resource_list: $('#show-resource-list').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
-    /* Contexts */
-    showall: $('#showall').prop('checked'),
-    alexa: $('#alexa').prop('checked'),
-    domaintools: $('#domaintools').prop('checked'),
-    wbmsummary: $('#wbmsummary').prop('checked'),
-    annotations: $('#annotations').prop('checked'),
-    tagcloud: $('#tagcloud').prop('checked'),
-    auto_update_context: $('#auto-update-context').prop('checked')
+    /* General */
+    show_resource_list: $('#show-resource-list').prop('checked'),
+    email_outlinks: $('#email-outlinks-setting').prop('checked'),
+    auto_update_context: auto_update_context,
+    show_context: $('input[name=tw]:checked').val()
   })
   if (wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
@@ -95,7 +86,7 @@ function saveOptions() {
   }
 }
 
-function validate() {
+/*function validate() {
   let checkboxes = $('[name="context"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkboxes.length === checkedCount) {
@@ -110,7 +101,7 @@ function selectall() {
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
   }
-}
+}*/
 
 function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
@@ -152,7 +143,6 @@ function hideUiButtons() {
   if ($('#amazon-setting').is(':not(:checked)')) { $('#borrow_books').hide() }
   if ($('#newstv-setting').is(':not(:checked)')) { $('#news_recommend').hide() }
   if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-block').hide() }
-
   // change color of fact check button
   if ($('#fact-check').is(':not(:checked)')) {
     $('#fact-check-btn').removeClass('btn-purple')

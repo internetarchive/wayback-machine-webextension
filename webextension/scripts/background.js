@@ -486,10 +486,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
   } else if (message.message === 'clearResource') {
-    // resources settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
-        removeToolbarState(tabs[0].id, 'R')
+        // TODO FIXME: this needs to be rethought, as shouldn't clear 'R' if others still active.
+        // wiki_resource settings unchecked
+        if (message.resource === 'wikiResource') {
+          if (tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tabs[0].id, 'R') }
+        }
+        // amazon_books settings unchecked
+        if (message.resource === 'amazonBooks') {
+          if (tabs[0].url.includes('www.amazon')) { removeToolbarState(tabs[0].id, 'R') }
+        }
+        // tv_news settings unchecked
+        if (message.resource === 'tvNews') {
+          const news_host = new URL(tabs[0].url).hostname
+          if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
+        }
+        // clear toolbar icon when using Search URL
+        if (message.resource === 'all') { removeToolbarState(tabs[0].id, 'R') }
       }
     })
   } else if (message.message === 'clearFactCheck') {
@@ -586,13 +600,22 @@ chrome.tabs.onActivated.addListener((info) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
-    if (!(event.wiki_setting || event.amazon_setting || event.newstv_setting) && (getToolbarState(info.tabId).has('R'))) {
-      // reset toolbar if ALL resource settings turned off
-      // TODO: need to rethink this
-      removeToolbarState(info.tabId, 'R')
-    }
-    updateToolbar(info.tabId)
     chrome.tabs.get(info.tabId, (tab) => {
+      // wiki_setting settings unchecked
+      if (event.wiki_setting === false && getToolbarState(info.tabId).has('R')) {
+        if (tab.url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tab.id, 'R') }
+      }
+      // amazon_setting settings unchecked
+      if (event.amazon_setting === false && getToolbarState(info.tabId).has('R')) {
+        if (tab.url.includes('www.amazon')) { removeToolbarState(tab.id, 'R') }
+      }
+      // newstv_setting settings unchecked
+      if (event.newstv_setting === false && getToolbarState(info.tabId).has('R')) {
+        const news_host = new URL(tab.url).hostname
+        if (newshosts.has(news_host)) { removeToolbarState(tab.id, 'R') }
+      }
+
+      updateToolbar(info.tabId)
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
       // auto update context page
