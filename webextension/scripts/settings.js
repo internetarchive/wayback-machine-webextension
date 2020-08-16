@@ -52,6 +52,9 @@ function restoreOptions(items) {
 function saveOptions() {
   let wm_count = $('#wm-count-setting').prop('checked')
   let fact_check = $('#fact-check').prop('checked')
+  let wiki_setting = $('#wiki-setting').prop('checked')
+  let amazon_setting = $('#amazon-setting').prop('checked')
+  let newstv_setting = $('#newstv-setting').prop('checked')
   let auto_update_context = $('#auto-update-context').prop('checked')
   chrome.storage.local.set({
     /* SPN */
@@ -62,9 +65,9 @@ function saveOptions() {
     not_found_popup: $('#not-found-popup').prop('checked'),
     wm_count: wm_count,
     fact_check: fact_check,
-    wiki_setting: $('#wiki-setting').prop('checked'),
-    amazon_setting: $('#amazon-setting').prop('checked'),
-    newstv_setting: $('#newstv-setting').prop('checked'),
+    wiki_setting: wiki_setting,
+    amazon_setting: amazon_setting,
+    newstv_setting: newstv_setting,
     auto_archive: $('#auto-archive').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     /* General */
@@ -77,12 +80,17 @@ function saveOptions() {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
-  // TODO: needs to be rethought
-  //if (resource === false) {
-  //  chrome.runtime.sendMessage({ message: 'clearResource' })
-  //}
   if (fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  }
+  if (wiki_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'wikiResource' })
+  }
+  if (amazon_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonBooks' })
+  }
+  if (newstv_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'tvNews' })
   }
 }
 

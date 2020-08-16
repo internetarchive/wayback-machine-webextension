@@ -488,16 +488,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'clearResource') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
-        // TODO FIXME: this needs to be rethought, as shouldn't clear 'R' if others still active.
-        // wiki_resource settings unchecked
+        // wiki_setting settings unchecked
         if (message.resource === 'wikiResource') {
           if (tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tabs[0].id, 'R') }
         }
-        // amazon_books settings unchecked
+        // amazon_setting settings unchecked
         if (message.resource === 'amazonBooks') {
           if (tabs[0].url.includes('www.amazon')) { removeToolbarState(tabs[0].id, 'R') }
         }
-        // tv_news settings unchecked
+        // newstv_setting settings unchecked
         if (message.resource === 'tvNews') {
           const news_host = new URL(tabs[0].url).hostname
           if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
