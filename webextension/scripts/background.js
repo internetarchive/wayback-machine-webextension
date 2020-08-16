@@ -493,7 +493,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           const news_host = new URL(tabs[0].url).hostname
           if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
-              ((message.settings.tvnews === false) && newshosts.has(news_host))) {
+              ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
             removeToolbarState(tabs[0].id, 'R')
           }
         }
