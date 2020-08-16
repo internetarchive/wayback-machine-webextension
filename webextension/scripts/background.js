@@ -501,6 +501,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           const news_host = new URL(tabs[0].url).hostname
           if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
         }
+        // clear toolbar icon when using Search URL
+        if (message.resource === 'all') { removeToolbarState(tabs[0].id, 'R') }
       }
     })
   } else if (message.message === 'clearFactCheck') {
