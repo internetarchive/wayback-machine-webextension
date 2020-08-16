@@ -50,48 +50,48 @@ function restoreOptions(items) {
 }
 
 function saveOptions() {
-  let wm_count = $('#wm-count-setting').prop('checked')
-  let fact_check = $('#fact-check').prop('checked')
-  let wiki_setting = $('#wiki-setting').prop('checked')
-  let amazon_setting = $('#amazon-setting').prop('checked')
-  let newstv_setting = $('#newstv-setting').prop('checked')
-  let auto_update_context = $('#auto-update-context').prop('checked')
-  chrome.storage.local.set({
+  let settings = {
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
     /* Features */
     private_mode: $('#private-mode').prop('checked'),
     not_found_popup: $('#not-found-popup').prop('checked'),
-    wm_count: wm_count,
-    fact_check: fact_check,
-    wiki_setting: wiki_setting,
-    amazon_setting: amazon_setting,
-    newstv_setting: newstv_setting,
+    wm_count: $('#wm-count-setting').prop('checked'),
+    fact_check: $('#fact-check').prop('checked'),
+    wiki_setting: $('#wiki-setting').prop('checked'),
+    amazon_setting: $('#amazon-setting').prop('checked'),
+    newstv_setting: $('#newstv-setting').prop('checked'),
     auto_archive: $('#auto-archive').prop('checked'),
     show_context: $('input[name=tw]:checked').val(),
     /* General */
     show_resource_list: $('#show-resource-list').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    auto_update_context: auto_update_context,
+    auto_update_context: $('#auto-update-context').prop('checked'),
     show_context: $('input[name=tw]:checked').val()
-  })
-  if (wm_count === false) {
+  }
+  chrome.storage.local.set(settings)
+
+  if (settings.wm_count === false) {
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
-  if (fact_check === false) {
+  if (settings.fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
-  if (wiki_setting === false) {
+  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
+// TO REMOVE
+/*
+  if (settings.wiki_setting === false) {
     chrome.runtime.sendMessage({ message: 'clearResource', resource: 'wikiResource' })
   }
-  if (amazon_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonBooks' })
+  if (settings.amazon_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'amazonResource' })
   }
-  if (newstv_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'tvNews' })
+  if (settings.newstv_setting === false) {
+    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'newstvResourse' })
   }
+*/
 }
 
 /*function validate() {

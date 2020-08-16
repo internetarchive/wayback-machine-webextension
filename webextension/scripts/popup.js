@@ -171,7 +171,7 @@ function useSearchBox() {
       // }
     // }
     chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearResource', resource: 'all' })
+    chrome.runtime.sendMessage({ message: 'clearResource' })  // TO REMOVE: , resource: 'all'
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     $('#mapbox').removeClass('flip-inside')
     $('#twitterbox').removeClass('flip-inside')

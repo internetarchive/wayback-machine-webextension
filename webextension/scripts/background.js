@@ -488,21 +488,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'clearResource') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
+        if (message.settings) {
+          // clear 'R' state if wiki, amazon, or newstv settings have been cleared
+          const news_host = new URL(tabs[0].url).hostname
+          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
+              ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
+              ((message.settings.newstv_setting === false) && newshosts.has(news_host))) {
+            removeToolbarState(tabs[0].id, 'R')
+          }
+        }
+        else {
+          // clear 'R' if settings not provided
+          removeToolbarState(tabs[0].id, 'R')
+        }
+// TO REMOVE
+/*
         // wiki_setting settings unchecked
         if (message.resource === 'wikiResource') {
           if (tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tabs[0].id, 'R') }
         }
         // amazon_setting settings unchecked
-        if (message.resource === 'amazonBooks') {
+        else if (message.resource === 'amazonResource') {
           if (tabs[0].url.includes('www.amazon')) { removeToolbarState(tabs[0].id, 'R') }
         }
         // newstv_setting settings unchecked
-        if (message.resource === 'tvNews') {
+        else if (message.resource === 'newstvResource') {
           const news_host = new URL(tabs[0].url).hostname
           if (newshosts.has(news_host)) { removeToolbarState(tabs[0].id, 'R') }
         }
         // clear toolbar icon when using Search URL
         if (message.resource === 'all') { removeToolbarState(tabs[0].id, 'R') }
+*/
+
       }
     })
   } else if (message.message === 'clearFactCheck') {
