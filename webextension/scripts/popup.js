@@ -47,7 +47,7 @@ function loginError() {
   $('#bulk-save-btn').off('click')
   $('#savebox').addClass('flip-inside')
   $('#last_save').text('Login to Save Page')
-  $('#save_now').attr('disabled', true)
+  $('#save_now').parent().attr('disabled', true)
   $('#savebtn').off('click').click(() => {
     show_login_page()
   })
@@ -62,17 +62,16 @@ function loginError() {
 }
 
 function loginSuccess() {
+  $('.tab-item').css('width', '18%')
+  $('#logout-button').css('display', 'inline-block')
+  $('#save_now').parent().removeAttr('disabled')
+  $('#savebtn').off('click')
+  $('#bulk-save-btn').removeAttr('disabled')
+  $('#bulk-save-btn').click(bulkSave)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
-      $('.tab-item').css('width', '18%')
-      $('#logout-button').css('display', 'inline-block')
-      $('#bulk-save-btn').removeAttr('disabled')
-      $('#bulk-save-btn').click(bulkSave)
-      $('#savebtn').off('click')
-
       if (isNotExcludedUrl(url)) {
-        $('#save_now').removeAttr('disabled')
         $('#savebtn').click(save_now)
         $('#contextTip').click(openContextMenu)
         chrome.storage.local.get(['private_mode'], (event) => {

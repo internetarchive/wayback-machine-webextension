@@ -391,7 +391,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
-    let isBulkSave = message.isBulkSave
+    let isBulkSave = message.isBulkSave || false
     if (isNotExcludedUrl(page_url)) {
       if (message.method !== 'save') {
         URLopener(open_url, url, true)
