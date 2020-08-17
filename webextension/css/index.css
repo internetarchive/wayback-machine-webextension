@@ -145,6 +145,10 @@ body {
     z-index: 5;
 }
 
+#bulk-save {
+    margin: 3px 0 6px;
+}
+
 /* buttons */
 
 button {
