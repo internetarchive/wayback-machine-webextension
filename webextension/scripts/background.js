@@ -17,6 +17,7 @@ let waybackCountCache = {}
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
 var fact_checked_data = new Map()
+var cached_url_data = new Map() //data to be stored here so that there are no functions for API calls. Data is retrieved from cache.
 const SPN_RETRY = 6000
 
 var private_before_default = new Set([
@@ -28,6 +29,32 @@ var private_before_default = new Set([
   'email-outlinks-setting',
   'not-found-popup'
 ])
+
+function loadingCacheData(tabId, page_url) {
+  chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+    if(info.status == 'loading') {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        let url = searchValue || get_clean_url(tabs[0].url)
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                if ($('#last_save').text !== 'URL not supported') {
+                  $('#last_save').text(message.time)
+                }
+                $('#savebox').addClass('flip-inside')
+              }
+            })
+          }
+        })
+      })
+    }
+  }
+}
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
@@ -240,7 +267,8 @@ async function validate_spn(tabId, job_id, silent = false, page_url) {
  * @param onSuccess(json): json = root object from API call.
  * @param onFail(error): error = Error object or null.
  * @return Promise
- */
+ **/
+
 function getFactCheck(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     const requestUrl = 'https://data.our.news/api/'
@@ -546,17 +574,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       }
     })
   } else if (info.status === 'loading') {
-    updateWaybackCountBadge(tab.id, tab.url)
-    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
-      // fact check
-      if (event.fact_check === true) {
-        factCheckPage(tab.id, tab.url)
-      }
-      // auto save page
-      if (event.auto_archive === true) {
-        auto_save(tab.id, tab.url)
-      }
-    })
     var received_url = tab.url
     clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {

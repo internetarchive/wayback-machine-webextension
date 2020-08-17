@@ -3,6 +3,12 @@
 // from 'utils.js'
 /*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
+var cached_url_data = new Map()
+
+function getCacheData() {
+ 
+}
+
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
