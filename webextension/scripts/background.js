@@ -22,7 +22,9 @@ const SPN_RETRY = 6000
 var private_before_default = new Set([
   'fact-check',
   'wm-count-setting',
-  'resource',
+  'wiki-setting',
+  'amazon-setting',
+  'tvnews-setting',
   'email-outlinks-setting',
   'not-found-popup'
 ])
@@ -488,10 +490,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
   } else if (message.message === 'clearResource') {
-    // resources settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
-        removeToolbarState(tabs[0].id, 'R')
+        if (message.settings) {
+          // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
+          const news_host = new URL(tabs[0].url).hostname
+          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
+              ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
+              ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
+            removeToolbarState(tabs[0].id, 'R')
+          }
+        }
+        else {
+          // clear 'R' if settings not provided
+          removeToolbarState(tabs[0].id, 'R')
+        }
       }
     })
   } else if (message.message === 'clearFactCheck') {
@@ -540,34 +553,34 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['auto_update_context', 'show_context', 'resource'], (event) => {
+      chrome.storage.local.get(['auto_update_context', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+        // checking resources
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
-            if (event.resource === true) {
-              const url = get_clean_url(tabs[0].url)
-              const tabId = tabs[0].id
-              const news_host = new URL(url).hostname
-              // checking resource of amazon books
-              if (url.includes('www.amazon')) {
-                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-                  .then(resp => resp.json())
-                  .then(resp => {
-                    if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                      addToolbarState(tabId, 'R')
-                      // Storing the tab url as well as the fetched archive url for future use
-                      chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
-                    }
-                  })
-              // checking resource of wikipedia books and papers
-              } else if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-                addToolbarState(tabId, 'R')
-              // checking resource of tv news
-              } else if (newshosts.has(news_host)) {
-                addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
-              }
+            const url = get_clean_url(tabs[0].url)
+            const tabId = tabs[0].id
+            const news_host = new URL(url).hostname
+            if (event.amazon_setting && url.includes('www.amazon')) {
+              // check and show button for Amazon books
+              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+                .then(resp => resp.json())
+                .then(resp => {
+                  if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
+                    addToolbarState(tabId, 'R')
+                    // Storing the tab url as well as the fetched archive url for future use
+                    chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
+                  }
+                })
+            } else if (event.wiki_setting && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+              // show button for Wikipedia books and papers
+              addToolbarState(tabId, 'R')
+            } else if (event.tvnews_setting && newshosts.has(news_host)) {
+              // show button for TV news
+              addToolbarState(tabId, 'R')
             }
           }
         })
+        // auto-update context
         if (event.auto_update_context === true) {
           if (tabIdPromise) {
             tabIdPromise.then((id) => {
@@ -584,16 +597,26 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'resource', 'fact_check'], (event) => {
+  chrome.storage.local.get(['auto_update_context', 'fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
-    if ((event.resource === false) && (getToolbarState(info.tabId).has('R'))) {
-      // reset toolbar if resource setting turned off
-      removeToolbarState(info.tabId, 'R')
-    }
-    updateToolbar(info.tabId)
     chrome.tabs.get(info.tabId, (tab) => {
+      // wiki_setting settings unchecked
+      if (event.wiki_setting === false && getToolbarState(info.tabId).has('R')) {
+        if (tab.url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tab.id, 'R') }
+      }
+      // amazon_setting settings unchecked
+      if (event.amazon_setting === false && getToolbarState(info.tabId).has('R')) {
+        if (tab.url.includes('www.amazon')) { removeToolbarState(tab.id, 'R') }
+      }
+      // tvnews_setting settings unchecked
+      if (event.tvnews_setting === false && getToolbarState(info.tabId).has('R')) {
+        const news_host = new URL(tab.url).hostname
+        if (newshosts.has(news_host)) { removeToolbarState(tab.id, 'R') }
+      }
+
+      updateToolbar(info.tabId)
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
       // auto update context page

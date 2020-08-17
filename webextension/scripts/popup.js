@@ -184,32 +184,23 @@ function search_tweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-    for (let context in event) {
-      if (event[context]) {
-        $('#ctxbox').removeClass('flip-inside')
-        $('#contextBtn').removeAttr('disabled')
-      }
-    }
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    chrome.runtime.sendMessage({ message: 'clearResource' })
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-    $('#mapbox').removeClass('flip-inside')
-    $('#twitterbox').removeClass('flip-inside')
-    $('#fact-check-box').removeClass('flip-inside')
-    $('#fact-check-btn').removeClass('btn-purple')
-    $('#contextTip').text('Enable in Settings')
-    $('#contextTip').click(openContextMenu)
-    $('#suggestion-box').text('').hide()
-    $('#wayback-count-label').hide()
-    $('#url-not-supported-message').hide()
-    $('#using-search-url').show()
-    $('#borrow_books').hide()
-    $('#news_recommend').hide()
-    $('#wikibooks').hide()
-    $('#doi').hide()
-    last_save()
-  })
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+  chrome.runtime.sendMessage({ message: 'clearResource' })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  $('#mapbox').removeClass('flip-inside')
+  $('#twitterbox').removeClass('flip-inside')
+  $('#fact-check-box').removeClass('flip-inside')
+  $('#fact-check-btn').removeClass('btn-purple')
+  $('#contextTip').text('Enable in Settings')
+  $('#contextTip').click(openContextMenu)
+  $('#suggestion-box').text('').hide()
+  $('#wayback-count-label').hide()
+  $('#url-not-supported-message').hide()
+  $('#using-search-url').show()
+  $('#borrow_books').hide()
+  $('#news_recommend').hide()
+  $('#wiki-block').hide()
+  last_save()
 }
 
 function search_box_activate() {
@@ -422,12 +413,13 @@ function show_wikibooks() {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia books button
-          $('#wikibooks_tr').show().click(() => {
+          $('#wiki-block').show()
+          $('#wikibooks-btn').click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
           // show wikipedia cited paper button
-          $('#doi_tr').show().click(() => {
+          $('#wikipapers-btn').click(() => {
             const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })
@@ -457,29 +449,47 @@ function setUpFactCheck() {
   })
 }
 
-function showFactCheck() {
+// Common function to show different context
+function showContext(eventObj) {
+  let id = eventObj.target.getAttribute('id')
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
-    const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-    openByWindowSetting(factCheckUrl)
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      if (id.includes('fact-check')) {
+        const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+        openByWindowSetting(factCheckUrl)
+      } else if (id.includes('alexa')) {
+        const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+        openByWindowSetting(alexaUrl)
+      } else if (id.includes('annotations')) {
+        const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+        openByWindowSetting(annotationsUrl)
+      } else if (id.includes('more-info')) {
+        const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+        openByWindowSetting(wbmsummaryUrl)
+      } else if (id.includes('tag-cloud')) {
+        const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+        openByWindowSetting(tagsUrl)
+      }
+    }
   })
 }
 
-function noContextTip() {
-  chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
-    // If none of the context is selected, grey out the button and adding tip when the user hovers
-    for (const context in event) {
-      if (event[context]) {
-        $('#contextBtn').removeAttr('disabled')
-        return $('#contextBtn').click(show_all_screens)
-      }
-    }
-    if (!$('#ctxbox').hasClass('flip-inside')) {
-      $('#ctxbox').addClass('flip-inside')
-      $('#contextBtn').attr('disabled', true)
-    }
-  })
-}
+// function noContextTip() {
+//   chrome.storage.local.get(['alexa', 'domaintools', 'tweets', 'wbmsummary', 'annotations', 'tagcloud'], (event) => {
+//     // If none of the context is selected, grey out the button and adding tip when the user hovers
+//     for (const context in event) {
+//       if (event[context]) {
+//         $('#contextBtn').removeAttr('disabled')
+//         return $('#contextBtn').click(show_all_screens)
+//       }
+//     }
+//     if (!$('#ctxbox').hasClass('flip-inside')) {
+//       $('#ctxbox').addClass('flip-inside')
+//       $('#contextBtn').attr('disabled', true)
+//     }
+//   })
+// }
 
 function openContextMenu () {
   $('#popup-page').hide()
@@ -490,12 +500,30 @@ function openContextMenu () {
   if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
+function checkExcluded() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let url = searchValue || tabs[0].url
+    if (isNotExcludedUrl(url)) {
+      last_save()
+    } else {
+      $('#savebox').addClass('flip-inside')
+      // $('#contextBtn').attr('disabled', true)
+      $('#last_save').text('URL not supported')
+      // $('#contextTip').text('URL not supported')
+      $('#url-not-supported-message').text('URL not supported')
+    }
+  })
+}
+
+/*
+// TODO: REMOVE?
 function setExcluded() {
   const idList = ['savebox', 'mapbox', 'fact-check-box', 'twitterbox', 'ctxbox']
   idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
   $('#contextTip').text('URL not supported')
   $('#url-not-supported-message').text('URL not supported')
 }
+*/
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
 function clearFocus() {
@@ -586,7 +614,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -599,7 +627,7 @@ $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
 $('#twit_share').click(social_share)
 $('#linkedin_share').click(social_share)
-$('#twitterbtn').click(search_tweet)
+$('#tweets').click(search_tweet)
 $('#about-button').click(about_support)
 $('#donate-button').click(open_donations_page)
 $('#settings-button').click(settings)
@@ -607,7 +635,11 @@ $('#setting-page').hide()
 $('#login-page').hide()
 $('#feedback-button').click(open_feedback_page)
 $('#allbtn').click(view_all)
-$('#mapbtn').click(sitemap)
+$('#site-map').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
-$('#fact-check-btn').click(showFactCheck)
+$('#fact-check-btn').click(showContext)
+$('#alexa').click(showContext)
+$('#annotations').click(showContext)
+$('#more-info').click(showContext)
+$('#tag-cloud').click(showContext)

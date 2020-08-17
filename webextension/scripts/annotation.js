@@ -6,7 +6,7 @@
 /**
  * Prepare hypothes.is URL to request API.
  */
-function hypothesis_api_url (url, type) {
+function hypothesis_api_url(url, type) {
   if (!/^https?:\/\//i.test(url)) {
     url = 'http://' + url
   }
@@ -22,8 +22,9 @@ function hypothesis_api_url (url, type) {
 /**
  * Get hypothes.is data and render results.
  */
-function get_annotations (type = 'url') {
+function get_annotations(type = 'url') {
   const url = decodeURIComponent(getUrlByParameter('url'))
+  $('.url').text(url).attr('href', url)
   const new_url = hypothesis_api_url(url, type)
   $.getJSON(new_url, (data) => {
     const length = data.rows.length
@@ -80,7 +81,7 @@ function get_annotations (type = 'url') {
   })
 }
 
-function showAnnotations (type) {
+function showAnnotations(type) {
   $('.tabcontent').hide()
   $('.tablink').removeClass('active')
   $('.tablink[value="' + type + '"]').addClass('active')
@@ -91,9 +92,13 @@ $('.tablink').click(() => {
   showAnnotations($(this).attr('value'))
 })
 
-if (typeof module !== 'undefined') {
-  module.exports = { 
-    hypothesis_api_url,
-    get_annotations 
+function get_hypothesis() {
+  let hypo_domain = get_annotations('domain')
+  let hypo_url = get_annotations('url')
+  $('#loader_annotations').hide()
+  if (hypo_url && hypo_domain) {
+    $('#annotations_status').show()
   }
 }
+
+window.onload = get_hypothesis

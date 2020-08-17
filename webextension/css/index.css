@@ -145,10 +145,6 @@ body {
     z-index: 5;
 }
 
-#bulk-save {
-    margin: 3px 0 6px;
-}
-
 /* buttons */
 
 button {
@@ -236,7 +232,7 @@ a.btn-social, .btn-social {
     font-size: 13px;
     height: 36px;
     line-height: 25px;
-    margin: 0 2px 8px 2px;
+    margin: 0 2px 4px 2px;
     width: 36px;
 }
 .btn-social.btn-lg {
@@ -277,6 +273,11 @@ a.btn-social, .btn-social {
 
 .btn-medium {
     width: 100%;
+    height: 30px;
+}
+
+.btn-half {
+    width: 82px;
     height: 30px;
 }
 
@@ -400,8 +401,7 @@ a.btn-social, .btn-social {
     transform: rotateX(180deg);
 }
 
-.related_archived_resources {
-    margin-bottom: 10px;
+.related-resources {
     display: none;
 }
 
