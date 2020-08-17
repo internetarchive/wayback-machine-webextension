@@ -43,11 +43,21 @@ function last_save() {
 }
 
 function loginError() {
+  $('#bulk-save-btn').attr('disabled', true)
+  $('#bulk-save-btn').off('click')
   $('#savebox').addClass('flip-inside')
   $('#last_save').text('Login to Save Page')
   $('#save_now').parent().attr('disabled', true)
   $('#savebtn').off('click').click(() => {
     show_login_page()
+  })
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      let url = searchValue || get_clean_url(tabs[0].url)
+      if (isNotExcludedUrl(url)) {
+        $('#contextTip').click(openContextMenu)
+      } else { setExcluded() }
+    }
   })
 }
 
@@ -55,25 +65,36 @@ function loginSuccess() {
   $('.tab-item').css('width', '18%')
   $('#logout-button').css('display', 'inline-block')
   $('#save_now').parent().removeAttr('disabled')
-  $('#savebtn').off('click').click(save_now)
+  $('#savebtn').off('click')
+  $('#bulk-save-btn').removeAttr('disabled')
+  $('#bulk-save-btn').click(bulkSave)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.storage.local.get(['private_mode'], (event) => {
-      // auto save page
-      if (!event.private_mode) {
-        chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
-        }, (message) => {
-          if (message.message === 'last_save') {
-            if ($('#last_save').text !== 'URL not supported') {
-              $('#last_save').text(message.time)
-            }
-            $('#savebox').addClass('flip-inside')
+    if (tabs && tabs[0]) {
+      let url = searchValue || get_clean_url(tabs[0].url)
+      if (isNotExcludedUrl(url)) {
+        $('#savebtn').click(save_now)
+        $('#contextTip').click(openContextMenu)
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                if ($('#last_save').text !== 'URL not supported') {
+                  $('#last_save').text(message.time)
+                }
+                $('#savebox').addClass('flip-inside')
+              }
+            })
           }
         })
+      } else {
+        setExcluded()
+        $('#last_save').text('URL not supported')
       }
-    })
+    }
   })
 }
 
@@ -469,21 +490,11 @@ function openContextMenu () {
   if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
 }
 
-function checkExcluded() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || tabs[0].url
-    if (isNotExcludedUrl(url)) {
-      last_save()
-      $('#contextTip').click(openContextMenu)
-    } else {
-      const idList = ['savebox', 'fact-check-box', 'mapbox', 'twitterbox', 'ctxbox']
-      idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-      $('#contextBtn').attr('disabled', true)
-      $('#last_save').text('URL not supported')
-      $('#contextTip').text('URL not supported')
-      $('#url-not-supported-message').text('URL not supported')
-    }
-  })
+function setExcluded() {
+  const idList = ['savebox', 'mapbox', 'fact-check-box', 'twitterbox', 'ctxbox']
+  idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+  $('#contextTip').text('URL not supported')
+  $('#url-not-supported-message').text('URL not supported')
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -531,6 +542,10 @@ function clearWaybackCount() {
   $('#wayback-count-label').html('&nbsp;')
 }
 
+function bulkSave() {
+  openByWindowSetting('../bulk-save.html','windows')
+}
+
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tabId = tabs[0].id
@@ -571,8 +586,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, noContextTip, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
@@ -580,7 +594,6 @@ window.onload = () => {
 }
 
 $('.logo-wayback-machine').click(homepage)
-$('#savebtn').click(save_now)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
 $('#fb_share').click(social_share)
