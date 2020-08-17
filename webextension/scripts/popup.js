@@ -80,7 +80,17 @@ function loginSuccess() {
       if (isNotExcludedUrl(url)) {
         $('#savebtn').click(save_now)
         $('#contextTip').click(openContextMenu)
-        chrome.storage.local.get(['private_mode'], (event) => {
+        cached_url_data.forEach((value, key) => {
+          if(value == url) {
+            if(key == "last_save") {
+              if($('#last_save').text !== 'URL not supported') {
+                $('#last_save').text(key);
+              }
+            }
+          }
+        })
+        $('#savebox').addClass('flip-inside')
+        /*chrome.storage.local.get(['private_mode'], (event) => {
           // auto save page
           if (!event.private_mode) {
             chrome.runtime.sendMessage({
@@ -90,12 +100,7 @@ function loginSuccess() {
               if (message.message === 'last_save') {
                 if ($('#last_save').text !== 'URL not supported') {
                   $('#last_save').text(message.time)
-                }
-                $('#savebox').addClass('flip-inside')
-              }
-            })
-          }
-        })
+                }*/            
       } else {
         setExcluded()
         $('#last_save').text('URL not supported')

@@ -30,7 +30,7 @@ var private_before_default = new Set([
   'not-found-popup'
 ])
 
-function loadingCacheData(tabId, page_url) {
+function loadingCacheData() {
   chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     if(info.status == 'loading') {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -42,19 +42,18 @@ function loadingCacheData(tabId, page_url) {
               message: 'getLastSaveTime',
               page_url: url
             }, (message) => {
-              if (message.message === 'last_save') {
-                if ($('#last_save').text !== 'URL not supported') {
-                  $('#last_save').text(message.time)
-                }
-                $('#savebox').addClass('flip-inside')
-              }
+                  if (cached_url_data.size > 10) {
+                    let first_key = cached_url_data.entries().next().value[0]
+                    cached_url_data.delete(first_key)
+                  }
+                  cached_url_data.set(url, message.time)
             })
           }
         })
       })
     }
   }
-}
+  )}
 
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
