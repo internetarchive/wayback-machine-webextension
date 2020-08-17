@@ -30,31 +30,6 @@ var private_before_default = new Set([
   'not-found-popup'
 ])
 
-function loadingCacheData() {
-  chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-    if(info.status == 'loading') {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = searchValue || get_clean_url(tabs[0].url)
-        chrome.storage.local.get(['private_mode'], (event) => {
-          // auto save page
-          if (!event.private_mode) {
-            chrome.runtime.sendMessage({
-              message: 'getLastSaveTime',
-              page_url: url
-            }, (message) => {
-                  if (cached_url_data.size > 10) {
-                    let first_key = cached_url_data.entries().next().value[0]
-                    cached_url_data.delete(first_key)
-                  }
-                  cached_url_data.set(url, message.time)
-            })
-          }
-        })
-      })
-    }
-  }
-  )}
-
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
@@ -81,6 +56,33 @@ function URLopener(open_url, url, wmIsAvailable) {
 }
 
 /* * * API Calls * * */
+
+function loadingCacheData() {
+  chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+    if(info.status == 'loading') {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        let url = searchValue || get_clean_url(tabs[0].url)
+        chrome.storage.local.get(['private_mode'], (event) => {
+          // auto save page
+          if (!event.private_mode) {
+            chrome.runtime.sendMessage({
+              message: 'getLastSaveTime',
+              page_url: url
+            }, (message) => {
+              if (message.message === 'last_save') {
+                  if (cached_url_data.size > 10) {
+                    let first_key = cached_url_data.entries().next().value[0]
+                    cached_url_data.delete(first_key)
+                  }
+                  cached_url_data.set(url, message.time)
+              }
+            })
+          }
+        })
+      })
+    }
+  }
+  )}
 
 function savePageNow(tabId, page_url, silent = false, options = [], isBulkSave = false) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {

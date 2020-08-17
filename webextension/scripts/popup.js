@@ -3,12 +3,6 @@
 // from 'utils.js'
 /*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
-var cached_url_data = new Map()
-
-function getCacheData() {
- 
-}
-
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -81,10 +75,11 @@ function loginSuccess() {
         $('#savebtn').click(save_now)
         $('#contextTip').click(openContextMenu)
         cached_url_data.forEach((value, key) => {
-          if(value == url) {
-            if(key == "last_save") {
+          if(value === url) {
+            if(key === 'last_save') {
               if($('#last_save').text !== 'URL not supported') {
                 $('#last_save').text(key);
+                break;
               }
             }
           }
