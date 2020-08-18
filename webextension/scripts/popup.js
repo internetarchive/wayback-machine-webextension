@@ -54,9 +54,10 @@ function loginError() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
-      if (isNotExcludedUrl(url)) {
-        $('#contextTip').click(openContextMenu)
-      } else { setExcluded() }
+      if (!isNotExcludedUrl(url)) {
+        // $('#contextTip').click(openContextMenu)
+        setExcluded()
+      }
     }
   })
 }
@@ -73,7 +74,7 @@ function loginSuccess() {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (isNotExcludedUrl(url)) {
         $('#savebtn').click(save_now)
-        $('#contextTip').click(openContextMenu)
+        // $('#contextTip').click(openContextMenu)
         chrome.storage.local.get(['private_mode'], (event) => {
           // auto save page
           if (!event.private_mode) {
@@ -191,8 +192,8 @@ function useSearchBox() {
   $('#twitterbox').removeClass('flip-inside')
   $('#fact-check-box').removeClass('flip-inside')
   $('#fact-check-btn').removeClass('btn-purple')
-  $('#contextTip').text('Enable in Settings')
-  $('#contextTip').click(openContextMenu)
+  // $('#contextTip').text('Enable in Settings')
+  // $('#contextTip').click(openContextMenu)
   $('#suggestion-box').text('').hide()
   $('#wayback-count-label').hide()
   $('#url-not-supported-message').hide()
@@ -491,39 +492,37 @@ function showContext(eventObj) {
 //   })
 // }
 
-function openContextMenu () {
-  $('#popup-page').hide()
-  $('#setting-page').show()
-  $('#general-panel').hide()
-  $('#context-panel').show()
-  if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
-  if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
-}
+// function openContextMenu () {
+//   $('#popup-page').hide()
+//   $('#setting-page').show()
+//   $('#general-panel').hide()
+//   $('#context-panel').show()
+//   if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
+//   if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
+// }
 
-function checkExcluded() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || tabs[0].url
-    if (isNotExcludedUrl(url)) {
-      last_save()
-    } else {
-      $('#savebox').addClass('flip-inside')
-      // $('#contextBtn').attr('disabled', true)
-      $('#last_save').text('URL not supported')
-      // $('#contextTip').text('URL not supported')
-      $('#url-not-supported-message').text('URL not supported')
-    }
-  })
-}
+// function checkExcluded() {
+//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//     let url = searchValue || tabs[0].url
+//     if (isNotExcludedUrl(url)) {
+//       last_save()
+//     } else {
+//       $('#savebox').addClass('flip-inside')
+//       // $('#contextBtn').attr('disabled', true)
+//       $('#last_save').text('URL not supported')
+//       // $('#contextTip').text('URL not supported')
+//       $('#url-not-supported-message').text('URL not supported')
+//     }
+//   })
+// }
 
-/*
-// TODO: REMOVE?
 function setExcluded() {
-  const idList = ['savebox', 'mapbox', 'fact-check-box', 'twitterbox', 'ctxbox']
-  idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
-  $('#contextTip').text('URL not supported')
+  // const idList = ['savebox', 'mapbox', 'fact-check-box', 'twitterbox', 'ctxbox']
+  // idList.forEach((id) => { $(`#${id}`).addClass('flip-inside') })
+  // $('#contextTip').text('URL not supported')
+  $('#savebox').addClass('flip-inside')
   $('#url-not-supported-message').text('URL not supported')
 }
-*/
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
 function clearFocus() {
@@ -614,7 +613,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [checkExcluded, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
