@@ -154,6 +154,8 @@ button {
 .btn {
     font-weight: 400;
     border-radius: 5px;
+    padding-left: 0;
+    padding-right: 0;
 }
 .btn:active {
     outline: none !important;
@@ -284,6 +286,21 @@ a.btn-social, .btn-social {
 .btn-short {
     width: 60px;
     height: 30px;
+}
+
+.btn-flex {
+    width: auto;
+    height: 30px;
+    flex-grow: 1;
+}
+
+.btn-flex-block {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-flex-block+.btn-flex-block, .btn-block+.btn-flex-block, .btn-flex-block+.btn-block {
+    margin-top: 5px;
 }
 
 /* button colors */
