@@ -152,12 +152,13 @@
 
       <div class="btn-container">
         <ul class="nav">
-          <li><button class="btn btn-sm btn-medium btn-unselected" id="general-btn">Features</button></li>
-          <li><button class="btn btn-sm btn-medium btn-unselected " id="context-btn">General</button></li>
+          <li><button class="btn btn-sm btn-medium btn-unselected" id="general-btn">Context</button></li>
+          <li><button class="btn btn-sm btn-medium btn-unselected" id="context-btn">General</button></li>
         </ul>
       </div>
 
       <div id="general-panel">
+
         <label class="setting-switch" for="private-mode">
           <input type="checkbox" id="private-mode">
           <div class="setting-text-box">
@@ -173,14 +174,7 @@
         <label class="setting-switch" for="wm-count-setting">
           <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
           <div class="setting-text-box">
-            <span class="toggle">Archived Count</span>
-          </div>
-        </label>
-        <label class="setting-switch" for="auto-archive">
-          <input type="checkbox" name="private-include" class="private" id="auto-archive">
-          <div class="setting-text-box">
-            <span class="toggle">Auto Save Page</span>
-            <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
+            <span class="toggle">Wayback Machine Count</span>
           </div>
         </label>
         <label class="setting-switch" for="fact-check">
@@ -215,13 +209,19 @@
       </div>
       <div id="context-panel">
 
+        <label class="setting-switch" for="auto-archive">
+          <input type="checkbox" name="private-include" class="private" id="auto-archive">
+          <div class="setting-text-box">
+            <span class="toggle">Auto Save Page</span>
+            <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
+          </div>
+        </label>
         <label class="setting-switch" for="email-outlinks-setting">
           <input type="checkbox" id="email-outlinks-setting">
           <div class="setting-text-box">
             <span class="toggle">Email Outlinks</span>
           </div>
         </label>
-
         <label class="setting-switch" for="show-resource-list">
           <input type="checkbox" id="show-resource-list">
           <div class="setting-text-box">
@@ -276,7 +276,6 @@
           </div>
         </label>
         <br>
--->
 
         <label class="setting-switch ctx" for="auto-update-context">
           <input type="checkbox" id="auto-update-context" class="only">
@@ -284,7 +283,7 @@
             <span class="enable">Auto-Update Contexts</span>
           </div>
         </label>
-
+-->
         <div class="setting-switch" id="view">
           <div id="view-text">Show Features In</div>
           <input type="radio" name="tw" value="tab">
