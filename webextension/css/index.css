@@ -269,7 +269,8 @@ a.btn-social, .btn-social {
 /* button sizes */
 
 .btn-wide {
-    width: 170px;
+    /* width: 170px; */
+    width: 100%;
     height: 30px;
 }
 
@@ -288,8 +289,13 @@ a.btn-social, .btn-social {
     height: 30px;
 }
 
+.btn-equal {
+    height: 30px;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
 .btn-flex {
-    width: auto;
     height: 30px;
     flex-grow: 1;
 }
@@ -297,6 +303,7 @@ a.btn-social, .btn-social {
 .btn-flex-block {
     display: flex;
     gap: 5px;
+    align-items: center;
 }
 
 .btn-flex-block+.btn-flex-block, .btn-block+.btn-flex-block, .btn-flex-block+.btn-block {
@@ -383,7 +390,7 @@ a.btn-social, .btn-social {
 .flip {
     position: relative;
     perspective: 1000px;
-    width: 170px;
+    /* width: 170px; */
     height: 30px;
 }
 
@@ -407,6 +414,7 @@ a.btn-social, .btn-social {
 .flip-front, .flip-back {
     position: absolute;
     backface-visibility: hidden;
+    width: 100%;
 }
 
 .flip-front {
