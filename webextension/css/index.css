@@ -7,8 +7,12 @@ body {
     color: #222;
 }
 
+.page {
+    margin: 10px 0;
+}
+
 .tab-bar {
-    padding: 2px 0 5px 0;
+    padding-top: 2px;
 }
 .tab-item {
     display: inline-block;
@@ -73,7 +77,7 @@ body {
 
 .logo-wayback-machine {
     position: relative;
-    padding: 10px;
+    padding: 0 10px 10px 10px;
 }
 .logo-wayback-machine:hover {
     opacity: 0.8;
@@ -134,7 +138,7 @@ body {
     border-radius: 5px;
     top: -15px;
     padding-top: 17px;
-    margin-bottom: -8px;
+    margin-bottom: -10px;
     border: 1px solid #ddd;
     border-top: none;
     background-color: #ddd;
@@ -238,7 +242,7 @@ a.btn-social, .btn-social {
     font-size: 13px;
     height: 36px;
     line-height: 25px;
-    margin: 0 2px 4px 2px;
+    margin: 2px;
     width: 36px;
 }
 .btn-social.btn-lg {
@@ -299,11 +303,23 @@ a.btn-social, .btn-social {
     display: flex;
     gap: 5px;
     align-items: center;
+    margin-top: 5px;
 }
 
+.btn-block {
+    margin-top: 5px;
+}
+
+.btn-center-block {
+    margin-top: 5px;
+    text-align:center;
+}
+
+/*
 .btn-flex-block+.btn-flex-block, .btn-block+.btn-flex-block, .btn-flex-block+.btn-block {
     margin-top: 5px;
 }
+*/
 
 /* button colors */
 
@@ -378,6 +394,13 @@ a.btn-social, .btn-social {
     display: none;
     color: #d4312c;
     font-size: 12px;
+}
+
+.login-form {
+    margin: 5px 2px 10px 2px;
+}
+.login-form * {
+    margin-top: 8px;
 }
 
 /* flipping effect */
