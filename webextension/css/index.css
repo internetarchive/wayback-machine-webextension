@@ -161,6 +161,10 @@ button {
     outline: none !important;
 }
 
+.btn-hidden {
+    display: none;
+}
+
 .spn-btn {
     width: 100%;
     position: absolute;
@@ -269,24 +273,15 @@ a.btn-social, .btn-social {
 /* button sizes */
 
 .btn-wide {
-    /* width: 170px; */
     width: 100%;
     height: 30px;
 }
 
-.btn-medium {
-    width: 100%;
+.btn-auto {
+    min-width: 60px;
     height: 30px;
-}
-
-.btn-half {
-    width: 82px;
-    height: 30px;
-}
-
-.btn-short {
-    width: 60px;
-    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .btn-equal {
@@ -390,7 +385,6 @@ a.btn-social, .btn-social {
 .flip {
     position: relative;
     perspective: 1000px;
-    /* width: 170px; */
     height: 30px;
 }
 
@@ -424,10 +418,6 @@ a.btn-social, .btn-social {
 
 .flip-back {
     transform: rotateX(180deg);
-}
-
-.related-resources {
-    display: none;
 }
 
 /* dark mode */

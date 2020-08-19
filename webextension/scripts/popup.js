@@ -197,9 +197,10 @@ function useSearchBox() {
   $('#wayback-count-label').hide()
   $('#url-not-supported-message').hide()
   $('#using-search-url').show()
-  $('#borrow_books').hide()
-  $('#news_recommend').hide()
-  $('#wiki-block').hide()
+  $('#readbook-btn').hide()
+  $('#tvnews-btn').hide()
+  $('#wikibooks-btn').hide()
+  $('#wikipapers-btn').hide()
   last_save()
 }
 
@@ -350,7 +351,7 @@ function borrow_books() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
-          $('#borrow_books_tr').css({ 'display': 'block' })
+          $('#readbook-btn').show()
           chrome.storage.local.get(['tab_url', 'detail_url', 'show_context'], (res) => {
             const stored_url = res.tab_url
             const detail_url = res.detail_url
@@ -358,7 +359,7 @@ function borrow_books() {
             // Checking if the tab url is the same as the last stored one
             if (stored_url === url) {
               // if same, use the previously fetched url
-              $('#borrow_books_tr').click(() => {
+              $('#readbook-btn').click(() => {
                 openByWindowSetting(detail_url, context)
               })
             } else {
@@ -368,7 +369,7 @@ function borrow_books() {
               .then(response => {
                 if (response['metadata'] && response['metadata']['identifier-access']) {
                   const new_details_url = response['metadata']['identifier-access']
-                  $('#borrow_books_tr').click(() => {
+                  $('#readbook-btn').click(() => {
                     openByWindowSetting(new_details_url, context)
                   })
                 }
@@ -393,7 +394,7 @@ function show_news() {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
-            $('#news_recommend_tr').show().click(() => {
+            $('#tvnews-btn').show().click(() => {
               const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
             })
@@ -413,13 +414,12 @@ function show_wikibooks() {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia books button
-          $('#wiki-block').show()
-          $('#wikibooks-btn').click(() => {
+          $('#wikibooks-btn').show().click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
           // show wikipedia cited paper button
-          $('#wikipapers-btn').click(() => {
+          $('#wikipapers-btn').show().click(() => {
             const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })
