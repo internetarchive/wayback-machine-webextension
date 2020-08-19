@@ -65,45 +65,45 @@
             <label class="chk-options" for="chk-screenshot" title="Includes page image."><input type="checkbox" id="chk-screenshot"> Screenshot</label>
           </div>
 
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-short btn-light-gray" id="first_capture">Oldest</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-equal btn-light-gray" id="first_capture">Oldest</button>
             <a class="btn-social btn-sm btn-red" id="allbtn" title="Overview"><i class="fa fa-calendar"></i></a>
-            <button type="button" class="btn btn-sm btn-short btn-light-gray" id="recent_capture">Newest</button>
+            <button type="button" class="btn btn-sm btn-equal btn-light-gray" id="recent_capture">Newest</button>
           </div>
 
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="more-info" title="Wayback Machine Summary">More Info</button>
-            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="bulk-save-btn">Bulk Save</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-equal btn-dark-gray" id="more-info" title="Wayback Machine Summary">More Info</button>
+            <button type="button" class="btn btn-sm btn-equal btn-light-gray" id="bulk-save-btn">Bulk Save</button>
           </div>
 
           <!-- Contexts -->
 
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="site-map">Site Map</button>
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="tag-cloud">Tag Cloud</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-flex btn-light-gray" id="site-map">Site Map</button>
+            <button type="button" class="btn btn-sm btn-flex btn-dark-gray" id="tag-cloud">Word Cloud</button>
           </div>
 
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="tweets"><i class="fa fa-twitter"></i> Tweets</button>
-            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="alexa">Alexa</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-flex btn-dark-gray" id="tweets"><i class="fa fa-twitter"></i> Tweets</button>
+            <button type="button" class="btn btn-sm btn-flex btn-light-gray" id="alexa">Alexa Internet</button>
           </div>
 
-          <div class="btn-block">
-            <button type="button" class="btn btn-sm btn-half btn-light-gray" id="fact-check-btn">Fact Check</button>
-            <button type="button" class="btn btn-sm btn-half btn-dark-gray" id="annotations" title="Annotations">Annotate</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-flex btn-light-gray" id="fact-check-btn">Fact Check</button>
+            <button type="button" class="btn btn-sm btn-flex btn-dark-gray" id="annotations">Annotations</button>
           </div>
 
           <!-- Related Archived Resources -->
 
-          <div class="btn-block related-resources" id="borrow_books_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="borrow_books">Read Book</button>
+          <div class="btn-block">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue btn-hidden" id="readbook-btn">Read Book</button>
           </div>
-          <div class="btn-block related-resources" id="news_recommend_tr">
-            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="news_recommend">TV News Clips</button>
+          <div class="btn-block">
+            <button type="button" class="btn btn-sm btn-block btn-wide btn-blue btn-hidden" id="tvnews-btn">TV News Clips</button>
           </div>
-          <div class="btn-block related-resources" id="wiki-block">
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikibooks-btn" title="Find Cited Books">Books</button>
-            <button type="button" class="btn btn-sm btn-half btn-blue" id="wikipapers-btn" title="Find Cited Papers">Papers</button>
+          <div class="btn-flex-block">
+            <button type="button" class="btn btn-sm btn-flex btn-blue btn-hidden" id="wikibooks-btn" title="Find Cited Books">Books</button>
+            <button type="button" class="btn btn-sm btn-flex btn-blue btn-hidden" id="wikipapers-btn" title="Find Cited Papers">Papers</button>
           </div>
 
           <!-- Share -->
@@ -152,12 +152,13 @@
 
       <div class="btn-container">
         <ul class="nav">
-          <li><button class="btn btn-sm btn-medium btn-unselected" id="general-btn">Features</button></li>
-          <li><button class="btn btn-sm btn-medium btn-unselected " id="context-btn">General</button></li>
+          <li><button class="btn btn-sm btn-wide btn-unselected" id="general-btn">Context</button></li>
+          <li><button class="btn btn-sm btn-wide btn-unselected" id="context-btn">General</button></li>
         </ul>
       </div>
 
       <div id="general-panel">
+
         <label class="setting-switch" for="private-mode">
           <input type="checkbox" id="private-mode">
           <div class="setting-text-box">
@@ -173,14 +174,7 @@
         <label class="setting-switch" for="wm-count-setting">
           <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
           <div class="setting-text-box">
-            <span class="toggle">Archived Count</span>
-          </div>
-        </label>
-        <label class="setting-switch" for="auto-archive">
-          <input type="checkbox" name="private-include" class="private" id="auto-archive">
-          <div class="setting-text-box">
-            <span class="toggle">Auto Save Page</span>
-            <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
+            <span class="toggle">Wayback Machine Count</span>
           </div>
         </label>
         <label class="setting-switch" for="fact-check">
@@ -215,13 +209,19 @@
       </div>
       <div id="context-panel">
 
+        <label class="setting-switch" for="auto-archive">
+          <input type="checkbox" name="private-include" class="private" id="auto-archive">
+          <div class="setting-text-box">
+            <span class="toggle">Auto Save Page</span>
+            <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
+          </div>
+        </label>
         <label class="setting-switch" for="email-outlinks-setting">
           <input type="checkbox" id="email-outlinks-setting">
           <div class="setting-text-box">
             <span class="toggle">Email Outlinks</span>
           </div>
         </label>
-
         <label class="setting-switch" for="show-resource-list">
           <input type="checkbox" id="show-resource-list">
           <div class="setting-text-box">
@@ -276,7 +276,6 @@
           </div>
         </label>
         <br>
--->
 
         <label class="setting-switch ctx" for="auto-update-context">
           <input type="checkbox" id="auto-update-context" class="only">
@@ -284,7 +283,7 @@
             <span class="enable">Auto-Update Contexts</span>
           </div>
         </label>
-
+-->
         <div class="setting-switch" id="view">
           <div id="view-text">Show Features In</div>
           <input type="radio" name="tw" value="tab">
@@ -297,7 +296,7 @@
     </div>
 
     <div style="width:100%; text-align:center; margin-top:5px">
-      <button class="btn btn-sm btn-short btn-dark-gray back-btn">Back</button>
+      <button class="btn btn-sm btn-auto btn-dark-gray back-btn">Back</button>
     </div>
 
   </div>
@@ -328,7 +327,7 @@
         </div>
       </div>
       <div style="width:100%; text-align:center; margin:10px 0 10px 0">
-        <button class="btn btn-sm btn-short btn-dark-gray back-btn">Back</button>
+        <button class="btn btn-sm btn-auto btn-dark-gray back-btn">Back</button>
       </div>
   </div>
 
