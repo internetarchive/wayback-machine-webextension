@@ -15,7 +15,7 @@
 
   <!-- Main Popup Page -->
 
-  <div class="page" id="popup-page">
+  <div class="unselectable page" id="popup-page">
 
     <a href="#"><img class="resize-fit-center logo-wayback-machine" src="images/wayback-bordered.png" alt="Wayback Machine"></a>
     <div class="text-center">
@@ -58,8 +58,12 @@
       </div>
 
       <div class="chk-frame">
-        <label class="chk-options" for="chk-outlinks" title="Takes longer to save more."><input type="checkbox" id="chk-outlinks"> Outlinks</label>
-        <label class="chk-options" for="chk-screenshot" title="Includes page image."><input type="checkbox" id="chk-screenshot"> Screenshot</label>
+        <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Takes longer to save more.">
+          <input type="checkbox" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
+        </label>
+        <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Includes page image.">
+          <input type="checkbox" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
+        </label>
       </div>
 
       <div class="btn-flex-block">
@@ -142,7 +146,7 @@
 
   <!-- Settings Page -->
 
-  <div class="page" id="setting-page">
+  <div class="unselectable page" id="setting-page">
 
     <div class="btn-container">
       <ul class="nav">
@@ -293,7 +297,7 @@
 
   <!-- Login Page -->
 
-  <div class="page" id="login-page">
+  <div class="unselectable page" id="login-page">
 
     <a href="#"><img class="resize-fit-center logo-wayback-machine" src="images/wayback-bordered.png" alt="Wayback Machine"></a>
 

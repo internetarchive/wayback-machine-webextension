@@ -121,24 +121,36 @@ body {
 /* checkboxes */
 
 .chk-options {
-    font-weight: 400;
-    font-size: 12px;
     padding: 0 5px;
-    margin-bottom: 3px;
+    margin-bottom: 1px;
+    flex-grow: 1;
     cursor: pointer;
 }
 .chk-options:hover {
     background-color: rgba(127, 127, 127, 0.2);
     border-radius: 5px;
 }
+.chk-options * {
+    font-size: 12px;
+    font-weight: 400;
+    margin: 0;
+}
+.chk-options input {
+    margin: 5px 5px 0 0;
+}
+.chk-options span {
+    vertical-align: text-bottom;
+}
 
 .chk-frame {
+    display: flex;
+    gap: 2px;
     position: relative;
     width: 100%;
     border-radius: 5px;
-    top: -15px;
-    padding-top: 17px;
-    margin-bottom: -10px;
+    top: -17px;
+    padding-top: 18px;
+    margin-bottom: -15px;
     border: 1px solid #ddd;
     border-top: none;
     background-color: #ddd;
