@@ -452,9 +452,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
     timeoutPromise
       .then(response => response.json())
-      .then((clips) => {
-        sendResponse(clips)
-      })
+      .then(clips => sendResponse(clips))
+      .catch(error => sendResponse(error))
     return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
