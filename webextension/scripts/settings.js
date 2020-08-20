@@ -187,20 +187,20 @@ function goBack () {
 }
 
 function switchSetting() {
-  if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
-  $('#context-panel').hide()
+  if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
+  $('#second-panel').hide()
   // switching pressed effect of tab button
-  $('#general-btn').click(() => {
-    $('#context-panel').hide()
-    $('#general-panel').show()
-    if (!$('#general-btn').hasClass('selected')) { $('#general-btn').addClass('selected') }
-    if ($('#context-btn').hasClass('selected')) { $('#context-btn').removeClass('selected') }
+  $('#panel1-btn').click(() => {
+    $('#second-panel').hide()
+    $('#first-panel').show()
+    if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
+    if ($('#panel2-btn').hasClass('selected')) { $('#panel2-btn').removeClass('selected') }
   })
-  $('#context-btn').click(() => {
-    $('#general-panel').hide()
-    $('#context-panel').show()
-    if (!$('#context-btn').hasClass('selected')) { $('#context-btn').addClass('selected') }
-    if ($('#general-btn').hasClass('selected')) { $('#general-btn').removeClass('selected') }
+  $('#panel2-btn').click(() => {
+    $('#first-panel').hide()
+    $('#second-panel').show()
+    if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
+    if ($('#panel1-btn').hasClass('selected')) { $('#panel1-btn').removeClass('selected') }
   })
 }
 
