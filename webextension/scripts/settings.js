@@ -160,12 +160,12 @@ function goBack () {
   $('#login-page').hide()
   $('#setting-page').hide()
   $('#popup-page').show()
+/* TO REMOVE? Show Context button no longer exists.
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || tabs[0].url
     // checking contexts selection status
     if (noneSelected()) {
       if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-      /* $('#context-screen').off('click').css({ opacity: 0.5 }) */
       $('#contextBtn').off('click')
       $('#contextBtn').attr('disabled', true)
       if (isNotExcludedUrl(url)) {
@@ -179,11 +179,11 @@ function goBack () {
           $('#ctxbox').removeClass('flip-inside')
         }
       }
-      /* $('#context-screen').off('click').css({ opacity: 1.0 }).on('click', show_all_screens) */
       $('#contextBtn').off('click').on('click', show_all_screens)
       $('#contextBtn').removeAttr('disabled')
     }
   })
+*/
 }
 
 function switchSetting() {
