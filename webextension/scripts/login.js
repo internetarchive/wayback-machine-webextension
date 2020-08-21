@@ -67,6 +67,8 @@ function doLogin(e) {
           $('#popup-page').show()
           $('#login-message').hide()
         }, 500)
+        $('#email-address').val('')
+        $('#password').val('')
         $('#log-in').val('Login')
       }
     })
