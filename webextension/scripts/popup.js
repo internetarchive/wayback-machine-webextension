@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
+/*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
 
 function homepage() {
@@ -486,7 +486,7 @@ function setupWaybackCount() {
   chrome.storage.local.get(['wm_count'], (event) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
-      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !url.includes('archive.org')) {
+      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         $('#wayback-count-label').show()
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
