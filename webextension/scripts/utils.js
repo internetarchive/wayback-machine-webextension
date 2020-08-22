@@ -177,6 +177,22 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
 }
 
 /**
+ * Checks that url isn't an archive.org domain.
+ * @param url {string}
+ * @return {bool}
+ */
+function isArchiveUrl(url) {
+  if (typeof url !== 'string') { return false }
+  try {
+    const hostname = new URL(url).hostname
+    return (hostname === 'archive.org') || hostname.endsWith('.archive.org')
+  } catch (e) {
+    // url not formated correctly
+    return false
+  }
+}
+
+/**
  * Makes sure response is a valid URL to prevent code injection
  * @param url {string}
  * @return {bool}
@@ -466,6 +482,7 @@ if (typeof module !== 'undefined') {
     getErrorMessage,
     getUrlByParameter,
     getWaybackUrlFromResponse,
+    isArchiveUrl,
     isValidUrl,
     makeValidURL,
     isNotExcludedUrl,
