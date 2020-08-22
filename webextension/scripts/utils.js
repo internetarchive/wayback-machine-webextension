@@ -40,6 +40,7 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
+// TODO FIXME: This breaks when running tests!
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
 })
@@ -174,6 +175,22 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
         onfail()
       }
     })
+}
+
+/**
+ * Checks that url isn't an archive.org domain.
+ * @param url {string}
+ * @return {bool}
+ */
+function isArchiveUrl(url) {
+  if (typeof url !== 'string') { return false }
+  try {
+    const hostname = new URL(url).hostname
+    return (hostname === 'archive.org') || hostname.endsWith('.archive.org')
+  } catch (e) {
+    // url not formated correctly
+    return false
+  }
 }
 
 /**
@@ -466,6 +483,7 @@ if (typeof module !== 'undefined') {
     getErrorMessage,
     getUrlByParameter,
     getWaybackUrlFromResponse,
+    isArchiveUrl,
     isValidUrl,
     makeValidURL,
     isNotExcludedUrl,
