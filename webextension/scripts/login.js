@@ -4,7 +4,7 @@
 /*   global openByWindowSetting */
 
 // from 'popup.js'
-/* loginSuccess, loginError */
+/*   global loginSuccess, loginError */
 
 $('#sign-up').click(signUp)
 $('#forgot-password').click(forgotPassword)
@@ -33,6 +33,8 @@ function doLogin(e) {
     return
   }
   $('#log-in').val('Please Wait...')
+  // need to set test-cookie for login API to return json instead of html
+  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
   const data = new URLSearchParams()
   data.append('username', email)
   data.append('password', password)
@@ -55,9 +57,9 @@ function doLogin(e) {
   loginPromise
     .then(response => response.json())
     .then((res) => {
+      $('#log-in').val('Login')
       if (res.status === 'bad_login') {
         $('#login-message').show().text('Incorrect Email or Password')
-        $('#log-in').val('Login')
       } else {
         $('#login-message').show().css('color', 'green').text('Success')
         loginSuccess()
@@ -69,10 +71,13 @@ function doLogin(e) {
         }, 500)
         $('#email-address').val('')
         $('#password').val('')
-        $('#log-in').val('Login')
       }
     })
-    .catch(e => console.log(e))
+    .catch((e) => {
+      console.log(e)
+      $('#login-message').show().text('Login Error')
+      $('#log-in').val('Login')
+    })
 }
 
 function doLogout() {
