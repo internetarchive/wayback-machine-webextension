@@ -2,6 +2,7 @@ const dom = require('./setup').jsdom
 const expect = require('chai').expect
 const assert = require('assert').strict
 const getUrlByParameter = require('../webextension/scripts/utils').getUrlByParameter
+const isArchiveUrl = require('../webextension/scripts/utils').isArchiveUrl
 const isValidUrl = require('../webextension/scripts/utils').isValidUrl
 const get_clean_url = require('../webextension/scripts/utils').get_clean_url
 const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedUrl
@@ -15,6 +16,31 @@ describe('twitter', () => {
     dom.reconfigure({ url: 'chrome-extension://hkahpanhaccgppbidkekeijffcdppdan/twitter.html?url=https://archive.org/' })
     let tweetURL = getUrlByParameter('url')
     expect(tweetURL).to.be.equal('https://archive.org/')
+  })
+})
+
+describe('isArchiveUrl', () => {
+  var test_cases = [
+    { 'url': 'http://archive.org', 'result': true },
+    { 'url': 'https://archive.org', 'result': true },
+    { 'url': 'http://archive.org/some/path/?key=value', 'result': true },
+    { 'url': 'https://web.archive.org', 'result': true },
+    { 'url': 'https://web.archive.org/some/path', 'result': true },
+    { 'url': 'http://example.com', 'result': false },
+    { 'url': 'https://example.com', 'result': false },
+    { 'url': 'http://anotherarchive.org', 'result': false },
+    { 'url': 'file://example.html', 'result': false },
+    { 'url': 'archive.org', 'result': false },
+    { 'url': '', 'result': false }
+  ]
+  test_cases.forEach(({ url, result }) => {
+    it('should return ' + result + ' on ' + url, () => {
+      expect(isArchiveUrl(url)).to.equal(result)
+    })
+  })
+  it('should reject non-strings', () => {
+    let result = isArchiveUrl(5) || isArchiveUrl({}) || isArchiveUrl(true)
+    expect(result).to.be.false
   })
 })
 

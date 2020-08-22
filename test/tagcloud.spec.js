@@ -10,7 +10,7 @@ describe('tagcloud', () => {
     }
     var array2 = 'ABCDEF'
     var response2 = _toConsumableArray(array2)
-    for (var i = 0; i < response1.length; i++) {
+    for (var i = 0; i < response2.length; i++) {
       expect(array2.charAt(i)).to.equal(response2[i])
     }
   })

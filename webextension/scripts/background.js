@@ -4,7 +4,7 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, get_clean_url, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
 
 var manifest = chrome.runtime.getManifest()
@@ -452,9 +452,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
     timeoutPromise
       .then(response => response.json())
-      .then((clips) => {
-        sendResponse(clips)
-      })
+      .then(clips => sendResponse(clips))
+      .catch(error => sendResponse(error))
     return true
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -691,7 +690,7 @@ function incrementCount(url) {
 
 function updateWaybackCountBadge(tabId, url) {
   chrome.storage.local.get(['wm_count'], (event) => {
-    if (url && isValidUrl(url) && isNotExcludedUrl(url) && !url.includes('web.archive.org') && (event.wm_count === true)) {
+    if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (total) => {
         if (total > 0) {
           // display badge
