@@ -553,7 +553,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['auto_update_context', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+      chrome.storage.local.get(['wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
         // checking resources
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
@@ -580,16 +580,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             }
           }
         })
-        // auto-update context
-        if (event.auto_update_context === true) {
-          if (tabIdPromise) {
-            tabIdPromise.then((id) => {
-              if (tabId !== id && tab.id !== id && isNotExcludedUrl(contextUrl)) {
-                chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(contextUrl) })
-              }
-            })
-          }
-        }
       })
     }
   }
@@ -597,7 +587,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['auto_update_context', 'fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+  chrome.storage.local.get(['fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
     if ((event.fact_check === false) && (getToolbarState(info.tabId).has('F'))) {
       removeToolbarState(info.tabId, 'F')
     }
@@ -619,14 +609,6 @@ chrome.tabs.onActivated.addListener((info) => {
       updateToolbar(info.tabId)
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
-      // auto update context page
-      if ((event.auto_update_context === true) && tabIdPromise) {
-        tabIdPromise.then((id) => {
-          if (info.tabId === tab.id && tab.tabId !== id && tab.url && isNotExcludedUrl(tab.url)) {
-            chrome.tabs.update(id, { url: chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(tab.url) })
-          }
-        })
-      }
     })
   })
 })
