@@ -81,10 +81,10 @@ function doLogin(e) {
 }
 
 function doLogout() {
-  chrome.cookies.getAll({domain: '.archive.org'}, (cookies) => {
+  chrome.cookies.getAll({ domain: '.archive.org' }, (cookies) => {
     for (var i = 0; i < cookies.length; i++) {
       if (cookies[i].name !== 'test-cookie') {
-        chrome.cookies.remove({url: 'https://archive.org', name: cookies[i].name})
+        chrome.cookies.remove({ url: 'https://archive.org', name: cookies[i].name })
       }
     }
     $('#logout-button').hide()
