@@ -86,13 +86,13 @@
 
 /* navgation bar */
 
-ul.nav {
+ul.setting-nav {
     list-style-type: none;
     margin: 0 0 5px 0;
     overflow: hidden;
 }
 
-ul.nav li {
+ul.setting-nav li {
     float: left;
     width: 50%;
 }
@@ -108,8 +108,8 @@ ul.nav li {
 
 /* options */
 
-#view {
-    text-align: center;
+#view-setting {
+    text-align: center !important;
 }
 
 .setting-switch input[type=checkbox] {

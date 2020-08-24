@@ -452,7 +452,7 @@ function showContext(eventObj) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      if (id.includes('fact-check')) {
+      if (id.includes('fact-check-setting')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
       } else if (id.includes('alexa')) {

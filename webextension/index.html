@@ -149,21 +149,21 @@
   <div class="unselectable page" id="setting-page">
 
     <div class="btn-container">
-      <ul class="nav">
+      <ul class="nav setting-nav">
         <li><button class="btn btn-sm btn-wide btn-unselected" id="panel1-btn">Context</button></li>
         <li><button class="btn btn-sm btn-wide btn-unselected" id="panel2-btn">General</button></li>
       </ul>
     </div>
 
     <div id="first-panel">
-      <label class="setting-switch" for="private-mode">
-        <input type="checkbox" id="private-mode">
+      <label class="setting-switch" for="private-mode-setting">
+        <input type="checkbox" id="private-mode-setting">
         <div class="setting-text-box">
           <span class="toggle">Private Mode</span>
         </div>
       </label>
-      <label class="setting-switch" for="not-found-popup">
-        <input type="checkbox" name="private-include" class="private" id="not-found-popup">
+      <label class="setting-switch" for="not-found-setting">
+        <input type="checkbox" name="private-include" class="private" id="not-found-setting">
         <div class="setting-text-box">
           <span class="toggle">Replace 404s</span>
         </div>
@@ -174,42 +174,42 @@
           <span class="toggle">Wayback Machine Count</span>
         </div>
       </label>
-      <label class="setting-switch" for="fact-check">
-        <input type="checkbox" name="private-include" class="private" id="fact-check">
+      <label class="setting-switch" for="fact-check-setting">
+        <input type="checkbox" name="private-include" class="private" id="fact-check-setting">
         <div class="setting-text-box">
           <span class="toggle">Fact Checks</span>
-          <img src="images/toolbar/toolbar-icon-F32.png" alt="F" style="width:16px">
+          <img src="images/toolbar/toolbar-icon-F32.png" alt="F" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="wiki-setting">
         <input type="checkbox" name="private-include" class="private" id="wiki-setting">
         <div class="setting-text-box">
           <span class="toggle">Wikipedia Resources</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" style="width:16px">
+          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="amazon-setting">
         <input type="checkbox" name="private-include" class="private" id="amazon-setting">
         <div class="setting-text-box">
           <span class="toggle">Amazon Books</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" style="width:16px">
+          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="tvnews-setting">
         <input type="checkbox" name="private-include" class="private" id="tvnews-setting">
         <div class="setting-text-box">
           <span class="toggle">TV News Clips</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" style="width:16px">
+          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
     </div>
 
     <div id="second-panel" style="margin-bottom: 10px">
-      <label class="setting-switch" for="auto-archive">
-        <input type="checkbox" name="private-include" class="private" id="auto-archive">
+      <label class="setting-switch" for="auto-archive-setting">
+        <input type="checkbox" name="private-include" class="private" id="auto-archive-setting">
         <div class="setting-text-box">
           <span class="toggle">Auto Save Page</span>
-          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" style="width:16px">
+          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="email-outlinks-setting">
@@ -218,8 +218,8 @@
           <span class="toggle">Email Outlinks</span>
         </div>
       </label>
-      <label class="setting-switch" for="show-resource-list">
-        <input type="checkbox" id="show-resource-list">
+      <label class="setting-switch" for="resource-list-setting">
+        <input type="checkbox" id="resource-list-setting">
         <div class="setting-text-box">
           <span class="toggle">Show Resources During Save</span>
         </div>
@@ -280,11 +280,11 @@
           </div>
         </label>
 -->
-      <div class="setting-switch" id="view">
+      <div class="setting-switch" id="view-setting">
         <div id="view-text">Show Features In</div>
-        <input type="radio" name="tw" value="tab">
+        <input type="radio" name="view-input" value="tab">
         <label class="toggle">Tab</label>&nbsp;
-        <input type="radio" name="tw" value="window">
+        <input type="radio" name="view-input" value="window">
         <label class="toggle">Window</label>
       </div>
     </div>

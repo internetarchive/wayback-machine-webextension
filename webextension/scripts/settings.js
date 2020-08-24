@@ -10,9 +10,9 @@ $(initializeSettings)
 // $('.only').click(validate)
 // $('#showall').click(selectall)
 $('.private').click(validatePrivateMode)
-$('#private-mode').click(togglePrivateMode)
+$('#private-mode-setting').click(togglePrivateMode)
 // use capture instead of bubbling
-document.getElementById('view').addEventListener('click', switchTabWindow, true)
+document.getElementById('view-setting').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
 $('input').change(saveOptions)
 $('#show_context').change(saveOptions)
@@ -28,21 +28,19 @@ function restoreOptions(items) {
   /* SPN */
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
-  /* Features */
-  $('#private-mode').prop('checked', items.private_mode)
-  $('#not-found-popup').prop('checked', items.not_found_popup)
+  /* First Panel */
+  $('#private-mode-setting').prop('checked', items.private_mode)
+  $('#not-found-setting').prop('checked', items.not_found_popup)
   $('#wm-count-setting').prop('checked', items.wm_count)
-  $('#fact-check').prop('checked', items.fact_check)
+  $('#fact-check-setting').prop('checked', items.fact_check)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
-  $('#auto-archive').prop('checked', items.auto_archive)
-  $('#fact-check').prop('checked', items.fact_check)
-  /* General */
+  /* Second Panel */
+  $('#auto-archive-setting').prop('checked', items.auto_archive)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
-  $('#show-resource-list').prop('checked', items.show_resource_list)
-  $('#auto-update-context').prop('checked', items.auto_update_context)
-  $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
+  $('#resource-list-setting').prop('checked', items.show_resource_list)
+  $(`input[name=view-input][value=${items.show_context}]`).prop('checked', true)
   /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
@@ -54,21 +52,19 @@ function saveOptions() {
     /* SPN */
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
-    /* Features */
-    private_mode: $('#private-mode').prop('checked'),
-    not_found_popup: $('#not-found-popup').prop('checked'),
+    /* First Panel */
+    private_mode: $('#private-mode-setting').prop('checked'),
+    not_found_popup: $('#not-found-setting').prop('checked'),
     wm_count: $('#wm-count-setting').prop('checked'),
-    fact_check: $('#fact-check').prop('checked'),
+    fact_check: $('#fact-check-setting').prop('checked'),
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     tvnews_setting: $('#tvnews-setting').prop('checked'),
-    auto_archive: $('#auto-archive').prop('checked'),
-    show_context: $('input[name=tw]:checked').val(),
-    /* General */
-    show_resource_list: $('#show-resource-list').prop('checked'),
+    /* Second Panel */
+    auto_archive: $('#auto-archive-setting').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    auto_update_context: $('#auto-update-context').prop('checked'),
-    show_context: $('input[name=tw]:checked').val()
+    show_resource_list: $('#resource-list-setting').prop('checked'),
+    show_context: $('input[name=view-input]:checked').val()
   }
   chrome.storage.local.set(settings)
 
@@ -103,7 +99,7 @@ function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
-    $('#private-mode').prop('checked', false)
+    $('#private-mode-setting').prop('checked', false)
   }
 
   // If the event.taget.checked is true, add class 'selected-prior' to the event.taget, if it is NOT there
@@ -143,7 +139,7 @@ function hideUiButtons() {
     $('#wikipapers-btn').hide()
   }
   // change color of fact check button
-  if ($('#fact-check').is(':not(:checked)')) {
+  if ($('#fact-check-setting').is(':not(:checked)')) {
     $('#fact-check-btn').removeClass('btn-purple')
   }
 }
@@ -209,17 +205,17 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 function addDocs() {
   let docs = {
     /* Tab 1 */
-    'private-mode': 'Reduces communications to our servers unless explicit action is taken.',
-    'not-found-popup': 'Check if an archived copy is available when an error occurs.',
+    'private-mode-setting': 'Reduces communications to our servers unless explicit action is taken.',
+    'not-found-setting': 'Check if an archived copy is available when an error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'auto-archive': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
-    'fact-check': 'Auto check to see if the page you are on has been Fact Checked.',
+    'auto-archive-setting': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
+    'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
     'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
     'tvnews-setting': 'Auto check for Recommended TV News Clips while visiting news websites.',
     /* Tab 2 */
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'show-resource-list': 'Display a list of resources during Save Page Now.',
+    'resource-list-setting': 'Display a list of resources during Save Page Now.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     /* Contexts */
     'alexa': 'Displays what Alexa Internet knows about the site you are on.',

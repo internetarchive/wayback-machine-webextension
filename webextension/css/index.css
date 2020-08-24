@@ -52,6 +52,11 @@ body {
     height: 28px;
 }
 
+.toolbar-icon {
+    width: 16px;
+    height: 16px;
+}
+
 #search-input, .login-input {
     background-color: #fff;
     border-color: #777;
