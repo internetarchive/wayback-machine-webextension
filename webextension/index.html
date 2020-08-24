@@ -28,18 +28,15 @@
 
       <!-- Search -->
 
-      <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
-        <div class="bootstrap-typeahead clearfix open" style="position: relative;">
-          <div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;">
+      <form class="search-toolbar-input-container">
+        <div class="bootstrap-typeahead clearfix open">
+          <div class="bootstrap-typeahead-input" tabindex="-1">
             <input id="search-input" type="text" placeholder="Search URL" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection">
-<!--
-            <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
--->
           </div>
           <div id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left">
           </div>
         </div>
-        <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+        <input type="submit" tabindex="-1" class="search-toolbar-submit">
       </form>
 
       <!-- Wayback Machine -->
