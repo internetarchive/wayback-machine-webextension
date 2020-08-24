@@ -6,9 +6,9 @@
 // from 'popup.js'
 /*   global loginSuccess, loginError */
 
-$('#sign-up').click(signUp)
-$('#forgot-password').click(forgotPassword)
-$('#log-in').click(doLogin)
+$('#signup-btn').click(signUp)
+$('#forgot-pw-btn').click(forgotPassword)
+$('#login-btn').click(doLogin)
 $('#logout-button').click(doLogout)
 
 function signUp() {
@@ -22,8 +22,8 @@ function forgotPassword() {
 function doLogin(e) {
   e.preventDefault()
   $('#login-message').hide()
-  let email = $('#email-address').val()
-  let password = $('#password').val()
+  let email = $('#email-input').val()
+  let password = $('#password-input').val()
   if (email.length === 0) {
     $('#login-message').show().text('Please type an email')
     return
@@ -32,7 +32,7 @@ function doLogin(e) {
     $('#login-message').show().text('Please type a password')
     return
   }
-  $('#log-in').val('Please Wait...')
+  $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
   chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
   const data = new URLSearchParams()
@@ -57,7 +57,7 @@ function doLogin(e) {
   loginPromise
     .then(response => response.json())
     .then((res) => {
-      $('#log-in').val('Login')
+      $('#login-btn').val('Login')
       if (res.status === 'bad_login') {
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
@@ -69,14 +69,14 @@ function doLogin(e) {
           $('#popup-page').show()
           $('#login-message').hide()
         }, 500)
-        $('#email-address').val('')
-        $('#password').val('')
+        $('#email-input').val('')
+        $('#password-input').val('')
       }
     })
     .catch((e) => {
       console.log(e)
       $('#login-message').show().text('Login Error')
-      $('#log-in').val('Login')
+      $('#login-btn').val('Login')
     })
 }
 
