@@ -186,9 +186,6 @@ function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   chrome.runtime.sendMessage({ message: 'clearResource' })
   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  $('#mapbox').removeClass('flip-inside')
-  $('#twitterbox').removeClass('flip-inside')
-  $('#fact-check-box').removeClass('flip-inside')
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#wayback-count-msg').hide()
@@ -452,7 +449,7 @@ function showContext(eventObj) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      if (id.includes('fact-check-setting')) {
+      if (id.includes('fact-check-btn')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
       } else if (id.includes('alexa-btn')) {
