@@ -129,7 +129,7 @@ function togglePrivateMode() {
 function hideUiButtons() {
   // hide wayback machine count label
   if ($('#wm-count-setting').is(':not(:checked)')) {
-    $('#wayback-count-label').hide()
+    $('#wayback-count-msg').hide()
   }
   // hide relevant resources buttons
   if ($('#amazon-setting').is(':not(:checked)')) { $('#readbook-btn').hide() }

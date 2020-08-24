@@ -63,7 +63,7 @@ body {
     color: #222;
 }
 
-#wayback-count-label, #url-not-supported-message, #using-search-url {
+#wayback-count-msg, #url-not-supported-msg, #using-search-msg {
     font-size: 9pt;
     color: #222;
 }
@@ -93,7 +93,7 @@ body {
     height: 64px;
 }
 
-#using-search-url, #save-progress-bar {
+#using-search-msg, #save-progress-bar {
     display: none;
 }
 
@@ -161,7 +161,7 @@ body {
     background-color: #ddd;
 }
 
-#savebtn {
+.spn-container { /* #savebtn { */
     /* to cover over the chk-frame */
     z-index: 5;
 }
@@ -186,7 +186,7 @@ button {
     display: none;
 }
 
-.spn-btn {
+#spn-front-label {
     width: 100%;
     position: absolute;
     bottom: 6px;
@@ -199,7 +199,7 @@ button {
 }
 
 .progress {
-    height: 28px;
+    height: 100%;
     margin: 0;
     overflow: hidden;
     border-radius: 5px;
@@ -493,7 +493,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-label, #url-not-supported-message, #using-search-url {
+    #wayback-count-msg, #url-not-supported-msg, #using-search-msg {
        color: #eee;
     }
 

@@ -20,11 +20,13 @@
     <a href="#"><img class="resize-fit-center logo-wayback-machine" src="images/wayback-bordered.png" alt="Wayback Machine"></a>
     <div class="text-center">
 
-      <div id ="url-not-supported-message"></div>
+      <!-- Status Messages -->
 
-      <div id="wayback-count-label">&nbsp;</div>
+      <div id ="url-not-supported-msg"></div>
+      <div id="wayback-count-msg">&nbsp;</div>
+      <div id="using-search-msg">Using Search URL</div>
 
-      <div id="using-search-url">Using Search URL</div>
+      <!-- Search -->
 
       <form class="search-toolbar-input-container" style="margin: 5px 2px 10px 2px;">
         <div class="bootstrap-typeahead clearfix open" style="position: relative;">
@@ -42,18 +44,20 @@
 
       <!-- Wayback Machine -->
 
-      <div class="flip" id="savebtn">
-        <div id="savebox">
+      <div class="flip spn-container">
+        <div id="spn-btn">
           <div class="flip-front">
             <div type="button" class="btn btn-sm btn-wide btn-red progress-container">
               <div class="progress" id="save-progress-bar">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
                 </div>
               </div>
-              <p class="spn-btn" id="save_now">Save Page Now</p>
+              <div id="spn-front-label">Save Page Now</div>
             </div>
           </div>
-          <div class="flip-back"><div type="button" class="btn btn-sm btn-wide btn-red" id="last_save" tabindex="-1">URL not supported</div></div>
+          <div class="flip-back">
+            <div type="button" class="btn btn-sm btn-wide btn-red" id="spn-back-label" tabindex="-1">URL not supported</div>
+          </div>
         </div>
       </div>
 
