@@ -63,7 +63,7 @@ function loginError() {
 
 function loginSuccess() {
   $('.tab-item').css('width', '18%')
-  $('#logout-button').css('display', 'inline-block')
+  $('#logout-tab-btn').css('display', 'inline-block')
   $('#save_now').parent().removeAttr('disabled')
   $('#savebtn').off('click')
   $('#bulk-save-btn').removeAttr('disabled')
@@ -158,11 +158,11 @@ function social_share(eventObj) {
       sharing_url = recent_url + get_clean_url(url) // When not on a playback page, share the recent archived version of that URL
     }
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
-      if (id.includes('fb')) {
+      if (id.includes('facebook-share-btn')) {
         openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
-      } else if (id.includes('twit')) {
+      } else if (id.includes('twitter-share-btn')) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
-      } else if (id.includes('linkedin')) {
+      } else if (id.includes('linkedin-share-btn')) {
         openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
       }
     }
@@ -576,16 +576,16 @@ window.onload = () => {
 $('.logo-wayback-machine').click(homepage)
 $('#recent_capture').click(recent_capture)
 $('#first_capture').click(first_capture)
-$('#fb_share').click(social_share)
-$('#twit_share').click(social_share)
-$('#linkedin_share').click(social_share)
+$('#facebook-share-btn').click(social_share)
+$('#twitter-share-btn').click(social_share)
+$('#linkedin-share-btn').click(social_share)
 $('#tweets').click(search_tweet)
-$('#about-button').click(about_support)
-$('#donate-button').click(open_donations_page)
-$('#settings-button').click(settings)
+$('#about-tab-btn').click(about_support)
+$('#donate-tab-btn').click(open_donations_page)
+$('#settings-tab-btn').click(settings)
 $('#setting-page').hide()
 $('#login-page').hide()
-$('#feedback-button').click(open_feedback_page)
+$('#feedback-tab-btn').click(open_feedback_page)
 $('#allbtn').click(view_all)
 $('#site-map').click(sitemap)
 $('#search-input').keydown(display_suggestions)

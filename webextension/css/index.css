@@ -398,11 +398,11 @@ a.btn-social, .btn-social {
 
 /* other */
 
-#feedback-button {
+#feedback-tab-btn {
     font-size: 190%;
 }
 
-#logout-button {
+#logout-tab-btn {
     display: none;
     margin-top: -2px;
 }
