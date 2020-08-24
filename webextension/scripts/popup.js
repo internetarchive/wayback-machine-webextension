@@ -455,16 +455,16 @@ function showContext(eventObj) {
       if (id.includes('fact-check-setting')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
-      } else if (id.includes('alexa')) {
+      } else if (id.includes('alexa-btn')) {
         const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
         openByWindowSetting(alexaUrl)
-      } else if (id.includes('annotations')) {
+      } else if (id.includes('annotations-btn')) {
         const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
         openByWindowSetting(annotationsUrl)
-      } else if (id.includes('more-info')) {
+      } else if (id.includes('more-info-btn')) {
         const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
         openByWindowSetting(wbmsummaryUrl)
-      } else if (id.includes('tag-cloud')) {
+      } else if (id.includes('tag-cloud-btn')) {
         const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
         openByWindowSetting(tagsUrl)
       }
@@ -574,24 +574,24 @@ window.onload = () => {
 }
 
 $('.logo-wayback-machine').click(homepage)
-$('#recent_capture').click(recent_capture)
-$('#first_capture').click(first_capture)
+$('#newest-btn').click(recent_capture)
+$('#oldest-btn').click(first_capture)
 $('#facebook-share-btn').click(social_share)
 $('#twitter-share-btn').click(social_share)
 $('#linkedin-share-btn').click(social_share)
-$('#tweets').click(search_tweet)
+$('#tweets-btn').click(search_tweet)
 $('#about-tab-btn').click(about_support)
 $('#donate-tab-btn').click(open_donations_page)
 $('#settings-tab-btn').click(settings)
 $('#setting-page').hide()
 $('#login-page').hide()
 $('#feedback-tab-btn').click(open_feedback_page)
-$('#allbtn').click(view_all)
-$('#site-map').click(sitemap)
+$('#overview-btn').click(view_all)
+$('#site-map-btn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
 $('#fact-check-btn').click(showContext)
-$('#alexa').click(showContext)
-$('#annotations').click(showContext)
-$('#more-info').click(showContext)
-$('#tag-cloud').click(showContext)
+$('#alexa-btn').click(showContext)
+$('#annotations-btn').click(showContext)
+// $('#more-info-btn').click(showContext)
+$('#tag-cloud-btn').click(showContext)
