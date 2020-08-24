@@ -1,6 +1,10 @@
 
 /* default light mode */
 
+#setting-page {
+    overflow: hidden;
+}
+
 #setting-page label {
     font-weight: 500;
     font-size: 12px;
@@ -80,21 +84,15 @@
     }
 }
 
-
-#setting-page {
-    overflow: hidden;
-    margin: 10px 0;
-}
-
 /* navgation bar */
 
-ul.nav {
+ul.setting-nav {
     list-style-type: none;
     margin: 0 0 5px 0;
     overflow: hidden;
 }
 
-ul.nav li {
+ul.setting-nav li {
     float: left;
     width: 50%;
 }
@@ -110,8 +108,8 @@ ul.nav li {
 
 /* options */
 
-#view {
-    text-align: center;
+#view-setting {
+    text-align: center !important;
 }
 
 .setting-switch input[type=checkbox] {

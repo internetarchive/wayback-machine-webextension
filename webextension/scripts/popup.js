@@ -45,10 +45,10 @@ function last_save() {
 function loginError() {
   $('#bulk-save-btn').attr('disabled', true)
   $('#bulk-save-btn').off('click')
-  $('#savebox').addClass('flip-inside')
-  $('#last_save').text('Login to Save Page')
-  $('#save_now').parent().attr('disabled', true)
-  $('#savebtn').off('click').click(() => {
+  $('#spn-btn').addClass('flip-inside')
+  $('#spn-back-label').text('Login to Save Page')
+  $('#spn-front-label').parent().attr('disabled', true)
+  $('#spn-btn').off('click').click(() => {
     show_login_page()
   })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -63,16 +63,16 @@ function loginError() {
 
 function loginSuccess() {
   $('.tab-item').css('width', '18%')
-  $('#logout-button').css('display', 'inline-block')
-  $('#save_now').parent().removeAttr('disabled')
-  $('#savebtn').off('click')
+  $('#logout-tab-btn').css('display', 'inline-block')
+  $('#spn-front-label').parent().removeAttr('disabled')
+  $('#spn-btn').off('click')
   $('#bulk-save-btn').removeAttr('disabled')
   $('#bulk-save-btn').click(bulkSave)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (isNotExcludedUrl(url)) {
-        $('#savebtn').click(save_now)
+        $('#spn-btn').click(save_now)
         chrome.storage.local.get(['private_mode'], (event) => {
           // auto save page
           if (!event.private_mode) {
@@ -81,17 +81,17 @@ function loginSuccess() {
               page_url: url
             }, (message) => {
               if (message.message === 'last_save') {
-                if ($('#last_save').text !== 'URL not supported') {
-                  $('#last_save').text(message.time)
+                if ($('#spn-back-label').text !== 'URL not supported') {  // TODO: try a different approach
+                  $('#spn-back-label').text(message.time)
                 }
-                $('#savebox').addClass('flip-inside')
+                $('#spn-btn').addClass('flip-inside')
               }
             })
           }
         })
       } else {
         setExcluded()
-        $('#last_save').text('URL not supported')
+        $('#spn-back-label').text('URL not supported')
       }
     }
   })
@@ -158,11 +158,11 @@ function social_share(eventObj) {
       sharing_url = recent_url + get_clean_url(url) // When not on a playback page, share the recent archived version of that URL
     }
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
-      if (id.includes('fb')) {
+      if (id.includes('facebook-share-btn')) {
         openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
-      } else if (id.includes('twit')) {
+      } else if (id.includes('twitter-share-btn')) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
-      } else if (id.includes('linkedin')) {
+      } else if (id.includes('linkedin-share-btn')) {
         openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
       }
     }
@@ -186,14 +186,11 @@ function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   chrome.runtime.sendMessage({ message: 'clearResource' })
   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  $('#mapbox').removeClass('flip-inside')
-  $('#twitterbox').removeClass('flip-inside')
-  $('#fact-check-box').removeClass('flip-inside')
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
-  $('#wayback-count-label').hide()
-  $('#url-not-supported-message').hide()
-  $('#using-search-url').show()
+  $('#wayback-count-msg').hide()
+  $('#url-not-supported-msg').hide()
+  $('#using-search-msg').show()
   $('#readbook-btn').hide()
   $('#tvnews-btn').hide()
   $('#wikibooks-btn').hide()
@@ -208,7 +205,7 @@ function search_box_activate() {
     if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       searchValue = get_clean_url(makeValidURL(search_box.value))
       // use searchValue if it is valid, else update UI
-      searchValue ? useSearchBox() : $('#using-search-url').hide()
+      searchValue ? useSearchBox() : $('#using-search-msg').hide()
     }
   })
 }
@@ -287,10 +284,10 @@ function display_suggestions(e) {
     e.preventDefault()
   } else {
     if ($('#search-input').val().length >= 1) {
-      $('#url-not-supported-message').hide()
+      $('#url-not-supported-msg').hide()
     } else {
-      $('#url-not-supported-message').show()
-      $('#using-search-url').hide()
+      $('#url-not-supported-msg').show()
+      $('#using-search-msg').hide()
     }
     clearTimeout(timer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
@@ -452,19 +449,19 @@ function showContext(eventObj) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      if (id.includes('fact-check')) {
+      if (id.includes('fact-check-btn')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
-      } else if (id.includes('alexa')) {
+      } else if (id.includes('alexa-btn')) {
         const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
         openByWindowSetting(alexaUrl)
-      } else if (id.includes('annotations')) {
+      } else if (id.includes('annotations-btn')) {
         const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
         openByWindowSetting(annotationsUrl)
-      } else if (id.includes('more-info')) {
+      } else if (id.includes('more-info-btn')) {
         const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
         openByWindowSetting(wbmsummaryUrl)
-      } else if (id.includes('tag-cloud')) {
+      } else if (id.includes('tag-cloud-btn')) {
         const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
         openByWindowSetting(tagsUrl)
       }
@@ -473,8 +470,8 @@ function showContext(eventObj) {
 }
 
 function setExcluded() {
-  $('#savebox').addClass('flip-inside')
-  $('#url-not-supported-message').text('URL not supported')
+  $('#spn-btn').addClass('flip-inside')
+  $('#url-not-supported-msg').text('URL not supported')
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -487,11 +484,11 @@ function setupWaybackCount() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
       if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-        $('#wayback-count-label').show()
+        $('#wayback-count-msg').show()
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
-        $('#wayback-count-label').hide()
+        $('#wayback-count-msg').hide()
         clearWaybackCount()
         chrome.runtime.sendMessage({ message: 'clearCountBadge' })
       }
@@ -511,7 +508,7 @@ function showWaybackCount(url) {
       } else {
         text = 'This page was never archived.'
       }
-      $('#wayback-count-label').text(text)
+      $('#wayback-count-msg').text(text)
     } else {
       clearWaybackCount()
     }
@@ -519,7 +516,7 @@ function showWaybackCount(url) {
 }
 
 function clearWaybackCount() {
-  $('#wayback-count-label').html('&nbsp;')
+  $('#wayback-count-msg').html('&nbsp;')
 }
 
 function bulkSave() {
@@ -540,7 +537,7 @@ function setupSaveButton() {
 
 function showSaving() {
   $('#save-progress-bar').show()
-  $('#save_now').text('Archiving URL...')
+  $('#spn-front-label').text('Archiving URL...')
 }
 
 // make the tab/window option in setting page checked according to previous setting
@@ -552,14 +549,14 @@ chrome.runtime.onMessage.addListener(
       if (tabs[0].id === message.tabId) {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
-          $('#save_now').text('Save successful')
-          $('#last_save').text(message.time)
-          $('#savebox').addClass('flip-inside')
+          $('#spn-front-label').text('Save successful')
+          $('#spn-back-label').text(message.time)
+          $('#spn-btn').addClass('flip-inside')
         } else if (message.message === 'save_start') {
           showSaving()
         } else if (message.message === 'save_error') {
           $('#save-progress-bar').hide()
-          $('#save_now').text('Save Failed')
+          $('#spn-front-label').text('Save Failed')
         }
       }
     })
@@ -574,24 +571,24 @@ window.onload = () => {
 }
 
 $('.logo-wayback-machine').click(homepage)
-$('#recent_capture').click(recent_capture)
-$('#first_capture').click(first_capture)
-$('#fb_share').click(social_share)
-$('#twit_share').click(social_share)
-$('#linkedin_share').click(social_share)
-$('#tweets').click(search_tweet)
-$('#about-button').click(about_support)
-$('#donate-button').click(open_donations_page)
-$('#settings-button').click(settings)
+$('#newest-btn').click(recent_capture)
+$('#oldest-btn').click(first_capture)
+$('#facebook-share-btn').click(social_share)
+$('#twitter-share-btn').click(social_share)
+$('#linkedin-share-btn').click(social_share)
+$('#tweets-btn').click(search_tweet)
+$('#about-tab-btn').click(about_support)
+$('#donate-tab-btn').click(open_donations_page)
+$('#settings-tab-btn').click(settings)
 $('#setting-page').hide()
 $('#login-page').hide()
-$('#feedback-button').click(open_feedback_page)
-$('#allbtn').click(view_all)
-$('#site-map').click(sitemap)
+$('#feedback-tab-btn').click(open_feedback_page)
+$('#overview-btn').click(view_all)
+$('#site-map-btn').click(sitemap)
 $('#search-input').keydown(display_suggestions)
 $('.btn').click(clearFocus)
 $('#fact-check-btn').click(showContext)
-$('#alexa').click(showContext)
-$('#annotations').click(showContext)
-$('#more-info').click(showContext)
-$('#tag-cloud').click(showContext)
+$('#alexa-btn').click(showContext)
+$('#annotations-btn').click(showContext)
+// $('#more-info-btn').click(showContext)
+$('#tag-cloud-btn').click(showContext)

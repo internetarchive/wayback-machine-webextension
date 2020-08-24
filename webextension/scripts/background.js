@@ -20,13 +20,13 @@ var fact_checked_data = new Map()
 const SPN_RETRY = 6000
 
 var private_before_default = new Set([
-  'fact-check',
+  'fact-check-setting',
   'wm-count-setting',
   'wiki-setting',
   'amazon-setting',
   'tvnews-setting',
   'email-outlinks-setting',
-  'not-found-popup'
+  'not-found-setting'
 ])
 
 function rewriteUserAgentHeader(e) {
