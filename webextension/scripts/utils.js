@@ -388,9 +388,15 @@ function opener(url, option, callback) {
   } else {
     let width = Math.floor(window.screen.availWidth * 0.75)
     let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
-      if (callback) { callback(window.tabs[0].id) }
-    })
+    if (isFirefox) {
+      chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
+        if (callback) { callback(window.tabs[0].id) }
+      })
+    } else {
+      chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup', focused: false }, (window) => {
+        if (callback) { callback(window.tabs[0].id) }
+      })
+    }
   }
 }
 
