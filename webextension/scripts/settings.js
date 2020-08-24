@@ -41,7 +41,6 @@ function restoreOptions(items) {
   /* General */
   $('#email-outlinks-setting').prop('checked', items.email_outlinks)
   $('#show-resource-list').prop('checked', items.show_resource_list)
-  $('#auto-update-context').prop('checked', items.auto_update_context)
   $(`input[name=tw][value=${items.show_context}]`).prop('checked', true)
   /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
@@ -67,7 +66,6 @@ function saveOptions() {
     /* General */
     show_resource_list: $('#show-resource-list').prop('checked'),
     email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    auto_update_context: $('#auto-update-context').prop('checked'),
     show_context: $('input[name=tw]:checked').val()
   }
   chrome.storage.local.set(settings)

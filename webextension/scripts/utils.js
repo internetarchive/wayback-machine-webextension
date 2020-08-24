@@ -455,7 +455,6 @@ function initDefaultOptions () {
     /* General */
     show_resource_list: false,
     email_outlinks: false,
-    auto_update_context: false,
     show_context: 'tab',
     private_before_state: Array.from(private_before_default)
   })
