@@ -198,7 +198,7 @@ button {
     outline: none !important;
 }
 
-.btn-hidden {
+#readbook-container, #tvnews-container, #wiki-container {
     display: none;
 }
 

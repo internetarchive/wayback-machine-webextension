@@ -132,12 +132,9 @@ function hideUiButtons() {
     $('#wayback-count-msg').hide()
   }
   // hide relevant resources buttons
-  if ($('#amazon-setting').is(':not(:checked)')) { $('#readbook-btn').hide() }
-  if ($('#tvnews-setting').is(':not(:checked)')) { $('#tvnews-btn').hide() }
-  if ($('#wiki-setting').is(':not(:checked)')) {
-    $('#wikibooks-btn').hide()
-    $('#wikipapers-btn').hide()
-  }
+  if ($('#amazon-setting').is(':not(:checked)')) { $('#readbook-container').hide() }
+  if ($('#tvnews-setting').is(':not(:checked)')) { $('#tvnews-container').hide() }
+  if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-container').hide() }
   // change color of fact check button
   if ($('#fact-check-setting').is(':not(:checked)')) {
     $('#fact-check-btn').removeClass('btn-purple')
