@@ -332,10 +332,10 @@ a.btn-social, .btn-social {
     flex-basis: 0;
 }
 
-.btn-flex {
+/* .btn-flex {
     height: 30px;
     flex-grow: 1;
-}
+} */
 
 .btn-flex-block {
     display: flex;
@@ -346,6 +346,7 @@ a.btn-social, .btn-social {
 
 .btn-block {
     margin-top: 5px;
+    gap: 5px;
 }
 
 /*

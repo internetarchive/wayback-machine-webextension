@@ -193,8 +193,9 @@ function useSearchBox() {
   $('#using-search-msg').show()
   $('#readbook-btn').hide()
   $('#tvnews-btn').hide()
-  $('#wikibooks-btn').hide()
-  $('#wikipapers-btn').hide()
+  $('#wiki-block').hide()
+  // $('#wikibooks-btn').hide()
+  // $('#wikipapers-btn').hide()
   last_save()
 }
 
@@ -407,6 +408,7 @@ function show_wikibooks() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
+          $('#wiki-block').css('display', 'flex')
           // show wikipedia books button
           $('#wikibooks-btn').show().click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
