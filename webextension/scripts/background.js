@@ -546,7 +546,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
-    clearToolbarState(tab.id)
+    chrome.windows.get(tab.windowId, window => {
+      if (window && window.type === 'normal') {
+        clearToolbarState(tab.id)
+      }
+    })
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
@@ -605,7 +609,11 @@ chrome.tabs.onActivated.addListener((info) => {
         if (newshosts.has(news_host)) { removeToolbarState(tab.id, 'R') }
       }
 
-      updateToolbar(info.tabId)
+      chrome.windows.get(info.windowId, window => {
+        if (window && window.type === 'normal') {
+          updateToolbar(info.tabId)
+        }
+      })
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
     })
