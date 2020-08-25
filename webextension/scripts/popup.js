@@ -191,10 +191,9 @@ function useSearchBox() {
   $('#wayback-count-msg').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
-  $('#readbook-btn').hide()
-  $('#tvnews-btn').hide()
-  $('#wikibooks-btn').hide()
-  $('#wikipapers-btn').hide()
+  $('#readbook-container').hide()
+  $('#tvnews-container').hide()
+  $('#wiki-container').hide()
   last_save()
 }
 
@@ -345,7 +344,7 @@ function borrow_books() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
-          $('#readbook-btn').show()
+          $('#readbook-container').show()
           chrome.storage.local.get(['tab_url', 'detail_url', 'show_context'], (res) => {
             const stored_url = res.tab_url
             const detail_url = res.detail_url
@@ -388,7 +387,8 @@ function show_news() {
         chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
-            $('#tvnews-btn').show().click(() => {
+            $('#tvnews-container').show()
+            $('#tvnews-btn').click(() => {
               const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
             })
@@ -407,13 +407,13 @@ function show_wikibooks() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
-          // show wikipedia books button
-          $('#wikibooks-btn').show().click(() => {
+          // show wikipedia cited books & papers buttons
+          $('#wiki-container').show()
+          $('#wikibooks-btn').click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
-          // show wikipedia cited paper button
-          $('#wikipapers-btn').show().click(() => {
+          $('#wikipapers-btn').click(() => {
             const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })
