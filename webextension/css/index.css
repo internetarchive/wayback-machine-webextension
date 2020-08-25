@@ -2,13 +2,17 @@
 /* default light mode */
 
 body {
-    width: 200px;
+    width: 220px;
     background-color: #eee;
     color: #222;
 }
 
+.page {
+    margin: 10px;
+}
+
 .tab-bar {
-    padding: 2px 0 5px 0;
+    padding-top: 2px;
 }
 .tab-item {
     display: inline-block;
@@ -48,22 +52,23 @@ body {
     height: 28px;
 }
 
+.toolbar-icon {
+    width: 16px;
+    height: 16px;
+}
+
 #search-input, .login-input {
     background-color: #fff;
     border-color: #777;
     color: #222;
 }
 
-#wayback-count-label, #url-not-supported-message, #using-search-url {
+#wayback-count-msg, #url-not-supported-msg, #using-search-msg {
     font-size: 9pt;
     color: #222;
 }
 
 /* general */
-
-.focused {
-    background-color: #eee;
-}
 
 .resize-fit-center {
   margin: 0 0 0 0;
@@ -73,7 +78,7 @@ body {
 
 .logo-wayback-machine {
     position: relative;
-    padding: 10px;
+    margin-bottom: 10px;
 }
 .logo-wayback-machine:hover {
     opacity: 0.8;
@@ -84,7 +89,7 @@ body {
     height: 64px;
 }
 
-#using-search-url, #save-progress-bar {
+#using-search-msg, #save-progress-bar {
     display: none;
 }
 
@@ -102,7 +107,7 @@ body {
 #suggestion-box {
     display: none;
     max-height: 350px;
-    width: 166px;
+    width: 100%;
     border-radius: 5px;
     word-break: break-all;
 }
@@ -110,37 +115,69 @@ body {
 #suggestion-box div {
     padding: 3px 10px;
 }
-#suggestion-box div:hover {
+#suggestion-box div:hover, .focused {
     background-color: #eee;
+    border-radius: 3px;
+}
+
+.dropdown-menu {
+    padding: 1px;
+}
+
+.search-toolbar-input-container {
+    margin: 5px 2px 10px 2px;
+}
+
+.search-toolbar-input-container div.bootstrap-typeahead {
+    position: relative;
+}
+
+.search-toolbar-submit {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
 }
 
 /* checkboxes */
 
 .chk-options {
-    font-weight: 400;
-    font-size: 12px;
     padding: 0 5px;
-    margin-bottom: 3px;
+    margin-bottom: 1px;
+    flex-grow: 1;
     cursor: pointer;
 }
 .chk-options:hover {
     background-color: rgba(127, 127, 127, 0.2);
     border-radius: 5px;
 }
+.chk-options * {
+    font-size: 12px;
+    font-weight: 400;
+    margin: 0;
+}
+.chk-options input {
+    margin: 5px 5px 0 0;
+}
+.chk-options span {
+    vertical-align: text-bottom;
+}
 
 .chk-frame {
+    display: flex;
+    gap: 2px;
     position: relative;
     width: 100%;
     border-radius: 5px;
-    top: -15px;
-    padding-top: 17px;
-    margin-bottom: -8px;
+    top: -17px;
+    padding-top: 18px;
+    margin-bottom: -15px;
     border: 1px solid #ddd;
     border-top: none;
     background-color: #ddd;
 }
 
-#savebtn {
+.spn-container { /* #savebtn { */
     /* to cover over the chk-frame */
     z-index: 5;
 }
@@ -161,11 +198,11 @@ button {
     outline: none !important;
 }
 
-.btn-hidden {
+#readbook-container, #tvnews-container, #wiki-container {
     display: none;
 }
 
-.spn-btn {
+#spn-front-label {
     width: 100%;
     position: absolute;
     bottom: 6px;
@@ -178,7 +215,7 @@ button {
 }
 
 .progress {
-    height: 28px;
+    height: 100%;
     margin: 0;
     overflow: hidden;
     border-radius: 5px;
@@ -238,7 +275,7 @@ a.btn-social, .btn-social {
     font-size: 13px;
     height: 36px;
     line-height: 25px;
-    margin: 0 2px 4px 2px;
+    margin: 2px;
     width: 36px;
 }
 .btn-social.btn-lg {
@@ -270,6 +307,11 @@ a.btn-social, .btn-social {
     background-color: #4a8aff;
 }
 
+.share-block {
+    display: block;
+    margin-top: 5px;
+}
+
 /* button sizes */
 
 .btn-wide {
@@ -299,11 +341,18 @@ a.btn-social, .btn-social {
     display: flex;
     gap: 5px;
     align-items: center;
+    margin-top: 5px;
 }
 
+.btn-block {
+    margin-top: 5px;
+}
+
+/*
 .btn-flex-block+.btn-flex-block, .btn-block+.btn-flex-block, .btn-flex-block+.btn-block {
     margin-top: 5px;
 }
+*/
 
 /* button colors */
 
@@ -365,11 +414,11 @@ a.btn-social, .btn-social {
 
 /* other */
 
-#feedback-button {
+#feedback-tab-btn {
     font-size: 190%;
 }
 
-#logout-button {
+#logout-tab-btn {
     display: none;
     margin-top: -2px;
 }
@@ -378,6 +427,13 @@ a.btn-social, .btn-social {
     display: none;
     color: #d4312c;
     font-size: 12px;
+}
+
+.login-form {
+    margin: 5px 2px 10px 2px;
+}
+.login-form * {
+    margin-top: 8px;
 }
 
 /* flipping effect */
@@ -453,7 +509,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-label, #url-not-supported-message, #using-search-url {
+    #wayback-count-msg, #url-not-supported-msg, #using-search-msg {
        color: #eee;
     }
 
