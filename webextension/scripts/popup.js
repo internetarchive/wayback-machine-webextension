@@ -27,7 +27,7 @@ function save_now() {
       page_url: url,
       options: options,
       method: 'save',
-      tabId: tabs[0].id
+      atab: tabs[0]
     })
   })
 }
@@ -341,7 +341,7 @@ function borrow_books() {
     const url = tabs[0].url
     const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -384,7 +384,7 @@ function show_news() {
       let set_of_sites = newshosts
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             $('#tvnews-container').show()
@@ -404,7 +404,7 @@ function show_wikibooks() {
     const url = tabs[0].url
     const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -430,7 +430,7 @@ function setUpFactCheck() {
     if (isNotExcludedUrl(url)) {
       chrome.storage.local.get(['fact_check'], (event) => {
         if (event.fact_check) {
-          chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+          chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
             let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -526,7 +526,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tabId = tabs[0].id
-    chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
       let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()
