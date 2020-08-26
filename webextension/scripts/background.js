@@ -546,11 +546,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     })
   } else if (info.status === 'loading') {
     var received_url = tab.url
-    chrome.windows.get(tab.windowId, window => {
-      if (window && window.type === 'normal') {
-        clearToolbarState(tab.id)
-      }
-    })
+    clearToolbarState(tab.id)
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
@@ -609,15 +605,24 @@ chrome.tabs.onActivated.addListener((info) => {
         if (newshosts.has(news_host)) { removeToolbarState(tab.id, 'R') }
       }
 
-      chrome.windows.get(info.windowId, window => {
-        if (window && window.type === 'normal') {
-          updateToolbar(info.tabId)
-        }
-      })
+      updateToolbar(info.tabId)
       // update or clear count badge
       updateWaybackCountBadge(info.tabId, tab.url)
     })
   })
+})
+
+// get the id of focused window
+chrome.windows.onFocusChanged.addListener(windowId => {
+  if (windowId > -1) {
+    chrome.windows.get(windowId, window => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (window && window.type === 'normal') {
+          updateToolbar(tabs[0].id)
+        }
+      })
+    })
+  }
 })
 
 function auto_save(tabId, url) {
@@ -762,19 +767,24 @@ function clearToolbarState(tabId) {
 function updateToolbar(tabId) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === tabId)) {
-      let state = gToolbarStates[tabId]
-      // this order defines the priority of what icon to display
-      if (state && state.has('S')) {
-        setToolbarIcon('S')
-      } else if (state && state.has('F')) {
-        setToolbarIcon('F')
-      } else if (state && state.has('R')) {
-        setToolbarIcon('R')
-      } else if (state && state.has('check')) {
-        setToolbarIcon('check')
-      } else {
-        setToolbarIcon('archive')
-      }
+      chrome.windows.get(tabs[0].windowId, window => {
+        // prevent updation of toolbar icon for popup type windows
+        if (window && window.type === 'normal') {
+          let state = gToolbarStates[tabId]
+          // this order defines the priority of what icon to display
+          if (state && state.has('S')) {
+            setToolbarIcon('S')
+          } else if (state && state.has('F')) {
+            setToolbarIcon('F')
+          } else if (state && state.has('R')) {
+            setToolbarIcon('R')
+          } else if (state && state.has('check')) {
+            setToolbarIcon('check')
+          } else {
+            setToolbarIcon('archive')
+          }
+        }
+      })
     }
   })
 }
