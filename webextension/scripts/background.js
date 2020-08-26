@@ -612,19 +612,6 @@ chrome.tabs.onActivated.addListener((info) => {
   })
 })
 
-// get the id of focused window
-chrome.windows.onFocusChanged.addListener(windowId => {
-  if (windowId > -1) {
-    chrome.windows.get(windowId, window => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (window && window.type === 'normal') {
-          updateToolbar(tabs[0])
-        }
-      })
-    })
-  }
-})
-
 function auto_save(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
@@ -715,7 +702,7 @@ const validToolbarIcons = new Set(['R', 'S', 'F', 'check', 'archive'])
  * Name string is based on PNG image filename in images/toolbar/
  * @param name {string} = one of 'archive', 'check', 'R', or 'S'
  */
-function setToolbarIcon(name) {
+function setToolbarIcon(name, tabId) {
   const path = 'images/toolbar/toolbar-icon-'
   let n = validToolbarIcons.has(name) ? name : 'archive'
   let details = {
@@ -724,7 +711,7 @@ function setToolbarIcon(name) {
     '32': (path + n + '32.png'),
     '64': (path + n + '64.png')
   }
-  chrome.browserAction.setIcon({ path: details })
+  chrome.browserAction.setIcon({ path: details, tabId:tabId})
 }
 
 // Returns a string key from a Tab windowId and tab id.
@@ -776,20 +763,20 @@ function clearToolbarState(atab) {
 function updateToolbar(atab) {
   const tabKey = toolbarStateKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
-  chrome.tabs.query({ active: true, currentWindow: true, windowType: 'normal' }, (tabs) => {
+  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
       let state = gToolbarStates[tabKey]
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
-        setToolbarIcon('S')
+        setToolbarIcon('S', tabs[0].id)
       } else if (state && state.has('F')) {
-        setToolbarIcon('F')
+        setToolbarIcon('F', tabs[0].id)
       } else if (state && state.has('R')) {
-        setToolbarIcon('R')
+        setToolbarIcon('R', tabs[0].id)
       } else if (state && state.has('check')) {
-        setToolbarIcon('check')
+        setToolbarIcon('check', tabs[0].id)
       } else {
-        setToolbarIcon('archive')
+        setToolbarIcon('archive', tabs[0].id)
       }
     }
   })
