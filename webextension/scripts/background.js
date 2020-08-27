@@ -701,17 +701,19 @@ const validToolbarIcons = new Set(['R', 'S', 'F', 'check', 'archive'])
  * Sets the toolbar icon.
  * Name string is based on PNG image filename in images/toolbar/
  * @param name {string} = one of 'archive', 'check', 'R', or 'S'
+ * @param tabId {int} (optional) = tab id, else sets current or global icon.
  */
-function setToolbarIcon(name, tabId) {
+function setToolbarIcon(name, tabId = null) {
   const path = 'images/toolbar/toolbar-icon-'
   let n = validToolbarIcons.has(name) ? name : 'archive'
-  let details = {
+  let allPaths = {
     '16': (path + n + '16.png'),
     '24': (path + n + '24.png'),
     '32': (path + n + '32.png'),
     '64': (path + n + '64.png')
   }
-  chrome.browserAction.setIcon({ path: details, tabId:tabId})
+  let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
+  chrome.browserAction.setIcon(details)
 }
 
 // Returns a string key from a Tab windowId and tab id.
@@ -768,15 +770,15 @@ function updateToolbar(atab) {
       let state = gToolbarStates[tabKey]
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
-        setToolbarIcon('S', tabs[0].id)
+        setToolbarIcon('S', atab.id)
       } else if (state && state.has('F')) {
-        setToolbarIcon('F', tabs[0].id)
+        setToolbarIcon('F', atab.id)
       } else if (state && state.has('R')) {
-        setToolbarIcon('R', tabs[0].id)
+        setToolbarIcon('R', atab.id)
       } else if (state && state.has('check')) {
-        setToolbarIcon('check', tabs[0].id)
+        setToolbarIcon('check', atab.id)
       } else {
-        setToolbarIcon('archive', tabs[0].id)
+        setToolbarIcon('archive', atab.id)
       }
     }
   })
