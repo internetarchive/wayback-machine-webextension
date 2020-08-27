@@ -121,4 +121,4 @@ To contribute code and docs to Wayback Machine Chrome extension, take a look at 
 
 Copyright © 2017-2020 Internet Archive. All rights reserved.
 
-Licensed under the the terms of the [GNU Affero General Public License version 3 (AGPLv3)](LICENSE).
+Licensed under the terms of the [GNU Affero General Public License version 3 (AGPLv3)](LICENSE).
