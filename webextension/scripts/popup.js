@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, viewableTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -492,6 +492,7 @@ function setupWaybackCount() {
   })
 }
 
+// Displays Wayback count, and Oldest and Newest timestamps
 function showWaybackCount(url) {
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
     if ('total' in result) {
@@ -508,11 +509,21 @@ function showWaybackCount(url) {
     } else {
       clearWaybackCount()
     }
+    if ('first_ts' in result) {
+      let date = timestampToDate(result.first_ts)
+      $('#oldest-btn').attr('title', date.toLocaleString())
+    }
+    if ('last_ts' in result) {
+      let date = timestampToDate(result.last_ts)
+      $('#newest-btn').attr('title', date.toLocaleString())
+    }
   })
 }
 
 function clearWaybackCount() {
   $('#wayback-count-msg').html('&nbsp;')
+  $('#oldest-btn').attr('title', null)
+  $('#newest-btn').attr('title', null)
 }
 
 function bulkSave() {

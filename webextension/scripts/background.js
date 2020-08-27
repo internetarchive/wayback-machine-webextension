@@ -515,7 +515,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'getCachedWaybackCount') {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
-      (total) => { sendResponse({ total: total }) },
+      (values) => { sendResponse(values) },
       (error) => { sendResponse({ error: error }) }
     )
   } else if (message.message === 'clearCountCache') {
@@ -644,13 +644,13 @@ function factCheckPage(atab, url) {
 /* * * Wayback Count * * */
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheTotal = waybackCountCache[url]
-  if (cacheTotal) {
-    onSuccess(cacheTotal)
+  let cacheValues = waybackCountCache[url]
+  if (cacheValues) {
+    onSuccess(cacheValues)
   } else {
-    getWaybackCount(url, (total) => {
-      waybackCountCache[url] = total
-      onSuccess(total)
+    getWaybackCount(url, (values) => {
+      waybackCountCache[url] = values
+      onSuccess(values)
     }, onFail)
   }
 }
@@ -664,17 +664,17 @@ function clearCountCache() {
  * @param url {string}
  */
 function incrementCount(url) {
-  let cacheTotal = waybackCountCache[url]
-  waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
+  let cacheValues = waybackCountCache[url]
+  waybackCountCache[url] = (cacheValues && cacheValues.total) ? cacheValues.total + 1 : 1
 }
 
 function updateWaybackCountBadge(atab, url) {
   chrome.storage.local.get(['wm_count'], (event) => {
     if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      getCachedWaybackCount(url, (total) => {
-        if (total > 0) {
+      getCachedWaybackCount(url, (values) => {
+        if (values.total > 0) {
           // display badge
-          let text = badgeCountText(total)
+          let text = badgeCountText(values.total)
           chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
           chrome.browserAction.setBadgeText({ tabId: atab.id, text: text })
         } else {

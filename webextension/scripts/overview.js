@@ -21,8 +21,8 @@ function get_details (url) {
     }
   }).fail(() => {})
   var captures
-  getWaybackCount(url, (total) => {
-    captures = total
+  getWaybackCount(url, (values) => {
+    captures = values.total
     $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
     .text(captures.toLocaleString())
     if (captures > 0) {
