@@ -661,7 +661,12 @@ function clearCountCache() {
  */
 function incrementCount(url) {
   let cacheValues = waybackCountCache[url]
-  waybackCountCache[url] = (cacheValues && cacheValues.total) ? cacheValues.total + 1 : 1
+  if (cacheValues && cacheValues.total) {
+    cacheValues.total += 1
+    waybackCountCache[url] = cacheValues
+  } else {
+    waybackCountCache[url] = { total: 1 }
+  }
 }
 
 function updateWaybackCountBadge(atab, url) {
