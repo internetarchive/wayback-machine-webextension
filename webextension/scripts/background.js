@@ -499,8 +499,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
             removeToolbarState(tabs[0], 'R')
           }
-        }
-        else {
+        } else {
           // clear 'R' if settings not provided
           removeToolbarState(tabs[0], 'R')
         }
@@ -548,7 +547,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     var received_url = tab.url
     clearToolbarState(tab)
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
-      let contextUrl = received_url
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
