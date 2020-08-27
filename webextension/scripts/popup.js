@@ -543,10 +543,12 @@ function showSaving() {
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
+// respond to Save Page Now success
 chrome.runtime.onMessage.addListener(
   (message) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0].id === message.tabId) {
+      let atab = message.atab
+      if (atab && atab.id && (atab.id === tabs[0].id)) {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
