@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, viewableTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -80,10 +80,8 @@ function loginSuccess() {
               message: 'getLastSaveTime',
               page_url: url
             }, (message) => {
-              if (message.message === 'last_save') {
-                if ($('#spn-back-label').text !== 'URL not supported') { // TODO: try a different approach
-                  $('#spn-back-label').text(message.time)
-                }
+              if ((message.message === 'last_save') && message.timestamp) {
+                $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
                 $('#spn-btn').addClass('flip-inside')
               }
             })
@@ -509,11 +507,11 @@ function showWaybackCount(url) {
     } else {
       clearWaybackCount()
     }
-    if ('first_ts' in result) {
+    if (result.first_ts) {
       let date = timestampToDate(result.first_ts)
       $('#oldest-btn').attr('title', date.toLocaleString())
     }
-    if ('last_ts' in result) {
+    if (result.last_ts) {
       let date = timestampToDate(result.last_ts)
       $('#newest-btn').attr('title', date.toLocaleString())
     }
@@ -558,7 +556,7 @@ chrome.runtime.onMessage.addListener(
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          $('#spn-back-label').text(message.time)
+          $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').addClass('flip-inside')
         } else if (message.message === 'save_start') {
           showSaving()

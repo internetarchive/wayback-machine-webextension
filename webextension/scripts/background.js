@@ -190,7 +190,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
     addToolbarState(atab, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
-      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
+      timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
     })
@@ -382,10 +382,6 @@ chrome.webRequest.onCompleted.addListener((details) => {
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-function getLastSaveTime(timestamp) {
-  return viewableTimestamp(timestamp)
-}
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.message === 'openurl') {
     let atab = message.atab
@@ -410,13 +406,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (wb_url, url, timestamp) => {
         sendResponse({
           message: 'last_save',
-          time: 'Last saved: ' + getLastSaveTime(timestamp)
+          timestamp: timestamp
         })
       },
       () => {
         sendResponse({
           message: 'last_save',
-          time: "Page hasn't been saved"
+          timestamp: ''
         })
       })
     return true
