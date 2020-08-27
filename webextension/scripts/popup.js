@@ -27,7 +27,7 @@ function save_now() {
       page_url: url,
       options: options,
       method: 'save',
-      tabId: tabs[0].id
+      atab: tabs[0]
     })
   })
 }
@@ -81,7 +81,7 @@ function loginSuccess() {
               page_url: url
             }, (message) => {
               if (message.message === 'last_save') {
-                if ($('#spn-back-label').text !== 'URL not supported') {  // TODO: try a different approach
+                if ($('#spn-back-label').text !== 'URL not supported') { // TODO: try a different approach
                   $('#spn-back-label').text(message.time)
                 }
                 $('#spn-btn').addClass('flip-inside')
@@ -339,9 +339,8 @@ function show_all_screens() {
 function borrow_books() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
-    const tabId = tabs[0].id
     if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -378,13 +377,12 @@ function borrow_books() {
 function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
-    const tabId = tabs[0].id
     const news_host = new URL(url).hostname
     chrome.storage.local.get(['show_context'], function (event) {
       let set_of_sites = newshosts
       const option = event.show_context
       if (set_of_sites.has(news_host)) {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             $('#tvnews-container').show()
@@ -402,9 +400,8 @@ function show_news() {
 function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
-    const tabId = tabs[0].id
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -426,11 +423,10 @@ function show_wikibooks() {
 function setUpFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = get_clean_url(tabs[0].url)
-    const tabId = tabs[0].id
     if (isNotExcludedUrl(url)) {
       chrome.storage.local.get(['fact_check'], (event) => {
         if (event.fact_check) {
-          chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+          chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
             let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -520,13 +516,12 @@ function clearWaybackCount() {
 }
 
 function bulkSave() {
-  openByWindowSetting('../bulk-save.html','windows')
+  openByWindowSetting('../bulk-save.html', 'windows')
 }
 
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const tabId = tabs[0].id
-    chrome.runtime.sendMessage({ message: 'getToolbarState', tabId: tabId }, (result) => {
+    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
       let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()
@@ -543,10 +538,12 @@ function showSaving() {
 // make the tab/window option in setting page checked according to previous setting
 chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
 
+// respond to Save Page Now success
 chrome.runtime.onMessage.addListener(
   (message) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0].id === message.tabId) {
+      let atab = message.atab
+      if (atab && atab.id && (atab.id === tabs[0].id)) {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
