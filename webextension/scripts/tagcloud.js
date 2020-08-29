@@ -113,3 +113,5 @@ function _toConsumableArray (arr) {
 }
 
 window.onload = get_tags
+
+if (typeof module !== 'undefined') { module.exports = { _toConsumableArray } }

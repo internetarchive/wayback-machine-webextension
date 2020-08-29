@@ -40,7 +40,6 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
-// TODO FIXME: This breaks when running tests!
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
 })
