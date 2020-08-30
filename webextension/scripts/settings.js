@@ -4,7 +4,7 @@
 /*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue */
 
 // from 'popup.js'
-/*   global show_all_screens, openContextMenu */
+/*   global show_all_screens, openContextMenu, setupWaybackCount */
 
 $(initializeSettings)
 // $('.only').click(validate)
@@ -68,10 +68,13 @@ function saveOptions() {
   }
   chrome.storage.local.set(settings)
 
+  // displays or clears the count badge, label, oldest and newest tooltips
+  setupWaybackCount()
   if (settings.wm_count === false) {
-    chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+    // additionally clear the cache if setting cleared
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
+
   if (settings.fact_check === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
@@ -127,10 +130,6 @@ function togglePrivateMode() {
 }
 
 function hideUiButtons() {
-  // hide wayback machine count label
-  if ($('#wm-count-setting').is(':not(:checked)')) {
-    $('#wayback-count-msg').hide()
-  }
   // hide relevant resources buttons
   if ($('#amazon-setting').is(':not(:checked)')) { $('#readbook-container').hide() }
   if ($('#tvnews-setting').is(':not(:checked)')) { $('#tvnews-container').hide() }

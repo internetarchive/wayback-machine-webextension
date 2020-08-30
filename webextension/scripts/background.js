@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, viewableTimestamp, badgeCountText, getWaybackCount, newshosts */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -186,17 +186,15 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
   removeToolbarState(atab, 'S')
 
   if (vdata.status === 'success') {
+    incrementCount(vdata.original_url)
     // update UI
     addToolbarState(atab, 'check')
     chrome.runtime.sendMessage({
       message: 'save_success',
-      time: 'Last saved: ' + getLastSaveTime(vdata.timestamp),
+      timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
     })
-    // increment and update wayback count
-    incrementCount(vdata.original_url)
-    chrome.runtime.sendMessage({ message: 'updateCountBadge' }) // not working
     // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -382,10 +380,6 @@ chrome.webRequest.onCompleted.addListener((details) => {
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-function getLastSaveTime(timestamp) {
-  return viewableTimestamp(timestamp)
-}
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.message === 'openurl') {
     let atab = message.atab
@@ -410,13 +404,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (wb_url, url, timestamp) => {
         sendResponse({
           message: 'last_save',
-          time: 'Last saved: ' + getLastSaveTime(timestamp)
+          timestamp: timestamp
         })
       },
       () => {
         sendResponse({
           message: 'last_save',
-          time: "Page hasn't been saved"
+          timestamp: ''
         })
       })
     return true
@@ -515,7 +509,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'getCachedWaybackCount') {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
-      (total) => { sendResponse({ total: total }) },
+      (values) => { sendResponse(values) },
       (error) => { sendResponse({ error: error }) }
     )
   } else if (message.message === 'clearCountCache') {
@@ -644,13 +638,13 @@ function factCheckPage(atab, url) {
 /* * * Wayback Count * * */
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheTotal = waybackCountCache[url]
-  if (cacheTotal) {
-    onSuccess(cacheTotal)
+  let cacheValues = waybackCountCache[url]
+  if (cacheValues) {
+    onSuccess(cacheValues)
   } else {
-    getWaybackCount(url, (total) => {
-      waybackCountCache[url] = total
-      onSuccess(total)
+    getWaybackCount(url, (values) => {
+      waybackCountCache[url] = values
+      onSuccess(values)
     }, onFail)
   }
 }
@@ -661,20 +655,28 @@ function clearCountCache() {
 
 /**
  * Adds +1 to url in cache, or set to 1 if it doesn't exist.
+ * Also updates "last_ts" with current timestamp.
  * @param url {string}
  */
 function incrementCount(url) {
-  let cacheTotal = waybackCountCache[url]
-  waybackCountCache[url] = (cacheTotal) ? cacheTotal + 1 : 1
+  let cacheValues = waybackCountCache[url]
+  let timestamp = dateToTimestamp(new Date())
+  if (cacheValues && cacheValues.total) {
+    cacheValues.total += 1
+    cacheValues.last_ts = timestamp
+    waybackCountCache[url] = cacheValues
+  } else {
+    waybackCountCache[url] = { total: 1, last_ts: timestamp }
+  }
 }
 
 function updateWaybackCountBadge(atab, url) {
   chrome.storage.local.get(['wm_count'], (event) => {
     if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      getCachedWaybackCount(url, (total) => {
-        if (total > 0) {
+      getCachedWaybackCount(url, (values) => {
+        if (values.total >= 0) {
           // display badge
-          let text = badgeCountText(total)
+          let text = badgeCountText(values.total)
           chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
           chrome.browserAction.setBadgeText({ tabId: atab.id, text: text })
         } else {

@@ -111,8 +111,11 @@ function badgeCountText(count) {
 
 /**
  * Retrieves total count of snapshots stored in the Wayback Machine for given url.
+ * Includes first and last timestamp.
  * @param url {string}
  * @return Promise
+ * onSuccess is an object { "total": int, "first_ts": string, "last_ts": string }
+ * onFail is an Error object or null.
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
@@ -142,7 +145,8 @@ function getWaybackCount(url, onSuccess, onFail) {
           }
         }
       }
-      onSuccess(total)
+      let values = { total: total, first_ts: json.first_ts, last_ts: json.last_ts }
+      onSuccess(values)
     })
     .catch(error => {
       if (onFail) { onFail(error) }
