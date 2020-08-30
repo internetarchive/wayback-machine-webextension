@@ -114,7 +114,7 @@ function badgeCountText(count) {
  * Includes first and last timestamp.
  * @param url {string}
  * @return Promise
- * onSuccess is an object { "total": int , "last_ts": string, "first_ts": string }
+ * onSuccess is an object { "total": int, "first_ts": string, "last_ts": string }
  * onFail is an Error object or null.
  */
 function getWaybackCount(url, onSuccess, onFail) {

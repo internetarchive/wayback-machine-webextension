@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -186,6 +186,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
   removeToolbarState(atab, 'S')
 
   if (vdata.status === 'success') {
+    incrementCount(vdata.original_url)
     // update UI
     addToolbarState(atab, 'check')
     chrome.runtime.sendMessage({
@@ -194,9 +195,6 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       atab: atab,
       url: page_url
     })
-    // increment and update wayback count
-    incrementCount(vdata.original_url)
-    chrome.runtime.sendMessage({ message: 'updateCountBadge' }) // not working
     // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -657,15 +655,18 @@ function clearCountCache() {
 
 /**
  * Adds +1 to url in cache, or set to 1 if it doesn't exist.
+ * Also updates "last_ts" with current timestamp.
  * @param url {string}
  */
 function incrementCount(url) {
   let cacheValues = waybackCountCache[url]
+  let timestamp = dateToTimestamp(new Date())
   if (cacheValues && cacheValues.total) {
     cacheValues.total += 1
+    cacheValues.last_ts = timestamp
     waybackCountCache[url] = cacheValues
   } else {
-    waybackCountCache[url] = { total: 1 }
+    waybackCountCache[url] = { total: 1, last_ts: timestamp }
   }
 }
 
