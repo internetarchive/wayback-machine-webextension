@@ -186,12 +186,12 @@ function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
-  $('#wayback-count-msg').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
   $('#readbook-container').hide()
   $('#tvnews-container').hide()
   $('#wiki-container').hide()
+  clearWaybackCount()
   last_save()
 }
 
@@ -478,11 +478,9 @@ function setupWaybackCount() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
       if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-        $('#wayback-count-msg').show()
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
-        $('#wayback-count-msg').hide()
         clearWaybackCount()
         chrome.runtime.sendMessage({ message: 'clearCountBadge' })
       }
@@ -492,6 +490,7 @@ function setupWaybackCount() {
 
 // Displays Wayback count, and Oldest and Newest timestamps
 function showWaybackCount(url) {
+  $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
     if ('total' in result) {
       // set label
@@ -519,7 +518,7 @@ function showWaybackCount(url) {
 }
 
 function clearWaybackCount() {
-  $('#wayback-count-msg').html('&nbsp;')
+  $('#wayback-count-msg').html('').hide()
   $('#oldest-btn').attr('title', null)
   $('#newest-btn').attr('title', null)
 }
