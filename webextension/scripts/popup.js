@@ -500,7 +500,7 @@ function showWaybackCount(url) {
       } else if (result.total > 1) {
         text = 'Saved ' + result.total.toLocaleString() + ' times.'
       } else {
-        text = 'This page was never archived.'
+        text = 'This page has not been archived.'
       }
       $('#wayback-count-msg').text(text)
     } else {

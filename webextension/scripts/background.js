@@ -674,7 +674,7 @@ function updateWaybackCountBadge(atab, url) {
   chrome.storage.local.get(['wm_count'], (event) => {
     if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
-        if (values.total > 0) {
+        if (values.total >= 0) {
           // display badge
           let text = badgeCountText(values.total)
           chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
