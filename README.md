@@ -41,7 +41,7 @@ Follow the steps below for the currently deployed version.
 
 Follow the steps below to install the latest build on your local machine.
 
-- First tap on the **Clone** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
+- First tap on the **Code** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
 
 ### Chrome
 
@@ -73,6 +73,14 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 3. Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
+
+### Renamed Repo
+
+If you previously used the command line to clone this repo, note that it has been renamed. To update your local copy, run one of the following commands from the repo's directory.
+
+*SSH:* `git remote set-url origin git@github.com:internetarchive/wayback-machine-webextension.git`
+
+*HTTPS:* `git remote set-url origin https://github.com/internetarchive/wayback-machine-webextension.git`
 
 
 ## Provide Feedback
