@@ -74,6 +74,11 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
+### Safari 14
+
+This code is **not yet ready** to run on Safari 14, but it is currently being worked on.
+
+
 ### Renamed Repo
 
 If you previously used the command line to clone this repo, note that it has been renamed. To update your local copy, run one of the following commands from the repo's directory.
