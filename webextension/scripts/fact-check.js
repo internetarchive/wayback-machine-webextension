@@ -35,11 +35,11 @@ if (isValidUrl(url) && isNotExcludedUrl(url)) {
         let relatedAnalysis = $('<a target="_blank">').text(item.indicators[i].url).attr('href', item.indicators[i].url)
         let scoreValue = $('<span class="color_code">').text((Math.round((item.indicators[i].confidence)*100)))
         let sRating = cScore(item.indicators[i].confidence)
-        let scoreLabel = $(`<span class="score-label ${sRating}">`).text(sRating)
-        let confidenceScore = $('<div>').text('Confidence Score: ').append(scoreValue, scoreLabel)
+        //let scoreLabel = $(`<span class="score-label ${sRating}">`).text(sRating)
+        //let confidenceScore = $('<div>').text('Confidence Score: ').append(scoreValue, scoreLabel)
 
         $('#results-container').append(
-          row.append(checkedBy, relatedAnalysis, confidenceScore)
+          row.append(checkedBy, relatedAnalysis)
         )
       }
     } else {
