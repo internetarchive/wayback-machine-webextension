@@ -202,9 +202,9 @@ function addDocs() {
   let docs = {
     /* Tab 1 */
     'private-mode-setting': 'Reduces communications to our servers unless explicit action is taken.',
-    'not-found-setting': 'Check if an archived copy is available when an error occurs.',
+    'not-found-setting': 'Check if an archived copy is available when a 4xx or 5xx error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'auto-archive-setting': 'Identify and Save URLs that have not previously been saved on the Wayback Machine.',
+    'auto-archive-setting': 'Save URLs that have not previously been saved on the Wayback Machine. Must be logged in.',
     'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
     'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
