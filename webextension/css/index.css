@@ -33,6 +33,7 @@ body {
     color: #444;
 }
 
+/* this hack doesn't work in Safari */
 .donate-icon-outer {
     width: 28px;
     height: 28px;
@@ -50,6 +51,17 @@ body {
     display: block;
     width: 28px;
     height: 28px;
+}
+
+/* this should work in Safari */
+.donate-icon-svg {
+    position: relative;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    margin: 0 auto;
+    filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
+    /* Calculate filter colors using this tool: https://codepen.io/sosuke/pen/Pjoqqp */
 }
 
 .toolbar-icon {
@@ -501,6 +513,10 @@ a.btn-social, .btn-social {
 
     .tab-icon {
         color: #bbb;
+    }
+    .donate-icon-svg {
+        /* check above on how to calculate this */
+        filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(83%) contrast(89%);
     }
 
     #search-input, .login-input {
