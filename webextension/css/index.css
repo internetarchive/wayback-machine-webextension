@@ -53,7 +53,7 @@ body {
     height: 28px;
 }
 
-/* this should work in Safari */
+/* this should work in all browsers */
 .donate-icon-svg {
     position: relative;
     top: 0;
@@ -177,7 +177,7 @@ body {
 
 .chk-frame {
     display: flex;
-    gap: 2px;
+    gap: 2px; /* Safari doesn't support gap */
     position: relative;
     width: 100%;
     border-radius: 5px;
@@ -189,7 +189,7 @@ body {
     background-color: #ddd;
 }
 
-.spn-container { /* #savebtn { */
+.spn-container {
     /* to cover over the chk-frame */
     z-index: 5;
 }
@@ -287,7 +287,7 @@ a.btn-social, .btn-social {
     font-size: 13px;
     height: 36px;
     line-height: 25px;
-    margin: 2px;
+    margin: 0;
     width: 36px;
 }
 .btn-social.btn-lg {
@@ -321,7 +321,8 @@ a.btn-social, .btn-social {
 
 .share-block {
     display: block;
-    margin-top: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* button sizes */
@@ -351,9 +352,16 @@ a.btn-social, .btn-social {
 
 .btn-flex-block {
     display: flex;
-    gap: 5px;
     align-items: center;
     margin-top: 5px;
+}
+
+/* add gap for Safari support */
+.btn-flex-block > * {
+    margin-left: 5px !important;
+}
+.btn-flex-block > *:first-child {
+    margin-left: 0 !important;
 }
 
 .btn-block {
