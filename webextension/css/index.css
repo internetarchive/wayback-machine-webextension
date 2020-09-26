@@ -172,7 +172,8 @@ body {
     margin: 5px 5px 0 0;
 }
 .chk-options span {
-    vertical-align: text-bottom;
+    vertical-align: middle;
+    padding-bottom: 2px;
 }
 
 .chk-frame {
