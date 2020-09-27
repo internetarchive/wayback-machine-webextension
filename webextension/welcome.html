@@ -12,11 +12,10 @@
   <body>
     <div id="container">
       <div id="header">
-        <img src="images/logo.gif" style="height:100px"><br>
+        <img src="images/wayback-light.png" style="height:150px"><br>
         <h1>
           Welcome to the Internet Archive's<br>
-          Wayback Machine<br>
-          Extension
+          Wayback Machine Extension
         </h1>
       </div>
       <br>
@@ -28,12 +27,14 @@
           Please read and accept the <a href="https://archive.org/about/terms.php" target="_blank">Internet Archive Terms of Use and Privacy Policy</a>.
         </p>
         <br>
-        <button type="submit" name="acceptTerms" id="accept" class="btn btn-success">
-          <span>Accept and Enable</span>
-        </button>
-        <button type="submit" name="declineTerms" id="decline" class="btn btn-warning">
-          <span>Cancel</span>
-        </button>
+        <p>
+          <button type="submit" name="accept-terms" id="accept-btn" class="btn btn-auto btn-blue">
+            <span>Accept and Enable</span>
+          </button>
+          <button type="submit" name="decline-terms" id="decline-btn" class="btn btn-auto btn-dark-gray">
+            <span>Cancel</span>
+          </button>
+        </p>
       </div>
     </div>
     <script src="scripts/utils.js"></script>

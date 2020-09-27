@@ -89,7 +89,7 @@ function deleteFromBulkList(e) {
 // clear the UI (remove buttons and other options) while saving URLs
 function clearUI() {
   $('#list-container').off('click')
-  $('#import-bookmarks').hide()
+  $('#import-bookmarks-btn').hide()
   $('.save-box').hide()
   $('#add').hide()
 }
@@ -165,7 +165,7 @@ function messageListener(urlArray, index) {
   )
 }
 
-function setUpBulkSave() {
+function doBulkSaveAll() {
   saveSuccessCount = 0
   saveFailedCount = 0
   totalUrlCount = 0
@@ -184,7 +184,7 @@ function setUpBulkSave() {
             .catch(() => {})
         } else {
           // save all URLs
-          initiateBulkSave(saveUrl, i)
+          saveTheURL(saveUrl, i)
         }
       }
     }
@@ -195,7 +195,7 @@ function setUpBulkSave() {
 }
 
 // save the URL
-function initiateBulkSave(url, index) {
+function saveTheURL(url, index) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -247,7 +247,7 @@ function trackStatus(index) {
   )
 }
 
-$('#import-bookmarks').click(importBookmarks)
-$('#start-bulk-save').click(setUpBulkSave)
+$('#import-bookmarks-btn').click(importBookmarks)
+$('#bulk-save-all-btn').click(doBulkSaveAll)
 $('#list-container').click(deleteFromBulkList)
 $('#add-url').keyup(addToBulkList)

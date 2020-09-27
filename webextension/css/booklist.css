@@ -26,19 +26,19 @@
     width: 250px;
 }
 
-.text_elements > p {
+.text-elements {
     display: block;
-    margin: auto;
+    margin: 10px auto;
     overflow: hidden;
     text-align: center;
     white-space: normal;
-    width: 250px;
+    padding: 0 1em;
 }
 
-.bottom_details {
+.bottom-details {
     justify-content: flex-end;
     width: 180px;
-    margin: 10px auto;
+    margin: 0 auto 10px;
 }
 
 .btn {
@@ -50,7 +50,7 @@
     align-self: center;
     display: block;
     height: 250px;
-    margin: 10px auto;
+    margin-bottom: 10px;
     width: 180px;
 }
 

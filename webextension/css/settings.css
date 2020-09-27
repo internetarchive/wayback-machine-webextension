@@ -39,21 +39,6 @@
     color: #fff;
 }
 
-.btn-container {
-    border-radius: 5px;
-    background-color: #ddd;
-}
-
-.btn-container .btn {
-    border-radius: 0;
-}
-.btn-container li:first-child .btn {
-    border-radius: 5px 0 0 5px !important;
-}
-.btn-container li:last-child .btn {
-    border-radius: 0 5px 5px 0 !important;
-}
-
 
 /* dark mode */
 
@@ -79,9 +64,6 @@
         color: #000;
     }
 
-    .btn-container {
-        background-color: #3C3C3C;
-    }
 }
 
 /* navgation bar */

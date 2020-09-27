@@ -28,7 +28,7 @@
 
       <!-- Search -->
 
-      <form class="search-toolbar-input-container">
+      <form class="search-container">
         <div class="bootstrap-typeahead clearfix open">
           <div class="bootstrap-typeahead-input" tabindex="-1">
             <input id="search-input" type="text" placeholder="Search URL" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection">
@@ -36,7 +36,7 @@
           <div id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left">
           </div>
         </div>
-        <input type="submit" tabindex="-1" class="search-toolbar-submit">
+        <input type="submit" tabindex="-1" class="search-submit">
       </form>
 
       <!-- Wayback Machine -->
@@ -150,7 +150,7 @@
 
   <div class="unselectable page" id="setting-page">
 
-    <div class="btn-container">
+    <div class="segmented-container">
       <ul class="nav setting-nav">
         <li><button class="btn btn-sm btn-wide btn-unselected" id="panel1-btn">Context</button></li>
         <li><button class="btn btn-sm btn-wide btn-unselected" id="panel2-btn">General</button></li>
