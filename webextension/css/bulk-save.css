@@ -32,11 +32,10 @@ body {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     color: #000;
     display: block;
-    /* padding: 0.5em 0; */
     min-height: 1em;
     margin: 1em 0;
     word-break: break-all;
-    font-size: 20px;
+    font-size: 14px;
     line-height: 1.5;
     color: #333;
     background-color: #f5f5f5;
@@ -48,21 +47,21 @@ body {
 #import-bookmarks-btn {
     flex: 2;
     width: 200px;
-    height: 30px;
+    /* height: 30px; */
 }
 
 #bulk-save-all-btn {
     width: 200px;
-    height: 30px;
+    /* height: 30px; */
 }
 
 .delete-btn {
-    font-size: 10px;
+    font-size: 14px; /* 10px */
     color: #fff;
     background-color: #9A3B38;
     border-radius: 5px;
     margin: auto 0;
-    padding-top: 4px;
+    /* padding-top: 4px; */
     text-align: center;
     height: 20px;
     min-width: 20px;
@@ -94,6 +93,10 @@ body {
 .save-box {
     width: auto;
     margin: 1em 0 2em;
+}
+
+.save-options-container p * {
+    cursor: pointer;
 }
 
 p {

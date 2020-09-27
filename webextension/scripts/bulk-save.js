@@ -15,7 +15,7 @@ function displayList(list) {
   if (newSetLength > oldSetLength) {
     for (let item of Array.from([...list]).slice(oldSetLength, newSetLength)) {
       let row = $('<div class="url-list flex-container">')
-      let del = $('<div class="delete-btn">').text('X')
+      let del = $('<div class="delete-btn">').text('x')
       let span = $('<div class="url-item">').append(item)
 
       $('#list-container').append(
@@ -233,7 +233,7 @@ function trackStatus(index) {
         } else if (msg === 'save_success' && listItemUrl === url) {
           saveSuccessCount++
           $('#saved').show().children().text(saveSuccessCount)
-          updateStatus(items[index], '✓', 'green')
+          updateStatus(items[index], '✔', 'green')
         } else if (msg === 'save_error' && (listItemUrl === url)) {
           saveFailedCount++
           $('#failed').show().children().text(saveFailedCount)

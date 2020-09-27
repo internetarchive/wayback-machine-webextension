@@ -671,6 +671,7 @@ function incrementCount(url) {
 }
 
 function updateWaybackCountBadge(atab, url) {
+  if (!atab) { return }
   chrome.storage.local.get(['wm_count'], (event) => {
     if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
@@ -718,12 +719,13 @@ function setToolbarIcon(name, tabId = null) {
 
 // Returns a string key from a Tab windowId and tab id.
 function toolbarStateKey(atab) {
-  return '' + atab.windowId + atab.id
+  return (atab) ? '' + atab.windowId + atab.id : ''
 }
 
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 function addToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (!gToolbarStates[tabKey]) {
     gToolbarStates[tabKey] = new Set()
@@ -734,6 +736,7 @@ function addToolbarState(atab, state) {
 
 // Remove state from the state set for given Tab, and update toolbar.
 function removeToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].delete(state)
@@ -743,12 +746,14 @@ function removeToolbarState(atab, state) {
 
 // Returns a Set of toolbar states, or an empty set.
 function getToolbarState(atab) {
+  if (!atab) { return new Set() }
   const tabKey = toolbarStateKey(atab)
   return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
 }
 
 // Clears state for given Tab and update toolbar icon.
 function clearToolbarState(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].clear()
@@ -763,6 +768,7 @@ function clearToolbarState(atab) {
  * @param atab {Tab}
  */
 function updateToolbar(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
