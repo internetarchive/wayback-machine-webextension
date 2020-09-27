@@ -40,7 +40,7 @@ function getMetadata (book) {
       'image': 'https://archive.org/services/img/' + book.metadata.identifier,
       'link': book.metadata['identifier-access'],
       'button_text': 'Read Book',
-      'button_class': 'btn btn-sm btn-auto btn-blue',
+      'button_class': 'btn btn-auto btn-blue',
       'readable': true
     }
   }

@@ -49,7 +49,7 @@ function makeEntry (data) {
   let bottom_details = $('<div>').addClass('bottom-details')
   if (data.url !== '#') {
     bottom_details.append(
-      $('<button>').attr({ 'class': 'btn btn-sm btn-auto btn-blue' }).text('Read Paper')
+      $('<button>').attr({ 'class': 'btn btn-auto btn-blue' }).text('Read Paper')
         .click(() => {
           chrome.storage.local.get(['show_context'], (event1) => {
             if (event1.show_context === undefined) {
