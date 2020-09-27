@@ -37,7 +37,7 @@ function getMetadata(entry) {
 
 function makeEntry (data) {
   let paper = $('<div>').append(
-    $('<p class="text_elements">').append(
+    $('<p class="text-elements">').append(
       $('<p>').append(
         $('<strong>').text(data.title)
       ),
@@ -46,10 +46,10 @@ function makeEntry (data) {
       // $('<p>').append(journal)
     )
   )
-  let bottom_details = $('<div>').addClass('bottom_details')
+  let bottom_details = $('<div>').addClass('bottom-details')
   if (data.url !== '#') {
     bottom_details.append(
-      $('<button>').attr({ 'class': 'btn btn-success' }).text('Read Paper')
+      $('<button>').attr({ 'class': 'btn btn-sm btn-auto btn-blue' }).text('Read Paper')
         .click(() => {
           chrome.storage.local.get(['show_context'], (event1) => {
             if (event1.show_context === undefined) {
@@ -74,7 +74,7 @@ function makeEntry (data) {
       $('<div>').addClass('small text-muted').text('source: ' + data.source)
     )
   } else {
-    bottom_details.append($('<p>').text('Paper Unavailable').addClass('not_found'))
+    bottom_details.append($('<p>').text('Paper Unavailable').addClass('unavailable-label'))
   }
   paper.append(bottom_details)
   return paper

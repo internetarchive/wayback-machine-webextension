@@ -1,15 +1,17 @@
-.btn-archive img{
+
+.btn-archive img {
   border-radius: 5px;
   max-height:25px;
   max-width:25px;
 
 }
 
-.text_elements{
-  color:white;
+.text-elements {
+  color: white;
   max-width: 100%;
 }
-.cover-img{
+
+.cover-img {
   align-self: center;
   border: 1px solid black;
   border-radius: 3px;
@@ -18,17 +20,18 @@
   margin:10px auto;
   width: 120px;
 }
-.popup-title{
+
+.popup-title {
   color:#eee;
   text-align: center;
 }
 
-.tooltip.in{
+.tooltip.in {
   opacity: 1;
 }
 
 
-.bottom_details{
+.bottom-details{
   background-color: #eee;
   width: 100%;
   padding: 1px 5px 1px 5px;
