@@ -45,8 +45,15 @@ body {
     overflow-y: scroll;
 }
 
-#import-bookmarks {
+#import-bookmarks-btn {
     flex: 2;
+    width: 200px;
+    height: 30px;
+}
+
+#bulk-save-all-btn {
+    width: 200px;
+    height: 30px;
 }
 
 .delete-btn {
@@ -140,36 +147,9 @@ p {
     display: flex;
 }
 
-.btn {
-    font-weight: 400;
-    border-radius: 5px;
-    width: 200px;
-    height: 30px;
-    background-color: #4D4D4D;
-    color: #eee !important;
-    border: 1px solid #737373
-}
-.btn:focus {
-    outline: none;
-    text-decoration: none;
-}
-.btn:active {
-    outline: none !important;
-}
-.btn:hover {
-    background-color: #5D5D5D;
-}
 
-.btn-red {
-    background-color: #9A3B38 !important;
-    border: 1px solid #BF4946 !important;
-    color: #eee !important;
-}
-.btn-red:hover {
-    background-color: #AA4B48 !important;
-}
+/* Dark Mode */
 
-/* dark mode */
 @media (prefers-color-scheme: dark) {
 
     body {
