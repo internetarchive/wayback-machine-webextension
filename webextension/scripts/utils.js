@@ -40,6 +40,7 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
+// TODO FIXME: This breaks when running tests!
 chrome.storage.local.get(['private_before_state'], (event) => {
   private_before_state = new Set(event.private_before_state)
 })
@@ -110,8 +111,11 @@ function badgeCountText(count) {
 
 /**
  * Retrieves total count of snapshots stored in the Wayback Machine for given url.
+ * Includes first and last timestamp.
  * @param url {string}
  * @return Promise
+ * onSuccess is an object { "total": int, "first_ts": string, "last_ts": string }
+ * onFail is an Error object or null.
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
@@ -141,7 +145,8 @@ function getWaybackCount(url, onSuccess, onFail) {
           }
         }
       }
-      onSuccess(total)
+      let values = { total: total, first_ts: json.first_ts, last_ts: json.last_ts }
+      onSuccess(values)
     })
     .catch(error => {
       if (onFail) { onFail(error) }
@@ -174,6 +179,22 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
         onfail()
       }
     })
+}
+
+/**
+ * Checks that url isn't an archive.org domain.
+ * @param url {string}
+ * @return {bool}
+ */
+function isArchiveUrl(url) {
+  if (typeof url !== 'string') { return false }
+  try {
+    const hostname = new URL(url).hostname
+    return (hostname === 'archive.org') || hostname.endsWith('.archive.org')
+  } catch (e) {
+    // url not formated correctly
+    return false
+  }
 }
 
 /**
@@ -426,24 +447,19 @@ function initDefaultOptions () {
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    /* General */
-    fact_check: false,
-    wm_count: false,
-    resource: false,
-    auto_archive: false,
-    email_outlinks: false,
-    not_found_popup: false,
-    show_resource_list: false,
-    show_context: 'tab',
+    /* Features */
     private_mode: false,
-    /* Contexts */
-    showall: true,
-    alexa: true,
-    domaintools: false,
-    wbmsummary: true,
-    annotations: true,
-    tagcloud: true,
-    auto_update_context: false,
+    not_found_popup: false,
+    wm_count: false,
+    wiki_setting: false,
+    amazon_setting: false,
+    tvnews_setting: false,
+    auto_archive: false,
+    fact_check: false,
+    /* General */
+    show_resource_list: false,
+    email_outlinks: false,
+    show_context: 'tab',
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -451,12 +467,15 @@ function initDefaultOptions () {
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
   chrome.storage.local.set({
-    /* General */
-    fact_check: true,
+    /* Features */
+    not_found_popup: true,
     wm_count: true,
-    resource: true,
-    email_outlinks: true,
-    not_found_popup: true
+    wiki_setting: true,
+    amazon_setting: true,
+    tvnews_setting: true,
+    fact_check: true,
+    /* General */
+    email_outlinks: true
   })
 }
 
@@ -467,6 +486,7 @@ if (typeof module !== 'undefined') {
     getErrorMessage,
     getUrlByParameter,
     getWaybackUrlFromResponse,
+    isArchiveUrl,
     isValidUrl,
     makeValidURL,
     isNotExcludedUrl,

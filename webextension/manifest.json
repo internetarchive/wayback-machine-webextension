@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "version": "3.0.0.9",
+  "version": "3.0.0.15",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/mini-icon16.png",
@@ -30,6 +30,7 @@
       "contextMenus",
       "notifications",
       "storage",
+      "bookmarks",
       "tabs",
       "webRequest",
       "webRequestBlocking",

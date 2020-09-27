@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/bulk-save.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>Bulk Save URLs</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header-container">
+      <div class="logo">
+        <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
+      </div>
+      <h2 id="status-title">Bulk Save</h2>
+      <p id="empty-list-err">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
+      <p id="not-logged-in">Looks like you aren't logged in. Please log in and try again.</p>
+    </div>
+    <div class="loader"></div>
+    <div class="outer-list-container">
+      <div class="container-scrollbar" id="list-container">
+      </div>
+      <div id="total-saved">
+        <p id="total-elements">Total Elements To Save: <b class="highlight-color"></b></p>
+        <p id="saved">Successfully Saved: <b class="highlight-color"></b></p>
+        <p id="failed">Failed: <b class="highlight-color"></b></p>
+      </div>
+      <div  class="flex-container">
+        <button id="import-bookmarks" class="btn">Import All Bookmarks</button>
+        <div id="add">
+          <textarea id="add-url"rows="4" cols="50" placeholder="Enter URLs..." autofocus></textarea>
+        </div>
+      </div>
+      <div class="save-box">
+        <div class="save-options-container">
+          <label class="save-options" for="never-saved"><input type="checkbox" id="never-saved"> Save only URLs that have never been saved.</label>
+        </div>
+        <div>
+          <button type="button" class="btn btn-red" id="start-bulk-save">Save All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/bulk-save.js"></script>
+</body>
+</html>

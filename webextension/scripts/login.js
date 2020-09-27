@@ -4,12 +4,12 @@
 /*   global openByWindowSetting */
 
 // from 'popup.js'
-/* loginSuccess, loginError */
+/*   global loginSuccess, loginError */
 
-$('#sign-up').click(signUp)
-$('#forgot-password').click(forgotPassword)
-$('#log-in').click(doLogin)
-$('#logout-button').click(doLogout)
+$('#signup-btn').click(signUp)
+$('#forgot-pw-btn').click(forgotPassword)
+$('#login-btn').click(doLogin)
+$('#logout-tab-btn').click(doLogout)
 
 function signUp() {
   openByWindowSetting('https://archive.org/account/signup')
@@ -22,8 +22,8 @@ function forgotPassword() {
 function doLogin(e) {
   e.preventDefault()
   $('#login-message').hide()
-  let email = $('#email-address').val()
-  let password = $('#password').val()
+  let email = $('#email-input').val()
+  let password = $('#password-input').val()
   if (email.length === 0) {
     $('#login-message').show().text('Please type an email')
     return
@@ -32,7 +32,9 @@ function doLogin(e) {
     $('#login-message').show().text('Please type a password')
     return
   }
-  $('#log-in').val('Please Wait...')
+  $('#login-btn').val('Please Wait...')
+  // need to set test-cookie for login API to return json instead of html
+  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
   const data = new URLSearchParams()
   data.append('username', email)
   data.append('password', password)
@@ -55,9 +57,9 @@ function doLogin(e) {
   loginPromise
     .then(response => response.json())
     .then((res) => {
+      $('#login-btn').val('Login')
       if (res.status === 'bad_login') {
         $('#login-message').show().text('Incorrect Email or Password')
-        $('#log-in').val('Login')
       } else {
         $('#login-message').show().css('color', 'green').text('Success')
         loginSuccess()
@@ -67,20 +69,25 @@ function doLogin(e) {
           $('#popup-page').show()
           $('#login-message').hide()
         }, 500)
-        $('#log-in').val('Login')
+        $('#email-input').val('')
+        $('#password-input').val('')
       }
     })
-    .catch(e => console.log(e))
+    .catch((e) => {
+      console.log(e)
+      $('#login-message').show().text('Login Error')
+      $('#login-btn').val('Login')
+    })
 }
 
 function doLogout() {
-  chrome.cookies.getAll({domain: '.archive.org'}, (cookies) => {
+  chrome.cookies.getAll({ domain: '.archive.org' }, (cookies) => {
     for (var i = 0; i < cookies.length; i++) {
       if (cookies[i].name !== 'test-cookie') {
-        chrome.cookies.remove({url: 'https://archive.org', name: cookies[i].name})
+        chrome.cookies.remove({ url: 'https://archive.org', name: cookies[i].name })
       }
     }
-    $('#logout-button').hide()
+    $('#logout-tab-btn').hide()
     $('.tab-item').css('width', '22%')
     loginError()
   })

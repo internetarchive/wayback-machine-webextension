@@ -242,10 +242,10 @@ ul {
 }
 
 /* Style the tab content */
-.tabcontent {
+/* .tabcontent {
     margin: auto;
     display: none;
-}
+} */
 
 #message_tagcloud {
     text-align: center;

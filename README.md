@@ -7,14 +7,16 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Features
 
-- **Save Page Now** - Instantly save the page you are currently viewing in The WayBack Machine. Can auto-save pages that have yet to be archived.
-- **Oldest, Newest, Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
-- **Sitemap** - Present a sunburst diagram for the domain you are currently viewing.
-- **Related Tweets** & **Share Links** - Search Twitter for information regarding your current page. Share archived links on social media.
-- **Show Contexts** - Provides a variety of information regarding the page you are viewing, including analytics from *Alexa*, capture summary from the Wayback Machine, annotations from *Hypothes.is*, and a word tag cloud.
-- **404 Not Found** - Check if an archived copy is available if an error occurs while visiting a URL.
-- **Wayback Count** - Display a count of pages that have been archived each time you visit a website.
-- **Relevant Archived Resources** - Display archived resources on relevant URLs, including from Amazon books, Wikipedia, and various news sources. View digitized books and papers which are cited on the website, and present archived TV news clips relevant to the current page.
+- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved. Must be logged in to use.
+- **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
+- **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
+- **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
+- **Fact Checks** - Provides a list of fact checkers who have analyzed the web page you visit for misinformation, provided by [our.news](https://our.news/).
+- **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
+- **Relevant Resources** - View archived digitized books while visiting *Amazon Books*, research papers and books while visiting *Wikipedia*, and recommended *TV News Clips* while visiting news websites.
+- **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
+- **Tweets, Alexa Internet, Share Links** - Search Twitter for information regarding your current page, or provide analytics from [Alexa Internet](https://www.alexa.com). Share archived links on social media.
+- **Bulk Save** - Archive a list of URLs that you provide, or retrieve from bookmarks.
 
 
 ## Installing the Extension
@@ -41,7 +43,7 @@ Follow the steps below for the currently deployed version.
 
 Follow the steps below to install the latest build on your local machine.
 
-- First tap on the **Clone** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
+- First tap on the **Code** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
 
 ### Chrome
 
@@ -73,6 +75,19 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 3. Click the **Load unpacked** button and select the `wayback-machine-chrome/webextension` directory that contains this code.
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
+
+### Safari 14
+
+This code is **not yet ready** to run on Safari 14, but it is currently being worked on.
+
+
+### Renamed Repo
+
+If you previously used the command line to clone this repo, note that it has been renamed. To update your local copy, run one of the following commands from the repo's directory.
+
+*SSH:* `git remote set-url origin git@github.com:internetarchive/wayback-machine-webextension.git`
+
+*HTTPS:* `git remote set-url origin https://github.com/internetarchive/wayback-machine-webextension.git`
 
 
 ## Provide Feedback
@@ -121,4 +136,4 @@ To contribute code and docs to Wayback Machine Chrome extension, take a look at 
 
 Copyright © 2017-2020 Internet Archive. All rights reserved.
 
-Licensed under the the terms of the [GNU Affero General Public License version 3 (AGPLv3)](LICENSE).
+Licensed under the terms of the [GNU Affero General Public License version 3 (AGPLv3)](LICENSE).
