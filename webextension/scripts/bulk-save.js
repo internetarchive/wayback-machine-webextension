@@ -55,10 +55,10 @@ function importBookmarks() {
   }
 }
 
-// add URL to the list
+// add URLs to the list
 function addToBulkList(e) {
   if ((e.keyCode === 13 || e.which === 13)) {
-    let urls = document.getElementById('add-url').value
+    let urls = document.getElementById('add-url-area').value
     $('#empty-list-err').hide()
     if (urls.includes('.')) {
       let addedURLs = []
@@ -72,7 +72,7 @@ function addToBulkList(e) {
     } else {
       alert(`The Wayback Machine cannot archive '${urls}'.`)
     }
-    document.getElementById('add-url').value = ''
+    document.getElementById('add-url-area').value = ''
   }
 }
 
@@ -89,9 +89,9 @@ function deleteFromBulkList(e) {
 // clear the UI (remove buttons and other options) while saving URLs
 function clearUI() {
   $('#list-container').off('click')
-  $('#import-bookmarks-btn').hide()
+  /* $('#import-bookmarks-btn').hide() */
   $('.save-box').hide()
-  $('#add').hide()
+  $('.add-container').hide()
 }
 
 // crop URL
@@ -218,8 +218,8 @@ function updateStatus(urlIndex, symbol, bgcolor) {
 // track the save status
 function trackStatus(index) {
   totalUrlCount++
-  $('#total-elements').children().text(totalUrlCount)
-  $('#total-saved').show()
+  $('#total-count').text(totalUrlCount)
+  $('.count-container').show()
   chrome.runtime.onMessage.addListener(
     (message) => {
       let msg = message.message
@@ -232,11 +232,11 @@ function trackStatus(index) {
           updateStatus(items[index], '', 'yellow')
         } else if (msg === 'save_success' && listItemUrl === url) {
           saveSuccessCount++
-          $('#saved').show().children().text(saveSuccessCount)
+          $('#saved-count').text(saveSuccessCount)
           updateStatus(items[index], '✔', 'green')
         } else if (msg === 'save_error' && (listItemUrl === url)) {
           saveFailedCount++
-          $('#failed').show().children().text(saveFailedCount)
+          $('#failed-count').text(saveFailedCount)
           updateStatus(items[index], '!', 'red')
         }
       }
@@ -248,6 +248,6 @@ function trackStatus(index) {
 }
 
 $('#import-bookmarks-btn').click(importBookmarks)
-$('#bulk-save-all-btn').click(doBulkSaveAll)
+$('#bulk-save-btn').click(doBulkSaveAll)
 $('#list-container').click(deleteFromBulkList)
-$('#add-url').keyup(addToBulkList)
+$('#add-url-area').keyup(addToBulkList)

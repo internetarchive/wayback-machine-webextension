@@ -32,6 +32,15 @@ h4 {
     font-weight: bold;
 }
 
+.unselectable, .unselectable > * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* buttons */
 
 button {
@@ -74,6 +83,7 @@ button {
 
 .btn-flex-block {
     display: flex;
+    flex-direction: row;
     align-items: center;
     margin-top: 5px;
 }

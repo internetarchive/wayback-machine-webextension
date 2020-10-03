@@ -10,44 +10,51 @@
   <title>Bulk Save URLs</title>
 </head>
 <body>
-  <div class="container">
+  <div class="body-container">
+
     <div class="header-container">
       <div class="logo">
         <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
       </div>
-      <h2 id="status-title">Bulk Save</h2>
+      <h2 id="main-title">Bulk Save</h2>
+      <p id="main-info">Enter a list of URLs below or import from your bookmarks.</p>
+      <p id="error-msg"></p>
       <p id="empty-list-err">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
       <p id="not-logged-in">Looks like you aren't logged in. Please log in and try again.</p>
     </div>
+
     <div class="loader"></div>
-    <div class="outer-list-container">
-      <div class="container-scrollbar" id="list-container">
-      </div>
-      <div id="total-saved">
-        <p id="total-elements">Total Elements To Save: <b class="highlight-color"></b></p>
-        <p id="saved">Successfully Saved: <b class="highlight-color"></b></p>
-        <p id="failed">Failed: <b class="highlight-color"></b></p>
+
+    <div class="outer-container">
+
+      <div class="add-container">
+        <textarea id="add-url-area" class="container-scrollbar" placeholder="Enter URLs..." autofocus></textarea>
+        <div class="btn-flex-block">
+          <button class="btn btn-auto btn-dark-gray" id="add-url-btn">Add URLs</button>
+          <button class="btn btn-auto btn-dark-gray" id="import-bookmarks-btn">Import All Bookmarks</button>
+          <button class="btn btn-auto btn-dark-gray" id="clear-all-btn">Clear All</button>
+        </div>
       </div>
 
-      <div class="flex-container">
-        <button id="import-bookmarks-btn" class="btn btn-dark-gray">Import All Bookmarks</button>
+      <div id="list-container" class="container-scrollbar"></div>
+
+      <div class="count-container">
+        <div><span>Total</span>:&nbsp;<b id="total-count" class="highlight-color">0</b></div>
+        <div><span>Saved</span>:&nbsp;<b id="saved-count" class="highlight-color">0</b></div>
+        <div><span>Failed</span>:&nbsp;<b id="failed-count" class="highlight-color">0</b></div>
       </div>
-<!--
-      <div id="add">
-      </div>
--->
-      <textarea id="add-url"rows="4" cols="50" placeholder="Enter URLs..." autofocus></textarea>
 
       <div class="save-box">
         <div class="save-options-container">
-          <p><input type="checkbox" id="never-saved"> <label class="save-options" for="never-saved">Save only URLs that have never been saved.</label></p>
+          <p><input type="checkbox" id="never-saved"> <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label></p>
         </div>
         <div>
-          <button type="button" class="btn btn-red" id="bulk-save-all-btn">Save URLs</button>
+          <button type="button" class="btn btn-red" id="bulk-save-btn">Start Bulk Save</button>
         </div>
       </div>
 
     </div>
+
   </div>
   <script src="scripts/utils.js"></script>
   <script src="scripts/build.js"></script>

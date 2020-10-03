@@ -3,17 +3,23 @@ body {
     background-color: #eee;
 }
 
-.container {
+p {
+    font-family: Gill Sans Light;
+    font-size: 20px;
+}
+
+.body-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 0 15px;
 }
 
 .header-container {
     text-align: center;
 }
 
-.outer-list-container {
+.outer-container {
     display: contents;
 }
 
@@ -31,86 +37,80 @@ body {
 #list-container {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     color: #000;
-    display: block;
-    min-height: 1em;
+    flex: 4;
+    min-height: 4em;
     margin: 1em 0;
     word-break: break-all;
     font-size: 14px;
-    line-height: 1.5;
     color: #333;
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow-y: scroll;
 }
-
-#import-bookmarks-btn {
-    flex: 2;
-    width: 200px;
-    /* height: 30px; */
+#list-container .url-list:nth-child(even) {
+    background-color: #fff;
 }
 
-#bulk-save-all-btn {
+#bulk-save-btn {
     width: 200px;
-    /* height: 30px; */
 }
 
 .delete-btn {
-    font-size: 14px; /* 10px */
+    font-size: 14px;
     color: #fff;
     background-color: #9A3B38;
     border-radius: 5px;
     margin: auto 0;
-    /* padding-top: 4px; */
     text-align: center;
     height: 20px;
     min-width: 20px;
     cursor: pointer;
+    user-select: none;
 }
 .delete-btn:hover {
     background-color: #AA4B48;
 }
 
 .url-item {
-    margin-left: 1%;
+    margin-left: 0.5em;
 }
 
-#add {
+.btn {
+    white-space: inherit;
+}
+
+.add-container {
     display: flex;
-    margin-left: 1em;
-    flex: 6;
+    flex-direction: column;
+    flex: 2;
 }
 
-#add-url {
-    padding: 0.5em;
-    color: #333;
-    border: 1px solid #737373;
+#add-url-area {
+    flex: 2;
+    width: 100%;
+    min-height: 4em;
     border-radius: 5px;
-    flex: 5;
+    padding: 0.5em;
+    border: 1px solid #737373;
+    color: #333;
+    resize: none;
 }
-
 
 .save-box {
     width: auto;
-    margin: 1em 0 2em;
+    margin: 0 0 1em;
 }
 
 .save-options-container p * {
     cursor: pointer;
-}
-
-p {
-    font-family: Gill Sans Light;
-    font-size: 20px;
+    margin: 2px;
+    display: inline;
 }
 
 .url-list {
     margin: 0;
-    padding: 0.2em 0.5em;
-}
-
-#list-container .url-list:nth-child(even) {
-    background-color: #fff;
+    padding: 0.25em 0.5em;
 }
 
 .logo {
@@ -132,14 +132,16 @@ p {
     border-radius: 5px;
 }
 
-#total-saved {
+.count-container {
     display: none;
+    font-family: Gill Sans Light;
+    font-size: 20px;
     text-align: right;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
-
-#saved, #failed {
-    display: none;
+.count-container div {
+    display: inline-flex;
+    width: 5em;
 }
 
 .highlight-color {
@@ -164,7 +166,7 @@ p {
         color: #bbb;
     }
 
-    #list-container, #add-url {
+    #list-container, #add-url-area {
         color: #ddd;
         background-color: #333;
         border: 1px solid #555;
