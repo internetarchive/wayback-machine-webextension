@@ -57,7 +57,6 @@ function importBookmarks() {
 
 // add URLs to the list
 function addToBulkList(e) {
-  if ((e.keyCode === 13 || e.which === 13)) {
     let urls = document.getElementById('add-url-area').value
     $('#empty-list-err').hide()
     if (urls.includes('.')) {
@@ -73,7 +72,6 @@ function addToBulkList(e) {
       alert(`The Wayback Machine cannot archive '${urls}'.`)
     }
     document.getElementById('add-url-area').value = ''
-  }
 }
 
 // delete URL from the list
@@ -86,10 +84,17 @@ function deleteFromBulkList(e) {
   }
 }
 
+// clear all URLs from the list
+function clearBulkList() {
+  urlList.clear()
+  oldSetLength = 0
+  newSetLength = 0
+  $('#list-container').text('')
+}
+
 // clear the UI (remove buttons and other options) while saving URLs
 function clearUI() {
   $('#list-container').off('click')
-  /* $('#import-bookmarks-btn').hide() */
   $('.save-box').hide()
   $('.add-container').hide()
 }
@@ -250,4 +255,5 @@ function trackStatus(index) {
 $('#import-bookmarks-btn').click(importBookmarks)
 $('#bulk-save-btn').click(doBulkSaveAll)
 $('#list-container').click(deleteFromBulkList)
-$('#add-url-area').keyup(addToBulkList)
+$('#add-url-btn').click(addToBulkList)
+$('#clear-all-btn').click(clearBulkList)
