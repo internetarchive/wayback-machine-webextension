@@ -207,27 +207,6 @@ body {
     margin: auto;
 }
 
-.progress-container {
-    padding: 0px;
-}
-
-.progress {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    border-radius: 5px;
-}
-
-.progress-bar {
-    background-color: #9A3B38;
-}
-
-.progress-bar.active {
-    -webkit-animation: progress-bar-stripes 0.5s linear infinite;
-    -o-animation: progress-bar-stripes 0.5s linear infinite;
-    animation: progress-bar-stripes 0.5s linear infinite;
-}
-
 /* social buttons */
 
 a.btn-social, .btn-social {

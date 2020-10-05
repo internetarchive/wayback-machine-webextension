@@ -23,8 +23,6 @@
       <p id="not-logged-in">Looks like you aren't logged in. Please log in and try again.</p>
     </div>
 
-    <div class="loader"></div>
-
     <div class="outer-container">
 
       <div class="add-container">
@@ -48,11 +46,17 @@
         <div class="save-options-container">
           <p><input type="checkbox" id="never-saved"> <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label></p>
         </div>
-        <div>
-          <button type="button" class="btn btn-red" id="bulk-save-btn">Start Bulk Save</button>
-        </div>
       </div>
 
+    </div>
+
+    <div class="save-container">
+      <div type="button" class="btn btn-auto btn-red progress-container" id="bulk-save-btn">
+        <div class="progress" id="save-progress-bar">
+          <div class="progress-bar progress-bar-striped active" role="progressbar" style="width:100%"></div>
+        </div>
+        <div id="bulk-save-label">Start Bulk Save</div>
+      </div>
     </div>
 
   </div>

@@ -9,6 +9,7 @@ let oldSetLength = 0
 let saveSuccessCount
 let saveFailedCount
 let totalUrlCount
+let isSaving = false
 
 function displayList(list) {
   newSetLength = list.size
@@ -69,7 +70,7 @@ function addToBulkList(e) {
       }
       displayList(urlList)
     } else {
-      alert(`The Wayback Machine cannot archive '${urls}'.`)
+      alert('Please enter valid website addresses.')
     }
     document.getElementById('add-url-area').value = ''
 }
@@ -144,8 +145,10 @@ function messageListener(urlArray, index) {
     (message) => {
       // cancel save if user is not logged in
       if (message && message.error && message.error === 'You need to be logged in to use Save Page Now.') {
-        $('.loader').hide()
-        $('.save-box').show()
+        isSaving = false
+        hideSaving('Start Bulk Save')
+        $('#bulk-save-btn').click(doBulkSaveAll)
+        // $('.save-box').show() // TODO: Currently not implemented
         $('#not-logged-in').show()
       } else {
         // continue save
@@ -183,12 +186,17 @@ function doBulkSaveAll() {
       if (urlListArray[i]) {
         let saveUrl = urlListArray[i]
         // filter and save if saving only never saved URLs
+        // TODO: FIXME: Option not implemented!
         if ($('#never-saved').prop('checked') === true) {
           wmCheck(saveUrl, i)
             .then(() => {})
             .catch(() => {})
         } else {
           // save all URLs
+          if ((i === 0) && !isSaving){
+            isSaving = true
+            showSaving()
+          }
           saveTheURL(saveUrl, i)
         }
       }
@@ -233,7 +241,6 @@ function trackStatus(index) {
       if (items[index]) {
         let listItemUrl = items[index].innerText
         if (msg === 'save_start' && listItemUrl === url) {
-          $('.loader').show()
           updateStatus(items[index], '', 'yellow')
         } else if (msg === 'save_success' && listItemUrl === url) {
           saveSuccessCount++
@@ -245,12 +252,26 @@ function trackStatus(index) {
           updateStatus(items[index], '!', 'red')
         }
       }
-      if (saveSuccessCount + saveFailedCount === totalUrlCount) {
-        $('.loader').hide()
+      if (isSaving && (saveSuccessCount + saveFailedCount === totalUrlCount)) {
+        isSaving = false
+        hideSaving('Save Finished')
       }
     }
   )
 }
+
+function showSaving() {
+  $('#bulk-save-btn').off('click')
+  $('#save-progress-bar').show()
+  $('#bulk-save-label').text('Archiving URLs...')
+}
+
+function hideSaving(msg) {
+  $('#save-progress-bar').hide()
+  $('#bulk-save-label').text(msg)
+}
+
+$('.save-box').hide() // TODO: Remove once this is implemented
 
 $('#import-bookmarks-btn').click(importBookmarks)
 $('#bulk-save-btn').click(doBulkSaveAll)

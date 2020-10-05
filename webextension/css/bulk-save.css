@@ -12,7 +12,7 @@ p {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 0 15px;
+    padding: 1em 15px;
 }
 
 .header-container {
@@ -21,11 +21,6 @@ p {
 
 .outer-container {
     display: contents;
-}
-
-.loader {
-    flex: none;
-    display: none;
 }
 
 #empty-list-err, #not-logged-in {
@@ -52,8 +47,27 @@ p {
     background-color: #fff;
 }
 
+.save-container {
+    height: 32px;
+}
+
 #bulk-save-btn {
+    position: absolute;
+    display: block;
     width: 200px;
+    height: 32px;
+}
+
+#bulk-save-label {
+    width: 100%;
+    position: absolute;
+    bottom: 6px;
+    text-align: center;
+    margin: auto;
+}
+
+#save-progress-bar {
+    display: none;
 }
 
 .delete-btn {
@@ -99,7 +113,7 @@ p {
 
 .save-box {
     width: auto;
-    margin: 0 0 1em;
+    margin: 0;
 }
 
 .save-options-container p * {
@@ -114,7 +128,7 @@ p {
 }
 
 .logo {
-    margin: 1em auto;
+    margin: 0 auto;
     text-align: center;
 }
 
