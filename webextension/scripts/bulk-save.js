@@ -273,6 +273,12 @@ function hideSaving(msg) {
   $('#bulk-save-label').text(msg)
 }
 
+// For removing focus outline around buttons on mouse click, while keeping during keyboard use.
+function clearFocus() {
+  document.activeElement.blur()
+}
+$('.btn').click(clearFocus)
+
 $('.save-box').hide() // TODO: Remove once this is implemented
 
 $('#import-bookmarks-btn').click(importBookmarks)
