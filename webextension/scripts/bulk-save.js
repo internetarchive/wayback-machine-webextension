@@ -1,9 +1,9 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, wmAvailabilityCheck, hostURL */
 
-let urlList = new Set()
+let urlListSet = new Set()
 let newSetLength = 0
 let oldSetLength = 0
 let saveSuccessCount
@@ -37,8 +37,8 @@ function processNode(node) {
   if (node.url) {
     if (isValidUrl(node.url) && isNotExcludedUrl(node.url)) {
       if(!isDuplicateURL(node.url)) {
-        urlList.add(node.url)
-        displayList(urlList)
+        urlListSet.add(node.url)
+        displayList(urlListSet)
       }
     }
   }
@@ -58,17 +58,19 @@ function importBookmarks() {
 
 // add URLs to the list
 function addToBulkList(e) {
-    let urls = document.getElementById('add-url-area').value
     $('#empty-list-err').hide()
-    if (urls.includes('.')) {
-      let addedURLs = []
-      if (urls.includes('\n')) { addedURLs = urls.split('\n') }
-      for (let elem of addedURLs) {
-        if (elem !== ''  && isNotExcludedUrl(elem)) {
-          if (!isDuplicateURL(elem)) { urlList.add(makeValidURL(elem)) }
-        }
+    let text = document.getElementById('add-url-area').value
+    let c = 0
+    let addedURLs = text.split('\n')
+    for (let elem of addedURLs) {
+      let url = makeValidURL(elem)
+      if (url && !url.includes(' ') && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
+        urlListSet.add(url)
+        c++
       }
-      displayList(urlList)
+    }
+    if (c > 0) {
+      displayList(urlListSet)
     } else {
       alert('Please enter valid website addresses.')
     }
@@ -79,7 +81,7 @@ function addToBulkList(e) {
 function deleteFromBulkList(e) {
   if (e.target.classList.contains('delete-btn')) {
     let delUrl = e.target.nextElementSibling.innerText
-    urlList.delete(delUrl)
+    urlListSet.delete(delUrl)
     e.target.parentElement.remove()
     oldSetLength--
   }
@@ -87,7 +89,7 @@ function deleteFromBulkList(e) {
 
 // clear all URLs from the list
 function clearBulkList() {
-  urlList.clear()
+  urlListSet.clear()
   oldSetLength = 0
   newSetLength = 0
   $('#list-container').text('')
@@ -119,7 +121,7 @@ function cropURL(url) {
 }
 
 // check for duplicate URLs
-function isDuplicateURL(url, list = urlList) {
+function isDuplicateURL(url, list = urlListSet) {
   let newURL = cropURL(url)
   for (let elem of list) {
     let newElem = cropURL(elem)
@@ -177,11 +179,11 @@ function doBulkSaveAll() {
   saveSuccessCount = 0
   saveFailedCount = 0
   totalUrlCount = 0
-  if (urlList && urlList.size > 0) {
+  if (urlListSet && urlListSet.size > 0) {
     let i = 0
     let j = 5
     clearUI()
-    let urlListArray = Array.from([...urlList])
+    let urlListArray = Array.from([...urlListSet])
     for (i = 0; i < j; i++) {
       if (urlListArray[i]) {
         let saveUrl = urlListArray[i]
