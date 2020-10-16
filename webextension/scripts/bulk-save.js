@@ -30,10 +30,11 @@ function startSaving() {
 
 // Hide progress bar when Saving stops.
 // msg = save button label.
-function stopSaving(msg = 'Start Bulk Save') {
+function stopSaving() {
   isSaving = false
   $('#save-progress-bar').hide()
-  $('#bulk-save-label').text(msg)
+  $('#bulk-save-label').text('Save Finished')
+  $('#bulk-save-btn').click(closeWindow)
 }
 
 // Reset UI
@@ -49,6 +50,10 @@ function resetUI() {
 // Removes focus outline on mouse click, while keeping during keyboard use.
 function clearFocus() {
   document.activeElement.blur()
+}
+
+function closeWindow() {
+  window.close()
 }
 
 /* * * Bookmarks * * */
@@ -266,7 +271,7 @@ function processStatus(msg, url) {
 // Stop saving when counts reach total count.
 function checkIfFinished() {
   if (isSaving && (saveSuccessCount + saveFailedCount >= totalUrlCount)) {
-    stopSaving('Save Finished')
+    stopSaving()
   }
 }
 
