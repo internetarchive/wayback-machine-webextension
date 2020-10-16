@@ -108,6 +108,10 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
           }
         }
       })
+      .catch(() => {
+        // handle http errors
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
+      })
   }
 }
 
@@ -381,6 +385,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (!message) { return }
   if (message.message === 'openurl') {
     let atab = message.atab
     var page_url = message.page_url
@@ -389,12 +394,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     var open_url = wayback_url + encodeURI(url)
     let isBulkSave = message.isBulkSave || false
     if (isNotExcludedUrl(page_url)) {
-      if (message.method !== 'save') {
-        URLopener(open_url, url, true)
-      } else {
-        let options = (message.options !== null) ? message.options : []
+      if (message.method && (message.method === 'save')) {
+        let options = (message.options && (message.options !== null)) ? message.options : []
         savePageNow(atab, page_url, false, options, isBulkSave)
         return true
+      } else {
+        URLopener(open_url, url, true)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
