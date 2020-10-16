@@ -56,7 +56,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = false) {
+function savePageNow(atab, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURI(page_url))
@@ -82,7 +82,7 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
-            if (result.show_resource_list === true && isBulkSave === false) {
+            if (result.show_resource_list === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
@@ -392,11 +392,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
-    let isBulkSave = message.isBulkSave || false
     if (isNotExcludedUrl(page_url)) {
       if (message.method && (message.method === 'save')) {
+        let silent = message.silent || false
         let options = (message.options && (message.options !== null)) ? message.options : []
-        savePageNow(atab, page_url, false, options, isBulkSave)
+        savePageNow(atab, page_url, silent, options)
         return true
       } else {
         URLopener(open_url, url, true)

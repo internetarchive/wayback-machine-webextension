@@ -227,7 +227,7 @@ function saveTheURL(url) {
     wayback_url: hostURL + 'save/',
     page_url: url,
     method: 'save',
-    isBulkSave: 'true' // TODO: LOOK AT
+    silent: true
   })
 }
 
