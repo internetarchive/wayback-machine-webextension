@@ -56,7 +56,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = false) {
+function savePageNow(atab, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURI(page_url))
@@ -82,7 +82,7 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
         if (!silent) {
           notify('Saving ' + page_url)
           chrome.storage.local.get(['show_resource_list'], (result) => {
-            if (result.show_resource_list === true && isBulkSave === false) {
+            if (result.show_resource_list === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
@@ -107,6 +107,10 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
             notify('Error: ' + msg)
           }
         }
+      })
+      .catch(() => {
+        // handle http errors
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
       })
   }
 }
@@ -381,20 +385,21 @@ chrome.webRequest.onCompleted.addListener((details) => {
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (!message) { return }
   if (message.message === 'openurl') {
     let atab = message.atab
     var page_url = message.page_url
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
-    let isBulkSave = message.isBulkSave || false
     if (isNotExcludedUrl(page_url)) {
-      if (message.method !== 'save') {
-        URLopener(open_url, url, true)
-      } else {
-        let options = (message.options !== null) ? message.options : []
-        savePageNow(atab, page_url, false, options, isBulkSave)
+      if (message.method && (message.method === 'save')) {
+        let silent = message.silent || false
+        let options = (message.options && (message.options !== null)) ? message.options : []
+        savePageNow(atab, page_url, silent, options)
         return true
+      } else {
+        URLopener(open_url, url, true)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
@@ -671,6 +676,7 @@ function incrementCount(url) {
 }
 
 function updateWaybackCountBadge(atab, url) {
+  if (!atab) { return }
   chrome.storage.local.get(['wm_count'], (event) => {
     if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
@@ -718,12 +724,13 @@ function setToolbarIcon(name, tabId = null) {
 
 // Returns a string key from a Tab windowId and tab id.
 function toolbarStateKey(atab) {
-  return '' + atab.windowId + atab.id
+  return (atab) ? '' + atab.windowId + atab.id : ''
 }
 
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 function addToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (!gToolbarStates[tabKey]) {
     gToolbarStates[tabKey] = new Set()
@@ -734,6 +741,7 @@ function addToolbarState(atab, state) {
 
 // Remove state from the state set for given Tab, and update toolbar.
 function removeToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].delete(state)
@@ -743,12 +751,14 @@ function removeToolbarState(atab, state) {
 
 // Returns a Set of toolbar states, or an empty set.
 function getToolbarState(atab) {
+  if (!atab) { return new Set() }
   const tabKey = toolbarStateKey(atab)
   return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
 }
 
 // Clears state for given Tab and update toolbar icon.
 function clearToolbarState(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].clear()
@@ -763,6 +773,7 @@ function clearToolbarState(atab) {
  * @param atab {Tab}
  */
 function updateToolbar(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
