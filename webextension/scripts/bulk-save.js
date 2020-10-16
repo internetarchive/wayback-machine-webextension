@@ -3,61 +3,99 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, makeValidURL, wmAvailabilityCheck, hostURL */
 
-let urlListSet = new Set()
-let newSetLength = 0
-let oldSetLength = 0
-let saveSuccessCount
-let saveFailedCount
-let totalUrlCount
+// max concurrent saves supported by SPN
+// -1 allows SPN button to work at same time
+const MAX_SAVES = 5-1
+let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj }}
+let bulkSaveQueue = [] // array of cropped_url keys in the save queue
+let saveSuccessCount = 0
+let saveFailedCount = 0
+let totalUrlCount = 0
 let isSaving = false
 
-function displayList(list) {
-  newSetLength = list.size
-  if (newSetLength > oldSetLength) {
-    for (let item of Array.from([...list]).slice(oldSetLength, newSetLength)) {
-      let row = $('<div class="url-list flex-container">')
-      let del = $('<div class="delete-btn">').text('x')
-      let span = $('<div class="url-item">').append(item)
+/* * * UI * * */
 
-      $('#list-container').append(
-        row.append(del, span)
-      )
-    }
-    oldSetLength = newSetLength
-  }
+// Change UI when Saving starts.
+function startSaving() {
+  isSaving = true
+  $('#list-container').off('click')
+  $('#bulk-save-btn').off('click').click(clearFocus)
+  $('#not-logged-in').hide()
+  $('.add-container').hide()
+  $('.save-box').hide()
+  $('#bulk-save-label').text('Archiving URLs...')
+  $('#save-progress-bar').show()
+  $('.count-container').show()
 }
 
-function processNode(node) {
-  // recursively process child nodes
-  if (node.children) {
-    node.children.forEach((child) => { processNode(child) })
-  }
-
-  // access leaf nodes: Bookmarked URLs
-  if (node.url) {
-    if (isValidUrl(node.url) && isNotExcludedUrl(node.url)) {
-      if(!isDuplicateURL(node.url)) {
-        urlListSet.add(node.url)
-        displayList(urlListSet)
-      }
-    }
-  }
+// Hide progress bar when Saving stops.
+// msg = save button label.
+function stopSaving(msg = 'Start Bulk Save') {
+  isSaving = false
+  $('#save-progress-bar').hide()
+  $('#bulk-save-label').text(msg)
 }
 
-// import all bookmarked URLs
-function importBookmarks() {
+// Reset UI
+function resetUI() {
+  $('.count-container').hide()
+  $('.add-container').show()
+  $('.save-box').show()
+  $('#bulk-save-label').text('Start Bulk Save')
+  $('#bulk-save-btn').click(doBulkSaveAll)
+  $('#list-container').click(doRemoveURL)
+}
+
+// Removes focus outline on mouse click, while keeping during keyboard use.
+function clearFocus() {
+  document.activeElement.blur()
+}
+
+/* * * Bookmarks * * */
+
+// Click handler to import all bookmarks.
+function doImportBookmarks(e) {
   $('#empty-list-err').hide()
+  importAllBookmarks()
+}
+
+// Import all bookmarked URLs.
+function importAllBookmarks() {
   if (chrome.bookmarks) {
-    chrome.bookmarks.getTree((itemTree) => {
-      itemTree.forEach((item) => {
-          processNode(item)
+    chrome.bookmarks.getTree((nodeTree) => {
+      nodeTree.forEach((node) => {
+          processTreeNode(node)
       })
     })
   }
 }
 
-// add URLs to the list
-function addToBulkList(e) {
+// Traverses the bookmark tree nodes recursively.
+function processTreeNode(node) {
+  // process child nodes
+  if (node.children) {
+    node.children.forEach((child) => { processTreeNode(child) })
+  }
+  // add bookmark URL from leaf node
+  if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
+    addToBulkSave(node.url)
+  }
+}
+
+/* * * Save List * * */
+
+// Adds a URL to Bulk Save and appends it to #list-container.
+function addToBulkSave(url) {
+  let curl = cropPrefix(url)
+  let $row = $('<div class="url-list flex-container">')
+  let $del = $('<div class="delete-btn">').text('x')
+  let $span = $('<div class="url-item">').text(url)
+  $('#list-container').append($row.append($del, $span))
+  bulkSaveObj[curl] = { url: url, row: $row }
+}
+
+// Click handler to Add URLs to Bulk Save.
+function doAddURLs(e) {
     $('#empty-list-err').hide()
     let text = document.getElementById('add-url-area').value
     let c = 0
@@ -65,224 +103,180 @@ function addToBulkList(e) {
     for (let elem of addedURLs) {
       let url = makeValidURL(elem)
       if (url && !url.includes(' ') && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
-        urlListSet.add(url)
+        addToBulkSave(url)
         c++
       }
     }
-    if (c > 0) {
-      displayList(urlListSet)
-    } else {
+    if (c == 0) {
       alert('Please enter valid website addresses.')
     }
     document.getElementById('add-url-area').value = ''
 }
 
-// delete URL from the list
-function deleteFromBulkList(e) {
+
+// Click handler to Remove a URL from Bulk Save.
+function doRemoveURL(e) {
   if (e.target.classList.contains('delete-btn')) {
-    let delUrl = e.target.nextElementSibling.innerText
-    urlListSet.delete(delUrl)
+    let curl = cropPrefix(e.target.nextElementSibling.innerText)
+    delete bulkSaveObj[curl]
     e.target.parentElement.remove()
-    oldSetLength--
   }
 }
 
-// clear all URLs from the list
-function clearBulkList() {
-  urlListSet.clear()
-  oldSetLength = 0
-  newSetLength = 0
+// Click handler to Clear Bulk Save.
+function doClearAll(e) {
+  bulkSaveObj = {}
   $('#list-container').text('')
 }
 
-// clear the UI (remove buttons and other options) while saving URLs
-function clearUI() {
-  $('#list-container').off('click')
-  $('.save-box').hide()
-  $('.add-container').hide()
-}
-
-// crop URL
-function cropURL(url) {
+// Returns substring of URL after :// not including "www." if present.
+function cropPrefix(url) {
   let pos = 0
   if (url.slice(-1) === '/') { url = url.slice(0, -1) }
   if (url.includes('://')) {
     if (url.includes('://www.')) {
       pos = url.indexOf('://www.')
       return url.substring(pos + 7)
-    } else pos = url.indexOf('://')
+    } else {
+      pos = url.indexOf('://')
+    }
     return url.substring(pos + 3)
-  } else if (!url.includes('://')) {
+  } else {
     if (url.includes('www.')) {
       pos = url.indexOf('www.')
       return url.substring(pos + 4)
-    } else return url
+    } else {
+      return url
+    }
   }
 }
 
-// check for duplicate URLs
-function isDuplicateURL(url, list = urlListSet) {
-  let newURL = cropURL(url)
-  for (let elem of list) {
-    let newElem = cropURL(elem)
-    if (newURL === newElem) { return true}
-  }
-  return false
+// Returns true if URL is already in Bulk Save.
+function isDuplicateURL(url) {
+    let curl = cropPrefix(url)
+    return (curl in bulkSaveObj) ? true : false
 }
 
-// check availability
-function wmCheck(url, index) {
-  return new Promise((resolve, reject) => {
-    wmAvailabilityCheck(url, () => {
-    }, () => {
-      initiateBulkSave(url, index)
-    })
-    resolve()
+// Listens to SPN response messages from background.js.
+function initMessageListener() {
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message && message.error) {
+      // stop if user not logged in
+      stopSaving()
+      resetUI()
+      $('#not-logged-in').show()
+    } else if (message && message.message && message.url) {
+      // respond to message
+      processStatus(message.message, message.url)
+      checkIfFinished()
+    }
   })
 }
 
-// listen to messages then save more URLs
-function messageListener(urlArray, index) {
-  chrome.runtime.onMessage.addListener(
-    (message) => {
-      // cancel save if user is not logged in
-      if (message && message.error && message.error === 'You need to be logged in to use Save Page Now.') {
-        isSaving = false
-        hideSaving('Start Bulk Save')
-        $('#bulk-save-btn').click(doBulkSaveAll)
-        // $('.save-box').show() // TODO: Currently not implemented
-        $('#not-logged-in').show()
-      } else {
-        // continue save
-        $('#not-logged-in').hide()
-        msg = message.message
-        // save next URL only when previous saving job is terminated (success/fail)
-        if (msg === 'save_success' ||  msg === 'save_error') {
-          if (urlArray[index]) {
-            let saveUrl = urlArray[index]
-            if ($('#never-saved').prop('checked') === true) {
-              wmCheck(saveUrl, index)
-                .then(() => {})
-                .catch(() => {})
-            } else {
-              initiateBulkSave(saveUrl, index)
-            }
-            index++
-          }
-        }
-      }
-    }
-  )
-}
-
-function doBulkSaveAll() {
+// Click handler to Start Bulk Save.
+function doBulkSaveAll(e) {
+  // prepare queue, exit if empty
+  bulkSaveQueue = Object.keys(bulkSaveObj)
+  if (bulkSaveQueue.length === 0) {
+    $('#empty-list-err').show()
+    return
+  }
+  // reset counts
   saveSuccessCount = 0
   saveFailedCount = 0
-  totalUrlCount = 0
-  if (urlListSet && urlListSet.size > 0) {
-    let i = 0
-    let j = 5
-    clearUI()
-    let urlListArray = Array.from([...urlListSet])
-    for (i = 0; i < j; i++) {
-      if (urlListArray[i]) {
-        let saveUrl = urlListArray[i]
-        // filter and save if saving only never saved URLs
-        // TODO: FIXME: Option not implemented!
-        if ($('#never-saved').prop('checked') === true) {
-          wmCheck(saveUrl, i)
-            .then(() => {})
-            .catch(() => {})
-        } else {
-          // save all URLs
-          if ((i === 0) && !isSaving){
-            isSaving = true
-            showSaving()
-          }
-          saveTheURL(saveUrl, i)
-        }
-      }
-    }
-    messageListener(urlListArray, i)
-  } else {
-    $('#empty-list-err').show()
+  totalUrlCount = bulkSaveQueue.length
+  $('#total-count').text(totalUrlCount)
+  // start saving concurrently
+  startSaving()
+  for (let i=0; i < MAX_SAVES; i++) {
+    saveNextInQueue()
   }
 }
 
-// save the URL
-function saveTheURL(url, index) {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.runtime.sendMessage({
-      message: 'openurl',
-      wayback_url: hostURL + 'save/',
-      page_url: url,
-      method: 'save',
-      isBulkSave: 'true'
-      // tabId: tabs[0].id
-    })
+// Pop next URL to save off the queue.
+function saveNextInQueue() {
+  let curl = bulkSaveQueue.shift()
+  if (curl) {
+    let saveUrl = bulkSaveObj[curl].url
+    if ($('#never-saved').prop('checked') === true) {
+      // only save URL if not already in archive
+      wmAvailabilityCheck(saveUrl, () => {
+        // already archived
+        processStatus('archived', saveUrl)
+        checkIfFinished()
+      }, () => {
+        // hasn't been archived
+        saveTheURL(saveUrl)
+      })
+    } else {
+      // save all URLs
+      saveTheURL(saveUrl)
+    }
+  }
+}
+
+// Send a Save message to background.js.
+function saveTheURL(url) {
+  chrome.runtime.sendMessage({
+    message: 'openurl',
+    wayback_url: hostURL + 'save/',
+    page_url: url,
+    method: 'save',
+    isBulkSave: 'true' // TODO: LOOK AT
   })
-  trackStatus(index)
 }
 
-// show the save status (saving, success, error) in UI
-function updateStatus(urlIndex, symbol, bgcolor) {
-  urlIndex.previousElementSibling.innerText = symbol
-  urlIndex.previousElementSibling.style.backgroundColor = bgcolor
+// Show the Save Status (saving, success, error) in UI.
+// $row is a jQuery object
+function updateRow($row, symbol, bgcolor) {
+  let $del = $row.children('.delete-btn').first()
+  $del.text(symbol)
+  $del.css('background-color', bgcolor)
 }
 
-// track the save status
-function trackStatus(index) {
-  totalUrlCount++
-  $('#total-count').text(totalUrlCount)
-  $('.count-container').show()
-  chrome.runtime.onMessage.addListener(
-    (message) => {
-      let msg = message.message
-      let url = message.url
-      let items = $('.url-item')
-      if (items[index]) {
-        let listItemUrl = items[index].innerText
-        if (msg === 'save_start' && listItemUrl === url) {
-          updateStatus(items[index], '', 'yellow')
-        } else if (msg === 'save_success' && listItemUrl === url) {
-          saveSuccessCount++
-          $('#saved-count').text(saveSuccessCount)
-          updateStatus(items[index], '✔', 'green')
-        } else if (msg === 'save_error' && (listItemUrl === url)) {
-          saveFailedCount++
-          $('#failed-count').text(saveFailedCount)
-          updateStatus(items[index], '!', 'red')
-        }
-      }
-      if (isSaving && (saveSuccessCount + saveFailedCount === totalUrlCount)) {
-        isSaving = false
-        hideSaving('Save Finished')
+// Update an individual URL item in the list container.
+function processStatus(msg, url) {
+  let curl = cropPrefix(url)
+  if (curl in bulkSaveObj) {
+    let $row = bulkSaveObj[curl].row
+    if ($row) {
+      if (msg === 'save_start') {
+        updateRow($row, '', 'yellow')
+      } else if (msg === 'save_success') {
+        updateRow($row, '✔', 'green')
+        saveSuccessCount++
+        $('#saved-count').text(saveSuccessCount)
+        saveNextInQueue()
+      } else if (msg === 'save_error') {
+        updateRow($row, '!', 'red')
+        saveFailedCount++
+        $('#failed-count').text(saveFailedCount)
+        saveNextInQueue()
+      } else if (msg === 'archived') {
+        // url was already archived
+        updateRow($row, '•', 'green')
+        saveSuccessCount++
+        $('#saved-count').text(saveSuccessCount)
+        saveNextInQueue()
       }
     }
-  )
+  }
 }
 
-function showSaving() {
-  $('#bulk-save-btn').off('click')
-  $('#save-progress-bar').show()
-  $('#bulk-save-label').text('Archiving URLs...')
+// Stop saving when counts reach total count.
+function checkIfFinished() {
+  if (isSaving && (saveSuccessCount + saveFailedCount >= totalUrlCount)) {
+    stopSaving('Save Finished')
+  }
 }
 
-function hideSaving(msg) {
-  $('#save-progress-bar').hide()
-  $('#bulk-save-label').text(msg)
+function main() {
+  $('.btn').click(clearFocus)
+  $('#add-url-btn').click(doAddURLs)
+  $('#import-bookmarks-btn').click(doImportBookmarks)
+  $('#clear-all-btn').click(doClearAll)
+  resetUI()
+  initMessageListener()
 }
 
-// For removing focus outline around buttons on mouse click, while keeping during keyboard use.
-function clearFocus() {
-  document.activeElement.blur()
-}
-$('.btn').click(clearFocus)
-
-$('.save-box').hide() // TODO: Remove once this is implemented
-
-$('#import-bookmarks-btn').click(importBookmarks)
-$('#bulk-save-btn').click(doBulkSaveAll)
-$('#list-container').click(deleteFromBulkList)
-$('#add-url-btn').click(addToBulkList)
-$('#clear-all-btn').click(clearBulkList)
+main()
