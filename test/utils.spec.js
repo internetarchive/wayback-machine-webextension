@@ -10,6 +10,7 @@ const badgeCountText = require('../webextension/scripts/utils').badgeCountText
 const timestampToDate = require('../webextension/scripts/utils').timestampToDate
 const dateToTimestamp = require('../webextension/scripts/utils').dateToTimestamp
 const makeValidURL = require('../webextension/scripts/utils').makeValidURL
+const cropPrefix = require('../webextension/scripts/utils').cropPrefix
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -216,6 +217,36 @@ describe('makeValidURL', () => {
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
       expect(makeValidURL(url)).to.equal(result)
+    })
+  })
+})
+
+describe('cropPrefix', () => {
+  var test_cases = [
+    { 'url': 'https://www.example.com/', 'result': 'example.com' },
+    { 'url': 'http://www.example.com/', 'result': 'example.com' },
+    { 'url': 'https://example.com', 'result': 'example.com' },
+    { 'url': 'http://example.com', 'result': 'example.com' },
+    { 'url': 'https://foo.example.com', 'result': 'foo.example.com' },
+    { 'url': 'http://foo.example.com', 'result': 'foo.example.com' },
+    { 'url': 'example', 'result': 'example' },
+    { 'url': 'example.com', 'result': 'example.com' },
+    { 'url': 'www.example.com/', 'result': 'example.com' },
+    { 'url': 'https://foo.example.com/foo/bar?baz#buz', 'result': 'foo.example.com/foo/bar?baz#buz' },
+    { 'url': 'http://foo.example.com/foo/bar?baz#buz', 'result': 'foo.example.com/foo/bar?baz#buz' },
+    { 'url': 'www.example.com/www/foo.html', 'result': 'example.com/www/foo.html' },
+    { 'url': 'www.example.com/www.html', 'result': 'example.com/www.html' },
+    { 'url': 'http://example.com/www/foo.html', 'result': 'example.com/www/foo.html' },
+    { 'url': 'example.com/www.html', 'result': 'example.com/www.html' },
+    { 'url': 'www.example.com/www/foo.html', 'result': 'example.com/www/foo.html' },
+    { 'url': 'www.example.com/www.html', 'result': 'example.com/www.html' },
+    { 'url': 'foo.www.example.com', 'result': 'foo.www.example.com' },
+    { 'url': 'ftp://example.com/', 'result': 'example.com' },
+    { 'url': 'ftp://www.example.com/', 'result': 'example.com' }
+]
+  test_cases.forEach(({ url, result }) => {
+    it('should return ' + result + ' on ' + url, () => {
+      expect(cropPrefix(url)).to.equal(result)
     })
   })
 })

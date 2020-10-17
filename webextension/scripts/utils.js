@@ -221,6 +221,7 @@ function makeValidURL(url) {
 }
 
 // Returns substring of URL after :// not including "www." if present.
+// Also crops trailing slash.
 function cropPrefix(url) {
   let pos = 0
   if (url.slice(-1) === '/') { url = url.slice(0, -1) }
