@@ -51,7 +51,7 @@ function get_tags() {
         var arr = mynewTags.reduce((acc, newTag) => {
           var minDistance = void 0
           if (acc.length > 0) {
-            minDistance = Math.min.apply(Math, _toConsumableArray(acc.map((oldTag) => {
+            minDistance = Math.min.apply(Math, toConsumableArray(acc.map((oldTag) => {
               return Levenshtein.get(oldTag, newTag)
             })))
           } else {
@@ -102,7 +102,7 @@ function get_tags() {
     })
 }
 
-function _toConsumableArray (arr) {
+function toConsumableArray (arr) {
   if (Array.isArray(arr)) {
     let arr2 = Array(arr.length)
     for (let i = 0; i < arr.length; i++) {
@@ -115,3 +115,9 @@ function _toConsumableArray (arr) {
 }
 
 window.onload = get_tags
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    toConsumableArray
+  }
+}
