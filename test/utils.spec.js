@@ -242,7 +242,9 @@ describe('cropPrefix', () => {
     { 'url': 'www.example.com/www.html', 'result': 'example.com/www.html' },
     { 'url': 'foo.www.example.com', 'result': 'foo.www.example.com' },
     { 'url': 'ftp://example.com/', 'result': 'example.com' },
-    { 'url': 'ftp://www.example.com/', 'result': 'example.com' }
+    { 'url': 'ftp://www.example.com/', 'result': 'example.com' },
+    { 'url': 'https://example.com/foo/https://www.example.org/', 'result': 'example.com/foo/https://www.example.org' },
+    { 'url': '', 'result': '' },
 ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {

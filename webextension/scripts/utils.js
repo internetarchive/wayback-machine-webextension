@@ -223,24 +223,10 @@ function makeValidURL(url) {
 // Returns substring of URL after :// not including "www." if present.
 // Also crops trailing slash.
 function cropPrefix(url) {
-  let pos = 0
   if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  if (url.includes('://')) {
-    if (url.includes('://www.')) {
-      pos = url.indexOf('://www.')
-      return url.substring(pos + 7)
-    } else {
-      pos = url.indexOf('://')
-    }
-    return url.substring(pos + 3)
-  } else {
-    if (url.includes('www.')) {
-      pos = url.indexOf('www.')
-      return url.substring(pos + 4)
-    } else {
-      return url
-    }
-  }
+  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/;
+  let match = re.exec(url)
+  return match[1]
 }
 
 // Function to check whether it is a valid URL or not
