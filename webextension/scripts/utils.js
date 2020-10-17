@@ -40,10 +40,14 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
-// TODO FIXME: This breaks when running tests!
-chrome.storage.local.get(['private_before_state'], (event) => {
-  private_before_state = new Set(event.private_before_state)
-})
+// not called
+function main() {
+  // what is this for? chrome can't be accessed directly here.
+  // TODO FIXME: This breaks when running tests!
+  chrome.storage.local.get(['private_before_state'], (event) => {
+    private_before_state = new Set(event.private_before_state)
+  })
+}
 
 /* * * Browser Detection * * */
 
