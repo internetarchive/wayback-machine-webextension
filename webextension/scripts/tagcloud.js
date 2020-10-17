@@ -2,6 +2,8 @@
 
 // from 'index.js'
 /*   global Levenshtein */
+// from 'utils.js'
+/*   global getUrlByParameter */
 
 var mynewTags = []
 

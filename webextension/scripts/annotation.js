@@ -102,3 +102,10 @@ function get_hypothesis() {
 }
 
 window.onload = get_hypothesis
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    hypothesis_api_url,
+    get_annotations
+  }
+}
