@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
@@ -132,28 +132,6 @@ function doRemoveURL(e) {
 function doClearAll(e) {
   bulkSaveObj = {}
   $('#list-container').text('')
-}
-
-// Returns substring of URL after :// not including "www." if present.
-function cropPrefix(url) {
-  let pos = 0
-  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  if (url.includes('://')) {
-    if (url.includes('://www.')) {
-      pos = url.indexOf('://www.')
-      return url.substring(pos + 7)
-    } else {
-      pos = url.indexOf('://')
-    }
-    return url.substring(pos + 3)
-  } else {
-    if (url.includes('www.')) {
-      pos = url.indexOf('www.')
-      return url.substring(pos + 4)
-    } else {
-      return url
-    }
-  }
 }
 
 // Returns true if URL is already in Bulk Save.

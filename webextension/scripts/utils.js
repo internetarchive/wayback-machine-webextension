@@ -40,10 +40,11 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
-// TODO FIXME: This breaks when running tests!
-chrome.storage.local.get(['private_before_state'], (event) => {
-  private_before_state = new Set(event.private_before_state)
-})
+function initPrivateState() {
+  chrome.storage.local.get(['private_before_state'], (event) => {
+    private_before_state = new Set(event.private_before_state)
+  })
+}
 
 /* * * Browser Detection * * */
 
@@ -214,6 +215,15 @@ function isValidUrl(url) {
  */
 function makeValidURL(url) {
   return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
+}
+
+// Returns substring of URL after :// not including "www." if present.
+// Also crops trailing slash.
+function cropPrefix(url) {
+  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
+  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/;
+  let match = re.exec(url)
+  return match[1]
 }
 
 // Function to check whether it is a valid URL or not
@@ -489,6 +499,7 @@ if (typeof module !== 'undefined') {
     isArchiveUrl,
     isValidUrl,
     makeValidURL,
+    cropPrefix,
     isNotExcludedUrl,
     get_clean_url,
     wmAvailabilityCheck,
@@ -508,6 +519,7 @@ if (typeof module !== 'undefined') {
     feedbackURL,
     newshosts,
     private_before_state,
+    initPrivateState,
     searchValue
   }
 }
