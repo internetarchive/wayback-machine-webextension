@@ -1,11 +1,12 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue */
+/*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue, initPrivateState */
 
 // from 'popup.js'
 /*   global show_all_screens, openContextMenu, setupWaybackCount */
 
+initPrivateState()
 $(initializeSettings)
 // $('.only').click(validate)
 // $('#showall').click(selectall)
