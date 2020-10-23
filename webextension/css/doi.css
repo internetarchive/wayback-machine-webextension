@@ -70,6 +70,10 @@ p {
     font-size: 20px;
 }
 
+h3 {
+    font-size: 20px;
+}
+/*
 strong {
     font-family:  bebas Neue;
 }
@@ -93,6 +97,7 @@ button:hover {
     background-color: #AA4B48;
     color: #eee;
 }
+*/
 
 /* dark mode */
 @media (prefers-color-scheme: dark) {
@@ -100,11 +105,11 @@ button:hover {
       background-color: #2C2C2C;
       color: #eee;
     }
-
+/*
     h2, h3, h4 {
       color: #bbb;
     }
-
+*/
     #container-whole-doi > div {
         background-color: #333;
     }

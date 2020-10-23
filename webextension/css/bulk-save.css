@@ -4,7 +4,7 @@ body {
 }
 
 p {
-    font-family: Gill Sans Light;
+    font-family: "Gill Sans Light";
     font-size: 20px;
 }
 
@@ -12,7 +12,6 @@ p {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 1em 15px;
 }
 
 .header-container {
@@ -127,15 +126,6 @@ p {
     padding: 0.25em 0.5em;
 }
 
-.logo {
-    margin: 0 auto;
-    text-align: center;
-}
-
-.ia-logo {
-    height: 64px;
-}
-
 .container-scrollbar::-webkit-scrollbar {
     background-color: #aaa;
     width: 16px;
@@ -174,10 +164,6 @@ p {
     body {
         background-color: #2C2C2C;
         color: #eee;
-    }
-
-    h2, h3, h4 {
-        color: #bbb;
     }
 
     #list-container, #add-url-area {

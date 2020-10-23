@@ -38,9 +38,7 @@ function getMetadata(entry) {
 function makeEntry (data) {
   let paper = $('<div>').append(
     $('<p class="text-elements">').append(
-      $('<p>').append(
-        $('<strong>').text(data.title)
-      ),
+      $('<h3>').text(data.title),
       $('<p>').append(data.author)
       // Journal was also commented out in the previous version.
       // $('<p>').append(journal)
@@ -86,7 +84,7 @@ function createPage () {
   $.getJSON(hostURL + 'services/context/papers?url=' + url, (response) => {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
-      $('#doi-heading').html(response.message)
+      $('#error-msg').html(response.message)
     } else {
       for (var i = 0; i < response.length; i++) {
         if (response[i]) {

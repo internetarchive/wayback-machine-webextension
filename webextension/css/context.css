@@ -3,8 +3,6 @@ body {
 }
 
 h1 {
-    font-weight: bold;
-    font-family: sans-serif;
     margin: 1em 0 0.5em 0;
 }
 
@@ -51,10 +49,6 @@ h4 {
     border: 1px solid transparent;
     border-radius: 5px;
     color: #333;
-}
-
-.ia-logo {
-    height: 64px;
 }
 
 .wb-logo {

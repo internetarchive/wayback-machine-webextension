@@ -2,7 +2,7 @@ body {
     background-color: #eee;
 }
 
-.container {
+.body-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -50,15 +50,6 @@ body {
 .name {
     font-size: 21px;
     font-weight: 800;
-}
-
-.logo {
-    margin: 1em auto;
-    text-align: center;
-}
-
-.ia-logo {
-    height: 64px;
 }
 
 .ournews-branding {
@@ -118,10 +109,6 @@ body {
     body {
         background-color: #2C2C2C;
         color: #eee;
-    }
-
-    h2, h3, h4 {
-        color: #bbb;
     }
 
     #results-container {

@@ -63,32 +63,12 @@ body {
 }
 
 p {
-    font-family: Gill Sans Light;
+    font-family: "Gill Sans Light";
     font-size: 20px;
 }
 
-strong {
-    font-family:  bebas Neue;
-}
-
-h2 strong {
-    font-family: 'Oswald', sans-serif;
-}
-
-.ia-logo {
-    margin-top: 1em;
-    height: 64px;
-}
-
-button {
-    border-radius: 5px;
-    color: #fff;
-    padding: 5px;
-    background-color: #a94442;
-}
-button:hover {
-    background-color: #AA4B48;
-    color: #eee;
+h3 {
+    font-size: 20px;
 }
 
 /* dark mode */
@@ -96,10 +76,6 @@ button:hover {
   body {
       background-color: #2C2C2C;
       color: #eee;
-  }
-
-  h2, h3, h4 {
-      color: #bbb;
   }
 
   #resultsTray > div {

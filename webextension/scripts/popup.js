@@ -46,7 +46,7 @@ function loginError() {
   $('#bulk-save-btn').attr('disabled', true)
   $('#bulk-save-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
-  $('#spn-back-label').text('Login to Save Page')
+  $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
   $('#spn-btn').off('click').click(() => {
     show_login_page()
