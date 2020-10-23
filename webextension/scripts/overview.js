@@ -68,6 +68,7 @@ function recent_archive_details (url) {
 }
 // Function used to get the thumbnail of the URL
 function get_thumbnail (url) {
+  // Add to manifest permissions to use: "http://crawl-services.us.archive.org:8200/*"
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
