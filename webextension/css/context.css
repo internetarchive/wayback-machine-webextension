@@ -3,13 +3,16 @@ body {
 }
 
 h1 {
-    font-weight: bold;
-    font-family: sans-serif;
     margin: 1em 0 0.5em 0;
 }
 
 h4 {
     font-size: 23px;
+}
+
+#main-info {
+    font-family: "Gill Sans Light";
+    font-size: 20px;
 }
 
 .hyp-branding {
@@ -21,8 +24,11 @@ h4 {
     height: 35px;
 }
 
-.color_code, .glyphicon-globe {
+.color_code {
     color: #22c399;
+}
+.glyphicon-globe {
+    color: #23527c;
 }
 
 #side-nav-bar {
@@ -51,10 +57,6 @@ h4 {
     border: 1px solid transparent;
     border-radius: 5px;
     color: #333;
-}
-
-.ia-logo {
-    height: 64px;
 }
 
 .wb-logo {
@@ -89,8 +91,9 @@ h4 {
 
 .target-selector-exact {
     padding: 5px 10px;
-    font-family: 'Courier New', Courier, monospace;
+    /* font-family: 'Courier New', Courier, monospace; */
     word-wrap: break-word;
+    border-left: 2px #855 solid;
 }
 
 #link-incontext, #link-html {
@@ -176,21 +179,24 @@ ul {
     color: #000;
 }
 
+
 .pre {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    word-wrap: break-word;
+}
+.annotations-container, .pre-container {
+    font-size: 18px;
+    line-height: 1.5;
     display: block;
     min-height: 1em;
     margin: 1em auto 1.8em auto;
-    font-size: 18px;
-    line-height: 1.5;
     color: #333;
-    word-wrap: break-word;
     background-color: #ffffff75;
     border-radius: 5px;	
     border: 1px solid #888;
 }
 
-.pre-container {
+.pre-inner {
     margin: 0.7em;
 }
 
@@ -259,10 +265,6 @@ ul {
 #container-whole-url, #container-whole-domain {
     max-height: 500px;
     overflow-y: auto;
-}
-
-#text-contain, .target-selector-exact {
-    text-align: justify;
 }
 
 .container-scrollbar::-webkit-scrollbar {
@@ -341,7 +343,11 @@ ul {
         color: #eee;
     }
 
-    #side-nav-bar, .pre {
+    .glyphicon-globe {
+        color: #d66;
+    }
+
+    #side-nav-bar, .annotations-container, .pre-container {
         background-color: #333;
         color: #ddd;
     }
@@ -351,7 +357,7 @@ ul {
         color: #aaa;
     }
 
-    .pre, .thumbnail-box {
+    .annotations-container, .thumbnail-box, .pre-container {
         border: 1px solid #666;
     }
 

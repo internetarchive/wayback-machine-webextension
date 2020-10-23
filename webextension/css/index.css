@@ -300,10 +300,14 @@ a.btn-social, .btn-social {
     margin-top: -2px;
 }
 
+#login-label {
+    font-size: 14px;
+}
+
 #login-message {
     display: none;
     color: #d4312c;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .login-form {

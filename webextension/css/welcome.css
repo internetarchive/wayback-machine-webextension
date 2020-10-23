@@ -21,3 +21,7 @@ div#content > h1 {
 p {
     text-align: justify;
 }
+
+h1, h2, h3, h4 {
+  color: inherit;
+}

@@ -44,15 +44,19 @@ function get_annotations(type = 'url') {
         item.attr('id', 'row-' + i)
         item.find('.date').html('Dated on ' + date)
         item.find('.userinfo').html(user)
-        item.find('#source-contain').html('(' + source + ')')
-        item.find('#text-contain').html(exactData)
-        item.find('.title').html(title)
-        item.find('.links').append(
-          $('<a>').attr({ 'href': rowData.links.incontext, 'id': 'link-incontext', 'class': 'button', 'target': '_blank' })
-            .html('Click to see in context'),
-          $('<a>').attr({ 'href': rowData.links.html, 'id': 'link-html',  'class': 'button', 'target': '_blank' })
-            .html('Click to see the HTML')
+        item.find('#source-contain').append(
+          $('<a>').attr({ 'href': source, 'target': '_blank' }).html(title)
         )
+        item.find('#text-contain').html(exactData)
+        item.find('.links').append(
+          $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in Context').click(() => {
+            openByWindowSetting(rowData.links.incontext)
+          })
+          //, $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in HTML').click(() => {
+          //  openByWindowSetting(rowData.links.html)
+          //})
+        )
+
         if (rowData.target[0].hasOwnProperty('selector')) {
           var selector_length = rowData.target[0].selector.length
           var exact = rowData.target[0].selector[selector_length - 1].exact

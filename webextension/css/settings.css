@@ -116,6 +116,7 @@ label[for=tagcloud] {
 
 .tooltip-inner p {
     margin: 5px;
+    font-size: 12px;
 }
 
 .setting-tip {

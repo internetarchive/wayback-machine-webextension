@@ -390,7 +390,7 @@ function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
     chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
   } else {
-    opener(url, op)
+    opener(url, op, cb)
   }
 }
 
@@ -400,9 +400,17 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    let width = Math.floor(window.screen.availWidth * 0.75)
-    let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
+    let w, h
+    if (screen.width > screen.height) {
+      // landscape screen
+      w = Math.floor(screen.width * 0.666)
+      h = Math.floor(w * 0.75)
+    } else {
+      // portrait screen (likely mobile)
+      w = Math.floor(screen.width * 0.9)
+      h = Math.floor(screen.height * 0.9)
+    }
+    chrome.windows.create({ url: url, width: w, height: h, top: 0, left: 0, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }

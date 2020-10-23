@@ -10,11 +10,24 @@
     src: url("../fonts/GillSans-Light.ttf");
 }
 
+p {
+    font-size: 18px;
+}
+
+label {
+    font-weight: 400;
+}
+
 hr {
     margin: 5px 0;
     border: none;
     border-top: 1px solid #aaa;
     height: 1px;
+}
+
+h1, h2, h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 h2 {
@@ -30,6 +43,14 @@ h4 {
     font-family: "Oswald", sans-serif;
     font-size: 22px;
     font-weight: bold;
+}
+
+.body-container {
+    padding: 1em;
+}
+
+.ia-logo {
+    height: 64px;
 }
 
 .unselectable, .unselectable > * {
@@ -204,6 +225,14 @@ button {
 
     hr {
         border-top: 1px solid #555;
+    }
+
+    h1 {
+        color: #ddd;
+    }
+
+    h2, h3, h4 {
+        color: #bbb;
     }
 
     /* buttons */

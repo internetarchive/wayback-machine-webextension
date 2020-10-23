@@ -37,7 +37,7 @@ function populateBooks(url) {
 
 function addBook (metadata) {
   let text_elements = $('<div>').attr({ 'class': 'text-elements' }).append(
-    $('<p>').append($('<strong>').text(metadata.title)),
+    $('<h3>').text(metadata.title),
     $('<p>').text(metadata.author)
   )
   let details = $('<div>').attr({ 'class': 'bottom-details' }).append(
