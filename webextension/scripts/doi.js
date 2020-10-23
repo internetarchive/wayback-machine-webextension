@@ -49,11 +49,11 @@ function makeEntry (data) {
     bottom_details.append(
       $('<button>').attr({ 'class': 'btn btn-auto btn-blue' }).text('Read Paper')
         .click(() => {
-          chrome.storage.local.get(['show_context'], (event1) => {
-            if (event1.show_context === undefined) {
-              event1.show_context = 'tab'
+          chrome.storage.local.get(['view_setting'], (event1) => {
+            if (event1.view_setting === undefined) {
+              event1.view_setting = 'tab'
             }
-            if (event1.show_context === 'tab') {
+            if (event1.view_setting === 'tab') {
               chrome.tabs.create({ url: data.url })
             } else {
               chrome.windows.getCurrent((window) => {

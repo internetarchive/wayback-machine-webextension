@@ -20,11 +20,11 @@ function constructArticles (clip) {
     $('<a>').attr({ 'href': '#' }).append(
       $('<img class="preview-clips">').attr({ 'src': clip.preview_thumb })
     ).click(() => {
-      chrome.storage.local.get(['show_context'], (event1) => {
-        if (event1.show_context === undefined) {
-          event1.show_context = 'tab'
+      chrome.storage.local.get(['view_setting'], (event1) => {
+        if (event1.view_setting === undefined) {
+          event1.view_setting = 'tab'
         }
-        if (event1.show_context === 'tab') {
+        if (event1.view_setting === 'tab') {
           chrome.tabs.create({ url: clip.preview_url })
         } else {
           let width = window.screen.availWidth

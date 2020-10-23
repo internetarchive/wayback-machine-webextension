@@ -81,8 +81,8 @@ function savePageNow(atab, page_url, silent = false, options = []) {
       .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
-          chrome.storage.local.get(['show_resource_list'], (result) => {
-            if (result.show_resource_list === true) {
+          chrome.storage.local.get(['resource_list_setting'], (result) => {
+            if (result.resource_list_setting === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
@@ -327,8 +327,8 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-      if (event.not_found_popup === true && event.agreement === true) {
+    chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+      if (event.not_found_setting === true && event.agreement === true) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
           chrome.tabs.sendMessage(details.tabId, {
             type: 'SHOW_BANNER',
@@ -375,8 +375,8 @@ chrome.webRequest.onCompleted.addListener((details) => {
   }
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
-      chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-        if (event.not_found_popup === true && event.agreement === true) {
+      chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+        if ((event.not_found_setting === true) && (event.agreement === true)) {
           tabIsReady(tabs[0].id)
         }
       })
@@ -532,13 +532,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
-    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
+    chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (event) => {
       // auto save page
-      if (event.auto_archive === true) {
+      if (event.auto_archive_setting === true) {
         auto_save(tab, tab.url)
       }
       // fact check
-      if (event.fact_check === true) {
+      if (event.fact_check_setting === true) {
         factCheckPage(tab, tab.url)
       }
     })
@@ -583,10 +583,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+  chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
     chrome.tabs.get(info.tabId, (tab) => {
       // fact check settings unchecked
-      if ((event.fact_check === false) && (getToolbarState(tab).has('F'))) {
+      if ((event.fact_check_setting === false) && (getToolbarState(tab).has('F'))) {
         removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
@@ -677,8 +677,8 @@ function incrementCount(url) {
 
 function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
-  chrome.storage.local.get(['wm_count'], (event) => {
-    if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+  chrome.storage.local.get(['wm_count_setting'], (event) => {
+    if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
         if (values.total >= 0) {
           // display badge
