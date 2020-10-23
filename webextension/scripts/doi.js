@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, openByWindowSetting */
 
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
@@ -47,28 +47,9 @@ function makeEntry (data) {
   let bottom_details = $('<div>').addClass('bottom-details')
   if (data.url !== '#') {
     bottom_details.append(
-      $('<button>').attr({ 'class': 'btn btn-auto btn-blue' }).text('Read Paper')
-        .click(() => {
-          chrome.storage.local.get(['view_setting'], (event1) => {
-            if (event1.view_setting === undefined) {
-              event1.view_setting = 'tab'
-            }
-            if (event1.view_setting === 'tab') {
-              chrome.tabs.create({ url: data.url })
-            } else {
-              chrome.windows.getCurrent((window) => {
-                const height = window.height
-                const width = window.width
-                chrome.windows.create({ url: data.url,
-                  width: width / 2,
-                  height: height,
-                  top: 0,
-                  left: 0 
-                })
-              })
-            }
-          })
-        }),
+      $('<button>').attr({ 'class': 'btn btn-auto btn-blue' }).text('Read Paper').click(() => {
+        openByWindowSetting(data.url)
+      }),
       $('<div>').addClass('small text-muted').text('source: ' + data.source)
     )
   } else {
