@@ -267,10 +267,6 @@ ul {
     overflow-y: auto;
 }
 
-#text-contain, .target-selector-exact {
-/*    text-align: justify; */
-}
-
 .container-scrollbar::-webkit-scrollbar {
     background-color: #aaa;
     width: 16px;
