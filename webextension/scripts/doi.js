@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, openByWindowSetting */
+/*   global hostURL, getUrlByParameter, openByWindowSetting */
 
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
@@ -86,6 +86,7 @@ function createPage () {
 if (typeof module !== 'undefined') {
   module.exports = {
     getMetadata,
-    makeEntry
+    makeEntry,
+    createPage
   }
 }
