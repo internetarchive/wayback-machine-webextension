@@ -83,8 +83,8 @@ function singlePageView() {
           // Get first tab
           if (!clickFeature) {
             clickFeature = featureTabId
-            //Set border for the first tab
-            $(clickFeature).children(0).css({'border-radius': '5px 5px 0 0'})
+            // Set border for the first tab
+            $(clickFeature).children(0).css({ 'border-radius': '5px 5px 0 0' })
           }
           // Open the selected tab if it is there
           if (openedFeature) {
@@ -102,8 +102,8 @@ function singlePageView() {
           }
         }
       }
-      //Set border for the last tab
-      $(lastFeatureTab).children(0).css({'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px'})
+      // Set border for the last tab
+      $(lastFeatureTab).children(0).css({ 'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px' })
       // Show error message if no context is selected
       if (countFeature <= 0) {
         $('#error-message').show()

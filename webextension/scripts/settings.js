@@ -1,10 +1,10 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, isNotExcludedUrl, private_before_state, searchValue, initPrivateState */
+/*   global attachTooltip, private_before_state, initPrivateState */
 
 // from 'popup.js'
-/*   global show_all_screens, openContextMenu, setupWaybackCount */
+/*   global setupWaybackCount */
 
 initPrivateState()
 $(initializeSettings)
@@ -16,7 +16,6 @@ $('#private-mode-setting').click(togglePrivateMode)
 document.getElementById('view-setting').addEventListener('click', switchTabWindow, true)
 $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
 $('input').change(saveOptions)
-$('#show_context').change(saveOptions)
 $('.back-btn').click(goBack)
 switchSetting()
 addDocs()
@@ -30,18 +29,18 @@ function restoreOptions(items) {
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
   /* First Panel */
-  $('#private-mode-setting').prop('checked', items.private_mode)
-  $('#not-found-setting').prop('checked', items.not_found_popup)
-  $('#wm-count-setting').prop('checked', items.wm_count)
-  $('#fact-check-setting').prop('checked', items.fact_check)
+  $('#private-mode-setting').prop('checked', items.private_mode_setting)
+  $('#not-found-setting').prop('checked', items.not_found_setting)
+  $('#wm-count-setting').prop('checked', items.wm_count_setting)
+  $('#fact-check-setting').prop('checked', items.fact_check_setting)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
   /* Second Panel */
-  $('#auto-archive-setting').prop('checked', items.auto_archive)
-  $('#email-outlinks-setting').prop('checked', items.email_outlinks)
-  $('#resource-list-setting').prop('checked', items.show_resource_list)
-  $(`input[name=view-input][value=${items.show_context}]`).prop('checked', true)
+  $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
+  $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
+  $('#resource-list-setting').prop('checked', items.resource_list_setting)
+  $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
   /* Set 'selected-prior' class to the previous state */
   for (let item of private_before_state) {
     $('#' + item).addClass('selected-prior')
@@ -54,35 +53,36 @@ function saveOptions() {
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
     /* First Panel */
-    private_mode: $('#private-mode-setting').prop('checked'),
-    not_found_popup: $('#not-found-setting').prop('checked'),
-    wm_count: $('#wm-count-setting').prop('checked'),
-    fact_check: $('#fact-check-setting').prop('checked'),
+    private_mode_setting: $('#private-mode-setting').prop('checked'),
+    not_found_setting: $('#not-found-setting').prop('checked'),
+    wm_count_setting: $('#wm-count-setting').prop('checked'),
+    fact_check_setting: $('#fact-check-setting').prop('checked'),
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     tvnews_setting: $('#tvnews-setting').prop('checked'),
     /* Second Panel */
-    auto_archive: $('#auto-archive-setting').prop('checked'),
-    email_outlinks: $('#email-outlinks-setting').prop('checked'),
-    show_resource_list: $('#resource-list-setting').prop('checked'),
-    show_context: $('input[name=view-input]:checked').val()
+    auto_archive_setting: $('#auto-archive-setting').prop('checked'),
+    email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
+    resource_list_setting: $('#resource-list-setting').prop('checked'),
+    view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
 
   // displays or clears the count badge, label, oldest and newest tooltips
   setupWaybackCount()
-  if (settings.wm_count === false) {
+  if (settings.wm_count_setting === false) {
     // additionally clear the cache if setting cleared
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
 
-  if (settings.fact_check === false) {
+  if (settings.fact_check_setting === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 
-/*function validate() {
+/*
+function validate() {
   let checkboxes = $('[name="context"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkboxes.length === checkedCount) {
@@ -97,7 +97,8 @@ function selectall() {
   for (var i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = $(this).prop('checked')
   }
-}*/
+}
+*/
 
 function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
@@ -141,6 +142,7 @@ function hideUiButtons() {
   }
 }
 
+/*
 function noneSelected() {
   let checkboxes = $('[name="context"]')
   for (var i = 0; i < checkboxes.length; i++) {
@@ -148,35 +150,12 @@ function noneSelected() {
   }
   return true
 }
+*/
 
 function goBack () {
   $('#login-page').hide()
   $('#setting-page').hide()
   $('#popup-page').show()
-/* TO REMOVE? Show Context button no longer exists.
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || tabs[0].url
-    // checking contexts selection status
-    if (noneSelected()) {
-      if (!$('#ctxbox').hasClass('flip-inside')) { $('#ctxbox').addClass('flip-inside') }
-      $('#contextBtn').off('click')
-      $('#contextBtn').attr('disabled', true)
-      if (isNotExcludedUrl(url)) {
-        $('#contextTip').click(openContextMenu)
-      }
-    } else {
-      if ($('#ctxbox').hasClass('flip-inside')) {
-        if (!isNotExcludedUrl(url)) {
-          $('#contextTip').text('URL not supported')
-        } else {
-          $('#ctxbox').removeClass('flip-inside')
-        }
-      }
-      $('#contextBtn').off('click').on('click', show_all_screens)
-      $('#contextBtn').removeAttr('disabled')
-    }
-  })
-*/
 }
 
 function switchSetting() {
@@ -229,5 +208,11 @@ function addDocs() {
       let docBtn = $('<button>').addClass('btn-docs').text('?')
       $(labels[i]).append(attachTooltip(docBtn, tt, 'top'))
     }
+  }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+
   }
 }

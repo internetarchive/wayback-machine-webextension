@@ -48,3 +48,9 @@ function addBook (metadata) {
   )
   return $('<div>').append(text_elements, details)
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    populateBooks
+  }
+}

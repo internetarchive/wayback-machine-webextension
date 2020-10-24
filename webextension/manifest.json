@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Wayback Machine",
-  "version": "3.0.0.16",
+  "version": "3.0",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/mini-icon16.png",
@@ -34,13 +34,11 @@
       "tabs",
       "webRequest",
       "webRequestBlocking",
-      "cookies",
       "https://archive.org/*",
       "https://*.archive.org/*",
-      "http://web.archive.org/*",
-      "http://crawl-services.us.archive.org:8200/*",
       "https://xml.alexa.com/*",
       "https://hypothes.is/*",
+      "https://data.our.news/api/*",
       "<all_urls>"
   ],
   "background": {
@@ -56,14 +54,9 @@
     }
   ],
   "web_accessible_resources": [
+    "css/*",
+    "fonts/*",
     "images/*",
-    "scripts/build.js",
-    "scripts/archive.js",
-    "scripts/RTcontent.js",
-    "css/RTstyle.css",
-    "css/sequences.css",
-    "css/googlestyle.css",
-    "css/radial-tree.css",
-    "css/archive.css"
+    "scripts/*"
   ]
 }

@@ -1,7 +1,7 @@
 // annotation.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, openByWindowSetting */
 
 /**
  * Prepare hypothes.is URL to request API.
@@ -52,9 +52,9 @@ function get_annotations(type = 'url') {
           $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in Context').click(() => {
             openByWindowSetting(rowData.links.incontext)
           })
-          //, $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in HTML').click(() => {
-          //  openByWindowSetting(rowData.links.html)
-          //})
+          // , $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in HTML').click(() => {
+          //   openByWindowSetting(rowData.links.html)
+          // })
         )
 
         if (rowData.target[0].hasOwnProperty('selector')) {

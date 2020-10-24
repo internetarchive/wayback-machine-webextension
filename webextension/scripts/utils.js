@@ -221,7 +221,7 @@ function makeValidURL(url) {
 // Also crops trailing slash.
 function cropPrefix(url) {
   if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/;
+  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
   let match = re.exec(url)
   return match[1]
 }
@@ -388,7 +388,7 @@ function getUrlByParameter(name) {
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
+    chrome.storage.local.get(['view_setting'], (event) => { opener(url, event.view_setting, cb) })
   } else {
     opener(url, op, cb)
   }
@@ -466,18 +466,18 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* Features */
-    private_mode: false,
-    not_found_popup: false,
-    wm_count: false,
+    private_mode_setting: false,
+    not_found_setting: false,
+    wm_count_setting: false,
     wiki_setting: false,
     amazon_setting: false,
     tvnews_setting: false,
-    auto_archive: false,
-    fact_check: false,
+    auto_archive_setting: false,
+    fact_check_setting: false,
     /* General */
-    show_resource_list: false,
-    email_outlinks: false,
-    show_context: 'tab',
+    resource_list_setting: false,
+    email_outlinks_setting: false,
+    view_setting: 'tab',
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -486,14 +486,14 @@ function initDefaultOptions () {
 function afterAcceptOptions () {
   chrome.storage.local.set({
     /* Features */
-    not_found_popup: true,
-    wm_count: true,
+    not_found_setting: true,
+    wm_count_setting: true,
     wiki_setting: true,
     amazon_setting: true,
     tvnews_setting: true,
-    fact_check: true,
+    fact_check_setting: true,
     /* General */
-    email_outlinks: true
+    email_outlinks_setting: true
   })
 }
 
@@ -517,7 +517,10 @@ if (typeof module !== 'undefined') {
     attachTooltip,
     getWaybackCount,
     badgeCountText,
+    isChrome,
     isFirefox,
+    isEdge,
+    isSafari,
     hostURL,
     timestampToDate,
     dateToTimestamp,

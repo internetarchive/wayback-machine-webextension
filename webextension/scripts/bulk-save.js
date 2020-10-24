@@ -5,7 +5,7 @@
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
-const MAX_SAVES = 5-1
+const MAX_SAVES = 5 - 1
 let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
@@ -69,7 +69,7 @@ function importAllBookmarks() {
   if (chrome.bookmarks) {
     chrome.bookmarks.getTree((nodeTree) => {
       nodeTree.forEach((node) => {
-          processTreeNode(node)
+        processTreeNode(node)
       })
     })
   }
@@ -101,23 +101,22 @@ function addToBulkSave(url) {
 
 // Click handler to Add URLs to Bulk Save.
 function doAddURLs(e) {
-    $('#empty-list-err').hide()
-    let text = document.getElementById('add-url-area').value
-    let c = 0
-    let addedURLs = text.split('\n')
-    for (let elem of addedURLs) {
-      let url = makeValidURL(elem)
-      if (url && !url.includes(' ') && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
-        addToBulkSave(url)
-        c++
-      }
+  $('#empty-list-err').hide()
+  let text = document.getElementById('add-url-area').value
+  let c = 0
+  let addedURLs = text.split('\n')
+  for (let elem of addedURLs) {
+    let url = makeValidURL(elem)
+    if (url && !url.includes(' ') && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
+      addToBulkSave(url)
+      c++
     }
-    if (c == 0) {
-      alert('Please enter valid website addresses.')
-    }
-    document.getElementById('add-url-area').value = ''
+  }
+  if (c === 0) {
+    alert('Please enter valid website addresses.')
+  }
+  document.getElementById('add-url-area').value = ''
 }
-
 
 // Click handler to Remove a URL from Bulk Save.
 function doRemoveURL(e) {
@@ -136,8 +135,8 @@ function doClearAll(e) {
 
 // Returns true if URL is already in Bulk Save.
 function isDuplicateURL(url) {
-    let curl = cropPrefix(url)
-    return (curl in bulkSaveObj) ? true : false
+  let curl = cropPrefix(url)
+  return (curl in bulkSaveObj)
 }
 
 // Listens to SPN response messages from background.js.
@@ -171,7 +170,7 @@ function doBulkSaveAll(e) {
   $('#total-count').text(totalUrlCount)
   // start saving concurrently
   startSaving()
-  for (let i=0; i < MAX_SAVES; i++) {
+  for (let i = 0; i < MAX_SAVES; i++) {
     saveNextInQueue()
   }
 }

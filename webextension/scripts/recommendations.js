@@ -1,5 +1,8 @@
 // recommendations.js
 
+// from 'utils.js'
+/*   global openByWindowSetting */
+
 const threshold = 0.85
 
 function parseDate (date) {
@@ -20,18 +23,7 @@ function constructArticles (clip) {
     $('<a>').attr({ 'href': '#' }).append(
       $('<img class="preview-clips">').attr({ 'src': clip.preview_thumb })
     ).click(() => {
-      chrome.storage.local.get(['show_context'], (event1) => {
-        if (event1.show_context === undefined) {
-          event1.show_context = 'tab'
-        }
-        if (event1.show_context === 'tab') {
-          chrome.tabs.create({ url: clip.preview_url })
-        } else {
-          let width = window.screen.availWidth
-          let height = window.screen.availHeight
-          chrome.windows.create({ url: clip.preview_url, width: width / 2, height: height, top: 0, left: 0, focused: true })
-        }
-      })
+      openByWindowSetting(clip.preview_url)
     }),
     $('<p>').text(parseDate(clip.show_date))
   )
@@ -82,6 +74,7 @@ function getArticles(url) {
 
 if (typeof module !== 'undefined') {
   module.exports = {
+    getArticles,
     parseDate
   }
 }

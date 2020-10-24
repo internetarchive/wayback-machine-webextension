@@ -1,7 +1,7 @@
 // domaintools.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global getUrlByParameter, hostURL */
 
 function appendToParent (id, item, text_before, parent, show_item, text_after) {
   if (item) {
@@ -15,7 +15,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
 
 function get_domainTool () {
   let url = decodeURIComponent(getUrlByParameter('url'))
-  let domaintools_api = hostURL+'context/domaintools?url=' + url
+  let domaintools_api = hostURL + 'context/domaintools?url=' + url
   $.getJSON(domaintools_api, (data) => {
     let parent = $('#show_domaintools_data')
     if (data.status !== 'error') {
@@ -44,4 +44,5 @@ function get_domainTool () {
     $('#show_domaintools_data').text('Data not available')
   })
 }
-if (typeof module !== 'undefined') { module.exports = { appendToParent } }
+
+if (typeof module !== 'undefined') { module.exports = { appendToParent, get_domainTool } }

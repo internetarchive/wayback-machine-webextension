@@ -87,7 +87,7 @@ function createDonateToolTip (isbn) {
 
 function createReadToolTip (id, metadata) {
   return $('<a>')
-    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank'  })
+    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank' })
     .append(
       $('<div>')
         .addClass('text-elements')
@@ -162,4 +162,10 @@ function getWikipediaBooks (url) {
       }
     })
   })
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    addCitations
+  }
 }
