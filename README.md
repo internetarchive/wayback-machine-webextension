@@ -99,13 +99,14 @@ If you have a GitHub account, please check the [list of existing issues](https:/
 
 *This step is not required if you only want to try out the extension.*
 
-To setup the testing environment, run `npm install` to install required packages.
+- To setup the testing environment, run `npm install` to install required packages.
 This should create directory `node_modules` and populate it with modules.
 
-To run tests, execute `npm test`.
+- To run tests, execute `npm test`.
 
-When writing a test for `example.js`, create a new file in the test directory
-named `example.spec.js`.
+- When writing a test for `example.js` create a new file in the test directory named `example.spec.js`.
+
+- To recreate the `/webextension/scripts/build.js` file run `npm run-script build` which will run webpack.
 
 This has been tested using `node v10.11.0` and `npm 6.4.1`.
 
