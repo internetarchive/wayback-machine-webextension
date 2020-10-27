@@ -162,6 +162,14 @@ function social_share(eventObj) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
       } else if (id.includes('linkedin-share-btn')) {
         openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
+      } else if (id.includes('copy-link-btn')) {
+        navigator.clipboard.writeText(sharing_url).then(() => {
+          let copiedMessage = document.getElementById('link-copied-message')
+          copiedMessage.innerText = 'Link Copied!'
+          setTimeout(() => {
+            copiedMessage.innerText = ''
+          }, 1500)
+        })
       }
     }
   })
@@ -229,7 +237,7 @@ function arrow_key_access() {
         search_box.value = index.textContent
       }
 
-    // listen for down key
+      // listen for down key
     } else if (e.keyCode === 40 || e.which === 40) {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
@@ -355,15 +363,15 @@ function borrow_books() {
             } else {
               // if not, fetch it again
               fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-              .then(res => res.json())
-              .then(response => {
-                if (response['metadata'] && response['metadata']['identifier-access']) {
-                  const new_details_url = response['metadata']['identifier-access']
-                  $('#readbook-btn').click(() => {
-                    openByWindowSetting(new_details_url, context)
-                  })
-                }
-              })
+                .then(res => res.json())
+                .then(response => {
+                  if (response['metadata'] && response['metadata']['identifier-access']) {
+                    const new_details_url = response['metadata']['identifier-access']
+                    $('#readbook-btn').click(() => {
+                      openByWindowSetting(new_details_url, context)
+                    })
+                  }
+                })
             }
           })
         }
@@ -582,6 +590,7 @@ $('#oldest-btn').click(first_capture)
 $('#facebook-share-btn').click(social_share)
 $('#twitter-share-btn').click(social_share)
 $('#linkedin-share-btn').click(social_share)
+$('#copy-link-btn').click(social_share)
 $('#tweets-btn').click(search_tweet)
 $('#about-tab-btn').click(about_support)
 $('#donate-tab-btn').click(open_donations_page)
