@@ -487,13 +487,13 @@ function afterAcceptOptions () {
   chrome.storage.local.set({
     /* Features */
     not_found_setting: true,
-    wm_count_setting: true,
-    wiki_setting: true,
-    amazon_setting: true,
-    tvnews_setting: true,
-    fact_check_setting: true,
+    wm_count_setting: false,
+    wiki_setting: false,
+    amazon_setting: false,
+    tvnews_setting: false,
+    fact_check_setting: false,
     /* General */
-    email_outlinks_setting: true
+    email_outlinks_setting: false
   })
 }
 
