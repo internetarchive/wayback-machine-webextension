@@ -390,39 +390,49 @@ a.btn-social, .btn-social {
 /* dark mode */
 
 @media (prefers-color-scheme: dark) {
+
     body {
         background-color: #2C2C2C;
         color: #eee;
     }
+
     .chk-options:hover {
         background-color: #503838;
     }
+
     .chk-frame {
         border: 1px solid #744;
         border-top: none;
         background-color: #3c2c2c;
     }
+
     .tab-icon {
         color: #bbb;
     }
+
     .donate-icon-svg {
         /* check above on how to calculate this */
         filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(83%) contrast(89%);
     }
+
     #search-input, .login-input {
         background-color: #222;
         border-color: #666;
         color: #ddd;
     }
+
     #wayback-count-msg, #url-not-supported-msg, #using-search-msg {
         color: #eee;
     }
+
     #suggestion-box {
         background-color: #2C2C2C;
         color: #eee;
         border: 1px solid #666;
     }
+
     #suggestion-box div:hover, .focused {
         background-color: #666;
     }
+
 }
