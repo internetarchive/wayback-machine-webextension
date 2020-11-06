@@ -87,6 +87,25 @@ body {
     color: #222;
 }
 
+.link-copied-block {
+    position: relative;
+    text-align: center;
+}
+
+#link-copied-msg {
+    display: none;
+    color: #eee;
+    background-color: #222222dd;
+    font-size: 9pt;
+    padding: 5px 10px;
+    position: absolute;
+    border-radius: 5px;
+    top: 14px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
 /* general */
 
 .resize-fit-center {

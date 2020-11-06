@@ -162,12 +162,12 @@ function social_share(eventObj) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
       } else if (id.includes('linkedin-share-btn')) {
         openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
-      } else if (id.includes('copy-link-btn')) {
+      } else if (id.includes('copy-link-btn') && navigator.clipboard) {
         navigator.clipboard.writeText(sharing_url).then(() => {
-          let copiedMessage = document.getElementById('link-copied-message')
-          copiedMessage.innerText = 'Link Copied!'
+          let copiedMsg = $('#link-copied-msg')
+          copiedMsg.text('Copied to Clipboard').fadeIn('fast')
           setTimeout(() => {
-            copiedMessage.innerText = ''
+            copiedMsg.fadeOut('fast')
           }, 1500)
         })
       }
