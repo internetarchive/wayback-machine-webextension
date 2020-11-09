@@ -42,15 +42,30 @@
       "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/utils.js",
-                "scripts/background.js"],
+    "scripts": [
+      "scripts/browser-polyfill.js",
+      "scripts/utils.js",
+      "scripts/background.js"
+    ],
     "persistent": true
   },
   "content_scripts": [
     {
-      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
-      "js": ["scripts/build.js", "scripts/utils.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
-      "css": ["css/style.css", "css/wikipedia.css"]
+      "matches": [
+        "http://*.wikipedia.org/*",
+        "https://*.wikipedia.org/*"
+      ],
+      "js": [
+        "scripts/browser-polyfill.js",
+        "scripts/build.js",
+        "scripts/utils.js",
+        "scripts/wikipedia.js",
+        "scripts/wikipedia_loader.js"
+      ],
+      "css": [
+        "css/style.css",
+        "css/wikipedia.css"
+      ]
     }
   ],
   "web_accessible_resources": [
