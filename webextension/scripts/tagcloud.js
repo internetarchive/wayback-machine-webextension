@@ -8,7 +8,7 @@
 
 var mynewTags = []
 
-function get_tags() {
+function getTags() {
   const url = decodeURIComponent(getUrlByParameter('url'))
   var hostname = new URL(url).hostname
   var toBeUsedAsURL = hostname.replace(/^www./, '')
@@ -115,7 +115,7 @@ function toConsumableArray (arr) {
   }
 }
 
-window.onload = get_tags
+window.onload = getTags
 
 if (typeof module !== 'undefined') {
   module.exports = {

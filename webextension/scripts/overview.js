@@ -3,15 +3,15 @@
 // from 'utils.js'
 /*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
 
-function get_WBMSummary () {
+function getWBMSummary () {
   var url = decodeURIComponent(getUrlByParameter('url'))
-  get_details(url)
-  first_archive_details(url)
-  recent_archive_details(url)
+  getDetails(url)
+  firstArchiveDetails(url)
+  recentArchiveDetails(url)
   $('#loader_wbmsummary').hide()
 }
 
-function get_details (url) {
+function getDetails (url) {
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     if ('type' in response) {
@@ -27,7 +27,7 @@ function get_details (url) {
     .text(captures.toLocaleString())
     if (captures > 0) {
       $('#total_captures').show()
-      get_thumbnail(url)
+      getThumbnail(url)
     } else {
       $('#loader_thumbnail').hide()
       $('#show_thumbnail').text('Thumbnail not found.').show()
@@ -35,7 +35,7 @@ function get_details (url) {
   })
 }
 
-function first_archive_details (url) {
+function firstArchiveDetails (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
@@ -51,7 +51,7 @@ function first_archive_details (url) {
   .fail(() => $('#first_archive_datetime_error').text('Data not available'))
 }
 
-function recent_archive_details (url) {
+function recentArchiveDetails (url) {
   var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
@@ -67,7 +67,7 @@ function recent_archive_details (url) {
   .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
 }
 // Function used to get the thumbnail of the URL
-function get_thumbnail (url) {
+function getThumbnail (url) {
   // Add to manifest permissions to use: "http://crawl-services.us.archive.org:8200/*"
   var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
@@ -94,4 +94,4 @@ function get_thumbnail (url) {
 const url = decodeURIComponent(getUrlByParameter('url'))
 $('.url').text(url).attr('href', url)
 
-window.onload = get_WBMSummary
+window.onload = getWBMSummary

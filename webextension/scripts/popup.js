@@ -8,7 +8,7 @@ function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
 
-function save_now() {
+function saveNow() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     let options = ['capture_all']
@@ -72,7 +72,7 @@ function loginSuccess() {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (isNotExcludedUrl(url)) {
-        $('#spn-btn').click(save_now)
+        $('#spn-btn').click(saveNow)
         chrome.storage.local.get(['private_mode_setting'], (event) => {
           // auto save page
           if (!event.private_mode_setting) {
