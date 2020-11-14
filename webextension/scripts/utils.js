@@ -98,6 +98,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
     }),
     body: requestParams
   })
+    // FIXME: Safari: "Unhandled Promise Rejection: SyntaxError"
     .then(response => response.json())
     .then((json) => {
       let wayback_url = getWaybackUrlFromResponse(json)
@@ -297,6 +298,9 @@ function notify(message, callback) {
     message: message,
     iconUrl: browser.extension.getURL('images/app-icon/app-icon96.png')
   }
+  // FIXME: Safari: "Unhandled Promise Rejection: TypeError: undefined is not an object"
+  // maybe create a polyfill? browser.prototype.notifications = { create: function(...) } ??
+  browser.notifications && /* for Safari */
   browser.notifications.create(options, callback)
 }
 
