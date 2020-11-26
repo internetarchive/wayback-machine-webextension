@@ -277,13 +277,19 @@ function getTvNews(Url, onSuccess, onFail) {
       if (onFail) { onFail(error) }
     })
 }
+// variable to check the api call state
+let wiki_function_call = false
 
 function getCachedWikipediaBooks(url, onSuccess, onFail) {
+  wiki_function_call = true
   let cacheWikipediaBooks = wikipediaBooksCache.get(url)
   if (cacheWikipediaBooks) {
+    wiki_function_call = false
     onSuccess(cacheWikipediaBooks)
   } else {
+    wiki_function_call = true
     getWikipediaBooks(url, (json) => {
+      wiki_function_call = false
       if (wikipediaBooksCache.size > 2) {
         let first_key = wikipediaBooksCache.keys().next().value
         wikipediaBooksCache.delete(first_key)
@@ -501,17 +507,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
-    getCachedWikipediaBooks(message.query,
-      (json) => { sendResponse(json) },
-      (error) => { sendResponse({ error: error }) }
-    )
+    let intervalId = setInterval(function() {
+      if (!wiki_function_call) {
+        getCachedWikipediaBooks(message.query,
+          (json) => { sendResponse(json) },
+          (error) => { sendResponse({ error: error }) }
+        )
+        clearInterval(intervalId)
+      }
+    }, 1000)
   } else if (message.message === 'tvnews') {
     // retrieve tv news clips
     getCachedTvNews(message.article,
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
     )
-
   } else if (message.message === 'sendurl') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
@@ -605,13 +615,19 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     const news_host = new URL(clean_url).hostname
 
     if (clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      getCachedWikipediaBooks(clean_url,
-        (data) => {
-          if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
-            addToolbarState(tabId, 'R')
-          }
-        }, () => {}
-      )
+      let intervalId = setInterval(function() {
+        if (!wiki_function_call) {
+          getCachedWikipediaBooks(clean_url,
+            (data) => {
+              if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
+                //FIXME: Toolbar State is not updating
+                addToolbarState(tabId, 'R')
+                clearInterval(intervalId)
+              }
+            }, () => {}
+          )
+        }
+      }, 1000)
     // checking resource of tv news
     } else if (newshosts.has(news_host)) {
       getCachedTvNews(clean_url,
@@ -621,7 +637,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           }
         }, () => {}
       )
-      addToolbarState(tabId, 'R')  // TODO: comment this out to disable TV News check
+      addToolbarState(tabId, 'R') // TODO: comment this out to disable TV News check
     }
   } else if (info.status === 'loading') {
     var received_url = tab.url
