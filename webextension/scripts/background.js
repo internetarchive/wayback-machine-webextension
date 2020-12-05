@@ -406,7 +406,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // get most recent saved time, remove hash for some sites
     const url = message.page_url.split('#')[0]
     let cached_value = waybackCountCache[url]
-    if(!cached_value){
+    if (!cached_value) {
       wmAvailabilityCheck(url,
         (wb_url, url, timestamp) => {
           sendResponse({
