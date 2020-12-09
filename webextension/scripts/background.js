@@ -403,10 +403,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     }
   } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time, remove hash for some sites
-    const url = message.page_url.split('#')[0]
+    // get most recent saved time
+    const url = message.page_url
     let cached_value = waybackCountCache[url]
-    if (!cached_value) {
+    if (cached_value && cached_value.last_ts) {
+      sendResponse({
+        message: 'last_save',
+        timestamp: cached_value.last_ts
+      })
+    } else {
       wmAvailabilityCheck(url,
         (wb_url, url, timestamp) => {
           sendResponse({
@@ -420,11 +425,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             timestamp: ''
           })
         })
-    } else {
-      sendResponse({
-        message: 'last_save',
-        timestamp: cached_value.last_ts
-      })
     }
     return true
   } else if (message.message === 'auth_check') {
