@@ -317,13 +317,13 @@ chrome.browserAction.onClicked.addListener((tab) => {
   openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
 })
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
+browser.webRequest.onBeforeSendHeaders.addListener(
   rewriteUserAgentHeader,
   { urls: [WB_API_URL] },
   ['blocking', 'requestHeaders']
 )
 
-chrome.webRequest.onErrorOccurred.addListener((details) => {
+browser.webRequest.onErrorOccurred.addListener((details) => {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
@@ -345,37 +345,31 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 /**
 * Header callback
 */
-chrome.webRequest.onCompleted.addListener((details) => {
+browser.webRequest.onCompleted.addListener((details) => {
   function tabIsReady(tabId) {
     if (details.frameId === 0 &&
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(tabId, {
-          file: 'scripts/archive.js'
+        // inject code into page
+        browser.tabs.executeScript(tabId, { file: '/scripts/archive.js' }).then(() => {
+          // success
+          browser.tabs.sendMessage(tabId, {
+            type: 'SHOW_BANNER',
+            wayback_url: wayback_url,
+            page_url: details.url,
+            status_code: details.statusCode
+          })
         }, () => {
-          if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.sendMessage(tabId, {
-              type: 'SHOW_BANNER',
-              wayback_url: wayback_url,
-              page_url: url,
-              status_code: 999
-            })
-          } else {
-            chrome.tabs.sendMessage(tabId, {
-              type: 'SHOW_BANNER',
-              wayback_url: wayback_url,
-              page_url: details.url,
-              status_code: details.statusCode
-            })
-          }
+          // error
+          console.log('Could not inject banner. statusCode: ' + details.statusCode)
         })
       }, () => {})
     }
   }
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
-      chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+      browser.storage.local.get(['not_found_setting', 'agreement'], (event) => {
         if ((event.not_found_setting === true) && (event.agreement === true)) {
           tabIsReady(tabs[0].id)
         }
