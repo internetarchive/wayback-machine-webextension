@@ -403,21 +403,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     }
   } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time, remove hash for some sites
-    const url = message.page_url.split('#')[0]
-    wmAvailabilityCheck(url,
-      (wb_url, url, timestamp) => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: timestamp
-        })
-      },
-      () => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: ''
-        })
+    // get most recent saved time
+    const url = message.page_url
+    let cached_value = waybackCountCache[url]
+    if (cached_value && cached_value.last_ts) {
+      sendResponse({
+        message: 'last_save',
+        timestamp: cached_value.last_ts
       })
+    } else {
+      wmAvailabilityCheck(url,
+        (wb_url, url, timestamp) => {
+          sendResponse({
+            message: 'last_save',
+            timestamp: timestamp
+          })
+        },
+        () => {
+          sendResponse({
+            message: 'last_save',
+            timestamp: ''
+          })
+        })
+    }
     return true
   } else if (message.message === 'auth_check') {
     // auth check using cookies

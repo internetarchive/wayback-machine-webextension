@@ -71,7 +71,7 @@ function loginSuccess() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
-      if (isNotExcludedUrl(url)) {
+      if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         $('#spn-btn').click(save_now)
         chrome.storage.local.get(['private_mode_setting'], (event) => {
           // auto save page
