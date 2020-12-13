@@ -405,8 +405,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
     getCachedWaybackCount(message.page_url,
-      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts })},
-      (error) => { sendResponse({ message: 'last_save', timestamp: '' })}
+      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
+      () => { sendResponse({ message: 'last_save', timestamp: '' }) }
     )
     return true
   } else if (message.message === 'auth_check') {
