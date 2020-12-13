@@ -404,28 +404,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
-    const url = message.page_url
-    let cached_value = waybackCountCache[url]
-    if (cached_value && cached_value.last_ts) {
-      sendResponse({
-        message: 'last_save',
-        timestamp: cached_value.last_ts
-      })
-    } else {
-      wmAvailabilityCheck(url,
-        (wb_url, url, timestamp) => {
-          sendResponse({
-            message: 'last_save',
-            timestamp: timestamp
-          })
-        },
-        () => {
-          sendResponse({
-            message: 'last_save',
-            timestamp: ''
-          })
-        })
-    }
+    getCachedWaybackCount(message.page_url,
+      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts })},
+      (error) => { sendResponse({ message: 'last_save', timestamp: '' })}
+    )
     return true
   } else if (message.message === 'auth_check') {
     // auth check using cookies
@@ -523,7 +505,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
       (values) => { sendResponse(values) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
@@ -531,7 +513,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve fact check results
     getCachedFactCheck(message.url,
       (json) => { sendResponse(json) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   }
   return true
