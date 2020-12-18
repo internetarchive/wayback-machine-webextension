@@ -367,14 +367,18 @@ browser.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true })
+  .then((tabs) => {
     if (tabs && tabs[0]) {
-      browser.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+      browser.storage.local.get(['not_found_setting', 'agreement'])
+      .then((event) => {
         if ((event.not_found_setting === true) && (event.agreement === true)) {
           tabIsReady(tabs[0].id)
         }
-      })
+      }, (error) => {})
     }
+  }, (error) => {
+    console.log(`Error: ${error}`)
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
