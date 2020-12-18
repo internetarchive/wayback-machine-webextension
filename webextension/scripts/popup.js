@@ -9,7 +9,7 @@ function homepage() {
 }
 
 function save_now() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     let options = ['capture_all']
     if ($('#chk-outlinks').prop('checked') === true) {
@@ -51,7 +51,7 @@ function loginError() {
   $('#spn-btn').off('click').click(() => {
     show_login_page()
   })
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (!isNotExcludedUrl(url)) {
@@ -68,7 +68,7 @@ function loginSuccess() {
   $('#spn-btn').off('click')
   $('#bulk-save-btn').removeAttr('disabled')
   $('#bulk-save-btn').click(bulkSave)
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (isNotExcludedUrl(url)) {
@@ -102,7 +102,7 @@ function checkAuthentication(callback) {
 }
 
 function recent_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -114,7 +114,7 @@ function recent_capture() {
 }
 
 function first_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -126,7 +126,7 @@ function first_capture() {
 }
 
 function view_all() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -147,7 +147,7 @@ function social_share(eventObj) {
   let timestamp = dateToTimestamp(new Date())
   let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
 
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || tabs[0].url
     let sharing_url
     if (url.includes('web.archive.org')) {
@@ -176,7 +176,7 @@ function social_share(eventObj) {
 }
 
 function search_tweet() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
       url = url.replace(/^https?:\/\//, '')
@@ -316,7 +316,7 @@ function about_support() {
 }
 
 function sitemap() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
   })
@@ -336,14 +336,14 @@ function show_login_page() {
 }
 
 function show_all_screens() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
 
 function borrow_books() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -381,7 +381,7 @@ function borrow_books() {
 }
 
 function show_news() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
     const news_host = new URL(url).hostname
     chrome.storage.local.get(['view_setting'], function (event) {
@@ -404,7 +404,7 @@ function show_news() {
 }
 
 function show_wikibooks() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -427,7 +427,7 @@ function show_wikibooks() {
 }
 
 function setUpFactCheck() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
       chrome.storage.local.get(['fact_check_setting'], (event) => {
@@ -448,7 +448,7 @@ function setUpFactCheck() {
 // Common function to show different context
 function showContext(eventObj) {
   let id = eventObj.target.getAttribute('id')
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       if (id.includes('fact-check-btn')) {
@@ -483,7 +483,7 @@ function clearFocus() {
 
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (event) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       let url = tabs[0].url
       if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
@@ -536,7 +536,7 @@ function bulkSave() {
 }
 
 function setupSaveButton() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
       let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
@@ -557,7 +557,7 @@ chrome.storage.local.get(['view_setting'], (event) => { $(`input[name=tw][value=
 // respond to Save Page Now success
 chrome.runtime.onMessage.addListener(
   (message) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       let atab = message.atab
       if (atab && atab.id && (atab.id === tabs[0].id)) {
         if (message.message === 'save_success') {

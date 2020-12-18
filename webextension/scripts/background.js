@@ -367,15 +367,13 @@ browser.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  browser.tabs.query({ active: true, currentWindow: true })
-  .then((tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     if (tabs && tabs[0]) {
-      browser.storage.local.get(['not_found_setting', 'agreement'])
-      .then((event) => {
+      browser.storage.local.get(['not_found_setting', 'agreement']).then((event) => {
         if ((event.not_found_setting === true) && (event.agreement === true)) {
           tabIsReady(tabs[0].id)
         }
-      }, (error) => {})
+      })
     }
   }, (error) => {
     console.log(`Error: ${error}`)
@@ -453,7 +451,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => sendResponse(error))
     return true
   } else if (message.message === 'sendurl') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs && tabs[0]) {
         let url = get_clean_url(tabs[0].url)
         chrome.tabs.sendMessage(tabs[0].id, { url: url })
@@ -472,21 +470,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ stateArray: Array.from(state) })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs && tabs[0]) {
         updateWaybackCountBadge(tabs[0], null)
       }
     })
   } else if (message.message === 'updateCountBadge') {
     // update wayback count badge
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs && tabs[0]) {
         let url = get_clean_url(tabs[0].url)
         updateWaybackCountBadge(tabs[0], url)
       }
     })
   } else if (message.message === 'clearResource') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs && tabs[0]) {
         if (message.settings) {
           // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
@@ -504,7 +502,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
   } else if (message.message === 'clearFactCheck') {
     // fact check settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs && tabs[0]) {
         removeToolbarState(tabs[0], 'F')
       }
@@ -549,7 +547,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.local.get(['wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
         // checking resources
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
           if (tabs && tabs[0]) {
             const url = get_clean_url(tabs[0].url)
             const atab = tabs[0]
@@ -774,7 +772,7 @@ function updateToolbar(atab) {
   if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
-  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
+  browser.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }).then((tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
       let state = gToolbarStates[tabKey]
       // this order defines the priority of what icon to display
@@ -822,7 +820,7 @@ chrome.contextMenus.create({
 })
 
 chrome.contextMenus.onClicked.addListener((click) => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
       const page_url = get_clean_url(click.linkUrl) || get_clean_url(tabs[0].url)
       let wayback_url
