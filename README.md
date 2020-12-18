@@ -1,17 +1,17 @@
 # Wayback Machine Web Browser Extension
 
-In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official WayBack Machine Extension*. With the power of the WayBack Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
+In co-operation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official WayBack Machine Extension*. With the power of the WayBack Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
 
 ![screenshot](graphics/screenshots/popups.png)
 
 
 ## Features
 
-- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved. Must be logged in to use.
-- **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
+- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. You can turn on *Auto Save Page* in settings to save pages that have not previously been saved. You Must be logged in to use.
+- **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine, Or view a calendar overview of all archived pages.
 - **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
 - **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
-- **Fact Checks** - Provides a list of fact checkers who have analyzed the web page you visit for misinformation, provided by [our.news](https://our.news/).
+- **Fact Checks** - Provides a list of fact checkers who have analyzed the web page you visited for misinformation, provided by [our.news](https://our.news/).
 - **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
 - **Relevant Resources** - View archived digitized books while visiting *Amazon Books*, research papers and books while visiting *Wikipedia*, and recommended *TV News Clips* while visiting news websites.
 - **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
