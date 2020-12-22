@@ -6,6 +6,8 @@
   },
   "rules": {
     "indent": ["warn", 2, {"SwitchCase": 1, "MemberExpression": "off"} ],
+    "brace-style": "off",
+    "no-useless-escape": "warn",
     "camelcase": "off",
     "space-before-function-paren": "off"
   },

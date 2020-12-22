@@ -489,7 +489,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.settings) {
           // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
           const news_host = new URL(tabs[0].url).hostname
-          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
+          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
               ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
             removeToolbarState(tabs[0], 'R')
@@ -563,7 +563,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                     chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
                   }
                 })
-            } else if (settings.wiki_setting && url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+            } else if (settings.wiki_setting && url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
               // show button for Wikipedia books and papers
               addToolbarState(atab, 'R')
             } else if (settings.tvnews_setting && newshosts.has(news_host)) {
@@ -587,7 +587,7 @@ chrome.tabs.onActivated.addListener((info) => {
       }
       // wiki_setting settings unchecked
       if (settings.wiki_setting === false && getToolbarState(tab).has('R')) {
-        if (tab.url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
+        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
       if (settings.amazon_setting === false && getToolbarState(tab).has('R')) {
@@ -631,7 +631,7 @@ function factCheckPage(atab, url) {
           addToolbarState(atab, 'F')
         }
       },
-      (error) => {}
+      () => {}
     )
   }
 }

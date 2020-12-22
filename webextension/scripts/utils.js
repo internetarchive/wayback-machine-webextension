@@ -221,7 +221,7 @@ function makeValidURL(url) {
 // Also crops trailing slash.
 function cropPrefix(url) {
   if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
+  let re = /^(?:[a-z]+:\/\/)?(?:www\.)?(.*)$/
   let match = re.exec(url)
   return match[1]
 }

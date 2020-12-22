@@ -55,58 +55,58 @@ function singlePageView() {
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud', 'selectedFeature']
   browser.storage.local.get(features).then((settings) => {
-      let openedFeature = settings.selectedFeature
-      let clickFeature = null
-      let countFeature = 0
-      let lastFeatureTab = null
-      for (let i = 0; i < features.length; i++) {
-        let feature = features[i]
-        let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
-        let featureTabId = featureId + '_tab'
+    let openedFeature = settings.selectedFeature
+    let clickFeature = null
+    let countFeature = 0
+    let lastFeatureTab = null
+    for (let i = 0; i < features.length; i++) {
+      let feature = features[i]
+      let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
+      let featureTabId = featureId + '_tab'
 
-        if (settings[feature]) {
-          countFeature++
-          lastFeatureTab = featureTabId
-          // Show sidebar menu
-          $('#side-nav-bar').show()
-          // Show selected features in menu
-          $(featureTabId).show()
-          contexts_dic[feature]()
-          $(featureTabId).click((event) => {
-            // When clicked on a context tab, open that tab and set that tab as selectedFeature
-            openContextFeature(event, featureId)
-            let selectedFeature = featureTabId
-            chrome.storage.local.set({ selectedFeature }, () => {
-            })
+      if (settings[feature]) {
+        countFeature++
+        lastFeatureTab = featureTabId
+        // Show sidebar menu
+        $('#side-nav-bar').show()
+        // Show selected features in menu
+        $(featureTabId).show()
+        contexts_dic[feature]()
+        $(featureTabId).click((event) => {
+          // When clicked on a context tab, open that tab and set that tab as selectedFeature
+          openContextFeature(event, featureId)
+          let selectedFeature = featureTabId
+          chrome.storage.local.set({ selectedFeature }, () => {
           })
-          // Get first tab
-          if (!clickFeature) {
-            clickFeature = featureTabId
-            // Set border for the first tab
-            $(clickFeature).children(0).css({ 'border-radius': '5px 5px 0 0' })
-          }
-          // Open the selected tab if it is there
-          if (openedFeature) {
-            // Open the first tab if last selected tab is hidden now
-            if (openedFeature !== featureTabId) {
-              $(clickFeature).click()
-            } else {
-              // Open the previously selected tab
-              clickFeature = openedFeature
-              $(clickFeature).click()
-            }
+        })
+        // Get first tab
+        if (!clickFeature) {
+          clickFeature = featureTabId
+          // Set border for the first tab
+          $(clickFeature).children(0).css({ 'border-radius': '5px 5px 0 0' })
+        }
+        // Open the selected tab if it is there
+        if (openedFeature) {
+          // Open the first tab if last selected tab is hidden now
+          if (openedFeature !== featureTabId) {
+            $(clickFeature).click()
           } else {
-            // Open first tab if user is accesing Contexts Page for the first time
+            // Open the previously selected tab
+            clickFeature = openedFeature
             $(clickFeature).click()
           }
+        } else {
+          // Open first tab if user is accesing Contexts Page for the first time
+          $(clickFeature).click()
         }
       }
-      // Set border for the last tab
-      $(lastFeatureTab).children(0).css({ 'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px' })
-      // Show error message if no context is selected
-      if (countFeature <= 0) {
-        $('#error-message').show()
-      }
+    }
+    // Set border for the last tab
+    $(lastFeatureTab).children(0).css({ 'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px' })
+    // Show error message if no context is selected
+    if (countFeature <= 0) {
+      $('#error-message').show()
+    }
   })
 }
 

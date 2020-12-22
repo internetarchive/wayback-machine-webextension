@@ -406,7 +406,7 @@ function show_news() {
 function show_wikibooks() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
-    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+    if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
