@@ -41,8 +41,8 @@ let searchValue
 let private_before_state
 
 function initPrivateState() {
-  chrome.storage.local.get(['private_before_state'], (event) => {
-    private_before_state = new Set(event.private_before_state)
+  browser.storage.local.get(['private_before_state']).then((settings) => {
+    private_before_state = new Set(settings.private_before_state)
   })
 }
 
@@ -388,7 +388,7 @@ function getUrlByParameter(name) {
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.local.get(['view_setting'], (event) => { opener(url, event.view_setting, cb) })
+    browser.storage.local.get(['view_setting']).then((settings) => { opener(url, settings.view_setting, cb) })
   } else {
     opener(url, op, cb)
   }

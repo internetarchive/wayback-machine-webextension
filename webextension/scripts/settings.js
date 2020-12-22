@@ -21,7 +21,9 @@ switchSetting()
 addDocs()
 
 function initializeSettings() {
-  chrome.storage.local.get(null, restoreOptions)
+  browser.storage.local.get(null).then((settings) => {
+    restoreOptions(settings)
+  })
 }
 
 function restoreOptions(items) {

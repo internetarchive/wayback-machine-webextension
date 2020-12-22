@@ -3,8 +3,8 @@
 // from 'wikipedia.js'
 /*   global addCitations */
 
-chrome.storage.local.get(['wiki_setting'], (event) => {
-  if (event.wiki_setting) {
+browser.storage.local.get(['wiki_setting']).then((settings) => {
+  if (settings.wiki_setting) {
     addCitations()
   }
 })
