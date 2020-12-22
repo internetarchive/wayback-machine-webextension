@@ -68,7 +68,7 @@ function saveOptions() {
     resource_list_setting: $('#resource-list-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
-  chrome.storage.local.set(settings)
+  browser.storage.local.set(settings)
 
   // displays or clears the count badge, label, oldest and newest tooltips
   setupWaybackCount()
@@ -121,7 +121,7 @@ function validatePrivateMode(event) {
     $(event.target).removeClass('selected-prior')
   }
   // Set the final previous state
-  chrome.storage.local.set({ private_before_state: Array.from(private_before_state) }, () => {})
+  browser.storage.local.set({ private_before_state: Array.from(private_before_state) })
   hideUiButtons()
 }
 

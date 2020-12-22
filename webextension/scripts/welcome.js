@@ -5,7 +5,7 @@
 
 $('#accept-btn').click(() => {
   afterAcceptOptions()
-  chrome.storage.local.set({ 'agreement': true }, () => {
+  browser.storage.local.set({ 'agreement': true }).then(() => {
     chrome.browserAction.setPopup({ popup: 'index.html' }, () => {
       chrome.tabs.getCurrent((tab) => {
         chrome.tabs.remove(tab.id, () => {})

@@ -560,7 +560,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                   if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
                     addToolbarState(atab, 'R')
                     // Storing the tab url as well as the fetched archive url for future use
-                    chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
+                    browser.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] })
                   }
                 })
             } else if (settings.wiki_setting && url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {

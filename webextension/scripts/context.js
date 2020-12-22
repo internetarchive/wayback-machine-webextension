@@ -76,8 +76,7 @@ function singlePageView() {
           // When clicked on a context tab, open that tab and set that tab as selectedFeature
           openContextFeature(event, featureId)
           let selectedFeature = featureTabId
-          chrome.storage.local.set({ selectedFeature }, () => {
-          })
+          browser.storage.local.set({ selectedFeature })
         })
         // Get first tab
         if (!clickFeature) {

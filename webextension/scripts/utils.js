@@ -460,7 +460,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
-  chrome.storage.local.set({
+  browser.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
@@ -484,7 +484,7 @@ function initDefaultOptions () {
 
 // Turn on these Settings after accepting terms.
 function afterAcceptOptions () {
-  chrome.storage.local.set({
+  browser.storage.local.set({
     /* Features */
     not_found_setting: true,
     wm_count_setting: false,
