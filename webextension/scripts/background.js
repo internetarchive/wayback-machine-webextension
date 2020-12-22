@@ -83,7 +83,7 @@ function savePageNow(atab, page_url, silent = false, options = []) {
           notify('Saving ' + page_url)
           browser.storage.local.get(['resource_list_setting']).then((settings) => {
             if (settings.resource_list_setting === true) {
-              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+              const resource_list_url = browser.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
                 setTimeout(() => {
@@ -314,7 +314,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 chrome.browserAction.onClicked.addListener((tab) => {
-  openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
+  openByWindowSetting(browser.runtime.getURL('welcome.html'), 'tab')
 })
 
 browser.webRequest.onBeforeSendHeaders.addListener(
@@ -460,7 +460,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
-    const context_url = chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(message.url)
+    const context_url = browser.runtime.getURL('context.html') + '?url=' + encodeURIComponent(message.url)
     tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
     })

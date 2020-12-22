@@ -113,7 +113,7 @@ function createDonateAnchor (isbn) {
     })
     .prepend(
       $('<img>')
-        .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon_color.png') })[0]
+        .attr({ 'alt': 'Read', 'src': browser.runtime.getURL('images/icon_color.png') })[0]
     )
 }
 function createArchiveAnchor (id) {
@@ -126,7 +126,7 @@ function createArchiveAnchor (id) {
     })
     .prepend(
       $('<img>')
-        .attr({ 'alt': 'Read', 'src': chrome.extension.getURL('images/icon.png') })[0]
+        .attr({ 'alt': 'Read', 'src': browser.runtime.getURL('images/icon.png') })[0]
     )
 }
 

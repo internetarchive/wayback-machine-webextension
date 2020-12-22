@@ -393,7 +393,7 @@ function show_news() {
           if (state.has('R')) {
             $('#tvnews-container').show()
             $('#tvnews-btn').click(() => {
-              const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+              const URL = browser.runtime.getURL('recommendations.html') + '?url=' + url
               openByWindowSetting(URL, option)
             })
           }
@@ -413,11 +413,11 @@ function show_wikibooks() {
           // show wikipedia cited books & papers buttons
           $('#wiki-container').show()
           $('#wikibooks-btn').click(() => {
-            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+            const URL = browser.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
           })
           $('#wikipapers-btn').click(() => {
-            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+            const URL = browser.runtime.getURL('doi.html') + '?url=' + url
             openByWindowSetting(URL)
           })
         }
@@ -452,19 +452,19 @@ function showContext(eventObj) {
     const url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       if (id.includes('fact-check-btn')) {
-        const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+        const factCheckUrl = browser.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
       } else if (id.includes('alexa-btn')) {
-        const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+        const alexaUrl = browser.runtime.getURL('alexa.html') + '?url=' + url
         openByWindowSetting(alexaUrl)
       } else if (id.includes('annotations-btn')) {
-        const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+        const annotationsUrl = browser.runtime.getURL('annotations.html') + '?url=' + url
         openByWindowSetting(annotationsUrl)
       } else if (id.includes('more-info-btn')) {
-        const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+        const wbmsummaryUrl = browser.runtime.getURL('wbmsummary.html') + '?url=' + url
         openByWindowSetting(wbmsummaryUrl)
       } else if (id.includes('tag-cloud-btn')) {
-        const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+        const tagsUrl = browser.runtime.getURL('tagcloud.html') + '?url=' + url
         openByWindowSetting(tagsUrl)
       }
     }
