@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, getBrowser */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -32,7 +32,7 @@ var private_before_default = new Set([
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_Chrome/' + VERSION + ' Status-code/' + globalStatusCode
+      header.value = header.value + ' Wayback_Machine_'+ getBrowser().charAt(0).toUpperCase() + getBrowser().slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
     }
   }
   return { requestHeaders: e.requestHeaders }
