@@ -23,7 +23,7 @@ function cScore(score) {
 const url = decodeURIComponent(getUrlByParameter('url'))
 $('#fact-check-url').text(url)
 if (isValidUrl(url) && isNotExcludedUrl(url)) {
-  chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
+  browser.runtime.sendMessage({ message: 'getFactCheckResults', url: url }).then((resp) => {
     $('.loader').hide()
     $('.facts').show()
     if (resp && resp.results) {

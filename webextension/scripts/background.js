@@ -87,7 +87,7 @@ function savePageNow(atab, page_url, silent = false, options = []) {
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
                 setTimeout(() => {
-                  chrome.runtime.sendMessage({
+                  browser.runtime.sendMessage({
                     message: 'resource_list_show_error',
                     data: res,
                     url: page_url
@@ -102,7 +102,7 @@ function savePageNow(atab, page_url, silent = false, options = []) {
         } else {
           // handle error
           let msg = res.message || 'Please Try Again'
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
+          browser.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
           if (!silent) {
             notify('Error: ' + msg)
           }
@@ -110,7 +110,7 @@ function savePageNow(atab, page_url, silent = false, options = []) {
       })
       .catch(() => {
         // handle http errors
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
+        browser.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
       })
   }
 }
@@ -139,7 +139,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
   let wait_time = 1000
   while ((status === 'start') || (status === 'pending')) {
     // update UI
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'save_start',
       atab: atab,
       url: page_url
@@ -172,14 +172,14 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       .then((data) => {
         status = data.status
         vdata = data
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           message: 'resource_list_show',
           data: data,
           url: page_url
         })
       })
       .catch((err) => {
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           message: 'resource_list_show',
           data: err,
           url: page_url
@@ -193,7 +193,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
     incrementCount(vdata.original_url)
     // update UI
     addToolbarState(atab, 'check')
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'save_success',
       timestamp: vdata.timestamp,
       atab: atab,
@@ -217,7 +217,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
     }
   } else if (!vdata.status || (status === 'error')) {
     // update UI
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'save_error',
       error: vdata.message,
       url: page_url,

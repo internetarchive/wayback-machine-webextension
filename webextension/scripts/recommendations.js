@@ -34,17 +34,14 @@ function constructArticles (clip) {
 }
 
 function getDetails(article) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
-      message: 'tvnews',
-      article: article
-    }, (clips) => {
-      if (clips.status !== 'error') {
-        resolve(clips)
-      } else {
-        reject(new Error('Clips not found'))
-      }
-    })
+  return browser.runtime.sendMessage({
+    message: 'tvnews',
+    article: article
+  }).then((clips) => {
+    if (clips.status === 'error') {
+      throw new Error('Clips not found')
+    }
+    return clips
   })
 }
 
@@ -52,7 +49,7 @@ function getArticles(url) {
   getDetails(url)
   .then((clips) => {
     $('.loader').hide()
-    if (clips.length > 0 && threshold >= clips[0]['similarity']) {
+    if (clips && clips.length > 0 && threshold >= clips[0]['similarity']) {
       for (let clip of clips) {
         if (threshold >= clip['similarity']) {
           $('#RecommendationTray').append(constructArticles(clip))

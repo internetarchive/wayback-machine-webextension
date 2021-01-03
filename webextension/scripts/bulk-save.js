@@ -199,7 +199,7 @@ function saveNextInQueue() {
 
 // Send a Save message to background.js.
 function saveTheURL(url) {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     message: 'openurl',
     wayback_url: hostURL + 'save/',
     page_url: url,

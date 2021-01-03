@@ -21,7 +21,7 @@ function save_now() {
     if ($('#chk-screenshot').prop('checked') === true) {
       options.push('capture_screenshot')
     }
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: hostURL + 'save/',
       page_url: url,
@@ -76,10 +76,10 @@ function loginSuccess() {
         browser.storage.local.get(['private_mode_setting']).then((settings) => {
           // auto save page
           if (!settings.private_mode_setting) {
-            chrome.runtime.sendMessage({
+            browser.runtime.sendMessage({
               message: 'getLastSaveTime',
               page_url: url
-            }, (message) => {
+            }).then((message) => {
               if ((message.message === 'last_save') && message.timestamp) {
                 $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
                 $('#spn-btn').addClass('flip-inside')
@@ -96,15 +96,15 @@ function loginSuccess() {
 }
 
 function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     message: 'auth_check'
-  }, callback)
+  }).then(callback)
 }
 
 function recent_capture() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
       page_url: url,
@@ -116,7 +116,7 @@ function recent_capture() {
 function first_capture() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
       page_url: url,
@@ -128,7 +128,7 @@ function first_capture() {
 function view_all() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
       page_url: url,
@@ -189,9 +189,9 @@ function search_tweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-  chrome.runtime.sendMessage({ message: 'clearResource' })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  browser.runtime.sendMessage({ message: 'clearCountBadge' })
+  browser.runtime.sendMessage({ message: 'clearResource' })
+  browser.runtime.sendMessage({ message: 'clearFactCheck' })
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -338,7 +338,7 @@ function show_login_page() {
 function show_all_screens() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({ message: 'showall', url: url })
+    browser.runtime.sendMessage({ message: 'showall', url: url })
   })
 }
 
@@ -346,7 +346,7 @@ function borrow_books() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+      browser.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }).then((result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -388,7 +388,7 @@ function show_news() {
       let set_of_sites = newshosts
       const option = settings.view_setting
       if (set_of_sites.has(news_host)) {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        browser.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }).then((result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             $('#tvnews-container').show()
@@ -407,7 +407,7 @@ function show_wikibooks() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+      browser.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }).then((result) => {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -432,7 +432,7 @@ function setUpFactCheck() {
     if (isNotExcludedUrl(url)) {
       browser.storage.local.get(['fact_check_setting']).then((settings) => {
         if (settings.fact_check_setting) {
-          chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          browser.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }).then((result) => {
             let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -487,10 +487,10 @@ function setupWaybackCount() {
       let url = tabs[0].url
       if ((settings.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+        browser.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+        browser.runtime.sendMessage({ message: 'clearCountBadge' })
       }
     })
   })
@@ -499,7 +499,7 @@ function setupWaybackCount() {
 // Displays Wayback count, and Oldest and Newest timestamps
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
-  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
+  browser.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }).then((result) => {
     if ('total' in result) {
       // set label
       let text = ''
@@ -537,7 +537,7 @@ function bulkSave() {
 
 function setupSaveButton() {
   browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+    browser.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }).then((result) => {
       let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()

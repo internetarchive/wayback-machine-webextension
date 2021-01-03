@@ -149,18 +149,14 @@ function getPageFromCitation (book) {
 // Get all books on wikipedia page through
 // https://archive.org/services/context/books?url=...
 function getWikipediaBooks (url) {
-  // Encapsulate the chrome message sender with a promise object
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
-      message: 'getWikipediaBooks',
-      query: url
-    }, (books) => {
-      if (books) {
-        resolve(books)
-      } else {
-        reject(new Error('error'))
-      }
-    })
+  return browser.runtime.sendMessage({
+    message: 'getWikipediaBooks',
+    query: url
+  }).then((books) => {
+    if (!books) {
+      throw new Error('error')
+    }
+    return books
   })
 }
 
