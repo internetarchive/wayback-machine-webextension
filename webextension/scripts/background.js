@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
 
-var manifest = chrome.runtime.getManifest()
+var manifest = browser.runtime.getManifest()
 // Load version from Manifest.json file
 var VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
