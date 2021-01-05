@@ -613,32 +613,38 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // checking resource of wikipedia books (TODO: wikipedia papers)
     const clean_url = get_clean_url(tab.url)
     const news_host = new URL(clean_url).hostname
-
-    if (clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      let intervalId = setInterval(function() {
-        if (!wiki_function_call) {
-          getCachedWikipediaBooks(clean_url,
-            (data) => {
-              if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
-                //FIXME: Toolbar State is not updating
-                addToolbarState(tabId, 'R')
-                clearInterval(intervalId)
+    chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
+      if(event.wiki_setting){
+        if (clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+          let intervalId = setInterval(function() {
+            if (!wiki_function_call) {
+              getCachedWikipediaBooks(clean_url,
+                (data) => {
+                  if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
+                    //FIXME: Toolbar State is not updating
+                    addToolbarState(tab, 'R')
+                    clearInterval(intervalId)
+                  }
+                }, () => {}
+              )
+            }
+          }, 1000)
+        }
+      }
+      // checking resource of tv news
+      if(event.tvnews_setting){
+        if (newshosts.has(news_host)) {
+          getCachedTvNews(clean_url,
+            (clips) => {
+              if (clips && clips.status !== 'error') {
+                addToolbarState(tab, 'R')
               }
             }, () => {}
           )
+          addToolbarState(tabId, 'R') // TODO: comment this out to disable TV News check
         }
-      }, 1000)
-    // checking resource of tv news
-    } else if (newshosts.has(news_host)) {
-      getCachedTvNews(clean_url,
-        (clips) => {
-          if (clips && clips.status !== 'error') {
-            addToolbarState(tabId, 'R')
-          }
-        }, () => {}
-      )
-      addToolbarState(tabId, 'R') // TODO: comment this out to disable TV News check
-    }
+      }
+    })
   } else if (info.status === 'loading') {
     var received_url = tab.url
     clearToolbarState(tab)
@@ -646,11 +652,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
-        // checking resources
+      chrome.storage.local.get(['amazon_setting'], (event) => {
+        // checking amazon books settings
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
-            if (event.resource === true) {
+            if (event.amazon_setting === true) {
               const url = get_clean_url(tabs[0].url)
               const tabId = tabs[0].id
               // checking resource of amazon books
@@ -659,7 +665,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
                   .then(resp => resp.json())
                   .then(resp => {
                     if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                      addToolbarState(tabId, 'R')
+                      addToolbarState(tabs[0], 'R')
                       // Storing the tab url as well as the fetched archive url for future use
                       chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
                     }
