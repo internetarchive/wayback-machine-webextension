@@ -380,7 +380,7 @@ browser.webRequest.onCompleted.addListener((details) => {
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => { // FIXME: Uncaught, Promised response went out of scope
   if (!message) { return }
   if (message.message === 'openurl') {
     let atab = message.atab

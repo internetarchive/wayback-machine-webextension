@@ -481,25 +481,30 @@ function clearFocus() {
   document.activeElement.blur()
 }
 
+// returns a Promise
 function setupWaybackCount() {
-  browser.storage.local.get(['wm_count_setting']).then((settings) => {
-    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+  return browser.storage.local.get(['wm_count_setting']).then((settings) => {
+    return browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       let url = tabs[0].url
       if ((settings.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-        showWaybackCount(url)
-        browser.runtime.sendMessage({ message: 'updateCountBadge' })
+        return showWaybackCount(url).then(() => {
+          return browser.runtime.sendMessage({ message: 'updateCountBadge' }) // FIXME: Promise rejected
+        }).catch((error) => {
+          console.log(`Error: ${error}`) // FIXME: "Error: Promised response from onMessage listener went out of scope"
+        })
       } else {
         clearWaybackCount()
-        browser.runtime.sendMessage({ message: 'clearCountBadge' })
+        return browser.runtime.sendMessage({ message: 'clearCountBadge' }) // FIXME: Promise rejected
       }
-    })
-  })
+    }).catch(() => {})
+  }).catch(() => {})
 }
 
 // Displays Wayback count, and Oldest and Newest timestamps
+// returns a Promise
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
-  browser.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }).then((result) => {
+  return browser.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }).then((result) => { // FIXME: Promise rejected
     if ('total' in result) {
       // set label
       let text = ''
@@ -522,7 +527,7 @@ function showWaybackCount(url) {
       let date = timestampToDate(result.last_ts)
       $('#newest-btn').attr('title', date.toLocaleString())
     }
-  })
+  }).catch(() => {})
 }
 
 function clearWaybackCount() {
@@ -567,7 +572,7 @@ chrome.runtime.onMessage.addListener(
           $('#spn-front-label').text('Save successful')
           $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').addClass('flip-inside')
-          setupWaybackCount()
+          return setupWaybackCount()
         } else if (message.message === 'save_start') {
           showSaving()
         } else if (message.message === 'save_error') {

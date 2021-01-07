@@ -78,9 +78,9 @@ function saveOptions() {
   }
 
   if (settings.fact_check_setting === false) {
-    browser.runtime.sendMessage({ message: 'clearFactCheck' })
+    browser.runtime.sendMessage({ message: 'clearFactCheck' }) // FIXME: Promise rejected
   }
-  browser.runtime.sendMessage({ message: 'clearResource', settings: settings })
+  browser.runtime.sendMessage({ message: 'clearResource', settings: settings }) // FIXME: Promise rejected after context unloaded
 }
 
 /*
