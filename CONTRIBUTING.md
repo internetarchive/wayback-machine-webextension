@@ -18,8 +18,8 @@ Before we begin, if you don't already have, download [git](https://git-scm.com/d
  - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
  - Clone the project and navigate to working directory by typing the commands    
-`git clone https://github.com/<github_account_name>/wayback-machine-chrome.git`   
- `cd wayback-machine-chrome`
+`git clone https://github.com/<github_account_name>/wayback-machine-webextension.git`   
+ `cd wayback-machine-webextension`
  - Install the required packages by typing the command   
 `npm install`
 - Now you have a `node_modules` directory populated with packages
