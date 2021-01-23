@@ -14,7 +14,7 @@ To share either bug or features, [create an issue here](https://github.com/inter
 
 ## How to set up the development environment?
 Before we begin, if you don't already have, download [git](https://git-scm.com/downloads ) and [node.js](https://nodejs.org/en/download/ ) (You may look at relevant tutorials to set them up according to your operating system)
- - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-chrome/ ), and fork the project
+ - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-webextension/ ), and fork the project
  - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
  - Clone the project and navigate to working directory by typing the commands    
