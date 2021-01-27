@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -32,7 +32,7 @@ var private_before_default = new Set([
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_Chrome/' + VERSION + ' Status-code/' + globalStatusCode
+      header.value = header.value + ' Wayback_Machine_'+ gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -403,21 +403,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     }
   } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time, remove hash for some sites
-    const url = message.page_url.split('#')[0]
-    wmAvailabilityCheck(url,
-      (wb_url, url, timestamp) => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: timestamp
-        })
-      },
-      () => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: ''
-        })
-      })
+    // get most recent saved time
+    getCachedWaybackCount(message.page_url,
+      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
+      () => { sendResponse({ message: 'last_save', timestamp: '' }) }
+    )
     return true
   } else if (message.message === 'auth_check') {
     // auth check using cookies
@@ -515,7 +505,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
       (values) => { sendResponse(values) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
@@ -523,7 +513,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve fact check results
     getCachedFactCheck(message.url,
       (json) => { sendResponse(json) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   }
   return true
