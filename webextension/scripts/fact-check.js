@@ -44,7 +44,7 @@ if (isValidUrl(url) && isNotExcludedUrl(url)) {
       }
     } else {
       let row = $('<div class="fact-checks-list title">')
-      $('#results-container').append(row.text('No fact checks found for the current URL.'))
+      $('#results-container').append(row.text(resp.error ? 'Some error occured during fact checking! Can not process the request' : 'No fact checks found for the current URL.'))
     }
     // TODO: handle error (resp.error)
   })
