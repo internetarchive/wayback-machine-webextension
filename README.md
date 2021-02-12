@@ -21,7 +21,8 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Installing the Extension
 
-Follow the steps below for the currently deployed version.
+Follow the steps below for the currently deployed version depending on your preferred browser :
+
 
 <img src="https://cdn.worldvectorlogo.com/logos/google-chrome-1.svg" width="120"></img> 
 
@@ -43,7 +44,8 @@ Follow the steps below for the currently deployed version.
 
 Follow the steps below to install the latest build on your local machine.
 
-- First tap on the **Code** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
+- First tap on the **Code** button, **Download ZIP**, then unzip the file in a location where you can find on your computer then follow the below steps based on your preferred browser :
+
 
 <img src="https://cdn.worldvectorlogo.com/logos/google-chrome-1.svg" width="120"></img>
 
