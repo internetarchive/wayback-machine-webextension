@@ -23,7 +23,7 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 Follow the steps below for the currently deployed version.
 
-### Chrome
+<img src="https://cdn.worldvectorlogo.com/logos/google-chrome-1.svg" width="120"></img> 
 
 1. Go to our page on the [Chrome Web Store](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
 2. Click the **Add to Chrome** button, then **Add extension**.
@@ -32,7 +32,7 @@ Follow the steps below for the currently deployed version.
 5. Click on the newly added icon.
 6. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
-### Firefox
+<img src="https://cdn.worldvectorlogo.com/logos/mozilla-firefox.svg" width="120"></img> 
 
 1. Go to the [Firefox Add-Ons](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) website.
 2. Click **+ Add to Firefox**
@@ -45,7 +45,7 @@ Follow the steps below to install the latest build on your local machine.
 
 - First tap on the **Code** button, **Download ZIP**, then unzip the file in a location where you can find on your computer.
 
-### Chrome
+<img src="https://cdn.worldvectorlogo.com/logos/google-chrome-1.svg" width="120"></img>
 
 1. Open Chrome and navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the 3 vertical dots menu on the top-right, hovering over **More Tools**, then selecting **Extensions**.
 2. Turn on the switch next to **Developer mode**.
@@ -57,7 +57,7 @@ Follow the steps below to install the latest build on your local machine.
 
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
-### Firefox
+<img src="https://cdn.worldvectorlogo.com/logos/mozilla-firefox.svg" width="120"></img> 
 
 1. Open Firefox and navigate to `about:debugging` in the browser. You can also access this page by clicking on the hamburger menu on the top-right, select **Add-ons**, then the **Gear Tools button** on the top-right, then **Debug Add-ons**.
 2. Click **This Firefox** on the left.
@@ -68,7 +68,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
-### Edge
+<img src="https://cdn.worldvectorlogo.com/logos/microsoft-edge-1.svg" width="60"></img> 
 
 1. Open Edge and navigate to `edge://extensions` in your browser. You can also access this page by clicking on the 3 horizontal dots menu on the top-right, then clicking **Extensions**.
 2. Turn on the switch next to **Developer mode**.
@@ -76,7 +76,7 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
-### Safari 14
+<img src="https://cdn.worldvectorlogo.com/logos/safari-3.svg" width="60"></img> 
 
 This code is **not yet ready** to run on Safari 14, but it is currently being worked on.
 
