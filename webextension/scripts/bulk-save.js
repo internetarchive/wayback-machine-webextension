@@ -74,19 +74,25 @@ function importAllBookmarks() {
     })
   }
 }
-
+// Creating a variable to keep a check on loop in recursion
+var count = 0 
 // Traverses the bookmark tree nodes recursively.
 function processTreeNode(node) {
   // process child nodes
   if (node.children) {
-    node.children.forEach((child) => { processTreeNode(child) })
+    node.children.forEach((child) => { processTreeNode(child); count++; })
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
     addToBulkSave(node.url)
   }
+  // if in first cycle node.url is null then give alert message
+  else {
+    if (count === 0) {
+      alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks")
+    }
+  }
 }
-
 /* * * Save List * * */
 
 // Adds a URL to Bulk Save and appends it to #list-container.
