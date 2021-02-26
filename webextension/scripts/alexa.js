@@ -57,7 +57,7 @@ function get_alexa() {
     $('#show_alexa_data').show()
   }).fail((error) => {
     $('#loader_alexa').hide();
-    $('#show_alexa_data > div > div:nth-child(1) > b').show();
+    $('#show_alexa_data > div > div:nth-child(1) > b').hide();
     $('.error').text('No More Data Found')
     $('.rank').hide()
     $('.country').hide()
