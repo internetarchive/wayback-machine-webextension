@@ -55,6 +55,14 @@ function get_alexa() {
     $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url.hostname)
     $('#loader_alexa').hide()
     $('#show_alexa_data').show()
+  }).fail((error) => {
+    $('#loader_alexa').hide();
+    $('#show_alexa_data > div > div:nth-child(1) > b').show();
+    $('.error').text('No More Data Found')
+    $('.rank').hide()
+    $('.country').hide()
+    $('#show_alexa_data').show();
+
   })
 }
 
