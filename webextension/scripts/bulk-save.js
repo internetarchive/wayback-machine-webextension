@@ -70,16 +70,14 @@ function importAllBookmarks() {
     chrome.bookmarks.getTree((nodeTree) => {
       nodeTree.forEach((node) => {
         processTreeNode(node)
-        if (count === 0) {
+        //Check and response for no bookmark in the browser
+        if (Object.keys(bulkSaveObj).length === 0) {
           alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks");
         }
-        count = 0
       })
     })
   }
-}
-// Creating a variable to keep a check on loop in recursion
-var count = 0 
+} 
 // Traverses the bookmark tree nodes recursively.
 function processTreeNode(node) {
   // process child nodes
@@ -88,7 +86,6 @@ function processTreeNode(node) {
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
-    count++
     addToBulkSave(node.url)
   }
 }
