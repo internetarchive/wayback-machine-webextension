@@ -70,6 +70,9 @@ function importAllBookmarks() {
     chrome.bookmarks.getTree((nodeTree) => {
       nodeTree.forEach((node) => {
         processTreeNode(node)
+        if (count === 0) {
+          alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks")
+        }
       })
     })
   }
@@ -80,17 +83,11 @@ var count = 0
 function processTreeNode(node) {
   // process child nodes
   if (node.children) {
-    node.children.forEach((child) => { processTreeNode(child); count++; })
+    node.children.forEach((child) => { processTreeNode(child) })
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
     addToBulkSave(node.url)
-  }
-  // if in first cycle node.url is null then give alert message
-  else {
-    if (count === 0) {
-      alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks")
-    }
   }
 }
 /* * * Save List * * */
