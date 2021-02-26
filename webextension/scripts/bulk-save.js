@@ -87,6 +87,7 @@ function processTreeNode(node) {
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
+    count++
     addToBulkSave(node.url)
   }
 }
