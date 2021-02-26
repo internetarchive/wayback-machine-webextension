@@ -71,8 +71,9 @@ function importAllBookmarks() {
       nodeTree.forEach((node) => {
         processTreeNode(node)
         if (count === 0) {
-          alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks")
+          alert("Sorry No Bookmarks Found. Please ensure that you have bookmarks");
         }
+        count = 0
       })
     })
   }
