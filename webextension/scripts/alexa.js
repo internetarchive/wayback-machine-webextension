@@ -58,7 +58,7 @@ function get_alexa() {
   }).fail((error) => {
     $('#loader_alexa').hide();
     $('#show_alexa_data > div > div:nth-child(1) > b').hide();
-    $('.error').text('No More Data Found')
+    $('.error').text('Can not reach Alexa at the moment!')
     $('.rank').hide()
     $('.country').hide()
     $('#show_alexa_data').show();
