@@ -36,7 +36,7 @@ var private_before_default = new Set([
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_'+ gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
+      header.value = header.value + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -497,7 +497,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.settings) {
           // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
           const news_host = new URL(tabs[0].url).hostname
-          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) ||
+          if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
               ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
             removeToolbarState(tabs[0], 'R')
@@ -552,7 +552,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     const news_host = new URL(clean_url).hostname
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
       // checking wikipedia books
-      if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         getCachedBooks(clean_url,
           (data) => {
             if (data && (data.status !== 'error')) {
@@ -615,7 +615,7 @@ chrome.tabs.onActivated.addListener((info) => {
       }
       // wiki_setting settings unchecked
       if (event.wiki_setting === false && getToolbarState(tab).has('R')) {
-        if (tab.url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
+        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
       if (event.amazon_setting === false && getToolbarState(tab).has('R')) {
