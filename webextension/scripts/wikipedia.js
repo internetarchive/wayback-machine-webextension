@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global attachTooltip */
 
-// main method
+// This is called from wikipedia_loader.js
 function addCitations () {
   wikipediaBooks(location.href).then((data) => {
     let books = $("a[title^='Special:BookSources']")

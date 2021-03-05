@@ -14,11 +14,13 @@ var VERSION = manifest.version
 var globalStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
-let wikipediaBooksCache = new Map()
-let tvNewsCache = new Map()
+let globalAPICache = new Map()
+const API_CACHE_SIZE = 5
+const API_LOADING = 'LOADING'
+const API_TIMEOUT = 10000
+const API_RETRY = 1000
 let tabIdPromise
 var WB_API_URL = hostURL + 'wayback/available'
-var fact_checked_data = new Map()
 const SPN_RETRY = 6000
 
 var private_before_default = new Set([
@@ -234,13 +236,23 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
   }
 }
 
-function getWikipediaBooks(Url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/books?url='
-  const url = requestUrl + encodeURIComponent(Url)
-  // Encapsulate fetch with a timeout promise object
+/**
+ * Encapsulate fetching a url with a timeout promise object.
+ * @param url {string}
+ * @param onSuccess(json): json = root object from API call.
+ * @param onFail(error): error = Error object or null.
+ * @return Promise
+ */
+function fetchAPI(url, onSuccess, onFail) {
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => { reject(new Error('timeout')) }, 5000)
-    fetch(url).then(resolve, reject)
+    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(resolve, reject)
   })
   return timeoutPromise
     .then(response => response.json())
@@ -256,119 +268,53 @@ function getWikipediaBooks(Url, onSuccess, onFail) {
     })
 }
 
-function getTvNews(Url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/tvnews?url='
-  const url = requestUrl + encodeURIComponent(Url)
-  // Encapsulate fetch with a timeout promise object
-  const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => { reject(new Error('timeout')) }, 5000)
-    fetch(url).then(resolve, reject)
-  })
-  return timeoutPromise
-    .then(response => response.json())
-    .then(clips => {
-      if (clips) {
-        onSuccess(clips)
-      } else {
-        if (onFail) { onFail(null) }
-      }
-    })
-    .catch(error => {
-      if (onFail) { onFail(error) }
-    })
-}
-// variable to check the api call state
-let wiki_function_call = false
-
-function getCachedWikipediaBooks(url, onSuccess, onFail) {
-  wiki_function_call = true
-  let cacheWikipediaBooks = wikipediaBooksCache.get(url)
-  if (cacheWikipediaBooks) {
-    wiki_function_call = false
-    onSuccess(cacheWikipediaBooks)
-  } else {
-    wiki_function_call = true
-    getWikipediaBooks(url, (json) => {
-      wiki_function_call = false
-      if (wikipediaBooksCache.size > 2) {
-        let first_key = wikipediaBooksCache.keys().next().value
-        wikipediaBooksCache.delete(first_key)
-      }
-      wikipediaBooksCache.set(url, json)
-      onSuccess(json)
-    }, onFail)
-  }
-}
-
-function getCachedTvNews(url, onSuccess, onFail) {
-  let cacheTvNews = tvNewsCache.get(url)
-  if (cacheTvNews) {
-    onSuccess(cacheTvNews)
-  } else {
-    getTvNews(url, (json) => {
-      if (tvNewsCache.size > 2) {
-        let first_key = tvNewsCache.keys().next().value
-        tvNewsCache.delete(first_key)
-      }
-      tvNewsCache.set(url, json)
-      onSuccess(json)
-    }, onFail)
-  }
-}
-
 /**
- * Retrieves data from our.news Fack Check API for given url.
+ * Returns cached API call, or fetches url if not in cache.
  * @param url {string}
  * @param onSuccess(json): json = root object from API call.
  * @param onFail(error): error = Error object or null.
- * @return Promise
+ * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
-function getFactCheck(url, onSuccess, onFail) {
-  if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = 'https://data.our.news/api/'
-    const requestParams = '?partner=wayback&factcheck=' + encodeURIComponent(url)
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => { reject(new Error('timeout')) }, 5000)
-      fetch(requestUrl + requestParams, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(resolve, reject)
-    })
-    return timeoutPromise
-    .then(response => response.json())
-    .then(json => {
-      if (json && json.results) {
-        onSuccess(json)
-      } else {
-        if (onFail) { onFail(null) }
-      }
-    })
-    .catch(error => {
-      if (onFail) { onFail(error) }
-    })
+function fetchCachedAPI(url, onSuccess, onFail) {
+  let data = globalAPICache.get(url)
+  if (data === API_LOADING) {
+    // re-call after delay if previous fetch hadn't returned yet
+    setTimeout(() => {
+      fetchCachedAPI(url, onSuccess, onFail)
+    }, API_RETRY)
+    return null
+  } else if (data !== undefined) {
+    onSuccess(data)
+    return data
   } else {
-    if (onFail) { onFail(null) }
+    // if cache full, remove first object which is the oldest from the cache
+    if (globalAPICache.size >= API_CACHE_SIZE) {
+      globalAPICache.delete(globalAPICache.keys().next().value)
+    }
+    globalAPICache.set(url, API_LOADING)
+    return fetchAPI(url, (json) => {
+      globalAPICache.set(url, json)
+      onSuccess(json)
+    }, (error) => {
+      globalAPICache.delete(url)
+      onFail(error)
+    })
   }
 }
 
+function getCachedBooks(url, onSuccess, onFail) {
+  const requestUrl = hostURL + 'services/context/books?url=' + encodeURIComponent(url)
+  fetchCachedAPI(requestUrl, onSuccess, onFail)
+}
+
+function getCachedTvNews(url, onSuccess, onFail) {
+  const requestUrl = hostURL + 'services/context/tvnews?url=' + encodeURIComponent(url)
+  fetchCachedAPI(requestUrl, onSuccess, onFail)
+}
+
 function getCachedFactCheck(url, onSuccess, onFail) {
-  let cacheData = fact_checked_data.get(url)
-  if (cacheData) {
-    onSuccess(cacheData)
-  } else {
-    getFactCheck(url, (json) => {
-      // remove older cached data
-      if (fact_checked_data.size > 2) {
-        let first_key = fact_checked_data.entries().next().value[0]
-        fact_checked_data.delete(first_key)
-      }
-      fact_checked_data.set(url, json)
-      onSuccess(json)
-    }, onFail)
-  }
+  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + encodeURIComponent(url)
+  fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 /* * * Startup related * * */
@@ -507,15 +453,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
-    let intervalId = setInterval(function() {
-      if (!wiki_function_call) {
-        getCachedWikipediaBooks(message.query,
-          (json) => { sendResponse(json) },
-          (error) => { sendResponse({ error: error }) }
-        )
-        clearInterval(intervalId)
-      }
-    }, 1000)
+    getCachedBooks(message.query,
+      (json) => { sendResponse(json) },
+      (error) => { sendResponse({ error: error }) }
+    )
   } else if (message.message === 'tvnews') {
     // retrieve tv news clips
     getCachedTvNews(message.article,
@@ -610,39 +551,32 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         factCheckPage(tab, tab.url)
       }
     })
-    // checking resource of wikipedia books (TODO: wikipedia papers)
+    // checking resources
+    // TODO: wikipedia papers
     const clean_url = get_clean_url(tab.url)
     const news_host = new URL(clean_url).hostname
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
-      if(event.wiki_setting){
-        if (clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-          let intervalId = setInterval(function() {
-            if (!wiki_function_call) {
-              getCachedWikipediaBooks(clean_url,
-                (data) => {
-                  if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
-                    //FIXME: Toolbar State is not updating
-                    addToolbarState(tab, 'R')
-                    clearInterval(intervalId)
-                  }
-                }, () => {}
-              )
+      // checking wikipedia books
+      if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+        getCachedBooks(clean_url,
+          (data) => {
+            if (data && (data.status !== 'error')) {
+              addToolbarState(tab, 'R')
             }
-          }, 1000)
-        }
+          }, () => {}
+        )
       }
-      // checking resource of tv news
-      if(event.tvnews_setting){
-        if (newshosts.has(news_host)) {
-          getCachedTvNews(clean_url,
-            (clips) => {
-              if (clips && clips.status !== 'error') {
-                addToolbarState(tab, 'R')
-              }
-            }, () => {}
-          )
-          addToolbarState(tabId, 'R') // TODO: comment this out to disable TV News check
-        }
+      // checking tv news
+      if (event.tvnews_setting && newshosts.has(news_host)) {
+        getCachedTvNews(clean_url,
+          (clips) => {
+            if (clips && (clips.status !== 'error')) {
+              addToolbarState(tab, 'R')
+            }
+          }, () => {}
+        )
+        // TODO: comment this out to disable TV News check
+        // addToolbarState(tabId, 'R')
       }
     })
   } else if (info.status === 'loading') {
@@ -658,7 +592,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (tabs && tabs[0]) {
             if (event.amazon_setting === true) {
               const url = get_clean_url(tabs[0].url)
-              const tabId = tabs[0].id
               // checking resource of amazon books
               if (url.includes('www.amazon')) {
                 fetch(hostURL + 'services/context/amazonbooks?url=' + url)
@@ -733,7 +666,9 @@ function factCheckPage(atab, url) {
           addToolbarState(atab, 'F')
         }
       },
-      (error) => {}
+      (error) => {
+        console.log('factcheck error: ', error)
+      }
     )
   }
 }

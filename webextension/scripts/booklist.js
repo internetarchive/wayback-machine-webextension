@@ -4,11 +4,12 @@
 /*   global openByWindowSetting */
 
 // from 'wikipedia.js'
-/*   global wikipediaBooks */
+/*   global wikipediaBooks, getMetadata */
 
-// from 'doi.js'
-/*   global getMetadata */
+// TODO: rename getMetadata in doi.js or wikipedia.js
 
+// This is called from booklist_loader.js
+// It retrieves a list of book cover images.
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
   wikipediaBooks(url).then(data => {
