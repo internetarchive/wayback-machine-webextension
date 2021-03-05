@@ -570,8 +570,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             }
           }, () => {}
         )
-        // TODO: comment this out to disable TV News check
-        // addToolbarState(tabId, 'R')
       }
     })
   } else if (info.status === 'loading') {
