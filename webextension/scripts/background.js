@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -36,7 +36,7 @@ var private_before_default = new Set([
 function rewriteUserAgentHeader(e) {
   for (var header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_Chrome/' + VERSION + ' Status-code/' + globalStatusCode
+      header.value = header.value + ' Wayback_Machine_'+ gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -60,7 +60,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = false) {
+function savePageNow(atab, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
     data.append('url', encodeURI(page_url))
@@ -85,8 +85,8 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
       .then((res) => {
         if (!silent) {
           notify('Saving ' + page_url)
-          chrome.storage.local.get(['show_resource_list'], (result) => {
-            if (result.show_resource_list === true && isBulkSave === false) {
+          chrome.storage.local.get(['resource_list_setting'], (result) => {
+            if (result.resource_list_setting === true) {
               const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
               openByWindowSetting(resource_list_url, 'windows')
               if (res.status === 'error') {
@@ -111,6 +111,10 @@ function savePageNow(atab, page_url, silent = false, options = [], isBulkSave = 
             notify('Error: ' + msg)
           }
         }
+      })
+      .catch(() => {
+        // handle http errors
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
       })
   }
 }
@@ -353,8 +357,8 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-      if (event.not_found_popup === true && event.agreement === true) {
+    chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+      if (event.not_found_setting === true && event.agreement === true) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
           chrome.tabs.sendMessage(details.tabId, {
             type: 'SHOW_BANNER',
@@ -401,8 +405,8 @@ chrome.webRequest.onCompleted.addListener((details) => {
   }
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
-      chrome.storage.local.get(['not_found_popup', 'agreement'], (event) => {
-        if (event.not_found_popup === true && event.agreement === true) {
+      chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
+        if ((event.not_found_setting === true) && (event.agreement === true)) {
           tabIsReady(tabs[0].id)
         }
       })
@@ -411,38 +415,29 @@ chrome.webRequest.onCompleted.addListener((details) => {
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (!message) { return }
   if (message.message === 'openurl') {
     let atab = message.atab
     var page_url = message.page_url
     var wayback_url = message.wayback_url
     var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
     var open_url = wayback_url + encodeURI(url)
-    let isBulkSave = message.isBulkSave || false
     if (isNotExcludedUrl(page_url)) {
-      if (message.method !== 'save') {
-        URLopener(open_url, url, true)
-      } else {
-        let options = (message.options !== null) ? message.options : []
-        savePageNow(atab, page_url, false, options, isBulkSave)
+      if (message.method && (message.method === 'save')) {
+        let silent = message.silent || false
+        let options = (message.options && (message.options !== null)) ? message.options : []
+        savePageNow(atab, page_url, silent, options)
         return true
+      } else {
+        URLopener(open_url, url, true)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time, remove hash for some sites
-    const url = message.page_url.split('#')[0]
-    wmAvailabilityCheck(url,
-      (wb_url, url, timestamp) => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: timestamp
-        })
-      },
-      () => {
-        sendResponse({
-          message: 'last_save',
-          timestamp: ''
-        })
-      })
+    // get most recent saved time
+    getCachedWaybackCount(message.page_url,
+      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
+      () => { sendResponse({ message: 'last_save', timestamp: '' }) }
+    )
     return true
   } else if (message.message === 'auth_check') {
     // auth check using cookies
@@ -524,7 +519,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve wayback count
     getCachedWaybackCount(message.url,
       (values) => { sendResponse(values) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
@@ -532,7 +527,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve fact check results
     getCachedFactCheck(message.url,
       (json) => { sendResponse(json) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error }) }
     )
   }
   return true
@@ -541,13 +536,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
-    chrome.storage.local.get(['auto_archive', 'fact_check'], (event) => {
+    chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (event) => {
       // auto save page
-      if (event.auto_archive === true) {
+      if (event.auto_archive_setting === true) {
         auto_save(tab, tab.url)
       }
       // fact check
-      if (event.fact_check === true) {
+      if (event.fact_check_setting === true) {
         factCheckPage(tab, tab.url)
       }
     })
@@ -614,10 +609,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['fact_check', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+  chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
     chrome.tabs.get(info.tabId, (tab) => {
       // fact check settings unchecked
-      if ((event.fact_check === false) && (getToolbarState(tab).has('F'))) {
+      if ((event.fact_check_setting === false) && (getToolbarState(tab).has('F'))) {
         removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
@@ -709,8 +704,9 @@ function incrementCount(url) {
 }
 
 function updateWaybackCountBadge(atab, url) {
-  chrome.storage.local.get(['wm_count'], (event) => {
-    if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+  if (!atab) { return }
+  chrome.storage.local.get(['wm_count_setting'], (event) => {
+    if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
         if (values.total >= 0) {
           // display badge
@@ -756,12 +752,13 @@ function setToolbarIcon(name, tabId = null) {
 
 // Returns a string key from a Tab windowId and tab id.
 function toolbarStateKey(atab) {
-  return '' + atab.windowId + atab.id
+  return (atab) ? '' + atab.windowId + atab.id : ''
 }
 
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 function addToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (!gToolbarStates[tabKey]) {
     gToolbarStates[tabKey] = new Set()
@@ -772,6 +769,7 @@ function addToolbarState(atab, state) {
 
 // Remove state from the state set for given Tab, and update toolbar.
 function removeToolbarState(atab, state) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].delete(state)
@@ -781,12 +779,14 @@ function removeToolbarState(atab, state) {
 
 // Returns a Set of toolbar states, or an empty set.
 function getToolbarState(atab) {
+  if (!atab) { return new Set() }
   const tabKey = toolbarStateKey(atab)
   return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
 }
 
 // Clears state for given Tab and update toolbar icon.
 function clearToolbarState(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].clear()
@@ -801,6 +801,7 @@ function clearToolbarState(atab) {
  * @param atab {Tab}
  */
 function updateToolbar(atab) {
+  if (!atab) { return }
   const tabKey = toolbarStateKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {

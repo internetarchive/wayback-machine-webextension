@@ -12,11 +12,10 @@
   <body>
     <div id="container">
       <div id="header">
-        <img src="images/logo.gif" style="height:100px"><br>
+        <img src="images/wayback-light.png" style="height:150px"><br>
         <h1>
           Welcome to the Internet Archive's<br>
-          Wayback Machine<br>
-          Extension
+          Wayback Machine Extension
         </h1>
       </div>
       <br>
@@ -25,15 +24,20 @@
           This extension collects and stores information about the search queries you make and the web pages you view to provide you with information about those pages and to help the Wayback Machine archive the Web. In some cases, information collected by the extension may be personally identifiable, but we do not attempt to analyze any information collected by the extension to determine the identity of any user.
         </p>
         <p>
+          By enabling this extension, you agree to allow it to read and write cookies under the <b>archive.org</b> domain.
+        </p>
+        <p>
           Please read and accept the <a href="https://archive.org/about/terms.php" target="_blank">Internet Archive Terms of Use and Privacy Policy</a>.
         </p>
         <br>
-        <button type="submit" name="acceptTerms" id="accept" class="btn btn-success">
-          <span>Accept and Enable</span>
-        </button>
-        <button type="submit" name="declineTerms" id="decline" class="btn btn-warning">
-          <span>Cancel</span>
-        </button>
+        <p>
+          <button type="submit" name="accept-terms" id="accept-btn" class="btn btn-auto btn-blue">
+            <span>Accept and Enable</span>
+          </button>
+          <button type="submit" name="decline-terms" id="decline-btn" class="btn btn-auto btn-dark-gray">
+            <span>Cancel</span>
+          </button>
+        </p>
       </div>
     </div>
     <script src="scripts/utils.js"></script>

@@ -39,8 +39,8 @@ function getMetadata (book) {
       'author': book.metadata.creator,
       'image': 'https://archive.org/services/img/' + book.metadata.identifier,
       'link': book.metadata['identifier-access'],
-      'button_text': 'Read Now',
-      'button_class': 'btn btn-success resize_fit_center',
+      'button_text': 'Read Book',
+      'button_class': 'btn btn-auto btn-blue',
       'readable': true
     }
   }
@@ -69,14 +69,14 @@ function createDonateToolTip (isbn) {
     })
     .append(
       $('<div>')
-        .addClass('text_elements')
+        .addClass('text-elements')
         .append(
           $('<p>').append(
             $('<strong>').text('Please donate $50 and we will try to purchase and digitize the book for you.')
           )
         ),
       $('<div>')
-        .addClass('bottom_details text-muted')
+        .addClass('bottom-details text-muted')
         .append(
           $('<p>').text('Or if you have a copy of this book please mail it to: '),
           $('<p>').text('300 Funston, San Francisco, CA 94118'),
@@ -87,16 +87,16 @@ function createDonateToolTip (isbn) {
 
 function createReadToolTip (id, metadata) {
   return $('<a>')
-    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank'  })
+    .attr({ 'class': 'popup_box popup_read', 'href': 'https://archive.org/details/' + id, 'target': '_blank' })
     .append(
       $('<div>')
-        .addClass('text_elements')
+        .addClass('text-elements')
         .append(
           $('<p>').append($('<strong>').text(metadata.title)).addClass('popup-title'),
           $('<p>').addClass('text-muted').text(metadata.author)
         ),
       $('<div>')
-        .addClass('bottom_details')
+        .addClass('bottom-details')
         .append(
           metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : null,
           $('<p>').text('Click To Read Now').addClass('text-muted')
@@ -162,4 +162,10 @@ function wikipediaBooks (url) {
       }
     })
   })
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    addCitations
+  }
 }

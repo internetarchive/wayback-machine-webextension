@@ -37,15 +37,21 @@ function populateBooks(url) {
 }
 
 function addBook (metadata) {
-  let text_elements = $('<div>').attr({ 'class': 'text_elements' }).append(
-    $('<p>').append($('<strong>').text(metadata.title)),
+  let text_elements = $('<div>').attr({ 'class': 'text-elements' }).append(
+    $('<h3>').text(metadata.title),
     $('<p>').text(metadata.author)
   )
-  let details = $('<div>').attr({ 'class': 'bottom_details' }).append(
+  let details = $('<div>').attr({ 'class': 'bottom-details' }).append(
     metadata.image ? $('<img>').attr({ 'class': 'cover-img', 'src': metadata.image }) : $('<p>').attr({ 'class': 'cover-img' }).text('No cover available'),
     $('<button>').attr({ 'class': metadata.button_class }).text(metadata.button_text).click(() => {
       openByWindowSetting(metadata.link)
     })
   )
   return $('<div>').append(text_elements, details)
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    populateBooks
+  }
 }

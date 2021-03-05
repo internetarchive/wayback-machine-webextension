@@ -62,10 +62,6 @@ p {
     text-align: center;
 }
 
-.ia-logo {
-    height: 64px;
-}
-
 .wb-logo {
     height: 90px;
     padding-top: 1em;
@@ -126,10 +122,6 @@ p {
     body {
         background-color: #2C2C2C;
         color: #eee;
-    }
-
-    h2, h3, h4 {
-        color: #bbb;
     }
 
     #resource-list-container {

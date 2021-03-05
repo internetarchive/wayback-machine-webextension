@@ -10,26 +10,26 @@ In order to add documentation for the project, you need to have some understandi
 However, if you do not understand certain things about the project, the community will always be there to help you.
 ### Finding Bugs / Giving feature ideas
 This is the easiest way of helping us with the project. You are encouraged to try out the latest development version, explore different features, and find out if there are any bugs. You can also brainstorm feature ideas, and share them with us.
-To share either bug or features, [create an issue here](https://github.com/internetarchive/wayback-machine-chrome/issues/new/choose), and we can continue the rest of the discussion there.
+To share either bug or features, [create an issue here](https://github.com/internetarchive/wayback-machine-webextension/issues/new/choose), and we can continue the rest of the discussion there.
 
 ## How to set up the development environment?
 Before we begin, if you don't already have, download [git](https://git-scm.com/downloads ) and [node.js](https://nodejs.org/en/download/ ) (You may look at relevant tutorials to set them up according to your operating system)
- - Open the [wayback machine chrome github page](https://github.com/internetarchive/wayback-machine-chrome/ ), and fork the project
+ - Open the [wayback machine browser extension github page](https://github.com/internetarchive/wayback-machine-webextension/ ), and fork the project
  - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
  - Clone the project and navigate to working directory by typing the commands    
-`git clone https://github.com/<github_account_name>/wayback-machine-chrome.git`   
- `cd wayback-machine-chrome`
+`git clone https://github.com/<github_account_name>/wayback-machine-webextension.git`   
+ `cd wayback-machine-webextension`
  - Install the required packages by typing the command   
 `npm install`
 - Now you have a `node_modules` directory populated with packages
 
 ## How to install developer version of the extension?
-Once you have cloned the repository to your local machine(this would work with both the original and the forked repositories, but if you wish to make changes, you need to clone the forked version), you can follow the guide at [readme.md](https://github.com/internetarchive/wayback-machine-chrome/blob/master/README.md )
+Once you have cloned the repository to your local machine(this would work with both the original and the forked repositories, but if you wish to make changes, you need to clone the forked version), you can follow the guide at [readme.md](https://github.com/internetarchive/wayback-machine-webextension/blob/master/README.md )
 ## How to contribute code and docs?
 ### Find / Create an Issue to work on
 
- - Explore the [issues section](https://github.com/internetarchive/wayback-machine-chrome/issues) on the repository.
+ - Explore the [issues section](https://github.com/internetarchive/wayback-machine-webextension/issues) on the repository.
  - Go through open issues, read comments, talk to people and finalize an issue, you can work on, and get yourself assigned to the issue
  - Alternatively, if you notice any bug, or have any feature idea, you can create an issue, and discuss with code maintainers, and get yourself assigned to the issue.
 ### Write the code/docs
@@ -61,7 +61,7 @@ Here are a set of rules, you are advised to follow, to ensure smooth workflow.
  - Inform and talk to the community, before working on an issue
  - Always write meaningful commit messages
  - Only commit complete and well tested code
- - Follow the [style guide](https://github.com/internetarchive/wayback-machine-chrome/blob/master/STYLE_GUIDE.md)
+ - Follow the [style guide](https://github.com/internetarchive/wayback-machine-webextension/blob/master/STYLE_GUIDE.md)
  - Make small commits - Add different commits for different changes.
  - Don't push straight to master. Create a separate branch(with a meaningful name) for each feature or bug you work on.
  - Avoid working on outdated forks. Follow these tutorials on [configuring a remote](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork), and [syncing a fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)

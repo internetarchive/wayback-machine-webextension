@@ -3,6 +3,9 @@
 // from 'index.js'
 /*   global Levenshtein */
 
+// from 'utils.js'
+/*   global getUrlByParameter, hostURL */
+
 var mynewTags = []
 
 function get_tags() {
@@ -22,14 +25,14 @@ function get_tags() {
   var not_display3 = not_display4 + ' extension'
   var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
 
-  var new_url = hostURL+ 'services/context/tagcloud?url=' + toBeUsedAsURL
+  var new_url = hostURL + 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())
     .then((data) => {
       $('#loader_tagcloud').hide()
       if (!data.error && data.length > 0) {
-        $('.wordcloud').css( 'display', 'inline-block' )
+        $('.wordcloud').css('display', 'inline-block')
         $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
@@ -49,7 +52,7 @@ function get_tags() {
         var arr = mynewTags.reduce((acc, newTag) => {
           var minDistance = void 0
           if (acc.length > 0) {
-            minDistance = Math.min.apply(Math, _toConsumableArray(acc.map((oldTag) => {
+            minDistance = Math.min.apply(Math, toConsumableArray(acc.map((oldTag) => {
               return Levenshtein.get(oldTag, newTag)
             })))
           } else {
@@ -100,7 +103,7 @@ function get_tags() {
     })
 }
 
-function _toConsumableArray (arr) {
+function toConsumableArray (arr) {
   if (Array.isArray(arr)) {
     let arr2 = Array(arr.length)
     for (let i = 0; i < arr.length; i++) {
@@ -113,3 +116,9 @@ function _toConsumableArray (arr) {
 }
 
 window.onload = get_tags
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    toConsumableArray
+  }
+}

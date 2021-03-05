@@ -46,7 +46,7 @@ function loginError() {
   $('#bulk-save-btn').attr('disabled', true)
   $('#bulk-save-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
-  $('#spn-back-label').text('Login to Save Page')
+  $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
   $('#spn-btn').off('click').click(() => {
     show_login_page()
@@ -71,11 +71,11 @@ function loginSuccess() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       let url = searchValue || get_clean_url(tabs[0].url)
-      if (isNotExcludedUrl(url)) {
+      if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         $('#spn-btn').click(save_now)
-        chrome.storage.local.get(['private_mode'], (event) => {
+        chrome.storage.local.get(['private_mode_setting'], (event) => {
           // auto save page
-          if (!event.private_mode) {
+          if (!event.private_mode_setting) {
             chrome.runtime.sendMessage({
               message: 'getLastSaveTime',
               page_url: url
@@ -162,6 +162,14 @@ function social_share(eventObj) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
       } else if (id.includes('linkedin-share-btn')) {
         openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
+      } else if (id.includes('copy-link-btn') && navigator.clipboard) {
+        navigator.clipboard.writeText(sharing_url).then(() => {
+          let copiedMsg = $('#link-copied-msg')
+          copiedMsg.text('Copied to Clipboard').fadeIn('fast')
+          setTimeout(() => {
+            copiedMsg.fadeOut('fast')
+          }, 1500)
+        })
       }
     }
   })
@@ -229,7 +237,7 @@ function arrow_key_access() {
         search_box.value = index.textContent
       }
 
-    // listen for down key
+      // listen for down key
     } else if (e.keyCode === 40 || e.which === 40) {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
@@ -342,10 +350,10 @@ function borrow_books() {
         let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
-          chrome.storage.local.get(['tab_url', 'detail_url', 'show_context'], (res) => {
+          chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (res) => {
             const stored_url = res.tab_url
             const detail_url = res.detail_url
-            const context = res.show_context
+            const context = res.view_setting
             // Checking if the tab url is the same as the last stored one
             if (stored_url === url) {
               // if same, use the previously fetched url
@@ -355,15 +363,15 @@ function borrow_books() {
             } else {
               // if not, fetch it again
               fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-              .then(res => res.json())
-              .then(response => {
-                if (response['metadata'] && response['metadata']['identifier-access']) {
-                  const new_details_url = response['metadata']['identifier-access']
-                  $('#readbook-btn').click(() => {
-                    openByWindowSetting(new_details_url, context)
-                  })
-                }
-              })
+                .then(res => res.json())
+                .then(response => {
+                  if (response['metadata'] && response['metadata']['identifier-access']) {
+                    const new_details_url = response['metadata']['identifier-access']
+                    $('#readbook-btn').click(() => {
+                      openByWindowSetting(new_details_url, context)
+                    })
+                  }
+                })
             }
           })
         }
@@ -376,9 +384,9 @@ function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const news_host = new URL(url).hostname
-    chrome.storage.local.get(['show_context'], function (event) {
+    chrome.storage.local.get(['view_setting'], function (event) {
       let set_of_sites = newshosts
-      const option = event.show_context
+      const option = event.view_setting
       if (set_of_sites.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
@@ -422,8 +430,8 @@ function setUpFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
-      chrome.storage.local.get(['fact_check'], (event) => {
-        if (event.fact_check) {
+      chrome.storage.local.get(['fact_check_setting'], (event) => {
+        if (event.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
             let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
@@ -474,10 +482,10 @@ function clearFocus() {
 }
 
 function setupWaybackCount() {
-  chrome.storage.local.get(['wm_count'], (event) => {
+  chrome.storage.local.get(['wm_count_setting'], (event) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
-      if ((event.wm_count === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+      if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
@@ -544,7 +552,7 @@ function showSaving() {
 }
 
 // make the tab/window option in setting page checked according to previous setting
-chrome.storage.local.get(['show_context'], (event) => { $(`input[name=tw][value=${event.show_context}]`).prop('checked', true) })
+chrome.storage.local.get(['view_setting'], (event) => { $(`input[name=tw][value=${event.view_setting}]`).prop('checked', true) })
 
 // respond to Save Page Now success
 chrome.runtime.onMessage.addListener(
@@ -582,6 +590,7 @@ $('#oldest-btn').click(first_capture)
 $('#facebook-share-btn').click(social_share)
 $('#twitter-share-btn').click(social_share)
 $('#linkedin-share-btn').click(social_share)
+$('#copy-link-btn').click(social_share)
 $('#tweets-btn').click(search_tweet)
 $('#about-tab-btn').click(about_support)
 $('#donate-tab-btn').click(open_donations_page)

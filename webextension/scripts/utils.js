@@ -40,10 +40,11 @@ let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
 let private_before_state
 
-// TODO FIXME: This breaks when running tests!
-chrome.storage.local.get(['private_before_state'], (event) => {
-  private_before_state = new Set(event.private_before_state)
-})
+function initPrivateState() {
+  chrome.storage.local.get(['private_before_state'], (event) => {
+    private_before_state = new Set(event.private_before_state)
+  })
+}
 
 /* * * Browser Detection * * */
 
@@ -216,6 +217,15 @@ function makeValidURL(url) {
   return isValidUrl(url) ? url : (url.includes('.') ? 'https://' + url : null)
 }
 
+// Returns substring of URL after :// not including "www." if present.
+// Also crops trailing slash.
+function cropPrefix(url) {
+  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
+  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
+  let match = re.exec(url)
+  return match[1]
+}
+
 // Function to check whether it is a valid URL or not
 function isNotExcludedUrl(url) {
   const len = excluded_urls.length
@@ -378,9 +388,9 @@ function getUrlByParameter(name) {
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.local.get(['show_context'], (event) => { opener(url, event.show_context, cb) })
+    chrome.storage.local.get(['view_setting'], (event) => { opener(url, event.view_setting, cb) })
   } else {
-    opener(url, op)
+    opener(url, op, cb)
   }
 }
 
@@ -390,9 +400,17 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    let width = Math.floor(window.screen.availWidth * 0.75)
-    let height = Math.floor(window.screen.availHeight * 0.90)
-    chrome.windows.create({ url: url, width: width, height: height, top: 0, left: 0, type: 'popup' }, (window) => {
+    let w, h
+    if (screen.width > screen.height) {
+      // landscape screen
+      w = Math.floor(screen.width * 0.666)
+      h = Math.floor(w * 0.75)
+    } else {
+      // portrait screen (likely mobile)
+      w = Math.floor(screen.width * 0.9)
+      h = Math.floor(screen.height * 0.9)
+    }
+    chrome.windows.create({ url: url, width: w, height: h, top: 0, left: 0, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
@@ -448,18 +466,18 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* Features */
-    private_mode: false,
-    not_found_popup: false,
-    wm_count: false,
+    private_mode_setting: false,
+    not_found_setting: false,
+    wm_count_setting: false,
     wiki_setting: false,
     amazon_setting: false,
     tvnews_setting: false,
-    auto_archive: false,
-    fact_check: false,
+    auto_archive_setting: false,
+    fact_check_setting: false,
     /* General */
-    show_resource_list: false,
-    email_outlinks: false,
-    show_context: 'tab',
+    resource_list_setting: false,
+    email_outlinks_setting: false,
+    view_setting: 'tab',
     private_before_state: Array.from(private_before_default)
   })
 }
@@ -468,14 +486,14 @@ function initDefaultOptions () {
 function afterAcceptOptions () {
   chrome.storage.local.set({
     /* Features */
-    not_found_popup: true,
-    wm_count: true,
-    wiki_setting: true,
-    amazon_setting: true,
-    tvnews_setting: true,
-    fact_check: true,
+    not_found_setting: true,
+    wm_count_setting: false,
+    wiki_setting: false,
+    amazon_setting: false,
+    tvnews_setting: false,
+    fact_check_setting: false,
     /* General */
-    email_outlinks: true
+    email_outlinks_setting: false
   })
 }
 
@@ -489,6 +507,7 @@ if (typeof module !== 'undefined') {
     isArchiveUrl,
     isValidUrl,
     makeValidURL,
+    cropPrefix,
     isNotExcludedUrl,
     get_clean_url,
     wmAvailabilityCheck,
@@ -498,7 +517,10 @@ if (typeof module !== 'undefined') {
     attachTooltip,
     getWaybackCount,
     badgeCountText,
+    isChrome,
     isFirefox,
+    isEdge,
+    isSafari,
     hostURL,
     timestampToDate,
     dateToTimestamp,
@@ -508,6 +530,7 @@ if (typeof module !== 'undefined') {
     feedbackURL,
     newshosts,
     private_before_state,
+    initPrivateState,
     searchValue
   }
 }

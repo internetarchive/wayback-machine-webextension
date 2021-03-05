@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter */
+/*   global hostURL, getUrlByParameter, openByWindowSetting */
 
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
@@ -37,44 +37,23 @@ function getMetadata(entry) {
 
 function makeEntry (data) {
   let paper = $('<div>').append(
-    $('<p class="text_elements">').append(
-      $('<p>').append(
-        $('<strong>').text(data.title)
-      ),
+    $('<p class="text-elements">').append(
+      $('<h3>').text(data.title),
       $('<p>').append(data.author)
       // Journal was also commented out in the previous version.
       // $('<p>').append(journal)
     )
   )
-  let bottom_details = $('<div>').addClass('bottom_details')
+  let bottom_details = $('<div>').addClass('bottom-details')
   if (data.url !== '#') {
     bottom_details.append(
-      $('<button>').attr({ 'class': 'btn btn-success' }).text('Read Paper')
-        .click(() => {
-          chrome.storage.local.get(['show_context'], (event1) => {
-            if (event1.show_context === undefined) {
-              event1.show_context = 'tab'
-            }
-            if (event1.show_context === 'tab') {
-              chrome.tabs.create({ url: data.url })
-            } else {
-              chrome.windows.getCurrent((window) => {
-                const height = window.height
-                const width = window.width
-                chrome.windows.create({ url: data.url,
-                  width: width / 2,
-                  height: height,
-                  top: 0,
-                  left: 0 
-                })
-              })
-            }
-          })
-        }),
+      $('<button>').attr({ 'class': 'btn btn-auto btn-blue' }).text('Read Paper').click(() => {
+        openByWindowSetting(data.url)
+      }),
       $('<div>').addClass('small text-muted').text('source: ' + data.source)
     )
   } else {
-    bottom_details.append($('<p>').text('Paper Unavailable').addClass('not_found'))
+    bottom_details.append($('<p>').text('Paper Unavailable').addClass('unavailable-label'))
   }
   paper.append(bottom_details)
   return paper
@@ -86,7 +65,7 @@ function createPage () {
   $.getJSON(hostURL + 'services/context/papers?url=' + url, (response) => {
     $('.loader').hide()
     if (response.status && response.status === 'error') {
-      $('#doi-heading').html(response.message)
+      $('#error-msg').html(response.message)
     } else {
       for (var i = 0; i < response.length; i++) {
         if (response[i]) {
@@ -107,6 +86,7 @@ function createPage () {
 if (typeof module !== 'undefined') {
   module.exports = {
     getMetadata,
-    makeEntry
+    makeEntry,
+    createPage
   }
 }

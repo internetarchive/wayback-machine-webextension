@@ -10,7 +10,7 @@
     font-size: 12px;
 }
 
-#view-text {
+#view-setting-text {
     font-size: 12px;
     font-weight: 500;
 }
@@ -39,21 +39,6 @@
     color: #fff;
 }
 
-.btn-container {
-    border-radius: 5px;
-    background-color: #ddd;
-}
-
-.btn-container .btn {
-    border-radius: 0;
-}
-.btn-container li:first-child .btn {
-    border-radius: 5px 0 0 5px !important;
-}
-.btn-container li:last-child .btn {
-    border-radius: 0 5px 5px 0 !important;
-}
-
 
 /* dark mode */
 
@@ -63,7 +48,7 @@
         font-weight: 500;
     }
 
-    #view-text {
+    #view-setting-text {
         font-weight: 500;
     }
 
@@ -79,9 +64,6 @@
         color: #000;
     }
 
-    .btn-container {
-        background-color: #3C3C3C;
-    }
 }
 
 /* navgation bar */
@@ -95,15 +77,6 @@ ul.setting-nav {
 ul.setting-nav li {
     float: left;
     width: 50%;
-}
-
-.unselectable > * {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 /* options */
@@ -143,6 +116,7 @@ label[for=tagcloud] {
 
 .tooltip-inner p {
     margin: 5px;
+    font-size: 12px;
 }
 
 .setting-tip {

@@ -9,19 +9,21 @@
   <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
   <title>Word Cloud</title>
 </head>
-<body>
+<body class="body-container">
   <div class="tabcontent" id="Tagcloud">
-    <div class="col-sm-12 text-center">
-      <h1>Word Cloud</h1>
+    <div class="text-center">
+      <h2 id="main-title">Word Cloud</h2>
+      <p id="main-info"></p>
+      <p id="error-msg"></p>
       <h4>URL: <a class="url" target="_blank"></a></h4>
     </div>
     <div class="loader" id="loader_tagcloud"></div>
-    <div class="col-sm-6 title">
+    <div class="text-center">
       <div class="wordcloud">
         <div id="container-wordcloud"></div>
       </div>
     </div>
-    <div class="col-sm-6">
+    <div class="text-center">
       <div class="pre" id="tagcloud-not-found">
         <div class="pre-container">
           <div id="message_tagcloud" style="margin:10px 0"></div>

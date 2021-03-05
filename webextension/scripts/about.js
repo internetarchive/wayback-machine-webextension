@@ -1,4 +1,4 @@
-//about.js
+// about.js
 
 // from 'utils.js'
 /*   global feedbackURL */
