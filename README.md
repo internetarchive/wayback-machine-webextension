@@ -23,7 +23,7 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 Follow the steps below for the currently deployed version depending on your browser.
 
-<img style="float:left;height:3em" src="webextension/images/about/chrome64.png">
+<img width="40px" align="left" src="webextension/images/about/chrome64.png">
 
 ### Chrome
 
@@ -34,7 +34,7 @@ Follow the steps below for the currently deployed version depending on your brow
 5. Click on the newly added icon.
 6. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
-<img style="float:left;height:3em" src="webextension/images/about/firefox64.png">
+<img width="40px" align="left" src="webextension/images/about/firefox64.png">
 
 ### Firefox
 
@@ -47,7 +47,7 @@ Follow the steps below for the currently deployed version depending on your brow
 
 First tap on the **Code** button, **Download ZIP**, unzip the file in a location where you can find on your computer, then follow the steps below for your browser.
 
-<img style="float:left;height:3em" src="webextension/images/about/chrome64.png">
+<img width="40px" align="left" src="webextension/images/about/chrome64.png">
 
 ### Chrome
 
@@ -61,7 +61,7 @@ First tap on the **Code** button, **Download ZIP**, unzip the file in a location
 
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
-<img style="float:left;height:3em" src="webextension/images/about/firefox64.png">
+<img width="40px" align="left" src="webextension/images/about/firefox64.png">
 
 ### Firefox
 
@@ -74,7 +74,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
-<img style="float:left;height:3em" src="webextension/images/about/edge64.png">
+<img width="40px" align="left" src="webextension/images/about/edge64.png">
 
 ### Edge
 
@@ -84,7 +84,7 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
-<img style="float:left;height:3em" src="webextension/images/about/safari64.png">
+<img width="40px" align="left" src="webextension/images/about/safari64.png">
 
 ### Safari 14+
 
