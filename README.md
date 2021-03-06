@@ -24,6 +24,7 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 Follow the steps below for the currently deployed version depending on your browser.
 
 <img width="40px" align="left" src="webextension/images/about/chrome64.png">
+
 ### Chrome
 
 1. Go to our page on the [Chrome Web Store](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
@@ -34,6 +35,7 @@ Follow the steps below for the currently deployed version depending on your brow
 6. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 <img width="40px" align="left" src="webextension/images/about/firefox64.png">
+
 ### Firefox
 
 1. Go to the [Firefox Add-Ons](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) website.
@@ -46,6 +48,7 @@ Follow the steps below for the currently deployed version depending on your brow
 First tap on the **Code** button, **Download ZIP**, unzip the file in a location where you can find on your computer, then follow the steps below for your browser.
 
 <img width="40px" align="left" src="webextension/images/about/chrome64.png">
+
 ### Chrome
 
 1. Open Chrome and navigate to `chrome://extensions` in your browser. You can also access this page by clicking on the 3 vertical dots menu on the top-right, hovering over **More Tools**, then selecting **Extensions**.
@@ -59,6 +62,7 @@ First tap on the **Code** button, **Download ZIP**, unzip the file in a location
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
 <img width="40px" align="left" src="webextension/images/about/firefox64.png">
+
 ### Firefox
 
 1. Open Firefox and navigate to `about:debugging` in the browser. You can also access this page by clicking on the hamburger menu on the top-right, select **Add-ons**, then the **Gear Tools button** on the top-right, then **Debug Add-ons**.
@@ -71,6 +75,7 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
 
 <img width="40px" align="left" src="webextension/images/about/edge64.png">
+
 ### Edge
 
 1. Open Edge and navigate to `edge://extensions` in your browser. You can also access this page by clicking on the 3 horizontal dots menu on the top-right, then clicking **Extensions**.
@@ -80,6 +85,7 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 <img width="40px" align="left" src="webextension/images/about/safari64.png">
+
 ### Safari 14+
 
 This code is **not yet ready** to run on Safari 14, but it is currently being worked on.
