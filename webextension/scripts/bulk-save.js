@@ -150,9 +150,11 @@ function initMessageListener() {
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.error) {
       // stop if user not logged in
-      stopSaving()
-      resetUI()
-      $('#not-logged-in').show()
+      if (message.error == "You need to be logged in to use Save Page Now." ){
+        stopSaving()
+        resetUI()
+        $('#not-logged-in').show()
+      }
     } else if (message && message.message && message.url) {
       // respond to message
       processStatus(message.message, message.url)
