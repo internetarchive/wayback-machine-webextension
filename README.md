@@ -107,7 +107,11 @@ If you have a GitHub account, please check the [list of existing issues](https:/
 
 ## Contributing Code
 
-To contribute code and docs to Wayback Machine Chrome extension, take a look at our [Contribution Guide](CONTRIBUTING.md), [Style Guide](STYLE_GUIDE.md), and [Testing Guide](TESTING_GUIDE.md).
+To contribute code and docs to the Wayback Machine Web Extension, please read the following:
+
+- [Contribution Guide](CONTRIBUTING.md)
+- [Style Guide](STYLE_GUIDE.md)
+- [Testing Guide](TESTING_GUIDE.md)
 
 
 ## Credits
