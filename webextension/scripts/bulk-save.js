@@ -66,25 +66,31 @@ function doImportBookmarks(e) {
 
 // Import all bookmarked URLs.
 function importAllBookmarks() {
+  let count_val = 0
   if (chrome.bookmarks) {
     chrome.bookmarks.getTree((nodeTree) => {
       nodeTree.forEach((node) => {
-        processTreeNode(node)
+        count_val += processTreeNode(node)
       })
+      if (count_val === 0) {
+        alert('Sorry No Bookmark Found. Please ensure that you have bookmarks')
+      }
     })
   }
 }
-
 // Traverses the bookmark tree nodes recursively.
 function processTreeNode(node) {
+  let count = 0
   // process child nodes
   if (node.children) {
-    node.children.forEach((child) => { processTreeNode(child) })
+    node.children.forEach((child) => { count += processTreeNode(child) })
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
+    count++
     addToBulkSave(node.url)
   }
+  return count
 }
 
 /* * * Save List * * */
