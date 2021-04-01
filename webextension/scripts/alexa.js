@@ -55,6 +55,14 @@ function get_alexa() {
     $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url.hostname)
     $('#loader_alexa').hide()
     $('#show_alexa_data').show()
+  }).fail((error) => {
+    $('#loader_alexa').hide();
+    $('#alexa_domain_tag').hide();
+    $('.error').text('Can not reach Alexa at the moment!')
+    $('.rank').hide()
+    $('.country').hide()
+    $('#show_alexa_data').show();
+
   })
 }
 
