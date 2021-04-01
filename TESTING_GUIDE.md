@@ -78,14 +78,14 @@ While testing API calls, a couple of tools that I find useful is the Chrome brow
 <th>Replace 404s, etc...</th>
 <td>
 
-- 404 Page not found:   
-http://purl.oclc.org/docs/inet96.html
+404 Page not found:   
+- http://purl.oclc.org/docs/inet96.html
 
-- 302 Redirect to 404 above:   
-http://purl.oclc.org/OCLC/PURL/INET96
+302 Redirect to 404 above:   
+- http://purl.oclc.org/OCLC/PURL/INET96
 
-- 410 Page has gone:   
-https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
+410 Page has gone:   
+- https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
 
 </td>
 </tr>
@@ -101,14 +101,14 @@ Any URL
 <th>Fact Checks</th>
 <td>
 
-Tests 'F' state:
+Test 'F' state:   
 - http://actionnews3.com/rat-meat-has-been-sold-as-chicken-wings/
 - https://worldnewsdailyreport.com/california-pro-choice-activist-proudly-breaks-world-record-by-getting-her-27th-abortion/
 - https://www.intellihub.com/busted-protesters-uncover-false-flag-set-up-pile-of-bricks-strategically-placed-on-street-near-high-end-dallas-shops/
 - https://biohackinfo.com/news-bill-gates-id2020-vaccine-implant-covid-19-digital-certificates/
 - https://www.britannica.com/story/was-martin-luther-king-jr-a-republican-or-a-democrat
 
-Tests both 'F' and 'R' (TV News Clips):
+Test both 'F' and 'R' (TV News Clips):   
 - https://www.factcheck.org/2019/01/unsupported-mlk-claim-circulates-again/
 
 </td>
@@ -117,50 +117,49 @@ Tests both 'F' and 'R' (TV News Clips):
 <tr>
 <th>Wikipedia Resources</th>
 <td>
-<pre>
-Has Both Books and Papers:
-https://en.wikipedia.org/wiki/World_War_II
-https://en.wikipedia.org/wiki/Vincent_van_Gogh
-https://en.wikipedia.org/wiki/Paper
 
-Has Papers but No Books (No ISBNs):
-https://en.wikipedia.org/wiki/Perseverance_(rover)
+Has Both Books and Papers:   
+- https://en.wikipedia.org/wiki/World_War_II
+- https://en.wikipedia.org/wiki/Vincent_van_Gogh
+- https://en.wikipedia.org/wiki/Paper
 
-'Fact Check', 'Cited Books', and 'Cited Papers':
-https://en.wikipedia.org/wiki/Barack_Obama
+Has Papers but No Books (No ISBNs):   
+- https://en.wikipedia.org/wiki/Perseverance_(rover)
 
-Should not display 'R' icon:
-https://en.wikipedia.org/wiki/Main_Page
+'Fact Check', 'Cited Books', and 'Cited Papers':   
+- https://en.wikipedia.org/wiki/Barack_Obama
 
-</pre>
+Should not display 'R' icon:   
+- https://en.wikipedia.org/wiki/Main_Page
+
 </td>
 </tr>
 
 <tr>
 <th>Amazon Books</th>
 <td>
-<pre>
-Should display blue 'R' and 'Read Book':
-https://www.amazon.in/End-Days-Predictions-Prophecies-About/dp/0451226895
-https://www.amazon.com/Prophecy-What-Future-Holds-You/dp/0451215206
-https://www.amazon.com/End-Days-Jenny-Erpenbeck/dp/0811225135
-https://www.amazon.com/Sylvia-Brownes-Book-Dreams-Browne/dp/0451220293
-https://www.amazon.com/Other-Side-Back-Psychics-Beyond/dp/0451198638
-</pre>
+
+Should display blue 'R' and 'Read Book':   
+- https://www.amazon.in/End-Days-Predictions-Prophecies-About/dp/0451226895
+- https://www.amazon.com/Prophecy-What-Future-Holds-You/dp/0451215206
+- https://www.amazon.com/End-Days-Jenny-Erpenbeck/dp/0811225135
+- https://www.amazon.com/Sylvia-Brownes-Book-Dreams-Browne/dp/0451220293
+- https://www.amazon.com/Other-Side-Back-Psychics-Beyond/dp/0451198638
+
 </td>
 </tr>
 
 <tr>
 <th>TV News Clips</th>
 <td>
-<pre>
-Should display blue 'R' and 'TV News Clips':
-https://www.huffingtonpost.com/entry/alex-jones-infowars-app-apple-google_us_5b694ec3e4b0de86f4a4bc1d
-https://www.huffpost.com/entry/alex-jones-infowars-app-apple-google_n_5b694ec3e4b0de86f4a4bc1d
-https://www.vox.com/2020/7/6/21314472/covid-19-coronavirus-us-cases-deaths-trends-wtf
-https://www.theverge.com/2018/8/29/17798118/president-donald-trump-google-state-of-the-union-address-liberal-bias
-https://edition.cnn.com/2020/08/07/economy/larry-kudlow-poppy-harlow-unemployment/index.html
-</pre>
+
+Should display blue 'R' and 'TV News Clips':   
+- https://www.huffingtonpost.com/entry/alex-jones-infowars-app-apple-google_us_5b694ec3e4b0de86f4a4bc1d
+- https://www.huffpost.com/entry/alex-jones-infowars-app-apple-google_n_5b694ec3e4b0de86f4a4bc1d
+- https://www.vox.com/2020/7/6/21314472/covid-19-coronavirus-us-cases-deaths-trends-wtf
+- https://www.theverge.com/2018/8/29/17798118/president-donald-trump-google-state-of-the-union-address-liberal-bias
+- https://edition.cnn.com/2020/08/07/economy/larry-kudlow-poppy-harlow-unemployment/index.html
+
 </td>
 </tr>
 
