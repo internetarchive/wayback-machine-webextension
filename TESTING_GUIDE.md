@@ -77,6 +77,7 @@ While testing API calls, a couple of tools that I find useful is the Chrome brow
 <tr>
 <th>Replace 404s, etc...</th>
 <td>
+
 - 404 Page not found:   
 http://purl.oclc.org/docs/inet96.html
 
@@ -99,17 +100,17 @@ Any URL
 <tr>
 <th>Fact Checks</th>
 <td>
-<pre>
+
 Tests 'F' state:
-http://actionnews3.com/rat-meat-has-been-sold-as-chicken-wings/
-https://worldnewsdailyreport.com/california-pro-choice-activist-proudly-breaks-world-record-by-getting-her-27th-abortion/
-https://www.intellihub.com/busted-protesters-uncover-false-flag-set-up-pile-of-bricks-strategically-placed-on-street-near-high-end-dallas-shops/
-https://biohackinfo.com/news-bill-gates-id2020-vaccine-implant-covid-19-digital-certificates/
-https://www.britannica.com/story/was-martin-luther-king-jr-a-republican-or-a-democrat
+- http://actionnews3.com/rat-meat-has-been-sold-as-chicken-wings/
+- https://worldnewsdailyreport.com/california-pro-choice-activist-proudly-breaks-world-record-by-getting-her-27th-abortion/
+- https://www.intellihub.com/busted-protesters-uncover-false-flag-set-up-pile-of-bricks-strategically-placed-on-street-near-high-end-dallas-shops/
+- https://biohackinfo.com/news-bill-gates-id2020-vaccine-implant-covid-19-digital-certificates/
+- https://www.britannica.com/story/was-martin-luther-king-jr-a-republican-or-a-democrat
 
 Tests both 'F' and 'R' (TV News Clips):
-https://www.factcheck.org/2019/01/unsupported-mlk-claim-circulates-again/
-</pre>
+- https://www.factcheck.org/2019/01/unsupported-mlk-claim-circulates-again/
+
 </td>
 </tr>
 
