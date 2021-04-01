@@ -105,25 +105,9 @@ If you previously used the command line to clone this repo, note that it has bee
 If you have a GitHub account, please check the [list of existing issues](https://github.com/internetarchive/wayback-machine-webextension/issues) (bugs are tagged red), then create a **New issue** to file a Bug report or Feature request.
 
 
-## Testing
-
-*This step is not required if you only want to try out the extension.*
-
-- To setup the testing environment, run `npm install` to install required packages.
-This should create directory `node_modules` and populate it with modules.
-
-- To run tests, execute `npm test`.
-
-- When writing a test for `example.js` create a new file in the test directory named `example.spec.js`.
-
-- To recreate the `/webextension/scripts/build.js` file run `npm run-script build` which will run webpack.
-
-This has been tested using `node v10.11.0` and `npm 6.4.1`.
-
-
 ## Contributing Code
 
-To contribute code and docs to Wayback Machine Chrome extension, take a look at our [Contribution Guide](CONTRIBUTING.md) and [Style Guide](STYLE_GUIDE.md).
+To contribute code and docs to Wayback Machine Chrome extension, take a look at our [Contribution Guide](CONTRIBUTING.md), [Style Guide](STYLE_GUIDE.md), and [Testing Guide](TESTING_GUIDE.md).
 
 
 ## Credits

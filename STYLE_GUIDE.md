@@ -1,12 +1,9 @@
-Style Guide
-===========
-
-by [Carl Gorringe](https://github.com/cgorringe)
+# Style Guide
 
 This is a style guide for the Chrome extension code. Some of the code may not currently follow this guide, but you can help improve it by refactoring it. Some items are merely suggestions and there can be exceptions, so use your best judgement.
 
-HTML / CSS
-----------
+
+## HTML / CSS ##
 
 #### General ####
 
@@ -34,8 +31,7 @@ HTML / CSS
 }
 ```
 
-JavaScript
-----------
+## JavaScript ##
 
 #### General ####
 
@@ -71,35 +67,9 @@ function fooBarBaz(pos) {
 }
 ```
 
-Using ESLint
-------------
+## Using ESLint ##
 
-Using *eslint* will catch some basic formatting and syntax issues. It does not currently catch everything in the Style Guide above. Rules are defined in the `.eslintrc.json` file.
+Using *eslint* will catch some basic formatting and syntax issues. It does not currently catch everything in the Style Guide above. 
 
-[Getting Started with ESLint](https://eslint.org/docs/user-guide/getting-started)
+Please follow the directions in the [Testing Guide](TESTING_GUIDE.md) section on **Formatting & Style** for details.
 
-#### To install: ####
-
-```
-npm install eslint --save-dev
-```
-
-#### To see options: ####
-
-```
-npx eslint
-```
-
-#### Example to examine JS file: ####
-
-Run this from root directory where `package.json` is located:
-
-```
-npx eslint webextension/scripts/settings.js
-```
-
-To avoid `no-undef` errors that may occur with external global variables or functions, add it to a comment around the top of the file, like so:
-
-```
-/* global fooVar, barFunc */
-```
