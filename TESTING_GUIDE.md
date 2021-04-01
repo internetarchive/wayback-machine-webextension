@@ -77,16 +77,15 @@ While testing API calls, a couple of tools that I find useful is the Chrome brow
 <tr>
 <th>Replace 404s, etc...</th>
 <td>
-<pre>
-404 Page not found:
+- 404 Page not found:   
 http://purl.oclc.org/docs/inet96.html
 
-302 Redirect to 404 above:
+- 302 Redirect to 404 above:   
 http://purl.oclc.org/OCLC/PURL/INET96
 
-410 Page has gone:
+- 410 Page has gone:   
 https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
-</pre>
+
 </td>
 </tr>
 

@@ -1,6 +1,6 @@
 # Style Guide
 
-This is a style guide for the Chrome extension code. Some of the code may not currently follow this guide, but you can help improve it by refactoring it. Some items are merely suggestions and there can be exceptions, so use your best judgement.
+This is a style guide for the Web Extension code. Some of the code may not currently follow this guide, but you can help improve it by refactoring it. Some items are merely suggestions and there can be exceptions, so use your best judgement.
 
 
 ## HTML / CSS ##
