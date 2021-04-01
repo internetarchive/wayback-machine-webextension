@@ -101,14 +101,14 @@ Any URL
 <th>Fact Checks</th>
 <td>
 
-Test 'F' state:
+Should display purple 'F' and 'Fact Check':
 - http://actionnews3.com/rat-meat-has-been-sold-as-chicken-wings/
 - https://worldnewsdailyreport.com/california-pro-choice-activist-proudly-breaks-world-record-by-getting-her-27th-abortion/
 - https://www.intellihub.com/busted-protesters-uncover-false-flag-set-up-pile-of-bricks-strategically-placed-on-street-near-high-end-dallas-shops/
 - https://biohackinfo.com/news-bill-gates-id2020-vaccine-implant-covid-19-digital-certificates/
 - https://www.britannica.com/story/was-martin-luther-king-jr-a-republican-or-a-democrat
 
-Test both 'F' and 'R' (TV News Clips):
+Should display purple 'F', 'Fact Check', and 'TV News Clips' (R):
 - https://www.factcheck.org/2019/01/unsupported-mlk-claim-circulates-again/
 
 </td>
@@ -118,18 +118,18 @@ Test both 'F' and 'R' (TV News Clips):
 <th>Wikipedia Resources</th>
 <td>
 
-Has Both Books and Papers:
+Should display blue 'R', 'Cited Books', 'Cited Papers':
 - https://en.wikipedia.org/wiki/World_War_II
 - https://en.wikipedia.org/wiki/Vincent_van_Gogh
 - https://en.wikipedia.org/wiki/Paper
 
-Has Papers but No Books (No ISBNs):
+Should display blue 'R' and 'Cited Papers', but No Books.
 - https://en.wikipedia.org/wiki/Perseverance_(rover)
 
-'Fact Check', 'Cited Books', and 'Cited Papers':
+Should display 'F', 'Fact Check', 'Cited Books', 'Cited Papers':
 - https://en.wikipedia.org/wiki/Barack_Obama
 
-Should not display 'R' icon:
+Should not display 'R':
 - https://en.wikipedia.org/wiki/Main_Page
 
 </td>
