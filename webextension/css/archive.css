@@ -13,9 +13,22 @@
     box-shadow: 0 3px 5px 0 rgba(0,0,0,.3);
 }
 
+#dns-error {
+    position: relative;
+    margin:auto;
+    z-index: 2147483647;
+    width: 700px;
+    height: 400px;
+    background-color: white;
+    outline: 1rem black;
+    font-family: monospace, 'Courier New', Courier;
+    animation: fadein 0.8s ease-out;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.3);
+}
+
 #txt {
-    position: absolute;
-    width: 350px;
+    position: relative;
     height: 35px;
     font-size: 17px;
     text-align: center;
@@ -24,6 +37,7 @@
     background-color: #9C3837;
     border-radius: 5px 5px 0px 0px;
 }
+
 
 #close {
     display: inline-block;
@@ -38,13 +52,18 @@
     cursor: pointer;
 }
 
+#pid {
+    color: black;
+    text-align: center;
+    font-family: monospace, 'Courier New', Courier;
+    font-size: 20px;
+}
+
 #logo {
     display: block;
     position: relative;
-    width: 280px;
-    height: 100px;
-    top: 60px;
-    left: 40px;
+    width:80%;
+    margin: 35px auto;
 }
 
 
@@ -52,10 +71,7 @@
     display: block;
     position: relative;
     font-size: 20px;
-    width: 300px;
     height: 35px;
-    top: 90px;
-    left: 25px;
     background-color: #9C3837;
     color: white;
     line-height: 30px;
@@ -63,6 +79,7 @@
     text-decoration: none;
     opacity: 1;
     transition: 0.5s;
+    border-radius: 2px;
 }
 
 #archiveBtn:hover {
