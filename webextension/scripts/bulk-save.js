@@ -12,6 +12,7 @@ let saveSuccessCount = 0
 let saveFailedCount = 0
 let totalUrlCount = 0
 let isSaving = false
+let saveOptions = []
 
 /* * * UI * * */
 
@@ -154,7 +155,7 @@ function initMessageListener() {
     }
   })
 }
-let options = ['capture_all']
+
 // Click handler to Start Bulk Save.
 function doBulkSaveAll(e) {
   // prepare queue, exit if empty
@@ -168,17 +169,13 @@ function doBulkSaveAll(e) {
   saveFailedCount = 0
   totalUrlCount = bulkSaveQueue.length
   $('#total-count').text(totalUrlCount)
+  // reset options
+  saveOptions = []
+  // due to timeout issues, outlinks not supported right now
+  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions.push('capture_outlinks') }
+  if ($('#chk-screenshot').prop('checked') === true) { saveOptions.push('capture_screenshot') }
   // start saving concurrently
   startSaving()
-  if ($('#chk-outlinks').prop('checked') === true) {
-    options.push('capture_outlinks')
-    if ($('#email-outlinks-setting').prop('checked') === true) {
-      options.push('email_result')
-    }
-  }
-  if ($('#chk-screenshot').prop('checked') === true) {
-    options.push('capture_screenshot')
-  }
   for (let i = 0; i < MAX_SAVES; i++) {
     saveNextInQueue()
   }
@@ -212,7 +209,7 @@ function saveTheURL(url) {
     message: 'openurl',
     wayback_url: hostURL + 'save/',
     page_url: url,
-    options: options,
+    options: saveOptions,
     method: 'save',
     silent: true
   })

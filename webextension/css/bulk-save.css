@@ -112,13 +112,19 @@ p {
 
 .save-box {
     width: auto;
-    margin: 0;
+    margin: 0 0 1em 0;
 }
 
+.save-options-container p {
+    margin: 0;
+}
 .save-options-container p * {
     cursor: pointer;
     margin: 2px;
     display: inline;
+}
+.save-options-container p label {
+    margin-right: 0.5em;
 }
 
 .url-list {
@@ -154,36 +160,6 @@ p {
 
 .flex-container {
     display: flex;
-}
-
-/* checkboxes */
-
-.chk-options {
-    padding: 0 18px;
-    margin-bottom: 1px;
-    margin-top: 5px;
-    flex-grow: 1;
-    cursor: pointer;
-}
-
-.chk-options:hover {
-    background-color: rgba(127, 127, 127, 0.2);
-    border-radius: 5px;
-}
-
-.chk-options * {
-    font-size: 12px;
-    font-weight: 400;
-    margin: 0;
-}
-
-.chk-options input {
-    margin: 5px 5px 0 0;
-}
-
-.chk-options span {
-    vertical-align: middle;
-    padding-bottom: 2px;
 }
 
 /* Dark Mode */

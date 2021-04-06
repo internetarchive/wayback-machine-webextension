@@ -42,7 +42,18 @@
 
       <div class="save-box">
         <div class="save-options-container">
-          <p><input type="checkbox" id="never-saved"> <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label></p>
+          <p>
+            <input type="checkbox" id="never-saved">
+            <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label>
+          </p>
+          <p>
+            <input type="checkbox" id="chk-screenshot">
+            <label class="save-options" for="chk-screenshot" id="chk-screenshot-label">Save Screenshots.</label>
+            <!--
+            <input type="checkbox" id="chk-outlinks">
+            <label class="save-options" for="chk-outlinks" id="chk-outlinks-label">Save Outlinks. (slow)</label>
+            -->
+          </p>
         </div>
       </div>
 
@@ -55,15 +66,6 @@
         </div>
         <div id="bulk-save-label">Start Bulk Save</div>
       </button>
-    </div>
-
-    <div class="chk-frame">
-      <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Takes longer to save more.">
-        <input type="checkbox" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
-      </label>
-      <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Includes page image.">
-        <input type="checkbox" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
-      </label>
     </div>
 
   </div>
