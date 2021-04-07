@@ -1,0 +1,12 @@
+name: Continuous Integration
+on: [pull_request]
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 12
+    - run: npm install
+    - run: npm test
