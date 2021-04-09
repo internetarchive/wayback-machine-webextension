@@ -521,7 +521,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
     getCachedFactCheck(message.url,
-      (json) => { sendResponse(json) },
+      (json) => { sendResponse({ json }) },
       (error) => { sendResponse({ error }) }
     )
   }
