@@ -5,13 +5,13 @@
 
 function getWBMSummary () {
   var url = decodeURIComponent(getUrlByParameter('url'))
-  getDetails(url)
+  getArchiveDetails(url)
   firstArchiveDetails(url)
   recentArchiveDetails(url)
   $('#loader_wbmsummary').hide()
 }
 
-function getDetails (url) {
+function getArchiveDetails (url) {
   var new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     if ('type' in response) {

@@ -119,6 +119,7 @@ window.onload = getTags
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    toConsumableArray
+    toConsumableArray,
+    getTags
   }
 }
