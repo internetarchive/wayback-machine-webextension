@@ -6,13 +6,13 @@
 /**
  * Prepare hypothes.is URL to request API.
  */
-function hypothesis_api_url(url, type) {
+function hypothesisApiUrl(url, type) {
   if (!/^https?:\/\//i.test(url)) {
     url = 'http://' + url
   }
   if (type === 'domain') {
-    const url_obj = new URL(url)
-    const query = 'uri.parts=' + url_obj.host.split('.').join('&uri.parts=')
+    const urlObj = new URL(url)
+    const query = 'uri.parts=' + urlObj.host.split('.').join('&uri.parts=')
     return 'https://hypothes.is/api/search?' + query
   } else if (type === 'url') {
     return 'https://hypothes.is/api/search?uri=' + url
@@ -22,11 +22,11 @@ function hypothesis_api_url(url, type) {
 /**
  * Get hypothes.is data and render results.
  */
-function get_annotations(type = 'url') {
+function getAnnotations(type = 'url') {
   const url = decodeURIComponent(getUrlByParameter('url'))
   $('.url').text(url).attr('href', url)
-  const new_url = hypothesis_api_url(url, type)
-  $.getJSON(new_url, (data) => {
+  const newUrl = hypothesisApiUrl(url, type)
+  $.getJSON(newUrl, (data) => {
     const length = data.rows.length
     if (length > 0) {
       for (let i = 0; i < length; i++) {
@@ -97,8 +97,8 @@ $('.tablink').click(() => {
 })
 
 function get_hypothesis() {
-  let hypo_domain = get_annotations('domain')
-  let hypo_url = get_annotations('url')
+  let hypo_domain = getAnnotations('domain')
+  let hypo_url = getAnnotations('url')
   $('#loader_annotations').hide()
   if (hypo_url && hypo_domain) {
     $('#annotations_status').show()
@@ -109,7 +109,7 @@ window.onload = get_hypothesis
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    hypothesis_api_url,
-    get_annotations
+    hypothesisApiUrl,
+    getAnnotations
   }
 }

@@ -2,8 +2,9 @@
 
 // from 'utils.js'
 /*   global feedbackURL */
+
 const VERSION = chrome.runtime.getManifest().version
-const DATE = new Date().getFullYear()
+const YEAR = new Date().getFullYear()
 $('#version').text(VERSION)
-$('#year').text(DATE)
+$('#year').text(YEAR)
 $('#reviews-page').attr('href', feedbackURL)

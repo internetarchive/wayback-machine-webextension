@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global getUrlByParameter */
 
-function get_alexa() {
+function getAlexa() {
   var alexa_url = 'https://xml.alexa.com/data?cli=10&dat=n&url='
   var url = new URL(decodeURIComponent(getUrlByParameter('url')))
   $('.url').text(url).attr('href', url)
@@ -66,4 +66,4 @@ function get_alexa() {
   })
 }
 
-window.onload = get_alexa()
+window.onload = getAlexa()

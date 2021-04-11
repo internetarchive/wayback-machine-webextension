@@ -13,7 +13,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
   }
 }
 
-function get_domainTool () {
+function getDomainTool () {
   let url = decodeURIComponent(getUrlByParameter('url'))
   let domaintools_api = hostURL + 'context/domaintools?url=' + url
   $.getJSON(domaintools_api, (data) => {
@@ -45,4 +45,4 @@ function get_domainTool () {
   })
 }
 
-if (typeof module !== 'undefined') { module.exports = { appendToParent, get_domainTool } }
+if (typeof module !== 'undefined') { module.exports = { appendToParent, getDomainTool } }

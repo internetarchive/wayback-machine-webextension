@@ -4,29 +4,29 @@
 /*   global getUrlByParameter */
 
 // from 'tagcloud.js'
-/*   global get_tags */
+/*   global getTags */
 
 // from 'annotation.js'
-/*   global get_annotations */
+/*   global getAnnotations */
 
 // from 'alexa.js'
-/*   global get_alexa */
+/*   global getAlexa */
 
 // from 'domaintools.js'
-/*   global get_domainTool */
+/*   global getDomainTool */
 
 // from 'overview.js'
-/*   global get_WBMSummary */
+/*   global getWBMSummary */
 
 const url = decodeURIComponent(getUrlByParameter('url'))
 
 function get_tagCloud() {
-  get_tags(url)
+  getTags(url)
 }
 
 function get_hypothesis() {
-  let hypo_domain = get_annotations('domain')
-  let hypo_url = get_annotations('url')
+  let hypo_domain = getAnnotations('domain')
+  let hypo_url = getAnnotations('url')
   $('#loader_annotations').hide()
   if (hypo_url && hypo_domain) {
     $('#annotations_status').show()
@@ -45,9 +45,9 @@ function openContextFeature(evt, feature) {
 
 function singlePageView() {
   const contexts_dic = {
-    'alexa': get_alexa,
-    'domaintools': get_domainTool,
-    'wbmsummary': get_WBMSummary,
+    'alexa': getAlexa,
+    'domaintools': getDomainTool,
+    'wbmsummary': getWBMSummary,
     'annotations': get_hypothesis,
     'tagcloud': get_tagCloud
   }

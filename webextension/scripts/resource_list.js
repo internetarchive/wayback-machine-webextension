@@ -2,13 +2,13 @@ window.onload = () => {
   var url = new URL(window.location.href)
   var url_name = url.searchParams.get('url')
   if (document.location.hash === '#not_refreshed') {
-    show_resource_data(url_name)
+    showResourceData(url_name)
   } else {
     showError('Looks like you have reloaded the page. Please close and try again!')
   }
 }
 
-function show_resource_data(url_name) {
+function showResourceData(url_name) {
   const status_list = {
     pending: 'Processing...',
     success: 'Save Successful.',
