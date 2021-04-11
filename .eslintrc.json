@@ -5,9 +5,13 @@
     "webextensions": true
   },
   "rules": {
-    "indent": ["warn", 2, {"SwitchCase": 1, "MemberExpression": "off"} ],
+    "indent": ["warn", 2, { "SwitchCase": 1, "MemberExpression": "off" }],
+    "brace-style": "off",
     "camelcase": "off",
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "prefer-const": "off",
+    "quote-props": "off",
+    "dot-notation": "off"
   },
   "globals": {
     "$": "readonly"
