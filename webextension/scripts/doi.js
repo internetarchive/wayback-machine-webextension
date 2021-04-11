@@ -10,12 +10,12 @@ function getMetadata(entry) {
     title = title.slice(0, MAX_TITLE_LEN) + '...'
   }
   let author = ''
-  if (entry.authors) {
+  if (entry.authors && entry.authors[0]) {
     author = entry.authors[0]
     if (entry.authors.length > 1) {
       author = author + ' et al.'
     }
-  } else if (entry.contribs) {
+  } else if (entry.contribs && entry.contribs[0]) {
     author = entry.contribs[0].raw_name
     if (entry.contribs.length > 1) {
       author = author + ' et al.'
