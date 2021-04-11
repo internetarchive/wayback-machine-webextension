@@ -12,6 +12,7 @@ let saveSuccessCount = 0
 let saveFailedCount = 0
 let totalUrlCount = 0
 let isSaving = false
+let saveOptions = []
 
 /* * * UI * * */
 
@@ -66,25 +67,31 @@ function doImportBookmarks(e) {
 
 // Import all bookmarked URLs.
 function importAllBookmarks() {
+  let count_val = 0
   if (chrome.bookmarks) {
     chrome.bookmarks.getTree((nodeTree) => {
       nodeTree.forEach((node) => {
-        processTreeNode(node)
+        count_val += processTreeNode(node)
       })
+      if (count_val === 0) {
+        alert('Sorry No Bookmark Found. Please ensure that you have bookmarks')
+      }
     })
   }
 }
-
 // Traverses the bookmark tree nodes recursively.
 function processTreeNode(node) {
+  let count = 0
   // process child nodes
   if (node.children) {
-    node.children.forEach((child) => { processTreeNode(child) })
+    node.children.forEach((child) => { count += processTreeNode(child) })
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
+    count++
     addToBulkSave(node.url)
   }
+  return count
 }
 
 /* * * Save List * * */
@@ -144,9 +151,11 @@ function initMessageListener() {
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.error) {
       // stop if user not logged in
-      stopSaving()
-      resetUI()
-      $('#not-logged-in').show()
+      if (message.error == "You need to be logged in to use Save Page Now." ){
+        stopSaving()
+        resetUI()
+        $('#not-logged-in').show()
+      }
     } else if (message && message.message && message.url) {
       // respond to message
       processStatus(message.message, message.url)
@@ -168,6 +177,11 @@ function doBulkSaveAll(e) {
   saveFailedCount = 0
   totalUrlCount = bulkSaveQueue.length
   $('#total-count').text(totalUrlCount)
+  // reset options
+  saveOptions = []
+  // due to timeout issues, outlinks not supported right now
+  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions.push('capture_outlinks') }
+  if ($('#chk-screenshot').prop('checked') === true) { saveOptions.push('capture_screenshot') }
   // start saving concurrently
   startSaving()
   for (let i = 0; i < MAX_SAVES; i++) {
@@ -203,6 +217,7 @@ function saveTheURL(url) {
     message: 'openurl',
     wayback_url: hostURL + 'save/',
     page_url: url,
+    options: saveOptions,
     method: 'save',
     silent: true
   })

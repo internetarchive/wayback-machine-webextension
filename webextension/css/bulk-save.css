@@ -112,13 +112,19 @@ p {
 
 .save-box {
     width: auto;
-    margin: 0;
+    margin: 0 0 1em 0;
 }
 
+.save-options-container p {
+    margin: 0;
+}
 .save-options-container p * {
     cursor: pointer;
     margin: 2px;
     display: inline;
+}
+.save-options-container p label {
+    margin-right: 0.5em;
 }
 
 .url-list {
@@ -155,7 +161,6 @@ p {
 .flex-container {
     display: flex;
 }
-
 
 /* Dark Mode */
 
