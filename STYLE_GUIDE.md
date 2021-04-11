@@ -16,12 +16,13 @@ This is a style guide for the Web Extension code. Some of the code may not curre
  - Use double `(")` over single `(')` quotes for HTML attributes.
  - Use single `(')` over double `(")` quotes for CSS property values.
  - Inlined styles in HTML is OK temporarily, but please try to move to the .css file before final submission.
+ - If you're repeating the same styles on multiple *#ids*, consider placing those styles in a class!
 
 #### Naming ####
 
  - CSS ids and classes should be in `hyphen-style`. 
  - Try to avoid using CamelCase or underscores.
-
+ - Try to limit use of single-word classes and ids. 2-word ids are better. 3-word ids are fine too.
 
 #### Example ####
 
@@ -51,7 +52,7 @@ This is a style guide for the Web Extension code. Some of the code may not curre
  - Function names should be in `lowerCamelCase`.
  - Class names in `UpperCamelCase`.
  - Variables can be `lowercase`, `lowerCamelCase`, or `under_scored`.
- - Global or class-scoped constants in `CONSTANT_CASE`. Locally-scoped may remain lowercased if desired.
+ - Global or class-scoped constants in `CONSTANT_CASE`. Since `const` in Javascript doesn't really mean constant, but *one-time assignment*, please only convert *true* constants to uppercase (e.g. `const PI = 3.14159`), and leave the rest like variable names.
 
 #### Example ####
 

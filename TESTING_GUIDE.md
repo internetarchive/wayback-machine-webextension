@@ -16,19 +16,21 @@ After modifying code, run **eslint** to catch basic formatting and syntax issues
 
 #### To Install ####
 
-```
-npm install eslint --save-dev
-```
+If you haven't already set up your testing environment, run `npm install` to install the required packages including `eslint` which is  listed in `package.json`.
 
 #### Running ESLint ####
 
-Run from the root directory where `package.json` is located:
+Run from the root directory where `package.json` is located.
 
-```
-npx eslint webextension/scripts/example.js
-OR
-eslint webextension/scripts/example.js
-```
+##### To see options: #####
+
+`npx eslint`
+
+This runs the version of eslint located at `node_modules/.bin/`. Some people install eslint globally on their system. If that is your case you may leave out the `npx` part if you want.
+
+##### To lint a js file: #####
+
+`npx eslint webextension/scripts/example.js`
 
 - Recommend **not** using the `--fix` option but first try to fix it manually.
 
