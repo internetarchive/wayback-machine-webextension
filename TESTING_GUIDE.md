@@ -221,7 +221,7 @@ TODO
 <td>
 
 Importing Bookmarks that are URL-encoded should be decoded in list:
-- If bookmark is: https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/dallas-symphony-orchestra/m%C4%83celaru-conducts-rachmaninoff/
+- If Bookmark is: https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/den%C3%A8ve-conducts-brahms-dvo%C5%99%C3%A1k/
 - It should look like: https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/denève-conducts-brahms-dvořák/
 
 </td>
