@@ -74,7 +74,7 @@ function importAllBookmarks() {
         count_val += processTreeNode(node)
       })
       if (count_val === 0) {
-        alert('Sorry No Bookmark Found. Please ensure that you have bookmarks')
+        alert('No Bookmarks Found.')
       }
     })
   }
@@ -88,8 +88,12 @@ function processTreeNode(node) {
   }
   // add bookmark URL from leaf node
   if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
-    count++
-    addToBulkSave(node.url)
+    try {
+      addToBulkSave(decodeURI(node.url))
+      count++
+    } catch(e) {
+      console.log('Bookmark skipped: ', e)
+    }
   }
   return count
 }
