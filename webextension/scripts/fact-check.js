@@ -20,7 +20,7 @@ function cScore(score) {
   return confidenceScoreDict[value]
 }
 
-const url = decodeURIComponent(getUrlByParameter('url'))
+const url = getUrlByParameter('url')
 $('#fact-check-url').text(url)
 if (isValidUrl(url) && isNotExcludedUrl(url)) {
   chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {

@@ -9,7 +9,7 @@
 var mynewTags = []
 
 function getTags() {
-  const url = decodeURIComponent(getUrlByParameter('url'))
+  const url = getUrlByParameter('url')
   var hostname = new URL(url).hostname
   var toBeUsedAsURL = hostname.replace(/^www./, '')
   var y = hostname.split('.')
@@ -36,9 +36,10 @@ function getTags() {
         $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
           var b = {}
-          if (dontarray.indexOf(decodeURIComponent(data[i][0])) <= 0) {
-            mynewTags[i] = decodeURIComponent(data[i][0])
-            b.text = decodeURIComponent(data[i][0])
+          let text = decodeURIComponent(data[i][0])
+          if (dontarray.indexOf(text) <= 0) {
+            mynewTags[i] = text
+            b.text = text
             b.weight = (data[i][1])
             mynewTags.push(b)
           }

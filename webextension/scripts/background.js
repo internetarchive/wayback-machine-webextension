@@ -63,7 +63,7 @@ function URLopener(open_url, url, wmIsAvailable) {
 function savePageNow(atab, page_url, silent = false, options = []) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
     const data = new URLSearchParams()
-    data.append('url', encodeURI(page_url))
+    data.append('url', page_url) // this is correct!
     options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {

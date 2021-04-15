@@ -5,9 +5,10 @@
 
 function getAlexa() {
   var alexa_url = 'https://xml.alexa.com/data?cli=10&dat=n&url='
-  var url = new URL(decodeURIComponent(getUrlByParameter('url')))
+  let url = getUrlByParameter('url')
+  let hostname = new URL(url).hostname
   $('.url').text(url).attr('href', url)
-  $.get(alexa_url + url.hostname, (xml) => {
+  $.get(alexa_url + hostname, (xml) => {
     var name = xml.getElementsByTagName('ALEXA')[0].getAttribute('URL')
     $('#alexa_name').text(name)
     var details = xml.getElementsByTagName('SD')[0]
@@ -52,7 +53,7 @@ function getAlexa() {
     } else {
       $('.related_sites').hide()
     }
-    $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + url.hostname)
+    $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + hostname)
     $('#loader_alexa').hide()
     $('#show_alexa_data').show()
   }).fail((error) => {

@@ -23,7 +23,7 @@ function hypothesisApiUrl(url, type) {
  * Get hypothes.is data and render results.
  */
 function getAnnotations(type = 'url') {
-  const url = decodeURIComponent(getUrlByParameter('url'))
+  const url = getUrlByParameter('url')
   $('.url').text(url).attr('href', url)
   const newUrl = hypothesisApiUrl(url, type)
   $.getJSON(newUrl, (data) => {
