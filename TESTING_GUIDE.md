@@ -208,3 +208,24 @@ TODO
 
 </table>
 
+### Features ###
+
+<table>
+<tr>
+  <th></th>
+  <th>Tests</th>
+</tr>
+
+<tr>
+<th>Bulk Save</th>
+<td>
+
+Importing Bookmarks that are URL-encoded should be decoded in list:
+- If Bookmark is: `https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/den%C3%A8ve-conducts-brahms-dvo%C5%99%C3%A1k/`
+- It should look like: https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/denève-conducts-brahms-dvořák/
+
+</td>
+</tr>
+
+</table>
+

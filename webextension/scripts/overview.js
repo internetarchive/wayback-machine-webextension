@@ -4,7 +4,7 @@
 /*   global getUrlByParameter, hostURL, getWaybackCount, timestampToDate */
 
 function getWBMSummary () {
-  var url = decodeURIComponent(getUrlByParameter('url'))
+  let url = getUrlByParameter('url')
   getArchiveDetails(url)
   firstArchiveDetails(url)
   recentArchiveDetails(url)
@@ -91,7 +91,7 @@ function getThumbnail (url) {
     })
 }
 
-const url = decodeURIComponent(getUrlByParameter('url'))
-$('.url').text(url).attr('href', url)
+const gUrl = getUrlByParameter('url')
+$('.url').text(url).attr('href', gUrl)
 
 window.onload = getWBMSummary

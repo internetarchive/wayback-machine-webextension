@@ -14,7 +14,7 @@ function appendToParent (id, item, text_before, parent, show_item, text_after) {
 }
 
 function getDomainTool () {
-  let url = decodeURIComponent(getUrlByParameter('url'))
+  let url = getUrlByParameter('url')
   let domaintools_api = hostURL + 'context/domaintools?url=' + url
   $.getJSON(domaintools_api, (data) => {
     let parent = $('#show_domaintools_data')
