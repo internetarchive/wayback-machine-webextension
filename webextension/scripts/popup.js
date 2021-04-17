@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -153,10 +153,9 @@ function social_share(eventObj) {
     if (isNotExcludedUrl(url)) {
       // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
       if (id.includes('facebook-share-btn')) {
-        //openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(sharing_url))
-        openByWindowSetting('https://www.facebook.com/sharer.php?u=' + encodeURIComponent(sharing_url))
+        openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('twitter-share-btn')) {
-        openByWindowSetting('https://twitter.com/intent/tweet?url=' + encodeURIComponent(sharing_url))
+        openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('linkedin-share-btn')) {
         // LinkedIn's API isn't working with percent-encoded URLs, nor with URLs containing '?', so it's broken!
         openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + sharing_url)

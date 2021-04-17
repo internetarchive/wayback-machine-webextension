@@ -46,6 +46,13 @@ function initPrivateState() {
   })
 }
 
+// Use this instead of encodeURIComponent()
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+    return '%' + c.charCodeAt(0).toString(16)
+  });
+}
+
 /* * * Browser Detection * * */
 
 function getBrowser() {
@@ -121,7 +128,7 @@ function badgeCountText(count) {
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     const requestUrl = hostURL + '__wb/sparkline'
-    const requestParams = '?collection=web&output=json&url=' + encodeURIComponent(url)
+    const requestParams = '?collection=web&output=json&url=' + fixedEncodeURIComponent(url)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -162,7 +169,7 @@ function getWaybackCount(url, onSuccess, onFail) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var requestUrl = hostURL + 'wayback/available'
-  var requestParams = 'url=' + encodeURIComponent(url)
+  var requestParams = 'url=' + fixedEncodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
     headers: new Headers({
@@ -531,6 +538,7 @@ if (typeof module !== 'undefined') {
     newshosts,
     private_before_state,
     initPrivateState,
+    fixedEncodeURIComponent,
     searchValue
   }
 }

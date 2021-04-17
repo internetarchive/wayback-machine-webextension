@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -307,17 +307,17 @@ function fetchCachedAPI(url, onSuccess, onFail) {
 }
 
 function getCachedBooks(url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/books?url=' + encodeURIComponent(url)
+  const requestUrl = hostURL + 'services/context/books?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 function getCachedTvNews(url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/tvnews?url=' + encodeURIComponent(url)
+  const requestUrl = hostURL + 'services/context/tvnews?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 function getCachedFactCheck(url, onSuccess, onFail) {
-  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + encodeURIComponent(url)
+  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
@@ -460,7 +460,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
-    const context_url = chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(message.url)
+    const context_url = chrome.runtime.getURL('context.html') + '?url=' + fixedEncodeURIComponent(message.url)
     tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
     })
