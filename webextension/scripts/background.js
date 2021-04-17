@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent */
 
 var manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -307,17 +307,17 @@ function fetchCachedAPI(url, onSuccess, onFail) {
 }
 
 function getCachedBooks(url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/books?url=' + encodeURIComponent(url)
+  const requestUrl = hostURL + 'services/context/books?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 function getCachedTvNews(url, onSuccess, onFail) {
-  const requestUrl = hostURL + 'services/context/tvnews?url=' + encodeURIComponent(url)
+  const requestUrl = hostURL + 'services/context/tvnews?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 function getCachedFactCheck(url, onSuccess, onFail) {
-  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + encodeURIComponent(url)
+  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
@@ -412,19 +412,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) { return }
   if (message.message === 'openurl') {
-    let atab = message.atab
-    var page_url = message.page_url
-    var wayback_url = message.wayback_url
-    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
-    var open_url = wayback_url + encodeURI(url)
+    let page_url = get_clean_url(message.page_url)
     if (isNotExcludedUrl(page_url)) {
       if (message.method && (message.method === 'save')) {
         let silent = message.silent || false
         let options = (message.options && (message.options !== null)) ? message.options : []
-        savePageNow(atab, page_url, silent, options)
+        savePageNow(message.atab, page_url, silent, options)
         return true
       } else {
-        URLopener(open_url, url, true)
+        let open_url = message.wayback_url + page_url
+        URLopener(open_url, page_url, true)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
@@ -463,7 +460,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
-    const context_url = chrome.runtime.getURL('context.html') + '?url=' + encodeURIComponent(message.url)
+    const context_url = chrome.runtime.getURL('context.html') + '?url=' + fixedEncodeURIComponent(message.url)
     tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
     })
@@ -544,7 +541,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // checking resources
     // TODO: wikipedia papers
     const clean_url = get_clean_url(tab.url)
-    const news_host = new URL(clean_url).hostname
+    if (isValidUrl(clean_url) === false) { return }
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
       // checking wikipedia books
       if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
@@ -557,6 +554,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         )
       }
       // checking tv news
+      const news_host = new URL(clean_url).hostname
       if (event.tvnews_setting && newshosts.has(news_host)) {
         getCachedTvNews(clean_url,
           (clips) => {
@@ -847,26 +845,24 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const page_url = get_clean_url(click.linkUrl) || get_clean_url(tabs[0].url)
+      let url = click.linkUrl || tabs[0].url
+      let page_url = get_clean_url(url)
       let wayback_url
-      let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
         if (click.menuItemId === 'first') {
-          wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url)
+          wayback_url = 'https://web.archive.org/web/0/'
         } else if (click.menuItemId === 'recent') {
-          wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
+          wayback_url = 'https://web.archive.org/web/2/'
+        } else if (click.menuItemId === 'all') {
+          wayback_url = 'https://web.archive.org/web/*/'
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
-          if (isNotExcludedUrl(page_url)) {
-            let options = ['capture_all']
-            savePageNow(atab, page_url, false, options)
-            return true
-          }
-        } else if (click.menuItemId === 'all') {
-          wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
+          let options = ['capture_all']
+          savePageNow(atab, page_url, false, options)
+          return true
         }
-        URLopener(wayback_url, page_url, wmIsAvailable)
+        let open_url = wayback_url + page_url
+        URLopener(open_url, page_url, true)
       } else {
         alert('This URL is in the list of excluded URLs')
       }

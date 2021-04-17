@@ -208,7 +208,7 @@ TODO
 
 </table>
 
-### Features ###
+### General ###
 
 <table>
 <tr>
@@ -217,12 +217,17 @@ TODO
 </tr>
 
 <tr>
-<th>Bulk Save</th>
+<th>URLs</th>
 <td>
 
-Importing Bookmarks that are URL-encoded should be decoded in list:
+In Bulk Save, check that *Import All Bookmarks* will decode when adding URLs to list: [#729](https://github.com/internetarchive/wayback-machine-webextension/issues/729)
 - If Bookmark is: `https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/den%C3%A8ve-conducts-brahms-dvo%C5%99%C3%A1k/`
 - It should look like: https://www.bravovail.org/tickets-performances/2018/orchestra-concerts/the-philadelphia-orchestra/denève-conducts-brahms-dvořák/
+
+Test that SPN works on URLs containing percent-encodings: [#279](https://github.com/internetarchive/wayback-machine-webextension/issues/279)
+- https://www.courthousenews.com/%EF%BB%BFopponents-of-drag-queen-story-hour-tossed-from-court/
+
+Check above URLs work with Wayback (Oldest, Overview, Newest), Social Links, Copy to Clipboard.
 
 </td>
 </tr>
