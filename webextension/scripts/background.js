@@ -82,34 +82,39 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
     return timeoutPromise
       .then(response => response.json())
       .then((res) => {
-        if (!silent) {
-          notify('Saving ' + page_url)
-          chrome.storage.local.get(['resource_list_setting'], (result) => {
-            if (result.resource_list_setting === true) {
-              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
-              openByWindowSetting(resource_list_url, 'windows')
-              if (res.status === 'error') {
-                setTimeout(() => {
-                  chrome.runtime.sendMessage({
-                    message: 'resource_list_show_error',
-                    data: res,
-                    url: page_url
-                  })
-                }, 3000)
-              }
-            }
-          })
-        }
-        if (('job_id' in res) && (res.job_id !== 'undefined')) {
-          validate_spn(atab, res.job_id, silent, page_url)
+        // notifications depending on status
+        let msg = res.message || 'Please Try Again'
+        if (('job_id' in res) && (res.job_id !== null)) {
+          if (msg.indexOf('same snapshot') !== -1) {
+            // snapshot already archived within timeframe
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab })
+            if (!silent) { notify(msg) }
+          } else {
+            // call status during save
+            validate_spn(atab, res.job_id, silent, page_url)
+            if (!silent) { notify('Saving ' + page_url) }
+          }
         } else {
           // handle error
-          let msg = res.message || 'Please Try Again'
           chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
-          if (!silent) {
-            notify('Error: ' + msg)
-          }
+          if (!silent) { notify('Error: ' + msg) }
         }
+        // show resources during save
+        chrome.storage.local.get(['resource_list_setting'], (result) => {
+          if (!silent && (result.resource_list_setting === true)) {
+            const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+            openByWindowSetting(resource_list_url, 'windows')
+            if (res.status === 'error') {
+              setTimeout(() => {
+                chrome.runtime.sendMessage({
+                  message: 'resource_list_show_error',
+                  data: res,
+                  url: page_url
+                })
+              }, 3000)
+            }
+          }
+        })
       })
       .catch(() => {
         // handle http errors
