@@ -157,8 +157,7 @@ function social_share(eventObj) {
       } else if (id.includes('twitter-share-btn')) {
         openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('linkedin-share-btn')) {
-        // LinkedIn's API isn't working with percent-encoded URLs, nor with URLs containing '?', so it's broken!
-        openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + sharing_url)
+        openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('copy-link-btn') && navigator.clipboard) {
         navigator.clipboard.writeText(sharing_url).then(() => {
           let copiedMsg = $('#link-copied-msg')

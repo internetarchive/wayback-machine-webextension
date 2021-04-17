@@ -541,7 +541,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // checking resources
     // TODO: wikipedia papers
     const clean_url = get_clean_url(tab.url)
-    const news_host = new URL(clean_url).hostname
+    if (isValidUrl(clean_url) === false) { return }
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
       // checking wikipedia books
       if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
@@ -554,6 +554,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         )
       }
       // checking tv news
+      const news_host = new URL(clean_url).hostname
       if (event.tvnews_setting && newshosts.has(news_host)) {
         getCachedTvNews(clean_url,
           (clips) => {
