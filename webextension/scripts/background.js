@@ -60,11 +60,10 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = []) {
+function savePageNow(atab, page_url, silent = false, options = {}) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    const data = new URLSearchParams()
+    const data = new URLSearchParams(options)
     data.append('url', page_url) // this is correct!
-    options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -420,7 +419,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (isNotExcludedUrl(page_url)) {
       if (message.method && (message.method === 'save')) {
         let silent = message.silent || false
-        let options = (message.options && (message.options !== null)) ? message.options : []
+        let options = (message.options && (message.options !== null)) ? message.options : {}
         savePageNow(atab, page_url, silent, options)
         return true
       } else {
@@ -858,7 +857,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
           if (isNotExcludedUrl(page_url)) {
-            let options = ['capture_all']
+            let options = { 'capture_all': 1 }
             savePageNow(atab, page_url, false, options)
             return true
           }

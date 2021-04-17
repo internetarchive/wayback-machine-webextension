@@ -12,7 +12,7 @@ let saveSuccessCount = 0
 let saveFailedCount = 0
 let totalUrlCount = 0
 let isSaving = false
-let saveOptions = []
+let saveOptions = {}
 
 /* * * UI * * */
 
@@ -182,10 +182,10 @@ function doBulkSaveAll(e) {
   totalUrlCount = bulkSaveQueue.length
   $('#total-count').text(totalUrlCount)
   // reset options
-  saveOptions = []
+  saveOptions = {}
   // due to timeout issues, outlinks not supported right now
-  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions.push('capture_outlinks') }
-  if ($('#chk-screenshot').prop('checked') === true) { saveOptions.push('capture_screenshot') }
+  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions['capture_outlinks'] = 1 }
+  if ($('#chk-screenshot').prop('checked') === true) { saveOptions['capture_screenshot'] = 1 }
   // start saving concurrently
   startSaving()
   for (let i = 0; i < MAX_SAVES; i++) {
