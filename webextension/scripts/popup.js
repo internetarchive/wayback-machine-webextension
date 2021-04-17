@@ -2,7 +2,7 @@
 
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue */
+/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -145,23 +145,19 @@ function social_share(eventObj) {
   }
   // Share wayback link to the most recent snapshot of URL at the time this is called.
   let timestamp = dateToTimestamp(new Date())
-  let recent_url = 'https://web.archive.org/web/' + timestamp + '/'
+  let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || tabs[0].url
-    let sharing_url
-    if (url.includes('web.archive.org')) {
-      sharing_url = url // If the user is already at a playback page, share that URL
-    } else {
-      sharing_url = recent_url + get_clean_url(url) // When not on a playback page, share the recent archived version of that URL
-    }
-    if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
+    let url = get_clean_url(searchValue || tabs[0].url)
+    let sharing_url = isArchiveUrl(url) ? url : wayback_url + url
+    if (isNotExcludedUrl(url)) {
+      // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
       if (id.includes('facebook-share-btn')) {
-        openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
+        openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('twitter-share-btn')) {
-        openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
+        openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('linkedin-share-btn')) {
-        openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
+        openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
       } else if (id.includes('copy-link-btn') && navigator.clipboard) {
         navigator.clipboard.writeText(sharing_url).then(() => {
           let copiedMsg = $('#link-copied-msg')
