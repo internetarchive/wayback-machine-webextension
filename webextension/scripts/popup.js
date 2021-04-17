@@ -11,15 +11,15 @@ function homepage() {
 function doSaveNow() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    let options = ['capture_all']
+    let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
-      options.push('capture_outlinks')
+      options['capture_outlinks'] = 1
       if ($('#email-outlinks-setting').prop('checked') === true) {
-        options.push('email_result')
+        options['email_result'] = 1
       }
     }
     if ($('#chk-screenshot').prop('checked') === true) {
-      options.push('capture_screenshot')
+      options['capture_screenshot'] = 1
     }
     chrome.runtime.sendMessage({
       message: 'openurl',
@@ -562,6 +562,10 @@ chrome.runtime.onMessage.addListener(
           $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').addClass('flip-inside')
           setupWaybackCount()
+        } else if (message.message === 'save_archived') {
+          // snapshot already archived within timeframe
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Recently Saved')
         } else if (message.message === 'save_start') {
           showSaving()
         } else if (message.message === 'save_error') {

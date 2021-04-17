@@ -60,11 +60,10 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = []) {
+function savePageNow(atab, page_url, silent = false, options = {}) {
   if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    const data = new URLSearchParams()
+    const data = new URLSearchParams(options)
     data.append('url', page_url) // this is correct!
-    options.forEach(opt => data.append(opt, '1'))
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
@@ -83,34 +82,39 @@ function savePageNow(atab, page_url, silent = false, options = []) {
     return timeoutPromise
       .then(response => response.json())
       .then((res) => {
-        if (!silent) {
-          notify('Saving ' + page_url)
-          chrome.storage.local.get(['resource_list_setting'], (result) => {
-            if (result.resource_list_setting === true) {
-              const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
-              openByWindowSetting(resource_list_url, 'windows')
-              if (res.status === 'error') {
-                setTimeout(() => {
-                  chrome.runtime.sendMessage({
-                    message: 'resource_list_show_error',
-                    data: res,
-                    url: page_url
-                  })
-                }, 3000)
-              }
-            }
-          })
-        }
-        if (('job_id' in res) && (res.job_id !== 'undefined')) {
-          validate_spn(atab, res.job_id, silent, page_url)
+        // notifications depending on status
+        let msg = res.message || 'Please Try Again'
+        if (('job_id' in res) && (res.job_id !== null)) {
+          if (msg.indexOf('same snapshot') !== -1) {
+            // snapshot already archived within timeframe
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab })
+            if (!silent) { notify(msg) }
+          } else {
+            // call status during save
+            validate_spn(atab, res.job_id, silent, page_url)
+            if (!silent) { notify('Saving ' + page_url) }
+          }
         } else {
           // handle error
-          let msg = res.message || 'Please Try Again'
           chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
-          if (!silent) {
-            notify('Error: ' + msg)
-          }
+          if (!silent) { notify('Error: ' + msg) }
         }
+        // show resources during save
+        chrome.storage.local.get(['resource_list_setting'], (result) => {
+          if (!silent && (result.resource_list_setting === true)) {
+            const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+            openByWindowSetting(resource_list_url, 'windows')
+            if (res.status === 'error') {
+              setTimeout(() => {
+                chrome.runtime.sendMessage({
+                  message: 'resource_list_show_error',
+                  data: res,
+                  url: page_url
+                })
+              }, 3000)
+            }
+          }
+        })
       })
       .catch(() => {
         // handle http errors
@@ -416,7 +420,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (isNotExcludedUrl(page_url)) {
       if (message.method && (message.method === 'save')) {
         let silent = message.silent || false
-        let options = (message.options && (message.options !== null)) ? message.options : []
+        let options = (message.options && (message.options !== null)) ? message.options : {}
         savePageNow(message.atab, page_url, silent, options)
         return true
       } else {
@@ -857,7 +861,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
           wayback_url = 'https://web.archive.org/web/*/'
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
-          let options = ['capture_all']
+          let options = { 'capture_all': 1 }
           savePageNow(atab, page_url, false, options)
           return true
         }

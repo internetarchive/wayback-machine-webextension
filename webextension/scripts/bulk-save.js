@@ -12,7 +12,7 @@ let saveSuccessCount = 0
 let saveFailedCount = 0
 let totalUrlCount = 0
 let isSaving = false
-let saveOptions = []
+let saveOptions = {}
 
 /* * * UI * * */
 
@@ -154,13 +154,17 @@ function isDuplicateURL(url) {
 function initMessageListener() {
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.error) {
-      // stop if user not logged in
-      if (message.error == "You need to be logged in to use Save Page Now." ){
+      if (message.error.indexOf('logged in') !== -1) {
+        // stop if user not logged in
         stopSaving()
         resetUI()
         $('#not-logged-in').show()
+      } else if (message.error.indexOf('same snapshot') !== -1) {
+        // snapshot already archived within timeframe
+        processStatus('archived', message.url)
+        checkIfFinished()
       }
-    } else if (message && message.message && message.url) {
+    } else if (message) {
       // respond to message
       processStatus(message.message, message.url)
       checkIfFinished()
@@ -182,10 +186,11 @@ function doBulkSaveAll(e) {
   totalUrlCount = bulkSaveQueue.length
   $('#total-count').text(totalUrlCount)
   // reset options
-  saveOptions = []
+  saveOptions = {}
   // due to timeout issues, outlinks not supported right now
-  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions.push('capture_outlinks') }
-  if ($('#chk-screenshot').prop('checked') === true) { saveOptions.push('capture_screenshot') }
+  // if ($('#chk-outlinks').prop('checked') === true) { saveOptions['capture_outlinks'] = 1 }
+  if ($('#chk-screenshot').prop('checked') === true) { saveOptions['capture_screenshot'] = 1 }
+  if ($('#never-saved').prop('checked') === true) { saveOptions['if_not_archived_within'] = '99999d' }
   // start saving concurrently
   startSaving()
   for (let i = 0; i < MAX_SAVES; i++) {
@@ -196,22 +201,9 @@ function doBulkSaveAll(e) {
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
   let curl = bulkSaveQueue.shift()
-  if (curl) {
+  if (curl && (curl in bulkSaveObj)) {
     let saveUrl = bulkSaveObj[curl].url
-    if ($('#never-saved').prop('checked') === true) {
-      // only save URL if not already in archive
-      wmAvailabilityCheck(saveUrl, () => {
-        // already archived
-        processStatus('archived', saveUrl)
-        checkIfFinished()
-      }, () => {
-        // hasn't been archived
-        saveTheURL(saveUrl)
-      })
-    } else {
-      // save all URLs
-      saveTheURL(saveUrl)
-    }
+    saveTheURL(saveUrl)
   }
 }
 
