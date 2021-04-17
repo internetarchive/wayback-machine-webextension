@@ -157,11 +157,11 @@ function social_share(eventObj) {
     }
     if (isNotExcludedUrl(url)) { // Prevents sharing some unnecessary page
       if (id.includes('facebook-share-btn')) {
-        openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + sharing_url)
+        openByWindowSetting('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(sharing_url))
       } else if (id.includes('twitter-share-btn')) {
-        openByWindowSetting('https://twitter.com/intent/tweet?url=' + sharing_url)
+        openByWindowSetting('https://twitter.com/intent/tweet?url=' + encodeURIComponent(sharing_url))
       } else if (id.includes('linkedin-share-btn')) {
-        openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + sharing_url)
+        openByWindowSetting('https://www.linkedin.com/shareArticle?url=' + encodeURIComponent(sharing_url))
       } else if (id.includes('copy-link-btn') && navigator.clipboard) {
         navigator.clipboard.writeText(sharing_url).then(() => {
           let copiedMsg = $('#link-copied-msg')

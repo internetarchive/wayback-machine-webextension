@@ -412,19 +412,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) { return }
   if (message.message === 'openurl') {
-    let atab = message.atab
-    var page_url = message.page_url
-    var wayback_url = message.wayback_url
-    var url = page_url.replace(/https:\/\/web\.archive\.org\/web\/(.+?)\//g, '')
-    var open_url = wayback_url + encodeURI(url)
+    let page_url = get_clean_url(message.page_url)
     if (isNotExcludedUrl(page_url)) {
       if (message.method && (message.method === 'save')) {
         let silent = message.silent || false
         let options = (message.options && (message.options !== null)) ? message.options : []
-        savePageNow(atab, page_url, silent, options)
+        savePageNow(message.atab, page_url, silent, options)
         return true
       } else {
-        URLopener(open_url, url, true)
+        let open_url = message.wayback_url + page_url
+        URLopener(open_url, page_url, true)
       }
     }
   } else if (message.message === 'getLastSaveTime') {
@@ -847,26 +844,24 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
-      const page_url = get_clean_url(click.linkUrl) || get_clean_url(tabs[0].url)
+      let url = click.linkUrl || tabs[0].url
+      let page_url = get_clean_url(url)
       let wayback_url
-      let wmIsAvailable = true
       if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
         if (click.menuItemId === 'first') {
-          wayback_url = 'https://web.archive.org/web/0/' + encodeURI(page_url)
+          wayback_url = 'https://web.archive.org/web/0/'
         } else if (click.menuItemId === 'recent') {
-          wayback_url = 'https://web.archive.org/web/2/' + encodeURI(page_url)
+          wayback_url = 'https://web.archive.org/web/2/'
+        } else if (click.menuItemId === 'all') {
+          wayback_url = 'https://web.archive.org/web/*/'
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
-          if (isNotExcludedUrl(page_url)) {
-            let options = ['capture_all']
-            savePageNow(atab, page_url, false, options)
-            return true
-          }
-        } else if (click.menuItemId === 'all') {
-          wmIsAvailable = false
-          wayback_url = 'https://web.archive.org/web/*/' + encodeURI(page_url)
+          let options = ['capture_all']
+          savePageNow(atab, page_url, false, options)
+          return true
         }
-        URLopener(wayback_url, page_url, wmIsAvailable)
+        let open_url = wayback_url + page_url
+        URLopener(open_url, page_url, true)
       } else {
         alert('This URL is in the list of excluded URLs')
       }
