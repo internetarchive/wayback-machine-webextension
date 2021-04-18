@@ -117,7 +117,7 @@ function toConsumableArray (arr) {
 }
 
 // If not running through mocha, then only execute
-if (!isInTest) {
+if (!isInTestEnv) {
   window.onload = getTags
 }
 

@@ -106,7 +106,7 @@ function get_hypothesis() {
 }
 
 // If not running through mocha, then only execute
-if (!isInTest) {
+if (!isInTestEnv) {
   window.onload = get_hypothesis
 }
 
