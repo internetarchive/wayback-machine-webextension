@@ -35,6 +35,9 @@ const newshosts = new Set([
   'edition.cnn.com'
 ])
 
+// Check if in testing environment , default false, true while running tests
+const isInTestEnv = false
+
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let searchValue
@@ -50,7 +53,7 @@ function initPrivateState() {
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
     return '%' + c.charCodeAt(0).toString(16)
-  });
+  })
 }
 
 /* * * Browser Detection * * */
@@ -539,6 +542,7 @@ if (typeof module !== 'undefined') {
     private_before_state,
     initPrivateState,
     fixedEncodeURIComponent,
-    searchValue
+    searchValue,
+    isInTestEnv
   }
 }

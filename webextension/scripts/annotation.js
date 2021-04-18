@@ -105,7 +105,10 @@ function get_hypothesis() {
   }
 }
 
-window.onload = get_hypothesis
+// If not running through mocha, then only execute
+if (!isInTest) {
+  window.onload = get_hypothesis
+}
 
 if (typeof module !== 'undefined') {
   module.exports = {

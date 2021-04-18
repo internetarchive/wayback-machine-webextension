@@ -116,7 +116,10 @@ function toConsumableArray (arr) {
   }
 }
 
-window.onload = getTags
+// If not running through mocha, then only execute
+if (!isInTest) {
+  window.onload = getTags
+}
 
 if (typeof module !== 'undefined') {
   module.exports = {
