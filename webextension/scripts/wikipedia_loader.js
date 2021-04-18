@@ -5,8 +5,8 @@
 
 // This file is loaded every time URL matches '*.wikipedia.org/*' as defined in manifest.json.
 
-chrome.storage.local.get(['wiki_setting'], (event) => {
-  if (event.wiki_setting) {
+chrome.storage.local.get(['wiki_setting'], (settings) => {
+  if (settings && settings.wiki_setting) {
     addCitations()
   }
 })
