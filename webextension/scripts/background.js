@@ -100,8 +100,8 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           if (!silent) { notify('Error: ' + msg) }
         }
         // show resources during save
-        chrome.storage.local.get(['resource_list_setting'], (result) => {
-          if (!silent && (result.resource_list_setting === true)) {
+        chrome.storage.local.get(['resource_list_setting'], (settings) => {
+          if (!silent && settings && settings.resource_list_setting) {
             const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
             openByWindowSetting(resource_list_url, 'windows')
             if (res.status === 'error') {
@@ -329,8 +329,8 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 
 // Runs whenever extension starts up, except during incognito mode.
 chrome.runtime.onStartup.addListener((details) => {
-  chrome.storage.local.get({ agreement: false }, (result) => {
-    if (result.agreement === true) {
+  chrome.storage.local.get({ agreement: false }, (settings) => {
+    if (settings && settings.agreement) {
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
   })
@@ -339,8 +339,8 @@ chrome.runtime.onStartup.addListener((details) => {
 // Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
   initDefaultOptions()
-  chrome.storage.local.get({ agreement: false }, (result) => {
-    if (result.agreement === true) {
+  chrome.storage.local.get({ agreement: false }, (settings) => {
+    if (settings && settings.agreement) {
       afterAcceptOptions()
       chrome.browserAction.setPopup({ popup: 'index.html' })
     }
@@ -361,8 +361,8 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0 &&
     details.tabId > 0) {
-    chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
-      if (event.not_found_setting === true && event.agreement === true) {
+    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+      if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
           chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
         }, () => {})
@@ -404,8 +404,8 @@ chrome.webRequest.onCompleted.addListener((details) => {
   }
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
-      chrome.storage.local.get(['not_found_setting', 'agreement'], (event) => {
-        if ((event.not_found_setting === true) && (event.agreement === true)) {
+      chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+        if (settings && settings.not_found_setting && settings.agreement) {
           tabIsReady(tabs[0].id)
         }
       })
@@ -532,13 +532,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
-    chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (event) => {
+    chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (settings) => {
       // auto save page
-      if (event.auto_archive_setting === true) {
+      if (settings && settings.auto_archive_setting) {
         auto_save(tab, tab.url)
       }
       // fact check
-      if (event.fact_check_setting === true) {
+      if (settings && settings.fact_check_setting) {
         factCheckPage(tab, tab.url)
       }
     })
@@ -546,9 +546,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // TODO: wikipedia papers
     const clean_url = get_clean_url(tab.url)
     if (isValidUrl(clean_url) === false) { return }
-    chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (event) => {
+    chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (settings) => {
       // checking wikipedia books
-      if (event.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
+      if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         getCachedBooks(clean_url,
           (data) => {
             if (data && (data.status !== 'error')) {
@@ -559,7 +559,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       }
       // checking tv news
       const news_host = new URL(clean_url).hostname
-      if (event.tvnews_setting && newshosts.has(news_host)) {
+      if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
         getCachedTvNews(clean_url,
           (clips) => {
             if (clips && (clips.status !== 'error')) {
@@ -576,11 +576,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       var open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['amazon_setting'], (event) => {
+      chrome.storage.local.get(['amazon_setting'], (settings) => {
         // checking amazon books settings
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs && tabs[0]) {
-            if (event.amazon_setting === true) {
+            if (settings && settings.amazon_setting) {
               const url = get_clean_url(tabs[0].url)
               // checking resource of amazon books
               if (url.includes('www.amazon')) {
@@ -604,22 +604,22 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
-  chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (event) => {
+  chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     chrome.tabs.get(info.tabId, (tab) => {
       // fact check settings unchecked
-      if ((event.fact_check_setting === false) && (getToolbarState(tab).has('F'))) {
+      if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
         removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
-      if (event.wiki_setting === false && getToolbarState(tab).has('R')) {
+      if (settings && (settings.wiki_setting === false) && getToolbarState(tab).has('R')) {
         if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
-      if (event.amazon_setting === false && getToolbarState(tab).has('R')) {
+      if (settings && (settings.amazon_setting === false) && getToolbarState(tab).has('R')) {
         if (tab.url.includes('www.amazon')) { removeToolbarState(tab, 'R') }
       }
       // tvnews_setting settings unchecked
-      if (event.tvnews_setting === false && getToolbarState(tab).has('R')) {
+      if (settings && (settings.tvnews_setting === false) && getToolbarState(tab).has('R')) {
         const news_host = new URL(tab.url).hostname
         if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
       }
@@ -700,8 +700,8 @@ function incrementCount(url) {
 
 function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
-  chrome.storage.local.get(['wm_count_setting'], (event) => {
-    if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+  chrome.storage.local.get(['wm_count_setting'], (settings) => {
+    if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
         if (values.total >= 0) {
           // display badge

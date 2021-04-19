@@ -73,14 +73,14 @@ function loginSuccess() {
       let url = searchValue || get_clean_url(tabs[0].url)
       if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         $('#spn-btn').click(doSaveNow)
-        chrome.storage.local.get(['private_mode_setting'], (event) => {
+        chrome.storage.local.get(['private_mode_setting'], (settings) => {
           // auto save page
-          if (!event.private_mode_setting) {
+          if (settings && (settings.private_mode_setting === false)) {
             chrome.runtime.sendMessage({
               message: 'getLastSaveTime',
               page_url: url
             }, (message) => {
-              if ((message.message === 'last_save') && message.timestamp) {
+              if (message && (message.message === 'last_save') && message.timestamp) {
                 $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
                 $('#spn-btn').addClass('flip-inside')
               }
@@ -318,7 +318,7 @@ function sitemap() {
   })
 }
 
-function settings() {
+function showSettings() {
   $('#popup-page').hide()
   $('#login-page').hide()
   $('#setting-page').show()
@@ -343,13 +343,14 @@ function borrow_books() {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
-          chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (res) => {
-            const stored_url = res.tab_url
-            const detail_url = res.detail_url
-            const context = res.view_setting
+          chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
+            if (!settings) { return }
+            const stored_url = settings.tab_url
+            const detail_url = settings.detail_url
+            const context = settings.view_setting
             // Checking if the tab url is the same as the last stored one
             if (stored_url === url) {
               // if same, use the previously fetched url
@@ -380,22 +381,24 @@ function show_news() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const news_host = new URL(url).hostname
-    chrome.storage.local.get(['view_setting'], function (event) {
-      let set_of_sites = newshosts
-      const option = event.view_setting
-      if (set_of_sites.has(news_host)) {
-        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-          let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
-          if (state.has('R')) {
-            $('#tvnews-container').show()
-            $('#tvnews-btn').click(() => {
-              const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
-              openByWindowSetting(URL, option)
+    if (newshosts.has(news_host)) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('R')) {
+          $('#tvnews-container').show()
+          $('#tvnews-btn').click(() => {
+            chrome.storage.local.get(['view_setting'], function (settings) {
+              if (settings && settings.view_setting) {
+                const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+                openByWindowSetting(URL, settings.view_setting)
+              } else {
+                console.log('Missing view_setting!')
+              }
             })
-          }
-        })
-      }
-    })
+          })
+        }
+      })
+    }
   })
 }
 
@@ -404,7 +407,7 @@ function show_wikibooks() {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
           $('#wiki-container').show()
@@ -426,10 +429,10 @@ function setUpFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
-      chrome.storage.local.get(['fact_check_setting'], (event) => {
-        if (event.fact_check_setting) {
+      chrome.storage.local.get(['fact_check_setting'], (settings) => {
+        if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-            let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+            let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
               $('#fact-check-btn').addClass('btn-purple')
@@ -478,10 +481,10 @@ function clearFocus() {
 }
 
 function setupWaybackCount() {
-  chrome.storage.local.get(['wm_count_setting'], (event) => {
+  chrome.storage.local.get(['wm_count_setting'], (settings) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = tabs[0].url
-      if ((event.wm_count_setting === true) && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+      if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
@@ -496,7 +499,7 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if ('total' in result) {
+    if (result && ('total' in result)) {
       // set label
       let text = ''
       if (result.total === 1) {
@@ -510,11 +513,11 @@ function showWaybackCount(url) {
     } else {
       clearWaybackCount()
     }
-    if (result.first_ts) {
+    if (result && result.first_ts) {
       let date = timestampToDate(result.first_ts)
       $('#oldest-btn').attr('title', date.toLocaleString())
     }
-    if (result.last_ts) {
+    if (result && result.last_ts) {
       let date = timestampToDate(result.last_ts)
       $('#newest-btn').attr('title', date.toLocaleString())
     }
@@ -534,7 +537,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-      let state = (result.stateArray) ? new Set(result.stateArray) : new Set()
+      let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()
       }
@@ -548,7 +551,11 @@ function showSaving() {
 }
 
 // make the tab/window option in setting page checked according to previous setting
-chrome.storage.local.get(['view_setting'], (event) => { $(`input[name=tw][value=${event.view_setting}]`).prop('checked', true) })
+chrome.storage.local.get(['view_setting'], (settings) => {
+  if (settings && settings.view_setting) {
+    $(`input[name=tw][value=${settings.view_setting}]`).prop('checked', true)
+  }
+})
 
 // respond to Save Page Now success
 chrome.runtime.onMessage.addListener(
@@ -594,7 +601,7 @@ $('#copy-link-btn').click(social_share)
 $('#tweets-btn').click(search_tweet)
 $('#about-tab-btn').click(about_support)
 $('#donate-tab-btn').click(open_donations_page)
-$('#settings-tab-btn').click(settings)
+$('#settings-tab-btn').click(showSettings)
 $('#setting-page').hide()
 $('#login-page').hide()
 $('#feedback-tab-btn').click(open_feedback_page)

@@ -54,9 +54,9 @@ function singlePageView() {
 
   // Check settings for features
   let features = ['alexa', 'domaintools', 'wbmsummary', 'annotations', 'tagcloud']
-  chrome.storage.local.get(features, (event) => {
-    chrome.storage.local.get(['selectedFeature'], (result) => {
-      let openedFeature = result.selectedFeature
+  chrome.storage.local.get(features, (items) => {
+    chrome.storage.local.get(['selectedFeature'], (settings) => {
+      let openedFeature = (settings) ? settings.selectedFeature : null
       let clickFeature = null
       let countFeature = 0
       let lastFeatureTab = null
@@ -65,7 +65,7 @@ function singlePageView() {
         let featureId = '#' + feature.charAt(0).toUpperCase() + feature.substring(1)
         let featureTabId = featureId + '_tab'
 
-        if (event[feature]) {
+        if (items && items[feature]) {
           countFeature++
           lastFeatureTab = featureTabId
           // Show sidebar menu

@@ -41,8 +41,10 @@ let searchValue
 let private_before_state
 
 function initPrivateState() {
-  chrome.storage.local.get(['private_before_state'], (event) => {
-    private_before_state = new Set(event.private_before_state)
+  chrome.storage.local.get(['private_before_state'], (settings) => {
+    if (settings && settings.private_before_state) {
+      private_before_state = new Set(settings.private_before_state)
+    }
   })
 }
 
@@ -50,7 +52,7 @@ function initPrivateState() {
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
     return '%' + c.charCodeAt(0).toString(16)
-  });
+  })
 }
 
 /* * * Browser Detection * * */
@@ -395,7 +397,11 @@ function getUrlByParameter(name) {
 
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
-    chrome.storage.local.get(['view_setting'], (event) => { opener(url, event.view_setting, cb) })
+    chrome.storage.local.get(['view_setting'], (settings) => {
+      if (settings) { // OK if view_setting undefined
+        opener(url, settings.view_setting, cb)
+      }
+    })
   } else {
     opener(url, op, cb)
   }
