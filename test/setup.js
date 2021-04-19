@@ -18,5 +18,6 @@ global.$ = require('jquery')
 global.navigator = {
   userAgent: 'node.js'
 }
+global.isInTestEnv = true
 copyProps(window, global)
 module.exports = { jsdom: jsdom }
