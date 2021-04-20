@@ -3,9 +3,33 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
+/*   global attachTooltip */
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
+}
+
+// Popup tip over settings tab icon after first load.
+function showSettingsTabTip() {
+  let tt = $('<div>').append($('<p>').text('There are more great features in Settings!').attr({ 'class': 'setting-tip' }))[0].outerHTML
+  let tabItem = $('#settings-tab-btn').parent()
+  setTimeout(() => {
+    tabItem.append(attachTooltip(tabItem, tt, 'top'))
+    .tooltip('show')
+    .on('mouseenter', () => {
+      $(tabItem).tooltip('hide')
+      // prevent tooltip from ever showing again once mouse entered
+      chrome.storage.local.set({ show_settings_tab_tip: false }, () => {})
+    })
+  }, 500)
+}
+
+function setupSettingsTabTip() {
+  chrome.storage.local.get(['show_settings_tab_tip'], (settings) => {
+    if (settings && settings.show_settings_tab_tip) {
+      showSettingsTabTip()
+    }
+  })
 }
 
 function doSaveNow() {
@@ -590,6 +614,8 @@ window.onload = () => {
     this.onloadFuncs[i]()
   }
 }
+
+$(setupSettingsTabTip)
 
 $('.logo-wayback-machine').click(homepage)
 $('#newest-btn').click(recent_capture)

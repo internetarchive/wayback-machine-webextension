@@ -494,6 +494,7 @@ function initDefaultOptions () {
     resource_list_setting: false,
     email_outlinks_setting: false,
     view_setting: 'tab',
+    show_settings_tab_tip: true,
     private_before_state: Array.from(private_before_default)
   })
 }
