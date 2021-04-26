@@ -83,6 +83,8 @@ function createPage () {
   })
 }
 
+window.onload = createPage
+
 if (typeof module !== 'undefined') {
   module.exports = {
     getMetadata,

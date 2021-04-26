@@ -1,12 +1,11 @@
 // wikipedia.js
-//
+// This file is loaded every time URL matches '*.wikipedia.org/*' as defined in manifest.json.
 // This script adds buttons next to isbns on wikipedia pages that will redirect
 // the user to a readable digital copy of the referenced book.
 
 // from 'utils.js'
 /*   global attachTooltip */
 
-// This is called from wikipedia_loader.js
 function addCitations () {
   wikipediaBooks(location.href).then((data) => {
     let books = $("a[title^='Special:BookSources']")
@@ -163,6 +162,12 @@ function wikipediaBooks (url) {
     })
   })
 }
+
+chrome.storage.local.get(['wiki_setting'], (settings) => {
+  if (settings && settings.wiki_setting) {
+    addCitations()
+  }
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {
