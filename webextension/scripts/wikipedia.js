@@ -7,27 +7,29 @@
 /*   global attachTooltip */
 
 function addCitations () {
-  wikipediaBooks(location.href).then((data) => {
-    let books = $("a[title^='Special:BookSources']")
-    for (let book of books) {
-      let isbn = book.text.replace(/-/g, '')
-      let id = getIdentifier(data[isbn])
-      let metadata = getMetadata(data[isbn])
-      let page = getPageFromCitation(book)
-      if (id) {
-        let icon = addReadIcon(id, metadata)
-        if (page) {
-          icon[0].href += '/page/' + page
+  if(isNotExcludedUrl(location.href)){
+    wikipediaBooks(location.href).then((data) => {
+      let books = $("a[title^='Special:BookSources']")
+      for (let book of books) {
+        let isbn = book.text.replace(/-/g, '')
+        let id = getIdentifier(data[isbn])
+        let metadata = getMetadata(data[isbn])
+        let page = getPageFromCitation(book)
+        if (id) {
+          let icon = addReadIcon(id, metadata)
+          if (page) {
+            icon[0].href += '/page/' + page
+          }
+          book.parentElement.append(icon[0])
+        } else {
+          let icon = addDonateIcon(isbn)
+          book.parentElement.append(icon[0])
         }
-        book.parentElement.append(icon[0])
-      } else {
-        let icon = addDonateIcon(isbn)
-        book.parentElement.append(icon[0])
       }
-    }
-  }).catch((error) => {
-    console.log(error)
-  })
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
 }
 
 function getMetadata (book) {
