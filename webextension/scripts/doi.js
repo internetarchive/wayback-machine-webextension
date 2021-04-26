@@ -99,7 +99,10 @@ function getPapers(url) {
   })
 }
 
-window.onload = createPage
+// If not running through mocha, then only execute
+if(!isInTestEnv){
+  window.onload = createPage
+}
 
 if (typeof module !== 'undefined') {
   module.exports = {

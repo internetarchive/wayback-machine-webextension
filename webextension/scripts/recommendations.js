@@ -72,7 +72,10 @@ function getArticles(url) {
   })
 }
 
-getArticles(getUrlByParameter('url'))
+// If not running through mocha, then only execute
+if(!isInTestEnv){
+  getArticles(getUrlByParameter('url'))
+}
 
 if (typeof module !== 'undefined') {
   module.exports = {
