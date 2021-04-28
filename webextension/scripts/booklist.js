@@ -1,7 +1,7 @@
 // booklist.js
 
 // from 'utils.js'
-/*   global openByWindowSetting, getUrlByParameter*/
+/*   global openByWindowSetting, getUrlByParameter */
 
 // from 'wikipedia.js'
 /*   global wikipediaBooks, getMetadata */
@@ -54,7 +54,6 @@ window.onload = () => {
   var url = getUrlByParameter('url')
   populateBooks(url)
 }
-
 
 if (typeof module !== 'undefined') {
   module.exports = {

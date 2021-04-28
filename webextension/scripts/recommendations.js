@@ -1,7 +1,7 @@
 // recommendations.js
 
 // from 'utils.js'
-/*   global openByWindowSetting, getUrlByParameter*/
+/*   global openByWindowSetting, getUrlByParameter */
 
 const threshold = 0.85
 
@@ -73,7 +73,7 @@ function getArticles(url) {
 }
 
 // If not running through mocha, then only execute
-if(!isInTestEnv){
+if (!isInTestEnv) {
   getArticles(getUrlByParameter('url'))
 }
 

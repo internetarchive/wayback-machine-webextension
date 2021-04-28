@@ -4,10 +4,10 @@
 // the user to a readable digital copy of the referenced book.
 
 // from 'utils.js'
-/*   global attachTooltip */
+/*   global attachTooltip, isNotExcludedUrl */
 
 function addCitations () {
-  if(isNotExcludedUrl(location.href)){
+  if (isNotExcludedUrl(location.href)) {
     wikipediaBooks(location.href).then((data) => {
       let books = $("a[title^='Special:BookSources']")
       for (let book of books) {

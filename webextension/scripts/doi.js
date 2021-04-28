@@ -63,7 +63,7 @@ function createPage () {
   let container = $('#container-whole-doi')
   const url = getUrlByParameter('url')
   getPapers(url)
-  .then((papers)=>{
+  .then((papers) => {
     $('.loader').hide()
     for (var i = 0; i < papers.length; i++) {
       if (papers[i]) {
@@ -100,7 +100,7 @@ function getPapers(url) {
 }
 
 // If not running through mocha, then only execute
-if(!isInTestEnv){
+if (!isInTestEnv) {
   window.onload = createPage
 }
 

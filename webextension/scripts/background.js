@@ -567,7 +567,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             }
           }, () => {}
         )
-        if(!getToolbarState(tab).has('R')){
+        if (!getToolbarState(tab).has('R')) {
           getCachedPapers(clean_url,
             (data) => {
               if (data && (data.status !== 'error')) {
