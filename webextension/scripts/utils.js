@@ -173,8 +173,8 @@ function getWaybackCount(url, onSuccess, onFail) {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = hostURL + 'wayback/available'
-  var requestParams = 'url=' + fixedEncodeURIComponent(url)
+  const requestUrl = hostURL + 'wayback/available'
+  const requestParams = 'url=' + fixedEncodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
     headers: new Headers({
@@ -235,7 +235,7 @@ function makeValidURL(url) {
 function cropPrefix(url) {
   if (typeof url === 'string') {
     if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-    let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
+    let re = /^(?:[a-z]+:\/\/)?(?:www\.)?(.*)$/
     let match = re.exec(url)
     return match[1]
   }
@@ -437,7 +437,7 @@ function opener(url, option, callback) {
 }
 
 function notify(message, callback) {
-  var options = {
+  let options = {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
