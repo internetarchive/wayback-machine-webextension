@@ -231,11 +231,15 @@ function makeValidURL(url) {
 
 // Returns substring of URL after :// not including "www." if present.
 // Also crops trailing slash.
+// Returns null if match not found, or if url is not a string.
 function cropPrefix(url) {
-  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
-  let match = re.exec(url)
-  return match[1]
+  if (typeof url === 'string') {
+    if (url.slice(-1) === '/') { url = url.slice(0, -1) }
+    let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
+    let match = re.exec(url)
+    return match[1]
+  }
+  return null
 }
 
 // Function to check whether it is a valid URL or not
