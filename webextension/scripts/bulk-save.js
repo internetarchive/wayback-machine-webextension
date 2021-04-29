@@ -230,7 +230,7 @@ function updateRow($row, symbol, bgcolor) {
 // Update an individual URL item in the list container.
 function processStatus(msg, url) {
   let curl = cropPrefix(url)
-  if (curl in bulkSaveObj) {
+  if (curl && (curl in bulkSaveObj)) {
     let $row = bulkSaveObj[curl].row
     if ($row) {
       if (msg === 'save_start') {

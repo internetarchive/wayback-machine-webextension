@@ -173,8 +173,8 @@ function getWaybackCount(url, onSuccess, onFail) {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  var requestUrl = hostURL + 'wayback/available'
-  var requestParams = 'url=' + fixedEncodeURIComponent(url)
+  const requestUrl = hostURL + 'wayback/available'
+  const requestParams = 'url=' + fixedEncodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
     headers: new Headers({
@@ -231,11 +231,15 @@ function makeValidURL(url) {
 
 // Returns substring of URL after :// not including "www." if present.
 // Also crops trailing slash.
+// Returns null if match not found, or if url is not a string.
 function cropPrefix(url) {
-  if (url.slice(-1) === '/') { url = url.slice(0, -1) }
-  let re = /^(?:[a-z]+\:\/\/)?(?:www\.)?(.*)$/
-  let match = re.exec(url)
-  return match[1]
+  if (typeof url === 'string') {
+    if (url.slice(-1) === '/') { url = url.slice(0, -1) }
+    let re = /^(?:[a-z]+:\/\/)?(?:www\.)?(.*)$/
+    let match = re.exec(url)
+    return match[1]
+  }
+  return null
 }
 
 // Function to check whether it is a valid URL or not
@@ -433,7 +437,7 @@ function opener(url, option, callback) {
 }
 
 function notify(message, callback) {
-  var options = {
+  let options = {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
