@@ -435,7 +435,6 @@ function show_wikibooks() {
         if (state.has('R')) {
           var show_books = await wikiDetails('getWikipediaBooks', url)
           var show_papers = await wikiDetails('getCitedPapers', url)
-          console.log(show_books, show_papers)
           if (show_books && show_papers) {
             $('#wiki-container').show()
           } else if (show_books) {
