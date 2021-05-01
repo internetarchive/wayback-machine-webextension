@@ -443,6 +443,7 @@ function show_wikibooks() {
             $('#wiki-container').show()
           } else {
             $('#wikipapers-btn').addClass('btn-wide')
+            $('#wikipapers-btn').attr('style', 'margin-left: 0px !important');
             $('#wikibooks-btn').hide()
             $('#wiki-container').show()
           }
@@ -636,13 +637,14 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
   }
 }
 
+$(show_wikibooks)
 $(setupSettingsTabTip)
 
 $('.logo-wayback-machine').click(homepage)
