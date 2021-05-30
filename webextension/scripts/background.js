@@ -402,15 +402,13 @@ chrome.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
-      chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
-        if (settings && settings.not_found_setting && settings.agreement) {
-          tabIsReady(tabs[0].id)
-        }
-      })
-    }
-  })
+  if(details.tabId > 0){
+    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+      if (settings && settings.not_found_setting && settings.agreement) {
+        tabIsReady(details.tabId)
+      }
+    })
+  }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
