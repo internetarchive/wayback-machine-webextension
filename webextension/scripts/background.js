@@ -402,7 +402,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
       }, () => {})
     }
   }
-  if(details.tabId > 0){
+  if (details.tabId > 0) {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
@@ -604,6 +604,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     chrome.tabs.get(info.tabId, (tab) => {
+      if (typeof tab === 'undefined') { return }
       // fact check settings unchecked
       if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
         removeToolbarState(tab, 'F')
