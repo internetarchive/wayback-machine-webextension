@@ -195,13 +195,12 @@ function social_share(eventObj) {
   })
 }
 
-function search_tweet() {
+function searchTweet() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
-      url = url.replace(/^https?:\/\//, '')
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-      var open_url = 'https://twitter.com/search?q=' + url
+      var open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
       openByWindowSetting(open_url)
     }
   })
@@ -624,7 +623,7 @@ $('#facebook-share-btn').click(social_share)
 $('#twitter-share-btn').click(social_share)
 $('#linkedin-share-btn').click(social_share)
 $('#copy-link-btn').click(social_share)
-$('#tweets-btn').click(search_tweet)
+$('#tweets-btn').click(searchTweet)
 $('#about-tab-btn').click(about_support)
 $('#donate-tab-btn').click(open_donations_page)
 $('#settings-tab-btn').click(showSettings)
