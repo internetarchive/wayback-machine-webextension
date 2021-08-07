@@ -433,6 +433,15 @@ function show_wikibooks() {
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
+          if (state.has('books') && !state.has('papers')) {
+            // books only
+            $('#wikibooks-btn').addClass('btn-wide')
+            $('#wikipapers-btn').hide()
+          } else if (!state.has('books') && state.has('papers')) {
+            // papers only
+            $('#wikibooks-btn').hide()
+            $('#wikipapers-btn').addClass('btn-wide')
+          }
           $('#wiki-container').show()
           $('#wikibooks-btn').click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
@@ -607,13 +616,14 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [last_save, borrow_books, show_news, show_wikibooks, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (var i in this.onloadFuncs) {
     this.onloadFuncs[i]()
   }
 }
 
+$(show_wikibooks)
 $(setupSettingsTabTip)
 
 $('.logo-wayback-machine').click(homepage)

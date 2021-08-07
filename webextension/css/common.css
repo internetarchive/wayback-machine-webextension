@@ -110,11 +110,12 @@ button {
 }
 
 /* add gap for Safari support */
+
 .btn-flex-block > * {
-    margin-left: 5px !important;
+    margin-right: 5px !important;
 }
-.btn-flex-block > *:first-child {
-    margin-left: 0 !important;
+.btn-flex-block > *:last-child {
+    margin-right: 0px !important;
 }
 
 .btn-block {
