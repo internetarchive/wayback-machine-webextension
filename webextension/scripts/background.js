@@ -552,28 +552,27 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       }
     })
     // checking resources
-    // TODO: wikipedia papers
     const clean_url = get_clean_url(tab.url)
     if (isValidUrl(clean_url) === false) { return }
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (settings) => {
-      // checking wikipedia books
+      // checking wikipedia books & papers
       if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         getCachedBooks(clean_url,
           (data) => {
             if (data && (data.status !== 'error')) {
               addToolbarState(tab, 'R')
+              addToolbarState(tab, 'books')
             }
           }, () => {}
         )
-        if (!getToolbarState(tab).has('R')) {
-          getCachedPapers(clean_url,
-            (data) => {
-              if (data && (data.status !== 'error')) {
-                addToolbarState(tab, 'R')
-              }
-            }, () => {}
-          )
-        }
+        getCachedPapers(clean_url,
+          (data) => {
+            if (data && (data.status !== 'error')) {
+              addToolbarState(tab, 'R')
+              addToolbarState(tab, 'papers')
+            }
+          }, () => {}
+        )
       }
       // checking tv news
       const news_host = new URL(clean_url).hostname
@@ -771,6 +770,7 @@ function toolbarStateKey(atab) {
 
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
+// Add 'books' or 'papers' to display popup buttons for wikipedia resources.
 function addToolbarState(atab, state) {
   if (!atab) { return }
   const tabKey = toolbarStateKey(atab)

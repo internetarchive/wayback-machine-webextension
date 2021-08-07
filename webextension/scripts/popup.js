@@ -429,25 +429,20 @@ function show_wikibooks() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, async (result) => {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
-          var show_books = await wikiDetails('getWikipediaBooks', url)
-          var show_papers = await wikiDetails('getCitedPapers', url)
-          if (show_books && show_papers) {
-            $('#wiki-container').show()
-          } else if (show_books) {
+          // show wikipedia cited books & papers buttons
+          if (state.has('books') && !state.has('papers')) {
+            // books only
             $('#wikibooks-btn').addClass('btn-wide')
             $('#wikipapers-btn').hide()
-            $('#wiki-container').show()
-          } else {
-            $('#wikipapers-btn').addClass('btn-wide')
-            $('#wikipapers-btn').attr('style', 'margin-left: 0px !important');
+          } else if (!state.has('books') && state.has('papers')) {
+            // papers only
             $('#wikibooks-btn').hide()
-            $('#wiki-container').show()
+            $('#wikipapers-btn').addClass('btn-wide')
           }
-
-          // show wikipedia cited books & papers buttons
+          $('#wiki-container').show()
           $('#wikibooks-btn').click(() => {
             const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
             openByWindowSetting(URL)
@@ -459,21 +454,6 @@ function show_wikibooks() {
         }
       })
     }
-  })
-}
-
-function wikiDetails (message, query) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
-      message,
-      query
-    }, (result) => {
-      if (result && result.status !== 'error') {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
   })
 }
 
