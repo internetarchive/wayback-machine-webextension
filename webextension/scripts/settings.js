@@ -72,13 +72,19 @@ function saveOptions() {
   setupWaybackCount()
   if (settings.wm_count_setting === false) {
     // additionally clear the cache if setting cleared
-    chrome.runtime.sendMessage({ message: 'clearCountCache' })
+    chrome.runtime.sendMessage({ message: 'clearCountCache' }, () => {
+      if (chrome.runtime.lastError) { }
+    })
   }
 
   if (settings.fact_check_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => {
+      if (chrome.runtime.lastError) { }
+    })
   }
-  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
+  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings }, () => {
+    if (chrome.runtime.lastError) { }
+  })
 }
 
 /*

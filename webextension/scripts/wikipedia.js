@@ -156,6 +156,7 @@ function wikipediaBooks (url) {
       message: 'getWikipediaBooks',
       query: url
     }, (books) => {
+      if (chrome.runtime.lastError) { }
       if (books) {
         resolve(books)
       } else {

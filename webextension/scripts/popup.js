@@ -52,12 +52,15 @@ function doSaveNow() {
       options: options,
       method: 'save',
       atab: tabs[0]
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
   })
 }
 
 function last_save() {
   checkAuthentication((result) => {
+    if (chrome.runtime.lastError) { }
     if (!(result && result.auth_check)) {
       loginError()
     } else {
@@ -104,6 +107,7 @@ function loginSuccess() {
               message: 'getLastSaveTime',
               page_url: url
             }, (message) => {
+              if (chrome.runtime.lastError) { }
               if (message && (message.message === 'last_save') && message.timestamp) {
                 $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
                 $('#spn-btn').addClass('flip-inside')
@@ -133,6 +137,8 @@ function recent_capture() {
       wayback_url: 'https://web.archive.org/web/2/',
       page_url: url,
       method: 'recent'
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
   })
 }
@@ -145,6 +151,8 @@ function first_capture() {
       wayback_url: 'https://web.archive.org/web/0/',
       page_url: url,
       method: 'first'
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
   })
 }
@@ -157,6 +165,8 @@ function view_all() {
       wayback_url: 'https://web.archive.org/web/*/',
       page_url: url,
       method: 'viewall'
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
   })
 }
@@ -208,9 +218,9 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-  chrome.runtime.sendMessage({ message: 'clearResource' })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => { if (chrome.runtime.lastError) { } })
+  chrome.runtime.sendMessage({ message: 'clearResource' }, () => { if (chrome.runtime.lastError) { } })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => { if (chrome.runtime.lastError) { } })
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -357,7 +367,9 @@ function show_login_page() {
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
-    chrome.runtime.sendMessage({ message: 'showall', url: url })
+    chrome.runtime.sendMessage({ message: 'showall', url: url }, () => {
+      if (chrome.runtime.lastError) { }
+    })
   })
 }
 
@@ -366,6 +378,7 @@ function borrow_books() {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        if (chrome.runtime.lastError) { }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -406,6 +419,7 @@ function show_news() {
     const news_host = new URL(url).hostname
     if (newshosts.has(news_host)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        if (chrome.runtime.lastError) { }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#tvnews-container').show()
@@ -430,6 +444,7 @@ function show_wikibooks() {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        if (chrome.runtime.lastError) { }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -464,6 +479,7 @@ function setUpFactCheck() {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+            if (chrome.runtime.lastError) { }
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -518,10 +534,14 @@ function setupWaybackCount() {
       let url = tabs[0].url
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, () => {
+          if (chrome.runtime.lastError) { }
+        })
       } else {
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => {
+          if (chrome.runtime.lastError) { }
+        })
       }
     })
   })
@@ -531,6 +551,7 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
+    if (chrome.runtime.lastError) { }
     if (result && ('total' in result)) {
       // set label
       let text = ''
@@ -569,6 +590,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+      if (chrome.runtime.lastError) { }
       let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()

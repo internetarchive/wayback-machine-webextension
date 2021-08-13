@@ -216,6 +216,8 @@ function saveTheURL(url) {
     options: saveOptions,
     method: 'save',
     silent: true
+  }, () => {
+    if (chrome.runtime.lastError) { }
   })
 }
 

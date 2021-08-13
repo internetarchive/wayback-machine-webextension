@@ -87,7 +87,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         if (('job_id' in res) && (res.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab })
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
+              if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+            })
             if (!silent) { notify(msg) }
           } else {
             // call status during save
@@ -96,7 +98,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           }
         } else {
           // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
+            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+          })
           if (!silent) { notify('Error: ' + msg) }
         }
         // show resources during save
@@ -118,7 +122,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
       })
       .catch(() => {
         // handle http errors
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, () => {
+          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+        })
       })
   }
 }
@@ -151,6 +157,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       message: 'save_start',
       atab: atab,
       url: page_url
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     addToolbarState(atab, 'S')
 
@@ -184,6 +192,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: data,
           url: page_url
+        }, () => {
+          if (chrome.runtime.lastError) { }
         })
       })
       .catch((err) => {
@@ -191,6 +201,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: err,
           url: page_url
+        }, () => {
+          if (chrome.runtime.lastError) { }
         })
       })
   }
@@ -206,6 +218,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     // notify
     if (!silent) {
@@ -230,6 +244,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       error: vdata.message,
       url: page_url,
       atab: atab
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     // notify
     if (!silent) {
