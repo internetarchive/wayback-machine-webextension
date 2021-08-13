@@ -385,7 +385,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
+          chrome.tabs.update(details.tabId, { url: chrome.runtime.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
         }, () => {})
       }
     })

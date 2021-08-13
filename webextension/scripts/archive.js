@@ -24,15 +24,15 @@ const ERROR_CODE_DIC = {
 
 // appending css to the popup
 function appendStyle() {
-  const url = chrome.extension.getURL('css/archive.css')
+  const url = chrome.runtime.getURL('css/archive.css')
   return `<link rel="stylesheet" type="text/css" href=${url}>`
 }
 
 // appending the actual dom of popup
 function appendHTML(url, code) {
   const title = ERROR_CODE_DIC[code]
-  const close = chrome.extension.getURL('images/close.svg')
-  const logo = chrome.extension.getURL('images/wayback-light.png')
+  const close = chrome.runtime.getURL('images/close.svg')
+  const logo = chrome.runtime.getURL('images/wayback-light.png')
   const caption = 'View a saved version courtesy of the'
   const archive = 'View Archived Version'
   return `
