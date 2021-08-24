@@ -401,16 +401,9 @@ chrome.webRequest.onCompleted.addListener((details) => {
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(tabId, {
-          file: 'scripts/archive.js'
-        }, () => {
-          if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.sendMessage(tabId, {
-              type: 'SHOW_BANNER',
-              wayback_url: wayback_url,
-              page_url: url,
-              status_code: 999
-            })
+        chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
+          if (chrome.runtime.lastError) {
+            console.log('Could not inject banner. statusCode: ' + details.statusCode)
           } else {
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',

@@ -53,7 +53,7 @@ function getArticles(url) {
   getDetails(url)
   .then((clips) => {
     $('.loader').hide()
-    if (clips.length > 0 && threshold >= clips[0]['similarity']) {
+    if (clips && (clips.length > 0) && (threshold >= clips[0]['similarity'])) {
       for (let clip of clips) {
         if (threshold >= clip['similarity']) {
           $('#RecommendationTray').append(constructArticles(clip))
