@@ -47,11 +47,8 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, () => {
       openByWindowSetting(open_url)
     }, () => {
-      if (isFirefox) {
-        notify('This page has not been archived.')
-      } else {
-        alert('This page has not been archived.')
-      }
+      const msg = 'This page has not been archived.'
+      if (isFirefox) { notify(msg) } else { alert(msg) }
     })
   } else {
     openByWindowSetting(open_url)
@@ -896,7 +893,8 @@ chrome.contextMenus.onClicked.addListener((click) => {
         let open_url = wayback_url + page_url
         URLopener(open_url, page_url, true)
       } else {
-        alert('This URL is in the list of excluded URLs')
+        const msg = 'This URL is excluded.'
+        if (isFirefox) { notify(msg) } else { alert(msg) }
       }
     }
   })
