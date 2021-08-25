@@ -47,11 +47,8 @@ function URLopener(open_url, url, wmIsAvailable) {
     wmAvailabilityCheck(url, () => {
       openByWindowSetting(open_url)
     }, () => {
-      if (isFirefox) {
-        notify('This page has not been archived.')
-      } else {
-        alert('This page has not been archived.')
-      }
+      const msg = 'This page has not been archived.'
+      if (isFirefox) { notify(msg) } else { alert(msg) }
     })
   } else {
     openByWindowSetting(open_url)
@@ -87,7 +84,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         if (('job_id' in res) && (res.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab })
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
+              if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+            })
             if (!silent) { notify(msg) }
           } else {
             // call status during save
@@ -96,7 +95,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           }
         } else {
           // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
+            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+          })
           if (!silent) { notify('Error: ' + msg) }
         }
         // show resources during save
@@ -118,7 +119,9 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
       })
       .catch(() => {
         // handle http errors
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab })
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, () => {
+          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+        })
       })
   }
 }
@@ -151,6 +154,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       message: 'save_start',
       atab: atab,
       url: page_url
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     addToolbarState(atab, 'S')
 
@@ -184,6 +189,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: data,
           url: page_url
+        }, () => {
+          if (chrome.runtime.lastError) { }
         })
       })
       .catch((err) => {
@@ -191,6 +198,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: err,
           url: page_url
+        }, () => {
+          if (chrome.runtime.lastError) { }
         })
       })
   }
@@ -206,6 +215,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     // notify
     if (!silent) {
@@ -230,6 +241,8 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       error: vdata.message,
       url: page_url,
       atab: atab
+    }, () => {
+      if (chrome.runtime.lastError) { }
     })
     // notify
     if (!silent) {
@@ -369,7 +382,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.update(details.tabId, { url: chrome.extension.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
+          chrome.tabs.update(details.tabId, { url: chrome.runtime.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
         }, () => {})
       }
     })
@@ -385,9 +398,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
       details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(tabId, {
-          file: 'scripts/archive.js'
-        }, () => {
+        chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
@@ -887,7 +898,8 @@ chrome.contextMenus.onClicked.addListener((click) => {
         let open_url = wayback_url + page_url
         URLopener(open_url, page_url, true)
       } else {
-        alert('This URL is in the list of excluded URLs')
+        const msg = 'This URL is excluded.'
+        if (isFirefox) { notify(msg) } else { alert(msg) }
       }
     }
   })

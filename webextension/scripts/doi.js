@@ -90,6 +90,7 @@ function getPapers(url) {
       message: 'getCitedPapers',
       query: url
     }, (papers) => {
+      if (chrome.runtime.lastError) { }
       if (papers && papers.status !== 'error') {
         resolve(papers)
       } else {
