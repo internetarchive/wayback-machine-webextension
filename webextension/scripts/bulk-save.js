@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL, get_clean_url */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
@@ -170,7 +170,7 @@ function initMessageListener() {
         $('#not-logged-in').show()
       } else if (message.error.indexOf('same snapshot') !== -1) {
         // snapshot already archived within timeframe
-        processStatus('archived', message.url)
+        processStatus('save_archived', message.url)
         checkIfFinished()
       }
     } else if (message) {
@@ -210,9 +210,15 @@ function doBulkSaveAll(e) {
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
   let curl = bulkSaveQueue.shift()
-  if (curl && (curl in bulkSaveObj)) {
-    let saveUrl = bulkSaveObj[curl].url
-    saveTheURL(saveUrl)
+  if (curl) {
+    if (curl in bulkSaveObj) {
+      const saveUrl = bulkSaveObj[curl].url
+      saveTheURL(saveUrl)
+    } else {
+      // rare, but could happen if user clicks on delete-btn while bulk save in progress.
+      // in that case, we want to prevent getting stuck.
+      saveNextInQueue()
+    }
   }
 }
 
@@ -221,7 +227,7 @@ function saveTheURL(url) {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: hostURL + 'save/',
-    page_url: url,
+    page_url: get_clean_url(url),
     options: saveOptions,
     method: 'save',
     silent: true
@@ -259,7 +265,7 @@ function processStatus(msg, url) {
         saveFailedCount++
         $('#failed-count').text(saveFailedCount)
         saveNextInQueue()
-      } else if (msg === 'archived') {
+      } else if (msg === 'save_archived') {
         // url was already archived
         updateRow($row, '•', 'green')
         bulkSaveObj[curl].status = S_DONE
