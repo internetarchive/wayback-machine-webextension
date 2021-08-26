@@ -6,7 +6,8 @@
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
-let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj }}
+const S_NONE=0, S_SAVING=1, S_DONE=2, S_FAILED=3
+let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
 let saveFailedCount = 0
@@ -114,7 +115,7 @@ function addToBulkSave(url) {
     let $del = $('<div class="delete-btn">').text('x')
     let $span = $('<div class="url-item">').text(url)
     $('#list-container').append($row.append($del, $span))
-    bulkSaveObj[curl] = { url: url, row: $row }
+    bulkSaveObj[curl] = { url: url, row: $row, status: S_NONE }
   }
 }
 
@@ -240,28 +241,30 @@ function updateRow($row, symbol, bgcolor) {
 // Update an individual URL item in the list container.
 function processStatus(msg, url) {
   let curl = cropPrefix(url)
-  if (curl && (curl in bulkSaveObj)) {
+  if (curl && (curl in bulkSaveObj) && (bulkSaveObj[curl].status !== S_DONE)) {
     let $row = bulkSaveObj[curl].row
     if ($row) {
       if (msg === 'save_start') {
         updateRow($row, '', 'yellow')
+        bulkSaveObj[curl].status = S_SAVING
       } else if (msg === 'save_success') {
         updateRow($row, '✔', 'green')
+        bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
-        delete bulkSaveObj[curl]
         saveNextInQueue()
       } else if (msg === 'save_error') {
         updateRow($row, '!', 'red')
+        bulkSaveObj[curl].status = S_FAILED
         saveFailedCount++
         $('#failed-count').text(saveFailedCount)
         saveNextInQueue()
       } else if (msg === 'archived') {
         // url was already archived
         updateRow($row, '•', 'green')
+        bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
-        delete bulkSaveObj[curl]
         saveNextInQueue()
       }
     }
