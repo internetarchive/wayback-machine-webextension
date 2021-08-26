@@ -79,7 +79,10 @@ function importAllBookmarks() {
     })
   }
 }
-// Traverses the bookmark tree nodes recursively.
+
+// Traverses the bookmark tree nodes recursively, adding URLs to Bulk Save.
+// Returns count of URLs added.
+//
 function processTreeNode(node) {
   let count = 0
   // process child nodes
@@ -87,13 +90,16 @@ function processTreeNode(node) {
     node.children.forEach((child) => { count += processTreeNode(child) })
   }
   // add bookmark URL from leaf node
-  if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
-    try {
-      addToBulkSave(decodeURI(node.url))
+  try {
+    const url = decodeURI(node.url)
+    if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
+      addToBulkSave(url)
       count++
-    } catch(e) {
-      console.log('Bookmark skipped: ', e)
+    } else {
+      console.log('Bookmark skipped: ' + url)
     }
+  } catch(e) {
+    console.log(e)
   }
   return count
 }
@@ -103,11 +109,13 @@ function processTreeNode(node) {
 // Adds a URL to Bulk Save and appends it to #list-container.
 function addToBulkSave(url) {
   let curl = cropPrefix(url)
-  let $row = $('<div class="url-list flex-container">')
-  let $del = $('<div class="delete-btn">').text('x')
-  let $span = $('<div class="url-item">').text(url)
-  $('#list-container').append($row.append($del, $span))
-  bulkSaveObj[curl] = { url: url, row: $row }
+  if (curl) {
+    let $row = $('<div class="url-list flex-container">')
+    let $del = $('<div class="delete-btn">').text('x')
+    let $span = $('<div class="url-item">').text(url)
+    $('#list-container').append($row.append($del, $span))
+    bulkSaveObj[curl] = { url: url, row: $row }
+  }
 }
 
 // Click handler to Add URLs to Bulk Save.
@@ -241,6 +249,7 @@ function processStatus(msg, url) {
         updateRow($row, '✔', 'green')
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
+        delete bulkSaveObj[curl]
         saveNextInQueue()
       } else if (msg === 'save_error') {
         updateRow($row, '!', 'red')
@@ -252,6 +261,7 @@ function processStatus(msg, url) {
         updateRow($row, '•', 'green')
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
+        delete bulkSaveObj[curl]
         saveNextInQueue()
       }
     }
