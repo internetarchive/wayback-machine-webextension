@@ -85,7 +85,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
             chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
-              if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+              if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
             })
             if (!silent) { notify(msg) }
           } else {
@@ -96,7 +96,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         } else {
           // handle error
           chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
-            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError,message) }
           })
           if (!silent) { notify('Error: ' + msg) }
         }
@@ -117,10 +117,11 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           }
         })
       })
-      .catch(() => {
+      .catch((err) => {
         // handle http errors
+        console.log(err)
         chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, () => {
-          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError) }
+          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
         })
       })
   }

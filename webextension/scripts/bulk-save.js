@@ -260,6 +260,7 @@ function processStatus(msg, url) {
         $('#saved-count').text(saveSuccessCount)
         saveNextInQueue()
       } else if (msg === 'save_error') {
+        console.log('error saving url: ' + url)
         updateRow($row, '!', 'red')
         bulkSaveObj[curl].status = S_FAILED
         saveFailedCount++
@@ -274,6 +275,8 @@ function processStatus(msg, url) {
         saveNextInQueue()
       }
     }
+  } else {
+    console.log('url not valid? ' + url)
   }
 }
 
