@@ -1,12 +1,13 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL, get_clean_url */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
-let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj }}
+const S_NONE=0, S_SAVING=1, S_DONE=2, S_FAILED=3
+let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
 let saveFailedCount = 0
@@ -79,7 +80,10 @@ function importAllBookmarks() {
     })
   }
 }
-// Traverses the bookmark tree nodes recursively.
+
+// Traverses the bookmark tree nodes recursively, adding URLs to Bulk Save.
+// Returns count of URLs added.
+//
 function processTreeNode(node) {
   let count = 0
   // process child nodes
@@ -87,13 +91,16 @@ function processTreeNode(node) {
     node.children.forEach((child) => { count += processTreeNode(child) })
   }
   // add bookmark URL from leaf node
-  if (node.url && isValidUrl(node.url) && isNotExcludedUrl(node.url) && !isDuplicateURL(node.url)) {
-    try {
-      addToBulkSave(decodeURI(node.url))
+  try {
+    const url = decodeURI(node.url)
+    if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isDuplicateURL(url)) {
+      addToBulkSave(url)
       count++
-    } catch(e) {
-      console.log('Bookmark skipped: ', e)
+    } else {
+      console.log('Bookmark skipped: ' + url)
     }
+  } catch(e) {
+    console.log(e)
   }
   return count
 }
@@ -103,11 +110,13 @@ function processTreeNode(node) {
 // Adds a URL to Bulk Save and appends it to #list-container.
 function addToBulkSave(url) {
   let curl = cropPrefix(url)
-  let $row = $('<div class="url-list flex-container">')
-  let $del = $('<div class="delete-btn">').text('x')
-  let $span = $('<div class="url-item">').text(url)
-  $('#list-container').append($row.append($del, $span))
-  bulkSaveObj[curl] = { url: url, row: $row }
+  if (curl) {
+    let $row = $('<div class="url-list flex-container">')
+    let $del = $('<div class="delete-btn">').text('x')
+    let $span = $('<div class="url-item">').text(url)
+    $('#list-container').append($row.append($del, $span))
+    bulkSaveObj[curl] = { url: url, row: $row, status: S_NONE }
+  }
 }
 
 // Click handler to Add URLs to Bulk Save.
@@ -161,7 +170,7 @@ function initMessageListener() {
         $('#not-logged-in').show()
       } else if (message.error.indexOf('same snapshot') !== -1) {
         // snapshot already archived within timeframe
-        processStatus('archived', message.url)
+        processStatus('save_archived', message.url)
         checkIfFinished()
       }
     } else if (message) {
@@ -201,9 +210,15 @@ function doBulkSaveAll(e) {
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
   let curl = bulkSaveQueue.shift()
-  if (curl && (curl in bulkSaveObj)) {
-    let saveUrl = bulkSaveObj[curl].url
-    saveTheURL(saveUrl)
+  if (curl) {
+    if (curl in bulkSaveObj) {
+      const saveUrl = bulkSaveObj[curl].url
+      saveTheURL(saveUrl)
+    } else {
+      // rare, but could happen if user clicks on delete-btn while bulk save in progress.
+      // in that case, we want to prevent getting stuck.
+      saveNextInQueue()
+    }
   }
 }
 
@@ -212,7 +227,7 @@ function saveTheURL(url) {
   chrome.runtime.sendMessage({
     message: 'openurl',
     wayback_url: hostURL + 'save/',
-    page_url: url,
+    page_url: get_clean_url(url),
     options: saveOptions,
     method: 'save',
     silent: true
@@ -232,29 +247,36 @@ function updateRow($row, symbol, bgcolor) {
 // Update an individual URL item in the list container.
 function processStatus(msg, url) {
   let curl = cropPrefix(url)
-  if (curl && (curl in bulkSaveObj)) {
+  if (curl && (curl in bulkSaveObj) && (bulkSaveObj[curl].status !== S_DONE)) {
     let $row = bulkSaveObj[curl].row
     if ($row) {
       if (msg === 'save_start') {
         updateRow($row, '', 'yellow')
+        bulkSaveObj[curl].status = S_SAVING
       } else if (msg === 'save_success') {
         updateRow($row, '✔', 'green')
+        bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
         saveNextInQueue()
       } else if (msg === 'save_error') {
+        console.log('error saving url: ' + url)
         updateRow($row, '!', 'red')
+        bulkSaveObj[curl].status = S_FAILED
         saveFailedCount++
         $('#failed-count').text(saveFailedCount)
         saveNextInQueue()
-      } else if (msg === 'archived') {
+      } else if (msg === 'save_archived') {
         // url was already archived
         updateRow($row, '•', 'green')
+        bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
         saveNextInQueue()
       }
     }
+  } else {
+    console.log('url not valid? ' + url)
   }
 }
 
