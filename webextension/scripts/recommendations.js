@@ -39,7 +39,7 @@ function getDetails(article) {
       message: 'tvnews',
       article: article
     }, (clips) => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
       if (clips.status !== 'error') {
         resolve(clips)
       } else {

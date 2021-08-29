@@ -6,26 +6,26 @@
 // from 'utils.js'
 /*   global getUrlByParameter, hostURL */
 
-var mynewTags = []
+let mynewTags = []
 
 function getTags() {
   const url = getUrlByParameter('url')
-  var hostname = new URL(url).hostname
-  var toBeUsedAsURL = hostname.replace(/^www./, '')
-  var y = hostname.split('.')
-  var not_display4 = y.join(' ')
-  var not_display1 = y.join(' ')
+  let hostname = new URL(url).hostname
+  let toBeUsedAsURL = hostname.replace(/^www./, '')
+  let y = hostname.split('.')
+  let not_display4 = y.join(' ')
+  let not_display1 = y.join(' ')
   $('.url').text(url).attr('href', url)
   if (url.includes('https')) {
     not_display1 = 'https ' + not_display1
   } else {
     not_display1 = 'http ' + not_display1
   }
-  var not_display2 = not_display1 + ' extension'
-  var not_display3 = not_display4 + ' extension'
-  var dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
+  let not_display2 = not_display1 + ' extension'
+  let not_display3 = not_display4 + ' extension'
+  let dontarray = ['view page', 'open', 'read more', not_display1, not_display2, not_display3, not_display4]
 
-  var new_url = hostURL + 'services/context/tagcloud?url=' + toBeUsedAsURL
+  let new_url = hostURL + 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
   fetch(new_url)
     .then(response => response.json())
@@ -35,7 +35,7 @@ function getTags() {
         $('.wordcloud').css('display', 'inline-block')
         $('#container-wordcloud').show()
         for (let i = 0; i < data.length; i++) {
-          var b = {}
+          let b = {}
           let text = decodeURIComponent(data[i][0])
           if (dontarray.indexOf(text) <= 0) {
             mynewTags[i] = text
@@ -44,14 +44,14 @@ function getTags() {
             mynewTags.push(b)
           }
         }
-        var coefOfDistance
+        let coefOfDistance
         if (data.length < 500) {
           coefOfDistance = 1 / 40
         } else {
           coefOfDistance = 3 / 4
         }
-        var arr = mynewTags.reduce((acc, newTag) => {
-          var minDistance = void 0
+        let arr = mynewTags.reduce((acc, newTag) => {
+          let minDistance = 0
           if (acc.length > 0) {
             minDistance = Math.min.apply(Math, toConsumableArray(acc.map((oldTag) => {
               return Levenshtein.get(oldTag, newTag)
@@ -64,7 +64,7 @@ function getTags() {
           }
           return acc
         }, []).sort()
-        var result = []
+        let result = []
 
         // Filtering out the elements from data which aren't in arr
         data = data.filter((el) => {
@@ -78,7 +78,7 @@ function getTags() {
         })
 
         for (let i = 0; i < result.length; i++) {
-          var span = document.createElement('span')
+          let span = document.createElement('span')
           span.setAttribute('data-weight', result[i].weight)
           span.appendChild(document.createTextNode(result[i].text))
           document.getElementById('container-wordcloud').appendChild(span)

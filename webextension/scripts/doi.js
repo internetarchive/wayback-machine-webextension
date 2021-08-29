@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global hostURL, getUrlByParameter, openByWindowSetting */
+/*   global getUrlByParameter, openByWindowSetting */
 
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
@@ -65,7 +65,7 @@ function createPage () {
   getPapers(url)
   .then((papers) => {
     $('.loader').hide()
-    for (var i = 0; i < papers.length; i++) {
+    for (let i = 0; i < papers.length; i++) {
       if (papers[i]) {
         let data = getMetadata(papers[i])
         let paper = makeEntry(data)
@@ -90,7 +90,7 @@ function getPapers(url) {
       message: 'getCitedPapers',
       query: url
     }, (papers) => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
       if (papers && papers.status !== 'error') {
         resolve(papers)
       } else {

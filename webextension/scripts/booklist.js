@@ -51,7 +51,7 @@ function addBook (metadata) {
 }
 
 window.onload = () => {
-  var url = getUrlByParameter('url')
+  let url = getUrlByParameter('url')
   populateBooks(url)
 }
 

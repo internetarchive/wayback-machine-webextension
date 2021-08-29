@@ -7,11 +7,11 @@
 /*   global isNotExcludedUrl, get_clean_url, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent */
 
-var manifest = chrome.runtime.getManifest()
+let manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
-var VERSION = manifest.version
+let VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
-var globalStatusCode = ''
+let globalStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -20,10 +20,10 @@ const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
 const API_RETRY = 1000
 let tabIdPromise
-var WB_API_URL = hostURL + 'wayback/available'
+let WB_API_URL = hostURL + 'wayback/available'
 const SPN_RETRY = 6000
 
-var private_before_default = new Set([
+let private_before_default = new Set([
   'fact-check-setting',
   'wm-count-setting',
   'wiki-setting',
@@ -34,7 +34,7 @@ var private_before_default = new Set([
 ])
 
 function rewriteUserAgentHeader(e) {
-  for (var header of e.requestHeaders) {
+  for (let header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
       header.value = header.value + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
     }
@@ -96,7 +96,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         } else {
           // handle error
           chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
-            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError,message) }
+            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
           })
           if (!silent) { notify('Error: ' + msg) }
         }
@@ -127,6 +127,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
   }
 }
 
+// not currently used, but may in the future?
 function authCheckAPI() {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -156,7 +157,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       atab: atab,
       url: page_url
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
     addToolbarState(atab, 'S')
 
@@ -191,7 +192,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           data: data,
           url: page_url
         }, () => {
-          if (chrome.runtime.lastError) { }
+          if (chrome.runtime.lastError) { /* skip */ }
         })
       })
       .catch((err) => {
@@ -200,7 +201,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           data: err,
           url: page_url
         }, () => {
-          if (chrome.runtime.lastError) { }
+          if (chrome.runtime.lastError) { /* skip */ }
         })
       })
   }
@@ -217,7 +218,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       atab: atab,
       url: page_url
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
     // notify
     if (!silent) {
@@ -243,7 +244,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       url: page_url,
       atab: atab
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
     // notify
     if (!silent) {
@@ -599,11 +600,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       }
     })
   } else if (info.status === 'loading') {
-    var received_url = tab.url
+    let received_url = tab.url
     clearToolbarState(tab)
     if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
       received_url = received_url.replace(/^https?:\/\//, '')
-      var open_url = received_url
+      let open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.local.get(['amazon_setting'], (settings) => {
         // checking amazon books settings
@@ -905,3 +906,11 @@ chrome.contextMenus.onClicked.addListener((click) => {
     }
   })
 })
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    private_before_default,
+    tabIdPromise,
+    authCheckAPI
+  }
+}

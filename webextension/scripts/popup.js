@@ -53,14 +53,14 @@ function doSaveNow() {
       method: 'save',
       atab: tabs[0]
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   })
 }
 
 function last_save() {
   checkAuthentication((result) => {
-    if (chrome.runtime.lastError) { }
+    if (chrome.runtime.lastError) { /* skip */ }
     if (!(result && result.auth_check)) {
       loginError()
     } else {
@@ -107,7 +107,7 @@ function loginSuccess() {
               message: 'getLastSaveTime',
               page_url: url
             }, (message) => {
-              if (chrome.runtime.lastError) { }
+              if (chrome.runtime.lastError) { /* skip */ }
               if (message && (message.message === 'last_save') && message.timestamp) {
                 $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
                 $('#spn-btn').addClass('flip-inside')
@@ -138,7 +138,7 @@ function recent_capture() {
       page_url: url,
       method: 'recent'
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   })
 }
@@ -152,7 +152,7 @@ function first_capture() {
       page_url: url,
       method: 'first'
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   })
 }
@@ -166,7 +166,7 @@ function view_all() {
       page_url: url,
       method: 'viewall'
     }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   })
 }
@@ -210,7 +210,7 @@ function searchTweet() {
     let url = searchValue || get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-      var open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
+      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
       openByWindowSetting(open_url)
     }
   })
@@ -218,9 +218,9 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => { if (chrome.runtime.lastError) { } })
-  chrome.runtime.sendMessage({ message: 'clearResource' }, () => { if (chrome.runtime.lastError) { } })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => { if (chrome.runtime.lastError) { } })
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
+  chrome.runtime.sendMessage({ message: 'clearResource' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -258,7 +258,7 @@ function arrow_key_access() {
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
         search_box.value = index.textContent
       } else if (index === search_box) {
-
+        /* skip */
       } else if (index !== search_box && index && index.previousElementSibling) {
         if (index.classList.contains('focused')) { index.classList.remove('focused') }
         index = index.previousElementSibling
@@ -296,7 +296,7 @@ function display_list(key_word) {
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
       arrow_key_access()
-      for (var i = 0; i < data.hosts.length; i++) {
+      for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
@@ -368,7 +368,7 @@ function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
     chrome.runtime.sendMessage({ message: 'showall', url: url }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   })
 }
@@ -378,7 +378,7 @@ function borrow_books() {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { }
+        if (chrome.runtime.lastError) { /* skip */ }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -419,7 +419,7 @@ function show_news() {
     const news_host = new URL(url).hostname
     if (newshosts.has(news_host)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { }
+        if (chrome.runtime.lastError) { /* skip */ }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#tvnews-container').show()
@@ -444,7 +444,7 @@ function show_wikibooks() {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { }
+        if (chrome.runtime.lastError) { /* skip */ }
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -479,7 +479,7 @@ function setUpFactCheck() {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-            if (chrome.runtime.lastError) { }
+            if (chrome.runtime.lastError) { /* skip */ }
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -535,12 +535,12 @@ function setupWaybackCount() {
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' }, () => {
-          if (chrome.runtime.lastError) { }
+          if (chrome.runtime.lastError) { /* skip */ }
         })
       } else {
         clearWaybackCount()
         chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => {
-          if (chrome.runtime.lastError) { }
+          if (chrome.runtime.lastError) { /* skip */ }
         })
       }
     })
@@ -551,7 +551,7 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (chrome.runtime.lastError) { }
+    if (chrome.runtime.lastError) { /* skip */ }
     if (result && ('total' in result)) {
       // set label
       let text = ''
@@ -590,7 +590,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
       let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()
@@ -640,7 +640,7 @@ chrome.runtime.onMessage.addListener(
 
 window.onloadFuncs = [last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
-  for (var i in this.onloadFuncs) {
+  for (let i in this.onloadFuncs) {
     this.onloadFuncs[i]()
   }
 }

@@ -73,17 +73,17 @@ function saveOptions() {
   if (settings.wm_count_setting === false) {
     // additionally clear the cache if setting cleared
     chrome.runtime.sendMessage({ message: 'clearCountCache' }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   }
 
   if (settings.fact_check_setting === false) {
     chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
     })
   }
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings }, () => {
-    if (chrome.runtime.lastError) { }
+    if (chrome.runtime.lastError) { /* skip */ }
   })
 }
 
@@ -131,7 +131,7 @@ function validatePrivateMode(event) {
 
 function togglePrivateMode() {
   let checkboxes = $('.selected-prior.private')
-  for (var i = 0; i < checkboxes.length; i++) {
+  for (let i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = !$(this).prop('checked')
   }
   hideUiButtons()
@@ -151,7 +151,7 @@ function hideUiButtons() {
 /*
 function noneSelected() {
   let checkboxes = $('[name="context"]')
-  for (var i = 0; i < checkboxes.length; i++) {
+  for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) { return false }
   }
   return true
@@ -207,7 +207,7 @@ function addDocs() {
     'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.'
   }
   let labels = $('label')
-  for (var i = 0; i < labels.length; i++) {
+  for (let i = 0; i < labels.length; i++) {
     let docFor = $(labels[i]).attr('for')
     if (docs[docFor]) {
       let tt = $('<div>').append($('<p>').text(docs[docFor]).attr({ 'class': 'setting-tip' }))[0].outerHTML

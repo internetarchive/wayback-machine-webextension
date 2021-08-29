@@ -138,9 +138,9 @@ function getIdentifier (book) {
 }
 
 function getPageFromCitation (book) {
-  var raw = book.parentElement.innerText
-  var re = /p{1,2}\.\s(\d+)-?\d*/g
-  var result = re.exec(raw)
+  let raw = book.parentElement.innerText
+  let re = /p{1,2}\.\s(\d+)-?\d*/g
+  let result = re.exec(raw)
   if (result) {
     return result[1]
   }
@@ -156,7 +156,7 @@ function wikipediaBooks (url) {
       message: 'getWikipediaBooks',
       query: url
     }, (books) => {
-      if (chrome.runtime.lastError) { }
+      if (chrome.runtime.lastError) { /* skip */ }
       if (books) {
         resolve(books)
       } else {

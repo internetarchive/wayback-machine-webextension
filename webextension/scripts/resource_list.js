@@ -1,6 +1,6 @@
 window.onload = () => {
-  var url = new URL(window.location.href)
-  var url_name = url.searchParams.get('url')
+  let url = new URL(window.location.href)
+  let url_name = url.searchParams.get('url')
   if (document.location.hash === '#not_refreshed') {
     showResourceData(url_name)
   } else {

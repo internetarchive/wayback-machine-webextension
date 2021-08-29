@@ -1,12 +1,12 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, wmAvailabilityCheck, hostURL, get_clean_url */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, hostURL, get_clean_url */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
-const S_NONE=0, S_SAVING=1, S_DONE=2, S_FAILED=3
+const S_NONE = 0, S_SAVING = 1, S_DONE = 2, S_FAILED = 3
 let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
@@ -99,7 +99,7 @@ function processTreeNode(node) {
     } else {
       console.log('Bookmark skipped: ' + url)
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
   return count
@@ -232,7 +232,7 @@ function saveTheURL(url) {
     method: 'save',
     silent: true
   }, () => {
-    if (chrome.runtime.lastError) { }
+    if (chrome.runtime.lastError) { /* skip */ }
   })
 }
 
