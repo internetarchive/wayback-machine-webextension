@@ -11,6 +11,7 @@
     "space-before-function-paren": "off",
     "prefer-const": "off",
     "quote-props": "off",
+    "one-var": "off",
     "dot-notation": "off"
   },
   "globals": {

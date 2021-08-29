@@ -24,7 +24,7 @@ const url = getUrlByParameter('url')
 $('#fact-check-url').text(url)
 if (isValidUrl(url) && isNotExcludedUrl(url)) {
   chrome.runtime.sendMessage({ message: 'getFactCheckResults', url: url }, (resp) => {
-    if (chrome.runtime.lastError) { }
+    if (chrome.runtime.lastError) { /* skip */ }
     $('.loader').hide()
     $('.facts').show()
     if (resp && resp.json) {

@@ -12,15 +12,15 @@ function getWBMSummary () {
 }
 
 function getArchiveDetails (url) {
-  var new_url = hostURL + 'services/context/metadata?url=' + url
+  let new_url = hostURL + 'services/context/metadata?url=' + url
   $.getJSON(new_url, (response) => {
     if ('type' in response) {
-      var type = response.type
+      let type = response.type
       $('#details').text(type)
       $('#url_details').show()
     }
   }).fail(() => {})
-  var captures
+  let captures
   getWaybackCount(url, (values) => {
     captures = values.total
     $('#total_archives_number').attr('href', 'https://web.archive.org/web/*/' + url)
@@ -36,7 +36,7 @@ function getArchiveDetails (url) {
 }
 
 function firstArchiveDetails (url) {
-  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
+  let new_url = hostURL + 'cdx/search?url=' + url + '&limit=1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#first_archive_datetime_error').text('URL has not been archived')
@@ -52,7 +52,7 @@ function firstArchiveDetails (url) {
 }
 
 function recentArchiveDetails (url) {
-  var new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
+  let new_url = hostURL + 'cdx/search?url=' + url + '&limit=-1&output=json'
   $.getJSON(new_url, (data) => {
     if (data.length === 0) {
       $('#recent_archive_datetime_error').text('URL has not been archived')
@@ -69,7 +69,7 @@ function recentArchiveDetails (url) {
 // Function used to get the thumbnail of the URL
 function getThumbnail (url) {
   // Add to manifest permissions to use: "http://crawl-services.us.archive.org:8200/*"
-  var new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
+  let new_url = 'http://crawl-services.us.archive.org:8200/wayback?url=' + url + '&width=300&height=200'
   $('#loader_thumbnail').show()
   fetch(new_url)
     .then((response) => {
@@ -92,6 +92,6 @@ function getThumbnail (url) {
 }
 
 const gUrl = getUrlByParameter('url')
-$('.url').text(url).attr('href', gUrl)
+$('.url').text(gUrl).attr('href', gUrl)
 
 window.onload = getWBMSummary
