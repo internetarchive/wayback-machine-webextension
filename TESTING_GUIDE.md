@@ -41,6 +41,21 @@ To avoid `no-undef` errors that may occur with external global variables or func
 ```
 
 
+## Updating Dependencies ##
+
+Github's Dependabot may alert potential security issues in dependencies.
+
+To view and fix these issues:
+
+```
+npm audit
+npm audit fix
+npm update
+```
+
+Then update **build.js** as follows.
+
+
 ## Updating build.js (optional) ##
 
 This doesn't have to be done but once in a great while. We recommend doing so in it's own branch or *Pull Request* instead of in a bug or feature PR that you're working on.
