@@ -88,7 +88,7 @@ p {
 .url-item {
     margin-left: 0.5em;
 }
-
+list-container
 .btn {
     white-space: inherit;
 }
@@ -169,6 +169,13 @@ p {
     body {
         background-color: #2C2C2C;
         color: #eee;
+    }
+
+    a {
+        color: #d66;
+    }
+    a:hover {
+        color: #f88;
     }
 
     #list-container, #add-url-area {
