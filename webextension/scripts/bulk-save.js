@@ -37,7 +37,7 @@ function startSaving() {
 function stopSaving() {
   isSaving = false
   $('#save-progress-bar').hide()
-  $('#bulk-save-label').text('Save Finished')
+  $('#bulk-save-label').text('Done')
   $('#pause-btn').hide()
   $('#bulk-save-btn').click(closeWindow)
 }
