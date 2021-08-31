@@ -171,6 +171,13 @@ p {
         color: #eee;
     }
 
+    a {
+        color: #d66;
+    }
+    a:hover {
+        color: #f88;
+    }
+
     #list-container, #add-url-area {
         color: #ddd;
         background-color: #333;

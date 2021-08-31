@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, hostURL, get_clean_url */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, hostURL, get_clean_url, dateToTimestamp */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
@@ -161,21 +161,25 @@ function isDuplicateURL(url) {
 
 // Listens to SPN response messages from background.js.
 function initMessageListener() {
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message && message.error) {
-      if (message.error.indexOf('logged in') !== -1) {
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg && msg.error) {
+      if (msg.error.indexOf('logged in') !== -1) {
         // stop if user not logged in
         stopSaving()
         resetUI()
         $('#not-logged-in').show()
-      } else if (message.error.indexOf('same snapshot') !== -1) {
+      } else if (msg.error.indexOf('same snapshot') !== -1) {
         // snapshot already archived within timeframe
-        processStatus('save_archived', message.url)
+        // since no timestamp sent from API, use current time
+        let timestamp = dateToTimestamp(new Date())
+        let wbUrl = `https://web.archive.org/web/${timestamp}/${msg.url}`
+        processStatus('save_archived', msg.url, wbUrl)
         checkIfFinished()
       }
-    } else if (message) {
+    } else if (msg) {
       // respond to message
-      processStatus(message.message, message.url)
+      let wbUrl = `https://web.archive.org/web/${msg.timestamp}/${msg.url}`
+      processStatus(msg.message, msg.url, wbUrl)
       checkIfFinished()
     }
   })
@@ -237,15 +241,23 @@ function saveTheURL(url) {
 }
 
 // Show the Save Status (saving, success, error) in UI.
-// $row is a jQuery object
-function updateRow($row, symbol, bgcolor) {
+// $row is a jQuery object.
+// url is the url to save. (optional)
+// wbUrl is the wayback URL of saved url. (optional)
+//
+function updateRow($row, symbol, bgcolor, url, wbUrl) {
   let $del = $row.children('.delete-btn').first()
   $del.text(symbol)
   $del.css('background-color', bgcolor)
+  if (url && wbUrl) {
+    // replace url-item text with a wayback link.
+    let $span = $row.children('.url-item').first()
+    $span.html(`<a href="${wbUrl}" target="_blank">${url}</a>`)
+  }
 }
 
 // Update an individual URL item in the list container.
-function processStatus(msg, url) {
+function processStatus(msg, url, wbUrl) {
   let curl = cropPrefix(url)
   if (curl && (curl in bulkSaveObj) && (bulkSaveObj[curl].status !== S_DONE)) {
     let $row = bulkSaveObj[curl].row
@@ -254,7 +266,7 @@ function processStatus(msg, url) {
         updateRow($row, '', 'yellow')
         bulkSaveObj[curl].status = S_SAVING
       } else if (msg === 'save_success') {
-        updateRow($row, '✔', 'green')
+        updateRow($row, '✔', 'green', url, wbUrl)
         bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
@@ -268,7 +280,7 @@ function processStatus(msg, url) {
         saveNextInQueue()
       } else if (msg === 'save_archived') {
         // url was already archived
-        updateRow($row, '•', 'green')
+        updateRow($row, '•', 'green', url, wbUrl)
         bulkSaveObj[curl].status = S_DONE
         saveSuccessCount++
         $('#saved-count').text(saveSuccessCount)
