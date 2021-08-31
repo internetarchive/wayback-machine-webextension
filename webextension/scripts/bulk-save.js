@@ -130,6 +130,7 @@ function addToBulkSave(url) {
     let $span = $('<div class="url-item">').text(url)
     $('#list-container').append($row.append($del, $span))
     bulkSaveObj[curl] = { url: url, row: $row, status: S_NONE }
+    bulkSaveQueue.push(curl)
   }
 }
 
@@ -164,6 +165,7 @@ function doRemoveURL(e) {
 // Click handler to Clear Bulk Save.
 function doClearAll(e) {
   bulkSaveObj = {}
+  bulkSaveQueue = []
   $('#list-container').text('')
 }
 
@@ -201,17 +203,15 @@ function initMessageListener() {
 
 // Click handler to Start Bulk Save.
 function doBulkSaveAll(e) {
-  // prepare queue, exit if empty
-  bulkSaveQueue = Object.keys(bulkSaveObj)
-  if (bulkSaveQueue.length === 0) {
-    $('#empty-list-err').show()
-    return
-  }
   // reset counts
   saveSuccessCount = 0
   saveFailedCount = 0
   totalUrlCount = bulkSaveQueue.length
   $('#total-count').text(totalUrlCount)
+  if (totalUrlCount === 0) {
+    $('#empty-list-err').show()
+    return
+  }
   // reset options
   saveOptions = {}
   // due to timeout issues, outlinks not supported right now
@@ -225,9 +225,17 @@ function doBulkSaveAll(e) {
   }
 }
 
+// Click handler to Continue Bulk Save.
 function doContinue(e) {
-  startSaving()
-  saveNextInQueue()
+  totalUrlCount = bulkSaveQueue.length
+  $('#total-count').text(totalUrlCount)
+  if (totalUrlCount === 0) {
+    $('#empty-list-err').show()
+  } else {
+    startSaving()
+    // TODO: could try upto MAX_SAVES here
+    saveNextInQueue()
+  }
 }
 
 // Pop next URL to save off the queue.
