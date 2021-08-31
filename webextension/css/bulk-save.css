@@ -48,13 +48,19 @@ p {
 
 .save-container {
     height: 32px;
+    /* width: 50%; */
 }
 
 #bulk-save-btn {
     position: absolute;
     display: block;
     width: 200px;
-    height: 32px;
+    height: 34px;
+}
+
+#pause-btn {
+    position: absolute;
+    left: 220px;
 }
 
 #bulk-save-label {

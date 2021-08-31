@@ -85,7 +85,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
             chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
-              if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
+              if (chrome.runtime.lastError) { /* skip */ }
             })
             if (!silent) { notify(msg) }
           } else {
@@ -96,7 +96,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         } else {
           // handle error
           chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
-            if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
+            if (chrome.runtime.lastError) { /* skip */ }
           })
           if (!silent) { notify('Error: ' + msg) }
         }

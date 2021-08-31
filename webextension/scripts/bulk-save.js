@@ -26,6 +26,8 @@ function startSaving() {
   $('.add-container').hide()
   $('.save-box').hide()
   $('#bulk-save-label').text('Archiving URLs...')
+  $('#pause-btn').show()
+  $('#pause-btn').click(pauseSaving)
   $('#save-progress-bar').show()
   $('.count-container').show()
 }
@@ -36,11 +38,23 @@ function stopSaving() {
   isSaving = false
   $('#save-progress-bar').hide()
   $('#bulk-save-label').text('Save Finished')
+  $('#pause-btn').hide()
   $('#bulk-save-btn').click(closeWindow)
+}
+
+function pauseSaving() {
+  isSaving = false
+  $('.add-container').show()
+  $('#save-progress-bar').hide()
+  $('#pause-btn').hide()
+  $('#bulk-save-label').text('Continue Bulk Save')
+  $('#bulk-save-btn').click(doContinue)
+  $('#list-container').click(doRemoveURL)
 }
 
 // Reset UI
 function resetUI() {
+  $('#pause-btn').hide()
   $('.count-container').hide()
   $('.add-container').show()
   $('.save-box').show()
@@ -211,8 +225,14 @@ function doBulkSaveAll(e) {
   }
 }
 
+function doContinue(e) {
+  startSaving()
+  saveNextInQueue()
+}
+
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
+  if (!isSaving) { return }
   let curl = bulkSaveQueue.shift()
   if (curl) {
     if (curl in bulkSaveObj) {
@@ -294,7 +314,7 @@ function processStatus(msg, url, wbUrl) {
 
 // Stop saving when counts reach total count.
 function checkIfFinished() {
-  if (isSaving && (saveSuccessCount + saveFailedCount >= totalUrlCount)) {
+  if (saveSuccessCount + saveFailedCount >= totalUrlCount) {
     stopSaving()
   }
 }
@@ -308,4 +328,4 @@ function main() {
   initMessageListener()
 }
 
-main()
+$(main)
