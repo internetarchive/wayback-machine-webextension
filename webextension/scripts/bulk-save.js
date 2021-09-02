@@ -7,7 +7,7 @@
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
 const S_NONE = 0, S_SAVING = 1, S_DONE = 2, S_FAILED = 3
-let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
+let bulkSaveMap = new Map() // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
 let saveFailedCount = 0
@@ -33,13 +33,14 @@ function startSaving() {
 }
 
 // Hide progress bar when Saving stops.
-// msg = save button label.
 function stopSaving() {
   isSaving = false
+  $('.add-container').hide()
   $('#save-progress-bar').hide()
-  $('#bulk-save-label').text('Done')
   $('#pause-btn').hide()
+  $('#bulk-save-label').text('Done')
   $('#bulk-save-btn').click(closeWindow)
+  $('#list-container').off('click')
 }
 
 function pauseSaving() {
@@ -91,6 +92,7 @@ function importAllBookmarks() {
       if (count_val === 0) {
         alert('No Bookmarks Found.')
       }
+      updateCounts()
     })
   }
 }
@@ -121,6 +123,14 @@ function processTreeNode(node) {
 
 /* * * Save List * * */
 
+function clearBulkSave() {
+  bulkSaveMap = new Map()
+  bulkSaveQueue = []
+  saveSuccessCount = 0
+  saveFailedCount = 0
+  totalUrlCount = 0
+}
+
 // Adds a URL to Bulk Save and appends it to #list-container.
 function addToBulkSave(url) {
   let curl = cropPrefix(url)
@@ -129,8 +139,21 @@ function addToBulkSave(url) {
     let $del = $('<div class="delete-btn">').text('x')
     let $span = $('<div class="url-item">').text(url)
     $('#list-container').append($row.append($del, $span))
-    bulkSaveObj[curl] = { url: url, row: $row, status: S_NONE }
+    bulkSaveMap.set(curl, { url: url, row: $row, status: S_NONE })
     bulkSaveQueue.push(curl)
+  }
+}
+
+function removeFromBulkSave(url) {
+  let curl = cropPrefix(url)
+  if (curl && bulkSaveMap.has(curl)) {
+    let obj = bulkSaveMap.get(curl)
+    if (obj.status === S_DONE) {
+      saveSuccessCount--
+    } else if (obj.status === S_FAILED) {
+      saveFailedCount--
+    }
+    bulkSaveMap.delete(curl)
   }
 }
 
@@ -151,28 +174,29 @@ function doAddURLs(e) {
     alert('Please enter valid website addresses.')
   }
   document.getElementById('add-url-area').value = ''
+  updateCounts()
 }
 
 // Click handler to Remove a URL from Bulk Save.
 function doRemoveURL(e) {
   if (e.target.classList.contains('delete-btn')) {
-    let curl = cropPrefix(e.target.nextElementSibling.innerText)
-    delete bulkSaveObj[curl]
+    removeFromBulkSave(e.target.nextElementSibling.innerText)
     e.target.parentElement.remove()
+    updateCounts()
   }
 }
 
 // Click handler to Clear Bulk Save.
 function doClearAll(e) {
-  bulkSaveObj = {}
-  bulkSaveQueue = []
   $('#list-container').text('')
+  clearBulkSave()
+  updateCounts()
 }
 
 // Returns true if URL is already in Bulk Save.
 function isDuplicateURL(url) {
   let curl = cropPrefix(url)
-  return (curl in bulkSaveObj)
+  return bulkSaveMap.has(curl)
 }
 
 // Listens to SPN response messages from background.js.
@@ -206,8 +230,7 @@ function doBulkSaveAll(e) {
   // reset counts
   saveSuccessCount = 0
   saveFailedCount = 0
-  totalUrlCount = bulkSaveQueue.length
-  $('#total-count').text(totalUrlCount)
+  updateCounts()
   if (totalUrlCount === 0) {
     $('#empty-list-err').show()
     return
@@ -227,8 +250,7 @@ function doBulkSaveAll(e) {
 
 // Click handler to Continue Bulk Save.
 function doContinue(e) {
-  totalUrlCount = bulkSaveQueue.length
-  $('#total-count').text(totalUrlCount)
+  updateCounts()
   if (totalUrlCount === 0) {
     $('#empty-list-err').show()
   } else {
@@ -241,11 +263,12 @@ function doContinue(e) {
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
   if (!isSaving) { return }
+  checkIfFinished()
   let curl = bulkSaveQueue.shift()
   if (curl) {
-    if (curl in bulkSaveObj) {
-      const saveUrl = bulkSaveObj[curl].url
-      saveTheURL(saveUrl)
+    if (bulkSaveMap.has(curl)) {
+      const obj = bulkSaveMap.get(curl)
+      saveTheURL(obj.url)
     } else {
       // rare, but could happen if user clicks on delete-btn while bulk save in progress.
       // in that case, we want to prevent getting stuck.
@@ -284,36 +307,45 @@ function updateRow($row, symbol, bgcolor, url, wbUrl) {
   }
 }
 
+function updateCounts() {
+  totalUrlCount = bulkSaveMap.size
+  $('#saved-count').text(saveSuccessCount)
+  $('#failed-count').text(saveFailedCount)
+  $('#total-count').text(totalUrlCount)
+}
+
 // Update an individual URL item in the list container.
 function processStatus(msg, url, wbUrl) {
   let curl = cropPrefix(url)
-  if (curl && (curl in bulkSaveObj) && (bulkSaveObj[curl].status !== S_DONE)) {
-    let $row = bulkSaveObj[curl].row
+  if (curl && bulkSaveMap.has(curl) && (bulkSaveMap.get(curl).status !== S_DONE)) {
+    let obj = bulkSaveMap.get(curl)
+    let $row = obj.row
     if ($row) {
       if (msg === 'save_start') {
         updateRow($row, '', 'yellow')
-        bulkSaveObj[curl].status = S_SAVING
+        obj.status = S_SAVING
       } else if (msg === 'save_success') {
         updateRow($row, '✔', 'green', url, wbUrl)
-        bulkSaveObj[curl].status = S_DONE
+        obj.status = S_DONE
         saveSuccessCount++
-        $('#saved-count').text(saveSuccessCount)
+        updateCounts()
         saveNextInQueue()
       } else if (msg === 'save_error') {
         console.log('error saving url: ' + url)
         updateRow($row, '!', 'red')
-        bulkSaveObj[curl].status = S_FAILED
+        obj.status = S_FAILED
         saveFailedCount++
-        $('#failed-count').text(saveFailedCount)
+        updateCounts()
         saveNextInQueue()
       } else if (msg === 'save_archived') {
         // url was already archived
         updateRow($row, '•', 'green', url, wbUrl)
-        bulkSaveObj[curl].status = S_DONE
+        obj.status = S_DONE
         saveSuccessCount++
-        $('#saved-count').text(saveSuccessCount)
+        updateCounts()
         saveNextInQueue()
       }
+      bulkSaveMap.set(curl, obj)
     }
   } else {
     console.log('url not valid? ' + url)
