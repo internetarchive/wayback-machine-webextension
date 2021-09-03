@@ -23,7 +23,7 @@
 
     <div class="outer-container">
 
-      <div class="add-container">
+      <div id="add-container">
         <textarea id="add-url-area" class="container-scrollbar form-control" placeholder="Enter URLs..." autofocus></textarea>
         <div class="btn-flex-block">
           <button class="btn btn-auto btn-dark-gray" id="add-url-btn">Add URLs</button>
@@ -34,37 +34,50 @@
 
       <div id="list-container" class="container-scrollbar"></div>
 
-      <div id="status-container" class="btn-flex-block">
+      <div id="list-toolbar" class="btn-flex-block">
         <button class="btn btn-auto btn-dark-gray" id="copy-all-btn">Copy All Links</button>
         <button class="btn btn-auto btn-dark-gray" id="copy-saved-btn">Copy Saved</button>
         <button class="btn btn-auto btn-dark-gray" id="copy-unsaved-btn">Copy Unsaved</button>
-        <div class="count-container">
+        <div id="count-container">
           <div><span>Saved</span>:&nbsp;<b id="saved-count" class="highlight-color">0</b></div>
           <div><span>Failed</span>:&nbsp;<b id="failed-count" class="highlight-color">0</b></div>
           <div><span>Total</span>:&nbsp;<b id="total-count" class="highlight-color">0</b></div>
         </div>
       </div>
 
-      <div class="save-box">
-        <div class="save-options-container">
-          <p>
-            <input type="checkbox" id="never-saved">
-            <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label>
-          </p>
-          <p>
-            <input type="checkbox" id="chk-screenshot">
-            <label class="save-options" for="chk-screenshot" id="chk-screenshot-label">Save Screenshots.</label>
-            <!--
-            <input type="checkbox" id="chk-outlinks">
-            <label class="save-options" for="chk-outlinks" id="chk-outlinks-label">Save Outlinks. (slow)</label>
-            -->
-          </p>
-        </div>
+      <div id="save-options-container">
+        <p>
+          <input type="checkbox" id="never-saved">
+          <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label>
+        </p>
+        <p>
+          <input type="checkbox" id="chk-screenshot">
+          <label class="save-options" for="chk-screenshot" id="chk-screenshot-label">Save Screenshots.</label>
+          <!--
+          <input type="checkbox" id="chk-outlinks">
+          <label class="save-options" for="chk-outlinks" id="chk-outlinks-label">Save Outlinks. (slow)</label>
+          -->
+        </p>
       </div>
 
     </div>
 
-    <div class="save-container">
+    <div id="legend-container">
+      <table>
+        <tr>
+          <td><div class="legend-row"><div class="status-btn">x</div><div class="legend-item">Not Saved</div></div></td>
+          <td><div class="legend-row"><div class="status-btn status-saving"> </div><div class="legend-item">Saving</div></div></td>
+          <td><div class="legend-row"><div class="status-btn status-done">✔</div><div class="legend-item">Finished</div></div></td>
+        </tr>
+        <tr>
+          <td><div class="legend-row"><div class="status-btn status-failed">!</div><div class="legend-item">Failed</div></div></td>
+          <td><div class="legend-row"><div class="status-btn status-reset"> </div><div class="legend-item">Retry</div></div></td>
+          <td><div class="legend-row"><div class="status-btn status-done">•</div><div class="legend-item">Skipped</div></div></td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="save-container">
       <button class="btn btn-auto btn-red progress-container" id="bulk-save-btn">
         <div class="progress" id="save-progress-bar">
           <div class="progress-bar progress-bar-striped active" role="progressbar" style="width:100%"></div>
