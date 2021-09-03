@@ -158,6 +158,17 @@ function removeFromBulkSave(url) {
   }
 }
 
+// Resets all pending (yellow) and failed URLs stored in bulkSaveMap, re-adds them to the queue.
+function resetAllInBulkSave() {
+  for (let [curl, obj] of bulkSaveMap.entries()) {
+    let $row = obj.row
+    if ($row && ((obj.status === S_SAVING) || (obj.status === S_FAILED))) {
+      updateRow($row, '', 'purple')
+      bulkSaveQueue.push(curl)
+    }
+  }
+}
+
 // Click handler to Add URLs to Bulk Save.
 function doAddURLs(e) {
   $('#empty-list-err').hide()
@@ -255,9 +266,11 @@ function doContinue(e) {
   if (totalUrlCount === 0) {
     $('#empty-list-err').show()
   } else {
+    resetAllInBulkSave()
     startSaving()
-    // TODO: could try upto MAX_SAVES here
-    saveNextInQueue()
+    for (let i = 0; i < MAX_SAVES; i++) {
+      saveNextInQueue()
+    }
   }
 }
 
