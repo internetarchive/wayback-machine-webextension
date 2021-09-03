@@ -33,7 +33,7 @@ p {
     color: #000;
     flex: 4;
     min-height: 4em;
-    margin: 1em 0;
+    margin-top: 1em;
     word-break: break-all;
     font-size: 14px;
     color: #333;
@@ -118,7 +118,7 @@ p {
 
 .save-box {
     width: auto;
-    margin: 0 0 1em 0;
+    margin: 1em 0 1em 0;
 }
 
 .save-options-container p {
@@ -148,8 +148,12 @@ p {
     border-radius: 5px;
 }
 
+#status-container {
+    margin-bottom: 1em;
+}
+
 .count-container {
-    display: none;
+    flex: 2;
     font-family: Gill Sans Light;
     font-size: 20px;
     text-align: right;
