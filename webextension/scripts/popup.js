@@ -71,6 +71,7 @@ function last_save() {
 
 function loginError() {
   $('#bulk-save-btn').attr('disabled', true)
+  $('#bulk-save-btn').attr('title', 'Log in to use')
   $('#bulk-save-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
@@ -94,6 +95,7 @@ function loginSuccess() {
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#bulk-save-btn').removeAttr('disabled')
+  $('#bulk-save-btn').attr('title', '')
   $('#bulk-save-btn').click(bulkSave)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {

@@ -34,10 +34,15 @@
 
       <div id="list-container" class="container-scrollbar"></div>
 
-      <div class="count-container">
-        <div><span>Saved</span>:&nbsp;<b id="saved-count" class="highlight-color">0</b></div>
-        <div><span>Failed</span>:&nbsp;<b id="failed-count" class="highlight-color">0</b></div>
-        <div><span>Total</span>:&nbsp;<b id="total-count" class="highlight-color">0</b></div>
+      <div id="status-container" class="btn-flex-block">
+        <button class="btn btn-auto btn-dark-gray" id="copy-all-btn">Copy All Links</button>
+        <button class="btn btn-auto btn-dark-gray" id="copy-saved-btn">Copy Saved</button>
+        <button class="btn btn-auto btn-dark-gray" id="copy-unsaved-btn">Copy Unsaved</button>
+        <div class="count-container">
+          <div><span>Saved</span>:&nbsp;<b id="saved-count" class="highlight-color">0</b></div>
+          <div><span>Failed</span>:&nbsp;<b id="failed-count" class="highlight-color">0</b></div>
+          <div><span>Total</span>:&nbsp;<b id="total-count" class="highlight-color">0</b></div>
+        </div>
       </div>
 
       <div class="save-box">
@@ -66,6 +71,7 @@
         </div>
         <div id="bulk-save-label">Start Bulk Save</div>
       </button>
+      <button class="btn btn-auto btn-dark-gray" id="pause-btn">Pause</button>
     </div>
 
   </div>

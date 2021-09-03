@@ -7,7 +7,8 @@
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
 const S_NONE = 0, S_SAVING = 1, S_DONE = 2, S_FAILED = 3
-let bulkSaveObj = {} // { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_? }}
+let bulkSaveMap = new Map()
+// { "cropped_url" : { url: "full_url", row: jQueryObj, status: S_?, wburl: "wayback_url" }}
 let bulkSaveQueue = [] // array of cropped_url keys in the save queue
 let saveSuccessCount = 0
 let saveFailedCount = 0
@@ -26,22 +27,37 @@ function startSaving() {
   $('.add-container').hide()
   $('.save-box').hide()
   $('#bulk-save-label').text('Archiving URLs...')
+  $('#pause-btn').show()
+  $('#pause-btn').click(pauseSaving)
   $('#save-progress-bar').show()
-  $('.count-container').show()
+  $('#status-container').show()
 }
 
 // Hide progress bar when Saving stops.
-// msg = save button label.
 function stopSaving() {
   isSaving = false
+  $('.add-container').hide()
   $('#save-progress-bar').hide()
-  $('#bulk-save-label').text('Save Finished')
+  $('#pause-btn').hide()
+  $('#bulk-save-label').text('Done')
   $('#bulk-save-btn').click(closeWindow)
+  $('#list-container').off('click')
+}
+
+function pauseSaving() {
+  isSaving = false
+  $('.add-container').show()
+  $('#save-progress-bar').hide()
+  $('#pause-btn').hide()
+  $('#bulk-save-label').text('Continue Bulk Save')
+  $('#bulk-save-btn').click(doContinue)
+  $('#list-container').click(doRemoveURL)
 }
 
 // Reset UI
 function resetUI() {
-  $('.count-container').hide()
+  $('#pause-btn').hide()
+  $('#status-container').hide()
   $('.add-container').show()
   $('.save-box').show()
   $('#bulk-save-label').text('Start Bulk Save')
@@ -77,6 +93,7 @@ function importAllBookmarks() {
       if (count_val === 0) {
         alert('No Bookmarks Found.')
       }
+      updateCounts()
     })
   }
 }
@@ -107,6 +124,14 @@ function processTreeNode(node) {
 
 /* * * Save List * * */
 
+function clearBulkSave() {
+  bulkSaveMap = new Map()
+  bulkSaveQueue = []
+  saveSuccessCount = 0
+  saveFailedCount = 0
+  totalUrlCount = 0
+}
+
 // Adds a URL to Bulk Save and appends it to #list-container.
 function addToBulkSave(url) {
   let curl = cropPrefix(url)
@@ -115,7 +140,32 @@ function addToBulkSave(url) {
     let $del = $('<div class="delete-btn">').text('x')
     let $span = $('<div class="url-item">').text(url)
     $('#list-container').append($row.append($del, $span))
-    bulkSaveObj[curl] = { url: url, row: $row, status: S_NONE }
+    bulkSaveMap.set(curl, { url: url, row: $row, status: S_NONE })
+    bulkSaveQueue.push(curl)
+  }
+}
+
+function removeFromBulkSave(url) {
+  let curl = cropPrefix(url)
+  if (curl && bulkSaveMap.has(curl)) {
+    let obj = bulkSaveMap.get(curl)
+    if (obj.status === S_DONE) {
+      saveSuccessCount--
+    } else if (obj.status === S_FAILED) {
+      saveFailedCount--
+    }
+    bulkSaveMap.delete(curl)
+  }
+}
+
+// Resets all pending (yellow) and failed URLs stored in bulkSaveMap, re-adds them to the queue.
+function resetAllInBulkSave() {
+  for (let [curl, obj] of bulkSaveMap.entries()) {
+    let $row = obj.row
+    if ($row && ((obj.status === S_SAVING) || (obj.status === S_FAILED))) {
+      updateRow($row, '', 'purple')
+      bulkSaveQueue.push(curl)
+    }
   }
 }
 
@@ -136,27 +186,29 @@ function doAddURLs(e) {
     alert('Please enter valid website addresses.')
   }
   document.getElementById('add-url-area').value = ''
+  updateCounts()
 }
 
 // Click handler to Remove a URL from Bulk Save.
 function doRemoveURL(e) {
   if (e.target.classList.contains('delete-btn')) {
-    let curl = cropPrefix(e.target.nextElementSibling.innerText)
-    delete bulkSaveObj[curl]
+    removeFromBulkSave(e.target.nextElementSibling.innerText)
     e.target.parentElement.remove()
+    updateCounts()
   }
 }
 
 // Click handler to Clear Bulk Save.
 function doClearAll(e) {
-  bulkSaveObj = {}
   $('#list-container').text('')
+  clearBulkSave()
+  updateCounts()
 }
 
 // Returns true if URL is already in Bulk Save.
 function isDuplicateURL(url) {
   let curl = cropPrefix(url)
-  return (curl in bulkSaveObj)
+  return bulkSaveMap.has(curl)
 }
 
 // Listens to SPN response messages from background.js.
@@ -187,17 +239,14 @@ function initMessageListener() {
 
 // Click handler to Start Bulk Save.
 function doBulkSaveAll(e) {
-  // prepare queue, exit if empty
-  bulkSaveQueue = Object.keys(bulkSaveObj)
-  if (bulkSaveQueue.length === 0) {
-    $('#empty-list-err').show()
-    return
-  }
   // reset counts
   saveSuccessCount = 0
   saveFailedCount = 0
-  totalUrlCount = bulkSaveQueue.length
-  $('#total-count').text(totalUrlCount)
+  updateCounts()
+  if (totalUrlCount === 0) {
+    $('#empty-list-err').show()
+    return
+  }
   // reset options
   saveOptions = {}
   // due to timeout issues, outlinks not supported right now
@@ -211,13 +260,29 @@ function doBulkSaveAll(e) {
   }
 }
 
+// Click handler to Continue Bulk Save.
+function doContinue(e) {
+  updateCounts()
+  if (totalUrlCount === 0) {
+    $('#empty-list-err').show()
+  } else {
+    resetAllInBulkSave()
+    startSaving()
+    for (let i = 0; i < MAX_SAVES; i++) {
+      saveNextInQueue()
+    }
+  }
+}
+
 // Pop next URL to save off the queue.
 function saveNextInQueue() {
+  if (!isSaving) { return }
+  checkIfFinished()
   let curl = bulkSaveQueue.shift()
   if (curl) {
-    if (curl in bulkSaveObj) {
-      const saveUrl = bulkSaveObj[curl].url
-      saveTheURL(saveUrl)
+    if (bulkSaveMap.has(curl)) {
+      const obj = bulkSaveMap.get(curl)
+      saveTheURL(obj.url)
     } else {
       // rare, but could happen if user clicks on delete-btn while bulk save in progress.
       // in that case, we want to prevent getting stuck.
@@ -256,36 +321,47 @@ function updateRow($row, symbol, bgcolor, url, wbUrl) {
   }
 }
 
+function updateCounts() {
+  totalUrlCount = bulkSaveMap.size
+  $('#saved-count').text(saveSuccessCount)
+  $('#failed-count').text(saveFailedCount)
+  $('#total-count').text(totalUrlCount)
+}
+
 // Update an individual URL item in the list container.
 function processStatus(msg, url, wbUrl) {
   let curl = cropPrefix(url)
-  if (curl && (curl in bulkSaveObj) && (bulkSaveObj[curl].status !== S_DONE)) {
-    let $row = bulkSaveObj[curl].row
+  if (curl && bulkSaveMap.has(curl) && (bulkSaveMap.get(curl).status !== S_DONE)) {
+    let obj = bulkSaveMap.get(curl)
+    let $row = obj.row
     if ($row) {
       if (msg === 'save_start') {
         updateRow($row, '', 'yellow')
-        bulkSaveObj[curl].status = S_SAVING
+        obj.status = S_SAVING
       } else if (msg === 'save_success') {
         updateRow($row, '✔', 'green', url, wbUrl)
-        bulkSaveObj[curl].status = S_DONE
+        obj.status = S_DONE
+        obj.wburl = wbUrl
         saveSuccessCount++
-        $('#saved-count').text(saveSuccessCount)
+        updateCounts()
         saveNextInQueue()
       } else if (msg === 'save_error') {
         console.log('error saving url: ' + url)
         updateRow($row, '!', 'red')
-        bulkSaveObj[curl].status = S_FAILED
+        obj.status = S_FAILED
         saveFailedCount++
-        $('#failed-count').text(saveFailedCount)
+        updateCounts()
         saveNextInQueue()
       } else if (msg === 'save_archived') {
         // url was already archived
         updateRow($row, '•', 'green', url, wbUrl)
-        bulkSaveObj[curl].status = S_DONE
+        obj.status = S_DONE
+        obj.wburl = wbUrl
         saveSuccessCount++
-        $('#saved-count').text(saveSuccessCount)
+        updateCounts()
         saveNextInQueue()
       }
+      bulkSaveMap.set(curl, obj)
     }
   } else {
     console.log('url not valid? ' + url)
@@ -294,8 +370,39 @@ function processStatus(msg, url, wbUrl) {
 
 // Stop saving when counts reach total count.
 function checkIfFinished() {
-  if (isSaving && (saveSuccessCount + saveFailedCount >= totalUrlCount)) {
+  if (saveSuccessCount + saveFailedCount >= totalUrlCount) {
     stopSaving()
+    if (saveFailedCount === 0) { $('#copy-unsaved-btn').attr('disabled', true) }
+  }
+}
+
+// Copy all URLs in bulk save list to clipboard, separated by newlines.
+function doCopyAll() {
+  let text = Array.from(bulkSaveMap.values()).map(obj => obj.url).join('\n')
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('All links were copied to the clipboard.')
+    })
+  }
+}
+
+// Copy the Wayback links to the finished and skipped (green) archived URLs.
+function doCopySaved() {
+  let text = Array.from(bulkSaveMap.values()).filter(obj => (obj.status === S_DONE)).map(obj => obj.wburl).join('\n')
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Saved links to the Wayback Machine were copied to the clipboard.')
+    })
+  }
+}
+
+// Copy the original URLs of the unsaved, stuck or URLs (yellow & red) that had errors.
+function doCopyUnsaved() {
+  let text = Array.from(bulkSaveMap.values()).filter(obj => (obj.status !== S_DONE)).map(obj => obj.url).join('\n')
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Unsaved links were copied to the clipboard.')
+    })
   }
 }
 
@@ -304,8 +411,11 @@ function main() {
   $('#add-url-btn').click(doAddURLs)
   $('#import-bookmarks-btn').click(doImportBookmarks)
   $('#clear-all-btn').click(doClearAll)
+  $('#copy-all-btn').click(doCopyAll)
+  $('#copy-saved-btn').click(doCopySaved)
+  $('#copy-unsaved-btn').click(doCopyUnsaved)
   resetUI()
   initMessageListener()
 }
 
-main()
+$(main)
