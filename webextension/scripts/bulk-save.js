@@ -24,19 +24,19 @@ function startSaving() {
   $('#list-container').off('click')
   $('#bulk-save-btn').off('click').click(clearFocus)
   $('#not-logged-in').hide()
-  $('.add-container').hide()
-  $('.save-box').hide()
+  $('#add-container').hide()
+  $('#save-options-container').hide()
   $('#bulk-save-label').text('Archiving URLs...')
   $('#pause-btn').show()
   $('#pause-btn').click(pauseSaving)
   $('#save-progress-bar').show()
-  $('#status-container').show()
+  $('#list-toolbar').show()
 }
 
 // Hide progress bar when Saving stops.
 function stopSaving() {
   isSaving = false
-  $('.add-container').hide()
+  $('#add-container').hide()
   $('#save-progress-bar').hide()
   $('#pause-btn').hide()
   $('#bulk-save-label').text('Done')
@@ -46,7 +46,7 @@ function stopSaving() {
 
 function pauseSaving() {
   isSaving = false
-  $('.add-container').show()
+  $('#add-container').show()
   $('#save-progress-bar').hide()
   $('#pause-btn').hide()
   $('#bulk-save-label').text('Continue Bulk Save')
@@ -57,9 +57,9 @@ function pauseSaving() {
 // Reset UI
 function resetUI() {
   $('#pause-btn').hide()
-  $('#status-container').hide()
-  $('.add-container').show()
-  $('.save-box').show()
+  $('#list-toolbar').hide()
+  $('#add-container').show()
+  $('#save-options-container').show()
   $('#bulk-save-label').text('Start Bulk Save')
   $('#bulk-save-btn').click(doBulkSaveAll)
   $('#list-container').click(doRemoveURL)
@@ -136,8 +136,8 @@ function clearBulkSave() {
 function addToBulkSave(url) {
   let curl = cropPrefix(url)
   if (curl) {
-    let $row = $('<div class="url-list flex-container">')
-    let $del = $('<div class="delete-btn">').text('x')
+    let $row = $('<div class="url-list display-flex">')
+    let $del = $('<div class="status-btn">').text('x')
     let $span = $('<div class="url-item">').text(url)
     $('#list-container').append($row.append($del, $span))
     bulkSaveMap.set(curl, { url: url, row: $row, status: S_NONE })
@@ -191,7 +191,7 @@ function doAddURLs(e) {
 
 // Click handler to Remove a URL from Bulk Save.
 function doRemoveURL(e) {
-  if (e.target.classList.contains('delete-btn')) {
+  if (e.target.classList.contains('status-btn')) {
     removeFromBulkSave(e.target.nextElementSibling.innerText)
     e.target.parentElement.remove()
     updateCounts()
@@ -284,7 +284,7 @@ function saveNextInQueue() {
       const obj = bulkSaveMap.get(curl)
       saveTheURL(obj.url)
     } else {
-      // rare, but could happen if user clicks on delete-btn while bulk save in progress.
+      // rare, but could happen if user clicks on status-btn while bulk save in progress.
       // in that case, we want to prevent getting stuck.
       saveNextInQueue()
     }
@@ -311,7 +311,7 @@ function saveTheURL(url) {
 // wbUrl is the wayback URL of saved url. (optional)
 //
 function updateRow($row, symbol, bgcolor, url, wbUrl) {
-  let $del = $row.children('.delete-btn').first()
+  let $del = $row.children('.status-btn').first()
   $del.text(symbol)
   $del.css('background-color', bgcolor)
   if (url && wbUrl) {

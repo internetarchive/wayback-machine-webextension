@@ -46,7 +46,7 @@ p {
     background-color: #fff;
 }
 
-.save-container {
+#save-container {
     height: 32px;
     /* width: 50%; */
 }
@@ -75,7 +75,7 @@ p {
     display: none;
 }
 
-.delete-btn {
+.status-btn {
     font-size: 14px;
     color: #fff;
     background-color: #9A3B38;
@@ -87,7 +87,7 @@ p {
     cursor: pointer;
     user-select: none;
 }
-.delete-btn:hover {
+.status-btn:hover {
     background-color: #AA4B48;
 }
 
@@ -99,7 +99,7 @@ p {
     white-space: inherit;
 }
 
-.add-container {
+#add-container {
     display: flex;
     flex-direction: column;
     flex: 2;
@@ -116,20 +116,20 @@ p {
     resize: none;
 }
 
-.save-box {
+#save-options-container {
     width: auto;
     margin: 1em 0 1em 0;
 }
 
-.save-options-container p {
+#save-options-container p {
     margin: 0;
 }
-.save-options-container p * {
+#save-options-container p * {
     cursor: pointer;
     margin: 2px;
     display: inline;
 }
-.save-options-container p label {
+#save-options-container p label {
     margin-right: 0.5em;
 }
 
@@ -148,18 +148,18 @@ p {
     border-radius: 5px;
 }
 
-#status-container {
+#list-toolbar {
     margin-bottom: 1em;
 }
 
-.count-container {
+#count-container {
     flex: 2;
     font-family: Gill Sans Light;
     font-size: 20px;
     text-align: right;
     margin-bottom: 0.5em;
 }
-.count-container div {
+#count-container div {
     display: inline-flex;
     width: 5em;
 }
@@ -168,7 +168,7 @@ p {
     color: #733;
 }
 
-.flex-container {
+.display-flex {
     display: flex;
 }
 
