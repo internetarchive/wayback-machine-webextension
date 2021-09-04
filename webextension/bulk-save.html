@@ -47,8 +47,16 @@
 
       <div id="save-options-container">
         <p>
-          <input type="checkbox" id="never-saved">
-          <label class="save-options" for="never-saved">Save only URLs that have never been archived.</label>
+          <input type="checkbox" id="saved-within-chk">
+          <label class="save-options" for="saved-within-chk">Save only URLs that have not been archived within the last:</label>
+          <select id="saved-within-opt">
+            <option value="1d">24 hours</option>
+            <option value="7d">7 days</option>
+            <option value="30d">30 days</option>
+            <option value="90d">90 days</option>
+            <option value="365d">Year</option>
+            <option value="99999d" selected>Ever (default)</option>
+          </select>
         </p>
         <p>
           <input type="checkbox" id="chk-screenshot">

@@ -252,7 +252,8 @@ function doBulkSaveAll(e) {
   // due to timeout issues, outlinks not supported right now
   // if ($('#chk-outlinks').prop('checked') === true) { saveOptions['capture_outlinks'] = 1 }
   if ($('#chk-screenshot').prop('checked') === true) { saveOptions['capture_screenshot'] = 1 }
-  if ($('#never-saved').prop('checked') === true) { saveOptions['if_not_archived_within'] = '99999d' }
+  const savedWithin = $('#saved-within-opt').val() || '99999d'
+  if ($('#saved-within-chk').prop('checked') === true) { saveOptions['if_not_archived_within'] = savedWithin }
   // start saving concurrently
   startSaving()
   for (let i = 0; i < MAX_SAVES; i++) {
