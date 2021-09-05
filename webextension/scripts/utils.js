@@ -443,7 +443,7 @@ function notify(message, callback) {
     message: message,
     iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
   }
-  chrome.notifications.create(options, callback)
+  chrome.notifications && chrome.notifications.create(options, callback)
 }
 
 function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
