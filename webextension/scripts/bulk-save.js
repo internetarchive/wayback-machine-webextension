@@ -383,6 +383,8 @@ function doCopyAll() {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
       alert('All links were copied to the clipboard.')
+    }).catch(err => {
+      console.log('Not copied to clipboard: ', err)
     })
   }
 }
@@ -393,6 +395,8 @@ function doCopySaved() {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
       alert('Saved links to the Wayback Machine were copied to the clipboard.')
+    }).catch(err => {
+      console.log('Not copied to clipboard: ', err)
     })
   }
 }
@@ -403,6 +407,8 @@ function doCopyUnsaved() {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
       alert('Unsaved links were copied to the clipboard.')
+    }).catch(err => {
+      console.log('Not copied to clipboard: ', err)
     })
   }
 }

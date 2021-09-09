@@ -104,7 +104,7 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'https://0.0.0.0', 'result': false },
     { 'url': 'https://localhost', 'result': false },
     { 'url': 'https://127.0.0.1', 'result': false },
-    { 'url': 'chrome-extension://efppkbphbfgoiaadblijkcdkdmajikhd/singleWindow.html?url=https://www.google.com/', 'result': false },
+    { 'url': 'chrome-extension://qwertyuiop/example.html?url=https://www.example.com/', 'result': false },
     { 'url': 'chrome://extensions', 'result': false },
     { 'url': 'chrome://newtab', 'result': false },
     { 'url': 'https://example.com', 'result': true },
@@ -120,7 +120,9 @@ describe('isNotExcludedUrl', () => {
     { 'url': 'edge://newtab', 'result': false},
     { 'url': 'edge://about', 'result': false},
     { 'url': 'edge://favorites', 'result': false},
-    { 'url': 'extension://', 'result': false}
+    { 'url': 'extension://', 'result': false},
+    { 'url': '   ', 'result': false},
+    { 'url': '', 'result': false}
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {

@@ -228,7 +228,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
         msg = vdata.message
       }
       notify(msg, (notificationId) => {
-        chrome.notifications.onClicked.addListener((newNotificationId) => {
+        chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
             openByWindowSetting(snapshot_url)
@@ -249,7 +249,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
     // notify
     if (!silent) {
       notify('Error: ' + vdata.message, (notificationId) => {
-        chrome.notifications.onClicked.addListener((newNotificationId) => {
+        chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             openByWindowSetting('https://archive.org/account/login')
           }

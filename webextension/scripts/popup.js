@@ -5,6 +5,8 @@
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
 /*   global attachTooltip */
 
+let activeTabURL
+
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
@@ -22,6 +24,12 @@ function showSettingsTabTip() {
       chrome.storage.local.set({ show_settings_tab_tip: false }, () => {})
     })
   }, 500)
+}
+
+function initActiveTabURL() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) { activeTabURL = tabs[0].url }
+  })
 }
 
 function setupSettingsTabTip() {
@@ -183,28 +191,28 @@ function social_share(eventObj) {
   let timestamp = dateToTimestamp(new Date())
   let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
 
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = get_clean_url(searchValue || tabs[0].url)
-    let sharing_url = isArchiveUrl(url) ? url : wayback_url + url
-    if (isNotExcludedUrl(url)) {
-      // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
-      if (id.includes('facebook-share-btn')) {
-        openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
-      } else if (id.includes('twitter-share-btn')) {
-        openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
-      } else if (id.includes('linkedin-share-btn')) {
-        openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
-      } else if (id.includes('copy-link-btn') && navigator.clipboard) {
-        navigator.clipboard.writeText(sharing_url).then(() => {
-          let copiedMsg = $('#link-copied-msg')
-          copiedMsg.text('Copied to Clipboard').fadeIn('fast')
-          setTimeout(() => {
-            copiedMsg.fadeOut('fast')
-          }, 1500)
-        })
-      }
+  let url = get_clean_url(searchValue || activeTabURL)
+  let sharing_url = isArchiveUrl(url) ? url : wayback_url + url
+  if (isNotExcludedUrl(url)) {
+    // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
+    if (id.includes('facebook-share-btn')) {
+      openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('twitter-share-btn')) {
+      openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('linkedin-share-btn')) {
+      openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('copy-link-btn') && navigator.clipboard) {
+      navigator.clipboard.writeText(sharing_url).then(() => {
+        let copiedMsg = $('#link-copied-msg')
+        copiedMsg.text('Copied to Clipboard').fadeIn('fast')
+        setTimeout(() => {
+          copiedMsg.fadeOut('fast')
+        }, 1500)
+      }).catch(err => {
+        console.log('Not copied to clipboard: ', err)
+      })
     }
-  })
+  }
 }
 
 function searchTweet() {
@@ -640,7 +648,7 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
+window.onloadFuncs = [initActiveTabURL, last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
 window.onload = () => {
   for (let i in this.onloadFuncs) {
     this.onloadFuncs[i]()

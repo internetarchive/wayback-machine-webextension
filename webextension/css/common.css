@@ -1,5 +1,10 @@
 /*Common css attributes for all files*/
 
+html {
+    /* for Safari 14 */
+    color-scheme: light dark;
+}
+
 @font-face {
     font-family: "Bebas Neue";
     src: url("../fonts/BebasNeue.otf");
