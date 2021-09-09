@@ -160,7 +160,6 @@ p {
 #save-options-container p * {
     cursor: pointer;
     margin: 2px;
-    display: inline;
 }
 #save-options-container p label {
     /* margin-right: 0.5em; */

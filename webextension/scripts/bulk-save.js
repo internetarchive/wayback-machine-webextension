@@ -37,6 +37,7 @@ function startSaving() {
 function stopSaving() {
   isSaving = false
   $('#add-container').hide()
+  $('#save-options-container').hide()
   $('#save-progress-bar').hide()
   $('#pause-btn').hide()
   $('#bulk-save-label').text('Done')
@@ -58,6 +59,7 @@ function pauseSaving() {
 function resetUI() {
   $('#pause-btn').hide()
   $('#list-toolbar').hide()
+  $('#save-progress-bar').hide()
   $('#add-container').show()
   $('#save-options-container').show()
   $('#bulk-save-label').text('Start Bulk Save')
@@ -217,7 +219,7 @@ function initMessageListener() {
     if (msg && msg.error) {
       if (msg.error.indexOf('logged in') !== -1) {
         // stop if user not logged in
-        stopSaving()
+        isSaving = false
         resetUI()
         $('#not-logged-in').show()
       } else if (msg.error.indexOf('same snapshot') !== -1) {
@@ -371,7 +373,7 @@ function processStatus(msg, url, wbUrl) {
 
 // Stop saving when counts reach total count.
 function checkIfFinished() {
-  if (saveSuccessCount + saveFailedCount >= totalUrlCount) {
+  if ((totalUrlCount > 0) && (saveSuccessCount + saveFailedCount >= totalUrlCount)) {
     stopSaving()
     if (saveFailedCount === 0) { $('#copy-unsaved-btn').attr('disabled', true) }
   }
