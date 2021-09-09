@@ -242,11 +242,13 @@ function cropPrefix(url) {
   return null
 }
 
-// Function to check whether it is a valid URL or not
+// Function to check whether it is a valid URL or not.
+// Returns: true = good, false = excluded URL.
 function isNotExcludedUrl(url) {
-  const len = excluded_urls.length
-  for (let i = 0; i < len; i++) {
-    if (url.startsWith('http://' + excluded_urls[i]) || url.startsWith('https://' + excluded_urls[i]) || url.startsWith(excluded_urls[i])) {
+  if (typeof url !== 'string') { return false }
+  if (url.trim() === '') { return false }
+  for (const exUrl of excluded_urls) {
+    if (url.startsWith(exUrl) || url.startsWith('http://' + exUrl) || url.startsWith('https://' + exUrl)) {
       return false
     }
   }
