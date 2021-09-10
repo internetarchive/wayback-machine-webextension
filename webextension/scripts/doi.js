@@ -3,6 +3,9 @@
 // from 'utils.js'
 /*   global getUrlByParameter, openByWindowSetting */
 
+// from 'test/setup.js'
+/*   global isInTestEnv */
+
 function getMetadata(entry) {
   const MAX_TITLE_LEN = 300
   let title = entry.title
@@ -100,10 +103,11 @@ function getPapers(url) {
   })
 }
 
-// If not running through mocha, then only execute
-if (!isInTestEnv) {
-  window.onload = createPage
-}
+// onload
+$(function() {
+  // If not running through mocha, then only execute
+  if (!isInTestEnv) { createPage() }
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {

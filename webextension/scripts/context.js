@@ -18,9 +18,8 @@
 // from 'overview.js'
 /*   global getWBMSummary */
 
-const url = getUrlByParameter('url')
-
 function get_tagCloud() {
+  const url = getUrlByParameter('url')
   getTags(url)
 }
 
@@ -112,6 +111,9 @@ function singlePageView() {
   })
 }
 
-$('.url').text(url).attr('href', url)
-
-window.onload = singlePageView
+// onload
+$(function() {
+  const url = getUrlByParameter('url')
+  $('.url').text(url).attr('href', url)
+  singlePageView()
+})

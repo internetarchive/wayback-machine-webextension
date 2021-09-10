@@ -8,7 +8,8 @@ function getParameterByName(name) {
   return url.searchParams.get(name)
 }
 
-function main() {
+// onload
+$(function() {
   let page_url = getParameterByName('page_url')
   let wayback_url = getParameterByName('wayback_url')
   document.getElementById('title1').innerHTML = 'Server Not Found'
@@ -17,6 +18,4 @@ function main() {
   document.getElementById('page-url').innerHTML = page_url
   document.getElementById('page-url').href = page_url
   refreshWayback(wayback_url, 999)
-}
-
-main()
+})

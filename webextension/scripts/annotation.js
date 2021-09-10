@@ -3,6 +3,9 @@
 // from 'utils.js'
 /*   global getUrlByParameter, openByWindowSetting */
 
+// from 'test/setup.js'
+/*   global isInTestEnv */
+
 /**
  * Prepare hypothes.is URL to request API.
  */
@@ -92,10 +95,6 @@ function showAnnotations(type) {
   $('#' + type).show()
 }
 
-$('.tablink').click(() => {
-  showAnnotations($(this).attr('value'))
-})
-
 function get_hypothesis() {
   let hypo_domain = getAnnotations('domain')
   let hypo_url = getAnnotations('url')
@@ -105,10 +104,14 @@ function get_hypothesis() {
   }
 }
 
-// If not running through mocha, then only execute
-if (!isInTestEnv) {
-  window.onload = get_hypothesis
-}
+// onload
+$(function() {
+  $('.tablink').click(() => {
+    showAnnotations($(this).attr('value'))
+  })
+  // If not running through mocha, then only execute
+  if (!isInTestEnv) { get_hypothesis() }
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {

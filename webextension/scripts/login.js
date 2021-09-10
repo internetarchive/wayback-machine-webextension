@@ -6,10 +6,13 @@
 // from 'popup.js'
 /*   global loginSuccess, loginError */
 
-$('#signup-btn').click(signUp)
-$('#forgot-pw-btn').click(forgotPassword)
-$('#login-btn').click(doLogin)
-$('#logout-tab-btn').click(doLogout)
+// onload
+$(function() {
+  $('#signup-btn').click(signUp)
+  $('#forgot-pw-btn').click(forgotPassword)
+  $('#login-btn').click(doLogin)
+  $('#logout-tab-btn').click(doLogout)
+})
 
 function signUp() {
   openByWindowSetting('https://archive.org/account/signup')

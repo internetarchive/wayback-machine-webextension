@@ -91,7 +91,9 @@ function getThumbnail (url) {
     })
 }
 
-const gUrl = getUrlByParameter('url')
-$('.url').text(gUrl).attr('href', gUrl)
-
-window.onload = getWBMSummary
+// onload
+$(function() {
+  const url = getUrlByParameter('url')
+  $('.url').text(url).attr('href', url)
+  getWBMSummary()
+})

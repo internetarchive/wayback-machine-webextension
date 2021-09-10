@@ -6,6 +6,7 @@
 /*   global attachTooltip */
 
 let activeTabURL
+let searchBoxTimer
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -323,7 +324,6 @@ function display_list(key_word) {
   })
 }
 
-let timer
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
   if (e.keyCode === 38 || e.keyCode === 40) { return false }
@@ -337,9 +337,9 @@ function display_suggestions(e) {
       $('#url-not-supported-msg').show()
       $('#using-search-msg').hide()
     }
-    clearTimeout(timer)
+    clearTimeout(searchBoxTimer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
-    timer = setTimeout(() => {
+    searchBoxTimer = setTimeout(() => {
       display_list($('#search-input').val())
     }, 300)
   }
@@ -378,6 +378,7 @@ function show_login_page() {
   $('#login-page').show()
 }
 
+// not used
 function show_all_screens() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let url = searchValue || get_clean_url(tabs[0].url)
@@ -627,38 +628,42 @@ function showSaving() {
 }
 
 // make the tab/window option in setting page checked according to previous setting
-chrome.storage.local.get(['view_setting'], (settings) => {
-  if (settings && settings.view_setting) {
-    $(`input[name=tw][value=${settings.view_setting}]`).prop('checked', true)
-  }
-})
+function setupViewSetting() {
+  chrome.storage.local.get(['view_setting'], (settings) => {
+    if (settings && settings.view_setting) {
+      $(`input[name=tw][value=${settings.view_setting}]`).prop('checked', true)
+    }
+  })
+}
 
 // respond to Save Page Now success
-chrome.runtime.onMessage.addListener(
-  (message) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      let atab = message.atab
-      if (atab && atab.id && (atab.id === tabs[0].id)) {
-        if (message.message === 'save_success') {
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Save successful')
-          $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-          $('#spn-btn').addClass('flip-inside')
-          setupWaybackCount()
-        } else if (message.message === 'save_archived') {
-          // snapshot already archived within timeframe
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Recently Saved')
-        } else if (message.message === 'save_start') {
-          showSaving()
-        } else if (message.message === 'save_error') {
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Save Failed')
+function setupSaveListener() {
+  chrome.runtime.onMessage.addListener(
+    (message) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        let atab = message.atab
+        if (atab && atab.id && (atab.id === tabs[0].id)) {
+          if (message.message === 'save_success') {
+            $('#save-progress-bar').hide()
+            $('#spn-front-label').text('Save successful')
+            $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
+            $('#spn-btn').addClass('flip-inside')
+            setupWaybackCount()
+          } else if (message.message === 'save_archived') {
+            // snapshot already archived within timeframe
+            $('#save-progress-bar').hide()
+            $('#spn-front-label').text('Recently Saved')
+          } else if (message.message === 'save_start') {
+            showSaving()
+          } else if (message.message === 'save_error') {
+            $('#save-progress-bar').hide()
+            $('#spn-front-label').text('Save Failed')
+          }
         }
-      }
-    })
-  }
-)
+      })
+    }
+  )
+}
 
 // onload
 $(function() {
@@ -673,6 +678,8 @@ $(function() {
   setupSaveButton()
   updateLastSaved()
   setupWaybackCount()
+  setupSaveListener()
+  setupViewSetting()
   setupSettingsTabTip()
   $('.logo-wayback-machine').click(homepage)
   $('#newest-btn').click(recent_capture)

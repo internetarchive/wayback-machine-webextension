@@ -415,7 +415,8 @@ function doCopyUnsaved() {
   }
 }
 
-function main() {
+// onload
+$(function() {
   $('.btn').click(clearFocus)
   $('#add-url-btn').click(doAddURLs)
   $('#import-bookmarks-btn').click(doImportBookmarks)
@@ -425,6 +426,4 @@ function main() {
   $('#copy-unsaved-btn').click(doCopyUnsaved)
   resetUI()
   initMessageListener()
-}
-
-$(main)
+})

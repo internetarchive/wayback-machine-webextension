@@ -56,7 +56,7 @@ function getAlexa() {
     $('#alexa_page').attr('href', 'https://archive.org/services/context/alexa?url=' + hostname)
     $('#loader_alexa').hide()
     $('#show_alexa_data').show()
-  }).fail((error) => {
+  }).fail(() => {
     $('#loader_alexa').hide()
     $('#alexa_domain_tag').hide()
     $('.error').text('Can not reach Alexa at the moment!')
@@ -66,4 +66,7 @@ function getAlexa() {
   })
 }
 
-window.onload = getAlexa()
+// onload
+$(function() {
+  getAlexa()
+})
