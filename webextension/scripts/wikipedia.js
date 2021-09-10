@@ -166,10 +166,13 @@ function wikipediaBooks (url) {
   })
 }
 
-chrome.storage.local.get(['wiki_setting'], (settings) => {
-  if (settings && settings.wiki_setting) {
-    addCitations()
-  }
+// onload
+$(function() {
+  chrome.storage.local.get(['wiki_setting'], (settings) => {
+    if (settings && settings.wiki_setting) {
+      addCitations()
+    }
+  })
 })
 
 if (typeof module !== 'undefined') {

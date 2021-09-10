@@ -6,19 +6,23 @@
 // from 'popup.js'
 /*   global setupWaybackCount */
 
-initPrivateState()
-$(initializeSettings)
-// $('.only').click(validate)
-// $('#showall').click(selectall)
-$('.private').click(validatePrivateMode)
-$('#private-mode-setting').click(togglePrivateMode)
-// use capture instead of bubbling
-document.getElementById('view-setting').addEventListener('click', switchTabWindow, true)
-$('input[type="radio"]').click(() => { $(this).prop('checked', true) })
-$('input').change(saveOptions)
-$('.back-btn').click(goBack)
-switchSetting()
-addDocs()
+// onload
+$(function() {
+  initPrivateState()
+  initializeSettings()
+  // $('.only').click(validate)
+  // $('#showall').click(selectall)
+  $('.private').click(validatePrivateMode)
+  $('#private-mode-setting').click(togglePrivateMode)
+  // use capture instead of bubbling
+  //document.getElementById('view-setting').addEventListener('click', switchTabWindow, true)
+  $('#view-setting').click(switchTabWindow)
+  $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
+  $('input').change(saveOptions)
+  $('.back-btn').click(goBack)
+  switchSetting()
+  addDocs()
+})
 
 function initializeSettings() {
   chrome.storage.local.get(null, restoreOptions)

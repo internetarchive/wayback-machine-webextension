@@ -3,7 +3,10 @@
 // from 'utils.js'
 /*   global openByWindowSetting, getUrlByParameter */
 
-const threshold = 0.85
+// from 'test/setup.js'
+/*   global isInTestEnv */
+
+const THRESHOLD = 0.85
 
 function parseDate (date) {
   if (typeof date === 'string') {
@@ -53,9 +56,9 @@ function getArticles(url) {
   getDetails(url)
   .then((clips) => {
     $('.loader').hide()
-    if (clips && (clips.length > 0) && (threshold >= clips[0]['similarity'])) {
+    if (clips && (clips.length > 0) && (THRESHOLD >= clips[0]['similarity'])) {
       for (let clip of clips) {
-        if (threshold >= clip['similarity']) {
+        if (THRESHOLD >= clip['similarity']) {
           $('#RecommendationTray').append(constructArticles(clip))
         }
       }
@@ -73,10 +76,11 @@ function getArticles(url) {
   })
 }
 
-// If not running through mocha, then only execute
-if (!isInTestEnv) {
-  getArticles(getUrlByParameter('url'))
-}
+// onload
+$(function() {
+  // If not running through mocha, then only execute
+  if (!isInTestEnv) { getArticles(getUrlByParameter('url')) }
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {

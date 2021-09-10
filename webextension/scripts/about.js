@@ -5,6 +5,10 @@
 
 const VERSION = chrome.runtime.getManifest().version
 const YEAR = new Date().getFullYear()
-$('#version').text(VERSION)
-$('#year').text(YEAR)
-$('#reviews-page').attr('href', feedbackURL)
+
+// onload
+$(function() {
+  $('#version').text(VERSION)
+  $('#year').text(YEAR)
+  $('#reviews-page').attr('href', feedbackURL)
+})

@@ -6,9 +6,11 @@
 // from 'utils.js'
 /*   global getUrlByParameter, hostURL */
 
-let mynewTags = []
+// from 'test/setup.js'
+/*   global isInTestEnv */
 
 function getTags() {
+  let mynewTags = []
   const url = getUrlByParameter('url')
   let hostname = new URL(url).hostname
   let toBeUsedAsURL = hostname.replace(/^www./, '')
@@ -116,10 +118,11 @@ function toConsumableArray (arr) {
   }
 }
 
-// If not running through mocha, then only execute
-if (!isInTestEnv) {
-  window.onload = getTags
-}
+// onload
+$(function() {
+  // If not running through mocha, then only execute
+  if (!isInTestEnv) { getTags() }
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {

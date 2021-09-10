@@ -50,10 +50,11 @@ function addBook (metadata) {
   return $('<div>').append(text_elements, details)
 }
 
-window.onload = () => {
+// onload
+$(function() {
   let url = getUrlByParameter('url')
   populateBooks(url)
-}
+})
 
 if (typeof module !== 'undefined') {
   module.exports = {
