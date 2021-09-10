@@ -66,13 +66,14 @@ function doSaveNow() {
   })
 }
 
-function last_save() {
+// Updates SPN button UI depending on logged-in status and fetches last saved time.
+function updateLastSaved() {
   checkAuthentication((result) => {
     if (chrome.runtime.lastError) { /* skip */ }
-    if (!(result && result.auth_check)) {
-      loginError()
-    } else {
+    if (result && result.auth_check) {
       loginSuccess()
+    } else {
+      loginError()
     }
   })
 }
@@ -133,6 +134,8 @@ function loginSuccess() {
   })
 }
 
+// Checks if user is logged in by checking if 'logged-in-sig' cookie exists (not by API call).
+// returns callback object: { auth_check: bool }
 function checkAuthentication(callback) {
   chrome.runtime.sendMessage({
     message: 'auth_check'
@@ -239,10 +242,11 @@ function useSearchBox() {
   $('#tvnews-container').hide()
   $('#wiki-container').hide()
   clearWaybackCount()
-  last_save()
+  updateLastSaved()
 }
 
-function search_box_activate() {
+// Setup keyboard handler for Search Box.
+function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
@@ -383,7 +387,10 @@ function show_all_screens() {
   })
 }
 
-function borrow_books() {
+// Displays 'Read Book' button if on Amazon Books.
+// May fetch info about Amazon Books if not already cached, then update button click handler.
+//
+function setupReadBook() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
@@ -423,7 +430,8 @@ function borrow_books() {
   })
 }
 
-function show_news() {
+// Display 'TV News Clips' button if current url is present in newshosts[]
+function setupNewsClips() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     const news_host = new URL(url).hostname
@@ -449,7 +457,8 @@ function show_news() {
   })
 }
 
-function show_wikibooks() {
+// Display 'Cited Books' & 'Cited Papers' buttons.
+function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
@@ -482,7 +491,8 @@ function show_wikibooks() {
   })
 }
 
-function setUpFactCheck() {
+// Display purple 'Fact Check' button.
+function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = get_clean_url(tabs[0].url)
     if (isNotExcludedUrl(url)) {
@@ -538,6 +548,7 @@ function clearFocus() {
   document.activeElement.blur()
 }
 
+// Displays and updates or clears the Wayback Count badge.
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -597,6 +608,7 @@ function bulkSave() {
   openByWindowSetting('../bulk-save.html', 'windows')
 }
 
+// Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -648,36 +660,39 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-window.onloadFuncs = [initActiveTabURL, last_save, borrow_books, show_news, search_box_activate, setupWaybackCount, setupSaveButton, setUpFactCheck]
-window.onload = () => {
-  for (let i in this.onloadFuncs) {
-    this.onloadFuncs[i]()
-  }
-}
-
-$(show_wikibooks)
-$(setupSettingsTabTip)
-
-$('.logo-wayback-machine').click(homepage)
-$('#newest-btn').click(recent_capture)
-$('#oldest-btn').click(first_capture)
-$('#facebook-share-btn').click(social_share)
-$('#twitter-share-btn').click(social_share)
-$('#linkedin-share-btn').click(social_share)
-$('#copy-link-btn').click(social_share)
-$('#tweets-btn').click(searchTweet)
-$('#about-tab-btn').click(about_support)
-$('#donate-tab-btn').click(open_donations_page)
-$('#settings-tab-btn').click(showSettings)
-$('#setting-page').hide()
-$('#login-page').hide()
-$('#feedback-tab-btn').click(open_feedback_page)
-$('#overview-btn').click(view_all)
-$('#site-map-btn').click(sitemap)
-$('#search-input').keydown(display_suggestions)
-$('.btn').click(clearFocus)
-$('#fact-check-btn').click(showContext)
-$('#alexa-btn').click(showContext)
-$('#annotations-btn').click(showContext)
-// $('#more-info-btn').click(showContext)
-$('#tag-cloud-btn').click(showContext)
+// onload
+$(function() {
+  $('#setting-page').hide()
+  $('#login-page').hide()
+  initActiveTabURL()
+  setupNewsClips()
+  setupWikiButtons()
+  setupFactCheck()
+  setupReadBook()
+  setupSearchBox()
+  setupSaveButton()
+  updateLastSaved()
+  setupWaybackCount()
+  setupSettingsTabTip()
+  $('.logo-wayback-machine').click(homepage)
+  $('#newest-btn').click(recent_capture)
+  $('#oldest-btn').click(first_capture)
+  $('#facebook-share-btn').click(social_share)
+  $('#twitter-share-btn').click(social_share)
+  $('#linkedin-share-btn').click(social_share)
+  $('#copy-link-btn').click(social_share)
+  $('#tweets-btn').click(searchTweet)
+  $('#about-tab-btn').click(about_support)
+  $('#donate-tab-btn').click(open_donations_page)
+  $('#settings-tab-btn').click(showSettings)
+  $('#feedback-tab-btn').click(open_feedback_page)
+  $('#overview-btn').click(view_all)
+  $('#site-map-btn').click(sitemap)
+  $('#search-input').keydown(display_suggestions)
+  $('.btn').click(clearFocus)
+  $('#fact-check-btn').click(showContext)
+  $('#alexa-btn').click(showContext)
+  $('#annotations-btn').click(showContext)
+  // $('#more-info-btn').click(showContext)
+  $('#tag-cloud-btn').click(showContext)
+})
