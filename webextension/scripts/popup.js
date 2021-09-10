@@ -28,8 +28,9 @@ function showSettingsTabTip() {
 }
 
 function initActiveTabURL() {
+  activeTabURL = null
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) { activeTabURL = tabs[0].url }
+    activeTabURL = (tabs && tabs[0]) ? tabs[0].url : null
   })
 }
 
@@ -86,17 +87,12 @@ function loginError() {
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
-  $('#spn-btn').off('click').click(() => {
-    show_login_page()
-  })
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
-      let url = searchValue || get_clean_url(tabs[0].url)
-      if (!isNotExcludedUrl(url)) {
-        setExcluded()
-      }
-    }
-  })
+  $('#spn-btn').off('click').click(show_login_page)
+
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
+    if (!isNotExcludedUrl(url)) { setExcluded() }
+  }
 }
 
 function loginSuccess() {
@@ -107,32 +103,31 @@ function loginSuccess() {
   $('#bulk-save-btn').removeAttr('disabled')
   $('#bulk-save-btn').attr('title', '')
   $('#bulk-save-btn').click(bulkSave)
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
-      let url = searchValue || get_clean_url(tabs[0].url)
-      if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-        $('#spn-btn').click(doSaveNow)
-        chrome.storage.local.get(['private_mode_setting'], (settings) => {
-          // auto save page
-          if (settings && (settings.private_mode_setting === false)) {
-            chrome.runtime.sendMessage({
-              message: 'getLastSaveTime',
-              page_url: url
-            }, (message) => {
-              if (chrome.runtime.lastError) { /* skip */ }
-              if (message && (message.message === 'last_save') && message.timestamp) {
-                $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-                $('#spn-btn').addClass('flip-inside')
-              }
-            })
-          }
-        })
-      } else {
-        setExcluded()
-        $('#spn-back-label').text('URL not supported')
-      }
+
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
+    if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+      $('#spn-btn').click(doSaveNow)
+      chrome.storage.local.get(['private_mode_setting'], (settings) => {
+        // auto save page
+        if (settings && (settings.private_mode_setting === false)) {
+          chrome.runtime.sendMessage({
+            message: 'getLastSaveTime',
+            page_url: url
+          }, (message) => {
+            if (chrome.runtime.lastError) { /* skip */ }
+            if (message && (message.message === 'last_save') && message.timestamp) {
+              $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
+              $('#spn-btn').addClass('flip-inside')
+            }
+          })
+        }
+      })
+    } else {
+      setExcluded()
+      $('#spn-back-label').text('URL not supported')
     }
-  })
+  }
 }
 
 // Checks if user is logged in by checking if 'logged-in-sig' cookie exists (not by API call).
@@ -144,8 +139,8 @@ function checkAuthentication(callback) {
 }
 
 function recent_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -154,12 +149,12 @@ function recent_capture() {
     }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
     })
-  })
+  }
 }
 
 function first_capture() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -168,12 +163,12 @@ function first_capture() {
     }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
     })
-  })
+  }
 }
 
 function view_all() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -182,7 +177,7 @@ function view_all() {
     }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
     })
-  })
+  }
 }
 
 function social_share(eventObj) {
@@ -220,14 +215,14 @@ function social_share(eventObj) {
 }
 
 function searchTweet() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     if (isNotExcludedUrl(url)) {
       if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
       let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
       openByWindowSetting(open_url)
     }
-  })
+  }
 }
 
 // Update the UI when user is using the Search Box.
@@ -359,10 +354,10 @@ function about_support() {
 }
 
 function sitemap() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
-  })
+  }
 }
 
 function showSettings() {
@@ -380,12 +375,12 @@ function show_login_page() {
 
 // not used
 function show_all_screens() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    let url = searchValue || get_clean_url(activeTabURL)
     chrome.runtime.sendMessage({ message: 'showall', url: url }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
     })
-  })
+  }
 }
 
 // Displays 'Read Book' button if on Amazon Books.
@@ -516,8 +511,8 @@ function setupFactCheck() {
 // Common function to show different context
 function showContext(eventObj) {
   let id = eventObj.target.getAttribute('id')
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = searchValue || get_clean_url(tabs[0].url)
+  if (activeTabURL) {
+    const url = searchValue || get_clean_url(activeTabURL)
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       if (id.includes('fact-check-btn')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
@@ -536,7 +531,7 @@ function showContext(eventObj) {
         openByWindowSetting(tagsUrl)
       }
     }
-  })
+  }
 }
 
 function setExcluded() {
@@ -552,8 +547,8 @@ function clearFocus() {
 // Displays and updates or clears the Wayback Count badge.
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      let url = tabs[0].url
+    if (activeTabURL) {
+      let url = activeTabURL
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
         chrome.runtime.sendMessage({ message: 'updateCountBadge' }, () => {
@@ -565,7 +560,7 @@ function setupWaybackCount() {
           if (chrome.runtime.lastError) { /* skip */ }
         })
       }
-    })
+    }
   })
 }
 
