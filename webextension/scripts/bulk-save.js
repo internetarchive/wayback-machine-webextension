@@ -417,9 +417,14 @@ function doCopyUnsaved() {
 
 // onload
 $(function() {
+  if (chrome.bookmarks) {
+    $('#import-bookmarks-btn').click(doImportBookmarks)
+  } else {
+    // Safari doesn't support reading bookmarks
+    $('#import-bookmarks-btn').hide()
+  }
   $('.btn').click(clearFocus)
   $('#add-url-btn').click(doAddURLs)
-  $('#import-bookmarks-btn').click(doImportBookmarks)
   $('#clear-all-btn').click(doClearAll)
   $('#copy-all-btn').click(doCopyAll)
   $('#copy-saved-btn').click(doCopySaved)
