@@ -56,6 +56,11 @@ function showResourceData(url_name) {
           document.location.hash = '#refreshed'
           let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
           $('#snapshot-url').text('Click to view snapshot').attr('href', snapshot_url).show()
+          $('#snapshot-url').click(function(e) {
+            // forces open in new window in Safari
+            e.preventDefault()
+            window.open(this.href, '_blank')
+          })
         } else if (status === 'error') {
           showError()
           document.location.hash = '#refreshed'
