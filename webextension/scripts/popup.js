@@ -12,6 +12,12 @@ function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
 
+// If the popup displays, we know user already agreed in Welcome page.
+// This is a fix for Safari resetting the 'agreement' setting.
+function initAgreement() {
+  chrome.storage.local.set({ agreement: true }, () => {})
+}
+
 // Popup tip over settings tab icon after first load.
 function showSettingsTabTip() {
   let tt = $('<div>').append($('<p>').text('There are more great features in Settings!').attr({ 'class': 'setting-tip' }))[0].outerHTML
@@ -664,6 +670,7 @@ function setupSaveListener() {
 $(function() {
   $('#setting-page').hide()
   $('#login-page').hide()
+  initAgreement()
   initActiveTabURL()
   setupNewsClips()
   setupWikiButtons()

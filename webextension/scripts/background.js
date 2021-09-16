@@ -351,7 +351,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.runtime.onStartup.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: 'index.html' })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
     }
   })
 })
@@ -362,11 +362,12 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: 'index.html' })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
     }
   })
 })
 
+// Opens Welcome page if popup not yet set.
 chrome.browserAction.onClicked.addListener((tab) => {
   openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
 })
