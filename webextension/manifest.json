@@ -54,9 +54,7 @@
     }
   ],
   "web_accessible_resources": [
-    "css/*",
-    "fonts/*",
-    "images/*",
-    "scripts/*"
+    "css/archive.css",
+    "images/*"
   ]
 }
