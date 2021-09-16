@@ -351,7 +351,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.runtime.onStartup.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: 'index.html' })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
     }
   })
 })
@@ -362,11 +362,12 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: 'index.html' })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
     }
   })
 })
 
+// Opens Welcome page if popup not yet set.
 chrome.browserAction.onClicked.addListener((tab) => {
   openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
 })
@@ -374,13 +375,17 @@ chrome.browserAction.onClicked.addListener((tab) => {
 chrome.webRequest.onBeforeSendHeaders.addListener(
   rewriteUserAgentHeader,
   { urls: [WB_API_URL] },
-  ['blocking', 'requestHeaders']
+  ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
 )
 
+// Checks for error in page loading such as when a domain doesn't exist.
+// Currently not supported in Safari.
+//
 chrome.webRequest.onErrorOccurred.addListener((details) => {
+  console.log(`webRequest.onErrorOccurred: error: ${details.error}, tabId: ${details.tabId}, url: ${details.url}`) // DEBUG
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0 &&
-    details.tabId > 0) {
+    (details.tabId >= 0)) {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
@@ -391,17 +396,21 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
-/**
-* Header callback
-*/
+// Listens for website loading completed for 404-Not-Found popups.
 chrome.webRequest.onCompleted.addListener((details) => {
+
   function tabIsReady(tabId) {
-    if (details.frameId === 0 &&
-      details.statusCode >= 400 && isNotExcludedUrl(details.url)) {
+    console.log(`webRequest.onCompleted: tabIsReady tabId: ${tabId}, frameId: ${details.frameId}, statusCode: ${details.statusCode}`) // DEBUG
+    if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
-      wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
+      // insert script first, then check wayback machine, then show banner
+      chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
+        console.log(`webRequest.onCompleted: executeScript1`) // DEBUG
+
+        wmAvailabilityCheck(details.url, (wayback_url, url) => {
+          console.log(`webRequest.onCompleted: wayback_url: ${wayback_url}`) // DEBUG
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
+            console.log(`webRequest.onCompleted: sendMessage1`) // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -409,6 +418,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
               status_code: 999
             })
           } else {
+            console.log(`webRequest.onCompleted: sendMessage2`) // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -416,19 +426,24 @@ chrome.webRequest.onCompleted.addListener((details) => {
               status_code: details.statusCode
             })
           }
-        })
-      }, () => {})
-    }
-  }
-  if (details.tabId > 0) {
+        }, () => {}) // wmAvailabilityCheck
+      }) // executeScript
+    } // if
+  } // function
+
+  console.log(`webRequest.onCompleted: url: ${details.url}, tabId: ${details.tabId}`) // DEBUG
+  if (details.tabId >= 0) {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
+      } else {
+        console.log(`webRequest.onCompleted: NO agreement?`) // DEBUG
       }
     })
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
+// Listens for messages to call background functions from other scripts.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) { return }
   if (message.message === 'openurl') {

@@ -319,8 +319,15 @@ function updateRow($row, symbol, bgcolor, url, wbUrl) {
   $del.css('background-color', bgcolor)
   if (url && wbUrl) {
     // replace url-item text with a wayback link.
+    // all this needed to open in a new window in Safari.
     let $span = $row.children('.url-item').first()
-    $span.html(`<a href="${wbUrl}" target="_blank">${url}</a>`)
+    let $ahref = $(`<a href="${wbUrl}">${url}</a>`)
+    $ahref.click(function(e) {
+      e.preventDefault()
+      window.open(this.href, '_blank')
+    })
+    $span.empty()
+    $span.append($ahref)
   }
 }
 
@@ -417,9 +424,14 @@ function doCopyUnsaved() {
 
 // onload
 $(function() {
+  if (chrome.bookmarks) {
+    $('#import-bookmarks-btn').click(doImportBookmarks)
+  } else {
+    // Safari doesn't support reading bookmarks
+    $('#import-bookmarks-btn').hide()
+  }
   $('.btn').click(clearFocus)
   $('#add-url-btn').click(doAddURLs)
-  $('#import-bookmarks-btn').click(doImportBookmarks)
   $('#clear-all-btn').click(doClearAll)
   $('#copy-all-btn').click(doCopyAll)
   $('#copy-saved-btn').click(doCopySaved)

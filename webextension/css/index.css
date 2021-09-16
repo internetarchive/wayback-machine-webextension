@@ -259,12 +259,11 @@ a.btn-social, .btn-social {
 }
 
 .btn-social .fa, .btn-social i {
-    backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     -ms-transform: scale(1);
     -o-transform: scale(1);
     transform: scale(1);
     transition: all .25s;
+    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -webkit-transform: scale(1);
     -webkit-transition: all .25s;
@@ -394,6 +393,7 @@ a.btn-social, .btn-social {
 .flip-front, .flip-back {
     position: absolute;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     width: 100%;
 }
 
