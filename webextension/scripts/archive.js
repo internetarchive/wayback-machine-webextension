@@ -1,4 +1,5 @@
 // archive.js
+// do NOT use jQuery in this file
 
 let gCloseClicked = false
 let gArchiveClicked = false

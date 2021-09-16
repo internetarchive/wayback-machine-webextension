@@ -1,4 +1,5 @@
 // dnserror.js
+// do NOT use jQuery in this file
 
 // from 'archive.js'
 /*   global refreshWayback */
@@ -9,7 +10,7 @@ function getParameterByName(name) {
 }
 
 // onload
-$(function() {
+window.addEventListener('load', function() {
   let page_url = getParameterByName('page_url')
   let wayback_url = getParameterByName('wayback_url')
   document.getElementById('title1').innerHTML = 'Server Not Found'
