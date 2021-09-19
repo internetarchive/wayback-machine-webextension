@@ -1,7 +1,6 @@
 /* imports only, required to build scripts/build.js using webpack */
+// import '../css/style.css' // not correct?
 import 'bootstrap'
-import 'bootstrap-material-design-icons'
-import '@fortawesome/fontawesome-free'
 global.$ = require('jquery')
 global.jQuery = require('jquery')
 global.Levenshtein = require('fast-levenshtein')
