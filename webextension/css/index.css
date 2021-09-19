@@ -26,10 +26,6 @@ body {
     opacity: 0.7;
 }
 
-.tab-item .glyphicon {
-    font-size: 25px;
-}
-
 .tab-icon {
     color: #444;
     position: relative;

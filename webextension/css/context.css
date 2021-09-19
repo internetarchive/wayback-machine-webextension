@@ -27,8 +27,12 @@ h4 {
 .color_code {
     color: #22c399;
 }
-.glyphicon-globe {
+
+.globe-icon {
     color: #23527c;
+    filter: invert(26%) sepia(8%) saturate(5207%) hue-rotate(169deg) brightness(96%) contrast(84%); /* blue #23527c */
+    width: 18px;
+    height: 18px;
 }
 
 #side-nav-bar {
@@ -343,8 +347,9 @@ ul {
         color: #eee;
     }
 
-    .glyphicon-globe {
+    .globe-icon {
         color: #d66;
+        filter: invert(70%) sepia(12%) saturate(4632%) hue-rotate(313deg) brightness(90%) contrast(90%); /* red #d66 */
     }
 
     #side-nav-bar, .annotations-container, .pre-container {
