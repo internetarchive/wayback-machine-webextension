@@ -32,44 +32,28 @@ body {
 
 .tab-icon {
     color: #444;
-}
-
-/* this hack doesn't work in Safari */
-
-.donate-icon-outer {
-    width: 28px;
-    height: 28px;
-    margin: 0 auto;
-}
-
-.donate-icon-inner {
-    /* overflow: hidden; */
-    /* Chrome bug causes glitch with 'transition' and 'overflow'. */
-    position: fixed;
-    /* Required to fix Chrome bug with 'clip' below. */
-    clip: rect(0px 28px 28px -1px);
-}
-
-.donate-icon {
-    /* trick to tint black icons */
-    filter: drop-shadow(28px 0px);
-    margin-left: -28px;
-    display: block;
-    width: 28px;
-    height: 28px;
-}
-
-/* this should work in all browsers */
-
-.donate-icon-svg {
     position: relative;
     top: 0;
-    width: 28px;
-    height: 28px;
     margin: 0 auto;
-    filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
     /* Calculate filter colors using this tool: https://codepen.io/sosuke/pen/Pjoqqp */
+    filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
 }
+
+.settings-icon-svg, .about-icon-svg, .logout-icon-svg {
+    width: 25px;
+    height: 25px;
+}
+
+.feedback-icon-svg {
+    width: 27px;
+    height: 27px;
+}
+
+.donate-icon-svg {
+    width: 30px;
+    height: 25px;
+}
+
 
 .toolbar-icon {
     width: 16px;
@@ -201,6 +185,7 @@ body {
 
 .chk-options input {
     margin: 5px 5px 0 0;
+    cursor: pointer;
 }
 
 .chk-options span {
@@ -258,7 +243,7 @@ a.btn-social, .btn-social {
     cursor: pointer;
 }
 
-.btn-social .fa, .btn-social i {
+.btn-social .fa, .btn-social i, .btn-social img {
     -ms-transform: scale(1);
     -o-transform: scale(1);
     transform: scale(1);
@@ -269,13 +254,23 @@ a.btn-social, .btn-social {
     -webkit-transition: all .25s;
 }
 
+.tweets-svg {
+    filter: invert(98%) sepia(0%) saturate(1513%) hue-rotate(211deg) brightness(115%) contrast(87%); /* #eeeeee */
+    height: 13px;
+}
+
+.btn-social img {
+    vertical-align: middle;
+    filter: invert(98%) sepia(0%) saturate(1513%) hue-rotate(211deg) brightness(115%) contrast(87%); /* #eeeeee */
+}
+
 .btn-social:hover, .btn-social:focus {
     color: #fff;
     outline: none;
     text-decoration: none;
 }
 
-.btn-social:hover .fa, .btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i {
+.btn-social:hover .fa, .btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i,  .btn-social:hover img, .btn-social:focus img {
     -ms-transform: scale(1.3);
     -o-transform: scale(1.3);
     transform: scale(1.3);
@@ -290,12 +285,22 @@ a.btn-social, .btn-social {
     width: 36px;
 }
 
+.btn-social.btn-sm img {
+    height: 13px;
+    margin-bottom: 2px;
+}
+
 .btn-social.btn-lg {
     font-size: 22px;
     height: 72px;
     line-height: 4px;
     margin: 10px 6px;
     width: 72px;
+}
+
+.btn-social.btn-lg img {
+    height: 24px;
+    margin-bottom: 4px;
 }
 
 .btn-facebook {
@@ -427,9 +432,6 @@ a.btn-social, .btn-social {
 
     .tab-icon {
         color: #bbb;
-    }
-
-    .donate-icon-svg {
         /* check above on how to calculate this */
         filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(83%) contrast(89%);
     }
