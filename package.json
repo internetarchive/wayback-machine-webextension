@@ -1,6 +1,6 @@
 {
-  "name": "wayback-machine-chrome",
-  "version": "3.1.3",
+  "name": "wayback-machine-webextension",
+  "version": "2.999.6",
   "description": "A browser extension that interfaces with the internet archive",
   "main": "index.js",
   "directories": {
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/internetarchive/wayback-machine-chrome.git"
+    "url": "git+https://github.com/internetarchive/wayback-machine-webextension.git"
   },
   "author": "Internet Archive",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/internetarchive/wayback-machine-chrome/issues"
+    "url": "https://github.com/internetarchive/wayback-machine-webextension/issues"
   },
-  "homepage": "https://github.com/internetarchive/wayback-machine-chrome#readme",
+  "homepage": "https://github.com/internetarchive/wayback-machine-webextension#readme",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^3.4.1",
