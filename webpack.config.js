@@ -5,8 +5,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: './webextension/scripts/index.js',
   output: {
-    path: path.resolve(__dirname, 'webextension/scripts'),
-    filename: 'build.js'
+    path: path.resolve(__dirname, 'webextension'),
+    filename: 'scripts/build.js'
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -15,8 +15,8 @@ module.exports = {
     })
     ,
     new MiniCssExtractPlugin({
-      filename: "./webextension/css/style.css",
-      chunkFilename: "./webextension/css/style.css"
+      filename: "css/style.css",
+      chunkFilename: "css/style.css"
     })
   ],
   stats: {
@@ -39,7 +39,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
               name: '[name].[ext]',   
-              outputPath: './webextension/images/'
+              outputPath: 'images'
           }
       }]
       },
@@ -50,7 +50,7 @@ module.exports = {
           options: {
               name: '[name].[ext]',
               publicPath: '../fonts/',
-              outputPath: './webextension/fonts/'
+              outputPath: 'fonts'
           }
       }]
       }
