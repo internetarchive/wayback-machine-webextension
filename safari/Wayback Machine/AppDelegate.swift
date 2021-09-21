@@ -22,4 +22,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
+    /// Called from the install app's help menu.
+    @IBAction func openSupportWebsite(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://archive.org/about/contact.php")!)
+    }
+
 }

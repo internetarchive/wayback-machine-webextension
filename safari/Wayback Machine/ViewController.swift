@@ -10,15 +10,19 @@ import SafariServices.SFSafariApplication
 import SafariServices.SFSafariExtensionManager
 
 let appName = "Wayback Machine"
-let extensionBundleIdentifier = "archive.org.waybackmachine.Wayback-Machine.Extension"
+let extensionBundleIdentifier = "archive.org.waybackmachine.mac.extension"
+let APP_VERSION = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
 
 class ViewController: NSViewController {
 
-    @IBOutlet var appNameLabel: NSTextField!
+    @IBOutlet weak var statusLabel: NSTextField!
+    @IBOutlet weak var versionLabel: NSTextField!
+    @IBOutlet weak var activateButton: NSButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.appNameLabel.stringValue = appName
+        versionLabel.stringValue = "\(APP_VERSION)"
+
         SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { (state, error) in
             guard let state = state, error == nil else {
                 // Insert code to inform the user that something went wrong.
@@ -27,9 +31,10 @@ class ViewController: NSViewController {
 
             DispatchQueue.main.async {
                 if (state.isEnabled) {
-                    self.appNameLabel.stringValue = "\(appName)'s extension is currently on."
+                    self.statusLabel.stringValue = "Extension is On"
+                    self.activateButton.title = "Open Preferences"
                 } else {
-                    self.appNameLabel.stringValue = "\(appName)'s extension is currently off. You can turn it on in Safari Extensions preferences."
+                    self.statusLabel.stringValue = "Extension is Off"
                 }
             }
         }
@@ -42,9 +47,9 @@ class ViewController: NSViewController {
                 return
             }
 
-            DispatchQueue.main.async {
-                NSApplication.shared.terminate(nil)
-            }
+            //DispatchQueue.main.async {
+            //    NSApplication.shared.terminate(nil)
+            //}
         }
     }
 
