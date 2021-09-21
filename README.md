@@ -88,7 +88,18 @@ See [Temporary installation in Firefox](https://extensionworkshop.com/documentat
 
 ### Safari 14+
 
-This code is **not yet ready** to run on Safari 14, but it is currently being worked on.
+This will require Xcode to compile from source.
+
+1. Open Safari.
+  - If Develop menu is hidden, go to Preferences > Advanced > check "Show Develop menu in menu bar".
+  - Then Develop menu > Allow Unsigned Extensions (enter password).
+2. Open the project file `safari/Wayback Machine.xcodeproj` in Xcode. Click Play to run.
+3. Follow directions in splash window:
+  - Safari menu > Preferences > Extensions tab.
+  - Check to activate Wayback Machine.
+  - Select "Always Allow on Every Website..." button and confirm.
+4. Click on the newly added icon in the toolbar.
+5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 
 ## Renamed Repo
