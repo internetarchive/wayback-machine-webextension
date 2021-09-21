@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "safari-prefs-light-760x524.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "safari-prefs-dark-760x524.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

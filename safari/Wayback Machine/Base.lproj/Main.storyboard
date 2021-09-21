@@ -102,7 +102,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="520" height="320"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rxh-Xs-SD0">
+                            <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rxh-Xs-SD0">
                                 <rect key="frame" x="60" y="0.0" width="520" height="340"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ShadowArchive" id="tol-TP-MZe"/>
                             </imageView>
@@ -227,12 +227,12 @@ DQ
                                 </userDefinedRuntimeAttributes>
                             </button>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1yo-sE-bTO">
-                                <rect key="frame" x="227" y="-3" width="296" height="206"/>
+                                <rect key="frame" x="230" y="0.0" width="290" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="AS7-HY-SME"/>
                                     <constraint firstAttribute="width" constant="290" id="DpR-7J-2VK"/>
                                 </constraints>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="photo" id="yFv-zo-f7j"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="PrefScreenshots" id="yFv-zo-f7j"/>
                             </imageView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pwK-va-ECG">
                                 <rect key="frame" x="228" y="209" width="284" height="16"/>
@@ -305,6 +305,7 @@ DQ
     </scenes>
     <resources>
         <image name="AppIcon100" width="100" height="100"/>
+        <image name="PrefScreenshots" width="760" height="524"/>
         <image name="ShadowArchive" width="520" height="320"/>
     </resources>
 </document>
