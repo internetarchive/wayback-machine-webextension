@@ -113,6 +113,14 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
                   url: page_url
                 })
               }, 3000)
+            } else if (res.message.indexOf('same snapshot') >= 0){
+              setTimeout(() => {
+                chrome.runtime.sendMessage({
+                  message: 'resource_list_show_error',
+                  data: res,
+                  url: page_url
+                })
+              }, 3000)
             }
           }
         })
