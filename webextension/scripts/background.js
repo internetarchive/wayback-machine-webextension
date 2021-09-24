@@ -91,7 +91,16 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           } else {
             // call status during save
             validate_spn(atab, res.job_id, silent, page_url)
-            if (!silent) { notify('Saving ' + page_url) }
+            if (!silent) {
+              notify('Saving ' + page_url)
+              // show resources during save
+              chrome.storage.local.get(['resource_list_setting'], (settings) => {
+                if (settings && settings.resource_list_setting) {
+                  const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+                  openByWindowSetting(resource_list_url, 'windows')
+                }
+              })
+            }
           }
         } else {
           // handle error
@@ -100,30 +109,6 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           })
           if (!silent) { notify('Error: ' + msg) }
         }
-        // show resources during save
-        chrome.storage.local.get(['resource_list_setting'], (settings) => {
-          if (!silent && settings && settings.resource_list_setting) {
-            const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
-            openByWindowSetting(resource_list_url, 'windows')
-            if (res.status === 'error') {
-              setTimeout(() => {
-                chrome.runtime.sendMessage({
-                  message: 'resource_list_show_error',
-                  data: res,
-                  url: page_url
-                })
-              }, 3000)
-            } else if (res.message.indexOf('same snapshot') >= 0){
-              setTimeout(() => {
-                chrome.runtime.sendMessage({
-                  message: 'resource_list_show_error',
-                  data: res,
-                  url: page_url
-                })
-              }, 3000)
-            }
-          }
-        })
       })
       .catch((err) => {
         // handle http errors
