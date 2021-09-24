@@ -176,7 +176,6 @@ Should display blue 'R' and 'Read Book':
 Should display blue 'R' and 'TV News Clips':
 - https://www.huffingtonpost.com/entry/alex-jones-infowars-app-apple-google_us_5b694ec3e4b0de86f4a4bc1d
 - https://www.huffpost.com/entry/alex-jones-infowars-app-apple-google_n_5b694ec3e4b0de86f4a4bc1d
-- https://www.vox.com/2020/7/6/21314472/covid-19-coronavirus-us-cases-deaths-trends-wtf
 - https://www.theverge.com/2018/8/29/17798118/president-donald-trump-google-state-of-the-union-address-liberal-bias
 - https://edition.cnn.com/2020/08/07/economy/larry-kudlow-poppy-harlow-unemployment/index.html
 
