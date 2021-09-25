@@ -85,6 +85,10 @@ ul.setting-nav li {
     text-align: center !important;
 }
 
+.setting-switch * {
+    cursor: pointer;
+}
+
 .setting-switch input[type=checkbox] {
     margin: 3px 7px 0 3px;
     float: left;
