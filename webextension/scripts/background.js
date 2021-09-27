@@ -616,25 +616,21 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
       chrome.storage.local.get(['amazon_setting'], (settings) => {
         // checking amazon books settings
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          if (tabs && tabs[0]) {
-            if (settings && settings.amazon_setting) {
-              const url = get_clean_url(tabs[0].url)
-              // checking resource of amazon books
-              if (url.includes('www.amazon')) {
-                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-                  .then(resp => resp.json())
-                  .then(resp => {
-                    if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                      addToolbarState(tabs[0], 'R')
-                      // Storing the tab url as well as the fetched archive url for future use
-                      chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
-                    }
-                  })
-              }
-            }
+        if (settings && settings.amazon_setting) {
+          const url = get_clean_url(tab.url)
+          // checking resource of amazon books
+          if (url.includes('www.amazon')) {
+            fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+              .then(resp => resp.json())
+              .then(resp => {
+                if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
+                  addToolbarState(tab, 'R')
+                  // Storing the tab url as well as the fetched archive url for future use
+                  chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
+                }
+              })
           }
-        })
+        }
       })
     }
   }
