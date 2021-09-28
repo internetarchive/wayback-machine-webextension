@@ -1,7 +1,7 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, get_clean_url, openByWindowSetting, hostURL */
+/*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
 /*   global attachTooltip */
 
@@ -50,7 +50,7 @@ function setupSettingsTabTip() {
 
 function doSaveNow() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || get_clean_url(tabs[0].url)
+    let url = searchValue || getCleanUrl(tabs[0].url)
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
@@ -62,11 +62,9 @@ function doSaveNow() {
       options['capture_screenshot'] = 1
     }
     chrome.runtime.sendMessage({
-      message: 'openurl',
-      wayback_url: hostURL + 'save/',
+      message: 'saveurl',
       page_url: url,
       options: options,
-      method: 'save',
       atab: tabs[0]
     }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
@@ -96,7 +94,7 @@ function loginError() {
   $('#spn-btn').off('click').click(show_login_page)
 
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || activeTabURL
     if (!isNotExcludedUrl(url)) { setExcluded() }
   }
 }
@@ -111,7 +109,7 @@ function loginSuccess() {
   $('#bulk-save-btn').click(bulkSave)
 
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || activeTabURL
     if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       $('#spn-btn').click(doSaveNow)
       chrome.storage.local.get(['private_mode_setting'], (settings) => {
@@ -146,7 +144,7 @@ function checkAuthentication(callback) {
 
 function recent_capture() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || getCleanUrl(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -160,7 +158,7 @@ function recent_capture() {
 
 function first_capture() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || getCleanUrl(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -174,7 +172,7 @@ function first_capture() {
 
 function view_all() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || getCleanUrl(activeTabURL)
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -193,12 +191,13 @@ function social_share(eventObj) {
     id = parent.getAttribute('id')
   }
   // Share wayback link to the most recent snapshot of URL at the time this is called.
-  let timestamp = dateToTimestamp(new Date())
-  let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
+  let url = searchValue || activeTabURL
+  let clean_url = getCleanUrl(url)
+  if (isValidUrl(clean_url)) {
+    let timestamp = dateToTimestamp(new Date())
+    let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
+    let sharing_url = wayback_url + clean_url
 
-  let url = get_clean_url(searchValue || activeTabURL)
-  let sharing_url = isArchiveUrl(url) ? url : wayback_url + url
-  if (isNotExcludedUrl(url)) {
     // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
     if (id.includes('facebook-share-btn')) {
       openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
@@ -222,9 +221,11 @@ function social_share(eventObj) {
 
 function searchTweet() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url)) {
-      if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
+    let url = searchValue || getCleanUrl(activeTabURL)
+    if (isValidUrl(url)) {
+      if (url.slice(-1) === '/') {
+        url = url.substring(0, url.length - 1)
+      }
       let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
       openByWindowSetting(open_url)
     }
@@ -253,7 +254,7 @@ function setupSearchBox() {
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
     if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
-      searchValue = get_clean_url(makeValidURL(search_box.value))
+      searchValue = getCleanUrl(makeValidURL(search_box.value))
       // use searchValue if it is valid, else update UI
       searchValue ? useSearchBox() : $('#using-search-msg').hide()
     }
@@ -316,7 +317,7 @@ function display_list(key_word) {
         $('#suggestion-box').append(
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
-            searchValue = get_clean_url(makeValidURL(event.target.innerHTML))
+            searchValue = getCleanUrl(makeValidURL(event.target.innerHTML))
             if (searchValue) { useSearchBox() }
           })
         )
@@ -361,8 +362,10 @@ function about_support() {
 
 function sitemap() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
+    let url = searchValue || getCleanUrl(activeTabURL)
+    if (isValidUrl(url)) {
+      openByWindowSetting('https://web.archive.org/web/sitemap/' + url)
+    }
   }
 }
 
@@ -382,7 +385,7 @@ function show_login_page() {
 // not used
 function show_all_screens() {
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || getCleanUrl(activeTabURL)
     chrome.runtime.sendMessage({ message: 'showall', url: url }, () => {
       if (chrome.runtime.lastError) { /* skip */ }
     })
@@ -496,8 +499,7 @@ function setupWikiButtons() {
 // Display purple 'Fact Check' button.
 function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url)) {
+    if (isNotExcludedUrl(tabs[0].url)) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -518,8 +520,8 @@ function setupFactCheck() {
 function showContext(eventObj) {
   let id = eventObj.target.getAttribute('id')
   if (activeTabURL) {
-    const url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+    const url = searchValue || getCleanUrl(activeTabURL)
+    if (isValidUrl(url)) {
       if (id.includes('fact-check-btn')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)

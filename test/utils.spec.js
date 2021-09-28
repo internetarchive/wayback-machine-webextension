@@ -4,7 +4,7 @@ const assert = require('assert').strict
 const getUrlByParameter = require('../webextension/scripts/utils').getUrlByParameter
 const isArchiveUrl = require('../webextension/scripts/utils').isArchiveUrl
 const isValidUrl = require('../webextension/scripts/utils').isValidUrl
-const get_clean_url = require('../webextension/scripts/utils').get_clean_url
+const getCleanUrl = require('../webextension/scripts/utils').getCleanUrl
 const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedUrl
 const badgeCountText = require('../webextension/scripts/utils').badgeCountText
 const timestampToDate = require('../webextension/scripts/utils').timestampToDate
@@ -71,18 +71,18 @@ describe('isValidUrl', () => {
   })
 })
 
-describe('get_clean_url', () => {
+describe('getCleanUrl', () => {
   var test_cases = [
-    //Test Case when the URL is https://web.archive.org
+    // Test Case when the URL is https://web.archive.org
     { 'url': 'https://web.archive.org', 'result': 'https://web.archive.org' },
 
-    //Test Cases when the URL does not includes 'web.archive.org'
+    // Test Cases when the URL does not includes 'web.archive.org'
     { 'url': 'https://www.google.com/', 'result': 'https://www.google.com/' },
     { 'url': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
     { 'url': 'http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
     { 'url': 'https://apnews.com/', 'result': 'https://apnews.com/' },
 
-    //Test Cases when the URL includes 'web.archive.org'
+    // Test Cases when the URL includes 'web.archive.org'
     { 'url': 'https://web.archive.org/web/*/https://www.google.com/', 'result': 'https://www.google.com/' },
     { 'url': 'https://web.archive.org/web/*/https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
     { 'url': 'https://web.archive.org/web/*/http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
@@ -91,10 +91,16 @@ describe('get_clean_url', () => {
     { 'url': 'https://web.archive.org/web/20200602155930/https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462', 'result': 'https://www.amazon.in/End-Days-Predictions-Prophecies-Thorndike/dp/1410407462' },
     { 'url': 'https://web.archive.org/web/20200215123917/http://purl.oclc.org/docs/inet96.html', 'result': 'http://purl.oclc.org/docs/inet96.html' },
     { 'url': 'https://web.archive.org/web/20200308013652/https://apnews.com/', 'result': 'https://apnews.com/' },
+
+    // Test for Extension Pages
+    { 'url': 'moz-extension://abcd-1234-efghi/annotations.html?url=https://example.com/', 'result': 'https://example.com/' },
+    { 'url': 'moz-extension://abcd-1234-efghi/annotations.html?url=http://example.com/1234', 'result': 'http://example.com/1234' },
+    { 'url': 'chrome-extension://abcd-1234-efghi/annotations.html?url=https://example.com/', 'result': 'https://example.com/' },
+    { 'url': 'chrome-extension://abcd-1234-efghi/annotations.html?url=http://example.com/1234', 'result': 'http://example.com/1234' },
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
-      expect(get_clean_url(url)).to.equal(result)
+      expect(getCleanUrl(url)).to.equal(result)
     })
   })
 })

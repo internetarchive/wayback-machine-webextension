@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, hostURL, get_clean_url, dateToTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
@@ -297,11 +297,9 @@ function saveNextInQueue() {
 // Send a Save message to background.js.
 function saveTheURL(url) {
   chrome.runtime.sendMessage({
-    message: 'openurl',
-    wayback_url: hostURL + 'save/',
-    page_url: get_clean_url(url),
+    message: 'saveurl',
+    page_url: url,
     options: saveOptions,
-    method: 'save',
     silent: true
   }, () => {
     if (chrome.runtime.lastError) { /* skip */ }
