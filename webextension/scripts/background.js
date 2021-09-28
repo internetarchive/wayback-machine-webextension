@@ -479,7 +479,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     )
     return true
   } else if (message.message === 'getCitedPapers') {
-    // retrieve wikipedia books
+    // retrieve wikipedia papers
     getCachedPapers(message.query,
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
@@ -492,15 +492,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (error) => { sendResponse({ error: error }) }
     )
     return true
-  } else if (message.message === 'sendurl') { // not used?
+  } else if (message.message === 'sendurl') {
+    // sends a url to webpage under current tab (not used)
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
         let url = get_clean_url(tabs[0].url)
         chrome.tabs.sendMessage(tabs[0].id, { url: url })
       }
     })
-  } else if (message.message === 'changeBadge') {
-    // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
     // show all contexts (not used)
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + fixedEncodeURIComponent(message.url)
@@ -521,7 +520,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'updateCountBadge') {
     // update wayback count badge
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs && tabs[0]) {
+      if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url)) {
         let url = get_clean_url(tabs[0].url)
         updateWaybackCountBadge(tabs[0], url)
       }
@@ -571,6 +570,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+
+  if (!isNotExcludedUrl(tab.url)) { return }
+
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
     chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (settings) => {
@@ -621,7 +623,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   } else if (info.status === 'loading') {
     let received_url = tab.url
     clearToolbarState(tab)
-    if (isNotExcludedUrl(received_url) && !received_url.includes('web.archive.org') && !(received_url.includes('alexa.com') || received_url.includes('whois.com') || received_url.includes('twitter.com') || received_url.includes('oauth'))) {
+    if (isNotExcludedUrl(received_url) && !isArchiveUrl(received_url)) {
       received_url = received_url.replace(/^https?:\/\//, '')
       let open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
@@ -897,9 +899,9 @@ chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
       let url = click.linkUrl || tabs[0].url
-      let page_url = get_clean_url(url)
-      let wayback_url
-      if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
+      if (isValidUrl(url) && isNotExcludedUrl(url)) {
+        let page_url = get_clean_url(url)
+        let wayback_url
         if (click.menuItemId === 'first') {
           wayback_url = 'https://web.archive.org/web/0/'
         } else if (click.menuItemId === 'recent') {

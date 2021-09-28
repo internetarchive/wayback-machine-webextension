@@ -94,7 +94,7 @@ function loginError() {
   $('#spn-btn').off('click').click(show_login_page)
 
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || activeTabURL
     if (!isNotExcludedUrl(url)) { setExcluded() }
   }
 }
@@ -109,7 +109,7 @@ function loginSuccess() {
   $('#bulk-save-btn').click(bulkSave)
 
   if (activeTabURL) {
-    let url = searchValue || get_clean_url(activeTabURL)
+    let url = searchValue || activeTabURL
     if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       $('#spn-btn').click(doSaveNow)
       chrome.storage.local.get(['private_mode_setting'], (settings) => {
@@ -191,41 +191,37 @@ function social_share(eventObj) {
     id = parent.getAttribute('id')
   }
   // Share wayback link to the most recent snapshot of URL at the time this is called.
+  let url = searchValue || activeTabURL
   let timestamp = dateToTimestamp(new Date())
   let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
+  let sharing_url = wayback_url + get_clean_url(url)
 
-  let url = get_clean_url(searchValue || activeTabURL)
-  let sharing_url = isArchiveUrl(url) ? url : wayback_url + url
-  if (isNotExcludedUrl(url)) {
-    // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
-    if (id.includes('facebook-share-btn')) {
-      openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
-    } else if (id.includes('twitter-share-btn')) {
-      openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
-    } else if (id.includes('linkedin-share-btn')) {
-      openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
-    } else if (id.includes('copy-link-btn') && navigator.clipboard) {
-      navigator.clipboard.writeText(sharing_url).then(() => {
-        let copiedMsg = $('#link-copied-msg')
-        copiedMsg.text('Copied to Clipboard').fadeIn('fast')
-        setTimeout(() => {
-          copiedMsg.fadeOut('fast')
-        }, 1500)
-      }).catch(err => {
-        console.log('Not copied to clipboard: ', err)
-      })
-    }
+  // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
+  if (id.includes('facebook-share-btn')) {
+    openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
+  } else if (id.includes('twitter-share-btn')) {
+    openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
+  } else if (id.includes('linkedin-share-btn')) {
+    openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
+  } else if (id.includes('copy-link-btn') && navigator.clipboard) {
+    navigator.clipboard.writeText(sharing_url).then(() => {
+      let copiedMsg = $('#link-copied-msg')
+      copiedMsg.text('Copied to Clipboard').fadeIn('fast')
+      setTimeout(() => {
+        copiedMsg.fadeOut('fast')
+      }, 1500)
+    }).catch(err => {
+      console.log('Not copied to clipboard: ', err)
+    })
   }
 }
 
 function searchTweet() {
   if (activeTabURL) {
     let url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url)) {
-      if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
-      openByWindowSetting(open_url)
-    }
+    if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
+    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
+    openByWindowSetting(open_url)
   }
 }
 
@@ -360,7 +356,7 @@ function about_support() {
 function sitemap() {
   if (activeTabURL) {
     let url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url)) { openByWindowSetting('https://web.archive.org/web/sitemap/' + url) }
+    openByWindowSetting('https://web.archive.org/web/sitemap/' + url)
   }
 }
 
@@ -494,8 +490,8 @@ function setupWikiButtons() {
 // Display purple 'Fact Check' button.
 function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = get_clean_url(tabs[0].url)
-    if (isNotExcludedUrl(url)) {
+    if (isNotExcludedUrl(tabs[0].url)) {
+      const url = get_clean_url(tabs[0].url)
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -517,7 +513,7 @@ function showContext(eventObj) {
   let id = eventObj.target.getAttribute('id')
   if (activeTabURL) {
     const url = searchValue || get_clean_url(activeTabURL)
-    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+    if (isValidUrl(url)) {
       if (id.includes('fact-check-btn')) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
