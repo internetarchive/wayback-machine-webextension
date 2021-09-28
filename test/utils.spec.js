@@ -4,7 +4,7 @@ const assert = require('assert').strict
 const getUrlByParameter = require('../webextension/scripts/utils').getUrlByParameter
 const isArchiveUrl = require('../webextension/scripts/utils').isArchiveUrl
 const isValidUrl = require('../webextension/scripts/utils').isValidUrl
-const get_clean_url = require('../webextension/scripts/utils').get_clean_url
+const getCleanUrl = require('../webextension/scripts/utils').getCleanUrl
 const isNotExcludedUrl = require('../webextension/scripts/utils').isNotExcludedUrl
 const badgeCountText = require('../webextension/scripts/utils').badgeCountText
 const timestampToDate = require('../webextension/scripts/utils').timestampToDate
@@ -71,7 +71,7 @@ describe('isValidUrl', () => {
   })
 })
 
-describe('get_clean_url', () => {
+describe('getCleanUrl', () => {
   var test_cases = [
     //Test Case when the URL is https://web.archive.org
     { 'url': 'https://web.archive.org', 'result': 'https://web.archive.org' },
@@ -94,7 +94,7 @@ describe('get_clean_url', () => {
   ]
   test_cases.forEach(({ url, result }) => {
     it('should return ' + result + ' on ' + url, () => {
-      expect(get_clean_url(url)).to.equal(result)
+      expect(getCleanUrl(url)).to.equal(result)
     })
   })
 })
