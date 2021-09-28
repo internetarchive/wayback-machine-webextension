@@ -276,9 +276,11 @@ function remove_wbm(url) {
 
 // Function to clean the URL if the user is on 'web.archive.org'
 function get_clean_url(url) {
+  console.log(`get_clean_url: ${url}`) // DEBUG
   if (url && url.includes('web.archive.org')) {
     url = remove_wbm(url)
   }
+  console.log(`returns: ${url}`) // DEBUG
   return url
 }
 

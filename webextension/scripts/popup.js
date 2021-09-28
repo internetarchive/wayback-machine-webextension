@@ -192,36 +192,43 @@ function social_share(eventObj) {
   }
   // Share wayback link to the most recent snapshot of URL at the time this is called.
   let url = searchValue || activeTabURL
-  let timestamp = dateToTimestamp(new Date())
-  let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
-  let sharing_url = wayback_url + get_clean_url(url)
+  let clean_url = get_clean_url(url)
+  if (isValidUrl(clean_url)) {
+    let timestamp = dateToTimestamp(new Date())
+    let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
+    let sharing_url = wayback_url + clean_url
 
-  // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
-  if (id.includes('facebook-share-btn')) {
-    openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
-  } else if (id.includes('twitter-share-btn')) {
-    openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
-  } else if (id.includes('linkedin-share-btn')) {
-    openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
-  } else if (id.includes('copy-link-btn') && navigator.clipboard) {
-    navigator.clipboard.writeText(sharing_url).then(() => {
-      let copiedMsg = $('#link-copied-msg')
-      copiedMsg.text('Copied to Clipboard').fadeIn('fast')
-      setTimeout(() => {
-        copiedMsg.fadeOut('fast')
-      }, 1500)
-    }).catch(err => {
-      console.log('Not copied to clipboard: ', err)
-    })
+    // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
+    if (id.includes('facebook-share-btn')) {
+      openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('twitter-share-btn')) {
+      openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('linkedin-share-btn')) {
+      openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
+    } else if (id.includes('copy-link-btn') && navigator.clipboard) {
+      navigator.clipboard.writeText(sharing_url).then(() => {
+        let copiedMsg = $('#link-copied-msg')
+        copiedMsg.text('Copied to Clipboard').fadeIn('fast')
+        setTimeout(() => {
+          copiedMsg.fadeOut('fast')
+        }, 1500)
+      }).catch(err => {
+        console.log('Not copied to clipboard: ', err)
+      })
+    }
   }
 }
 
 function searchTweet() {
   if (activeTabURL) {
     let url = searchValue || get_clean_url(activeTabURL)
-    if (url.slice(-1) === '/') url = url.substring(0, url.length - 1)
-    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
-    openByWindowSetting(open_url)
+    if (isValidUrl(url)) {
+      if (url.slice(-1) === '/') {
+        url = url.substring(0, url.length - 1)
+      }
+      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
+      openByWindowSetting(open_url)
+    }
   }
 }
 
@@ -356,7 +363,9 @@ function about_support() {
 function sitemap() {
   if (activeTabURL) {
     let url = searchValue || get_clean_url(activeTabURL)
-    openByWindowSetting('https://web.archive.org/web/sitemap/' + url)
+    if (isValidUrl(url)) {
+      openByWindowSetting('https://web.archive.org/web/sitemap/' + url)
+    }
   }
 }
 

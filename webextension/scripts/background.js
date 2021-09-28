@@ -443,7 +443,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) { return }
   if (message.message === 'saveurl') {
     // Save Page Now
-    if (isNotExcludedUrl(message.page_url)) {
+    if (isValidUrl(message.page_url) && isNotExcludedUrl(message.page_url)) {
       let page_url = get_clean_url(message.page_url)
       let silent = message.silent || false
       let options = (message.options && (message.options !== null)) ? message.options : {}
@@ -452,7 +452,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if (message.message === 'openurl') {
     // open URL in new tab or window depending on setting
-    if (isNotExcludedUrl(message.page_url)) {
+    if (isValidUrl(message.page_url) && isNotExcludedUrl(message.page_url)) {
       let page_url = get_clean_url(message.page_url)
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, true)
