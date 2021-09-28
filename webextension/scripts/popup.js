@@ -62,11 +62,9 @@ function doSaveNow() {
       options['capture_screenshot'] = 1
     }
     chrome.runtime.sendMessage({
-      message: 'openurl',
-      wayback_url: hostURL + 'save/',
+      message: 'saveurl',
       page_url: url,
       options: options,
-      method: 'save',
       atab: tabs[0]
     }, () => {
       if (chrome.runtime.lastError) { /* skip */ }

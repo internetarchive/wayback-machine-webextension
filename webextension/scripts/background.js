@@ -437,20 +437,25 @@ chrome.webRequest.onCompleted.addListener((details) => {
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for messages to call background functions from other scripts.
+// note: return true only if sendResponse() needs to be kept around.
+//
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) { return }
-  if (message.message === 'openurl') {
-    let page_url = get_clean_url(message.page_url)
-    if (isNotExcludedUrl(page_url)) {
-      if (message.method && (message.method === 'save')) {
-        let silent = message.silent || false
-        let options = (message.options && (message.options !== null)) ? message.options : {}
-        savePageNow(message.atab, page_url, silent, options)
-        return true
-      } else {
-        let open_url = message.wayback_url + page_url
-        URLopener(open_url, page_url, true)
-      }
+  if (message.message === 'saveurl') {
+    // Save Page Now
+    if (isNotExcludedUrl(message.page_url)) {
+      let page_url = get_clean_url(message.page_url)
+      let silent = message.silent || false
+      let options = (message.options && (message.options !== null)) ? message.options : {}
+      savePageNow(message.atab, page_url, silent, options)
+    }
+  }
+  else if (message.message === 'openurl') {
+    // open URL in new tab or window depending on setting
+    if (isNotExcludedUrl(message.page_url)) {
+      let page_url = get_clean_url(message.page_url)
+      let open_url = message.wayback_url + page_url
+      URLopener(open_url, page_url, true)
     }
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
@@ -472,19 +477,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
     )
+    return true
   } else if (message.message === 'getCitedPapers') {
     // retrieve wikipedia books
     getCachedPapers(message.query,
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
     )
+    return true
   } else if (message.message === 'tvnews') {
     // retrieve tv news clips
     getCachedTvNews(message.article,
       (json) => { sendResponse(json) },
       (error) => { sendResponse({ error: error }) }
     )
-  } else if (message.message === 'sendurl') {
+    return true
+  } else if (message.message === 'sendurl') { // not used?
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
         let url = get_clean_url(tabs[0].url)
@@ -494,6 +502,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.message === 'changeBadge') {
     // used to change badge for auto-archive feature (not used?)
   } else if (message.message === 'showall' && isNotExcludedUrl(message.url)) {
+    // show all contexts (not used)
     const context_url = chrome.runtime.getURL('context.html') + '?url=' + fixedEncodeURIComponent(message.url)
     tabIdPromise = new Promise((resolve) => {
       openByWindowSetting(context_url, null, resolve)
@@ -547,6 +556,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (values) => { sendResponse(values) },
       (error) => { sendResponse({ error }) }
     )
+    return true
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
   } else if (message.message === 'getFactCheckResults') {
@@ -555,8 +565,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (json) => { sendResponse({ json }) },
       (error) => { sendResponse({ error }) }
     )
+    return true
   }
-  return true
+  return false
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
