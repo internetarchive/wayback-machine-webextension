@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, hostURL, dateToTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp */
 
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time

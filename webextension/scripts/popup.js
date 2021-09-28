@@ -500,7 +500,6 @@ function setupWikiButtons() {
 function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (isNotExcludedUrl(tabs[0].url)) {
-      const url = getCleanUrl(tabs[0].url)
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {

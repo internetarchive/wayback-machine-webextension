@@ -391,19 +391,18 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 
 // Listens for website loading completed for 404-Not-Found popups.
 chrome.webRequest.onCompleted.addListener((details) => {
-
   function tabIsReady(tabId) {
     console.log(`webRequest.onCompleted: tabIsReady tabId: ${tabId}, frameId: ${details.frameId}, statusCode: ${details.statusCode}`) // DEBUG
     if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       // insert script first, then check wayback machine, then show banner
       chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
-        console.log(`webRequest.onCompleted: executeScript1`) // DEBUG
+        console.log('webRequest.onCompleted: executeScript1') // DEBUG
 
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
           console.log(`webRequest.onCompleted: wayback_url: ${wayback_url}`) // DEBUG
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            console.log(`webRequest.onCompleted: sendMessage1`) // DEBUG
+            console.log('webRequest.onCompleted: sendMessage1') // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -411,7 +410,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
               status_code: 999
             })
           } else {
-            console.log(`webRequest.onCompleted: sendMessage2`) // DEBUG
+            console.log('webRequest.onCompleted: sendMessage2') // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -430,7 +429,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
       } else {
-        console.log(`webRequest.onCompleted: NO agreement?`) // DEBUG
+        console.log('webRequest.onCompleted: NO agreement?') // DEBUG
       }
     })
   }
@@ -570,9 +569,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-
   if (!isNotExcludedUrl(tab.url)) { return }
-
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
     chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (settings) => {

@@ -274,18 +274,12 @@ function remove_wbm(url) {
   return remove_port(new_url)
 }
 
-function getUrlFromExtensionPage(url) {
-  const url_param = new URL(url)
-  return url_param.searchParams.get('url')
-}
-
 /**
 * Extracts URL from web.archive.org or extension page, otherwise the url passed in.
 * @param url {string}
 * @return {string}
 */
-function get_clean_url(url) {
-  console.log(`get_clean_url: ${url}`) // DEBUG
+function getCleanUrl(url) {
   let rurl = url || ''
   if (rurl.includes('extension:')) {
     // return url param from extension page
@@ -295,7 +289,6 @@ function get_clean_url(url) {
     // return url from archive.org page
     rurl = remove_wbm(url)
   }
-  console.log(`returns: ${rurl}`) // DEBUG
   return rurl
 }
 
@@ -549,7 +542,7 @@ if (typeof module !== 'undefined') {
     makeValidURL,
     cropPrefix,
     isNotExcludedUrl,
-    get_clean_url,
+    getCleanUrl,
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
