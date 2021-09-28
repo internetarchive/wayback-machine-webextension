@@ -177,11 +177,11 @@ body {
     font-size: 12px;
     font-weight: 400;
     margin: 0;
+    cursor: pointer;
 }
 
 .chk-options input {
     margin: 5px 5px 0 0;
-    cursor: pointer;
 }
 
 .chk-options span {

@@ -10,14 +10,10 @@
 $(function() {
   initPrivateState()
   initializeSettings()
-  // $('.only').click(validate)
-  // $('#showall').click(selectall)
   $('.private').click(validatePrivateMode)
   $('#private-mode-setting').click(togglePrivateMode)
-  // use capture instead of bubbling
-  //document.getElementById('view-setting').addEventListener('click', switchTabWindow, true)
   $('#view-setting').click(switchTabWindow)
-  $('input[type="radio"]').click(() => { $(this).prop('checked', true) })
+  $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
   $('input').change(saveOptions)
   $('.back-btn').click(goBack)
   switchSetting()
