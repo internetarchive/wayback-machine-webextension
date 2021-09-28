@@ -274,14 +274,29 @@ function remove_wbm(url) {
   return remove_port(new_url)
 }
 
-// Function to clean the URL if the user is on 'web.archive.org'
+function getUrlFromExtensionPage(url) {
+  const url_param = new URL(url)
+  return url_param.searchParams.get('url')
+}
+
+/**
+* Extracts URL from web.archive.org or extension page, otherwise the url passed in.
+* @param url {string}
+* @return {string}
+*/
 function get_clean_url(url) {
   console.log(`get_clean_url: ${url}`) // DEBUG
-  if (url && url.includes('web.archive.org')) {
-    url = remove_wbm(url)
+  let rurl = url || ''
+  if (rurl.includes('extension:')) {
+    // return url param from extension page
+    const url_param = new URL(url)
+    rurl = url_param.searchParams.get('url')
+  } else if (rurl.includes('web.archive.org')) {
+    // return url from archive.org page
+    rurl = remove_wbm(url)
   }
-  console.log(`returns: ${url}`) // DEBUG
-  return url
+  console.log(`returns: ${rurl}`) // DEBUG
+  return rurl
 }
 
 /**
