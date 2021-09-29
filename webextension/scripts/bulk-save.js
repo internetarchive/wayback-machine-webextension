@@ -370,6 +370,28 @@ function updateLimitCount() {
   }
 }
 
+/**
+ * Fetches Limit Count from API & updates bulkSaveLimit.
+ * expects API to return: { "bulk-save-max": 100 }
+ * @return Promise
+ */
+function fetchLimitCount() {
+  // may need a random number added to url avoid caching?
+  const url = '' // TODO: enter URL of API here
+  const promise = fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    const num = data['bulk-save-max']
+    if (typeof num === 'number') {
+      bulkSaveLimit = num
+    }
+  })
+  return promise
+}
+
 // Update an individual URL item in the list container.
 function processStatus(msg, url, wbUrl) {
   let curl = cropPrefix(url)
@@ -473,4 +495,5 @@ $(function() {
   resetUI()
   initMessageListener()
   updateLimitCount()
+  // fetchLimitCount().then(data => { updateLimitCount() }) // uncomment to fetch limit from API
 })
