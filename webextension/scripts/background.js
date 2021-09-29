@@ -344,7 +344,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.runtime.onStartup.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },checkLastError)
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     }
   })
 })
@@ -355,7 +355,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },checkLastError)
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     }
   })
 })
@@ -751,18 +751,18 @@ function updateWaybackCountBadge(atab, url) {
         if (values.total >= 0) {
           // display badge
           let text = badgeCountText(values.total)
-          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' },checkLastError) // red
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text },checkLastError)
+          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
         } else {
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
         }
       },
       (error) => {
         console.log('wayback count error: ' + error)
-        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
+        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
       })
     } else {
-      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
+      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
     }
   })
 }
@@ -787,7 +787,7 @@ function setToolbarIcon(name, tabId = null) {
     '64': (path + n + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
-  chrome.browserAction.setIcon(details,checkLastError)
+  chrome.browserAction.setIcon(details, checkLastError)
 }
 
 // Returns a string key from a Tab windowId and tab id.
@@ -872,25 +872,25 @@ chrome.contextMenus.create({
   'title': 'Oldest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},checkLastError)
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'recent',
   'title': 'Newest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},checkLastError)
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'all',
   'title': 'All Versions',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},checkLastError)
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'save',
   'title': 'Save Page Now',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},checkLastError)
+}, checkLastError)
 
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
