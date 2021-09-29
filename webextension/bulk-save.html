@@ -15,10 +15,10 @@
     <div class="header-container">
       <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
       <h2 id="main-title">Bulk Save</h2>
-      <p id="main-info">Enter a list of URLs below or import from your bookmarks.</p>
-      <p id="error-msg"></p>
-      <p id="empty-list-err">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
-      <p id="not-logged-in">Looks like you aren't logged in. Please log in and try again.</p>
+      <p id="main-info"></p>
+      <p id="error-msg" class="error-color"></p>
+      <p id="empty-list-err" class="error-color">Looks like you haven't added any URLs. Please add some URLs and try again.</p>
+      <p id="not-logged-in" class="error-color">Looks like you aren't logged in. Please log in and try again.</p>
     </div>
 
     <div class="outer-container">
@@ -29,6 +29,7 @@
           <button class="btn btn-auto btn-dark-gray" id="add-url-btn">Add URLs</button>
           <button class="btn btn-auto btn-dark-gray" id="import-bookmarks-btn">Import All Bookmarks</button>
           <button class="btn btn-auto btn-dark-gray" id="clear-all-btn">Clear All</button>
+          <p id="limit-count-info"></p>
         </div>
       </div>
 

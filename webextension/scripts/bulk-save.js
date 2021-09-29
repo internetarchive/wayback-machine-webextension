@@ -3,6 +3,9 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp */
 
+// set this value to limit number of URLs per round
+let bulkSaveLimit = 25
+
 // max concurrent saves supported by SPN
 // -1 allows SPN button to work at same time
 const MAX_SAVES = 5 - 1
@@ -31,6 +34,7 @@ function startSaving() {
   $('#pause-btn').click(pauseSaving)
   $('#save-progress-bar').show()
   $('#list-toolbar').show()
+  $('#main-info').text('Archiving to the Wayback Machine...')
 }
 
 // Hide progress bar when Saving stops.
@@ -43,6 +47,7 @@ function stopSaving() {
   $('#bulk-save-label').text('Done')
   $('#bulk-save-btn').click(closeWindow)
   $('#list-container').off('click')
+  $('#main-info').text('Done - Click on a link to view on the Wayback Machine.')
 }
 
 function pauseSaving() {
@@ -53,6 +58,7 @@ function pauseSaving() {
   $('#bulk-save-label').text('Continue Bulk Save')
   $('#bulk-save-btn').click(doContinue)
   $('#list-container').click(doRemoveURL)
+  $('#main-info').text('Archiving Paused. You may add or remove URLs.')
 }
 
 // Reset UI
@@ -334,6 +340,34 @@ function updateCounts() {
   $('#saved-count').text(saveSuccessCount)
   $('#failed-count').text(saveFailedCount)
   $('#total-count').text(totalUrlCount)
+  updateLimitCount()
+}
+
+// updates UI for any bulk save limits
+function updateLimitCount() {
+  // max count
+  let countLeft = bulkSaveLimit - totalUrlCount
+  if (bulkSaveLimit === 0) {
+    // bulk save is unavailable
+    $('#error-msg').text('Bulk Save is currently Unavailable!')
+    $('#bulk-save-label').text('Close')
+    $('#bulk-save-btn').click(closeWindow)
+    $('#add-container').find('*').attr('disabled', true)
+    $('#save-options-container').find('*').attr('disabled', true)
+  } else if (bulkSaveLimit < 0) {
+    // no limits if negative
+    $('#limit-count-info').text(`${totalUrlCount}`)
+  } else {
+    // show count limits
+    $('#limit-count-info').text(`${countLeft} left out of ${bulkSaveLimit}`)
+    if (countLeft < 0) {
+      $('#limit-count-info').addClass('highlight-color')
+      $('#bulk-save-btn').attr('disabled', true)
+    } else {
+      $('#limit-count-info').removeClass('highlight-color')
+      $('#bulk-save-btn').removeAttr('disabled')
+    }
+  }
 }
 
 // Update an individual URL item in the list container.
@@ -389,7 +423,7 @@ function doCopyAll() {
   let text = Array.from(bulkSaveMap.values()).map(obj => obj.url).join('\n')
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
-      alert('All links were copied to the clipboard.')
+      alert('All links copied to the clipboard.')
     }).catch(err => {
       console.log('Not copied to clipboard: ', err)
     })
@@ -401,7 +435,7 @@ function doCopySaved() {
   let text = Array.from(bulkSaveMap.values()).filter(obj => (obj.status === S_DONE)).map(obj => obj.wburl).join('\n')
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Saved links to the Wayback Machine were copied to the clipboard.')
+      alert('Saved links to the Wayback Machine copied to the clipboard.')
     }).catch(err => {
       console.log('Not copied to clipboard: ', err)
     })
@@ -413,7 +447,7 @@ function doCopyUnsaved() {
   let text = Array.from(bulkSaveMap.values()).filter(obj => (obj.status !== S_DONE)).map(obj => obj.url).join('\n')
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Unsaved links were copied to the clipboard.')
+      alert('Unsaved links copied to the clipboard.')
     }).catch(err => {
       console.log('Not copied to clipboard: ', err)
     })
@@ -424,9 +458,11 @@ function doCopyUnsaved() {
 $(function() {
   if (chrome.bookmarks) {
     $('#import-bookmarks-btn').click(doImportBookmarks)
+    $('#main-info').text('Enter a list of URLs below or import from your bookmarks.')
   } else {
     // Safari doesn't support reading bookmarks
     $('#import-bookmarks-btn').hide()
+    $('#main-info').text('Enter a list of URLs below.')
   }
   $('.btn').click(clearFocus)
   $('#add-url-btn').click(doAddURLs)
@@ -436,4 +472,5 @@ $(function() {
   $('#copy-unsaved-btn').click(doCopyUnsaved)
   resetUI()
   initMessageListener()
+  updateLimitCount()
 })

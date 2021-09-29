@@ -22,9 +22,12 @@ p {
     display: contents;
 }
 
-#empty-list-err, #not-logged-in {
+.error-color {
     color: #733;
     font-weight: 700;
+}
+
+#empty-list-err, #not-logged-in {
     display: none;
 }
 
@@ -138,6 +141,12 @@ p {
     flex: 2;
 }
 
+#limit-count-info {
+    margin: 0;
+    flex: 2;
+    text-align: right;
+}
+
 #add-url-area {
     flex: 2;
     width: 100%;
@@ -244,7 +253,7 @@ p {
         border: 1px solid #555;
     }
 
-    #empty-list-err, #not-logged-in {
+    .error-color {
         color: #f66;
     }
 
