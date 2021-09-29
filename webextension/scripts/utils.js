@@ -427,10 +427,10 @@ function openByWindowSetting(url, op = null, cb) {
   }
 }
 
-function opener(url, option, callbackFn) {
+function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
     chrome.tabs.create({ url: url }, (tab) => {
-      if (callbackFn) { callbackFn(tab.id) }
+      if (callback) { callback(tab.id) }
     })
   } else {
     let w, h
@@ -444,23 +444,23 @@ function opener(url, option, callbackFn) {
       h = Math.floor(screen.height * 0.9)
     }
     chrome.windows.create({ url: url, width: w, height: h, top: 0, left: 0, type: 'popup' }, (window) => {
-      if (callbackFn) { callbackFn(window.tabs[0].id) }
+      if (callback) { callback(window.tabs[0].id) }
     })
   }
 }
 
-function notify(message, callbackFn) {
+function notify(message, callback) {
   let options = {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
     iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
   }
-  chrome.notifications && chrome.notifications.create(options, callbackFn)
+  chrome.notifications && chrome.notifications.create(options, callback)
 }
 
-function callback() {
-  if (chrome.runtime.lastError) {
+function checkLastError() {
+  if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith("No tab with id:")) {
       console.log(chrome.runtime.lastError.message);
   } else {
       // Tab exists
@@ -576,6 +576,6 @@ if (typeof module !== 'undefined') {
     fixedEncodeURIComponent,
     searchValue,
     isInTestEnv,
-    callback
+    checkLastError
   }
 }

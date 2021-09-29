@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, private_before_state, initPrivateState */
+/*   global attachTooltip, private_before_state, initPrivateState, checkLastError */
 
 // from 'popup.js'
 /*   global setupWaybackCount */
@@ -72,13 +72,13 @@ function saveOptions() {
   setupWaybackCount()
   if (settings.wm_count_setting === false) {
     // additionally clear the cache if setting cleared
-    chrome.runtime.sendMessage({ message: 'clearCountCache' }, callback)
+    chrome.runtime.sendMessage({ message: 'clearCountCache' }, checkLastError)
   }
 
   if (settings.fact_check_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' }, callback)
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
   }
-  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings }, callback)
+  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings }, checkLastError)
 }
 
 /*

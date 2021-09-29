@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError*/
 
 let manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -344,7 +344,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.runtime.onStartup.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },callback)
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },checkLastError)
     }
   })
 })
@@ -355,7 +355,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },callback)
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') },checkLastError)
     }
   })
 })
@@ -391,7 +391,6 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 
 // Listens for website loading completed for 404-Not-Found popups.
 chrome.webRequest.onCompleted.addListener((details) => {
-  if (chrome.runtime.lastError) {}
   function tabIsReady(tabId) {
     console.log(`webRequest.onCompleted: tabIsReady tabId: ${tabId}, frameId: ${details.frameId}, statusCode: ${details.statusCode}`) // DEBUG
     if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
@@ -440,7 +439,6 @@ chrome.webRequest.onCompleted.addListener((details) => {
 // note: return true only if sendResponse() needs to be kept around.
 //
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (chrome.runtime.lastError) { console.log("capturing the error") }
   if (!message) { return }
   if (message.message === 'saveurl') {
     // Save Page Now
@@ -571,7 +569,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-  if (chrome.runtime.lastError) { }
   if (!isNotExcludedUrl(tab.url)) { return }
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
@@ -754,18 +751,18 @@ function updateWaybackCountBadge(atab, url) {
         if (values.total >= 0) {
           // display badge
           let text = badgeCountText(values.total)
-          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' },callback) // red
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text },callback)
+          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' },checkLastError) // red
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text },checkLastError)
         } else {
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },callback)
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
         }
       },
       (error) => {
         console.log('wayback count error: ' + error)
-        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },callback)
+        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
       })
     } else {
-      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },callback)
+      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' },checkLastError)
     }
   })
 }
@@ -790,7 +787,7 @@ function setToolbarIcon(name, tabId = null) {
     '64': (path + n + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
-  chrome.browserAction.setIcon(details,callback)
+  chrome.browserAction.setIcon(details,checkLastError)
 }
 
 // Returns a string key from a Tab windowId and tab id.
@@ -875,25 +872,25 @@ chrome.contextMenus.create({
   'title': 'Oldest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},callback)
+},checkLastError)
 chrome.contextMenus.create({
   'id': 'recent',
   'title': 'Newest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},callback)
+},checkLastError)
 chrome.contextMenus.create({
   'id': 'all',
   'title': 'All Versions',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},callback)
+},checkLastError)
 chrome.contextMenus.create({
   'id': 'save',
   'title': 'Save Page Now',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-},callback)
+},checkLastError)
 
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

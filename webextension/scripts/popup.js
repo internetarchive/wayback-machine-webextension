@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
-/*   global attachTooltip, callback */
+/*   global attachTooltip, checkLastError */
 
 let activeTabURL
 let searchBoxTimer
@@ -66,7 +66,7 @@ function doSaveNow() {
       page_url: url,
       options: options,
       atab: tabs[0]
-    }, callback)
+    }, checkLastError)
   })
 }
 
@@ -134,10 +134,10 @@ function loginSuccess() {
 
 // Checks if user is logged in by checking if 'logged-in-sig' cookie exists (not by API call).
 // returns callback object: { auth_check: bool }
-function checkAuthentication(callbackFn) {
+function checkAuthentication(callback) {
   chrome.runtime.sendMessage({
     message: 'auth_check'
-  }, callbackFn)
+  }, callback)
 }
 
 function recent_capture() {
@@ -148,7 +148,7 @@ function recent_capture() {
       wayback_url: 'https://web.archive.org/web/2/',
       page_url: url,
       method: 'recent'
-    }, callback)
+    }, checkLastError)
   }
 }
 
@@ -160,7 +160,7 @@ function first_capture() {
       wayback_url: 'https://web.archive.org/web/0/',
       page_url: url,
       method: 'first'
-    }, callback)
+    }, checkLastError)
   }
 }
 
@@ -172,7 +172,7 @@ function view_all() {
       wayback_url: 'https://web.archive.org/web/*/',
       page_url: url,
       method: 'viewall'
-    }, callback)
+    }, checkLastError)
   }
 }
 
@@ -226,9 +226,9 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, callback)
-  chrome.runtime.sendMessage({ message: 'clearResource' }, callback)
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, callback)
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -378,7 +378,7 @@ function show_login_page() {
 function show_all_screens() {
   if (activeTabURL) {
     let url = searchValue || getCleanUrl(activeTabURL)
-    chrome.runtime.sendMessage({ message: 'showall', url: url }, callback)
+    chrome.runtime.sendMessage({ message: 'showall', url: url }, checkLastError)
   }
 }
 
@@ -549,10 +549,10 @@ function setupWaybackCount() {
       let url = activeTabURL
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, callback)
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, checkLastError)
       } else {
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, callback)
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
       }
     }
   })
@@ -629,7 +629,6 @@ function setupViewSetting() {
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
     (message) => {
-      if (chrome.runtime.lastError) { /* skip */ }
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let atab = message.atab
         if (atab && atab.id && (atab.id === tabs[0].id)) {
