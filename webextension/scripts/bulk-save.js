@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp, callback */
 
 // set this value to limit number of URLs per round
 let bulkSaveLimit = 25
@@ -222,6 +222,7 @@ function isDuplicateURL(url) {
 // Listens to SPN response messages from background.js.
 function initMessageListener() {
   chrome.runtime.onMessage.addListener((msg) => {
+    if (chrome.runtime.lastError) { }
     if (msg && msg.error) {
       if (msg.error.indexOf('logged in') !== -1) {
         // stop if user not logged in
@@ -307,9 +308,7 @@ function saveTheURL(url) {
     page_url: url,
     options: saveOptions,
     silent: true
-  }, () => {
-    if (chrome.runtime.lastError) { /* skip */ }
-  })
+  }, callback)
 }
 
 // Show the Save Status (saving, success, error) in UI.

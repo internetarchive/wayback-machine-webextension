@@ -16,7 +16,7 @@ const excluded_urls = [
   '10.',
   'file:',
   'edge:',
-  'extension:'
+  'chrome-error:'
 ]
 
 const newshosts = new Set([
@@ -426,10 +426,10 @@ function openByWindowSetting(url, op = null, cb) {
   }
 }
 
-function opener(url, option, callback) {
+function opener(url, option, callbackFn) {
   if (option === 'tab' || option === undefined) {
     chrome.tabs.create({ url: url }, (tab) => {
-      if (callback) { callback(tab.id) }
+      if (callbackFn) { callbackFn(tab.id) }
     })
   } else {
     let w, h
@@ -443,19 +443,27 @@ function opener(url, option, callback) {
       h = Math.floor(screen.height * 0.9)
     }
     chrome.windows.create({ url: url, width: w, height: h, top: 0, left: 0, type: 'popup' }, (window) => {
-      if (callback) { callback(window.tabs[0].id) }
+      if (callbackFn) { callbackFn(window.tabs[0].id) }
     })
   }
 }
 
-function notify(message, callback) {
+function notify(message, callbackFn) {
   let options = {
     type: 'basic',
     title: 'WayBack Machine',
     message: message,
     iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
   }
-  chrome.notifications && chrome.notifications.create(options, callback)
+  chrome.notifications && chrome.notifications.create(options, callbackFn)
+}
+
+function callback() {
+  if (chrome.runtime.lastError) {
+      console.log(chrome.runtime.lastError.message);
+  } else {
+      // Tab exists
+  }
 }
 
 function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
@@ -566,6 +574,7 @@ if (typeof module !== 'undefined') {
     initPrivateState,
     fixedEncodeURIComponent,
     searchValue,
-    isInTestEnv
+    isInTestEnv,
+    callback
   }
 }

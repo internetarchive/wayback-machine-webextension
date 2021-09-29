@@ -24,6 +24,7 @@ function showResourceData(url_name) {
   $('#current-url').text(url_name)
   chrome.runtime.onMessage.addListener(
     (message) => {
+      if (chrome.runtime.lastError) {}
       if (message.message === 'resource_list_show' && message.url === url_name) {
         vdata = message.data
         status = message.data.status
