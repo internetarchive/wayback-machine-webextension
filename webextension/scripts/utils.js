@@ -16,6 +16,7 @@ const excluded_urls = [
   '10.',
   'file:',
   'edge:',
+  'extension:',
   'chrome-error:'
 ]
 
