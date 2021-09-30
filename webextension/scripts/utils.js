@@ -461,13 +461,13 @@ function notify(message, callback) {
 
 function checkLastError() {
   if (chrome.runtime.lastError) {
-    if (chrome.runtime.lastError.message.startsWith("No tab with id:")){
-      console.log(chrome.runtime.lastError.message);
+    if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
+      // Skip
     } else {
       console.error(chrome.runtime.lastError.message)
     }
   } else {
-      // Tab exists
+    // No error occurred
   }
 }
 

@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, openByWindowSetting */
+/*   global getUrlByParameter, openByWindowSetting, checkLastError */
 
 // from 'test/setup.js'
 /*   global isInTestEnv */

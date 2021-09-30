@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError*/
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
 
 let manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -143,7 +143,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       message: 'save_start',
       atab: atab,
       url: page_url
-    }, checkLastError )
+    }, checkLastError)
     addToolbarState(atab, 'S')
 
     await sleep(wait_time)
@@ -183,7 +183,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: err,
           url: page_url
-        },checkLastError)
+        }, checkLastError)
       })
   }
   // update when done
