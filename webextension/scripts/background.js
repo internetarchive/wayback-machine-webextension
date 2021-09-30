@@ -633,6 +633,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
+    checkLastError()
     chrome.tabs.get(info.tabId, (tab) => {
       if (typeof tab === 'undefined') { return }
       // fact check settings unchecked

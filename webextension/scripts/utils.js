@@ -464,7 +464,8 @@ function checkLastError() {
     if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
       // Skip
     } else {
-      console.error(chrome.runtime.lastError.message)
+      console.log(chrome.runtime.lastError.message)
+      // console.trace() // uncomment while debugging
     }
   } else {
     // No error occurred
