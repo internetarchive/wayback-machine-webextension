@@ -73,7 +73,7 @@ function doSaveNow() {
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
   checkAuthentication((result) => {
-    if (chrome.runtime.lastError) { /* skip */ }
+    checkLastError()
     if (result && result.auth_check) {
       loginSuccess()
     } else {
@@ -117,7 +117,7 @@ function loginSuccess() {
             message: 'getLastSaveTime',
             page_url: url
           }, (message) => {
-            if (chrome.runtime.lastError) { /* skip */ }
+            checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
               $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
               $('#spn-btn').addClass('flip-inside')
@@ -390,7 +390,7 @@ function setupReadBook() {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -432,7 +432,7 @@ function setupNewsClips() {
     const news_host = new URL(url).hostname
     if (newshosts.has(news_host)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#tvnews-container').show()
@@ -458,7 +458,7 @@ function setupWikiButtons() {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -493,7 +493,7 @@ function setupFactCheck() {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-            if (chrome.runtime.lastError) { /* skip */ }
+            checkLastError()
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -562,7 +562,7 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (chrome.runtime.lastError) { /* skip */ }
+    checkLastError()
     if (result && ('total' in result)) {
       // set label
       let text = ''
@@ -602,7 +602,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-      if (chrome.runtime.lastError) { /* skip */ }
+      checkLastError()
       let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()

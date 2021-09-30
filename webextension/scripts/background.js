@@ -84,9 +84,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         if (('job_id' in res) && (res.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
-              if (chrome.runtime.lastError) { /* skip */ }
-            })
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, checkLastError)
             if (!silent) { notify(msg) }
           } else {
             // call status during save
@@ -104,18 +102,14 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           }
         } else {
           // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
-            if (chrome.runtime.lastError) { /* skip */ }
-          })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, checkLastError)
           if (!silent) { notify('Error: ' + msg) }
         }
       })
       .catch((err) => {
         // handle http errors
         console.log(err)
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, () => {
-          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
-        })
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, checkLastError)
       })
   }
 }
@@ -149,9 +143,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       message: 'save_start',
       atab: atab,
       url: page_url
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError )
     addToolbarState(atab, 'S')
 
     await sleep(wait_time)
@@ -184,18 +176,14 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: data,
           url: page_url
-        }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        }, checkLastError)
       })
       .catch((err) => {
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
           data: err,
           url: page_url
-        }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        },checkLastError)
       })
   }
   // update when done
@@ -210,9 +198,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
     // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -236,9 +222,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       error: vdata.message,
       url: page_url,
       atab: atab
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
     // notify
     if (!silent) {
       notify('Error: ' + vdata.message, (notificationId) => {
