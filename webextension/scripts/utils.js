@@ -16,7 +16,8 @@ const excluded_urls = [
   '10.',
   'file:',
   'edge:',
-  'extension:'
+  'extension:',
+  'chrome-error:'
 ]
 
 const newshosts = new Set([
@@ -458,6 +459,19 @@ function notify(message, callback) {
   chrome.notifications && chrome.notifications.create(options, callback)
 }
 
+function checkLastError() {
+  if (chrome.runtime.lastError) {
+    if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
+      // Skip
+    } else {
+      console.log(chrome.runtime.lastError.message)
+      // console.trace() // uncomment while debugging
+    }
+  } else {
+    // No error occurred
+  }
+}
+
 function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
   return anchor.attr({
@@ -566,6 +580,7 @@ if (typeof module !== 'undefined') {
     initPrivateState,
     fixedEncodeURIComponent,
     searchValue,
-    isInTestEnv
+    isInTestEnv,
+    checkLastError
   }
 }

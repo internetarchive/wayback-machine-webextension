@@ -1,7 +1,7 @@
 // doi.js
 
 // from 'utils.js'
-/*   global getUrlByParameter, openByWindowSetting */
+/*   global getUrlByParameter, openByWindowSetting, checkLastError */
 
 // from 'test/setup.js'
 /*   global isInTestEnv */
@@ -93,7 +93,7 @@ function getPapers(url) {
       message: 'getCitedPapers',
       query: url
     }, (papers) => {
-      if (chrome.runtime.lastError) { /* skip */ }
+      checkLastError()
       if (papers && papers.status !== 'error') {
         resolve(papers)
       } else {

@@ -1,7 +1,7 @@
 // bulk-save.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp */
+/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp, checkLastError */
 
 // set this value to limit number of URLs per round
 let bulkSaveLimit = 25
@@ -307,9 +307,7 @@ function saveTheURL(url) {
     page_url: url,
     options: saveOptions,
     silent: true
-  }, () => {
-    if (chrome.runtime.lastError) { /* skip */ }
-  })
+  }, checkLastError)
 }
 
 // Show the Save Status (saving, success, error) in UI.

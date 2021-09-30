@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
-/*   global attachTooltip */
+/*   global attachTooltip, checkLastError */
 
 let activeTabURL
 let searchBoxTimer
@@ -66,16 +66,14 @@ function doSaveNow() {
       page_url: url,
       options: options,
       atab: tabs[0]
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
   })
 }
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
   checkAuthentication((result) => {
-    if (chrome.runtime.lastError) { /* skip */ }
+    checkLastError()
     if (result && result.auth_check) {
       loginSuccess()
     } else {
@@ -119,7 +117,7 @@ function loginSuccess() {
             message: 'getLastSaveTime',
             page_url: url
           }, (message) => {
-            if (chrome.runtime.lastError) { /* skip */ }
+            checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
               $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
               $('#spn-btn').addClass('flip-inside')
@@ -150,9 +148,7 @@ function recent_capture() {
       wayback_url: 'https://web.archive.org/web/2/',
       page_url: url,
       method: 'recent'
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
   }
 }
 
@@ -164,9 +160,7 @@ function first_capture() {
       wayback_url: 'https://web.archive.org/web/0/',
       page_url: url,
       method: 'first'
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
   }
 }
 
@@ -178,9 +172,7 @@ function view_all() {
       wayback_url: 'https://web.archive.org/web/*/',
       page_url: url,
       method: 'viewall'
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
   }
 }
 
@@ -234,9 +226,9 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
-  chrome.runtime.sendMessage({ message: 'clearResource' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, () => { if (chrome.runtime.lastError) { /* skip */ } })
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
   $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -386,9 +378,7 @@ function show_login_page() {
 function show_all_screens() {
   if (activeTabURL) {
     let url = searchValue || getCleanUrl(activeTabURL)
-    chrome.runtime.sendMessage({ message: 'showall', url: url }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    chrome.runtime.sendMessage({ message: 'showall', url: url }, checkLastError)
   }
 }
 
@@ -400,7 +390,7 @@ function setupReadBook() {
     const url = tabs[0].url
     if (url.includes('www.amazon') && url.includes('/dp/')) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#readbook-container').show()
@@ -442,7 +432,7 @@ function setupNewsClips() {
     const news_host = new URL(url).hostname
     if (newshosts.has(news_host)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           $('#tvnews-container').show()
@@ -468,7 +458,7 @@ function setupWikiButtons() {
     const url = tabs[0].url
     if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        if (chrome.runtime.lastError) { /* skip */ }
+        checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('R')) {
           // show wikipedia cited books & papers buttons
@@ -503,7 +493,7 @@ function setupFactCheck() {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-            if (chrome.runtime.lastError) { /* skip */ }
+            checkLastError()
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
@@ -559,14 +549,10 @@ function setupWaybackCount() {
       let url = activeTabURL
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, checkLastError)
       } else {
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
       }
     }
   })
@@ -576,7 +562,7 @@ function setupWaybackCount() {
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
-    if (chrome.runtime.lastError) { /* skip */ }
+    checkLastError()
     if (result && ('total' in result)) {
       // set label
       let text = ''
@@ -616,7 +602,7 @@ function bulkSave() {
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-      if (chrome.runtime.lastError) { /* skip */ }
+      checkLastError()
       let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()

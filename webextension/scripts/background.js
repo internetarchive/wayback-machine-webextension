@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
 
 let manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
@@ -84,9 +84,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
         if (('job_id' in res) && (res.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, () => {
-              if (chrome.runtime.lastError) { /* skip */ }
-            })
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, checkLastError)
             if (!silent) { notify(msg) }
           } else {
             // call status during save
@@ -104,18 +102,14 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
           }
         } else {
           // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, () => {
-            if (chrome.runtime.lastError) { /* skip */ }
-          })
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, checkLastError)
           if (!silent) { notify('Error: ' + msg) }
         }
       })
       .catch((err) => {
         // handle http errors
         console.log(err)
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, () => {
-          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
-        })
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, checkLastError)
       })
   }
 }
@@ -149,9 +143,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       message: 'save_start',
       atab: atab,
       url: page_url
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
     addToolbarState(atab, 'S')
 
     await sleep(wait_time)
@@ -184,18 +176,14 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           message: 'resource_list_show',
           data: data,
           url: page_url
-        }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        }, checkLastError)
       })
       .catch((err) => {
         chrome.runtime.sendMessage({
           message: 'resource_list_show',
           data: err,
           url: page_url
-        }, () => {
-          if (chrome.runtime.lastError) { /* skip */ }
-        })
+        }, checkLastError)
       })
   }
   // update when done
@@ -210,9 +198,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       timestamp: vdata.timestamp,
       atab: atab,
       url: page_url
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
     // notify
     if (!silent) {
       let msg = 'Successfully saved! Click to view snapshot.'
@@ -236,9 +222,7 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       error: vdata.message,
       url: page_url,
       atab: atab
-    }, () => {
-      if (chrome.runtime.lastError) { /* skip */ }
-    })
+    }, checkLastError)
     // notify
     if (!silent) {
       notify('Error: ' + vdata.message, (notificationId) => {
@@ -344,7 +328,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.runtime.onStartup.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     }
   })
 })
@@ -355,7 +339,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') })
+      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     }
   })
 })
@@ -649,6 +633,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 // Called whenever a browser tab is selected
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
+    checkLastError()
     chrome.tabs.get(info.tabId, (tab) => {
       if (typeof tab === 'undefined') { return }
       // fact check settings unchecked
@@ -751,18 +736,18 @@ function updateWaybackCountBadge(atab, url) {
         if (values.total >= 0) {
           // display badge
           let text = badgeCountText(values.total)
-          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }) // red
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text })
+          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
         } else {
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' })
+          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
         }
       },
       (error) => {
         console.log('wayback count error: ' + error)
-        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' })
+        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
       })
     } else {
-      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' })
+      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
     }
   })
 }
@@ -787,7 +772,7 @@ function setToolbarIcon(name, tabId = null) {
     '64': (path + n + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
-  chrome.browserAction.setIcon(details)
+  chrome.browserAction.setIcon(details, checkLastError)
 }
 
 // Returns a string key from a Tab windowId and tab id.
@@ -872,25 +857,25 @@ chrome.contextMenus.create({
   'title': 'Oldest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-})
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'recent',
   'title': 'Newest Version',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-})
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'all',
   'title': 'All Versions',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-})
+}, checkLastError)
 chrome.contextMenus.create({
   'id': 'save',
   'title': 'Save Page Now',
   'contexts': ['all'],
   'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-})
+}, checkLastError)
 
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
