@@ -24,12 +24,6 @@ let WB_API_URL = hostURL + 'wayback/available'
 const SPN_RETRY = 6000
 
 let private_before_default = new Set([
-  'fact-check-setting',
-  'wm-count-setting',
-  'wiki-setting',
-  'amazon-setting',
-  'tvnews-setting',
-  'email-outlinks-setting',
   'not-found-setting'
 ])
 
