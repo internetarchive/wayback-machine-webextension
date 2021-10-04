@@ -17,7 +17,7 @@ function getTags() {
   let y = hostname.split('.')
   let not_display4 = y.join(' ')
   let not_display1 = y.join(' ')
-  $('.url').text(url).attr('href', url)
+  $('.url').text(hostname).attr('href', hostname)
   if (url.includes('https')) {
     not_display1 = 'https ' + not_display1
   } else {
