@@ -41,6 +41,7 @@ function doLogin(e) {
   const data = new URLSearchParams()
   data.append('username', email)
   data.append('password', password)
+  data.append('remember', true)
   data.append('action', 'login')
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
