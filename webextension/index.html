@@ -153,12 +153,41 @@
 
     <div class="segmented-container">
       <ul class="nav setting-nav">
-        <li><button class="btn btn-sm btn-wide btn-unselected" id="panel1-btn">Context</button></li>
-        <li><button class="btn btn-sm btn-wide btn-unselected" id="panel2-btn">General</button></li>
+        <li><button class="btn btn-sm btn-wide btn-unselected" id="panel1-btn">General</button></li>
+        <li><button class="btn btn-sm btn-wide btn-unselected" id="panel2-btn">Context</button></li>
       </ul>
     </div>
 
-    <div id="first-panel">
+    <div id="first-panel" style="margin-bottom: 10px">
+      <label class="setting-switch" for="auto-archive-setting">
+        <input type="checkbox" name="private-include" class="private" id="auto-archive-setting">
+        <div class="setting-text-box">
+          <span class="toggle">Auto Save Page</span>
+          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon">
+        </div>
+      </label>
+      <label class="setting-switch" for="email-outlinks-setting">
+        <input type="checkbox" id="email-outlinks-setting">
+        <div class="setting-text-box">
+          <span class="toggle">Email Outlinks</span>
+        </div>
+      </label>
+      <label class="setting-switch" for="resource-list-setting">
+        <input type="checkbox" id="resource-list-setting">
+        <div class="setting-text-box">
+          <span class="toggle">Show Resources During Save</span>
+        </div>
+      </label>
+      <div class="setting-switch" id="view-setting">
+        <div id="view-setting-text">Show Features In</div>
+        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-tab" value="tab">
+        <label class="toggle" for="view-setting-tab">Tab</label>&nbsp;
+        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-window" value="window">
+        <label class="toggle" for="view-setting-window">Window</label>
+      </div>
+    </div>
+
+    <div id="second-panel">
       <label class="setting-switch" for="private-mode-setting">
         <input type="checkbox" id="private-mode-setting">
         <div class="setting-text-box">
@@ -205,35 +234,6 @@
           <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
-    </div>
-
-    <div id="second-panel" style="margin-bottom: 10px">
-      <label class="setting-switch" for="auto-archive-setting">
-        <input type="checkbox" name="private-include" class="private" id="auto-archive-setting">
-        <div class="setting-text-box">
-          <span class="toggle">Auto Save Page</span>
-          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon">
-        </div>
-      </label>
-      <label class="setting-switch" for="email-outlinks-setting">
-        <input type="checkbox" id="email-outlinks-setting">
-        <div class="setting-text-box">
-          <span class="toggle">Email Outlinks</span>
-        </div>
-      </label>
-      <label class="setting-switch" for="resource-list-setting">
-        <input type="checkbox" id="resource-list-setting">
-        <div class="setting-text-box">
-          <span class="toggle">Show Resources During Save</span>
-        </div>
-      </label>
-      <div class="setting-switch" id="view-setting">
-        <div id="view-setting-text">Show Features In</div>
-        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-tab" value="tab">
-        <label class="toggle" for="view-setting-tab">Tab</label>&nbsp;
-        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-window" value="window">
-        <label class="toggle" for="view-setting-window">Window</label>
-      </div>
     </div>
 
     <div class="btn-block text-center">
