@@ -261,8 +261,15 @@ function attachTooltip2(anchorHtml, tooltipHtml, pos = 'right') {
   let span = document.createElement('span')
   span.className = 'wm1996-tooltip ' + pos
   span.innerHTML = anchorHtml
-  span.dataset.text = tooltipHtml
-  //span.dataset.text = 'This is a test popup.'
+  //span.dataset.text = tooltipHtml
+  span.dataset.text = 'This is a test popup.'
+
+  // TEST
+  let span2 = document.createElement('span')
+  span2.className = 'wm1996-tooltip-text'
+  span2.innerHTML = tooltipHtml
+  span.append(span2)
+
   return span
 }
 

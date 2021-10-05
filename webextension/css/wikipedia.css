@@ -1,8 +1,8 @@
 
 .btn-archive img {
   border-radius: 5px;
-  max-height:25px;
-  max-width:25px;
+  max-height: 25px;
+  max-width: 25px;
 
 }
 
@@ -43,21 +43,27 @@
 
 .wm1996-tooltip {
   position: relative;
+  /* TEST */
+  max-height: 25px;
+  max-width: 25px;
 }
 
-.wm1996-tooltip:before {
-/* .wm1996-tooltip-text */
-  content: attr(data-text);
+/* .wm1996-tooltip:before */
+.wm1996-tooltip-text {
+  /* content: attr(data-text); */
   position: absolute;
   z-index: 999;
 
-  /* vertically center */
+  /* centered */
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
 
   /* move to right */
+  /*
   left: 100%;
   margin-left: 15px;
+  */
 
   /* basic styles */
   width: 200px;
@@ -67,15 +73,18 @@
   color: #fff;
   text-align: center;
 
-  display: none;
-  /* opacity: 0; */
+  /* display: none; */
+  visibility: hidden;
+  opacity: 0;
   transition: 0.3s opacity;
-  /* transition-delay: 100ms; */
+  transition-delay: 100ms;
 }
 
-.wm1996-tooltip:hover:before {
+/*
+.wm1996-tooltip:hover::before {
   display: block;
 }
+*/
 
 .wm1996-tooltip.left:before {
   left: initial;
@@ -86,11 +95,11 @@
 
 
 /* tooltip arrows */
-.wm1996-tooltip:after {
-/* .wm1996-tooltip-text:before */
+/* .wm1996-tooltip:after */
+.wm1996-tooltip-text-SKIP::before { /* .wm1996-tooltip-text::before */
   content: "";
   position: absolute;
-  left: 100%;
+  right: 100%;
   margin-left: -5px;
 
   /* vertically center */
@@ -101,26 +110,28 @@
   border: 10px solid #000;
   border-color: transparent black transparent transparent;
 
-  display: none;
+  /* display: none; */
   /* visibility: hidden; */
-/*
   opacity: 0;
   transition: 0.3s opacity;
-*/
+  transition-delay: 100ms;
 }
 
 /* NOT TESTED */
+/*
 .wm1996-tooltip.left:after {
   left: initial;
   margin: initial;
-  right: 100%;
+  left: 100%;
   margin-right: -5px;
   border-color: transparent transparent transparent black;
 }
+*/
 
-.wm1996-tooltip:hover:before, .wm1996-tooltip:hover:after {
-/* .wm1996-tooltip-text:hover:before, .wm1996-tooltip-text:hover */
-  display: block;
-  /* visibility: visible; */
-  /* opacity: 1; */
+/* .wm1996-tooltip:hover:before, .wm1996-tooltip:hover:after */
+/* .wm1996-tooltip-text:hover::before, .wm1996-tooltip-text:hover, .wm1996-tooltip:hover::before *  */
+.wm1996-tooltip:hover * {
+  /* display: block; */
+  visibility: visible;
+  opacity: 1;
 }
