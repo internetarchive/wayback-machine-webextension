@@ -3,20 +3,50 @@
 // from 'utils.js'
 /*   global openByWindowSetting, getUrlByParameter */
 
-// from 'wikipedia.js'
-/*   global wikipediaBooks, getMetadata */
+// from 'wikipedia.js' REMOVE
+/*   global wikipediaBooks, getMetadata, checkLastError */
 
-// TODO: rename getMetadata in doi.js or wikipedia.js
+function getWikipediaBooks(url) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      message: 'getWikipediaBooks',
+      query: url
+    }, (books) => {
+      checkLastError()
+      if (books) {
+        resolve(books)
+      } else {
+        reject(new Error('error'))
+      }
+    })
+  })
+}
+
+function bookMetadata(book) {
+  const MAX_TITLE_LEN = 300
+  if (book && book.metadata) {
+    return {
+      'title': (book.metadata.title.length > MAX_TITLE_LEN) ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
+      'author': book.metadata.creator,
+      'image': 'https://archive.org/services/img/' + book.metadata.identifier,
+      'link': book.metadata['identifier-access'],
+      'button_text': 'Read Book',
+      'button_class': 'btn btn-auto btn-blue',
+      'readable': true
+    }
+  }
+  return false
+}
 
 // This runs every time booklist.html is viewed.
 // It retrieves a list of book cover images.
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url
-  wikipediaBooks(url).then(data => {
+  getWikipediaBooks(url).then(data => {
     $('.loader').hide()
     if (data && data.message !== 'No ISBNs found in page' && data.status !== 'error') {
       for (let isbn of Object.keys(data)) {
-        let metadata = getMetadata(data[isbn])
+        let metadata = bookMetadata(data[isbn])
         if (metadata) {
           let book_element = addBook(metadata)
           $('#resultsTray').append(book_element)
@@ -36,7 +66,7 @@ function populateBooks(url) {
   })
 }
 
-function addBook (metadata) {
+function addBook(metadata) {
   let text_elements = $('<div>').attr({ 'class': 'text-elements' }).append(
     $('<h3>').text(metadata.title),
     $('<p>').text(metadata.author)
