@@ -83,9 +83,9 @@ function updateLastSaved() {
 }
 
 function loginError() {
-  $('#bulk-save-btn').attr('disabled', true)
-  $('#bulk-save-btn').attr('title', 'Log in to use')
-  $('#bulk-save-btn').off('click')
+  // $('#bulk-save-btn').attr('disabled', true)
+  // $('#bulk-save-btn').attr('title', 'Log in to use')
+  // $('#bulk-save-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
@@ -102,9 +102,9 @@ function loginSuccess() {
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
-  $('#bulk-save-btn').removeAttr('disabled')
-  $('#bulk-save-btn').attr('title', '')
-  $('#bulk-save-btn').click(bulkSave)
+  // $('#bulk-save-btn').removeAttr('disabled')
+  // $('#bulk-save-btn').attr('title', '')
+  // $('#bulk-save-btn').click(bulkSave)
 
   if (activeTabURL) {
     let url = searchValue || activeTabURL
