@@ -232,7 +232,7 @@ function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
   chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
   chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
-  $('#fact-check-btn').removeClass('btn-purple')
+  // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
@@ -505,7 +505,7 @@ function setupFactCheck() {
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
-              $('#fact-check-btn').addClass('btn-purple')
+              // $('#fact-check-btn').addClass('btn-purple')
             }
           })
         }
@@ -695,9 +695,9 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  $('#fact-check-btn').click(showContext)
+  // $('#fact-check-btn').click(showContext)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
-  // $('#more-info-btn').click(showContext)
+  $('#more-info-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })
