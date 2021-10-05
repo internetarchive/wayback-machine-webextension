@@ -7,6 +7,7 @@
 
 let activeTabURL
 let searchBoxTimer
+let isLoggedIn = false
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -83,6 +84,7 @@ function updateLastSaved() {
 }
 
 function loginError() {
+  isLoggedIn = false
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
@@ -98,6 +100,7 @@ function loginError() {
 }
 
 function loginSuccess() {
+  isLoggedIn = true
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
@@ -334,7 +337,12 @@ function display_suggestions(e) {
     clearTimeout(searchBoxTimer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     searchBoxTimer = setTimeout(() => {
-      display_list($('#search-input').val())
+      const query = $('#search-input').val()
+      if (isLoggedIn && (query.toLowerCase() === 'bulk save')) {
+        bulkSave()
+      } else {
+        display_list(query)
+      }
     }, 300)
   }
 }
