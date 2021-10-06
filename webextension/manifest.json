@@ -38,7 +38,6 @@
       "https://*.archive.org/*",
       "https://xml.alexa.com/*",
       "https://hypothes.is/*",
-      "https://data.our.news/api/*",
       "<all_urls>"
   ],
   "background": {

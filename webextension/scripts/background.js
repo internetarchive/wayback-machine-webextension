@@ -312,6 +312,7 @@ function getCachedTvNews(url, onSuccess, onFail) {
 }
 
 function getCachedFactCheck(url, onSuccess, onFail) {
+  // require "https://data.our.news/api/*" in manifest permissions
   const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
