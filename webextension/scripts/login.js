@@ -38,31 +38,30 @@ function doLogin(e) {
   $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
   chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
-  const data = new URLSearchParams()
-  data.append('username', email)
-  data.append('password', password)
-  data.append('remember', true)
-  data.append('action', 'login')
+  var data = {
+    "email": email,
+    "password": password
+  };
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 5000)
-    fetch('https://archive.org/account/login',
+    fetch('https://archive.org/services/xauthn?op=login',
       {
         method: 'POST',
         body: data,
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json'
         }
       })
         .then(resolve, reject)
   })
   loginPromise
-    .then(response => response.json())
+    .then(response => {console.log(response);return response.json();})
     .then((res) => {
       $('#login-btn').val('Login')
-      if (res.status === 'bad_login') {
+      if (res.success === false) {
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
         $('#login-message').show().css('color', 'green').text('Success')
@@ -71,7 +70,7 @@ function doLogin(e) {
           $('#login-page').hide()
           $('#setting-page').hide()
           $('#popup-page').show()
-          $('#login-message').hide()
+          $('#login-message').removeAttr("style").hide()
         }, 500)
         $('#email-input').val('')
         $('#password-input').val('')
