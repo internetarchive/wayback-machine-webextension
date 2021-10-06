@@ -229,9 +229,9 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
-  chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+  chrome.runtime.sendMessage({ message: 'clearResource' })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -386,7 +386,7 @@ function show_login_page() {
 function show_all_screens() {
   if (activeTabURL) {
     let url = searchValue || getCleanUrl(activeTabURL)
-    chrome.runtime.sendMessage({ message: 'showall', url: url }, checkLastError)
+    chrome.runtime.sendMessage({ message: 'showall', url: url })
   }
 }
 
@@ -557,10 +557,10 @@ function setupWaybackCount() {
       let url = activeTabURL
       if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, checkLastError)
+        chrome.runtime.sendMessage({ message: 'updateCountBadge' })
       } else {
         clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
+        chrome.runtime.sendMessage({ message: 'clearCountBadge' })
       }
     }
   })
