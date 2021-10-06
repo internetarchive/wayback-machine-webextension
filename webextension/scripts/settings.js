@@ -32,7 +32,7 @@ function restoreOptions(items) {
   $('#private-mode-setting').prop('checked', items.private_mode_setting)
   $('#not-found-setting').prop('checked', items.not_found_setting)
   $('#wm-count-setting').prop('checked', items.wm_count_setting)
-  $('#fact-check-setting').prop('checked', items.fact_check_setting)
+  // $('#fact-check-setting').prop('checked', items.fact_check_setting)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
@@ -56,7 +56,7 @@ function saveOptions() {
     private_mode_setting: $('#private-mode-setting').prop('checked'),
     not_found_setting: $('#not-found-setting').prop('checked'),
     wm_count_setting: $('#wm-count-setting').prop('checked'),
-    fact_check_setting: $('#fact-check-setting').prop('checked'),
+    // fact_check_setting: $('#fact-check-setting').prop('checked'),
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     tvnews_setting: $('#tvnews-setting').prop('checked'),
@@ -137,9 +137,9 @@ function hideUiButtons() {
   if ($('#tvnews-setting').is(':not(:checked)')) { $('#tvnews-container').hide() }
   if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-container').hide() }
   // change color of fact check button
-  if ($('#fact-check-setting').is(':not(:checked)')) {
-    $('#fact-check-btn').removeClass('btn-purple')
-  }
+  /// if ($('#fact-check-setting').is(':not(:checked)')) {
+  //   $('#fact-check-btn').removeClass('btn-purple')
+  // }
 }
 
 /*
@@ -185,7 +185,7 @@ function addDocs() {
     'not-found-setting': 'Check if an archived copy is available when a 4xx or 5xx error occurs.',
     'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
     'auto-archive-setting': 'Save URLs that have not previously been saved on the Wayback Machine. Must be logged in.',
-    'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
+    // 'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
     'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
     'tvnews-setting': 'Auto check for Recommended TV News Clips while visiting news websites.',

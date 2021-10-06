@@ -9,16 +9,17 @@
   <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
   <title>Wayback Machine</title>
 </head>
-<body>
+<body class="body-container">
   <div class="tabcontent" id="Wbmsummary">
     <div class="col-sm-12 text-center">
-      <h1>Wayback Machine</h1>
+      <h2 id="main-title">Wayback Machine</h2>
+      <p id="main-info"></p>
       <h4>URL: <a class="url" target="_blank"></a></h4>
     </div>
-    <div class="loader" id="loader_wbmsummary"></div>
+    <div class="loader" style="display:none" id="loader_wbmsummary"></div>
     <div class="col-sm-6">
-      <div class="pre">
-        <div class="pre-container">
+      <div class="pre pre-container">
+        <div class="pre-inner">
           <div><b>First Capture: </b><a target="_blank" id="first_archive_datetime"></a><span class="color_code" id="first_archive_datetime_error"></span></div>
           <div><b>Last Capture: </b><a target="_blank" id="recent_archive_datetime"></a><span class="color_code" id="recent_archive_datetime_error"></span></div>
           <div id="total_captures"><b>Total Number of Captures: </b><a target="_blank" id="total_archives_number"></a></div>
@@ -27,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="loader" id="loader_thumbnail"></div>
+    <div class="loader" style="display:none" id="loader_thumbnail"></div>
     <div class="col-sm-6">
       <div id="show_thumbnail"></div>
     </div>
