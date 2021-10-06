@@ -64,13 +64,13 @@ function doLogin(e) {
       if (res.success === false) {
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
-        $('#login-message').show().css('color', 'green').text('Success')
+        $('#login-message').show().addClass('login-success').text('Success')
         loginSuccess()
         setTimeout(() => {
           $('#login-page').hide()
           $('#setting-page').hide()
           $('#popup-page').show()
-          $('#login-message').removeAttr("style").hide()
+          $('#login-message').removeClass('login-success').hide()
         }, 500)
         $('#email-input').val('')
         $('#password-input').val('')
