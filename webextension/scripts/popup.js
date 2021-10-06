@@ -7,6 +7,7 @@
 
 let activeTabURL
 let searchBoxTimer
+let isLoggedIn = false
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -83,9 +84,10 @@ function updateLastSaved() {
 }
 
 function loginError() {
-  $('#bulk-save-btn').attr('disabled', true)
-  $('#bulk-save-btn').attr('title', 'Log in to use')
-  $('#bulk-save-btn').off('click')
+  isLoggedIn = false
+  // $('#bulk-save-btn').attr('disabled', true)
+  // $('#bulk-save-btn').attr('title', 'Log in to use')
+  // $('#bulk-save-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
@@ -98,13 +100,14 @@ function loginError() {
 }
 
 function loginSuccess() {
+  isLoggedIn = true
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
-  $('#bulk-save-btn').removeAttr('disabled')
-  $('#bulk-save-btn').attr('title', '')
-  $('#bulk-save-btn').click(bulkSave)
+  // $('#bulk-save-btn').removeAttr('disabled')
+  // $('#bulk-save-btn').attr('title', '')
+  // $('#bulk-save-btn').click(bulkSave)
 
   if (activeTabURL) {
     let url = searchValue || activeTabURL
@@ -229,7 +232,7 @@ function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
   chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
   chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
-  $('#fact-check-btn').removeClass('btn-purple')
+  // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
@@ -334,7 +337,12 @@ function display_suggestions(e) {
     clearTimeout(searchBoxTimer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     searchBoxTimer = setTimeout(() => {
-      display_list($('#search-input').val())
+      const query = $('#search-input').val()
+      if (isLoggedIn && (query.toLowerCase() === 'bulk save')) {
+        bulkSave()
+      } else {
+        display_list(query)
+      }
     }, 300)
   }
 }
@@ -497,7 +505,7 @@ function setupFactCheck() {
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
-              $('#fact-check-btn').addClass('btn-purple')
+              // $('#fact-check-btn').addClass('btn-purple')
             }
           })
         }
@@ -687,9 +695,9 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  $('#fact-check-btn').click(showContext)
+  // $('#fact-check-btn').click(showContext)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
-  // $('#more-info-btn').click(showContext)
+  $('#more-info-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })

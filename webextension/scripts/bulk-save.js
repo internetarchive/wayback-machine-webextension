@@ -344,7 +344,6 @@ function updateCounts() {
 // updates UI for any bulk save limits
 function updateLimitCount() {
   // max count
-  let countLeft = bulkSaveLimit - totalUrlCount
   if (bulkSaveLimit === 0) {
     // bulk save is unavailable
     $('#error-msg').text('Bulk Save is currently Unavailable!')
@@ -357,8 +356,8 @@ function updateLimitCount() {
     $('#limit-count-info').text(`${totalUrlCount}`)
   } else {
     // show count limits
-    $('#limit-count-info').text(`${countLeft} left out of ${bulkSaveLimit}`)
-    if (countLeft < 0) {
+    $('#limit-count-info').text(`${totalUrlCount} of ${bulkSaveLimit} max limit`)
+    if (totalUrlCount > bulkSaveLimit) {
       $('#limit-count-info').addClass('highlight-color')
       $('#bulk-save-btn').attr('disabled', true)
     } else {

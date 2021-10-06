@@ -8,7 +8,6 @@ function getWBMSummary () {
   getArchiveDetails(url)
   firstArchiveDetails(url)
   recentArchiveDetails(url)
-  $('#loader_wbmsummary').hide()
 }
 
 function getArchiveDetails (url) {
@@ -28,9 +27,6 @@ function getArchiveDetails (url) {
     if (captures > 0) {
       $('#total_captures').show()
       getThumbnail(url)
-    } else {
-      $('#loader_thumbnail').hide()
-      $('#show_thumbnail').text('Thumbnail not found.').show()
     }
   })
 }
@@ -66,6 +62,7 @@ function recentArchiveDetails (url) {
   })
   .fail(() => $('#recent_archive_datetime_error').text('Data not available'))
 }
+
 // Function used to get the thumbnail of the URL
 function getThumbnail (url) {
   // Add to manifest permissions to use: "http://crawl-services.us.archive.org:8200/*"
