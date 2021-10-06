@@ -58,7 +58,7 @@ function doLogin(e) {
         .then(resolve, reject)
   })
   loginPromise
-    .then(response => {console.log(response);return response.json();})
+    .then(response => response.json())
     .then((res) => {
       $('#login-btn').val('Login')
       if (res.success === false) {
