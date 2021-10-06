@@ -38,10 +38,10 @@ function doLogin(e) {
   $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
   chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
-  var data = {
+  var data = JSON.stringify({
     "email": email,
     "password": password
-  };
+  });
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
