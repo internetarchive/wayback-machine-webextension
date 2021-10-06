@@ -26,9 +26,7 @@ function getArchiveDetails (url) {
     .text(captures.toLocaleString())
     if (captures > 0) {
       $('#total_captures').show()
-      // getThumbnail(url)
-    } else {
-      // $('#show_thumbnail').text('Thumbnail not found.').show()
+      getThumbnail(url)
     }
   })
 }
