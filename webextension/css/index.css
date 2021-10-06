@@ -358,6 +358,10 @@ a.btn-social, .btn-social {
     font-size: 14px;
 }
 
+.login-success {
+    color: green !important;
+}
+
 .login-form {
     margin: 5px 2px 10px 2px;
 }
