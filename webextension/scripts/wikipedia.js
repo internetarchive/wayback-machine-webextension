@@ -8,7 +8,6 @@
 // Do not use jQuery.
 
 (function(window) {
-
   function addCitations(url) {
     getWikipediaBooks(url).then((data) => {
       let books = document.querySelectorAll("a[title^='Special:BookSources']")
@@ -18,10 +17,8 @@
         let metadata = getMetadata(data[isbn])
         let page = getPageFromCitation(book)
         if (id) {
-          let icon = addReadIcon(id, metadata)
-          //if (page) {
-          //  icon[0].href += '/page/' + page // $ or js? TODO: Do inside addReadIcon()
-          //}
+          let id_page = (page) ? `${id}/page/${page}` : id
+          let icon = addReadIcon(id_page, metadata)
           book.parentElement.append(icon)
         } else {
           let icon = addDonateIcon(isbn)
@@ -81,8 +78,8 @@
         <p class="wm1996-tooltip-title">${metadata.title}</p>
         <p class="wm1996-tooltip-author">${metadata.author}</p>
       </div>
-      <div class="wm1996-tooltip-details">`
-        + (metadata.image ? `<img class="wm1996-book-img" src="${metadata.image}" alt="Read Book">` : '') +
+      <div class="wm1996-tooltip-details">` +
+        (metadata.image ? `<img class="wm1996-book-img" src="${metadata.image}" alt="Read Book">` : '') +
         `<button class="wm1996-btn wm1996-btn-auto wm1996-btn-blue">Read Book</button>
       </div>
     </a>`
@@ -167,5 +164,4 @@
       addCitations(location.href)
     }
   })
-
 })(window)
