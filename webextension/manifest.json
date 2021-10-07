@@ -47,7 +47,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
+      "matches": ["http://en.wikipedia.org/*", "https://en.wikipedia.org/*"],
       "js": ["scripts/wikipedia.js"],
       "css": ["css/wikipedia.css"]
     }
