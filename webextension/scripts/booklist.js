@@ -1,10 +1,7 @@
 // booklist.js
 
 // from 'utils.js'
-/*   global openByWindowSetting, getUrlByParameter */
-
-// from 'wikipedia.js' REMOVE
-/*   global wikipediaBooks, getMetadata, checkLastError */
+/*   global openByWindowSetting, getUrlByParameter, checkLastError */
 
 function getWikipediaBooks(url) {
   return new Promise((resolve, reject) => {
