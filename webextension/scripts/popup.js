@@ -51,23 +51,25 @@ function setupSettingsTabTip() {
 
 function doSaveNow() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || getCleanUrl(tabs[0].url)
-    let options = { 'capture_all': 1 }
-    if ($('#chk-outlinks').prop('checked') === true) {
-      options['capture_outlinks'] = 1
-      if ($('#email-outlinks-setting').prop('checked') === true) {
-        options['email_result'] = 1
+    if (tabs && tabs[0]) {
+      let url = searchValue || getCleanUrl(tabs[0].url)
+      let options = { 'capture_all': 1 }
+      if ($('#chk-outlinks').prop('checked') === true) {
+        options['capture_outlinks'] = 1
+        if ($('#email-outlinks-setting').prop('checked') === true) {
+          options['email_result'] = 1
+        }
       }
+      if ($('#chk-screenshot').prop('checked') === true) {
+        options['capture_screenshot'] = 1
+      }
+      chrome.runtime.sendMessage({
+        message: 'saveurl',
+        page_url: url,
+        options: options,
+        atab: tabs[0]
+      }, checkLastError)
     }
-    if ($('#chk-screenshot').prop('checked') === true) {
-      options['capture_screenshot'] = 1
-    }
-    chrome.runtime.sendMessage({
-      message: 'saveurl',
-      page_url: url,
-      options: options,
-      atab: tabs[0]
-    }, checkLastError)
   })
 }
 
@@ -395,40 +397,42 @@ function show_all_screens() {
 //
 function setupReadBook() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          $('#readbook-container').show()
-          chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
-            if (!settings) { return }
-            const stored_url = settings.tab_url
-            const detail_url = settings.detail_url
-            const context = settings.view_setting
-            // Checking if the tab url is the same as the last stored one
-            if (stored_url === url) {
-              // if same, use the previously fetched url
-              $('#readbook-btn').click(() => {
-                openByWindowSetting(detail_url, context)
-              })
-            } else {
-              // if not, fetch it again
-              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-                .then(res => res.json())
-                .then(response => {
-                  if (response['metadata'] && response['metadata']['identifier-access']) {
-                    const new_details_url = response['metadata']['identifier-access']
-                    $('#readbook-btn').click(() => {
-                      openByWindowSetting(new_details_url, context)
-                    })
-                  }
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      if (url.includes('www.amazon') && url.includes('/dp/')) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            $('#readbook-container').show()
+            chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
+              if (!settings) { return }
+              const stored_url = settings.tab_url
+              const detail_url = settings.detail_url
+              const context = settings.view_setting
+              // Checking if the tab url is the same as the last stored one
+              if (stored_url === url) {
+                // if same, use the previously fetched url
+                $('#readbook-btn').click(() => {
+                  openByWindowSetting(detail_url, context)
                 })
-            }
-          })
-        }
-      })
+              } else {
+                // if not, fetch it again
+                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+                  .then(res => res.json())
+                  .then(response => {
+                    if (response['metadata'] && response['metadata']['identifier-access']) {
+                      const new_details_url = response['metadata']['identifier-access']
+                      $('#readbook-btn').click(() => {
+                        openByWindowSetting(new_details_url, context)
+                      })
+                    }
+                  })
+              }
+            })
+          }
+        })
+      }
     }
   })
 }
@@ -436,26 +440,28 @@ function setupReadBook() {
 // Display 'TV News Clips' button if current url is present in newshosts[]
 function setupNewsClips() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    const news_host = new URL(url).hostname
-    if (newshosts.has(news_host)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          $('#tvnews-container').show()
-          $('#tvnews-btn').click(() => {
-            chrome.storage.local.get(['view_setting'], function (settings) {
-              if (settings && settings.view_setting) {
-                const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
-                openByWindowSetting(URL, settings.view_setting)
-              } else {
-                console.log('Missing view_setting!')
-              }
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      const news_host = new URL(url).hostname
+      if (newshosts.has(news_host)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            $('#tvnews-container').show()
+            $('#tvnews-btn').click(() => {
+              chrome.storage.local.get(['view_setting'], function (settings) {
+                if (settings && settings.view_setting) {
+                  const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+                  openByWindowSetting(URL, settings.view_setting)
+                } else {
+                  console.log('Missing view_setting!')
+                }
+              })
             })
-          })
-        }
-      })
+          }
+        })
+      }
     }
   })
 }
@@ -463,33 +469,35 @@ function setupNewsClips() {
 // Display 'Cited Books' & 'Cited Papers' buttons.
 function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          // show wikipedia cited books & papers buttons
-          if (state.has('books') && !state.has('papers')) {
-            // books only
-            $('#wikibooks-btn').addClass('btn-wide')
-            $('#wikipapers-btn').hide()
-          } else if (!state.has('books') && state.has('papers')) {
-            // papers only
-            $('#wikibooks-btn').hide()
-            $('#wikipapers-btn').addClass('btn-wide')
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            // show wikipedia cited books & papers buttons
+            if (state.has('books') && !state.has('papers')) {
+              // books only
+              $('#wikibooks-btn').addClass('btn-wide')
+              $('#wikipapers-btn').hide()
+            } else if (!state.has('books') && state.has('papers')) {
+              // papers only
+              $('#wikibooks-btn').hide()
+              $('#wikipapers-btn').addClass('btn-wide')
+            }
+            $('#wiki-container').show()
+            $('#wikibooks-btn').click(() => {
+              const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+              openByWindowSetting(URL)
+            })
+            $('#wikipapers-btn').click(() => {
+              const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+              openByWindowSetting(URL)
+            })
           }
-          $('#wiki-container').show()
-          $('#wikibooks-btn').click(() => {
-            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
-            openByWindowSetting(URL)
-          })
-          $('#wikipapers-btn').click(() => {
-            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
-            openByWindowSetting(URL)
-          })
-        }
-      })
+        })
+      }
     }
   })
 }
@@ -497,7 +505,7 @@ function setupWikiButtons() {
 // Display purple 'Fact Check' button.
 function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (isNotExcludedUrl(tabs[0].url)) {
+    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url) ) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -609,13 +617,15 @@ function bulkSave() {
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-      checkLastError()
-      let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-      if (state.has('S')) {
-        showSaving()
-      }
-    })
+    if (tabs && tabs[0]) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        checkLastError()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('S')) {
+          showSaving()
+        }
+      })
+    }
   })
 }
 

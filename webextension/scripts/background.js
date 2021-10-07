@@ -629,6 +629,7 @@ chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
     chrome.tabs.get(info.tabId, (tab) => {
+      checkLastError()
       if (typeof tab === 'undefined') { return }
       // fact check settings unchecked
       if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
