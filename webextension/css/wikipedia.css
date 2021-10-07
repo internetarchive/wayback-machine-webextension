@@ -60,10 +60,10 @@ Unknown:
   background-color: #eee;
   width: 100%;
   padding: 1px 5px 1px 5px;
-  margin-bottom: 3px;
   border-radius: 3px;
   color: #555;
   line-height: 1.4em;
+  text-align: center;
 }
 
 
@@ -71,9 +71,7 @@ Unknown:
 
 .wm1996-tooltip {
   position: relative;
-  /* TEST */
-  max-height: 25px;
-  max-width: 25px;
+  text-indent: 0;
 }
 
 .wm1996-tooltip a, .wm1996-tooltip-body a, .wm1996-tooltip a:hover, .wm1996-tooltip-body a:hover {
@@ -165,4 +163,38 @@ Unknown:
   /* display: block; */
   visibility: visible;
   opacity: 1;
+}
+
+/* Buttons */
+
+.wm1996-btn {
+  text-align: center;
+  margin: 0 auto 10px auto;
+  font-weight: 500;
+  border-radius: 5px;
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  padding: 6px 12px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.wm1996-btn-auto {
+  min-width: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.wm1996-btn-blue {
+  background-color: #405971 !important;
+  border: 1px solid #668db3 !important;
+  color: #eee !important;
+}
+
+.wm1996-btn-blue:hover {
+  background-color: #51708E !important;
 }

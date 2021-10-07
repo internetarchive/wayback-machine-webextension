@@ -133,7 +133,7 @@ function createReadToolTip(id, metadata) { // js
     </div>
     <div class="wm1996-tooltip-details">`
       + (metadata.image ? `<img class="wm1996-book-img" src="${metadata.image}" alt="Read Book">` : '') +
-      `<p class="">Click To Read Now</p>
+      `<button class="wm1996-btn wm1996-btn-auto wm1996-btn-blue">Read Book</button>
     </div>
   </a>`
 }
@@ -260,15 +260,10 @@ function attachTooltip2(anchorHtml, tooltipHtml, pos = 'right') {
   let span = document.createElement('span')
   span.className = 'wm1996-tooltip ' + pos
   span.innerHTML = anchorHtml
-  //span.dataset.text = tooltipHtml
-  //span.dataset.text = 'This is a test popup.'
-
-  // TEST
-  let span2 = document.createElement('span')
-  span2.className = 'wm1996-tooltip-body'
-  span2.innerHTML = tooltipHtml
-  span.append(span2)
-
+  let div = document.createElement('div')
+  div.className = 'wm1996-tooltip-body'
+  div.innerHTML = tooltipHtml
+  span.append(div)
   return span
 }
 
