@@ -21,8 +21,9 @@
           let icon = addReadIcon(id_page, metadata)
           book.parentElement.append(icon)
         } else {
-          let icon = addDonateIcon(isbn)
-          book.parentElement.append(icon)
+          // Skipping display of donate button
+          // let icon = addDonateIcon(isbn)
+          // book.parentElement.append(icon)
         }
       }
     }).catch((error) => {
