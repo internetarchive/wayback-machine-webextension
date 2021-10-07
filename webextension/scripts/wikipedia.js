@@ -94,7 +94,7 @@
 
   function createArchiveAnchor(id) {
     return `<a class="wm1996-archive-btn" target="_blank" href="https://archive.org/details/${id}">
-      <img src="${chrome.runtime.getURL('images/icon.png')}" alt="Read">
+      <img src="${chrome.runtime.getURL('images/app-icon/app-icon32.png')}" alt="Read Book">
     </a>`
   }
 
@@ -138,9 +138,9 @@
   // args are plain strings of HTML.
   // returns a DOM element.
   //
-  function attachTooltip(anchorHtml, tooltipHtml, pos = 'right') {
+  function attachTooltip(anchorHtml, tooltipHtml) {
     let span = document.createElement('span')
-    span.className = 'wm1996-tooltip ' + pos
+    span.className = 'wm1996-tooltip'
     span.innerHTML = anchorHtml
     let div = document.createElement('div')
     div.className = 'wm1996-tooltip-body'

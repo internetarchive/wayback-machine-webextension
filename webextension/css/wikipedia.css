@@ -87,13 +87,6 @@
   transition-delay: 100ms;
 }
 
-.wm1996-tooltip.left:before {
-  left: initial;
-  margin: initial;
-  right: 100%;
-  margin-right: 15px;
-}
-
 .wm1996-tooltip:hover * {
   visibility: visible;
   opacity: 1;
