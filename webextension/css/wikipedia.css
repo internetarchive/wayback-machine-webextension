@@ -1,43 +1,71 @@
 
-.btn-archive img {
-  border-radius: 5px;
-  max-height: 25px;
-  max-width: 25px;
-
-}
-
-.text-elements {
-  color: white;
-  max-width: 100%;
-}
-
-.cover-img {
-  align-self: center;
-  border: 1px solid black;
-  border-radius: 3px;
-  display:block;
-  height:168px;
-  margin:10px auto;
-  width: 120px;
-}
-
-.popup-title {
-  color:#eee;
-  text-align: center;
-}
 /*
-.tooltip.in {
-  opacity: 1;
-}
+Unknown:
+
+.popup_box    - used in old event code
+.popup_read   - not in code
+.popup_donate - not in code
+.text-muted   - from style.css? color: rgb(119, 119, 119);
+
 */
 
-.bottom-details {
+.wm1996-archive-btn {
+  padding: 5px;
+}
+
+.wm1996-archive-btn img { /* .btn-archive */
+  border-radius: 5px;
+  width: 25px;
+  height: 25px;
+}
+
+.wm1996-tooltip-header { /* .text-elements */
+  color: white;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.4em;
+}
+
+.wm1996-tooltip-header p {
+  margin: 0 0 0.5em 0 !important;
+}
+
+.wm1996-book-img { /* cover-img */
+  display: block;
+  align-self: center;
+  margin: 10px auto;
+  border: 1px solid black;
+  border-radius: 3px;
+  max-width: 120px;
+  max-height: 168px;
+}
+
+.wm1996-tooltip-title { /* popup-title */
+  color: #eee;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.wm1996-tooltip-author {
+  color: #bbb;
+}
+
+.wm1996-address {
+  font-weight: bold;
+  text-align: left;
+  line-height: 1.2em;
+}
+
+.wm1996-tooltip-details { /* bottom-details */
   background-color: #eee;
   width: 100%;
   padding: 1px 5px 1px 5px;
   margin-bottom: 3px;
   border-radius: 3px;
+  color: #555;
+  line-height: 1.4em;
 }
+
 
 /* CSS Tooltip */
 
@@ -48,8 +76,12 @@
   max-width: 25px;
 }
 
+.wm1996-tooltip a, .wm1996-tooltip-body a, .wm1996-tooltip a:hover, .wm1996-tooltip-body a:hover {
+  text-decoration: none;
+}
+
 /* .wm1996-tooltip:before */
-.wm1996-tooltip-text {
+.wm1996-tooltip-body { /* wm1996-tooltip-text */
   /* content: attr(data-text); */
   position: absolute;
   z-index: 999;
@@ -69,9 +101,8 @@
   width: 200px;
   padding: 10px;
   border-radius: 10px;
-  background: #000;
+  background: #333;
   color: #fff;
-  text-align: center;
 
   /* display: none; */
   visibility: hidden;
@@ -96,7 +127,7 @@
 
 /* tooltip arrows */
 /* .wm1996-tooltip:after */
-.wm1996-tooltip-text-SKIP::before { /* .wm1996-tooltip-text::before */
+.wm1996-tooltip-body-SKIP::before { /* .wm1996-tooltip-body::before */
   content: "";
   position: absolute;
   right: 100%;
@@ -129,7 +160,7 @@
 */
 
 /* .wm1996-tooltip:hover:before, .wm1996-tooltip:hover:after */
-/* .wm1996-tooltip-text:hover::before, .wm1996-tooltip-text:hover, .wm1996-tooltip:hover::before *  */
+/* .wm1996-tooltip-body:hover::before, .wm1996-tooltip-body:hover, .wm1996-tooltip:hover::before *  */
 .wm1996-tooltip:hover * {
   /* display: block; */
   visibility: visible;

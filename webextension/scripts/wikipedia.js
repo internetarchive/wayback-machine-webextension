@@ -93,14 +93,13 @@ function createDonateToolTip (isbn) {
 // */
 
 function createDonateToolTip(isbn) { // js
-  return `<a class="popup_box popup_donate" target="_blank" href="https://www.archive.org/donate?isbn=${isbn}">
-    <div class="text-elements">
-      <p><strong>Please donate $50 and we will try to purchase and digitize the book for you.</strong></p>
+  return `<a href="https://www.archive.org/donate?isbn=${isbn}" target="_blank">
+    <div class="wm1996-tooltip-header">
+      <p class="wm1996-tooltip-title">Please donate $50 and we will try to buy &amp; digitize the book for you.</p>
     </div>
-    <div class="bottom-details text-muted">
+    <div class="wm1996-tooltip-details">
       <p>Or if you have a copy of this book please mail it to: </p>
-      <p>300 Funston, San Francisco, CA 94118</p>
-      <p>so we can digitize it.</p>
+      <p class="wm1996-address">Internet Archive <br>300 Funston Ave <br>San Francisco, CA 94118</p>
     </div>
   </a>`
 }
@@ -127,14 +126,14 @@ function createReadToolTip (id, metadata) {
 // */
 
 function createReadToolTip(id, metadata) { // js
-  return `<a class="popup_box popup_read" target="_blank" href="https://www.archive.org/details/${id}">
-    <div class="text-elements">
-      <p class="popup-title"><strong>${metadata.title}</strong></p>
-      <p class="text-muted">${metadata.author}</p>
+  return `<a href="https://www.archive.org/details/${id}" target="_blank">
+    <div class="wm1996-tooltip-header">
+      <p class="wm1996-tooltip-title">${metadata.title}</p>
+      <p class="wm1996-tooltip-author">${metadata.author}</p>
     </div>
-    <div class="bottom-details">`
-      + (metadata.image ? `<img class="cover-img" src="${metadata.image}">` : '') +
-      `<p class="text-muted">Click To Read Now</p>
+    <div class="wm1996-tooltip-details">`
+      + (metadata.image ? `<img class="wm1996-book-img" src="${metadata.image}" alt="Read Book">` : '') +
+      `<p class="">Click To Read Now</p>
     </div>
   </a>`
 }
@@ -156,8 +155,8 @@ function createDonateAnchor (isbn) {
 // */
 
 function createDonateAnchor(isbn) { // js
-  return `<a class="btn-archive" target="_blank" style="padding: 5px" href="https://archive.org/donate">
-    <img alt="Read" src="${chrome.runtime.getURL('images/icon_color.png')}">
+  return `<a class="wm1996-archive-btn" target="_blank" href="https://archive.org/donate">
+    <img src="${chrome.runtime.getURL('images/icon_color.png')}" alt="Donate">
   </a>`
 }
 
@@ -178,8 +177,8 @@ function createArchiveAnchor (id) {
 // */
 
 function createArchiveAnchor(id) { // js
-  return `<a class="btn-archive" target="_blank" style="padding: 5px" href="https://archive.org/details/${id}">
-    <img alt="Read" src="${chrome.runtime.getURL('images/icon.png')}">
+  return `<a class="wm1996-archive-btn" target="_blank" href="https://archive.org/details/${id}">
+    <img src="${chrome.runtime.getURL('images/icon.png')}" alt="Read">
   </a>`
 }
 
@@ -262,11 +261,11 @@ function attachTooltip2(anchorHtml, tooltipHtml, pos = 'right') {
   span.className = 'wm1996-tooltip ' + pos
   span.innerHTML = anchorHtml
   //span.dataset.text = tooltipHtml
-  span.dataset.text = 'This is a test popup.'
+  //span.dataset.text = 'This is a test popup.'
 
   // TEST
   let span2 = document.createElement('span')
-  span2.className = 'wm1996-tooltip-text'
+  span2.className = 'wm1996-tooltip-body'
   span2.innerHTML = tooltipHtml
   span.append(span2)
 
