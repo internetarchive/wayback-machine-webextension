@@ -10,22 +10,29 @@
 (function(window) {
   function addCitations(url) {
     getWikipediaBooks(url).then((data) => {
-      let books = document.querySelectorAll("a[title^='Special:BookSources']")
-      for (let book of books) {
-        let isbn = book.innerText.replace(/-/g, '')
-        let id = getIdentifier(data[isbn])
-        let metadata = getMetadata(data[isbn])
-        let page = getPageFromCitation(book)
-        if (id) {
-          let id_page = (page) ? `${id}/page/${page}` : id
-          let icon = addReadIcon(id_page, metadata)
-          book.parentElement.append(icon)
-        } else {
-          // Skipping display of donate button
-          // let icon = addDonateIcon(isbn)
-          // book.parentElement.append(icon)
+      let books = Array.from(document.querySelectorAll("a[title^='Special:BookSources']"))
+
+      // add books asynchronously so website doesn't freeze up
+      setTimeout(function addBook(books) {
+        let book = books.shift()
+        if (book) {
+          let isbn = book.innerText.replace(/-/g, '')
+          let id = getIdentifier(data[isbn])
+          let metadata = getMetadata(data[isbn])
+          let page = getPageFromCitation(book)
+          if (id) {
+            let id_page = (page) ? `${id}/page/${page}` : id
+            let icon = addReadIcon(id_page, metadata)
+            book.parentElement.append(icon)
+          } else {
+            // Skipping display of donate button
+            // let icon = addDonateIcon(isbn)
+            // book.parentElement.append(icon)
+          }
         }
-      }
+        setTimeout(addBook, 1, books)
+      }, 1, books)
+
     }).catch((error) => {
       console.log(error)
     })
