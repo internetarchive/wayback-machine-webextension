@@ -48,8 +48,8 @@
   "content_scripts": [
     {
       "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
-      "js": ["scripts/build.js", "scripts/wikipedia.js"],
-      "css": ["css/style.css", "css/wikipedia.css"]
+      "js": ["scripts/wikipedia.js"],
+      "css": ["css/wikipedia.css"]
     }
   ],
   "web_accessible_resources": [

@@ -6,7 +6,7 @@
 // from 'utils.js' CAN REMOVE
 /*   global attachTooltip, isNotExcludedUrl */
 
-(function(window, $) {
+(function(window) {
 
   function addCitations(url) {
     getWikipediaBooks(url).then((data) => {
@@ -189,7 +189,7 @@ function getIdentifier(book) { // js
 }
 
 function getPageFromCitation(book) { // js
-  let raw = book.parentElement.innerText // TODO: is parentElement jQuery?
+  let raw = book.parentElement.innerText
   let re = /p{1,2}\.\s(\d+)-?\d*/g
   let result = re.exec(raw)
   if (result) {
@@ -219,6 +219,7 @@ function getWikipediaBooks(url) { // js
 }
 
 // TODO: replace with non-jQuery version.
+/*
 function attachTooltip(anchor, tooltip, pos = 'right', time = 200) { // $
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
   const janchor = $(anchor)
@@ -251,6 +252,7 @@ function attachTooltip(anchor, tooltip, pos = 'right', time = 200) { // $
     }, time)
   })
 }
+*/
 
 // This tooltip uses pure CSS.
 // args are plain strings of HTML.
@@ -285,4 +287,4 @@ function attachTooltip2(anchorHtml, tooltipHtml, pos = 'right') {
     }
   })
 
-})(window, jQuery)
+})(window)

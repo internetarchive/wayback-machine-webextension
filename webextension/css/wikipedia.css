@@ -57,6 +57,7 @@ Unknown:
 }
 
 .wm1996-tooltip-details { /* bottom-details */
+  box-sizing: border-box;
   background-color: #eee;
   width: 100%;
   padding: 1px 5px 1px 5px;
