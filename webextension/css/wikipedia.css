@@ -1,25 +1,16 @@
-
-/*
-Unknown:
-
-.popup_box    - used in old event code
-.popup_read   - not in code
-.popup_donate - not in code
-.text-muted   - from style.css? color: rgb(119, 119, 119);
-
-*/
+/* for embedding into Wikipedia pages */
 
 .wm1996-archive-btn {
   padding: 5px;
 }
 
-.wm1996-archive-btn img { /* .btn-archive */
+.wm1996-archive-btn img {
   border-radius: 5px;
   width: 25px;
   height: 25px;
 }
 
-.wm1996-tooltip-header { /* .text-elements */
+.wm1996-tooltip-header {
   color: white;
   max-width: 100%;
   text-align: center;
@@ -30,7 +21,7 @@ Unknown:
   margin: 0 0 0.5em 0 !important;
 }
 
-.wm1996-book-img { /* cover-img */
+.wm1996-book-img {
   display: block;
   align-self: center;
   margin: 10px auto;
@@ -40,7 +31,7 @@ Unknown:
   max-height: 168px;
 }
 
-.wm1996-tooltip-title { /* popup-title */
+.wm1996-tooltip-title {
   color: #eee;
   font-weight: bold;
   font-style: italic;
@@ -56,7 +47,7 @@ Unknown:
   line-height: 1.2em;
 }
 
-.wm1996-tooltip-details { /* bottom-details */
+.wm1996-tooltip-details {
   box-sizing: border-box;
   background-color: #eee;
   width: 100%;
@@ -67,54 +58,34 @@ Unknown:
   text-align: center;
 }
 
-
 /* CSS Tooltip */
 
 .wm1996-tooltip {
   position: relative;
   text-indent: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .wm1996-tooltip a, .wm1996-tooltip-body a, .wm1996-tooltip a:hover, .wm1996-tooltip-body a:hover {
   text-decoration: none;
 }
 
-/* .wm1996-tooltip:before */
-.wm1996-tooltip-body { /* wm1996-tooltip-text */
-  /* content: attr(data-text); */
+.wm1996-tooltip-body {
   position: absolute;
   z-index: 999;
-
-  /* centered */
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-
-  /* move to right */
-  /*
-  left: 100%;
-  margin-left: 15px;
-  */
-
-  /* basic styles */
   width: 200px;
   padding: 10px;
   border-radius: 10px;
   background: #333;
   color: #fff;
-
-  /* display: none; */
   visibility: hidden;
   opacity: 0;
   transition: 0.3s opacity;
   transition-delay: 100ms;
 }
-
-/*
-.wm1996-tooltip:hover::before {
-  display: block;
-}
-*/
 
 .wm1996-tooltip.left:before {
   left: initial;
@@ -123,45 +94,7 @@ Unknown:
   margin-right: 15px;
 }
 
-
-/* tooltip arrows */
-/* .wm1996-tooltip:after */
-.wm1996-tooltip-body-SKIP::before { /* .wm1996-tooltip-body::before */
-  content: "";
-  position: absolute;
-  right: 100%;
-  margin-left: -5px;
-
-  /* vertically center */
-  top: 50%;
-  transform: translateY(-50%);
-
-  /* the arrow */
-  border: 10px solid #000;
-  border-color: transparent black transparent transparent;
-
-  /* display: none; */
-  /* visibility: hidden; */
-  opacity: 0;
-  transition: 0.3s opacity;
-  transition-delay: 100ms;
-}
-
-/* NOT TESTED */
-/*
-.wm1996-tooltip.left:after {
-  left: initial;
-  margin: initial;
-  left: 100%;
-  margin-right: -5px;
-  border-color: transparent transparent transparent black;
-}
-*/
-
-/* .wm1996-tooltip:hover:before, .wm1996-tooltip:hover:after */
-/* .wm1996-tooltip-body:hover::before, .wm1996-tooltip-body:hover, .wm1996-tooltip:hover::before *  */
 .wm1996-tooltip:hover * {
-  /* display: block; */
   visibility: visible;
   opacity: 1;
 }
@@ -179,7 +112,6 @@ Unknown:
   touch-action: manipulation;
   cursor: pointer;
   padding: 6px 12px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.4;
 }
