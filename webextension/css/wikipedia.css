@@ -21,10 +21,15 @@
   margin: 0 0 0.5em 0 !important;
 }
 
-.wm1996-book-img {
+.wm1996-book-outer {
   display: block;
+  width: 122px;
+  height: 170px;
   align-self: center;
   margin: 10px auto;
+}
+
+.wm1996-book-img {
   border: 1px solid black;
   border-radius: 3px;
   max-width: 120px;
@@ -73,23 +78,20 @@
 .wm1996-tooltip-body {
   position: absolute;
   z-index: 999;
-  top: 50%;
-  left: 50%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
   transform: translateY(-50%) translateX(-50%);
   width: 18em;
   padding: 10px;
   border-radius: 10px;
   background: #333;
   color: #fff;
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.3s opacity;
-  transition-delay: 100ms;
+  animation:  wm1996-fadeInFrames ease 0.3s;
 }
 
-.wm1996-tooltip:hover * {
-  visibility: visible;
-  opacity: 1;
+@keyframes wm1996-fadeInFrames {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* Buttons */

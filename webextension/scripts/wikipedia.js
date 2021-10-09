@@ -87,7 +87,7 @@
         <p class="wm1996-tooltip-author">${metadata.author}</p>
       </div>
       <div class="wm1996-tooltip-details">` +
-        (metadata.image ? `<img class="wm1996-book-img" src="${metadata.image}" alt="Read Book">` : '') +
+        (metadata.image ? `<div class="wm1996-book-outer"><img class="wm1996-book-img" src="${metadata.image}" alt="Read Book"></div>` : '') +
         `<button class="wm1996-btn wm1996-btn-auto wm1996-btn-blue">Read Book</button>
       </div>
     </a>`
@@ -146,13 +146,31 @@
   // returns a DOM element.
   //
   function attachTooltip(anchorHtml, tooltipHtml) {
+    // create icon
     let span = document.createElement('span')
     span.className = 'wm1996-tooltip'
     span.innerHTML = anchorHtml
-    let div = document.createElement('div')
-    div.className = 'wm1996-tooltip-body'
-    div.innerHTML = tooltipHtml
-    span.append(div)
+    span.dataset.tooltip = tooltipHtml
+    // create popup
+    span.addEventListener('mouseover', (e) => {
+      const target = e.currentTarget
+      let div = document.createElement('div')
+      div.className = 'wm1996-tooltip-body'
+      if (target.dataset && target.dataset.tooltip) {
+        div.innerHTML = target.dataset.tooltip
+      }
+      // use absolute position of tooltip icon relative to document
+      let rect = target.getBoundingClientRect()
+      let x = window.pageXOffset + rect.x
+      let y = window.pageYOffset + rect.y
+      div.style.left = `${x}px`
+      div.style.top = `${y}px`
+      // remove popup
+      div.addEventListener('mouseleave', (e) => {
+        e.currentTarget.remove()
+      })
+      document.body.insertAdjacentElement('beforeend', div)
+    })
     return span
   }
 
