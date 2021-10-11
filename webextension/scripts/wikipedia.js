@@ -32,7 +32,6 @@
         }
         setTimeout(addBook, 1, books)
       }, 1, books)
-
     }).catch((error) => {
       console.log(error)
     })
@@ -161,8 +160,11 @@
       }
       // use absolute position of tooltip icon relative to document
       let rect = target.getBoundingClientRect()
-      let x = window.pageXOffset + rect.x
-      let y = window.pageYOffset + rect.y
+      let x = window.pageXOffset + rect.x + (rect.width / 2)
+      let y = window.pageYOffset + rect.y + (rect.height / 2)
+      const halfw = 150
+      // move popup left if it's over right edge
+      if (x + halfw > window.innerWidth) { x = window.innerWidth - halfw }
       div.style.left = `${x}px`
       div.style.top = `${y}px`
       // remove popup
