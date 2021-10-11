@@ -532,7 +532,8 @@ function showContext(eventObj) {
         const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
         openByWindowSetting(factCheckUrl)
       } else if (id.includes('alexa-btn')) {
-        const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
+        let hostname = new URL(url).hostname
+        const alexaUrl = "https://www.alexa.com/siteinfo/" + hostname
         openByWindowSetting(alexaUrl)
       } else if (id.includes('annotations-btn')) {
         const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
