@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/context.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>Alexa Internet</title>
+</head>
+<body class="body-container">
+  <div class="tabcontent" id="Alexa">
+    <div class="col-sm-12 text-center">
+      <h2 id="main-title">Alexa Internet</h2>
+      <p id="main-info">Website ranking and analytical insights.</p>
+      <h4>URL: <a class="url" target="_blank"></a></h4>
+    </div>
+    <div class="loader" id="loader_alexa"></div>
+    <div class="col-sm-6">
+      <div class="pre pre-container" id="show_alexa_data" style="display:none;">
+        <div class="pre-inner">
+          <div><b id="alexa_domain_tag">Domain: </b><span class="color_code" id="alexa_name"></span></div>
+          <div class="rank"><b>Alexa Rank: </b><span class="color_code" id="alexa_rank"></span></div>
+          <div class="country"><b>Country: </b><span class="color_code" id="alexa_country"></span></div>
+          <div class="error"></div>
+          <br>
+          <span class="related_sites">
+            <img src="images/fa/globe-americas-solid.svg" class="globe-icon" aria-hidden="true"> <b>Related sites:</b>
+            <ul id="alexa_list" class="rl-list rl-link"></ul>
+          </span>
+          <span>
+            <br>
+            <a id="alexa_page" target="_blank">Click to see more in alexa</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/alexa.js"></script>
+</body>
+</html>
