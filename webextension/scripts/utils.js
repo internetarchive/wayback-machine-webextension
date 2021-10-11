@@ -418,6 +418,7 @@ function getUrlByParameter(name) {
 function openByWindowSetting(url, op = null, cb) {
   if (op === null) {
     chrome.storage.local.get(['view_setting'], (settings) => {
+      checkLastError()
       if (settings) { // OK if view_setting undefined
         opener(url, settings.view_setting, cb)
       }
