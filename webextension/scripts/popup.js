@@ -80,7 +80,7 @@ function doSaveNow() {
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
-  $('#last-saved-msg').text('').hide()
+  //$('#last-saved-msg').text(' ')
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
