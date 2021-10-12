@@ -2,10 +2,10 @@
 
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
+/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
 /*   global attachTooltip, checkLastError */
 
-let activeTabURL
+let activeURL, activeTab
 let searchBoxTimer
 let isLoggedIn = false
 
@@ -35,9 +35,13 @@ function showSettingsTabTip() {
 }
 
 function initActiveTabURL() {
-  activeTabURL = null
+  activeTab = null
+  activeURL = null
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    activeTabURL = (tabs && tabs[0]) ? tabs[0].url : null
+    if (tabs && tabs[0]) {
+      activeTab = tabs[0]
+      activeURL = tabs[0].url
+    }
   })
 }
 
@@ -50,8 +54,8 @@ function setupSettingsTabTip() {
 }
 
 function doSaveNow() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    let url = searchValue || getCleanUrl(tabs[0].url)
+  const url = getCleanUrl(activeURL)
+  if (url) {
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
@@ -66,13 +70,15 @@ function doSaveNow() {
       message: 'saveurl',
       page_url: url,
       options: options,
-      atab: tabs[0]
+      atab: activeTab
     }, checkLastError)
-  })
+    showSaving()
+  }
 }
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
+  //$('#last-saved-msg').text(' ')
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -91,11 +97,10 @@ function loginError() {
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
-  $('#spn-btn').off('click').click(show_login_page)
+  $('#spn-btn').off('click').on('click', show_login_page)
 
-  if (activeTabURL) {
-    let url = searchValue || activeTabURL
-    if (!isNotExcludedUrl(url)) { setExcluded() }
+  if (activeURL) {
+    if (!isNotExcludedUrl(activeURL)) { setExcluded() }
   }
 }
 
@@ -105,25 +110,24 @@ function loginSuccess() {
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
+  $('#spn-btn').removeClass('flip-inside')
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
   // $('#bulk-save-btn').click(bulkSave)
 
-  if (activeTabURL) {
-    let url = searchValue || activeTabURL
-    if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      $('#spn-btn').click(doSaveNow)
+  if (activeURL) {
+    if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
+      $('#spn-btn').on('click', doSaveNow)
       chrome.storage.local.get(['private_mode_setting'], (settings) => {
         // auto save page
         if (settings && (settings.private_mode_setting === false)) {
           chrome.runtime.sendMessage({
             message: 'getLastSaveTime',
-            page_url: url
+            page_url: activeURL
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-              $('#spn-btn').addClass('flip-inside')
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
             }
           })
         }
@@ -144,8 +148,8 @@ function checkAuthentication(callback) {
 }
 
 function recent_capture() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
+  const url = getCleanUrl(activeURL)
+  if (url) {
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/2/',
@@ -156,8 +160,8 @@ function recent_capture() {
 }
 
 function first_capture() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
+  const url = getCleanUrl(activeURL)
+  if (url) {
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/0/',
@@ -168,8 +172,8 @@ function first_capture() {
 }
 
 function view_all() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
+  const url = getCleanUrl(activeURL)
+  if (url) {
     chrome.runtime.sendMessage({
       message: 'openurl',
       wayback_url: 'https://web.archive.org/web/*/',
@@ -186,8 +190,7 @@ function social_share(eventObj) {
     id = parent.getAttribute('id')
   }
   // Share wayback link to the most recent snapshot of URL at the time this is called.
-  let url = searchValue || activeTabURL
-  let clean_url = getCleanUrl(url)
+  let clean_url = getCleanUrl(activeURL)
   if (isValidUrl(clean_url)) {
     let timestamp = dateToTimestamp(new Date())
     let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
@@ -215,23 +218,21 @@ function social_share(eventObj) {
 }
 
 function searchTweet() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
-    if (isValidUrl(url)) {
-      if (url.slice(-1) === '/') {
-        url = url.substring(0, url.length - 1)
-      }
-      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
-      openByWindowSetting(open_url)
+  let url = getCleanUrl(activeURL)
+  if (url && isValidUrl(url)) {
+    if (url.slice(-1) === '/') {
+      url = url.substring(0, url.length - 1)
     }
+    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
+    openByWindowSetting(open_url)
   }
 }
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
-  chrome.runtime.sendMessage({ message: 'clearResource' }, checkLastError)
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+  chrome.runtime.sendMessage({ message: 'clearResource' })
+  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
@@ -249,9 +250,9 @@ function setupSearchBox() {
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
     if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
-      searchValue = getCleanUrl(makeValidURL(search_box.value))
-      // use searchValue if it is valid, else update UI
-      searchValue ? useSearchBox() : $('#using-search-msg').hide()
+      activeURL = getCleanUrl(makeValidURL(search_box.value))
+      // use activeURL if it is valid, else update UI
+      activeURL ? useSearchBox() : $('#using-search-msg').hide()
     }
   })
 }
@@ -312,8 +313,8 @@ function display_list(key_word) {
         $('#suggestion-box').append(
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
-            searchValue = getCleanUrl(makeValidURL(event.target.innerHTML))
-            if (searchValue) { useSearchBox() }
+            activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
+            if (activeURL) { useSearchBox() }
           })
         )
       }
@@ -361,11 +362,8 @@ function about_support() {
 }
 
 function sitemap() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
-    if (isValidUrl(url)) {
-      openByWindowSetting('https://web.archive.org/web/sitemap/' + url)
-    }
+  if (activeURL && isValidUrl(activeURL)) {
+    openByWindowSetting('https://web.archive.org/web/sitemap/' + activeURL)
   }
 }
 
@@ -384,9 +382,9 @@ function show_login_page() {
 
 // not used
 function show_all_screens() {
-  if (activeTabURL) {
-    let url = searchValue || getCleanUrl(activeTabURL)
-    chrome.runtime.sendMessage({ message: 'showall', url: url }, checkLastError)
+  const url = getCleanUrl(activeURL)
+  if (url) {
+    chrome.runtime.sendMessage({ message: 'showall', url: url })
   }
 }
 
@@ -395,40 +393,42 @@ function show_all_screens() {
 //
 function setupReadBook() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    if (url.includes('www.amazon') && url.includes('/dp/')) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          $('#readbook-container').show()
-          chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
-            if (!settings) { return }
-            const stored_url = settings.tab_url
-            const detail_url = settings.detail_url
-            const context = settings.view_setting
-            // Checking if the tab url is the same as the last stored one
-            if (stored_url === url) {
-              // if same, use the previously fetched url
-              $('#readbook-btn').click(() => {
-                openByWindowSetting(detail_url, context)
-              })
-            } else {
-              // if not, fetch it again
-              fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-                .then(res => res.json())
-                .then(response => {
-                  if (response['metadata'] && response['metadata']['identifier-access']) {
-                    const new_details_url = response['metadata']['identifier-access']
-                    $('#readbook-btn').click(() => {
-                      openByWindowSetting(new_details_url, context)
-                    })
-                  }
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      if (url.includes('www.amazon') && url.includes('/dp/')) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            $('#readbook-container').show()
+            chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
+              if (!settings) { return }
+              const stored_url = settings.tab_url
+              const detail_url = settings.detail_url
+              const context = settings.view_setting
+              // Checking if the tab url is the same as the last stored one
+              if (stored_url === url) {
+                // if same, use the previously fetched url
+                $('#readbook-btn').click(() => {
+                  openByWindowSetting(detail_url, context)
                 })
-            }
-          })
-        }
-      })
+              } else {
+                // if not, fetch it again
+                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
+                  .then(res => res.json())
+                  .then(response => {
+                    if (response['metadata'] && response['metadata']['identifier-access']) {
+                      const new_details_url = response['metadata']['identifier-access']
+                      $('#readbook-btn').click(() => {
+                        openByWindowSetting(new_details_url, context)
+                      })
+                    }
+                  })
+              }
+            })
+          }
+        })
+      }
     }
   })
 }
@@ -436,26 +436,28 @@ function setupReadBook() {
 // Display 'TV News Clips' button if current url is present in newshosts[]
 function setupNewsClips() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    const news_host = new URL(url).hostname
-    if (newshosts.has(news_host)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          $('#tvnews-container').show()
-          $('#tvnews-btn').click(() => {
-            chrome.storage.local.get(['view_setting'], function (settings) {
-              if (settings && settings.view_setting) {
-                const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
-                openByWindowSetting(URL, settings.view_setting)
-              } else {
-                console.log('Missing view_setting!')
-              }
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      const news_host = new URL(url).hostname
+      if (newshosts.has(news_host)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            $('#tvnews-container').show()
+            $('#tvnews-btn').click(() => {
+              chrome.storage.local.get(['view_setting'], function (settings) {
+                if (settings && settings.view_setting) {
+                  const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+                  openByWindowSetting(URL, settings.view_setting)
+                } else {
+                  console.log('Missing view_setting!')
+                }
+              })
             })
-          })
-        }
-      })
+          }
+        })
+      }
     }
   })
 }
@@ -463,33 +465,35 @@ function setupNewsClips() {
 // Display 'Cited Books' & 'Cited Papers' buttons.
 function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url
-    if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('R')) {
-          // show wikipedia cited books & papers buttons
-          if (state.has('books') && !state.has('papers')) {
-            // books only
-            $('#wikibooks-btn').addClass('btn-wide')
-            $('#wikipapers-btn').hide()
-          } else if (!state.has('books') && state.has('papers')) {
-            // papers only
-            $('#wikibooks-btn').hide()
-            $('#wikipapers-btn').addClass('btn-wide')
+    if (tabs && tabs[0]) {
+      const url = tabs[0].url
+      if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+        chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          checkLastError()
+          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          if (state.has('R')) {
+            // show wikipedia cited books & papers buttons
+            if (state.has('books') && !state.has('papers')) {
+              // books only
+              $('#wikibooks-btn').addClass('btn-wide')
+              $('#wikipapers-btn').hide()
+            } else if (!state.has('books') && state.has('papers')) {
+              // papers only
+              $('#wikibooks-btn').hide()
+              $('#wikipapers-btn').addClass('btn-wide')
+            }
+            $('#wiki-container').show()
+            $('#wikibooks-btn').click(() => {
+              const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+              openByWindowSetting(URL)
+            })
+            $('#wikipapers-btn').click(() => {
+              const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+              openByWindowSetting(URL)
+            })
           }
-          $('#wiki-container').show()
-          $('#wikibooks-btn').click(() => {
-            const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
-            openByWindowSetting(URL)
-          })
-          $('#wikipapers-btn').click(() => {
-            const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
-            openByWindowSetting(URL)
-          })
-        }
-      })
+        })
+      }
     }
   })
 }
@@ -497,7 +501,7 @@ function setupWikiButtons() {
 // Display purple 'Fact Check' button.
 function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (isNotExcludedUrl(tabs[0].url)) {
+    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url) ) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -516,26 +520,25 @@ function setupFactCheck() {
 
 // Common function to show different context
 function showContext(eventObj) {
-  let id = eventObj.target.getAttribute('id')
-  if (activeTabURL) {
-    const url = searchValue || getCleanUrl(activeTabURL)
-    if (isValidUrl(url)) {
-      if (id.includes('fact-check-btn')) {
-        const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-        openByWindowSetting(factCheckUrl)
-      } else if (id.includes('alexa-btn')) {
-        const alexaUrl = chrome.runtime.getURL('alexa.html') + '?url=' + url
-        openByWindowSetting(alexaUrl)
-      } else if (id.includes('annotations-btn')) {
-        const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
-        openByWindowSetting(annotationsUrl)
-      } else if (id.includes('more-info-btn')) {
-        const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
-        openByWindowSetting(wbmsummaryUrl)
-      } else if (id.includes('tag-cloud-btn')) {
-        const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
-        openByWindowSetting(tagsUrl)
-      }
+  const id = eventObj.target.getAttribute('id')
+  const url = getCleanUrl(activeURL)
+  if (url && isValidUrl(url)) {
+    if (id.includes('fact-check-btn')) {
+      const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+      openByWindowSetting(factCheckUrl)
+    } else if (id.includes('alexa-btn')) {
+      const hostname = new URL(url).hostname
+      const alexaUrl = "https://www.alexa.com/siteinfo/" + hostname
+      openByWindowSetting(alexaUrl)
+    } else if (id.includes('annotations-btn')) {
+      const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
+      openByWindowSetting(annotationsUrl)
+    } else if (id.includes('more-info-btn')) {
+      const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
+      openByWindowSetting(wbmsummaryUrl)
+    } else if (id.includes('tag-cloud-btn')) {
+      const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+      openByWindowSetting(tagsUrl)
     }
   }
 }
@@ -553,15 +556,12 @@ function clearFocus() {
 // Displays and updates or clears the Wayback Count badge.
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
-    if (activeTabURL) {
-      let url = activeTabURL
-      if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-        showWaybackCount(url)
-        chrome.runtime.sendMessage({ message: 'updateCountBadge' }, checkLastError)
-      } else {
-        clearWaybackCount()
-        chrome.runtime.sendMessage({ message: 'clearCountBadge' }, checkLastError)
-      }
+    if (activeURL && settings && settings.wm_count_setting && isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
+      showWaybackCount(activeURL)
+      chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+    } else {
+      clearWaybackCount()
+      chrome.runtime.sendMessage({ message: 'clearCountBadge' })
     }
   })
 }
@@ -598,20 +598,27 @@ function bulkSave() {
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+  if (activeTab) {
+    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: activeTab }, (result) => {
       checkLastError()
       let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
       if (state.has('S')) {
         showSaving()
       }
     })
-  })
+  }
 }
 
-function showSaving() {
+function showSaving(count) {
   $('#save-progress-bar').show()
-  $('#spn-front-label').text('Archiving URL...')
+  $('#spn-btn').off('click')
+  const text =  $('#spn-front-label').text()
+  if (count) {
+    $('#spn-front-label').text(`Archiving URL... ${count}`)
+  } else if (!text.startsWith('Archiving')) {
+    // only set if not already set so as to not replace archive count
+    $('#spn-front-label').text('Archiving URL...')
+  }
 }
 
 // make the tab/window option in setting page checked according to previous setting
@@ -627,27 +634,33 @@ function setupViewSetting() {
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
     (message) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let atab = message.atab
-        if (atab && atab.id && (atab.id === tabs[0].id)) {
-          if (message.message === 'save_success') {
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Save successful')
-            $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-            $('#spn-btn').addClass('flip-inside')
-            setupWaybackCount()
-          } else if (message.message === 'save_archived') {
-            // snapshot already archived within timeframe
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Recently Saved')
-          } else if (message.message === 'save_start') {
-            showSaving()
-          } else if (message.message === 'save_error') {
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Save Failed')
+      console.log(`message: ${message.message}  url: ${message.url}`) // DEBUG
+      if (activeURL === message.url) {
+        if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save successful')
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          $('#spn-btn').removeClass('flip-inside')
+          setupWaybackCount()
+        } else if (message.message === 'save_archived') {
+          // snapshot already archived within timeframe
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Recently Saved')
+          $('#spn-btn').attr('title', message.error)
+        } else if (message.message === 'save_start') {
+          showSaving()
+        } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save Failed')
+          $('#spn-btn').attr('title', message.error)
+        } else if ((message.message === 'resource_list_show')) {
+          // show resource count from SPN status in SPN button
+          const vdata = message.data
+          if (('resources' in vdata) && vdata.resources.length) {
+            showSaving(vdata.resources.length)
           }
         }
-      })
+      }
     }
   )
 }
