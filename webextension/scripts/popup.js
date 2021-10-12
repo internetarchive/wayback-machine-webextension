@@ -99,7 +99,7 @@ function loginError() {
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
-  $('#spn-btn').off('click').click(show_login_page)
+  $('#spn-btn').off('click').on('click', show_login_page)
 
   if (activeTabURL) {
     let url = searchValue || activeTabURL
@@ -121,7 +121,7 @@ function loginSuccess() {
   if (activeTabURL) {
     let url = searchValue || activeTabURL
     if (isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      $('#spn-btn').click(doSaveNow)
+      $('#spn-btn').on('click', doSaveNow)
       chrome.storage.local.get(['private_mode_setting'], (settings) => {
         // auto save page
         if (settings && (settings.private_mode_setting === false)) {
@@ -623,17 +623,15 @@ function bulkSave() {
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
-      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
-        checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('S')) {
-          showSaving()
-        }
-      })
-    }
-  })
+  if (activeTab) {
+    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: activeTab }, (result) => {
+      checkLastError()
+      let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+      if (state.has('S')) {
+        showSaving()
+      }
+    })
+  }
 }
 
 function showSaving(count) {
