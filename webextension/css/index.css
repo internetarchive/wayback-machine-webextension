@@ -62,7 +62,7 @@ body {
     color: #222;
 }
 
-#wayback-count-msg, #url-not-supported-msg, #using-search-msg {
+#wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
     font-size: 9pt;
     color: #222;
 }
@@ -96,7 +96,7 @@ body {
 
 .logo-wayback-machine {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .logo-wayback-machine:hover {
@@ -442,7 +442,7 @@ a.btn-social, .btn-social {
         color: #ddd;
     }
 
-    #wayback-count-msg, #url-not-supported-msg, #using-search-msg {
+    #wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
         color: #eee;
     }
 

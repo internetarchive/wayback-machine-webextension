@@ -159,8 +159,8 @@ function goBack () {
 }
 
 function switchSetting() {
-  if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
-  $('#second-panel').hide()
+  if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
+  $('#first-panel').hide()
   // switching pressed effect of tab button
   $('#panel1-btn').click(() => {
     $('#second-panel').hide()
