@@ -181,17 +181,17 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 function addDocs() {
   let docs = {
     /* Tab 1 */
-    'private-mode-setting': 'Reduces communications to our servers unless explicit action is taken.',
-    'not-found-setting': 'Check if an archived copy is available when a 4xx or 5xx error occurs.',
-    'wm-count-setting': 'Display count of snapshots of the current page stored in the Wayback Machine.',
-    'auto-archive-setting': 'Save URLs that have not previously been saved on the Wayback Machine. Must be logged in.',
+    'private-mode-setting': 'Don\'t initiate automatic communications with the Internet Archive.',
+    'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
+    'wm-count-setting': 'Show the number times the current URL has been archive in the Wayback Machine.',
+    'auto-archive-setting': 'Archive URLs that have not been archived to the Wayback Machine. Must be logged in.',
     // 'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
-    'wiki-setting': 'Auto check for Archived Books and Papers while visiting Wikipedia.',
-    'amazon-setting': 'Auto check for Archived Books while visiting Amazon.',
-    'tvnews-setting': 'Auto check for Recommended TV News Clips while visiting news websites.',
+    'wiki-setting': 'Check to see if there are books and academic papers from the Internet Archive referenced is Wikipeida articles.',
+    'amazon-setting': 'Check to see if books from Amazon pages are available to download or borrow from the Internet Archive.',
+    'tvnews-setting': 'Auto check for related TV News Clips while visitng selected news websites.',
     /* Tab 2 */
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'resource-list-setting': 'Display a list of resources during Save Page Now.',
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     /* Contexts */
     'alexa': 'Displays what Alexa Internet knows about the site you are on.',

@@ -585,21 +585,11 @@ function showWaybackCount(url) {
     } else {
       clearWaybackCount()
     }
-    if (result && result.first_ts) {
-      let date = timestampToDate(result.first_ts)
-      $('#oldest-btn').attr('title', date.toLocaleString())
-    }
-    if (result && result.last_ts) {
-      let date = timestampToDate(result.last_ts)
-      $('#newest-btn').attr('title', date.toLocaleString())
-    }
   })
 }
 
 function clearWaybackCount() {
   $('#wayback-count-msg').html('').hide()
-  $('#oldest-btn').attr('title', null)
-  $('#newest-btn').attr('title', null)
 }
 
 function bulkSave() {
