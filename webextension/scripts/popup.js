@@ -125,7 +125,7 @@ function loginSuccess() {
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#last-saved-msg').text('Last saved ' + viewableTimestamp(message.timestamp)).show()
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
               $('#spn-btn').removeClass('flip-inside')
             }
           })
@@ -654,7 +654,7 @@ function setupSaveListener() {
           if (message.message === 'save_success') {
             $('#save-progress-bar').hide()
             $('#spn-front-label').text('Save successful')
-            $('#last-saved-msg').text('Last saved ' + viewableTimestamp(message.timestamp)).show()
+            $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
             $('#spn-btn').removeClass('flip-inside')
             setupWaybackCount()
           } else if (message.message === 'save_archived') {

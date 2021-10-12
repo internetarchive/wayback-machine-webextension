@@ -388,7 +388,7 @@ function viewableTimestamp(timestamp) {
   if (date) {
     if ((Date.now() - date.getTime()) > 86400000) {
       // over 24 hours
-      text = date.toLocaleDateString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) // e.g.'5/2/2020'
+      text = date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }) // e.g.'Mar 5, 2021'
     } else {
       // under 24 hours
       text = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) // e.g.'7:00 PM'
