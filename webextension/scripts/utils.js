@@ -41,7 +41,6 @@ const isInTestEnv = false
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
-let searchValue
 let private_before_state
 
 function initPrivateState() {
@@ -580,7 +579,6 @@ if (typeof module !== 'undefined') {
     private_before_state,
     initPrivateState,
     fixedEncodeURIComponent,
-    searchValue,
     isInTestEnv,
     checkLastError
   }
