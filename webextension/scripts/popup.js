@@ -598,8 +598,8 @@ function showWaybackCount(url) {
 
 function clearWaybackCount() {
   $('#wayback-count-msg').html('').hide()
-  $('#oldest-btn').attr('title', null)
-  $('#newest-btn').attr('title', null)
+  $('#oldest-btn').attr('title', "Display the earliest archive of a URL")
+  $('#newest-btn').attr('title', "Display the most recent archive of a URL")
 }
 
 function bulkSave() {
