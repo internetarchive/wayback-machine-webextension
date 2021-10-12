@@ -75,6 +75,7 @@ function doSaveNow() {
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
+  $('#last-saved-msg').text('').hide()
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -124,8 +125,8 @@ function loginSuccess() {
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-              $('#spn-btn').addClass('flip-inside')
+              $('#last-saved-msg').text('Last saved ' + viewableTimestamp(message.timestamp)).show()
+              $('#spn-btn').removeClass('flip-inside')
             }
           })
         }
@@ -653,8 +654,8 @@ function setupSaveListener() {
           if (message.message === 'save_success') {
             $('#save-progress-bar').hide()
             $('#spn-front-label').text('Save successful')
-            $('#spn-back-label').text('Last saved: ' + viewableTimestamp(message.timestamp))
-            $('#spn-btn').addClass('flip-inside')
+            $('#last-saved-msg').text('Last saved ' + viewableTimestamp(message.timestamp)).show()
+            $('#spn-btn').removeClass('flip-inside')
             setupWaybackCount()
           } else if (message.message === 'save_archived') {
             // snapshot already archived within timeframe
