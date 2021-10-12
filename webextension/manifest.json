@@ -36,7 +36,6 @@
       "webRequestBlocking",
       "https://archive.org/*",
       "https://*.archive.org/*",
-      "https://xml.alexa.com/*",
       "https://hypothes.is/*",
       "<all_urls>"
   ],
