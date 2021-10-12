@@ -14,7 +14,7 @@ $(function() {
   $('#private-mode-setting').click(togglePrivateMode)
   $('#view-setting').click(switchTabWindow)
   $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
-  $('input').change(saveOptions)
+  $('input[type=checkbox],input[type=radio]').change(saveOptions)
   $('.back-btn').click(goBack)
   switchSetting()
   addDocs()
@@ -72,13 +72,13 @@ function saveOptions() {
   setupWaybackCount()
   if (settings.wm_count_setting === false) {
     // additionally clear the cache if setting cleared
-    chrome.runtime.sendMessage({ message: 'clearCountCache' }, checkLastError)
+    chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
 
   if (settings.fact_check_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' }, checkLastError)
+    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
   }
-  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings }, checkLastError)
+  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 
 /*
@@ -159,8 +159,8 @@ function goBack () {
 }
 
 function switchSetting() {
-  if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
-  $('#second-panel').hide()
+  if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
+  $('#first-panel').hide()
   // switching pressed effect of tab button
   $('#panel1-btn').click(() => {
     $('#second-panel').hide()

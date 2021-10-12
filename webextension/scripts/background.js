@@ -173,11 +173,14 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
         }, checkLastError)
       })
       .catch((err) => {
-        chrome.runtime.sendMessage({
-          message: 'resource_list_show',
-          data: err,
-          url: page_url
-        }, checkLastError)
+        // only report non-timeout errors for now, since timeouts aren't canceled, causing a bug
+        if (err.message !== 'timeout') {
+          chrome.runtime.sendMessage({
+            message: 'resource_list_show_error',
+            data: err,
+            url: page_url
+          }, checkLastError)
+        }
       })
   }
   // update when done
@@ -629,6 +632,7 @@ chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
     chrome.tabs.get(info.tabId, (tab) => {
+      checkLastError()
       if (typeof tab === 'undefined') { return }
       // fact check settings unchecked
       if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
