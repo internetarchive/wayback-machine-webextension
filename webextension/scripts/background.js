@@ -173,11 +173,14 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
         }, checkLastError)
       })
       .catch((err) => {
-        chrome.runtime.sendMessage({
-          message: 'resource_list_show_error',
-          data: err,
-          url: page_url
-        }, checkLastError)
+        // only report non-timeout errors for now, since timeouts aren't canceled, causing a bug
+        if (err.message !== 'timeout') {
+          chrome.runtime.sendMessage({
+            message: 'resource_list_show_error',
+            data: err,
+            url: page_url
+          }, checkLastError)
+        }
       })
   }
   // update when done

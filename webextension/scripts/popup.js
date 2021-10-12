@@ -648,27 +648,30 @@ function setupViewSetting() {
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
     (message) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let atab = message.atab
-        if (atab && atab.id && (atab.id === tabs[0].id)) {
-          if (message.message === 'save_success') {
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Save successful')
-            $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
-            $('#spn-btn').removeClass('flip-inside')
-            setupWaybackCount()
-          } else if (message.message === 'save_archived') {
-            // snapshot already archived within timeframe
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Recently Saved')
-          } else if (message.message === 'save_start') {
-            showSaving()
-          } else if (message.message === 'save_error') {
-            $('#save-progress-bar').hide()
-            $('#spn-front-label').text('Save Failed')
+      if (activeTabURL === message.url) {
+        if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save successful')
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          $('#spn-btn').removeClass('flip-inside')
+          setupWaybackCount()
+        } else if (message.message === 'save_archived') {
+          // snapshot already archived within timeframe
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Recently Saved')
+        } else if (message.message === 'save_start') {
+          showSaving()
+        } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save Failed')
+        } else if ((message.message === 'resource_list_show')) {
+          // show resource count from SPN status in SPN button
+          const vdata = message.data
+          if (('resources' in vdata) && vdata.resources.length) {
+            $('#spn-front-label').text('Archiving URL... ' + vdata.resources.length)
           }
         }
-      })
+      }
     }
   )
 }
