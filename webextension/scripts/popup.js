@@ -656,11 +656,13 @@ function setupSaveListener() {
           // snapshot already archived within timeframe
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Recently Saved')
+          $('#spn-btn').attr('title', message.error)
         } else if (message.message === 'save_start') {
           showSaving()
         } else if (message.message === 'save_error') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save Failed')
+          $('#spn-btn').attr('title', message.error)
         } else if ((message.message === 'resource_list_show')) {
           // show resource count from SPN status in SPN button
           const vdata = message.data
