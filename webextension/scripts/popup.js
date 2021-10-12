@@ -630,9 +630,16 @@ function setupSaveButton() {
   })
 }
 
-function showSaving() {
+function showSaving(count) {
   $('#save-progress-bar').show()
-  $('#spn-front-label').text('Archiving URL...')
+  $('#spn-btn').off('click')
+  const text =  $('#spn-front-label').text()
+  if (count) {
+    $('#spn-front-label').text(`Archiving URL... ${count}`)
+  } else if (!text.startsWith('Archiving')) {
+    // only set if not already set so as to not replace archive count
+    $('#spn-front-label').text('Archiving URL...')
+  }
 }
 
 // make the tab/window option in setting page checked according to previous setting
@@ -668,7 +675,7 @@ function setupSaveListener() {
           // show resource count from SPN status in SPN button
           const vdata = message.data
           if (('resources' in vdata) && vdata.resources.length) {
-            $('#spn-front-label').text('Archiving URL... ' + vdata.resources.length)
+            showSaving(vdata.resources.length)
           }
         }
       }
