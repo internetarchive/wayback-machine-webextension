@@ -5,7 +5,7 @@
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, searchValue, fixedEncodeURIComponent */
 /*   global attachTooltip, checkLastError */
 
-let activeTabURL
+let activeTabURL, activeTab
 let searchBoxTimer
 let isLoggedIn = false
 
@@ -37,7 +37,13 @@ function showSettingsTabTip() {
 function initActiveTabURL() {
   activeTabURL = null
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    activeTabURL = (tabs && tabs[0]) ? tabs[0].url : null
+    if (tabs && tabs[0]) {
+      activeTab = tabs[0]
+      activeTabURL = tabs[0].url
+    } else {
+      activeTab = null
+      activeTabURL = null
+    }
   })
 }
 
@@ -50,27 +56,26 @@ function setupSettingsTabTip() {
 }
 
 function doSaveNow() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
-      let url = searchValue || getCleanUrl(tabs[0].url)
-      let options = { 'capture_all': 1 }
-      if ($('#chk-outlinks').prop('checked') === true) {
-        options['capture_outlinks'] = 1
-        if ($('#email-outlinks-setting').prop('checked') === true) {
-          options['email_result'] = 1
-        }
+  if (searchValue || activeTabURL) {
+    let url = searchValue || getCleanUrl(activeTabURL)
+    let options = { 'capture_all': 1 }
+    if ($('#chk-outlinks').prop('checked') === true) {
+      options['capture_outlinks'] = 1
+      if ($('#email-outlinks-setting').prop('checked') === true) {
+        options['email_result'] = 1
       }
-      if ($('#chk-screenshot').prop('checked') === true) {
-        options['capture_screenshot'] = 1
-      }
-      chrome.runtime.sendMessage({
-        message: 'saveurl',
-        page_url: url,
-        options: options,
-        atab: tabs[0]
-      }, checkLastError)
     }
-  })
+    if ($('#chk-screenshot').prop('checked') === true) {
+      options['capture_screenshot'] = 1
+    }
+    chrome.runtime.sendMessage({
+      message: 'saveurl',
+      page_url: url,
+      options: options,
+      atab: activeTab
+    }, checkLastError)
+    showSaving()
+  }
 }
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
