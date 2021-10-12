@@ -108,6 +108,7 @@ function loginSuccess() {
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
+  $('#spn-btn').removeClass('flip-inside')
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
   // $('#bulk-save-btn').click(bulkSave)
@@ -126,7 +127,6 @@ function loginSuccess() {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
               $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
-              $('#spn-btn').removeClass('flip-inside')
             }
           })
         }
