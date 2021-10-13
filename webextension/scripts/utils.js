@@ -242,6 +242,16 @@ function cropPrefix(url) {
   return null
 }
 
+// Returns substring of url after :// only, or null if url is not a string.
+function cropScheme(url) {
+  if (typeof url === 'string') {
+    let re = /^(?:[a-z]+:\/\/)?(.*)$/
+    let match = re.exec(url)
+    return match[1]
+  }
+  return null
+}
+
 // Function to check whether it is a valid URL or not.
 // Returns: true = good, false = excluded URL.
 function isNotExcludedUrl(url) {
@@ -555,6 +565,7 @@ if (typeof module !== 'undefined') {
     isValidUrl,
     makeValidURL,
     cropPrefix,
+    cropScheme,
     isNotExcludedUrl,
     getCleanUrl,
     wmAvailabilityCheck,
