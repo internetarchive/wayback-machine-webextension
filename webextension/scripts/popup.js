@@ -218,9 +218,8 @@ function social_share(eventObj) {
 }
 
 function searchTweet() {
-  let url = getCleanUrl(activeURL)
-  if (url) {
-    const curl = cropScheme(url)
+  const curl = cropScheme(getCleanUrl(activeURL))
+  if (curl) {
     let surl = curl
     if (surl.slice(-1) === '/') {
       // remove trailing slash if present
