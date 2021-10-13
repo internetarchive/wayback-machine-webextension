@@ -506,7 +506,7 @@ function setupWikiButtons() {
 function setupFactCheck() {
   $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url) ) {
+    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url)) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -533,7 +533,7 @@ function showContext(eventObj) {
       openByWindowSetting(factCheckUrl)
     } else if (id.includes('alexa-btn')) {
       const hostname = new URL(url).hostname
-      const alexaUrl = "https://www.alexa.com/siteinfo/" + hostname
+      const alexaUrl = 'https://www.alexa.com/siteinfo/' + hostname
       openByWindowSetting(alexaUrl)
     } else if (id.includes('annotations-btn')) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
@@ -609,8 +609,8 @@ function showWaybackCount(url) {
 
 function clearWaybackCount() {
   $('#wayback-count-msg').html('').hide()
-  $('#oldest-btn').attr('title', "Display the earliest archive of a URL")
-  $('#newest-btn').attr('title', "Display the most recent archive of a URL")
+  $('#oldest-btn').attr('title', 'Display the earliest archive of a URL')
+  $('#newest-btn').attr('title', 'Display the most recent archive of a URL')
 }
 
 function bulkSave() {
@@ -636,7 +636,7 @@ function setupSaveButton() {
 function showSaving(count) {
   $('#save-progress-bar').show()
   $('#spn-btn').off('click')
-  const text =  $('#spn-front-label').text()
+  const text = $('#spn-front-label').text()
   if (count) {
     $('#spn-front-label').text(`Archiving URL... ${count}`)
   } else if (!text.startsWith('Archiving')) {
