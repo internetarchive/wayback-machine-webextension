@@ -220,12 +220,14 @@ function social_share(eventObj) {
 function searchTweet() {
   let url = getCleanUrl(activeURL)
   if (url) {
-    // remove trailing slash if present (not needed?)
-    // if (url.slice(-1) === '/') {
-    //   url = url.substring(0, url.length - 1)
-    // }
-
-    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
+    const curl = cropScheme(url)
+    let surl = curl
+    if (surl.slice(-1) === '/') {
+      // remove trailing slash if present
+      surl = surl.substring(0, surl.length - 1)
+    }
+    const query = `(${surl} OR https://${curl} OR http://${curl})`
+    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(query)
     openByWindowSetting(open_url)
   }
 }
