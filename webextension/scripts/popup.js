@@ -252,7 +252,7 @@ function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
-    if (!(e.keyCode === 38 || e.which === 38 || e.keyCode === 40 || e.which === 40) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
+    if (!(e.key === "ArrowUp" || e.key === "ArrowDown" ) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       activeURL = getCleanUrl(makeValidURL(search_box.value))
       // use activeURL if it is valid, else update UI
       activeURL ? useSearchBox() : $('#using-search-msg').hide()
@@ -267,7 +267,7 @@ function arrow_key_access() {
 
   search_box.addEventListener('keydown', (e) => {
     // listen for up key
-    if (e.keyCode === 38 || e.which === 38) {
+    if (e.key === "ArrowUp") {
       if (index === list.firstChild && index && list.lastChild) {
         if (index.classList.contains('focused')) { index.classList.remove('focused') }
         index = list.lastChild
@@ -283,7 +283,7 @@ function arrow_key_access() {
       }
 
       // listen for down key
-    } else if (e.keyCode === 40 || e.which === 40) {
+    } else if (e.key === "ArrowDown") {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
@@ -327,9 +327,9 @@ function display_list(key_word) {
 
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
-  if (e.keyCode === 38 || e.keyCode === 40) { return false }
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") { return false }
   $('#suggestion-box').text('').hide()
-  if (e.keyCode === 13) {
+  if (e.key === "Enter") {
     e.preventDefault()
   } else {
     if ($('#search-input').val().length >= 1) {
