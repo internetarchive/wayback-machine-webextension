@@ -5,9 +5,11 @@
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
 /*   global attachTooltip, checkLastError, cropScheme */
 
-let activeURL, activeTab
 let searchBoxTimer
 let isLoggedIn = false
+
+// don't reference in setup functions as there's a delay in assignment
+let activeURL, activeTab
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -78,7 +80,6 @@ function doSaveNow() {
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
-  //$('#last-saved-msg').text(' ')
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -91,6 +92,7 @@ function updateLastSaved() {
 
 function loginError() {
   isLoggedIn = false
+  // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
@@ -111,6 +113,7 @@ function loginSuccess() {
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#spn-btn').removeClass('flip-inside')
+  // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
   // $('#bulk-save-btn').click(bulkSave)
