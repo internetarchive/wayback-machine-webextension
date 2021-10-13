@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError */
+/*   global attachTooltip, checkLastError, cropScheme */
 
 let activeURL, activeTab
 let searchBoxTimer
@@ -219,10 +219,12 @@ function social_share(eventObj) {
 
 function searchTweet() {
   let url = getCleanUrl(activeURL)
-  if (url && isValidUrl(url)) {
-    if (url.slice(-1) === '/') {
-      url = url.substring(0, url.length - 1)
-    }
+  if (url) {
+    // remove trailing slash if present (not needed?)
+    // if (url.slice(-1) === '/') {
+    //   url = url.substring(0, url.length - 1)
+    // }
+
     let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(url)
     openByWindowSetting(open_url)
   }
