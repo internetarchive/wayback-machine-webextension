@@ -611,15 +611,18 @@ function bulkSave() {
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
-  if (activeTab) {
-    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: activeTab }, (result) => {
-      checkLastError()
-      let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-      if (state.has('S')) {
-        showSaving()
-      }
-    })
-  }
+  // not using activeTab here as it may not be assigned yet
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        checkLastError()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('S')) {
+          showSaving()
+        }
+      })
+    }
+  })
 }
 
 function showSaving(count) {
