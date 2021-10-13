@@ -559,13 +559,19 @@ function clearFocus() {
 // Displays and updates or clears the Wayback Count badge.
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
-    if (activeURL && settings && settings.wm_count_setting && isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
-      showWaybackCount(activeURL)
-      chrome.runtime.sendMessage({ message: 'updateCountBadge' })
-    } else {
-      clearWaybackCount()
-      chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0]) {
+        // not using activeURL as we don't want wayback count on search url
+        const url = tabs[0].url
+        if (url && settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+          showWaybackCount(url)
+          chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+        } else {
+          clearWaybackCount()
+          chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+        }
+      }
+    })
   })
 }
 
