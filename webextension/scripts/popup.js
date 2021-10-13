@@ -238,8 +238,6 @@ function searchTweet() {
 function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   chrome.runtime.sendMessage({ message: 'clearResource' })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
@@ -504,8 +502,9 @@ function setupWikiButtons() {
   })
 }
 
-// Display purple 'Fact Check' button.
+// Display purple 'Fact Check' button. (NOT USED)
 function setupFactCheck() {
+  $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url) ) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
@@ -515,7 +514,7 @@ function setupFactCheck() {
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
-              // $('#fact-check-btn').addClass('btn-purple')
+              $('#fact-check-btn').addClass('btn-purple')
             }
           })
         }
@@ -698,7 +697,6 @@ $(function() {
   initActiveTabURL()
   setupNewsClips()
   setupWikiButtons()
-  setupFactCheck()
   setupReadBook()
   setupSearchBox()
   setupSaveButton()
@@ -723,7 +721,6 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  // $('#fact-check-btn').click(showContext)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
   $('#more-info-btn').click(showContext)
