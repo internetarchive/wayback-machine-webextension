@@ -331,6 +331,7 @@ function display_suggestions(e) {
   if (e.key === "ArrowUp" || e.key === "ArrowDown") { return false }
   $('#suggestion-box').text('').hide()
   if (e.key === "Enter") {
+    clearTimeout(searchBoxTimer)
     e.preventDefault()
   } else {
     if ($('#search-input').val().length >= 1) {
