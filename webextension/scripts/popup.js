@@ -100,7 +100,7 @@ function loginError() {
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
   $('#spn-btn').off('click').on('click', show_login_page)
-
+  $('#last-saved-msg').hide()
   if (activeURL) {
     if (!isNotExcludedUrl(activeURL)) { setExcluded() }
   }
