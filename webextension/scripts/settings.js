@@ -184,7 +184,7 @@ function addDocs() {
     'private-mode-setting': 'Don\'t initiate automatic communications between this extension and the Internet Archive.',
     'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
     'wm-count-setting': 'Show number of times the current URL has been archived in the Wayback Machine.',
-    'auto-archive-setting': 'Archive URLs that have not previously been Archive to the Wayback Machine. You need to be logged in to use this feature.',
+    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     // 'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipeida articles. ',
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
