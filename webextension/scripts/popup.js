@@ -5,9 +5,11 @@
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
 /*   global attachTooltip, checkLastError, cropScheme */
 
-let activeURL, activeTab
 let searchBoxTimer
 let isLoggedIn = false
+
+// don't reference in setup functions as there's a delay in assignment
+let activeURL, activeTab
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -78,7 +80,6 @@ function doSaveNow() {
 
 // Updates SPN button UI depending on logged-in status and fetches last saved time.
 function updateLastSaved() {
-  //$('#last-saved-msg').text(' ')
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -91,6 +92,7 @@ function updateLastSaved() {
 
 function loginError() {
   isLoggedIn = false
+  // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
@@ -111,6 +113,7 @@ function loginSuccess() {
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#spn-btn').removeClass('flip-inside')
+  // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
   // $('#bulk-save-btn').click(bulkSave)
@@ -235,8 +238,6 @@ function searchTweet() {
 function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   chrome.runtime.sendMessage({ message: 'clearResource' })
-  chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  // $('#fact-check-btn').removeClass('btn-purple')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
@@ -501,10 +502,11 @@ function setupWikiButtons() {
   })
 }
 
-// Display purple 'Fact Check' button.
+// Display purple 'Fact Check' button. (NOT USED)
 function setupFactCheck() {
+  $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url) ) {
+    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url)) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
@@ -512,7 +514,7 @@ function setupFactCheck() {
             let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
             if (state.has('F')) {
               // show purple fact-check button
-              // $('#fact-check-btn').addClass('btn-purple')
+              $('#fact-check-btn').addClass('btn-purple')
             }
           })
         }
@@ -531,7 +533,7 @@ function showContext(eventObj) {
       openByWindowSetting(factCheckUrl)
     } else if (id.includes('alexa-btn')) {
       const hostname = new URL(url).hostname
-      const alexaUrl = "https://www.alexa.com/siteinfo/" + hostname
+      const alexaUrl = 'https://www.alexa.com/siteinfo/' + hostname
       openByWindowSetting(alexaUrl)
     } else if (id.includes('annotations-btn')) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
@@ -559,13 +561,19 @@ function clearFocus() {
 // Displays and updates or clears the Wayback Count badge.
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
-    if (activeURL && settings && settings.wm_count_setting && isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
-      showWaybackCount(activeURL)
-      chrome.runtime.sendMessage({ message: 'updateCountBadge' })
-    } else {
-      clearWaybackCount()
-      chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0]) {
+        // not using activeURL as we don't want wayback count on search url
+        const url = tabs[0].url
+        if (url && settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+          showWaybackCount(url)
+          chrome.runtime.sendMessage({ message: 'updateCountBadge' })
+        } else {
+          clearWaybackCount()
+          chrome.runtime.sendMessage({ message: 'clearCountBadge' })
+        }
+      }
+    })
   })
 }
 
@@ -601,8 +609,8 @@ function showWaybackCount(url) {
 
 function clearWaybackCount() {
   $('#wayback-count-msg').html('').hide()
-  $('#oldest-btn').attr('title', "Display the earliest archive of a URL")
-  $('#newest-btn').attr('title', "Display the most recent archive of a URL")
+  $('#oldest-btn').attr('title', 'Display the earliest archive of a URL')
+  $('#newest-btn').attr('title', 'Display the most recent archive of a URL')
 }
 
 function bulkSave() {
@@ -611,21 +619,24 @@ function bulkSave() {
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
-  if (activeTab) {
-    chrome.runtime.sendMessage({ message: 'getToolbarState', atab: activeTab }, (result) => {
-      checkLastError()
-      let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-      if (state.has('S')) {
-        showSaving()
-      }
-    })
-  }
+  // not using activeTab here as it may not be assigned yet
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        checkLastError()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('S')) {
+          showSaving()
+        }
+      })
+    }
+  })
 }
 
 function showSaving(count) {
   $('#save-progress-bar').show()
   $('#spn-btn').off('click')
-  const text =  $('#spn-front-label').text()
+  const text = $('#spn-front-label').text()
   if (count) {
     $('#spn-front-label').text(`Archiving URL... ${count}`)
   } else if (!text.startsWith('Archiving')) {
@@ -686,7 +697,6 @@ $(function() {
   initActiveTabURL()
   setupNewsClips()
   setupWikiButtons()
-  setupFactCheck()
   setupReadBook()
   setupSearchBox()
   setupSaveButton()
@@ -711,7 +721,6 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  // $('#fact-check-btn').click(showContext)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
   $('#more-info-btn').click(showContext)
