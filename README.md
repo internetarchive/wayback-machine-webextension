@@ -1,6 +1,6 @@
 # Wayback Machine Web Browser Extension
 
-In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official WayBack Machine Extension*. With the power of the WayBack Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
+In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official Wayback Machine Extension*. With the power of the Wayback Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
 
 ![screenshot](graphics/screenshots/popups.png)
 

@@ -462,7 +462,7 @@ function opener(url, option, callback) {
 function notify(message, callback) {
   let options = {
     type: 'basic',
-    title: 'WayBack Machine',
+    title: 'Wayback Machine',
     message: message,
     iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
   }
