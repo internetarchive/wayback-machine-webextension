@@ -191,7 +191,7 @@ function addDocs() {
     'tvnews-setting': 'Auto check for related TV News Clips while visitng selected news websites.',
     /* Tab 2 */
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'resource-list-setting': 'Display all archived URLs embedded in URLs archive with Save Page Now.',
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
     'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
     /* Contexts */
     'alexa': 'Displays what Alexa Internet knows about the site you are on.',

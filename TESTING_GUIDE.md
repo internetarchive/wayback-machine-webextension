@@ -96,10 +96,11 @@ While testing API calls, a couple of tools that I find useful is the Chrome brow
 <td>
 
 404 Page not found:
-- http://purl.oclc.org/docs/inet96.html
+- https://www.whitehouse.gov/energy/climate-change
+- http://purl.oclc.org/docs/inet96.html (no longer available)
 
 302 Redirect to 404 above:
-- http://purl.oclc.org/OCLC/PURL/INET96
+- http://purl.oclc.org/OCLC/PURL/INET96 (no longer available)
 
 410 Page has gone:
 - https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
