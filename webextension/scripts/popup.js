@@ -526,8 +526,8 @@ function showContext(eventObj) {
   const url = getCleanUrl(activeURL)
   if (url && isValidUrl(url)) {
     if (id.includes('fact-check-btn')) {
-      const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-      openByWindowSetting(factCheckUrl)
+      // const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
+      // openByWindowSetting(factCheckUrl)
     } else if (id.includes('alexa-btn')) {
       const hostname = new URL(url).hostname
       const alexaUrl = 'https://www.alexa.com/siteinfo/' + hostname

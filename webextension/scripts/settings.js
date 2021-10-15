@@ -75,9 +75,9 @@ function saveOptions() {
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
 
-  if (settings.fact_check_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  }
+  // if (settings.fact_check_setting === false) {
+  //   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  // }
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 

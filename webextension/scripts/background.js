@@ -314,9 +314,10 @@ function getCachedTvNews(url, onSuccess, onFail) {
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
+// NOT USED
 function getCachedFactCheck(url, onSuccess, onFail) {
-  const requestUrl = 'https://data.our.news/api/?partner=wayback&factcheck=' + fixedEncodeURIComponent(url)
-  fetchCachedAPI(requestUrl, onSuccess, onFail)
+  // const requestUrl = ''
+  // fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
 /* * * Startup related * * */
