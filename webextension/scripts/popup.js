@@ -344,11 +344,7 @@ function display_suggestions(e) {
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     searchBoxTimer = setTimeout(() => {
       const query = $('#search-input').val()
-      if (isLoggedIn && (query.toLowerCase() === 'bulk save')) {
-        bulkSave()
-      } else {
-        display_list(query)
-      }
+      display_list(query)
     }, 300)
   }
 }
@@ -614,8 +610,9 @@ function clearWaybackCount() {
   $('#newest-btn').attr('title', 'Display the most recent archive of a URL')
 }
 
+// not used right now
 function bulkSave() {
-  openByWindowSetting('../bulk-save.html', 'windows')
+  // openByWindowSetting('../bulk-save.html', 'windows')
 }
 
 // Displays animated 'Archiving...' for Save Button if in save state.
