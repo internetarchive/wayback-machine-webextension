@@ -535,9 +535,6 @@ function showContext(eventObj) {
     } else if (id.includes('annotations-btn')) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
       openByWindowSetting(annotationsUrl)
-    } else if (id.includes('more-info-btn')) {
-      const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
-      openByWindowSetting(wbmsummaryUrl)
     } else if (id.includes('tag-cloud-btn')) {
       const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
       openByWindowSetting(tagsUrl)
@@ -720,6 +717,5 @@ $(function() {
   $('.btn').click(clearFocus)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
-  $('#more-info-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })
