@@ -356,7 +356,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 // Currently not supported in Safari.
 //
 chrome.webRequest.onErrorOccurred.addListener((details) => {
-  console.log(`webRequest.onErrorOccurred: error: ${details.error}, tabId: ${details.tabId}, url: ${details.url}`) // DEBUG
   if (['net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0 &&
     (details.tabId >= 0)) {
@@ -373,17 +372,12 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 // Listens for website loading completed for 404-Not-Found popups.
 chrome.webRequest.onCompleted.addListener((details) => {
   function tabIsReady(tabId) {
-    console.log(`webRequest.onCompleted: tabIsReady tabId: ${tabId}, frameId: ${details.frameId}, statusCode: ${details.statusCode}`) // DEBUG
     if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       globalStatusCode = details.statusCode
       // insert script first, then check wayback machine, then show banner
       chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
-        console.log('webRequest.onCompleted: executeScript1') // DEBUG
-
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          console.log(`webRequest.onCompleted: wayback_url: ${wayback_url}`) // DEBUG
           if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            console.log('webRequest.onCompleted: sendMessage1') // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -391,7 +385,6 @@ chrome.webRequest.onCompleted.addListener((details) => {
               status_code: 999
             })
           } else {
-            console.log('webRequest.onCompleted: sendMessage2') // DEBUG
             chrome.tabs.sendMessage(tabId, {
               type: 'SHOW_BANNER',
               wayback_url: wayback_url,
@@ -404,13 +397,10 @@ chrome.webRequest.onCompleted.addListener((details) => {
     } // if
   } // function
 
-  console.log(`webRequest.onCompleted: url: ${details.url}, tabId: ${details.tabId}`) // DEBUG
   if (details.tabId >= 0) {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
-      } else {
-        console.log('webRequest.onCompleted: NO agreement?') // DEBUG
       }
     })
   }

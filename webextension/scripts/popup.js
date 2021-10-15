@@ -659,7 +659,6 @@ function setupViewSetting() {
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
     (message) => {
-      console.log(`message: ${message.message}  url: ${message.url}`) // DEBUG
       if (activeURL === message.url) {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
