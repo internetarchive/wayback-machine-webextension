@@ -315,10 +315,12 @@ function getCachedTvNews(url, onSuccess, onFail) {
 }
 
 // NOT USED
+/*
 function getCachedFactCheck(url, onSuccess, onFail) {
-  // const requestUrl = ''
-  // fetchCachedAPI(requestUrl, onSuccess, onFail)
+  const requestUrl = ''
+  fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
+*/
 
 /* * * Startup related * * */
 
@@ -529,7 +531,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.message === 'clearCountCache') {
     clearCountCache()
-  } else if (message.message === 'getFactCheckResults') {
+  } /* else if (message.message === 'getFactCheckResults') {
     // retrieve fact check results
     getCachedFactCheck(message.url,
       (json) => { sendResponse({ json }) },
@@ -537,6 +539,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     )
     return true
   }
+  */
   return false
 })
 
@@ -550,9 +553,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         auto_save(tab, tab.url)
       }
       // fact check
+      /*
       if (settings && settings.fact_check_setting) {
         factCheckPage(tab, tab.url)
       }
+      */
     })
     // checking resources
     const clean_url = getCleanUrl(tab.url)
@@ -666,6 +671,7 @@ function auto_save(atab, url) {
   }
 }
 
+/*
 function factCheckPage(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     // retrieve fact check results
@@ -681,6 +687,7 @@ function factCheckPage(atab, url) {
     )
   }
 }
+*/
 
 /* * * Wayback Count * * */
 

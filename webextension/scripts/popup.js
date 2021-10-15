@@ -382,12 +382,14 @@ function show_login_page() {
 }
 
 // not used
+/*
 function show_all_screens() {
   const url = getCleanUrl(activeURL)
   if (url) {
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   }
 }
+*/
 
 // Displays 'Read Book' button if on Amazon Books.
 // May fetch info about Amazon Books if not already cached, then update button click handler.
@@ -500,6 +502,7 @@ function setupWikiButtons() {
 }
 
 // Display purple 'Fact Check' button. (NOT USED)
+/*
 function setupFactCheck() {
   $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -519,6 +522,7 @@ function setupFactCheck() {
     }
   })
 }
+*/
 
 // Common function to show different context
 function showContext(eventObj) {
@@ -605,9 +609,11 @@ function clearWaybackCount() {
 }
 
 // not used right now
+/*
 function bulkSave() {
-  // openByWindowSetting('../bulk-save.html', 'windows')
+  openByWindowSetting('../bulk-save.html', 'windows')
 }
+*/
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
