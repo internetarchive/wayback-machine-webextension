@@ -537,7 +537,7 @@ function showContext(eventObj) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
       openByWindowSetting(annotationsUrl)
     } else if (id.includes('tag-cloud-btn')) {
-      const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+      const tagsUrl = chrome.runtime.getURL('wordcloud.html') + '?url=' + url
       openByWindowSetting(tagsUrl)
     }
   }
