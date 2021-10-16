@@ -487,7 +487,7 @@ function setupWikiButtons() {
             }
             $('#wiki-container').show()
             $('#wikibooks-btn').click(() => {
-              const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + url
               openByWindowSetting(URL)
             })
             $('#wikipapers-btn').click(() => {
