@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const getMetadata = require('../webextension/scripts/cited-papers').getMetadata
 
-describe('doi: getMetadata()', () => {
+describe('cited-papers: getMetadata()', () => {
   let response = {
     'abstracts': [],
     'container_id': 'hcivi5alwffalcl3q2yireetlm',
