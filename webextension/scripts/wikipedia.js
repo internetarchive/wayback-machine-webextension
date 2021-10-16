@@ -94,13 +94,13 @@
 
   function createDonateAnchor(isbn) {
     return `<a class="wm1996-archive-btn" target="_blank" href="https://archive.org/donate">
-      <img src="${chrome.runtime.getURL('images/icon_color.png')}" alt="Donate">
+      <img src="${chrome.runtime.getURL('images/wiki-archive-icon.png')}" alt="Donate">
     </a>`
   }
 
   function createArchiveAnchor(id) {
     return `<a class="wm1996-archive-btn" target="_blank" href="https://archive.org/details/${id}">
-      <img src="${chrome.runtime.getURL('images/app-icon/app-icon32.png')}" alt="Read Book">
+      <img src="${chrome.runtime.getURL('images/wiki-archive-icon.png')}" alt="Read Book">
     </a>`
   }
 

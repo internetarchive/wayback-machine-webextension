@@ -344,11 +344,7 @@ function display_suggestions(e) {
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
     searchBoxTimer = setTimeout(() => {
       const query = $('#search-input').val()
-      if (isLoggedIn && (query.toLowerCase() === 'bulk save')) {
-        bulkSave()
-      } else {
-        display_list(query)
-      }
+      display_list(query)
     }, 300)
   }
 }
@@ -386,12 +382,14 @@ function show_login_page() {
 }
 
 // not used
+/*
 function show_all_screens() {
   const url = getCleanUrl(activeURL)
   if (url) {
     chrome.runtime.sendMessage({ message: 'showall', url: url })
   }
 }
+*/
 
 // Displays 'Read Book' button if on Amazon Books.
 // May fetch info about Amazon Books if not already cached, then update button click handler.
@@ -504,6 +502,7 @@ function setupWikiButtons() {
 }
 
 // Display purple 'Fact Check' button. (NOT USED)
+/*
 function setupFactCheck() {
   $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -523,25 +522,20 @@ function setupFactCheck() {
     }
   })
 }
+*/
 
 // Common function to show different context
 function showContext(eventObj) {
   const id = eventObj.target.getAttribute('id')
   const url = getCleanUrl(activeURL)
   if (url && isValidUrl(url)) {
-    if (id.includes('fact-check-btn')) {
-      const factCheckUrl = chrome.runtime.getURL('fact-check.html') + '?url=' + url
-      openByWindowSetting(factCheckUrl)
-    } else if (id.includes('alexa-btn')) {
+    if (id.includes('alexa-btn')) {
       const hostname = new URL(url).hostname
       const alexaUrl = 'https://www.alexa.com/siteinfo/' + hostname
       openByWindowSetting(alexaUrl)
     } else if (id.includes('annotations-btn')) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
       openByWindowSetting(annotationsUrl)
-    } else if (id.includes('more-info-btn')) {
-      const wbmsummaryUrl = chrome.runtime.getURL('wbmsummary.html') + '?url=' + url
-      openByWindowSetting(wbmsummaryUrl)
     } else if (id.includes('tag-cloud-btn')) {
       const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
       openByWindowSetting(tagsUrl)
@@ -614,9 +608,12 @@ function clearWaybackCount() {
   $('#newest-btn').attr('title', 'Display the most recent archive of a URL')
 }
 
+// not used right now
+/*
 function bulkSave() {
   openByWindowSetting('../bulk-save.html', 'windows')
 }
+*/
 
 // Displays animated 'Archiving...' for Save Button if in save state.
 function setupSaveButton() {
@@ -659,7 +656,6 @@ function setupViewSetting() {
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
     (message) => {
-      console.log(`message: ${message.message}  url: ${message.url}`) // DEBUG
       if (activeURL === message.url) {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
@@ -724,6 +720,5 @@ $(function() {
   $('.btn').click(clearFocus)
   $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
-  $('#more-info-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })

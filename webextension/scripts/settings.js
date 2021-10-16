@@ -75,30 +75,11 @@ function saveOptions() {
     chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
 
-  if (settings.fact_check_setting === false) {
-    chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  }
+  // if (settings.fact_check_setting === false) {
+  //   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+  // }
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
-
-/*
-function validate() {
-  let checkboxes = $('[name="context"]')
-  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
-  if (checkboxes.length === checkedCount) {
-    $('#showall').prop('checked', true)
-  } else {
-    $('#showall').prop('checked', false)
-  }
-}
-
-function selectall() {
-  let checkboxes = $('[name="context"]')
-  for (var i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = $(this).prop('checked')
-  }
-}
-*/
 
 function validatePrivateMode(event) {
   let checkboxes = $('[name="private-include"]')
@@ -142,16 +123,6 @@ function hideUiButtons() {
   // }
 }
 
-/*
-function noneSelected() {
-  let checkboxes = $('[name="context"]')
-  for (let i = 0; i < checkboxes.length; i++) {
-    if (checkboxes[i].checked) { return false }
-  }
-  return true
-}
-*/
-
 function goBack () {
   $('#login-page').hide()
   $('#setting-page').hide()
@@ -180,25 +151,17 @@ function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('chec
 
 function addDocs() {
   let docs = {
-    /* Tab 1 */
+    /* Context Tab */
     'private-mode-setting': 'Don\'t initiate automatic communications between this extension and the Internet Archive.',
     'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
     'wm-count-setting': 'Show number of times the current URL has been archived in the Wayback Machine.',
-    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
-    // 'fact-check-setting': 'Auto check to see if the page you are on has been Fact Checked.',
     'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipeida articles. ',
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
     'tvnews-setting': 'Auto check for related TV News Clips while visitng selected news websites.',
-    /* Tab 2 */
+    /* General Tab */
+    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
-    'auto-update-context': 'Automatically update context windows when the page they are referencing changes.',
-    /* Contexts */
-    'alexa': 'Displays what Alexa Internet knows about the site you are on.',
-    'domaintools': 'Displays what Domaintools.com knows about the site you are on.',
-    'wbmsummary': 'Displays what the Wayback Machine knows about the page you are on.',
-    'annotations': 'Displays Annotations from Hypothes.is for the page you are on.',
-    'tagcloud': 'Creates a Word Cloud from Anchor Text of links archived in the Wayback Machine for the page you are on.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {
