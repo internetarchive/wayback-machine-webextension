@@ -451,7 +451,7 @@ function setupNewsClips() {
             $('#tvnews-btn').click(() => {
               chrome.storage.local.get(['view_setting'], function (settings) {
                 if (settings && settings.view_setting) {
-                  const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+                  const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
                   openByWindowSetting(URL, settings.view_setting)
                 } else {
                   console.log('Missing view_setting!')
