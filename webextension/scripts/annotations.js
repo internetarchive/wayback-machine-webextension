@@ -1,4 +1,4 @@
-// annotation.js
+// annotations.js
 
 // from 'utils.js'
 /*   global getUrlByParameter, openByWindowSetting */

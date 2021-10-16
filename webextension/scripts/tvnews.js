@@ -1,4 +1,4 @@
-// recommendations.js
+// tvnews.js
 
 // from 'utils.js'
 /*   global openByWindowSetting, getUrlByParameter */

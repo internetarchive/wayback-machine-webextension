@@ -451,7 +451,7 @@ function setupNewsClips() {
             $('#tvnews-btn').click(() => {
               chrome.storage.local.get(['view_setting'], function (settings) {
                 if (settings && settings.view_setting) {
-                  const URL = chrome.runtime.getURL('recommendations.html') + '?url=' + url
+                  const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
                   openByWindowSetting(URL, settings.view_setting)
                 } else {
                   console.log('Missing view_setting!')
@@ -487,11 +487,11 @@ function setupWikiButtons() {
             }
             $('#wiki-container').show()
             $('#wikibooks-btn').click(() => {
-              const URL = chrome.runtime.getURL('booklist.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + url
               openByWindowSetting(URL)
             })
             $('#wikipapers-btn').click(() => {
-              const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + url
               openByWindowSetting(URL)
             })
           }
@@ -537,7 +537,7 @@ function showContext(eventObj) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
       openByWindowSetting(annotationsUrl)
     } else if (id.includes('tag-cloud-btn')) {
-      const tagsUrl = chrome.runtime.getURL('tagcloud.html') + '?url=' + url
+      const tagsUrl = chrome.runtime.getURL('wordcloud.html') + '?url=' + url
       openByWindowSetting(tagsUrl)
     }
   }

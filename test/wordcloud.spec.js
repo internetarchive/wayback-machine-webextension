@@ -1,7 +1,7 @@
 const expect = require('chai').expect
-const toConsumableArray = require('../webextension/scripts/tagcloud').toConsumableArray
+const toConsumableArray = require('../webextension/scripts/wordcloud').toConsumableArray
 
-describe('tagcloud', () => {
+describe('wordcloud', () => {
   it('should execute the toConsumableArray function correctly by checking the array', () => {
     var array1 = [2001, 2003, 2004, 2005, 2006]
     var response1 = toConsumableArray(array1)

@@ -88,7 +88,7 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
               // show resources during save
               chrome.storage.local.get(['resource_list_setting'], (settings) => {
                 if (settings && settings.resource_list_setting) {
-                  const resource_list_url = chrome.runtime.getURL('resource_list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
                   openByWindowSetting(resource_list_url, 'windows')
                 }
               })

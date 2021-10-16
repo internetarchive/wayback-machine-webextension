@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const parseDate = require('../webextension/scripts/recommendations').parseDate
+const parseDate = require('../webextension/scripts/tvnews').parseDate
 
 describe('parseDate', () => {
   var tests = [

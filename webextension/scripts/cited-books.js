@@ -1,4 +1,4 @@
-// booklist.js
+// cited-books.js
 
 // from 'utils.js'
 /*   global openByWindowSetting, getUrlByParameter, checkLastError */
@@ -35,7 +35,7 @@ function bookMetadata(book) {
   return false
 }
 
-// This runs every time booklist.html is viewed.
+// This runs every time cited-books.html is viewed.
 // It retrieves a list of book cover images.
 function populateBooks(url) {
   // Gets the data for each book on the wikipedia url

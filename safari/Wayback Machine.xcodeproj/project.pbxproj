@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C32EFC91271AA72A006F4A1E /* resource-list.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8C271AA72A006F4A1E /* resource-list.html */; };
+		C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8D271AA72A006F4A1E /* cited-papers.html */; };
+		C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8E271AA72A006F4A1E /* wordcloud.html */; };
+		C32EFC94271AA72A006F4A1E /* cited-books.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8F271AA72A006F4A1E /* cited-books.html */; };
+		C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC90271AA72A006F4A1E /* tvnews.html */; };
+		C3B3C0F0271AA7E800BD70DF /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = C3B3C0EF271AA7E800BD70DF /* about.html */; };
 		C3CBA8B426E4511100CC9485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8B326E4511100CC9485 /* AppDelegate.swift */; };
 		C3CBA8B726E4511100CC9485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8B526E4511100CC9485 /* Main.storyboard */; };
 		C3CBA8B926E4511100CC9485 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8B826E4511100CC9485 /* ViewController.swift */; };
@@ -15,25 +21,14 @@
 		C3CBA8C726E4511200CC9485 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3CBA8C626E4511200CC9485 /* Cocoa.framework */; };
 		C3CBA8CA26E4511200CC9485 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8C926E4511200CC9485 /* SafariWebExtensionHandler.swift */; };
 		C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D726E4511300CC9485 /* annotations.html */; };
-		C3CBA8EC26E4511300CC9485 /* bulk-save.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D826E4511300CC9485 /* bulk-save.html */; };
-		C3CBA8ED26E4511300CC9485 /* doi.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D926E4511300CC9485 /* doi.html */; };
 		C3CBA8EE26E4511300CC9485 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DA26E4511300CC9485 /* index.html */; };
-		C3CBA8EF26E4511300CC9485 /* recommendations.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DB26E4511300CC9485 /* recommendations.html */; };
-		C3CBA8F026E4511300CC9485 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DC26E4511300CC9485 /* about.html */; };
-		C3CBA8F126E4511300CC9485 /* tagcloud.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DD26E4511300CC9485 /* tagcloud.html */; };
 		C3CBA8F226E4511300CC9485 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DE26E4511300CC9485 /* css */; };
 		C3CBA8F326E4511300CC9485 /* dnserror.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DF26E4511300CC9485 /* dnserror.html */; };
 		C3CBA8F426E4511300CC9485 /* images in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E026E4511300CC9485 /* images */; };
-		C3CBA8F526E4511300CC9485 /* alexa.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E126E4511300CC9485 /* alexa.html */; };
-		C3CBA8F626E4511300CC9485 /* context.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E226E4511300CC9485 /* context.html */; };
-		C3CBA8F726E4511300CC9485 /* booklist.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E326E4511300CC9485 /* booklist.html */; };
-		C3CBA8F826E4511300CC9485 /* resource_list.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E426E4511300CC9485 /* resource_list.html */; };
 		C3CBA8F926E4511300CC9485 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E526E4511300CC9485 /* scripts */; };
 		C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E626E4511300CC9485 /* welcome.html */; };
 		C3CBA8FB26E4511300CC9485 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E726E4511300CC9485 /* manifest.json */; };
 		C3CBA8FC26E4511300CC9485 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E826E4511300CC9485 /* fonts */; };
-		C3CBA8FD26E4511300CC9485 /* wbmsummary.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E926E4511300CC9485 /* wbmsummary.html */; };
-		C3CBA8FE26E4511300CC9485 /* fact-check.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8EA26E4511300CC9485 /* fact-check.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +56,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C32EFC8C271AA72A006F4A1E /* resource-list.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "resource-list.html"; path = "../../webextension/resource-list.html"; sourceTree = "<group>"; };
+		C32EFC8D271AA72A006F4A1E /* cited-papers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "cited-papers.html"; path = "../../webextension/cited-papers.html"; sourceTree = "<group>"; };
+		C32EFC8E271AA72A006F4A1E /* wordcloud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = wordcloud.html; path = ../../webextension/wordcloud.html; sourceTree = "<group>"; };
+		C32EFC8F271AA72A006F4A1E /* cited-books.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "cited-books.html"; path = "../../webextension/cited-books.html"; sourceTree = "<group>"; };
+		C32EFC90271AA72A006F4A1E /* tvnews.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tvnews.html; path = ../../webextension/tvnews.html; sourceTree = "<group>"; };
+		C3B3C0EF271AA7E800BD70DF /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = about.html; path = ../../webextension/about.html; sourceTree = "<group>"; };
 		C3CBA8AF26E4511100CC9485 /* Wayback Machine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wayback Machine.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3CBA8B226E4511100CC9485 /* Wayback_Machine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wayback_Machine.entitlements; sourceTree = "<group>"; };
 		C3CBA8B326E4511100CC9485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,25 +75,14 @@
 		C3CBA8CB26E4511200CC9485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3CBA8CC26E4511200CC9485 /* Wayback_Machine_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wayback_Machine_Extension.entitlements; sourceTree = "<group>"; };
 		C3CBA8D726E4511300CC9485 /* annotations.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = annotations.html; path = ../../webextension/annotations.html; sourceTree = "<group>"; };
-		C3CBA8D826E4511300CC9485 /* bulk-save.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "bulk-save.html"; path = "../../webextension/bulk-save.html"; sourceTree = "<group>"; };
-		C3CBA8D926E4511300CC9485 /* doi.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = doi.html; path = ../../webextension/doi.html; sourceTree = "<group>"; };
 		C3CBA8DA26E4511300CC9485 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../webextension/index.html; sourceTree = "<group>"; };
-		C3CBA8DB26E4511300CC9485 /* recommendations.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = recommendations.html; path = ../../webextension/recommendations.html; sourceTree = "<group>"; };
-		C3CBA8DC26E4511300CC9485 /* about.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = about.html; path = ../../webextension/about.html; sourceTree = "<group>"; };
-		C3CBA8DD26E4511300CC9485 /* tagcloud.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = tagcloud.html; path = ../../webextension/tagcloud.html; sourceTree = "<group>"; };
 		C3CBA8DE26E4511300CC9485 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../../webextension/css; sourceTree = "<group>"; };
 		C3CBA8DF26E4511300CC9485 /* dnserror.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = dnserror.html; path = ../../webextension/dnserror.html; sourceTree = "<group>"; };
 		C3CBA8E026E4511300CC9485 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../webextension/images; sourceTree = "<group>"; };
-		C3CBA8E126E4511300CC9485 /* alexa.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = alexa.html; path = ../../webextension/alexa.html; sourceTree = "<group>"; };
-		C3CBA8E226E4511300CC9485 /* context.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = context.html; path = ../../webextension/context.html; sourceTree = "<group>"; };
-		C3CBA8E326E4511300CC9485 /* booklist.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = booklist.html; path = ../../webextension/booklist.html; sourceTree = "<group>"; };
-		C3CBA8E426E4511300CC9485 /* resource_list.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = resource_list.html; path = ../../webextension/resource_list.html; sourceTree = "<group>"; };
 		C3CBA8E526E4511300CC9485 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../webextension/scripts; sourceTree = "<group>"; };
 		C3CBA8E626E4511300CC9485 /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = welcome.html; path = ../../webextension/welcome.html; sourceTree = "<group>"; };
 		C3CBA8E726E4511300CC9485 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../webextension/manifest.json; sourceTree = "<group>"; };
 		C3CBA8E826E4511300CC9485 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../../webextension/fonts; sourceTree = "<group>"; };
-		C3CBA8E926E4511300CC9485 /* wbmsummary.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = wbmsummary.html; path = ../../webextension/wbmsummary.html; sourceTree = "<group>"; };
-		C3CBA8EA26E4511300CC9485 /* fact-check.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "fact-check.html"; path = "../../webextension/fact-check.html"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,26 +158,21 @@
 		C3CBA8D626E4511300CC9485 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C3CBA8D726E4511300CC9485 /* annotations.html */,
-				C3CBA8D826E4511300CC9485 /* bulk-save.html */,
-				C3CBA8D926E4511300CC9485 /* doi.html */,
-				C3CBA8DA26E4511300CC9485 /* index.html */,
-				C3CBA8DB26E4511300CC9485 /* recommendations.html */,
-				C3CBA8DC26E4511300CC9485 /* about.html */,
-				C3CBA8DD26E4511300CC9485 /* tagcloud.html */,
 				C3CBA8DE26E4511300CC9485 /* css */,
-				C3CBA8DF26E4511300CC9485 /* dnserror.html */,
-				C3CBA8E026E4511300CC9485 /* images */,
-				C3CBA8E126E4511300CC9485 /* alexa.html */,
-				C3CBA8E226E4511300CC9485 /* context.html */,
-				C3CBA8E326E4511300CC9485 /* booklist.html */,
-				C3CBA8E426E4511300CC9485 /* resource_list.html */,
-				C3CBA8E526E4511300CC9485 /* scripts */,
-				C3CBA8E626E4511300CC9485 /* welcome.html */,
-				C3CBA8E726E4511300CC9485 /* manifest.json */,
 				C3CBA8E826E4511300CC9485 /* fonts */,
-				C3CBA8E926E4511300CC9485 /* wbmsummary.html */,
-				C3CBA8EA26E4511300CC9485 /* fact-check.html */,
+				C3CBA8E026E4511300CC9485 /* images */,
+				C3CBA8E526E4511300CC9485 /* scripts */,
+				C3B3C0EF271AA7E800BD70DF /* about.html */,
+				C3CBA8D726E4511300CC9485 /* annotations.html */,
+				C32EFC8F271AA72A006F4A1E /* cited-books.html */,
+				C32EFC8D271AA72A006F4A1E /* cited-papers.html */,
+				C3CBA8DF26E4511300CC9485 /* dnserror.html */,
+				C3CBA8DA26E4511300CC9485 /* index.html */,
+				C32EFC8C271AA72A006F4A1E /* resource-list.html */,
+				C32EFC90271AA72A006F4A1E /* tvnews.html */,
+				C3CBA8E626E4511300CC9485 /* welcome.html */,
+				C32EFC8E271AA72A006F4A1E /* wordcloud.html */,
+				C3CBA8E726E4511300CC9485 /* manifest.json */,
 			);
 			name = Resources;
 			path = "Wayback Machine Extension";
@@ -283,25 +268,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3CBA8F426E4511300CC9485 /* images in Resources */,
+				C32EFC94271AA72A006F4A1E /* cited-books.html in Resources */,
+				C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */,
+				C3B3C0F0271AA7E800BD70DF /* about.html in Resources */,
+				C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */,
 				C3CBA8F326E4511300CC9485 /* dnserror.html in Resources */,
-				C3CBA8F126E4511300CC9485 /* tagcloud.html in Resources */,
-				C3CBA8FE26E4511300CC9485 /* fact-check.html in Resources */,
 				C3CBA8F926E4511300CC9485 /* scripts in Resources */,
-				C3CBA8F026E4511300CC9485 /* about.html in Resources */,
-				C3CBA8F726E4511300CC9485 /* booklist.html in Resources */,
-				C3CBA8F526E4511300CC9485 /* alexa.html in Resources */,
+				C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */,
 				C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */,
 				C3CBA8EE26E4511300CC9485 /* index.html in Resources */,
-				C3CBA8F826E4511300CC9485 /* resource_list.html in Resources */,
 				C3CBA8F226E4511300CC9485 /* css in Resources */,
 				C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */,
-				C3CBA8F626E4511300CC9485 /* context.html in Resources */,
 				C3CBA8FB26E4511300CC9485 /* manifest.json in Resources */,
-				C3CBA8EC26E4511300CC9485 /* bulk-save.html in Resources */,
-				C3CBA8FD26E4511300CC9485 /* wbmsummary.html in Resources */,
 				C3CBA8FC26E4511300CC9485 /* fonts in Resources */,
-				C3CBA8ED26E4511300CC9485 /* doi.html in Resources */,
-				C3CBA8EF26E4511300CC9485 /* recommendations.html in Resources */,
+				C32EFC91271AA72A006F4A1E /* resource-list.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,7 +455,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.18;
+				MARKETING_VERSION = 2.999.20;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -496,7 +476,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.18;
+				MARKETING_VERSION = 2.999.20;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -520,7 +500,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.18;
+				MARKETING_VERSION = 2.999.20;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -543,7 +523,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.18;
+				MARKETING_VERSION = 2.999.20;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -5,22 +5,23 @@
   <meta content="utf-8" http-equiv="encoding">
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/common.css">
-  <link rel="stylesheet" type="text/css" href="css/doi.css">
+  <link rel="stylesheet" type="text/css" href="css/cited-books.css">
   <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
-  <script src="scripts/build.js"></script>
-  <script src="scripts/utils.js"></script>
-  <script src="scripts/doi.js"></script>
-  <title>Cited Papers</title>
+  <title>Cited Books</title>
 </head>
 <body class="body-container">
   <div class="text-center">
     <img src="images/app-icon/app-icon128.png" alt="Internet Archive icon" class="ia-logo">
-    <h2 id="main-title">Cited Papers</h2>
+    <h2 id="main-title">Cited Books</h2>
     <p id="main-info"></p>
     <p id="error-msg"></p>
   </div>
   <br>
   <div class="loader"></div>
-  <div class="wrapper" id="container-whole-doi"></div>
+  <div class="wrapper" id="resultsTray">
+  </div>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/cited-books.js"></script>
 </body>
 </html>

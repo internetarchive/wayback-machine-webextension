@@ -1,8 +1,8 @@
 const dom = require('./setup').jsdom
 const expect = require('chai').expect
-const hypothesisApiUrl = require('../webextension/scripts/annotation').hypothesisApiUrl
+const hypothesisApiUrl = require('../webextension/scripts/annotations').hypothesisApiUrl
 
-describe('annotation', () => {
+describe('annotations', () => {
   it('should format hypothes.is API URL correctly', () => {
     var url1 = 'example.com'
     expect(hypothesisApiUrl(url1, 'domain')).to.be.equal('https://hypothes.is/api/search?uri.parts=example&uri.parts=com')

@@ -1,4 +1,4 @@
-// tagcloud.js
+// wordcloud.js
 
 // from 'index.js'
 /*   global Levenshtein */
