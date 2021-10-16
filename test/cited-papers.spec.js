@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const getMetadata = require('../webextension/scripts/doi').getMetadata
+const getMetadata = require('../webextension/scripts/cited-papers').getMetadata
 
 describe('doi: getMetadata()', () => {
   let response = {

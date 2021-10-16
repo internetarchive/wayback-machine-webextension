@@ -491,7 +491,7 @@ function setupWikiButtons() {
               openByWindowSetting(URL)
             })
             $('#wikipapers-btn').click(() => {
-              const URL = chrome.runtime.getURL('doi.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + url
               openByWindowSetting(URL)
             })
           }

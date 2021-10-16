@@ -1,4 +1,4 @@
-// doi.js
+// cited-papers.js
 
 // from 'utils.js'
 /*   global getUrlByParameter, openByWindowSetting, checkLastError */
