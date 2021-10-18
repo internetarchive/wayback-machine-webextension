@@ -221,16 +221,19 @@ function social_share(eventObj) {
 }
 
 function searchTweet() {
-  const curl = cropScheme(getCleanUrl(activeURL))
-  if (curl) {
-    let surl = curl
-    if (surl.slice(-1) === '/') {
-      // remove trailing slash if present
-      surl = surl.substring(0, surl.length - 1)
+  let clean_url = getCleanUrl(activeURL)
+  if(isValidUrl(clean_url)){
+    const curl = cropScheme(clean_url)
+    if (curl) {
+      let surl = curl
+      if (surl.slice(-1) === '/') {
+        // remove trailing slash if present
+        surl = surl.substring(0, surl.length - 1)
+      }
+      const query = `(${surl} OR https://${curl} OR http://${curl})`
+      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(query)
+      openByWindowSetting(open_url)
     }
-    const query = `(${surl} OR https://${curl} OR http://${curl})`
-    let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(query)
-    openByWindowSetting(open_url)
   }
 }
 
