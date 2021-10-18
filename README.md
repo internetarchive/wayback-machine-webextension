@@ -11,12 +11,10 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 - **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
 - **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
 - **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
-- **Fact Checks** - Provides a list of fact checkers who have analyzed the web page you visit for misinformation, provided by [our.news](https://our.news/).
 - **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
 - **Relevant Resources** - View archived digitized books while visiting *Amazon Books*, research papers and books while visiting *Wikipedia*, and recommended *TV News Clips* while visiting news websites.
 - **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
 - **Tweets, Alexa Internet, Share Links** - Search Twitter for information regarding your current page, or provide analytics from [Alexa Internet](https://www.alexa.com). Share archived links on social media.
-- **Bulk Save** - Archive a list of URLs that you provide, or retrieve from bookmarks.
 
 
 ## Installing the Extension
