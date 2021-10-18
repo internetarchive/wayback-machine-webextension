@@ -6,5 +6,5 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 global.$ = require('jquery')
 global.jQuery = require('jquery')
-global.Levenshtein = require('fast-levenshtein')
-global.jsSHA = require('jssha')
+global.Levenshtein = require('fast-levenshtein') // used in wordcloud.js
+// global.jsSHA = require('jssha') // NOT USED

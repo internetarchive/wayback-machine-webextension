@@ -1,6 +1,6 @@
 {
   "name": "wayback-machine-webextension",
-  "version": "2.999.20",
+  "version": "2.999.21",
   "description": "A browser extension that interfaces with the internet archive",
   "main": "index.js",
   "directories": {
@@ -35,13 +35,12 @@
     "jsdom": "^16.5.2",
     "jssha": "^3.2.0",
     "mini-css-extract-plugin": "^1.4.1",
-    "mocha": "^8.3.2",
+    "mocha": ">=8.3.2",
     "style-loader": "^2.0.0",
     "webpack": "^5.31.2",
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "bootstrap-material-design-icons": "^2.2.0",
     "jquery": "^3.6.0",
     "url-loader": "^4.1.1"
   }
