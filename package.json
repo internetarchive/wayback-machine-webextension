@@ -41,7 +41,6 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "bootstrap-material-design-icons": "^2.2.0",
     "jquery": "^3.6.0",
     "url-loader": "^4.1.1"
   }
