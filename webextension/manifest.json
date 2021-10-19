@@ -30,7 +30,6 @@
       "contextMenus",
       "notifications",
       "storage",
-      "tabs",
       "webRequest",
       "webRequestBlocking",
       "https://archive.org/*",
