@@ -548,6 +548,7 @@ function showContext(eventObj) {
 
 function setExcluded() {
   $('#spn-btn').addClass('flip-inside')
+  $('#last-saved-msg').hide()
   $('#url-not-supported-msg').text('URL not supported')
 }
 
