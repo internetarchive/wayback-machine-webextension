@@ -84,12 +84,20 @@ function doLogin(e) {
 }
 
 function doLogout() {
+  console.log('doLogout()') // DEBUG
   chrome.cookies.getAll({ domain: '.archive.org' }, (cookies) => {
+    console.log(cookies) // DEBUG
     for (let i = 0; i < cookies.length; i++) {
       if (cookies[i].name !== 'test-cookie') {
-        chrome.cookies.remove({ url: 'https://archive.org', name: cookies[i].name })
+        chrome.cookies.remove({ url: 'https://archive.org', name: cookies[i].name }, (details) => {
+          // details will be null if failed, and runtime.lastError set
+          console.log(details) // DEBUG
+          console.log(runtime.lastError) // DEBUG
+        })
       }
     }
+    // chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
+    // chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' }) // TEST: didn't fix
     $('#logout-tab-btn').hide()
     $('.tab-item').css('width', '22%')
     loginError()
