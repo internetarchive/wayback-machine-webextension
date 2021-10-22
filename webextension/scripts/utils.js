@@ -192,8 +192,8 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
         onfail()
       }
     })
-    .catch((err) =>{
-      //catch the error in case of api failure
+    .catch((err) => {
+      // catch the error in case of api failure
       console.log(err)
     })
 }
