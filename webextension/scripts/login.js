@@ -84,14 +84,14 @@ function doLogin(e) {
 }
 
 function doLogout() {
-  chrome.cookies.getAll({ domain: '.archive.org' }, (cookies) => {
-    for (let i = 0; i < cookies.length; i++) {
-      if (cookies[i].name !== 'test-cookie') {
-        chrome.cookies.remove({ url: 'https://archive.org', name: cookies[i].name })
-      }
-    }
-    $('#logout-tab-btn').hide()
-    $('.tab-item').css('width', '22%')
-    loginError()
-  })
+  // set cookies to empty values for Safari
+  chrome.cookies.set({ domain: '.archive.org', name: 'logged-in-user', url: 'https://archive.org' })
+  chrome.cookies.set({ domain: '.archive.org', name: 'logged-in-sig', url: 'https://archive.org' })
+  // removes cookies in Chrome & Firefox
+  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
+  chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
+  // update UI
+  $('#logout-tab-btn').hide()
+  $('.tab-item').css('width', '22%')
+  loginError()
 }
