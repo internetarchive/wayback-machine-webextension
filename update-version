@@ -1,8 +1,10 @@
 #!/bin/bash
 
 echo "Usage: $0 [version]"
-echo ""
-echo "Current version is "
+echo " "
+
+version=`grep '"version"' webextension/manifest.json | sed 's/[\ ]*\"version\"\:\ \"\([0-9\.]*\)\"\,/\1/'`
+echo "Current version is $version"
 
 if [ -n "$1" ]; then
   echo "Updating version to $1"
