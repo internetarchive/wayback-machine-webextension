@@ -49,8 +49,8 @@
             // let icon = addDonateIcon(isbn)
             // book.parentElement.append(icon)
           }
+          setTimeout(addBook, 1, books)
         }
-        setTimeout(addBook, 1, books)
       }, 1, books)
     }).catch((error) => {
       console.log(error)
