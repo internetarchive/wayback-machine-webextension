@@ -10,18 +10,18 @@
 (function(window) {
 
   const hrefPatterns = {
-    'ar': '/wiki/%D8%AE%D8%A7%D8%B5:%D9%85%D8%B5%D8%A7%D8%AF%D8%B1_%D9%83%D8%AA%D8%A7%D8%A8',
-    'de': '/wiki/Spezial:ISBN-Suche',
-    'en': '/wiki/Special:BookSources',
-    'es': '/wiki/Especial:FuentesDeLibros',
-    'fr': '/wiki/Sp%C3%A9cial:Ouvrages_de_r%C3%A9f%C3%A9rence',
-    'it': '/wiki/Speciale:RicercaISBN',
-    'ja': '/wiki/%E7%89%B9%E5%88%A5:%E6%96%87%E7%8C%AE%E8%B3%87%E6%96%99',
-    'pl': '/wiki/Specjalna:Ksi%C4%85%C5%BCki',
-    'pt': '/wiki/Especial:Fontes_de_livros',
-    'ru': '/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%98%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%B8_%D0%BA%D0%BD%D0%B8%D0%B3',
-    'simple': '/wiki/Special:BookSources',
-    'zh': '/wiki/Special:%E7%BD%91%E7%BB%9C%E4%B9%A6%E6%BA%90'
+    'simple': 'Special:BookSources',
+    'ar': '%D8%AE%D8%A7%D8%B5:%D9%85%D8%B5%D8%A7%D8%AF%D8%B1_%D9%83%D8%AA%D8%A7%D8%A8',
+    'de': 'Spezial:ISBN-Suche',
+    'en': 'Special:BookSources',
+    'es': 'Especial:FuentesDeLibros',
+    'fr': 'Sp%C3%A9cial:Ouvrages_de_r%C3%A9f%C3%A9rence',
+    'it': 'Speciale:RicercaISBN',
+    'ja': '%E7%89%B9%E5%88%A5:%E6%96%87%E7%8C%AE%E8%B3%87%E6%96%99',
+    'pl': 'Specjalna:Ksi%C4%85%C5%BCki',
+    'pt': 'Especial:Fontes_de_livros',
+    'ru': '%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%98%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%B8_%D0%BA%D0%BD%D0%B8%D0%B3',
+    'zh': 'Special:%E7%BD%91%E7%BB%9C%E4%B9%A6%E6%BA%90'
   }
 
   function addCitations(url) {
@@ -30,7 +30,7 @@
       // find book anchor elements in page
       const lang = extractWikiLanguage(url)
       const patt = hrefPatterns[lang] || hrefPatterns['en']
-      let books = Array.from(document.querySelectorAll(`a[href^='${patt}']`))
+      let books = Array.from(document.querySelectorAll(`a[href^='/wiki/${patt}']`))
 
       // add books asynchronously so website doesn't freeze up
       setTimeout(function addBook(books) {
