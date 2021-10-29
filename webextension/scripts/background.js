@@ -238,13 +238,15 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
  * @param url {string}
  * @param onSuccess(json): json = root object from API call.
  * @param onFail(error): error = Error object or null.
+ * @param postData {object}: if present, uses POST instead of GET and sends postData object converted to json.
  * @return Promise
  */
-function fetchAPI(url, onSuccess, onFail) {
+function fetchAPI(url, onSuccess, onFail, postData = null) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     fetch(url, {
-      method: 'GET',
+      method: (postData) ? 'POST' : 'GET',
+      body: (postData) ? JSON.stringify(postData) : null,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -270,14 +272,15 @@ function fetchAPI(url, onSuccess, onFail) {
  * @param url {string}
  * @param onSuccess(json): json = root object from API call.
  * @param onFail(error): error = Error object or null.
+ * @param postData {object}: uses POST if present.
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
-function fetchCachedAPI(url, onSuccess, onFail) {
+function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
   let data = globalAPICache.get(url)
   if (data === API_LOADING) {
     // re-call after delay if previous fetch hadn't returned yet
     setTimeout(() => {
-      fetchCachedAPI(url, onSuccess, onFail)
+      fetchCachedAPI(url, onSuccess, onFail, postData)
     }, API_RETRY)
     return null
   } else if (data !== undefined) {
@@ -295,13 +298,24 @@ function fetchCachedAPI(url, onSuccess, onFail) {
     }, (error) => {
       globalAPICache.delete(url)
       onFail(error)
-    })
+    }, postData)
   }
 }
 
-function getCachedBooks(url, onSuccess, onFail) {
+/**
+ * The books API uses both GET, and POST with isbns array as the body.
+ * @param url {string}: Must include '?url=' as entire url is used as cache key.
+ * @param onSuccess(json): json = root object from API call.
+ * @param onFail(error): error = Error object or null.
+ * @param isbns: (optional) array of isbn strings.
+ */
+function getCachedBooks(url, onSuccess, onFail, isbns = null) {
   const requestUrl = hostURL + 'services/context/books?url=' + fixedEncodeURIComponent(url)
-  fetchCachedAPI(requestUrl, onSuccess, onFail)
+  if (isbns) {
+    fetchCachedAPI(requestUrl, onSuccess, onFail, { isbns: isbns })
+  } else {
+    fetchCachedAPI(requestUrl, onSuccess, onFail)
+  }
 }
 
 function getCachedPapers(url, onSuccess, onFail) {
@@ -448,7 +462,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve wikipedia books
     getCachedBooks(message.query,
       (json) => { sendResponse(json) },
-      (error) => { sendResponse({ error: error }) }
+      (error) => { sendResponse({ error: error }) },
+      message.isbns
     )
     return true
   } else if (message.message === 'getCitedPapers') {
@@ -483,6 +498,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // retrieve the toolbar state set
     let state = getToolbarState(message.atab)
     sendResponse({ stateArray: Array.from(state) })
+  } else if (message.message === 'addToolbarStates') {
+    // add one or more states to the toolbar
+    // States will fail to show if tab is loading but not in focus!
+    // Content scripts cannot use tabs.query and send the tab, so it must be called here.
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0] && (tabs[0].url === message.url)) {
+        for (let state of message.states) {
+          addToolbarState(tabs[0], state)
+        }
+      }
+    })
   } else if (message.message === 'clearCountBadge') {
     // wayback count settings unchecked
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -565,14 +591,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (settings) => {
       // checking wikipedia books & papers
       if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
-        getCachedBooks(clean_url,
-          (data) => {
-            if (data && (data.status !== 'error')) {
-              addToolbarState(tab, 'R')
-              addToolbarState(tab, 'books')
-            }
-          }, () => {}
-        )
+        // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
         getCachedPapers(clean_url,
           (data) => {
             if (data && (data.status !== 'error')) {

@@ -25,12 +25,30 @@
   }
 
   function addCitations(url) {
-    getWikipediaBooks(url).then((data) => {
 
-      // find book anchor elements in page
-      const lang = extractWikiLanguage(url)
-      const patt = hrefPatterns[lang] || hrefPatterns['en']
-      let books = Array.from(document.querySelectorAll(`a[href^='/wiki/${patt}']`))
+    // find book anchor elements in page
+    const lang = extractWikiLanguage(url)
+    const patt = hrefPatterns[lang] || hrefPatterns['en']
+    let books = Array.from(document.querySelectorAll(`a[href^='/wiki/${patt}']`))
+    const isbns = books.map((book) => {
+      return book.href.split('/').pop().replace(/-/g, '')
+    })
+    if (isbns.length === 0) { return }
+    console.log({ url, isbns }) // DEBUG
+
+    // get matching books from API
+    getWikipediaBooks(url /*, isbns */).then((data) => { // TODO: uncomment once books API supports POST
+      console.log({ data }) // DEBUG
+      if (!data || (data && data.status && (data.status === 'error'))) {
+        // no matching books returned
+        return
+      } else {
+        // indicate in toolbar that we have found books
+        // Content scripts cannot use tabs.query, so it must be called in background.js
+        chrome.runtime.sendMessage({ message: 'addToolbarStates', states: ['R', 'books'], url: url }, (result) => {
+          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
+        })
+      }
 
       // add books asynchronously so website doesn't freeze up
       setTimeout(function addBook(books) {
@@ -143,11 +161,12 @@
   // Get all books on wikipedia page through
   // https://archive.org/services/context/books?url=...
   //
-  function getWikipediaBooks(url) {
+  function getWikipediaBooks(url, isbns = null) {
     // Encapsulate the chrome message sender with a promise object
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({
         message: 'getWikipediaBooks',
+        isbns: isbns,
         query: url
       }, (books) => {
         if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
