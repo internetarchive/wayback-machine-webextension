@@ -81,11 +81,7 @@
       return {
         'title': (book.metadata.title.length > MAX_TITLE_LEN) ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
         'author': book.metadata.creator,
-        'image': 'https://archive.org/services/img/' + book.metadata.identifier,
-        'link': book.metadata['identifier-access'],
-        'button_text': 'Read Book',
-        'button_class': 'btn btn-auto btn-blue',
-        'readable': true
+        'image': 'https://archive.org/services/img/' + book.metadata.identifier
       }
     }
     return false
