@@ -34,11 +34,9 @@
       return book.href.split('/').pop().replace(/-/g, '')
     })
     if (isbns.length === 0) { return }
-    console.log({ url, isbns }) // DEBUG
 
     // get matching books from API
-    getWikipediaBooks(url /*, isbns */).then((data) => { // TODO: uncomment once books API supports POST
-      console.log({ data }) // DEBUG
+    getWikipediaBooks(url, isbns).then((data) => {
       if (!data || (data && data.status && (data.status === 'error'))) {
         // no matching books returned
         return
