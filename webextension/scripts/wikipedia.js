@@ -24,15 +24,76 @@
     'zh': 'Special:%E7%BD%91%E7%BB%9C%E4%B9%A6%E6%BA%90'
   }
 
+  // returns an ISBN string from book element
+  function extractISBN(book) {
+    return book.href.split('/').pop().replace(/-/g, '')
+  }
+
+  // returns true if given string is a valid ISBN
+  function isISBN(isbn) {
+    // may contain only 0-9, X, or dashes
+    if (/[0-9X-]+/.test(isbn)) {
+      isbn = isbn.replace(/-/g, '')
+
+      if (isbn.length === 10) {
+        // ISBN-10
+        isbn = isbn.replace(/X/g, 'A') // hack to use hex numbers
+        // following algorithm returns true if check digit is valid
+        let s = 0, t = 0
+        for (let i = 0; i < 10; i++) {
+          t += parseInt(isbn.charAt(i), 16)
+          s += t
+        }
+        return ((s % 11) === 0)
+
+      } else if ((isbn.length === 13) && (isbn.startsWith('978') || isbn.startsWith('979'))) {
+        // ISBN-13
+        // not bothering to verify check digit as this is good enough for now
+        return true
+      }
+    }
+    return false
+  }
+
+  // Returns an array of <a> elements in page that point to book ISBNs.
+  // Old method that relies on a different pattern for each language.
+  //
+  function getBookAnchorElementsOld(url) {
+    const lang = extractWikiLanguage(url)
+    const patt = hrefPatterns[lang] || hrefPatterns['en']
+    const books = Array.from(document.querySelectorAll(`a[href^='/wiki/${patt}']`))
+    return books
+  }
+
+  // Returns an array of <a> elements in page that point to book ISBNs.
+  // This generic version should work across all languages
+  //
+  function getBookAnchorElements() {
+    let books = []
+    const nodes = document.querySelectorAll('a[href^="/wiki/"]')
+    for (const node of nodes) {
+      if (isISBN(extractISBN(node))) { books.push(node) }
+    }
+    return books
+  }
+
   function addCitations(url) {
 
     // find book anchor elements in page
-    const lang = extractWikiLanguage(url)
-    const patt = hrefPatterns[lang] || hrefPatterns['en']
-    let books = Array.from(document.querySelectorAll(`a[href^='/wiki/${patt}']`))
-    const isbns = books.map((book) => {
-      return book.href.split('/').pop().replace(/-/g, '')
+
+    // TEST: compare old with new
+    let old_books = getBookAnchorElementsOld(url)
+    const old_isbns = old_books.map((book) => {
+      return extractISBN(book)
     })
+    console.log({ old_isbns }) // DEBUG
+
+    let books = getBookAnchorElements()
+    const isbns = books.map((book) => {
+      return extractISBN(book)
+    })
+    console.log({ isbns }) // DEBUG
+
     if (isbns.length === 0) { return }
 
     // get matching books from API
@@ -52,7 +113,7 @@
       setTimeout(function addBook(books) {
         let book = books.shift()
         if (book) {
-          let isbn = book.href.split('/').pop().replace(/-/g, '')
+          let isbn = extractISBN(book)
           let id = getIdentifier(data[isbn])
           let metadata = getMetadata(data[isbn])
           let page = getPageFromCitation(book)
