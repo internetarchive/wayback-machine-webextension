@@ -235,6 +235,7 @@
     return span
   }
 
+  // returns true if url is a valid Wikipedia URL
   function isWikipediaUrl(url) {
     if (typeof url !== 'string') { return false }
     try {
@@ -242,17 +243,6 @@
       return (hostname === 'wikipedia.org') || hostname.endsWith('.wikipedia.org')
     } catch (e) {
       return false
-    }
-  }
-
-  // returns the language prefix of wikipedia url, else empty string.
-  function extractWikiLanguage(url) {
-    if (typeof url !== 'string') { return '' }
-    try {
-      const hostname = new URL(url).hostname
-      return hostname.split('.')[0]
-    } catch (e) {
-      return ''
     }
   }
 
