@@ -9,9 +9,9 @@
 
 (function(window) {
 
-  // returns an ISBN string from book element
-  function extractISBN(book) {
-    return book.href.split('/').pop().replace(/-/g, '')
+  // returns an ISBN string without dashes from a book's href string, else an empty string
+  function extractISBN(url) {
+    return (typeof url === 'string') ? url.split('/').pop().replace(/-/g, '') : ''
   }
 
   // returns true if given string is a valid ISBN
@@ -47,7 +47,7 @@
     let books = []
     const nodes = document.querySelectorAll('a[href^="/wiki/"]')
     for (const node of nodes) {
-      if (isISBN(extractISBN(node))) { books.push(node) }
+      if (isISBN(extractISBN(node.href))) { books.push(node) }
     }
     return books
   }
@@ -57,7 +57,7 @@
     // find book anchor elements in page
     let books = getBookAnchorElements()
     const isbns = books.map((book) => {
-      return extractISBN(book)
+      return extractISBN(book.href)
     })
     if (isbns.length === 0) { return }
 
@@ -78,7 +78,7 @@
       setTimeout(function addBook(books) {
         let book = books.shift()
         if (book) {
-          let isbn = extractISBN(book)
+          let isbn = extractISBN(book.href)
           let id = getIdentifier(data[isbn])
           let metadata = getMetadata(data[isbn])
           let page = getPageFromCitation(book)
@@ -257,9 +257,21 @@
   }
 
   // calling direct instead of onload because of delay while injecting script
-  chrome.storage.local.get(['agreement', 'wiki_setting'], (settings) => {
-    if (settings && settings.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
-      addCitations(location.href)
+  if ((typeof chrome !== 'undefined') && chrome.storage) {
+    chrome.storage.local.get(['agreement', 'wiki_setting'], (settings) => {
+      if (settings && settings.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
+        addCitations(location.href)
+      }
+    })
+  }
+
+  // export for unit testing
+  if (typeof module !== 'undefined') {
+    module.exports = {
+      extractISBN,
+      isISBN,
+      isWikipediaUrl
     }
-  })
+  }
+
 })(window)
