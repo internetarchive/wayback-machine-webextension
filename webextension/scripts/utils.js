@@ -100,6 +100,14 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
+// user agent isn't modified in Chrome
+const hostUserAgent = navigator.userAgent + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + chrome.runtime.getManifest().version
+const hostHeaders = new Headers({
+  'Accept': 'application/json',
+  'User-Agent': hostUserAgent,
+  'backend': 'nomad'
+})
+
 /* * * Wayback functions * * */
 
 /**
@@ -140,9 +148,7 @@ function getWaybackCount(url, onSuccess, onFail) {
       }, 30000)
       fetch(requestUrl + requestParams, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: hostHeaders
       })
       .then(resolve, reject)
     })
@@ -177,25 +183,23 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   const requestParams = 'url=' + fixedEncodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
-    headers: new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }),
+    headers: hostHeaders,
     body: requestParams
   })
-    .then(response => response.json())
-    .then((json) => {
-      let wayback_url = getWaybackUrlFromResponse(json)
-      let timestamp = getWaybackTimestampFromResponse(json)
-      if (wayback_url !== null) {
-        onsuccess(wayback_url, url, timestamp)
-      } else if (onfail) {
-        onfail()
-      }
-    })
-    .catch((err) => {
-      // catch the error in case of api failure
-      console.log(err)
-    })
+  .then(response => response.json())
+  .then((json) => {
+    let wayback_url = getWaybackUrlFromResponse(json)
+    let timestamp = getWaybackTimestampFromResponse(json)
+    if (wayback_url !== null) {
+      onsuccess(wayback_url, url, timestamp)
+    } else if (onfail) {
+      onfail()
+    }
+  })
+  .catch((err) => {
+    // catch the error in case of api failure
+    console.log(err)
+  })
 }
 
 /**
@@ -479,7 +483,7 @@ function checkLastError() {
       // Skip
     } else {
       console.log(chrome.runtime.lastError.message)
-      // console.trace() // uncomment while debugging
+      console.trace() // uncomment while debugging
     }
   } else {
     // No error occurred
@@ -584,6 +588,8 @@ if (typeof module !== 'undefined') {
     isEdge,
     isSafari,
     hostURL,
+    hostUserAgent,
+    hostHeaders,
     timestampToDate,
     dateToTimestamp,
     viewableTimestamp,
