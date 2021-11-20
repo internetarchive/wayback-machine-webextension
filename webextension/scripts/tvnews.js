@@ -78,8 +78,8 @@ function getArticles(url) {
 
 // onload
 $(function() {
-  // If not running through mocha, then only execute
-  if (!isInTestEnv) { getArticles(getUrlByParameter('url')) }
+  // will not run during mocha testing
+  if (typeof isInTestEnv === 'undefined') { getArticles(getUrlByParameter('url')) }
 })
 
 if (typeof module !== 'undefined') {

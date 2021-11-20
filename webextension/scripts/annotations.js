@@ -109,8 +109,8 @@ $(function() {
   $('.tablink').click(() => {
     showAnnotations($(this).attr('value'))
   })
-  // If not running through mocha, then only execute
-  if (!isInTestEnv) { get_hypothesis() }
+  // will not run during mocha testing
+  if (typeof isInTestEnv === 'undefined') { get_hypothesis() }
 })
 
 if (typeof module !== 'undefined') {

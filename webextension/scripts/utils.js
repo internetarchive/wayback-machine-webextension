@@ -3,6 +3,9 @@
 // from 'background.js'
 /*   global private_before_default */
 
+// from 'test/setup.js'
+/*   global isInTestEnv */
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
@@ -35,9 +38,6 @@ const newshosts = new Set([
   'www.washingtonpost.com',
   'edition.cnn.com'
 ])
-
-// Check if in testing environment , default false, true while running tests
-const isInTestEnv = false
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
@@ -100,6 +100,26 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
+function getCustomUserAgent() {
+  let uAgent = navigator.userAgent || ''
+  const manifest = chrome.runtime.getManifest()
+  if (manifest) {
+    uAgent += ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + manifest.version
+  }
+  return uAgent
+}
+
+let hostHeaders = new Headers({
+  'Accept': 'application/json',
+  'backend': 'nomad'
+})
+
+// will not run during mocha testing
+if (typeof isInTestEnv === 'undefined') {
+  // Chrome ignores this being set. Works in Firefox & Safari.
+  hostHeaders.set('User-Agent', getCustomUserAgent())
+}
+
 /* * * Wayback functions * * */
 
 /**
@@ -140,9 +160,7 @@ function getWaybackCount(url, onSuccess, onFail) {
       }, 30000)
       fetch(requestUrl + requestParams, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: hostHeaders
       })
       .then(resolve, reject)
     })
@@ -177,25 +195,23 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   const requestParams = 'url=' + fixedEncodeURIComponent(url)
   fetch(requestUrl, {
     method: 'POST',
-    headers: new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }),
+    headers: hostHeaders,
     body: requestParams
   })
-    .then(response => response.json())
-    .then((json) => {
-      let wayback_url = getWaybackUrlFromResponse(json)
-      let timestamp = getWaybackTimestampFromResponse(json)
-      if (wayback_url !== null) {
-        onsuccess(wayback_url, url, timestamp)
-      } else if (onfail) {
-        onfail()
-      }
-    })
-    .catch((err) => {
-      // catch the error in case of api failure
-      console.log(err)
-    })
+  .then(response => response.json())
+  .then((json) => {
+    let wayback_url = getWaybackUrlFromResponse(json)
+    let timestamp = getWaybackTimestampFromResponse(json)
+    if (wayback_url !== null) {
+      onsuccess(wayback_url, url, timestamp)
+    } else if (onfail) {
+      onfail()
+    }
+  })
+  .catch((err) => {
+    // catch the error in case of api failure
+    console.log(err)
+  })
 }
 
 /**
@@ -584,6 +600,7 @@ if (typeof module !== 'undefined') {
     isEdge,
     isSafari,
     hostURL,
+    hostHeaders,
     timestampToDate,
     dateToTimestamp,
     viewableTimestamp,

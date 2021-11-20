@@ -6,10 +6,11 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
+/*   global hostHeaders */
 
-let manifest = chrome.runtime.getManifest()
 // Load version from Manifest.json file
-let VERSION = manifest.version
+const VERSION = chrome.runtime.getManifest().version
+
 // Used to store the statuscode of the if it is a httpFailCodes
 let globalStatusCode = ''
 let gToolbarStates = {}
@@ -59,15 +60,12 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(hostURL + 'save/',
-        {
-          credentials: 'include',
-          method: 'POST',
-          body: data,
-          headers: {
-            'Accept': 'application/json'
-          }
-        })
+      fetch(hostURL + 'save/', {
+        credentials: 'include',
+        method: 'POST',
+        body: data,
+        headers: hostHeaders
+      })
       .then(resolve, reject)
     })
     return timeoutPromise
@@ -117,7 +115,7 @@ function authCheckAPI() {
     fetch(hostURL + 'save/', {
       credentials: 'include',
       method: 'POST',
-      headers: { 'Accept': 'application/json' }
+      headers: hostHeaders
     })
     .then(resolve, reject)
   })
@@ -150,10 +148,9 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           credentials: 'include',
           method: 'POST',
           body: val_data,
-          headers: {
-            'Accept': 'application/json'
-          }
-        }).then(resolve, reject)
+          headers: hostHeaders
+        })
+        .then(resolve, reject)
       }
     })
     timeoutPromise
@@ -247,9 +244,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
     fetch(url, {
       method: (postData) ? 'POST' : 'GET',
       body: (postData) ? JSON.stringify(postData) : null,
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: hostHeaders
     })
     .then(resolve, reject)
   })
@@ -626,15 +621,18 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           const url = getCleanUrl(tab.url)
           // checking resource of amazon books
           if (url.includes('www.amazon')) {
-            fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-              .then(resp => resp.json())
-              .then(resp => {
-                if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                  addToolbarState(tab, 'R')
-                  // Storing the tab url as well as the fetched archive url for future use
-                  chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
-                }
-              })
+            fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
+              method: 'GET',
+              headers: hostHeaders
+            })
+            .then(resp => resp.json())
+            .then(resp => {
+              if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
+                addToolbarState(tab, 'R')
+                // Storing the tab url as well as the fetched archive url for future use
+                chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
+              }
+            })
           }
         }
       })
