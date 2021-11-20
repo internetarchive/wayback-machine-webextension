@@ -3,6 +3,9 @@
 // from 'background.js'
 /*   global private_before_default */
 
+// from 'test/setup.js'
+/*   global isInTestEnv */
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
@@ -492,7 +495,7 @@ function checkLastError() {
       // Skip
     } else {
       console.log(chrome.runtime.lastError.message)
-      console.trace() // uncomment while debugging
+      // console.trace() // uncomment while debugging
     }
   } else {
     // No error occurred
