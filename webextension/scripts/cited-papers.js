@@ -105,8 +105,8 @@ function getPapers(url) {
 
 // onload
 $(function() {
-  // If not running through mocha, then only execute
-  if (!isInTestEnv) { createPage() }
+  // will not run during mocha testing
+  if (typeof isInTestEnv === 'undefined') { createPage() }
 })
 
 if (typeof module !== 'undefined') {

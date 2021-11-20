@@ -36,9 +36,6 @@ const newshosts = new Set([
   'edition.cnn.com'
 ])
 
-// Check if in testing environment , default false, true while running tests
-const isInTestEnv = false
-
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
 let private_before_state
@@ -100,13 +97,25 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
-// user agent isn't modified in Chrome
-const hostUserAgent = navigator.userAgent + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + chrome.runtime.getManifest().version
-const hostHeaders = new Headers({
+function getCustomUserAgent() {
+  let uAgent = navigator.userAgent || ''
+  const manifest = chrome.runtime.getManifest()
+  if (manifest) {
+    uAgent += ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + manifest.version
+  }
+  return uAgent
+}
+
+let hostHeaders = new Headers({
   'Accept': 'application/json',
-  'User-Agent': hostUserAgent,
   'backend': 'nomad'
 })
+
+// will not run during mocha testing
+if (typeof isInTestEnv === 'undefined') {
+  // Chrome ignores this being set. Works in Firefox & Safari.
+  hostHeaders.set('User-Agent', getCustomUserAgent())
+}
 
 /* * * Wayback functions * * */
 
@@ -588,7 +597,6 @@ if (typeof module !== 'undefined') {
     isEdge,
     isSafari,
     hostURL,
-    hostUserAgent,
     hostHeaders,
     timestampToDate,
     dateToTimestamp,

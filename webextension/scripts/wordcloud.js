@@ -123,8 +123,8 @@ function toConsumableArray (arr) {
 
 // onload
 $(function() {
-  // If not running through mocha, then only execute
-  if (!isInTestEnv) { getTags() }
+  // will not run during mocha testing
+  if (typeof isInTestEnv === 'undefined') { getTags() }
 })
 
 if (typeof module !== 'undefined') {
