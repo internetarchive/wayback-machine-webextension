@@ -240,9 +240,11 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
 function fetchAPI(url, onSuccess, onFail) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    let headers = new Headers(hostHeaders)
+    headers.set('backend', 'nomad')
     fetch(url, {
       method: 'GET',
-      headers: hostHeaders
+      headers: headers
     })
     .then(resolve, reject)
   })
@@ -602,9 +604,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           const url = getCleanUrl(tab.url)
           // checking resource of amazon books
           if (url.includes('www.amazon')) {
+            let headers = new Headers(hostHeaders)
+            headers.set('backend', 'nomad')
             fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
               method: 'GET',
-              headers: hostHeaders
+              headers: headers
             })
             .then(resp => resp.json())
             .then(resp => {
