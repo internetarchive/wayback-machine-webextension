@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, getCustomUserAgent */
 
 // Used to store the statuscode of the if it is a httpFailCodes
