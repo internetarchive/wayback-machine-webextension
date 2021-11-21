@@ -6,13 +6,10 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders */
-
-// Load version from Manifest.json file
-const VERSION = chrome.runtime.getManifest().version
+/*   global hostHeaders, getCustomUserAgent */
 
 // Used to store the statuscode of the if it is a httpFailCodes
-let globalStatusCode = ''
+let gStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -28,10 +25,14 @@ let private_before_default = new Set([
   'not-found-setting'
 ])
 
+// updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
   for (let header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
+      const customUA = getCustomUserAgent()
+      const statusUA = 'Status-code/' + gStatusCode
+      // add customUA only if not yet present in user-agent
+      header.value += ' ' + ((header.value.indexOf(customUA) === -1) ? customUA + ' ' : '') + statusUA
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -373,7 +374,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 chrome.webRequest.onCompleted.addListener((details) => {
   function tabIsReady(tabId) {
     if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      globalStatusCode = details.statusCode
+      gStatusCode = details.statusCode
       // insert script first, then check wayback machine, then show banner
       chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
