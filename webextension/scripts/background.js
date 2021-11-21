@@ -18,7 +18,6 @@ const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
 const API_RETRY = 1000
 let tabIdPromise
-let WB_API_URL = hostURL + 'wayback/available'
 const SPN_RETRY = 6000
 
 let private_before_default = new Set([
@@ -32,7 +31,7 @@ function rewriteUserAgentHeader(e) {
       const customUA = getCustomUserAgent()
       const statusUA = 'Status-code/' + gStatusCode
       // add customUA only if not yet present in user-agent
-      header.value += ' ' + ((header.value.indexOf(customUA) === -1) ? customUA + ' ' : '') + statusUA
+      header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -349,7 +348,7 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
   rewriteUserAgentHeader,
-  { urls: [WB_API_URL] },
+  { urls: [hostURL + '*'] },
   ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
 )
 
@@ -399,6 +398,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
   } // function
 
   if (details.tabId >= 0) {
+    gStatusCode = ''
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
