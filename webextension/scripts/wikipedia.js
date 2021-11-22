@@ -56,10 +56,12 @@
 
     // find book anchor elements in page
     let books = getBookAnchorElements()
-    const isbns = books.map((book) => {
+    let isbns = books.map((book) => {
       return extractISBN(book.href)
     })
     if (isbns.length === 0) { return }
+    // remove duplicates
+    isbns = Array.from(new Set(isbns))
 
     // get matching books from API
     getWikipediaBooks(url, isbns).then((data) => {
