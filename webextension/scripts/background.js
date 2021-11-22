@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, getCustomUserAgent */
+/*   global hostHeaders, gCustomUserAgent */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = ''
@@ -28,7 +28,7 @@ let private_before_default = new Set([
 function rewriteUserAgentHeader(e) {
   for (let header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      const customUA = getCustomUserAgent()
+      const customUA = gCustomUserAgent
       const statusUA = 'Status-code/' + gStatusCode
       // add customUA only if not yet present in user-agent
       header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')

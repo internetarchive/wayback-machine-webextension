@@ -100,6 +100,7 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
+let gCustomUserAgent = ''
 function getCustomUserAgent() {
   let uAgent = ''
   const manifest = chrome.runtime.getManifest()
@@ -115,8 +116,9 @@ let hostHeaders = new Headers({
 
 // will not run during mocha testing
 if (typeof isInTestEnv === 'undefined') {
+  gCustomUserAgent = getCustomUserAgent()
   // Chrome ignores this being set. Works in Firefox & Safari.
-  hostHeaders.set('User-Agent', navigator.userAgent + ' ' + getCustomUserAgent())
+  hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
 }
 
 /* * * Wayback functions * * */
@@ -601,6 +603,7 @@ if (typeof module !== 'undefined') {
     hostURL,
     hostHeaders,
     getCustomUserAgent,
+    gCustomUserAgent,
     timestampToDate,
     dateToTimestamp,
     viewableTimestamp,
