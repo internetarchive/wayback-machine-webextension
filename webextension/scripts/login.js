@@ -1,7 +1,7 @@
 // login.js
 
 // from 'utils.js'
-/*   global openByWindowSetting */
+/*   global openByWindowSetting, hostHeaders */
 
 // from 'popup.js'
 /*   global loginSuccess, loginError */
@@ -46,16 +46,14 @@ function doLogin(e) {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 5000)
-    fetch('https://archive.org/services/xauthn?op=login',
-      {
-        method: 'POST',
-        body: data,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(resolve, reject)
+    let headers = new Headers(hostHeaders)
+    headers.set('Content-Type', 'application/json')
+    fetch('https://archive.org/services/xauthn?op=login', {
+      method: 'POST',
+      body: data,
+      headers: headers
+    })
+    .then(resolve, reject)
   })
   loginPromise
     .then(response => response.json())

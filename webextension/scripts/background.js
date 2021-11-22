@@ -5,13 +5,11 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, gBrowser, fixedEncodeURIComponent, checkLastError */
+/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
+/*   global hostHeaders, getCustomUserAgent */
 
-let manifest = chrome.runtime.getManifest()
-// Load version from Manifest.json file
-let VERSION = manifest.version
 // Used to store the statuscode of the if it is a httpFailCodes
-let globalStatusCode = ''
+let gStatusCode = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -20,17 +18,20 @@ const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
 const API_RETRY = 1000
 let tabIdPromise
-let WB_API_URL = hostURL + 'wayback/available'
 const SPN_RETRY = 6000
 
 let private_before_default = new Set([
   'not-found-setting'
 ])
 
+// updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
   for (let header of e.requestHeaders) {
     if (header.name.toLowerCase() === 'user-agent') {
-      header.value = header.value + ' Wayback_Machine_' + gBrowser.charAt(0).toUpperCase() + gBrowser.slice(1) + '/' + VERSION + ' Status-code/' + globalStatusCode
+      const customUA = getCustomUserAgent()
+      const statusUA = 'Status-code/' + gStatusCode
+      // add customUA only if not yet present in user-agent
+      header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
     }
   }
   return { requestHeaders: e.requestHeaders }
@@ -59,15 +60,12 @@ function savePageNow(atab, page_url, silent = false, options = {}) {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(hostURL + 'save/',
-        {
-          credentials: 'include',
-          method: 'POST',
-          body: data,
-          headers: {
-            'Accept': 'application/json'
-          }
-        })
+      fetch(hostURL + 'save/', {
+        credentials: 'include',
+        method: 'POST',
+        body: data,
+        headers: hostHeaders
+      })
       .then(resolve, reject)
     })
     return timeoutPromise
@@ -117,7 +115,7 @@ function authCheckAPI() {
     fetch(hostURL + 'save/', {
       credentials: 'include',
       method: 'POST',
-      headers: { 'Accept': 'application/json' }
+      headers: hostHeaders
     })
     .then(resolve, reject)
   })
@@ -150,10 +148,9 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
           credentials: 'include',
           method: 'POST',
           body: val_data,
-          headers: {
-            'Accept': 'application/json'
-          }
-        }).then(resolve, reject)
+          headers: hostHeaders
+        })
+        .then(resolve, reject)
       }
     })
     timeoutPromise
@@ -243,11 +240,11 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
 function fetchAPI(url, onSuccess, onFail) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    let headers = new Headers(hostHeaders)
+    headers.set('backend', 'nomad')
     fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: headers
     })
     .then(resolve, reject)
   })
@@ -351,7 +348,7 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
   rewriteUserAgentHeader,
-  { urls: [WB_API_URL] },
+  { urls: [hostURL + '*'] },
   ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
 )
 
@@ -376,7 +373,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 chrome.webRequest.onCompleted.addListener((details) => {
   function tabIsReady(tabId) {
     if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      globalStatusCode = details.statusCode
+      gStatusCode = details.statusCode
       // insert script first, then check wayback machine, then show banner
       chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
@@ -401,6 +398,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
   } // function
 
   if (details.tabId >= 0) {
+    gStatusCode = ''
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         tabIsReady(details.tabId)
@@ -607,15 +605,20 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           const url = getCleanUrl(tab.url)
           // checking resource of amazon books
           if (url.includes('www.amazon')) {
-            fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-              .then(resp => resp.json())
-              .then(resp => {
-                if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                  addToolbarState(tab, 'R')
-                  // Storing the tab url as well as the fetched archive url for future use
-                  chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
-                }
-              })
+            let headers = new Headers(hostHeaders)
+            headers.set('backend', 'nomad')
+            fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
+              method: 'GET',
+              headers: headers
+            })
+            .then(resp => resp.json())
+            .then(resp => {
+              if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
+                addToolbarState(tab, 'R')
+                // Storing the tab url as well as the fetched archive url for future use
+                chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
+              }
+            })
           }
         }
       })

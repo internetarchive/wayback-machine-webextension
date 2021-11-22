@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme */
+/*   global attachTooltip, checkLastError, cropScheme, hostHeaders */
 
 let searchBoxTimer
 let isLoggedIn = false
@@ -420,16 +420,21 @@ function setupReadBook() {
                 })
               } else {
                 // if not, fetch it again
-                fetch(hostURL + 'services/context/amazonbooks?url=' + url)
-                  .then(res => res.json())
-                  .then(response => {
-                    if (response['metadata'] && response['metadata']['identifier-access']) {
-                      const new_details_url = response['metadata']['identifier-access']
-                      $('#readbook-btn').click(() => {
-                        openByWindowSetting(new_details_url, context)
-                      })
-                    }
-                  })
+                let headers = new Headers(hostHeaders)
+                headers.set('backend', 'nomad')
+                fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
+                  method: 'GET',
+                  headers: headers
+                })
+                .then(res => res.json())
+                .then(response => {
+                  if (response['metadata'] && response['metadata']['identifier-access']) {
+                    const new_details_url = response['metadata']['identifier-access']
+                    $('#readbook-btn').click(() => {
+                      openByWindowSetting(new_details_url, context)
+                    })
+                  }
+                })
               }
             })
           }

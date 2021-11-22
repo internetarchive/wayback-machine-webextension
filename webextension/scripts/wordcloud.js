@@ -4,7 +4,7 @@
 /*   global Levenshtein */
 
 // from 'utils.js'
-/*   global getUrlByParameter, hostURL */
+/*   global getUrlByParameter, hostURL, hostHeaders */
 
 // from 'test/setup.js'
 /*   global isInTestEnv */
@@ -29,7 +29,12 @@ function getTags() {
 
   let new_url = hostURL + 'services/context/tagcloud?url=' + toBeUsedAsURL
   $('#loader_tagcloud').show()
-  fetch(new_url)
+  let headers = new Headers(hostHeaders)
+  headers.set('backend', 'nomad')
+  fetch(new_url, {
+    method: 'GET',
+    headers: headers
+  })
     .then(response => response.json())
     .then((data) => {
       $('#loader_tagcloud').hide()
@@ -120,8 +125,8 @@ function toConsumableArray (arr) {
 
 // onload
 $(function() {
-  // If not running through mocha, then only execute
-  if (!isInTestEnv) { getTags() }
+  // will not run during mocha testing
+  if (typeof isInTestEnv === 'undefined') { getTags() }
 })
 
 if (typeof module !== 'undefined') {
