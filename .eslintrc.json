@@ -12,6 +12,7 @@
     "prefer-const": "off",
     "quote-props": "off",
     "one-var": "off",
+    "padded-blocks": "off",
     "dot-notation": "off"
   },
   "globals": {

@@ -495,11 +495,11 @@ function setupWikiButtons() {
             }
             $('#wiki-container').show()
             $('#wikibooks-btn').click(() => {
-              const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
             $('#wikipapers-btn').click(() => {
-              const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + url
+              const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
           }

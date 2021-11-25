@@ -8,15 +8,79 @@
 // Do not use jQuery.
 
 (function(window) {
+
+  // returns an ISBN string without dashes from a book's href string, else an empty string
+  function extractISBN(url) {
+    return (typeof url === 'string') ? url.split('/').pop().replace(/-/g, '') : ''
+  }
+
+  // returns true if given string is a valid ISBN
+  function isISBN(isbn) {
+    // may contain only 0-9, X, or dashes
+    if (/[0-9X-]+/.test(isbn)) {
+      isbn = isbn.replace(/-/g, '')
+
+      if (isbn.length === 10) {
+        // ISBN-10
+        isbn = isbn.replace(/X/g, 'A') // hack to use hex numbers
+        // following algorithm returns true if check digit is valid
+        let s = 0, t = 0
+        for (let i = 0; i < 10; i++) {
+          t += parseInt(isbn.charAt(i), 16)
+          s += t
+        }
+        return ((s % 11) === 0)
+
+      } else if ((isbn.length === 13) && (isbn.startsWith('978') || isbn.startsWith('979'))) {
+        // ISBN-13
+        // not bothering to verify check digit as this is good enough for now
+        return true
+      }
+    }
+    return false
+  }
+
+  // Returns an array of <a> elements in page that point to book ISBNs.
+  // This generic version should work across all languages
+  //
+  function getBookAnchorElements() {
+    let books = []
+    const nodes = document.querySelectorAll('a[href^="/wiki/"]')
+    for (const node of nodes) {
+      if (isISBN(extractISBN(node.href))) { books.push(node) }
+    }
+    return books
+  }
+
   function addCitations(url) {
-    getWikipediaBooks(url).then((data) => {
-      let books = Array.from(document.querySelectorAll("a[title^='Special:BookSources']"))
+
+    // find book anchor elements in page
+    let books = getBookAnchorElements()
+    let isbns = books.map((book) => {
+      return extractISBN(book.href)
+    })
+    if (isbns.length === 0) { return }
+    // remove duplicates
+    isbns = Array.from(new Set(isbns))
+
+    // get matching books from API
+    getWikipediaBooks(url, isbns).then((data) => {
+      if (!data || (data && data.status && (data.status === 'error'))) {
+        // no matching books returned
+        return
+      } else {
+        // indicate in toolbar that we have found books
+        // Content scripts cannot use tabs.query, so it must be called in background.js
+        chrome.runtime.sendMessage({ message: 'addToolbarStates', states: ['R', 'books'], url: url }, (result) => {
+          if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
+        })
+      }
 
       // add books asynchronously so website doesn't freeze up
       setTimeout(function addBook(books) {
         let book = books.shift()
         if (book) {
-          let isbn = book.innerText.replace(/-/g, '')
+          let isbn = extractISBN(book.href)
           let id = getIdentifier(data[isbn])
           let metadata = getMetadata(data[isbn])
           let page = getPageFromCitation(book)
@@ -29,8 +93,8 @@
             // let icon = addDonateIcon(isbn)
             // book.parentElement.append(icon)
           }
+          setTimeout(addBook, 1, books)
         }
-        setTimeout(addBook, 1, books)
       }, 1, books)
     }).catch((error) => {
       console.log(error)
@@ -43,11 +107,7 @@
       return {
         'title': (book.metadata.title.length > MAX_TITLE_LEN) ? book.metadata.title.slice(0, MAX_TITLE_LEN) + '...' : book.metadata.title,
         'author': book.metadata.creator,
-        'image': 'https://archive.org/services/img/' + book.metadata.identifier,
-        'link': book.metadata['identifier-access'],
-        'button_text': 'Read Book',
-        'button_class': 'btn btn-auto btn-blue',
-        'readable': true
+        'image': 'https://archive.org/services/img/' + book.metadata.identifier
       }
     }
     return false
@@ -123,11 +183,12 @@
   // Get all books on wikipedia page through
   // https://archive.org/services/context/books?url=...
   //
-  function getWikipediaBooks(url) {
+  function getWikipediaBooks(url, isbns = null) {
     // Encapsulate the chrome message sender with a promise object
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({
         message: 'getWikipediaBooks',
+        isbns: isbns,
         query: url
       }, (books) => {
         if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message) }
@@ -176,6 +237,7 @@
     return span
   }
 
+  // returns true if url is a valid Wikipedia URL
   function isWikipediaUrl(url) {
     if (typeof url !== 'string') { return false }
     try {
@@ -187,9 +249,21 @@
   }
 
   // calling direct instead of onload because of delay while injecting script
-  chrome.storage.local.get(['agreement', 'wiki_setting'], (settings) => {
-    if (settings && settings.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
-      addCitations(location.href)
+  if ((typeof chrome !== 'undefined') && chrome.storage) {
+    chrome.storage.local.get(['agreement', 'wiki_setting'], (settings) => {
+      if (settings && settings.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
+        addCitations(location.href)
+      }
+    })
+  }
+
+  // export for unit testing
+  if (typeof module !== 'undefined') {
+    module.exports = {
+      extractISBN,
+      isISBN,
+      isWikipediaUrl
     }
-  })
+  }
+
 })(window)

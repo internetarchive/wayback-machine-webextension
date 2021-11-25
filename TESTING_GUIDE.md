@@ -153,6 +153,13 @@ Should display 'F', 'Fact Check', 'Cited Books', 'Cited Papers':
 Should not display 'R':
 - https://en.wikipedia.org/wiki/Main_Page
 
+Other domains & languages:
+- https://en.m.wikipedia.org/wiki/Paper
+- https://simple.wikipedia.org/wiki/Paper
+- https://es.wikipedia.org/wiki/Papel
+- https://fr.wikipedia.org/wiki/Papier
+- https://de.wikipedia.org/wiki/Papier
+
 </td>
 </tr>
 
