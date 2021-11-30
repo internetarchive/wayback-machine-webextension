@@ -11,6 +11,25 @@ let isLoggedIn = false
 // don't reference in setup functions as there's a delay in assignment
 let activeURL, activeTab
 
+const ERROR_CODE_DIC = {
+  404: '404 Page Not Found',
+  408: '408 Page Request Timeout',
+  410: '410 Page Has Gone',
+  451: '451 Page Is Illegal',
+  500: '500 Server Error',
+  502: '502 Bad Gateway',
+  503: '503 Service Unavailable',
+  504: '504 Gateway Timeout',
+  509: '509 Bandwidth Limit Exceeded',
+  520: '520 Unknown Error',
+  521: '521 Server Is Down',
+  523: '523 Unreachable Origin',
+  524: '524 Timout Occurred',
+  525: '525 SSL Handshake Failed',
+  526: '526 Invalid SSL Certificate',
+  999: 'Server Not Found'
+}
+
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
 }
@@ -130,7 +149,8 @@ function loginSuccess() {
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+              // $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show() // TODO: TEST then REMOVE
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
             }
           })
         }
@@ -393,6 +413,34 @@ function show_all_screens() {
   }
 }
 */
+
+// Checks toolbar state if 404 or similar error set, then show 'View Archived Version' button.
+//
+function setupViewArchived() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        checkLastError()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('V')) {
+          chrome.storage.local.get(['statusCode', 'statusWaybackUrl'], (g) => {
+            if (g && g.statusCode && g.statusWaybackUrl) {
+              const statusText = ERROR_CODE_DIC[g.statusCode] || `${g.statusCode} Error`
+              $('#last-saved-msg').hide()
+              $('#search-container').hide()
+              $('#spn-container').hide()
+              $('#view-archived-container').show()
+              $('#view-archived-msg').text(statusText)
+              $('#view-archived-btn').click(() => {
+                openByWindowSetting(g.statusWaybackUrl)
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+}
 
 // Displays 'Read Book' button if on Amazon Books.
 // May fetch info about Amazon Books if not already cached, then update button click handler.
@@ -682,7 +730,8 @@ function setupSaveListener() {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          // $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show() // TODO: TEST then REMOVE
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').removeClass('flip-inside')
           setupWaybackCount()
           enableAfterSaving()
@@ -717,6 +766,7 @@ $(function() {
   $('#login-page').hide()
   initAgreement()
   initActiveTabURL()
+  setupViewArchived()
   setupNewsClips()
   setupWikiButtons()
   setupReadBook()

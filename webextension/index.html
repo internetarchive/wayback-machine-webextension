@@ -26,7 +26,7 @@
 
       <!-- Search -->
 
-      <form class="search-container">
+      <form id="search-container">
         <div class="bootstrap-typeahead clearfix open">
           <div class="bootstrap-typeahead-input" tabindex="-1">
             <input id="search-input" type="text" placeholder="Search URL" value="" autocomplete="off"
@@ -40,31 +40,40 @@
 
       <!-- Wayback Machine -->
 
-      <div class="flip spn-container">
-        <div id="spn-btn">
-          <div class="flip-front">
-            <div type="button" class="btn btn-sm btn-wide btn-red progress-container">
-              <div class="progress" id="save-progress-bar">
-                <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
-                </div>
-              </div>
-              <div id="spn-front-label">Save Page Now</div>
-            </div>
-          </div>
-          <div class="flip-back">
-            <div type="button" class="btn btn-sm btn-wide btn-red" id="spn-back-label" tabindex="-1">URL not supported
-            </div>
-          </div>
+      <div id="view-archived-container">
+        <div id="view-archived-msg">&nbsp;</div>
+        <div class="btn-block">
+          <button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="view-archived-btn" title="">View Archived Version</button>
         </div>
       </div>
 
-      <div class="chk-frame">
-        <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Archive all Outlinked URLs">
-          <input type="checkbox" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
-        </label>
-        <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Archive a Screenshot (image)">
-          <input type="checkbox" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
-        </label>
+      <div id="spn-container">
+        <div class="spn-flip flip">
+          <div id="spn-btn">
+            <div class="flip-front">
+              <div type="button" class="btn btn-sm btn-wide btn-red progress-container">
+                <div class="progress" id="save-progress-bar">
+                  <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+                  </div>
+                </div>
+                <div id="spn-front-label">Save Page Now</div>
+              </div>
+            </div>
+            <div class="flip-back">
+              <div type="button" class="btn btn-sm btn-wide btn-red" id="spn-back-label" tabindex="-1">URL not supported
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chk-frame">
+          <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Archive all Outlinked URLs">
+            <input type="checkbox" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
+          </label>
+          <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Archive a Screenshot (image)">
+            <input type="checkbox" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
+          </label>
+        </div>
       </div>
 
       <div class="btn-flex-block">
@@ -198,6 +207,7 @@
         <input type="checkbox" name="private-include" class="private" id="not-found-setting">
         <div class="setting-text-box">
           <span class="toggle">Replace 404s, etc...</span>
+          <img src="images/toolbar/toolbar-icon-V32.png" alt="V" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="wm-count-setting">

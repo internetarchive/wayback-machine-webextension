@@ -67,6 +67,22 @@ body {
     color: #222;
 }
 
+#view-archived-container {
+    margin-top: 5px;
+}
+
+#view-archived-msg {
+    padding: 4px 0 2px 0;
+    margin: 5px 2px 10px 2px;
+    border-radius: 5px;
+    font-size: 9pt;
+
+    /* light mode */
+    color: #840;
+    background-color: #edc;
+    border: #666 solid 1px;
+}
+
 .link-copied-block {
     position: relative;
     text-align: center;
@@ -144,11 +160,11 @@ body {
     padding: 1px;
 }
 
-.search-container {
+#search-container {
     margin: 5px 2px 10px 2px;
 }
 
-.search-container div.bootstrap-typeahead {
+#search-container div.bootstrap-typeahead {
     position: relative;
 }
 
@@ -204,12 +220,12 @@ body {
     background-color: #ddd;
 }
 
-.spn-container {
+.spn-flip {
     /* to cover over the chk-frame */
     z-index: 5;
 }
 
-#readbook-container, #tvnews-container, #wiki-container {
+#readbook-container, #tvnews-container, #wiki-container, #view-archived-container {
     display: none;
 }
 
@@ -444,6 +460,12 @@ a.btn-social, .btn-social {
 
     #wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
         color: #eee;
+    }
+
+    #view-archived-msg {
+        color: #e94;
+        background-color: #222;
+        border: #666 solid 1px;
     }
 
     #suggestion-box {
