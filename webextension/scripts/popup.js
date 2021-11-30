@@ -146,7 +146,6 @@ function loginSuccess() {
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              // $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show() // TODO: TEST then REMOVE
               $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
             }
           })
@@ -727,7 +726,6 @@ function setupSaveListener() {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          // $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show() // TODO: TEST then REMOVE
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').removeClass('flip-inside')
           setupWaybackCount()
