@@ -6,7 +6,6 @@
 /*   global attachTooltip, checkLastError, cropScheme, hostHeaders */
 
 let searchBoxTimer
-let isLoggedIn = false
 
 // don't reference in setup functions as there's a delay in assignment
 let activeURL, activeTab
@@ -110,7 +109,6 @@ function updateLastSaved() {
 }
 
 function loginError() {
-  isLoggedIn = false
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
@@ -126,7 +124,6 @@ function loginError() {
 }
 
 function loginSuccess() {
-  isLoggedIn = true
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
@@ -242,7 +239,7 @@ function social_share(eventObj) {
 
 function searchTweet() {
   let clean_url = getCleanUrl(activeURL)
-  if(isValidUrl(clean_url)){
+  if (isValidUrl(clean_url)) {
     const curl = cropScheme(clean_url)
     if (curl) {
       let surl = curl
@@ -276,7 +273,7 @@ function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
-    if (!(e.key === "ArrowUp" || e.key === "ArrowDown" ) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
+    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       activeURL = getCleanUrl(makeValidURL(search_box.value))
       // use activeURL if it is valid, else update UI
       activeURL ? useSearchBox() : $('#using-search-msg').hide()
@@ -291,7 +288,7 @@ function arrow_key_access() {
 
   search_box.addEventListener('keydown', (e) => {
     // listen for up key
-    if (e.key === "ArrowUp") {
+    if (e.key === 'ArrowUp') {
       if (index === list.firstChild && index && list.lastChild) {
         if (index.classList.contains('focused')) { index.classList.remove('focused') }
         index = list.lastChild
@@ -307,7 +304,7 @@ function arrow_key_access() {
       }
 
       // listen for down key
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === 'ArrowDown') {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
@@ -351,9 +348,9 @@ function display_list(key_word) {
 
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
-  if (e.key === "ArrowUp" || e.key === "ArrowDown") { return false }
+  if ((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) { return false }
   $('#suggestion-box').text('').hide()
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     clearTimeout(searchBoxTimer)
     e.preventDefault()
   } else {
@@ -526,7 +523,7 @@ function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       const url = tabs[0].url
-      if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           checkLastError()
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
