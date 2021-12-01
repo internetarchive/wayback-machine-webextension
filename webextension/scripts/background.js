@@ -403,23 +403,34 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 // Listens for website loading completed for 404-Not-Found popups.
 //
 chrome.webRequest.onCompleted.addListener((details) => {
-  if (details.tabId >= 0) {
-    gStatusCode = ''
-    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
-      if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-        gStatusCode = details.statusCode
-        // display 'V' toolbar icon if wayback has a copy
-        wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.get(details.tabId, (tab) => {
-            checkLastError()
-            addToolbarState(tab, 'V')
-            gStatusWaybackUrl = wayback_url
-            saveGlobals()
-          })
-        })
-      }
-    })
+
+  function update(tab, waybackUrl) {
+    checkLastError()
+    addToolbarState(tab, 'V')
+    gStatusWaybackUrl = waybackUrl
+    saveGlobals()
   }
+
+  gStatusCode = ''
+  chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+    if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
+      gStatusCode = details.statusCode
+      // display 'V' toolbar icon if wayback has a copy
+      wmAvailabilityCheck(details.url, (wayback_url, url) => {
+        if (details.tabId >= 0) {
+          // normally go here
+          chrome.tabs.get(details.tabId, (tab) => {
+            update(tab, wayback_url)
+          })
+        } else {
+          // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            update(tabs[0], wayback_url)
+          })
+        }
+      })
+    }
+  })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for messages to call background functions from other scripts.
