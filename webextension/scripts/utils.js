@@ -550,6 +550,7 @@ function initDefaultOptions () {
     amazon_setting: false,
     tvnews_setting: false,
     auto_archive_setting: false,
+    auto_archive_age: '99999',
     fact_check_setting: false,
     /* General */
     resource_list_setting: false,

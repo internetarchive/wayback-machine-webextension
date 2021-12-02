@@ -163,7 +163,18 @@
         <input type="checkbox" name="private-include" class="private" id="auto-archive-setting">
         <div class="setting-text-box">
           <span class="toggle">Auto Save Page</span>
-          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon"><br>
+          <div style="margin-top: 0.5em">
+            if not archived:<br>
+            <select id="auto-archive-age">
+              <option value="99999" selected>previously</option>
+              <option value="365">within past year</option>
+              <option value="90">within 90 days</option>
+              <option value="30">within 30 days</option>
+              <option value="7">within 7 days</option>
+              <option value="1">within 24 hours</option>
+            </select>
+          </div>
         </div>
       </label>
       <label class="setting-switch" for="email-outlinks-setting">

@@ -81,6 +81,10 @@ ul.setting-nav li {
 
 /* options */
 
+#auto-archive-age {
+    border-style: none;
+}
+
 #view-setting {
     text-align: center !important;
 }
