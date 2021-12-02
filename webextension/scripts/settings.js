@@ -18,6 +18,7 @@ $(function() {
   $('#auto-archive-age').change((e) => {
     $('#auto-archive-setting').prop('checked', true)
     saveOptions()
+    e.target.blur()
     // FIXME: selecting Private Mode isn't clearing checkbox
   })
   $('.back-btn').click(goBack)
