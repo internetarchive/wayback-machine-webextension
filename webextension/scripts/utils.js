@@ -1,8 +1,5 @@
 // utils.js
 
-// from 'background.js'
-/*   global private_before_default */
-
 // from 'test/setup.js'
 /*   global isInTestEnv */
 
@@ -41,15 +38,6 @@ const newshosts = new Set([
 
 let isArray = (a) => (!!a) && (a.constructor === Array)
 let isObject = (a) => (!!a) && (a.constructor === Object)
-let private_before_state
-
-function initPrivateState() {
-  chrome.storage.local.get(['private_before_state'], (settings) => {
-    if (settings && settings.private_before_state) {
-      private_before_state = new Set(settings.private_before_state)
-    }
-  })
-}
 
 // Use this instead of encodeURIComponent()
 function fixedEncodeURIComponent(str) {
@@ -556,8 +544,7 @@ function initDefaultOptions () {
     resource_list_setting: false,
     email_outlinks_setting: false,
     view_setting: 'tab',
-    show_settings_tab_tip: true,
-    private_before_state: Array.from(private_before_default)
+    show_settings_tab_tip: true
   })
 }
 
@@ -612,8 +599,6 @@ if (typeof module !== 'undefined') {
     afterAcceptOptions,
     feedbackURL,
     newshosts,
-    private_before_state,
-    initPrivateState,
     fixedEncodeURIComponent,
     isInTestEnv,
     checkLastError

@@ -20,10 +20,6 @@ const API_RETRY = 1000
 let tabIdPromise
 const SPN_RETRY = 6000
 
-let private_before_default = new Set([
-  'not-found-setting'
-])
-
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
   for (let header of e.requestHeaders) {
@@ -942,7 +938,6 @@ chrome.contextMenus.onClicked.addListener((click) => {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    private_before_default,
     tabIdPromise,
     authCheckAPI
   }
