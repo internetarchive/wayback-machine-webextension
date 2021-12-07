@@ -89,7 +89,7 @@ function saveOptions() {
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 
-function validatePrivateMode(event) {
+function validatePrivateMode() {
   let checkboxes = $('[name="private-include"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
