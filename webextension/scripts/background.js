@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = ''
@@ -583,10 +583,20 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (!isNotExcludedUrl(tab.url)) { return }
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, tab.url)
-    chrome.storage.local.get(['auto_archive_setting', 'fact_check_setting'], (settings) => {
+    chrome.storage.local.get(['auto_archive_setting', 'auto_archive_age', 'fact_check_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
-        auto_save(tab, tab.url)
+        if (settings.auto_archive_age) {
+          // auto_archive_age is an int of days before now
+          const days = parseInt(settings.auto_archive_age, 10)
+          if (!isNaN(days)) {
+            const milisecs = days * 24 * 60 * 60 * 1000
+            const beforeDate = new Date(Date.now() - milisecs)
+            auto_save(tab, tab.url, beforeDate)
+          }
+        } else {
+          auto_save(tab, tab.url)
+        }
       }
       // fact check
       /*
@@ -688,12 +698,17 @@ chrome.tabs.onActivated.addListener((info) => {
   })
 })
 
-function auto_save(atab, url) {
+function auto_save(atab, url, beforeDate) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     wmAvailabilityCheck(url,
-      () => {
-        // check if page is now in archive after auto-saved
-        // (don't do anything)
+      (wayback_url, url, timestamp) => {
+        // save if timestamp from availability API is older than beforeDate
+        if (beforeDate) {
+          const checkDate = timestampToDate(timestamp)
+          if ((checkDate.getTime() < beforeDate.getTime()) && !getToolbarState(atab).has('S')) {
+            savePageNow(atab, url, true)
+          }
+        }
       },
       () => {
         // set auto-save toolbar icon if page doesn't exist, then save it

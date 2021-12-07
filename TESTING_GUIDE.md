@@ -143,12 +143,13 @@ Should display blue 'R', 'Cited Books', 'Cited Papers':
 - https://en.wikipedia.org/wiki/World_War_II
 - https://en.wikipedia.org/wiki/Vincent_van_Gogh
 - https://en.wikipedia.org/wiki/Paper
+- https://en.wikipedia.org/wiki/Barack_Obama
 
 Should display blue 'R' and 'Cited Papers', but No Books.
 - https://en.wikipedia.org/wiki/Perseverance_(rover)
 
-Should display 'F', 'Fact Check', 'Cited Books', 'Cited Papers':
-- https://en.wikipedia.org/wiki/Barack_Obama
+Should display blue 'R' and 'Cited Books', but No Papers.
+- https://en.wikipedia.org/wiki/Bob_Marley
 
 Should not display 'R':
 - https://en.wikipedia.org/wiki/Main_Page

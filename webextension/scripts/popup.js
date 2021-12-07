@@ -528,16 +528,6 @@ function setupWikiButtons() {
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             // show wikipedia cited books & papers buttons
-            if (state.has('books') && !state.has('papers')) {
-              // books only
-              $('#wikibooks-btn').addClass('btn-wide')
-              $('#wikipapers-btn').hide()
-            } else if (!state.has('books') && state.has('papers')) {
-              // papers only
-              $('#wikibooks-btn').hide()
-              $('#wikipapers-btn').addClass('btn-wide')
-            }
-            $('#wiki-container').show()
             $('#wikibooks-btn').click(() => {
               const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
@@ -546,6 +536,16 @@ function setupWikiButtons() {
               const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
+            if (state.has('books') && !state.has('papers')) {
+              // books only
+              $('#wikibooks-btn').addClass('btn-wide')
+              $('#wikipapers-btn').remove()
+            } else if (!state.has('books') && state.has('papers')) {
+              // papers only
+              $('#wikibooks-btn').remove()
+              $('#wikipapers-btn').addClass('btn-wide')
+            }
+            $('#wiki-container').show()
           }
         })
       }
