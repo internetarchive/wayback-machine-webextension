@@ -1,6 +1,6 @@
 {
   "name": "wayback-machine-webextension",
-  "version": "2.999.28",
+  "version": "2.999.30",
   "description": "A browser extension that interfaces with the internet archive",
   "main": "index.js",
   "directories": {
