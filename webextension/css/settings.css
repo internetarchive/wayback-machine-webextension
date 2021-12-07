@@ -39,33 +39,6 @@
     color: #fff;
 }
 
-
-/* dark mode */
-
-@media (prefers-color-scheme: dark) {
-
-    #setting-page label {
-        font-weight: 500;
-    }
-
-    #view-setting-text {
-        font-weight: 500;
-    }
-
-    .setting-switch {
-        border: 1px solid #666;
-    }
-    .setting-switch:hover {
-        background-color: #444;
-    }
-
-    .btn-docs {
-        background-color: #888;
-        color: #000;
-    }
-
-}
-
 /* navgation bar */
 
 ul.setting-nav {
@@ -83,6 +56,9 @@ ul.setting-nav li {
 
 #auto-archive-age {
     border-style: none;
+    border-radius: 4px;
+    padding: 1px;
+    background-color: #ddd;
 }
 
 #view-setting {
@@ -129,4 +105,34 @@ label[for=tagcloud] {
 
 .setting-tip {
     width: 100px;
+}
+
+/* dark mode */
+
+@media (prefers-color-scheme: dark) {
+
+    #setting-page label {
+        font-weight: 500;
+    }
+
+    #auto-archive-age {
+        background-color: #3c3c3c;
+    }
+
+    #view-setting-text {
+        font-weight: 500;
+    }
+
+    .setting-switch {
+        border: 1px solid #666;
+    }
+    .setting-switch:hover {
+        background-color: #444;
+    }
+
+    .btn-docs {
+        background-color: #888;
+        color: #000;
+    }
+
 }
