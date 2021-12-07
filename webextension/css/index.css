@@ -251,13 +251,11 @@ a.btn-social, .btn-social {
 }
 
 .tweets-svg {
-    filter: invert(98%) sepia(0%) saturate(1513%) hue-rotate(211deg) brightness(115%) contrast(87%); /* #eeeeee */
     height: 13px;
 }
 
 .btn-social img {
     vertical-align: middle;
-    filter: invert(98%) sepia(0%) saturate(1513%) hue-rotate(211deg) brightness(115%) contrast(87%); /* #eeeeee */
 }
 
 .btn-social:hover, .btn-social:focus {
