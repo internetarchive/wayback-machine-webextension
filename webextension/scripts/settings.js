@@ -16,10 +16,10 @@ $(function() {
   $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
   $('input[type=checkbox],input[type=radio]').change(saveOptions)
   $('#auto-archive-age').change((e) => {
-    $('#auto-archive-setting').prop('checked', true)
+    $('#auto-archive-setting').prop('checked', true).addClass('selected-prior')
     saveOptions()
     e.target.blur()
-    // FIXME: selecting Private Mode isn't clearing checkbox
+    validatePrivateMode()
   })
   $('.back-btn').click(goBack)
   switchSetting()
