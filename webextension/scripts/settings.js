@@ -15,6 +15,12 @@ $(function() {
   $('#view-setting').click(switchTabWindow)
   $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
   $('input[type=checkbox],input[type=radio]').change(saveOptions)
+  $('#auto-archive-age').change((e) => {
+    $('#auto-archive-setting').prop('checked', true).addClass('selected-prior')
+    saveOptions()
+    e.target.blur()
+    validatePrivateMode()
+  })
   $('.back-btn').click(goBack)
   switchSetting()
   addDocs()
@@ -38,6 +44,7 @@ function restoreOptions(items) {
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
   /* Second Panel */
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
+  $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
@@ -62,6 +69,7 @@ function saveOptions() {
     tvnews_setting: $('#tvnews-setting').prop('checked'),
     /* Second Panel */
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
+    auto_archive_age: $('#auto-archive-age').val(),
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
@@ -81,7 +89,7 @@ function saveOptions() {
   chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 
-function validatePrivateMode(event) {
+function validatePrivateMode() {
   let checkboxes = $('[name="private-include"]')
   let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
   if (checkedCount > 0) {
