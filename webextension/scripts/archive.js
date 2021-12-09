@@ -16,6 +16,7 @@ const ERROR_CODE_DIC = {
   509: '509 Bandwidth Limit Exceeded',
   520: '520 Unknown Error',
   521: '521 Server Is Down',
+  522: '522 Connection timed out',
   523: '523 Unreachable Origin',
   524: '524 Timout Occurred',
   525: '525 SSL Handshake Failed',
