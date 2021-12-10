@@ -6,10 +6,36 @@
 /*   global attachTooltip, checkLastError, cropScheme, hostHeaders */
 
 let searchBoxTimer
-let isLoggedIn = false
 
 // don't reference in setup functions as there's a delay in assignment
 let activeURL, activeTab
+
+const ERROR_CODE_DIC = {
+  400: 'Bad Request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not Found',
+  405: 'Method Not Allowed',
+  406: 'Not Acceptable',
+  407: 'Proxy Auth Required',
+  408: 'Request Timeout',
+  410: 'Page Gone',
+  429: 'Too Many Requests',
+  451: 'Unavailable',
+  500: 'Internal Server Error',
+  502: 'Bad Gateway',
+  503: 'Service Unavailable',
+  504: 'Gateway Timeout',
+  509: 'Bandwidth Limit Exceeded',
+  520: 'Unknown Error',
+  521: 'Server Is Down',
+  522: 'Connection Timed Out',
+  523: 'Unreachable Origin',
+  524: 'Timout Occurred',
+  525: 'SSL Handshake Failed',
+  526: 'Invalid SSL Certificate',
+  999: 'Server Not Found'
+}
 
 function homepage() {
   openByWindowSetting('https://web.archive.org/')
@@ -91,7 +117,6 @@ function updateLastSaved() {
 }
 
 function loginError() {
-  isLoggedIn = false
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
@@ -107,7 +132,6 @@ function loginError() {
 }
 
 function loginSuccess() {
-  isLoggedIn = true
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
@@ -130,7 +154,7 @@ function loginSuccess() {
           }, (message) => {
             checkLastError()
             if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
             }
           })
         }
@@ -222,7 +246,7 @@ function social_share(eventObj) {
 
 function searchTweet() {
   let clean_url = getCleanUrl(activeURL)
-  if(isValidUrl(clean_url)){
+  if (isValidUrl(clean_url)) {
     const curl = cropScheme(clean_url)
     if (curl) {
       let surl = curl
@@ -256,7 +280,7 @@ function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
-    if (!(e.key === "ArrowUp" || e.key === "ArrowDown" ) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
+    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
       activeURL = getCleanUrl(makeValidURL(search_box.value))
       // use activeURL if it is valid, else update UI
       activeURL ? useSearchBox() : $('#using-search-msg').hide()
@@ -271,7 +295,7 @@ function arrow_key_access() {
 
   search_box.addEventListener('keydown', (e) => {
     // listen for up key
-    if (e.key === "ArrowUp") {
+    if (e.key === 'ArrowUp') {
       if (index === list.firstChild && index && list.lastChild) {
         if (index.classList.contains('focused')) { index.classList.remove('focused') }
         index = list.lastChild
@@ -287,7 +311,7 @@ function arrow_key_access() {
       }
 
       // listen for down key
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === 'ArrowDown') {
       if (index === search_box && list.firstChild) {
         index = list.firstChild
         if (!index.classList.contains('focused')) { index.classList.add('focused') }
@@ -331,9 +355,9 @@ function display_list(key_word) {
 
 function display_suggestions(e) {
   // exclude arrow keys from keypress event
-  if (e.key === "ArrowUp" || e.key === "ArrowDown") { return false }
+  if ((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) { return false }
   $('#suggestion-box').text('').hide()
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     clearTimeout(searchBoxTimer)
     e.preventDefault()
   } else {
@@ -393,6 +417,34 @@ function show_all_screens() {
   }
 }
 */
+
+// Checks toolbar state if 404 or similar error set, then show 'View Archived Version' button.
+//
+function setupViewArchived() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        checkLastError()
+        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        if (state.has('V')) {
+          chrome.storage.local.get(['statusCode', 'statusWaybackUrl'], (g) => {
+            if (g && g.statusCode && g.statusWaybackUrl) {
+              const statusText = g.statusCode + ' ' + (ERROR_CODE_DIC[g.statusCode] || 'Error')
+              $('#last-saved-msg').hide()
+              $('#search-container').hide()
+              $('#spn-container').hide()
+              $('#view-archived-container').show()
+              $('#view-archived-msg').text(statusText)
+              $('#view-archived-btn').click(() => {
+                openByWindowSetting(g.statusWaybackUrl)
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+}
 
 // Displays 'Read Book' button if on Amazon Books.
 // May fetch info about Amazon Books if not already cached, then update button click handler.
@@ -478,7 +530,7 @@ function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       const url = tabs[0].url
-      if (url.match(/^https?:\/\/[\w\.]*wikipedia.org/)) {
+      if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           checkLastError()
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
@@ -682,7 +734,7 @@ function setupSaveListener() {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
           $('#spn-btn').removeClass('flip-inside')
           setupWaybackCount()
           enableAfterSaving()
@@ -717,6 +769,7 @@ $(function() {
   $('#login-page').hide()
   initAgreement()
   initActiveTabURL()
+  setupViewArchived()
   setupNewsClips()
   setupWikiButtons()
   setupReadBook()
