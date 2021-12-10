@@ -23,7 +23,6 @@
 		C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D726E4511300CC9485 /* annotations.html */; };
 		C3CBA8EE26E4511300CC9485 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DA26E4511300CC9485 /* index.html */; };
 		C3CBA8F226E4511300CC9485 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DE26E4511300CC9485 /* css */; };
-		C3CBA8F326E4511300CC9485 /* dnserror.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DF26E4511300CC9485 /* dnserror.html */; };
 		C3CBA8F426E4511300CC9485 /* images in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E026E4511300CC9485 /* images */; };
 		C3CBA8F926E4511300CC9485 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E526E4511300CC9485 /* scripts */; };
 		C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E626E4511300CC9485 /* welcome.html */; };
@@ -77,7 +76,6 @@
 		C3CBA8D726E4511300CC9485 /* annotations.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = annotations.html; path = ../../webextension/annotations.html; sourceTree = "<group>"; };
 		C3CBA8DA26E4511300CC9485 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../webextension/index.html; sourceTree = "<group>"; };
 		C3CBA8DE26E4511300CC9485 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../../webextension/css; sourceTree = "<group>"; };
-		C3CBA8DF26E4511300CC9485 /* dnserror.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = dnserror.html; path = ../../webextension/dnserror.html; sourceTree = "<group>"; };
 		C3CBA8E026E4511300CC9485 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../webextension/images; sourceTree = "<group>"; };
 		C3CBA8E526E4511300CC9485 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../webextension/scripts; sourceTree = "<group>"; };
 		C3CBA8E626E4511300CC9485 /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = welcome.html; path = ../../webextension/welcome.html; sourceTree = "<group>"; };
@@ -166,7 +164,6 @@
 				C3CBA8D726E4511300CC9485 /* annotations.html */,
 				C32EFC8F271AA72A006F4A1E /* cited-books.html */,
 				C32EFC8D271AA72A006F4A1E /* cited-papers.html */,
-				C3CBA8DF26E4511300CC9485 /* dnserror.html */,
 				C3CBA8DA26E4511300CC9485 /* index.html */,
 				C32EFC8C271AA72A006F4A1E /* resource-list.html */,
 				C32EFC90271AA72A006F4A1E /* tvnews.html */,
@@ -272,7 +269,6 @@
 				C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */,
 				C3B3C0F0271AA7E800BD70DF /* about.html in Resources */,
 				C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */,
-				C3CBA8F326E4511300CC9485 /* dnserror.html in Resources */,
 				C3CBA8F926E4511300CC9485 /* scripts in Resources */,
 				C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */,
 				C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */,
@@ -455,7 +451,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.29;
+				MARKETING_VERSION = 2.999.30;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -476,7 +472,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.29;
+				MARKETING_VERSION = 2.999.30;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -500,7 +496,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.29;
+				MARKETING_VERSION = 2.999.30;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -523,7 +519,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.999.29;
+				MARKETING_VERSION = 2.999.30;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

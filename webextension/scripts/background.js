@@ -9,7 +9,8 @@
 /*   global hostHeaders, gCustomUserAgent, timestampToDate */
 
 // Used to store the statuscode of the if it is a httpFailCodes
-let gStatusCode = ''
+let gStatusCode = 0
+let gStatusWaybackUrl = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -19,6 +20,15 @@ const API_TIMEOUT = 10000
 const API_RETRY = 1000
 let tabIdPromise
 const SPN_RETRY = 6000
+
+// Used to pass variables to other files since they can't read this file's globals.
+function saveGlobals() {
+  chrome.storage.local.set({
+    // this won't work as expected for multiple pages with 404s, but likely rare in practice
+    'statusCode': gStatusCode,
+    'statusWaybackUrl': gStatusWaybackUrl
+  }, () => {})
+}
 
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
@@ -373,7 +383,13 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.update(details.tabId, { url: chrome.runtime.getURL('dnserror.html') + '?wayback_url=' + wayback_url + '&page_url=' + url })
+          chrome.tabs.get(details.tabId, (tab) => {
+            checkLastError()
+            addToolbarState(tab, 'V')
+            gStatusWaybackUrl = wayback_url
+            gStatusCode = 999
+            saveGlobals()
+          })
         }, () => {})
       }
     })
@@ -381,41 +397,36 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for website loading completed for 404-Not-Found popups.
+//
 chrome.webRequest.onCompleted.addListener((details) => {
-  function tabIsReady(tabId) {
-    if ((details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      gStatusCode = details.statusCode
-      // insert script first, then check wayback machine, then show banner
-      chrome.tabs.executeScript(tabId, { file: '/scripts/archive.js' }, () => {
-        wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          if (chrome.runtime.lastError && chrome.runtime.lastError.message.startsWith('Cannot access contents of url "chrome-error://chromewebdata/')) {
-            chrome.tabs.sendMessage(tabId, {
-              type: 'SHOW_BANNER',
-              wayback_url: wayback_url,
-              page_url: url,
-              status_code: 999
-            })
-          } else {
-            chrome.tabs.sendMessage(tabId, {
-              type: 'SHOW_BANNER',
-              wayback_url: wayback_url,
-              page_url: details.url,
-              status_code: details.statusCode
-            })
-          }
-        }, () => {}) // wmAvailabilityCheck
-      }) // executeScript
-    } // if
-  } // function
 
-  if (details.tabId >= 0) {
-    gStatusCode = ''
-    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
-      if (settings && settings.not_found_setting && settings.agreement) {
-        tabIsReady(details.tabId)
-      }
-    })
+  function update(tab, waybackUrl) {
+    checkLastError()
+    addToolbarState(tab, 'V')
+    gStatusWaybackUrl = waybackUrl
+    saveGlobals()
   }
+
+  gStatusCode = 0
+  chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+    if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
+      gStatusCode = details.statusCode
+      // display 'V' toolbar icon if wayback has a copy
+      wmAvailabilityCheck(details.url, (wayback_url, url) => {
+        if (details.tabId >= 0) {
+          // normally go here
+          chrome.tabs.get(details.tabId, (tab) => {
+            update(tab, wayback_url)
+          })
+        } else {
+          // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            update(tabs[0], wayback_url)
+          })
+        }
+      })
+    }
+  })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for messages to call background functions from other scripts.
@@ -784,7 +795,7 @@ function updateWaybackCountBadge(atab, url) {
 
 /* * * Toolbar * * */
 
-const validToolbarIcons = new Set(['R', 'S', 'F', 'check', 'archive'])
+const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
 
 /**
  * Sets the toolbar icon.
@@ -866,6 +877,8 @@ function updateToolbar(atab) {
       // this order defines the priority of what icon to display
       if (state && state.has('S')) {
         setToolbarIcon('S', atab.id)
+      } else if (state && state.has('V')) {
+        setToolbarIcon('V', atab.id)
       } else if (state && state.has('F')) {
         setToolbarIcon('F', atab.id)
       } else if (state && state.has('R')) {
