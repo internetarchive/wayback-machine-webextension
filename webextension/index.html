@@ -65,13 +65,12 @@
             </div>
           </div>
         </div>
-
         <div class="chk-frame">
           <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Archive all Outlinked URLs">
-            <input type="checkbox" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
+            <input type="checkbox" class="saved-setting" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
           </label>
           <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Archive a Screenshot (image)">
-            <input type="checkbox" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
+            <input type="checkbox" class="saved-setting" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
           </label>
         </div>
       </div>
@@ -169,7 +168,7 @@
 
     <div id="first-panel" style="margin-bottom: 10px">
       <label class="setting-switch" for="auto-archive-setting">
-        <input type="checkbox" name="private-include" class="private" id="auto-archive-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="auto-archive-setting">
         <div class="setting-text-box">
           <span class="toggle">Auto Save Page</span>
           <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon"><br>
@@ -187,49 +186,49 @@
         </div>
       </label>
       <label class="setting-switch" for="email-outlinks-setting">
-        <input type="checkbox" id="email-outlinks-setting">
+        <input type="checkbox" class="saved-setting" id="email-outlinks-setting">
         <div class="setting-text-box">
           <span class="toggle">Email Outlinks</span>
         </div>
       </label>
       <label class="setting-switch" for="resource-list-setting">
-        <input type="checkbox" id="resource-list-setting">
+        <input type="checkbox" class="saved-setting" id="resource-list-setting">
         <div class="setting-text-box">
           <span class="toggle">Show Resources During Save</span>
         </div>
       </label>
       <div class="setting-switch" id="view-setting">
         <div id="view-setting-text">Show Features In</div>
-        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-tab" value="tab">
+        <input class="saved-setting" type="radio" name="view-setting-input" id="view-setting-tab" value="tab">
         <label class="toggle" for="view-setting-tab">Tab</label>&nbsp;
-        <input class="view-setting-input" type="radio" name="view-setting-input" id="view-setting-window" value="window">
+        <input class="saved-setting" type="radio" name="view-setting-input" id="view-setting-window" value="window">
         <label class="toggle" for="view-setting-window">Window</label>
       </div>
     </div>
 
     <div id="second-panel">
       <label class="setting-switch" for="private-mode-setting">
-        <input type="checkbox" id="private-mode-setting">
+        <input type="checkbox" class="saved-setting" id="private-mode-setting">
         <div class="setting-text-box">
           <span class="toggle">Private Mode</span>
         </div>
       </label>
       <label class="setting-switch" for="not-found-setting">
-        <input type="checkbox" name="private-include" class="private" id="not-found-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="not-found-setting">
         <div class="setting-text-box">
           <span class="toggle">Replace 404s, etc...</span>
           <img src="images/toolbar/toolbar-icon-V32.png" alt="V" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="wm-count-setting">
-        <input type="checkbox" name="private-include" class="private" id="wm-count-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="wm-count-setting">
         <div class="setting-text-box">
           <span class="toggle">Wayback Machine Count</span>
         </div>
       </label>
 <!--
       <label class="setting-switch" for="fact-check-setting">
-        <input type="checkbox" name="private-include" class="private" id="fact-check-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="fact-check-setting">
         <div class="setting-text-box">
           <span class="toggle">Fact Checks</span>
           <img src="images/toolbar/toolbar-icon-F32.png" alt="F" class="toolbar-icon">
@@ -237,21 +236,21 @@
       </label>
 -->
       <label class="setting-switch" for="wiki-setting">
-        <input type="checkbox" name="private-include" class="private" id="wiki-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="wiki-setting">
         <div class="setting-text-box">
           <span class="toggle">Wikipedia Resources</span>
           <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="amazon-setting">
-        <input type="checkbox" name="private-include" class="private" id="amazon-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="amazon-setting">
         <div class="setting-text-box">
           <span class="toggle">Amazon Books</span>
           <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="tvnews-setting">
-        <input type="checkbox" name="private-include" class="private" id="tvnews-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="tvnews-setting">
         <div class="setting-text-box">
           <span class="toggle">TV News Clips</span>
           <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">

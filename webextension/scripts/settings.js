@@ -1,40 +1,30 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, private_before_state, initPrivateState, checkLastError */
+/*   global attachTooltip */
 
 // from 'popup.js'
 /*   global setupWaybackCount */
 
 // onload
 $(function() {
-  initPrivateState()
-  initializeSettings()
-  $('.private').click(validatePrivateMode)
-  $('#private-mode-setting').click(togglePrivateMode)
-  $('#view-setting').click(switchTabWindow)
-  $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
-  $('input[type=checkbox],input[type=radio]').change(saveOptions)
-  $('#auto-archive-age').change((e) => {
-    $('#auto-archive-setting').prop('checked', true).addClass('selected-prior')
-    saveOptions()
-    e.target.blur()
-    validatePrivateMode()
-  })
+  initSettings()
+  setupPrivateMode()
+  setupSettingsChange()
+  setupPanelSwitch()
+  setupHelpDocs()
   $('.back-btn').click(goBack)
-  switchSetting()
-  addDocs()
 })
 
-function initializeSettings() {
-  chrome.storage.local.get(null, restoreOptions)
+function initSettings() {
+  chrome.storage.local.get(null, restoreSettings)
 }
 
-function restoreOptions(items) {
-  /* SPN */
+function restoreSettings(items) {
+  // SPN
   $('#chk-screenshot').prop('checked', items.spn_screenshot)
   $('#chk-outlinks').prop('checked', items.spn_outlinks)
-  /* First Panel */
+  // first panel
   $('#private-mode-setting').prop('checked', items.private_mode_setting)
   $('#not-found-setting').prop('checked', items.not_found_setting)
   $('#wm-count-setting').prop('checked', items.wm_count_setting)
@@ -42,24 +32,20 @@ function restoreOptions(items) {
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
-  /* Second Panel */
+  // second panel
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
-  /* Set 'selected-prior' class to the previous state */
-  for (let item of private_before_state) {
-    $('#' + item).addClass('selected-prior')
-  }
 }
 
-function saveOptions() {
+function saveSettings() {
   let settings = {
-    /* SPN */
+    // SPN
     spn_outlinks: $('#chk-outlinks').prop('checked'),
     spn_screenshot: $('#chk-screenshot').prop('checked'),
-    /* First Panel */
+    // first panel
     private_mode_setting: $('#private-mode-setting').prop('checked'),
     not_found_setting: $('#not-found-setting').prop('checked'),
     wm_count_setting: $('#wm-count-setting').prop('checked'),
@@ -67,7 +53,7 @@ function saveOptions() {
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     tvnews_setting: $('#tvnews-setting').prop('checked'),
-    /* Second Panel */
+    // second panel
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
@@ -75,72 +61,92 @@ function saveOptions() {
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
-
-  // displays or clears the count badge, label, oldest and newest tooltips
-  setupWaybackCount()
-  if (settings.wm_count_setting === false) {
-    // additionally clear the cache if setting cleared
-    chrome.runtime.sendMessage({ message: 'clearCountCache' })
-  }
-
-  // if (settings.fact_check_setting === false) {
-  //   chrome.runtime.sendMessage({ message: 'clearFactCheck' })
-  // }
-  chrome.runtime.sendMessage({ message: 'clearResource', settings: settings })
 }
 
-function validatePrivateMode() {
-  let checkboxes = $('[name="private-include"]')
-  let checkedCount = checkboxes.filter((_index, item) => item.checked === true).length
-  if (checkedCount > 0) {
+function setupPrivateMode() {
+  $('#private-mode-setting').change(onPrivateModeChange)
+  $('.private-setting').change(onPrivateSettingChange)
+}
+
+// Clear all private checkboxes when private mode turned on.
+function onPrivateModeChange(e) {
+  if ($('#private-mode-setting').prop('checked') === true) {
+    $('.private-setting').prop('checked', false).trigger('change')
+  }
+}
+
+// Turn off private mode if any private checkbox is set.
+function onPrivateSettingChange(e) {
+  if ($(e.target).prop('checked') === true) {
     $('#private-mode-setting').prop('checked', false)
   }
+}
 
-  // If the event.taget.checked is true, add class 'selected-prior' to the event.taget, if it is NOT there
-  // Else if the event.taget.checked is false, then remove class 'selected-prior'
-  if (event.target.checked === true) {
-    if (!$(event.target).hasClass('selected-prior')) {
-      private_before_state.add(event.target.id)
-      $(event.target).addClass('selected-prior')
+// Save settings on change and other actions on particular settings.
+function setupSettingsChange() {
+
+  // save settings whenever one changes
+  $('.saved-setting').change(saveSettings)
+
+  // auto save page
+  $('#auto-archive-age').change((e) => {
+    $('#auto-archive-setting').prop('checked', true).trigger('change')
+    e.target.blur()
+  })
+
+  // view setting
+  $('#view-setting').click(switchTabWindow)
+  $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
+
+  // wayback count
+  $('#wm-count-setting').change((e) => {
+    // displays or clears the count badge, label, oldest and newest tooltips
+    setupWaybackCount()
+    if ($(e.target).prop('checked') === false) {
+      chrome.runtime.sendMessage({ message: 'clearCountCache' })
     }
-  } else if (event.target.checked === false) {
-    private_before_state.delete(event.target.id)
-    $(event.target).removeClass('selected-prior')
-  }
-  // Set the final previous state
-  chrome.storage.local.set({ private_before_state: Array.from(private_before_state) }, () => {})
-  hideUiButtons()
+  })
+
+  // resources
+  $('#wiki-setting').change((e) => {
+    if ($(e.target).prop('checked') === false) {
+      $('#wiki-container').hide()
+      chrome.runtime.sendMessage({ message: 'clearResource', settings: { wiki_setting: false } })
+    }
+  })
+  $('#amazon-setting').change((e) => {
+    if ($(e.target).prop('checked') === false) {
+      $('#readbook-container').hide()
+      chrome.runtime.sendMessage({ message: 'clearResource', settings: { amazon_setting: false } })
+    }
+  })
+  $('#tvnews-setting').change((e) => {
+    if ($(e.target).prop('checked') === false) {
+      $('#tvnews-container').hide()
+      chrome.runtime.sendMessage({ message: 'clearResource', settings: { tvnews_setting: false } })
+    }
+  })
+  /*
+  $('#fact-check-setting').change((e) => {
+    if ($(e.target).prop('checked') === false) {
+      $('#fact-check-btn').removeClass('btn-purple')
+      chrome.runtime.sendMessage({ message: 'clearFactCheck' })
+    }
+  })
+  */
 }
 
-function togglePrivateMode() {
-  let checkboxes = $('.selected-prior.private')
-  for (let i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = !$(this).prop('checked')
-  }
-  hideUiButtons()
-}
-
-function hideUiButtons() {
-  // hide relevant resources buttons
-  if ($('#amazon-setting').is(':not(:checked)')) { $('#readbook-container').hide() }
-  if ($('#tvnews-setting').is(':not(:checked)')) { $('#tvnews-container').hide() }
-  if ($('#wiki-setting').is(':not(:checked)')) { $('#wiki-container').hide() }
-  // change color of fact check button
-  /// if ($('#fact-check-setting').is(':not(:checked)')) {
-  //   $('#fact-check-btn').removeClass('btn-purple')
-  // }
-}
-
-function goBack () {
+// Returns to the main view.
+function goBack() {
   $('#login-page').hide()
   $('#setting-page').hide()
   $('#popup-page').show()
 }
 
-function switchSetting() {
+// Prepares the top tab bar for switching between setting panels.
+function setupPanelSwitch() {
   if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
   $('#first-panel').hide()
-  // switching pressed effect of tab button
   $('#panel1-btn').click(() => {
     $('#second-panel').hide()
     $('#first-panel').show()
@@ -155,21 +161,24 @@ function switchSetting() {
   })
 }
 
-function switchTabWindow() { $('input[type="radio"]').not(':checked').prop('checked', true).trigger('change') }
+// Toggles the Tab/Window setting.
+function switchTabWindow() {
+  $('input[name=view-setting-input]').not(':checked').prop('checked', true).trigger('change')
+}
 
-function addDocs() {
+function setupHelpDocs() {
   let docs = {
-    /* Context Tab */
+    // context tab
     'private-mode-setting': 'Don\'t initiate automatic communications between this extension and the Internet Archive.',
     'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
     'wm-count-setting': 'Show number of times the current URL has been archived in the Wayback Machine.',
     'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipeida articles. ',
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
     'tvnews-setting': 'Auto check for related TV News Clips while visitng selected news websites.',
-    /* General Tab */
+    // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {

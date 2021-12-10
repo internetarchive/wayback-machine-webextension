@@ -21,10 +21,6 @@ const API_RETRY = 1000
 let tabIdPromise
 const SPN_RETRY = 6000
 
-let private_before_default = new Set([
-  'not-found-setting'
-])
-
 // Used to pass variables to other files since they can't read this file's globals.
 function saveGlobals() {
   chrome.storage.local.set({
@@ -955,7 +951,6 @@ chrome.contextMenus.onClicked.addListener((click) => {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    private_before_default,
     tabIdPromise,
     authCheckAPI
   }
