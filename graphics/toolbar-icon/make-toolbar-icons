@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+
+# Copyright (c) 2021 Carl Gorringe (carl.gorringe.org)
+# make-toolbar-icons.pl
+# v2.3 - 12/9/2021
+#
+# About:
+#   Make toolbar icons given a 256x256 px icon.
+#   Makes sizes: 16, 24, 32, 64 px
+#
+# Usage:
+#   make-toolbar-icons outprefix icon256.png
+#
+# Where:
+#   outprefix is the output filename prefix, e.g. outprefix60.png
+#   icon256.png is input image file with size 256x256.
+
+use strict;
+
+{
+  my ($outfix, $lgfile);
+
+  if (scalar @ARGV <= 1) {
+    print STDERR "Make icons for webextension toolbar. (12/9/2021)\n";
+    print STDERR "Requires ImageMagick 'convert' tool installed.\n";
+    print STDERR "Usage:\n  $0 outprefix icon256.png\n";
+    exit(1);
+  }
+  if (scalar @ARGV >= 2) {
+    $outfix = $ARGV[0];
+    $lgfile = $ARGV[1];
+  }
+
+  # icons
+  my %lg_sizes = ( '16' => '16', '24' => '24', '32' => '32', '64' => '64' );
+
+  print "Making icons from ${lgfile}:\n";
+  foreach my $size (keys %lg_sizes) {
+    my $name = $lg_sizes{$size};
+    my $outfile = "${outfix}${name}.png";
+    print "  $outfile\n";
+    `convert '${lgfile}[${size}x${size}]' ${outfile}`;
+  }
+
+  print "Done\n";
+}
