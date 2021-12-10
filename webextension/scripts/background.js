@@ -9,7 +9,7 @@
 /*   global hostHeaders, gCustomUserAgent, timestampToDate */
 
 // Used to store the statuscode of the if it is a httpFailCodes
-let gStatusCode = ''
+let gStatusCode = 0
 let gStatusWaybackUrl = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
@@ -411,7 +411,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
     saveGlobals()
   }
 
-  gStatusCode = ''
+  gStatusCode = 0
   chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       gStatusCode = details.statusCode
