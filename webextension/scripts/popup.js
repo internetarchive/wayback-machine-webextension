@@ -185,8 +185,8 @@ function openWaybackPage(waybackURL, pageURL) {
   }
 }
 
-function openNewestPage()   { openWaybackPage('https://web.archive.org/web/2/', activeURL) }
-function openOldestPage()   { openWaybackPage('https://web.archive.org/web/0/', activeURL) }
+function openNewestPage() { openWaybackPage('https://web.archive.org/web/2/', activeURL) }
+function openOldestPage() { openWaybackPage('https://web.archive.org/web/0/', activeURL) }
 function openOverviewPage() { openWaybackPage('https://web.archive.org/web/*/', activeURL) }
 
 function social_share(eventObj) {
