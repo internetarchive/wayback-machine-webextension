@@ -174,41 +174,20 @@ function checkAuthentication(callback) {
   }, callback)
 }
 
-function recent_capture() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
+// Open Wayback Machine website for the given pageURL.
+function openWaybackPage(waybackURL, pageURL) {
+  if (pageURL) {
     chrome.runtime.sendMessage({
       message: 'openurl',
-      wayback_url: 'https://web.archive.org/web/2/',
-      page_url: url,
-      method: 'recent'
+      wayback_url: waybackURL,
+      page_url: pageURL
     }, checkLastError)
   }
 }
 
-function first_capture() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
-    chrome.runtime.sendMessage({
-      message: 'openurl',
-      wayback_url: 'https://web.archive.org/web/0/',
-      page_url: url,
-      method: 'first'
-    }, checkLastError)
-  }
-}
-
-function view_all() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
-    chrome.runtime.sendMessage({
-      message: 'openurl',
-      wayback_url: 'https://web.archive.org/web/*/',
-      page_url: url,
-      method: 'viewall'
-    }, checkLastError)
-  }
-}
+function openNewestPage()   { openWaybackPage('https://web.archive.org/web/2/', activeURL) }
+function openOldestPage()   { openWaybackPage('https://web.archive.org/web/0/', activeURL) }
+function openOverviewPage() { openWaybackPage('https://web.archive.org/web/*/', activeURL) }
 
 function social_share(eventObj) {
   let parent = eventObj.target.parentNode
@@ -781,8 +760,9 @@ $(function() {
   setupViewSetting()
   setupSettingsTabTip()
   $('.logo-wayback-machine').click(homepage)
-  $('#newest-btn').click(recent_capture)
-  $('#oldest-btn').click(first_capture)
+  $('#newest-btn').click(openNewestPage)
+  $('#oldest-btn').click(openOldestPage)
+  $('#overview-btn').click(openOverviewPage)
   $('#facebook-share-btn').click(social_share)
   $('#twitter-share-btn').click(social_share)
   $('#linkedin-share-btn').click(social_share)
@@ -792,7 +772,6 @@ $(function() {
   $('#donate-tab-btn').click(open_donations_page)
   $('#settings-tab-btn').click(showSettings)
   $('#feedback-tab-btn').click(open_feedback_page)
-  $('#overview-btn').click(view_all)
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)

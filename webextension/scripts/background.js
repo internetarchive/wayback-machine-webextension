@@ -445,8 +445,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if (message.message === 'openurl') {
     // open URL in new tab or window depending on setting
-    if (isValidUrl(message.page_url) && isNotExcludedUrl(message.page_url)) {
-      let page_url = getCleanUrl(message.page_url)
+    let page_url = getCleanUrl(message.page_url)
+    if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, false)
     }
