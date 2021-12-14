@@ -448,7 +448,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (isValidUrl(message.page_url) && isNotExcludedUrl(message.page_url)) {
       let page_url = getCleanUrl(message.page_url)
       let open_url = message.wayback_url + page_url
-      URLopener(open_url, page_url, true)
+      URLopener(open_url, page_url, false)
     }
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
@@ -940,7 +940,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
           return true
         }
         let open_url = wayback_url + page_url
-        URLopener(open_url, page_url, true)
+        URLopener(open_url, page_url, false)
       } else {
         const msg = 'This URL is excluded.'
         if (isFirefox) { notify(msg) } else { alert(msg) }
