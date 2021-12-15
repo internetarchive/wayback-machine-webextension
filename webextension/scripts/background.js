@@ -494,9 +494,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, true)
     }
-  } else if (message.message === 'save_success') {
-    // why isn't this reached?
-    // does the onMessage listener in popup.js somehow prevent this?
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
     getCachedWaybackCount(message.page_url,
