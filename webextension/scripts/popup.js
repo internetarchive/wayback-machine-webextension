@@ -121,6 +121,7 @@ function loginError() {
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
+  $('#my-archive-btn').attr('disabled', true).off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
@@ -137,6 +138,7 @@ function loginSuccess() {
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#spn-btn').removeClass('flip-inside')
+  $('#my-archive-btn').removeAttr('disabled').click(openMyWebArchivePage)
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
@@ -603,6 +605,15 @@ function showContext(eventObj) {
   }
 }
 
+function openMyWebArchivePage() {
+  chrome.storage.local.get(['screenname'], (settings) => {
+    if (settings && settings.screenname) {
+      const url = `https://archive.org/details/@${settings.screenname}?tab=web-archive`
+      openByWindowSetting(url)
+    }
+  })
+}
+
 function setExcluded() {
   $('#spn-btn').addClass('flip-inside')
   $('#last-saved-msg').hide()
@@ -796,7 +807,6 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })

@@ -60,8 +60,12 @@ function doLogin(e) {
     .then((res) => {
       $('#login-btn').val('Login')
       if (res.success === false) {
+        // login failed
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
+        // login success
+        const screenname = res.values.screenname || ''
+        chrome.storage.local.set({ screenname: screenname })
         $('#login-message').show().addClass('login-success').text('Success')
         loginSuccess()
         setTimeout(() => {

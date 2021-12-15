@@ -180,7 +180,7 @@ function setupHelpDocs() {
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now selected.',
+    'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')
