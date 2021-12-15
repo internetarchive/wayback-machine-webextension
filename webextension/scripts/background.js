@@ -201,8 +201,10 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
     }, checkLastError)
     // notify
     if (!silent) {
-      let msg = 'Successfully saved! Click to view snapshot.'
+      // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on.
+      checkSaveToMyWebArchive(page_url, vdata.timestamp)
       // replace message if present in result
+      let msg = 'Successfully saved! Click to view snapshot.'
       if (vdata.message && vdata.message.length > 0) {
         msg = vdata.message
       }
@@ -234,6 +236,29 @@ async function validate_spn(atab, job_id, silent = false, page_url) {
       })
     }
   }
+}
+
+/**
+ * Saves URL to user's My Web Archive list.
+ * This assumes user is logged in with cookies set, and params are valid.
+ * @param url {string}: Original URL to save.
+ * @param timestamp {string}: Wayback timestamp as "yyyyMMddHHmmss" in UTC.
+ * @return Promise: which should return this JSON on success: { "success": true }
+ */
+function saveToMyWebArchive(url, timestamp) {
+  const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    let headers = new Headers(hostHeaders)
+    headers.set('Content-Type', 'application/json')
+    fetch(hostURL + '__wb/web-archive', {
+      method: 'POST',
+      body: JSON.stringify(postData),
+      headers: headers
+    })
+    .then(resolve, reject)
+  })
+  return timeoutPromise
 }
 
 /**
@@ -429,6 +454,25 @@ chrome.webRequest.onCompleted.addListener((details) => {
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
+// Calls saveToMyWebArchive() if setting is set, and outputs errors to console.
+//
+function checkSaveToMyWebArchive(url, timestamp) {
+  chrome.storage.local.get(['my_archive_setting'], (settings) => {
+    if (settings && settings.my_archive_setting) {
+      saveToMyWebArchive(url, timestamp)
+      .then(response => response.json())
+      .then(data => {
+        if (!(data && (data['success'] === true))) {
+          console.log('Save to My Web Archive FAILED: ', data.error)
+        }
+      })
+      .catch(error => {
+        console.log('Save to My Web Archive FAILED: ', error)
+      })
+    }
+  })
+}
+
 // Listens for messages to call background functions from other scripts.
 // note: return true only if sendResponse() needs to be kept around.
 //
@@ -450,6 +494,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, true)
     }
+  } else if (message.message === 'save_success') {
+    // why isn't this reached?
+    // does the onMessage listener in popup.js somehow prevent this?
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
     getCachedWaybackCount(message.page_url,
