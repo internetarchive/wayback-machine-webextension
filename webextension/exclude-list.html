@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+  <link rel="stylesheet" type="text/css" href="css/exclude-list.css">
+  <link rel="icon" type="image/png" href="images/toolbar/toolbar-icon-archive32.png">
+  <title>Exclude URLs</title>
+</head>
+<body>
+  <div class="body-container">
+
+    <div class="header-container">
+      <h4 id="main-title">Exclude URLs</h4>
+      <p id="main-info">Enter URL patterns below to exclude from Auto Save.</p>
+    </div>
+
+    <div class="outer-container">
+
+      <div id="add-container">
+        <textarea id="add-url-area" class="form-control" placeholder="Enter 1 URL per line. For example: mail.google.com/*" autofocus></textarea>
+      </div>
+
+    </div>
+
+    <div id="legend-container">
+      Use * as a wildcard. For example:<br>
+      mail.google.com/*
+    </div>
+
+    <div id="save-container">
+      <button class="btn btn-auto btn-dark-gray" id="cancel-btn">Cancel</button>
+      <button class="btn btn-auto btn-dark-gray" id="reset-btn">Reset</button>
+      <button class="btn btn-auto btn-red" id="save-btn">Save</button>
+    </div>
+
+  </div>
+  <script src="scripts/build.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/exclude-list.js"></script>
+</body>
+</html>
