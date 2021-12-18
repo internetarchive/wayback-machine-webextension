@@ -39,7 +39,7 @@ use strict;
     my $name = $lg_sizes{$size};
     my $outfile = "${outfix}${name}.png";
     print "  $outfile\n";
-    `convert '${lgfile}[${size}x${size}]' ${outfile}`;
+    `convert -filter Catrom '${lgfile}[${size}x${size}]' ${outfile}`;
   }
 
   print "Done\n";
