@@ -588,10 +588,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            auto_save(tab, tab.url, beforeDate)
+            autoSave(tab, tab.url, beforeDate)
           }
         } else {
-          auto_save(tab, tab.url)
+          autoSave(tab, tab.url)
         }
       }
       // fact check
@@ -694,23 +694,29 @@ chrome.tabs.onActivated.addListener((info) => {
   })
 })
 
-function auto_save(atab, url, beforeDate) {
-  if (isValidUrl(url) && isNotExcludedUrl(url)) {
+/**
+ * Runs savePageNow if given tab not currently in saving state.
+ * First checks if url available in WM, and only saves if beforeDate is prior
+ * to last save date, or saves if never been saved before.
+ * @param atab {Tab}: Current tab, required to check save status.
+ * @param url {string}: URL to save.
+ * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
+ */
+function autoSave(atab, url, beforeDate) {
+  if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
     wmAvailabilityCheck(url,
       (wayback_url, url, timestamp) => {
         // save if timestamp from availability API is older than beforeDate
         if (beforeDate) {
           const checkDate = timestampToDate(timestamp)
-          if ((checkDate.getTime() < beforeDate.getTime()) && !getToolbarState(atab).has('S')) {
+          if (checkDate.getTime() < beforeDate.getTime()) {
             savePageNow(atab, url, true)
           }
         }
       },
       () => {
         // set auto-save toolbar icon if page doesn't exist, then save it
-        if (!getToolbarState(atab).has('S')) {
-          savePageNow(atab, url, true)
-        }
+        savePageNow(atab, url, true)
       }
     )
   }
