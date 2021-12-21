@@ -1,7 +1,7 @@
 // exclude-list.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, isValidUrl, makeValidURL, cropPrefix, dateToTimestamp, checkLastError, cropScheme */
+/*   global isNotExcludedUrl, cropScheme */
 
 const defaultExcludeList = [
   'mail.google.com/*',
@@ -20,11 +20,10 @@ function closeWindow() {
 // Fills textarea with URL pattern array of strings.
 function fillTextArea(elist) {
   const text = elist.join('\n')
-  // document.getElementById('add-url-area').value = ''
-  $('#add-url-area').text(text)
+  document.getElementById('exclude-list-area').value = text
 }
 
-// Reads list of URL patterns from storage then fills textarea.
+// Reads exclude list of URL patterns from storage then fills textarea.
 function loadExcludeList() {
   chrome.storage.local.get(['exclude_list'], (items) => {
     if (('exclude_list' in items) && items.exclude_list) {
@@ -36,12 +35,12 @@ function loadExcludeList() {
   })
 }
 
-// Reads list from textarea and saves it to storage.
+// Saves exclude list from textarea to storage.
 function saveExcludeList() {
-  const text = document.getElementById('add-url-area').value
+  const text = document.getElementById('exclude-list-area').value
   const lines = text.split('\n')
   let urlSet = new Set()
-  // cropping schemes from every URL, removing duplicates
+  // crop schemes from every URL and skip duplicates
   for (let line of lines) {
     if (isNotExcludedUrl(line)) {
       const curl = cropScheme(line)
@@ -54,16 +53,19 @@ function saveExcludeList() {
 }
 
 function resetExcludeList() {
-  // chrome.storage.local.set({ 'exclude_list': null }, () => {})
-  // loadExcludeList()
   fillTextArea(defaultExcludeList)
+}
+
+function clearExcludeList() {
+  fillTextArea([])
 }
 
 // onload
 $(function() {
   $('.btn').click(clearFocus)
-  $('#cancel-btn').click(closeWindow)
+  $('#clear-btn').click(clearExcludeList)
   $('#reset-btn').click(resetExcludeList)
+  $('#cancel-btn').click(closeWindow)
   $('#save-btn').click((e) => {
     saveExcludeList()
     closeWindow()
