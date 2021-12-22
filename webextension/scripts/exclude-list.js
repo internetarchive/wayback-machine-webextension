@@ -4,8 +4,12 @@
 /*   global isNotExcludedUrl, cropPrefix */
 
 const defaultExcludeList = [
-  'mail.google.com/*',
-  'mail.yahoo.com/*'
+  'archive.org*',
+  'web.archive.org*',
+  'google.com*',
+  '*.google.com*',
+  'mail.yahoo.com*',
+  'duckduckgo.com/?q=*'
 ]
 
 // Removes focus outline on mouse click, while keeping during keyboard use.
