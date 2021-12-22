@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate, isUrlInList */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -704,21 +704,25 @@ chrome.tabs.onActivated.addListener((info) => {
  */
 function autoSave(atab, url, beforeDate) {
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
-    wmAvailabilityCheck(url,
-      (wayback_url, url, timestamp) => {
-        // save if timestamp from availability API is older than beforeDate
-        if (beforeDate) {
-          const checkDate = timestampToDate(timestamp)
-          if (checkDate.getTime() < beforeDate.getTime()) {
+    chrome.storage.local.get(['auto_exclude_list'], (items) => {
+      if (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list)) {
+        wmAvailabilityCheck(url,
+          (wayback_url, url, timestamp) => {
+            // save if timestamp from availability API is older than beforeDate
+            if (beforeDate) {
+              const checkDate = timestampToDate(timestamp)
+              if (checkDate.getTime() < beforeDate.getTime()) {
+                savePageNow(atab, url, true)
+              }
+            }
+          },
+          () => {
+            // set auto-save toolbar icon if page doesn't exist, then save it
             savePageNow(atab, url, true)
           }
-        }
-      },
-      () => {
-        // set auto-save toolbar icon if page doesn't exist, then save it
-        savePageNow(atab, url, true)
+        )
       }
-    )
+    })
   }
 }
 

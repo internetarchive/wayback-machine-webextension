@@ -1,7 +1,7 @@
 // exclude-list.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, cropScheme */
+/*   global isNotExcludedUrl, cropPrefix */
 
 const defaultExcludeList = [
   'mail.google.com/*',
@@ -25,9 +25,9 @@ function fillTextArea(elist) {
 
 // Reads exclude list of URL patterns from storage then fills textarea.
 function loadExcludeList() {
-  chrome.storage.local.get(['exclude_list'], (items) => {
-    if (('exclude_list' in items) && items.exclude_list) {
-      fillTextArea(items.exclude_list)
+  chrome.storage.local.get(['auto_exclude_list'], (items) => {
+    if (('auto_exclude_list' in items) && items.auto_exclude_list) {
+      fillTextArea(items.auto_exclude_list)
     } else {
       // use a default list of excluded URLs
       fillTextArea(defaultExcludeList)
@@ -43,13 +43,13 @@ function saveExcludeList() {
   // crop schemes from every URL and skip duplicates
   for (let line of lines) {
     if (isNotExcludedUrl(line)) {
-      const curl = cropScheme(line)
+      const curl = cropPrefix(line)
       if (curl) { urlSet.add(curl) }
     }
   }
   // save the modified list
   const exlist = Array.from(urlSet)
-  chrome.storage.local.set({ 'exclude_list': exlist }, () => {})
+  chrome.storage.local.set({ 'auto_exclude_list': exlist }, () => {})
 }
 
 function resetExcludeList() {

@@ -420,6 +420,40 @@ function sleep(ms) {
 }
 
 /**
+ * Recursive test to see if text matches pattern string.
+ * Runs in O(n^2) time?
+ * @param pattern {string}: to match which may contain 1 or more '*' as wildcards.
+ * @param text {string}: string to test which doesn't have any wildcards.
+ * @return {bool}: true if matches, false if doesn't.
+ */
+function matchWildcard(text, pattern) {
+  if ((pattern.length === 0) && (text.length === 0)) { return true }
+  if ((pattern.length > 1) && (pattern[0] === '*') && (text.length === 0)) { return false }
+  if ((pattern.length > 0) && (text.length > 0) && (pattern[0] === text[0])) {
+    return matchWildcard(text.substring(1), pattern.substring(1))
+  }
+  if ((pattern.length === 1) && (pattern[0] === '*')) {
+    return true
+  }
+  if ((pattern.length > 0) && (pattern[0] === '*')) {
+    return matchWildcard(text, pattern.substring(1)) || matchWildcard(text.substring(1), pattern)
+  }
+  return false
+}
+
+/**
+ * Checks URL against given list of URL patterns.
+ * @param url {string}: URL to check against list.
+ * @param patterns {array of strings}: List of patterns that may include '*' wildcards.
+ * @returns {bool}: true if URL matches any pattern in the list.
+ */
+function isUrlInList(url, patterns) {
+  const curl = cropPrefix(url)
+  const matched = patterns.some(pat => matchWildcard(curl, pat))
+  return matched
+}
+
+/**
  * Customizes error handling
  * @param status {string}
  * @return {string}
@@ -572,6 +606,8 @@ if (typeof module !== 'undefined') {
     getWaybackUrlFromResponse,
     isArchiveUrl,
     isValidUrl,
+    isUrlInList,
+    matchWildcard,
     makeValidURL,
     cropPrefix,
     cropScheme,
