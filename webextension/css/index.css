@@ -80,8 +80,8 @@ body {
     font-size: 9pt;
 
     /* light mode */
-    color: #840;
-    background-color: #edc;
+    color: #800;
+    background-color: #edd;
     border: #666 solid 1px;
 }
 
@@ -463,7 +463,7 @@ a.btn-social, .btn-social {
     }
 
     #view-archived-msg {
-        color: #e94;
+        color: #e66;
         background-color: #222;
         border: #666 solid 1px;
     }
