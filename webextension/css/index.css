@@ -52,8 +52,10 @@ body {
 
 
 .toolbar-icon {
-    width: 16px;
-    height: 16px;
+    width: 8px;
+    height: 8px;
+    vertical-align: unset;
+    margin: 0 2px;
 }
 
 #search-input, .login-input {
