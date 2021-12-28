@@ -112,6 +112,15 @@ if (typeof isInTestEnv === 'undefined') {
 /* * * Wayback functions * * */
 
 /**
+ * Return true if toolbar badge position is along top of icon, false or undefined if along bottom.
+ */
+function isBadgeOnTop() {
+  // TODO: check other browsers
+  const badgeOnTop = { firefox: true, safari: true, chrome: false }
+  return badgeOnTop[gBrowser]
+}
+
+/**
  * Convert given int to a string with metric suffix, separators localized.
  * Used for toolbar button badge.
  * @param count {int}
@@ -584,6 +593,7 @@ if (typeof module !== 'undefined') {
     attachTooltip,
     getWaybackCount,
     badgeCountText,
+    isBadgeOnTop,
     isChrome,
     isFirefox,
     isEdge,
