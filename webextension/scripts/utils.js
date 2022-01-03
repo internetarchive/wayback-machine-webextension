@@ -116,7 +116,7 @@ if (typeof isInTestEnv === 'undefined') {
  */
 function isBadgeOnTop() {
   // TODO: check other browsers
-  const badgeOnTop = { firefox: true, safari: true, chrome: false }
+  const badgeOnTop = { firefox: true, safari: true, chrome: false, edge: false }
   return badgeOnTop[gBrowser]
 }
 
