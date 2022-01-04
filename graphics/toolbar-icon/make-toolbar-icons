@@ -1,9 +1,5 @@
 #!/usr/bin/env perl
 
-# Copyright (c) 2021 Carl Gorringe (carl.gorringe.org)
-# make-toolbar-icons.pl
-# v2.3 - 12/9/2021
-#
 # About:
 #   Make toolbar icons given a 256x256 px icon.
 #   Makes sizes: 16, 24, 32, 64 px
