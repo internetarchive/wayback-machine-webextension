@@ -119,23 +119,6 @@ Any URL
 </tr>
 
 <tr>
-<th>Fact Checks</th>
-<td>
-
-Should display purple 'F' and 'Fact Check':
-- http://actionnews3.com/rat-meat-has-been-sold-as-chicken-wings/
-- https://worldnewsdailyreport.com/california-pro-choice-activist-proudly-breaks-world-record-by-getting-her-27th-abortion/
-- https://www.intellihub.com/busted-protesters-uncover-false-flag-set-up-pile-of-bricks-strategically-placed-on-street-near-high-end-dallas-shops/
-- https://biohackinfo.com/news-bill-gates-id2020-vaccine-implant-covid-19-digital-certificates/
-- https://www.britannica.com/story/was-martin-luther-king-jr-a-republican-or-a-democrat
-
-Should display purple 'F', 'Fact Check', and 'TV News Clips' (R):
-- https://www.factcheck.org/2019/01/unsupported-mlk-claim-circulates-again/
-
-</td>
-</tr>
-
-<tr>
 <th>Wikipedia Resources</th>
 <td>
 
