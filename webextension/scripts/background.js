@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate, isUrlInList */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -805,8 +805,6 @@ function updateWaybackCountBadge(atab, url) {
 
 /* * * Toolbar * * */
 
-const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
-
 /**
  * Sets the toolbar icon.
  * Name string is based on PNG image filename in images/toolbar/
@@ -814,13 +812,16 @@ const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
  * @param tabId {int} (optional) = tab id, else sets current or global icon.
  */
 function setToolbarIcon(name, tabId = null) {
+  const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
+  const checkBadgePos = new Set(['R', 'F', 'V'])
   const path = 'images/toolbar/toolbar-icon-'
-  let n = validToolbarIcons.has(name) ? name : 'archive'
-  let allPaths = {
-    '16': (path + n + '16.png'),
-    '24': (path + n + '24.png'),
-    '32': (path + n + '32.png'),
-    '64': (path + n + '64.png')
+  const n = validToolbarIcons.has(name) ? name : 'archive'
+  const b = (checkBadgePos.has(name) && isBadgeOnTop()) ? 'b' : ''
+  const allPaths = {
+    '16': (path + n + b + '16.png'),
+    '24': (path + n + b + '24.png'),
+    '32': (path + n + b + '32.png'),
+    '64': (path + n + b + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)
