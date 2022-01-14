@@ -109,6 +109,50 @@ if (typeof isInTestEnv === 'undefined') {
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
 }
 
+/* * * Xauthn API * * */
+
+/**
+ * Calls the Xauthn Info service.
+ * Not currently useful since API returns a 401 Unauthorized error.
+ * @param email {string}
+ * @return {Promise}
+ */
+function getAuthInfo(email) {
+  console.log(`getAuthInfo( ${email} )`) // DEBUG
+  const apiPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 5000)
+    let data = JSON.stringify({ email: email })
+    let headers = new Headers(hostHeaders)
+    headers.set('Content-Type', 'application/json')
+    fetch('https://archive.org/services/xauthn?op=info', {
+      method: 'POST',
+      body: data,
+      headers: headers
+    })
+    .then(resolve, reject)
+  })
+
+  apiPromise
+  .then(response => response.json())
+  .then((res) => {
+    if (res && res.success) {
+      // success
+      console.log('getInfo success') // DEBUG
+      const screenname = res.values.screenname || ''
+      const itemname = res.values.itemname || ''
+      resolve({ screenname, itemname }) // ??
+    } else {
+      console.log('getInfo failed')
+    }
+  })
+  .catch((e) => {
+    console.log(e)
+  })
+  return apiPromise
+}
+
 /* * * Wayback functions * * */
 
 /**
