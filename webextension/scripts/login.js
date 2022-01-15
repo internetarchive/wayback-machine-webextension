@@ -62,7 +62,8 @@ function doLogin(e) {
       } else {
         // login success
         const screenname = res.values.screenname || ''
-        chrome.storage.local.set({ screenname })
+        const itemname = res.values.itemname || ''
+        chrome.storage.local.set({ screenname, itemname })
         $('#login-message').show().addClass('login-success').text('Success')
         loginSuccess()
         setTimeout(() => {
@@ -90,7 +91,7 @@ function doLogout() {
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
   // clear screenname
-  chrome.storage.local.remove('screenname')
+  chrome.storage.local.remove(['screenname', 'itemname'])
   // update UI
   $('#logout-tab-btn').hide()
   $('.tab-item').css('width', '22%')

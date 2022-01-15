@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getAuthInfo */
+/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo */
 
 let searchBoxTimer
 
@@ -606,33 +606,20 @@ function showContext(eventObj) {
 }
 
 function openMyWebArchivePage() {
-  chrome.storage.local.get(['screenname'], (settings) => {
-    if (settings && settings.screenname) {
-      const url = `https://archive.org/details/@${settings.screenname}?tab=web-archive`
+  chrome.storage.local.get(['itemname'], (settings) => {
+    if (settings && settings.itemname) {
+      // using saved itemname
+      const url = `https://archive.org/details/${settings.itemname}?tab=web-archive`
       openByWindowSetting(url)
     } else {
-      // screenname missing
-      const msg = 'Please log out and log in again using the Wayback Machine Extension.'
-      if (isFirefox) { notify(msg) } else { alert(msg) }
-      /*
-      // retrieve screenname by calling Xauthn API if cookies present. (doesn't work)
-      chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-user' }, (cookie) => {
-        try {
-          const email = decodeURIComponent(cookie.value)
-          getAuthInfo(email)
-          .then(info => { // this needs testing
-            console.log({ info }) // DEBUG
-            // chrome.storage.local.set(info)
-            if (info && info.screenname) {
-              const url = `https://archive.org/details/@${info.screenname}?tab=web-archive`
-              openByWindowSetting(url)
-            }
-          })
-        } catch(e) {
-          console.log(e);
+      // retrieve & store itemname
+      getUserInfo().then(info => {
+        if (info && ('screenname' in info) && ('itemname' in info)) {
+          chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
+          const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
+          openByWindowSetting(url)
         }
       })
-      */
     }
   })
 }

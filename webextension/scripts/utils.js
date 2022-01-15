@@ -109,48 +109,39 @@ if (typeof isInTestEnv === 'undefined') {
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
 }
 
-/* * * Xauthn API * * */
+/* * * Archive APIs * * */
 
 /**
- * Calls the Xauthn Info service.
- * Not currently useful since API returns a 401 Unauthorized error.
- * @param email {string}
+ * Get User info 'whoami'.
+ * Requires cookies of logged-in user are set.
  * @return {Promise}
  */
-function getAuthInfo(email) {
-  console.log(`getAuthInfo( ${email} )`) // DEBUG
+function getUserInfo() {
   const apiPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
     }, 5000)
-    let data = JSON.stringify({ email: email })
     let headers = new Headers(hostHeaders)
     headers.set('Content-Type', 'application/json')
-    fetch('https://archive.org/services/xauthn?op=info', {
-      method: 'POST',
-      body: data,
+    fetch('https://archive.org/services/user.php?op=whoami', {
+      method: 'GET',
       headers: headers
     })
     .then(resolve, reject)
   })
-
-  apiPromise
+  return apiPromise
   .then(response => response.json())
   .then((res) => {
-    if (res && res.success) {
+    if (res && res.success && ('value' in res)) {
       // success
-      console.log('getInfo success') // DEBUG
-      const screenname = res.values.screenname || ''
-      const itemname = res.values.itemname || ''
-      resolve({ screenname, itemname }) // ??
+      return res.value
     } else {
-      console.log('getInfo failed')
+      console.log('getUserInfo failed')
     }
   })
   .catch((e) => {
     console.log(e)
   })
-  return apiPromise
 }
 
 /* * * Wayback functions * * */
