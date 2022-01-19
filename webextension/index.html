@@ -188,7 +188,7 @@
           <span class="toggle">Auto Save Page</span>
           <div style="margin-top: 0.5em">
             if not archived:<br>
-            <select id="auto-archive-age">
+            <select id="auto-archive-age" class="btn-mini">
               <option value="99999" selected>previously</option>
               <option value="365">within past year</option>
               <option value="90">within 90 days</option>
@@ -196,6 +196,9 @@
               <option value="7">within 7 days</option>
               <option value="1">within 24 hours</option>
             </select>
+          </div>
+          <div>
+            <button class="btn btn-mini" id="exclude-urls-btn">Exclude URLs...</button>
           </div>
         </div>
       </label>

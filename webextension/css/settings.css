@@ -20,6 +20,10 @@
     width: calc(100% - 50px);
 }
 
+.setting-text-box div {
+    margin-top: 0.5em;
+}
+
 .setting-switch {
     width: 100%;
     min-height: 36px;
@@ -53,13 +57,6 @@ ul.setting-nav li {
 }
 
 /* options */
-
-#auto-archive-age {
-    border-style: none;
-    border-radius: 4px;
-    padding: 1px;
-    background-color: #ddd;
-}
 
 #view-setting {
     text-align: center !important;
@@ -113,10 +110,6 @@ label[for=tagcloud] {
 
     #setting-page label {
         font-weight: 500;
-    }
-
-    #auto-archive-age {
-        background-color: #3c3c3c;
     }
 
     #view-setting-text {
