@@ -12,6 +12,7 @@ const dateToTimestamp = require('../webextension/scripts/utils').dateToTimestamp
 const makeValidURL = require('../webextension/scripts/utils').makeValidURL
 const cropPrefix = require('../webextension/scripts/utils').cropPrefix
 const cropScheme = require('../webextension/scripts/utils').cropScheme
+const matchWildcard = require('../webextension/scripts/utils').matchWildcard
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
@@ -297,3 +298,27 @@ describe('cropScheme', () => {
     })
   })
 })
+
+describe('matchWildcard', () => {
+  let test_cases = [
+    { text: 'example', pattern: 'example', result: true },
+    { text: 'example.com/abc', pattern: 'example.com', result: false },
+    { text: 'example.com/abc', pattern: 'example.com*', result: true },
+    { text: 'example.com/abc', pattern: '*example.com*', result: true },
+    { text: 'www.example.com/abc', pattern: '*example.com*', result: true },
+    { text: 'www.example.com/abc', pattern: 'example.com*', result: false },
+    { text: 'example.com', pattern: 'example*com', result: true },
+    { text: 'example.abcdefg.com', pattern: 'example*com', result: true },
+    { text: 'example.abcdefg.com/abc', pattern: 'example*com', result: false },
+    { text: '', pattern: '', result: true },
+    { text: '', pattern: '*', result: true },
+    { text: 'abc', pattern: '*', result: true },
+    { text: '', pattern: '*abc', result: false },
+]
+  test_cases.forEach(({ text, pattern, result }) => {
+    it('should return ' + result + ' on ' + text + ' and ' + pattern, () => {
+      expect(matchWildcard(text, pattern)).to.equal(result)
+    })
+  })
+})
+

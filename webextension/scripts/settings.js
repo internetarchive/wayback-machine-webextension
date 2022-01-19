@@ -13,6 +13,7 @@ $(function() {
   setupSettingsChange()
   setupPanelSwitch()
   setupHelpDocs()
+  $('#exclude-urls-btn').click(showExcludeList)
   $('.back-btn').click(goBack)
 })
 
@@ -136,6 +137,10 @@ function setupSettingsChange() {
     }
   })
   */
+}
+
+function showExcludeList() {
+  openByWindowSetting(chrome.runtime.getURL('exclude-list.html'), 'windows')
 }
 
 // Returns to the main view.

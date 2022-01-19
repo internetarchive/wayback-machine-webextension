@@ -43,7 +43,10 @@
       <div id="view-archived-container">
         <div id="view-archived-msg">&nbsp;</div>
         <div class="btn-block">
-          <button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="view-archived-btn" title="">View Archived Version</button>
+          <button type="button" class="btn btn-sm btn-block btn-wide btn-red" id="view-archived-btn" title="">
+            <img src="images/toolbar/toolbar-icon-Vc16.png" alt="V" class="toolbar-icon">
+            View Archived Version
+          </button>
         </div>
       </div>
 
@@ -106,18 +109,30 @@
 
       <div id="readbook-container">
         <div class="btn-block">
-          <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="readbook-btn" title="Read or borrow the book">Read Book</button>
+          <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="readbook-btn" title="Read or borrow the book">
+            <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
+            Read Book
+          </button>
         </div>
       </div>
       <div id="tvnews-container">
         <div class="btn-block">
-          <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="tvnews-btn" title="See related news clips">TV News Clips</button>
+          <button type="button" class="btn btn-sm btn-block btn-wide btn-blue" id="tvnews-btn" title="See related news clips">
+            <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
+            TV News Clips
+          </button>
         </div>
       </div>
       <div id="wiki-container">
         <div class="btn-flex-block">
-          <button type="button" class="btn btn-sm btn-equal btn-blue" id="wikibooks-btn" title="Read cited Books">Cited Books</button>
-          <button type="button" class="btn btn-sm btn-equal btn-blue" id="wikipapers-btn" title="Read cited Papers">Cited Papers</button>
+          <button type="button" class="btn btn-sm btn-equal btn-blue" id="wikibooks-btn" title="Read Cited Books">
+            <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
+            Books
+          </button>
+          <button type="button" class="btn btn-sm btn-equal btn-blue" id="wikipapers-btn" title="Read Cited Papers">
+            <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
+            Papers
+          </button>
         </div>
       </div>
 
@@ -171,10 +186,9 @@
         <input type="checkbox" class="saved-setting private-setting" id="auto-archive-setting">
         <div class="setting-text-box">
           <span class="toggle">Auto Save Page</span>
-          <img src="images/toolbar/toolbar-icon-S32.png" alt="S" class="toolbar-icon"><br>
           <div style="margin-top: 0.5em">
             if not archived:<br>
-            <select id="auto-archive-age">
+            <select id="auto-archive-age" class="btn-mini">
               <option value="99999" selected>previously</option>
               <option value="365">within past year</option>
               <option value="90">within 90 days</option>
@@ -182,6 +196,9 @@
               <option value="7">within 7 days</option>
               <option value="1">within 24 hours</option>
             </select>
+          </div>
+          <div>
+            <button class="btn btn-mini" id="exclude-urls-btn">Exclude URLs...</button>
           </div>
         </div>
       </label>
@@ -223,7 +240,7 @@
         <input type="checkbox" class="saved-setting private-setting" id="not-found-setting">
         <div class="setting-text-box">
           <span class="toggle">Replace 404s, etc...</span>
-          <img src="images/toolbar/toolbar-icon-V32.png" alt="V" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-Vc16.png" alt="V" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="wm-count-setting">
@@ -237,7 +254,7 @@
         <input type="checkbox" class="saved-setting private-setting" id="fact-check-setting">
         <div class="setting-text-box">
           <span class="toggle">Fact Checks</span>
-          <img src="images/toolbar/toolbar-icon-F32.png" alt="F" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-Fc16.png" alt="F" class="toolbar-icon">
         </div>
       </label>
 -->
@@ -245,21 +262,21 @@
         <input type="checkbox" class="saved-setting private-setting" id="wiki-setting">
         <div class="setting-text-box">
           <span class="toggle">Wikipedia Resources</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="amazon-setting">
         <input type="checkbox" class="saved-setting private-setting" id="amazon-setting">
         <div class="setting-text-box">
           <span class="toggle">Amazon Books</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
         </div>
       </label>
       <label class="setting-switch" for="tvnews-setting">
         <input type="checkbox" class="saved-setting private-setting" id="tvnews-setting">
         <div class="setting-text-box">
           <span class="toggle">TV News Clips</span>
-          <img src="images/toolbar/toolbar-icon-R32.png" alt="R" class="toolbar-icon">
+          <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
         </div>
       </label>
     </div>

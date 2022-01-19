@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -489,10 +489,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if (message.message === 'openurl') {
     // open URL in new tab or window depending on setting
-    if (isValidUrl(message.page_url) && isNotExcludedUrl(message.page_url)) {
-      let page_url = getCleanUrl(message.page_url)
+    let page_url = getCleanUrl(message.page_url)
+    if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
       let open_url = message.wayback_url + page_url
-      URLopener(open_url, page_url, true)
+      URLopener(open_url, page_url, false)
     }
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
@@ -632,10 +632,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            auto_save(tab, tab.url, beforeDate)
+            autoSave(tab, tab.url, beforeDate)
           }
         } else {
-          auto_save(tab, tab.url)
+          autoSave(tab, tab.url)
         }
       }
       // fact check
@@ -738,25 +738,35 @@ chrome.tabs.onActivated.addListener((info) => {
   })
 })
 
-function auto_save(atab, url, beforeDate) {
-  if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    wmAvailabilityCheck(url,
-      (wayback_url, url, timestamp) => {
-        // save if timestamp from availability API is older than beforeDate
-        if (beforeDate) {
-          const checkDate = timestampToDate(timestamp)
-          if ((checkDate.getTime() < beforeDate.getTime()) && !getToolbarState(atab).has('S')) {
+/**
+ * Runs savePageNow if given tab not currently in saving state.
+ * First checks if url available in WM, and only saves if beforeDate is prior
+ * to last save date, or saves if never been saved before.
+ * @param atab {Tab}: Current tab, required to check save status.
+ * @param url {string}: URL to save.
+ * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
+ */
+function autoSave(atab, url, beforeDate) {
+  if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
+    chrome.storage.local.get(['auto_exclude_list'], (items) => {
+      if (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list)) {
+        wmAvailabilityCheck(url,
+          (wayback_url, url, timestamp) => {
+            // save if timestamp from availability API is older than beforeDate
+            if (beforeDate) {
+              const checkDate = timestampToDate(timestamp)
+              if (checkDate.getTime() < beforeDate.getTime()) {
+                savePageNow(atab, url, true)
+              }
+            }
+          },
+          () => {
+            // set auto-save toolbar icon if page doesn't exist, then save it
             savePageNow(atab, url, true)
           }
-        }
-      },
-      () => {
-        // set auto-save toolbar icon if page doesn't exist, then save it
-        if (!getToolbarState(atab).has('S')) {
-          savePageNow(atab, url, true)
-        }
+        )
       }
-    )
+    })
   }
 }
 
@@ -839,8 +849,6 @@ function updateWaybackCountBadge(atab, url) {
 
 /* * * Toolbar * * */
 
-const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
-
 /**
  * Sets the toolbar icon.
  * Name string is based on PNG image filename in images/toolbar/
@@ -848,13 +856,16 @@ const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
  * @param tabId {int} (optional) = tab id, else sets current or global icon.
  */
 function setToolbarIcon(name, tabId = null) {
+  const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
+  const checkBadgePos = new Set(['R', 'F', 'V'])
   const path = 'images/toolbar/toolbar-icon-'
-  let n = validToolbarIcons.has(name) ? name : 'archive'
-  let allPaths = {
-    '16': (path + n + '16.png'),
-    '24': (path + n + '24.png'),
-    '32': (path + n + '32.png'),
-    '64': (path + n + '64.png')
+  const n = validToolbarIcons.has(name) ? name : 'archive'
+  const b = (checkBadgePos.has(name) && isBadgeOnTop()) ? 'b' : ''
+  const allPaths = {
+    '16': (path + n + b + '16.png'),
+    '24': (path + n + b + '24.png'),
+    '32': (path + n + b + '32.png'),
+    '64': (path + n + b + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)
@@ -984,7 +995,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
           return true
         }
         let open_url = wayback_url + page_url
-        URLopener(open_url, page_url, true)
+        URLopener(open_url, page_url, false)
       } else {
         const msg = 'This URL is excluded.'
         if (isFirefox) { notify(msg) } else { alert(msg) }
