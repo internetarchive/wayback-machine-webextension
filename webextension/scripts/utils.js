@@ -539,7 +539,6 @@ function opener(url, option, callback) {
       w = Math.floor(w * 0.9)
       h = Math.floor(h * 0.9)
     }
-    console.log(`final size: ${w} x ${h}`)
     chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
