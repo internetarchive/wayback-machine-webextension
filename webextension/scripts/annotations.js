@@ -60,7 +60,7 @@ function getAnnotations(type = 'url') {
           // })
         )
 
-        if (rowData.target[0].hasOwnProperty('selector')) {
+        if ('selector' in rowData.target[0]) {
           let selector_length = rowData.target[0].selector.length
           let exact = rowData.target[0].selector[selector_length - 1].exact
           item.find('.target-selector-exact').html(exact)

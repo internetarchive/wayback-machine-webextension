@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip */
+/*   global attachTooltip, openByWindowSetting */
 
 // from 'popup.js'
 /*   global setupWaybackCount */
