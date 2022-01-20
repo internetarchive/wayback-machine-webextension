@@ -528,17 +528,18 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else {
-    let w, h
-    if (screen.width > screen.height) {
+    let w = window.screen.availWidth, h = window.screen.availHeight
+    if (w > h) {
       // landscape screen
-      w = Math.floor(screen.width * 0.666)
+      const maxW = 1200
+      w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
       h = Math.floor(w * 0.75)
     } else {
       // portrait screen (likely mobile)
-      w = Math.floor(screen.width * 0.9)
-      h = Math.floor(screen.height * 0.9)
+      w = Math.floor(w * 0.9)
+      h = Math.floor(h * 0.9)
     }
-    chrome.windows.create({ url: url, width: w, height: h, top: 0, left: 0, type: 'popup' }, (window) => {
+    chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
       if (callback) { callback(window.tabs[0].id) }
     })
   }
