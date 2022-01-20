@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders */
+/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo */
 
 let searchBoxTimer
 
@@ -121,6 +121,7 @@ function loginError() {
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
+  $('#my-archive-btn').attr('disabled', true).off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
@@ -137,6 +138,7 @@ function loginSuccess() {
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#spn-btn').removeClass('flip-inside')
+  $('#my-archive-btn').removeAttr('disabled').click(openMyWebArchivePage)
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
@@ -582,6 +584,25 @@ function showContext(eventObj) {
   }
 }
 
+function openMyWebArchivePage() {
+  chrome.storage.local.get(['itemname'], (settings) => {
+    if (settings && settings.itemname) {
+      // using saved itemname
+      const url = `https://archive.org/details/${settings.itemname}?tab=web-archive`
+      openByWindowSetting(url)
+    } else {
+      // retrieve & store itemname
+      getUserInfo().then(info => {
+        if (info && ('screenname' in info) && ('itemname' in info)) {
+          chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
+          const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
+          openByWindowSetting(url)
+        }
+      })
+    }
+  })
+}
+
 function setExcluded() {
   $('#spn-btn').addClass('flip-inside')
   $('#last-saved-msg').hide()
@@ -775,7 +796,6 @@ $(function() {
   $('#site-map-btn').click(sitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
-  $('#alexa-btn').click(showContext)
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 })

@@ -109,6 +109,41 @@ if (typeof isInTestEnv === 'undefined') {
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
 }
 
+/* * * Archive APIs * * */
+
+/**
+ * Get User info 'whoami'.
+ * Requires cookies of logged-in user are set.
+ * @return {Promise}
+ */
+function getUserInfo() {
+  const apiPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 5000)
+    let headers = new Headers(hostHeaders)
+    headers.set('Content-Type', 'application/json')
+    fetch('https://archive.org/services/user.php?op=whoami', {
+      method: 'GET',
+      headers: headers
+    })
+    .then(resolve, reject)
+  })
+  return apiPromise
+  .then(response => response.json())
+  .then((res) => {
+    if (res && res.success && ('value' in res)) {
+      // success
+      return res.value
+    } else {
+      console.log('getUserInfo failed')
+    }
+  })
+  .catch((e) => {
+    console.log(e)
+  })
+}
+
 /* * * Wayback functions * * */
 
 /**

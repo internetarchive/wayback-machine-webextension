@@ -37,6 +37,7 @@ function restoreSettings(items) {
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
+  $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
 }
@@ -58,6 +59,7 @@ function saveSettings() {
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
+    my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
@@ -183,6 +185,7 @@ function setupHelpDocs() {
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
+    'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')

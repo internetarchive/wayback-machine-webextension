@@ -38,10 +38,7 @@ function doLogin(e) {
   $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
   chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
-  var data = JSON.stringify({
-    "email": email,
-    "password": password
-  });
+  let data = JSON.stringify({ email: email, password: password })
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
@@ -60,8 +57,13 @@ function doLogin(e) {
     .then((res) => {
       $('#login-btn').val('Login')
       if (res.success === false) {
+        // login failed
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
+        // login success
+        const screenname = res.values.screenname || ''
+        const itemname = res.values.itemname || ''
+        chrome.storage.local.set({ screenname, itemname })
         $('#login-message').show().addClass('login-success').text('Success')
         loginSuccess()
         setTimeout(() => {
@@ -88,6 +90,8 @@ function doLogout() {
   // removes cookies in Chrome & Firefox
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
+  // clear screenname
+  chrome.storage.local.remove(['screenname', 'itemname'])
   // update UI
   $('#logout-tab-btn').hide()
   $('.tab-item').css('width', '22%')
