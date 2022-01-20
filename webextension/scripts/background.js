@@ -425,9 +425,10 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
 
-  function update(tab, waybackUrl) {
+  function update(tab, waybackUrl, statusCode) {
     checkLastError()
     addToolbarState(tab, 'V')
+    gStatusCode = statusCode
     gStatusWaybackUrl = waybackUrl
     saveGlobals()
   }
@@ -435,18 +436,17 @@ chrome.webRequest.onCompleted.addListener((details) => {
   gStatusCode = 0
   chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      gStatusCode = details.statusCode
       // display 'V' toolbar icon if wayback has a copy
       wmAvailabilityCheck(details.url, (wayback_url, url) => {
         if (details.tabId >= 0) {
           // normally go here
           chrome.tabs.get(details.tabId, (tab) => {
-            update(tab, wayback_url)
+            update(tab, wayback_url, details.statusCode)
           })
         } else {
           // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            update(tabs[0], wayback_url)
+            update(tabs[0], wayback_url, details.statusCode)
           })
         }
       })
