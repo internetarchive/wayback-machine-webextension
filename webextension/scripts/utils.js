@@ -661,6 +661,7 @@ if (typeof module !== 'undefined') {
     sleep,
     notify,
     attachTooltip,
+    getUserInfo,
     getWaybackCount,
     badgeCountText,
     isBadgeOnTop,

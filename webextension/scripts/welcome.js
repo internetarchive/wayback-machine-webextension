@@ -1,7 +1,7 @@
 // welcome.js
 
 // from 'utils.js'
-/*   global afterAcceptOptions, checkLastError*/
+/*   global afterAcceptOptions, checkLastError */
 
 $('#accept-btn').click(() => {
   afterAcceptOptions()
