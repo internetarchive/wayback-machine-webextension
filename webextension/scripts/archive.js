@@ -5,21 +5,29 @@ let gCloseClicked = false
 let gArchiveClicked = false
 let gShadowRoot
 const ERROR_CODE_DIC = {
-  404: '404 Page Not Found',
-  408: '408 Page Request Timeout',
-  410: '410 Page Has Gone',
-  451: '451 Page Is Illegal',
-  500: '500 Server Error',
-  502: '502 Bad Gateway',
-  503: '503 Service Unavailable',
-  504: '504 Gateway Timeout',
-  509: '509 Bandwidth Limit Exceeded',
-  520: '520 Unknown Error',
-  521: '521 Server Is Down',
-  523: '523 Unreachable Origin',
-  524: '524 Timout Occurred',
-  525: '525 SSL Handshake Failed',
-  526: '526 Invalid SSL Certificate',
+  400: 'Bad Request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not Found',
+  405: 'Method Not Allowed',
+  406: 'Not Acceptable',
+  407: 'Proxy Auth Required',
+  408: 'Request Timeout',
+  410: 'Page Gone',
+  429: 'Too Many Requests',
+  451: 'Unavailable',
+  500: 'Internal Server Error',
+  502: 'Bad Gateway',
+  503: 'Service Unavailable',
+  504: 'Gateway Timeout',
+  509: 'Bandwidth Limit Exceeded',
+  520: 'Unknown Error',
+  521: 'Server Is Down',
+  522: 'Connection Timed Out',
+  523: 'Unreachable Origin',
+  524: 'Timout Occurred',
+  525: 'SSL Handshake Failed',
+  526: 'Invalid SSL Certificate',
   999: 'Server Not Found'
 }
 
@@ -31,7 +39,7 @@ function appendStyle() {
 
 // appending the actual dom of popup
 function appendHTML(url, code) {
-  const title = ERROR_CODE_DIC[code]
+  const title = `${code} ${ERROR_CODE_DIC[code]}`
   const close = chrome.runtime.getURL('images/close.svg')
   const logo = chrome.runtime.getURL('images/wayback-light.png')
   const caption = 'View a saved version courtesy of the'

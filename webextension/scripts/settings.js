@@ -39,6 +39,7 @@ function restoreSettings(items) {
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
+  $('#embed-popup-setting').prop('checked', items.embed_popup_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
 }
 
@@ -61,6 +62,7 @@ function saveSettings() {
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
+    embed_popup_setting: $('#embed-popup-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
@@ -186,7 +188,8 @@ function setupHelpDocs() {
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
-    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
+    'embed-popup-setting': 'Also present error conditions such as 404s via pop-up within website.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {

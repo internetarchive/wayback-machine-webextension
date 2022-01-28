@@ -610,6 +610,7 @@ function initDefaultOptions () {
     /* Features */
     private_mode_setting: false,
     not_found_setting: false,
+    embed_popup_setting: false,
     wm_count_setting: false,
     wiki_setting: false,
     amazon_setting: false,
