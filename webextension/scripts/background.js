@@ -425,31 +425,51 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
 
-  function update(tab, waybackUrl, statusCode) {
+  // local functions
+  function update(tab, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
     gStatusCode = statusCode
     gStatusWaybackUrl = waybackUrl
     saveGlobals()
+    if (bannerFlag) {
+      chrome.tabs.sendMessage(tab.id, {
+        type: 'SHOW_BANNER',
+        wayback_url: waybackUrl,
+        status_code: statusCode
+      })
+    }
+  }
+  function checkWM(details, bannerFlag) {
+    // display 'V' toolbar icon if wayback has a copy
+    wmAvailabilityCheck(details.url, (wayback_url, url) => {
+      if (details.tabId >= 0) {
+        // normally go here
+        chrome.tabs.get(details.tabId, (tab) => {
+          update(tab, wayback_url, details.statusCode, bannerFlag)
+        })
+      } else {
+        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          update(tabs[0], wayback_url, details.statusCode, bannerFlag)
+        })
+      }
+    })
   }
 
   gStatusCode = 0
   chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      // display 'V' toolbar icon if wayback has a copy
-      wmAvailabilityCheck(details.url, (wayback_url, url) => {
-        if (details.tabId >= 0) {
-          // normally go here
-          chrome.tabs.get(details.tabId, (tab) => {
-            update(tab, wayback_url, details.statusCode)
-          })
-        } else {
-          // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            update(tabs[0], wayback_url, details.statusCode)
-          })
-        }
-      })
+      const bannerFlag = true // TODO: get from Settings
+      if (bannerFlag) {
+        // insert script first, then check wayback machine, then show banner
+        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
+          checkWM(details, bannerFlag)
+        })
+      } else {
+        // don't insert script, check wayback machine, don't show banner
+        checkWM(details, bannerFlag)
+      }
     }
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
