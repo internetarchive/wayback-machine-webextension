@@ -458,9 +458,9 @@ chrome.webRequest.onCompleted.addListener((details) => {
   }
 
   gStatusCode = 0
-  chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
+  chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      const bannerFlag = true // TODO: get from Settings
+      const bannerFlag = settings.embed_popup_setting || false
       if (bannerFlag) {
         // insert script first, then check wayback machine, then show banner
         chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
