@@ -181,9 +181,9 @@ function setupHelpDocs() {
     'private-mode-setting': 'Don\'t initiate automatic communications between this extension and the Internet Archive.',
     'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
     'wm-count-setting': 'Show number of times the current URL has been archived in the Wayback Machine.',
-    'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipeida articles. ',
+    'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipedia articles. ',
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
-    'tvnews-setting': 'Auto check for related TV News Clips while visitng selected news websites.',
+    'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
