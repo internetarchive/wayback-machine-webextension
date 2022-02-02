@@ -406,20 +406,19 @@ function setupViewArchived() {
     if (tabs && tabs[0]) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-        if (state.has('V')) {
-          chrome.storage.local.get(['statusCode', 'statusWaybackUrl'], (g) => {
-            if (g && g.statusCode && g.statusWaybackUrl) {
-              const statusText = g.statusCode + ' ' + (ERROR_CODE_DIC[g.statusCode] || 'Error')
-              $('#last-saved-msg').hide()
-              $('#search-container').hide()
-              $('#spn-container').hide()
-              $('#view-archived-container').show()
-              $('#view-archived-msg').text(statusText)
-              $('#view-archived-btn').click(() => {
-                openByWindowSetting(g.statusWaybackUrl)
-              })
-            }
+        const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
+        if (state.has('V') && ('customData' in result) && ('statusCode' in result.customData) && ('statusWaybackUrl' in result.customData)) {
+          // show msg and View Archived button for error status codes
+          const statusCode = result.customData.statusCode
+          const waybackUrl = result.customData.statusWaybackUrl
+          const statusText = statusCode + ' ' + (ERROR_CODE_DIC[statusCode] || 'Error')
+          $('#last-saved-msg').hide()
+          $('#search-container').hide()
+          $('#spn-container').hide()
+          $('#view-archived-container').show()
+          $('#view-archived-msg').text(statusText)
+          $('#view-archived-btn').click(() => {
+            openByWindowSetting(waybackUrl)
           })
         }
       })

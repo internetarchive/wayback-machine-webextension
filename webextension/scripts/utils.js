@@ -144,6 +144,39 @@ function getUserInfo() {
   })
 }
 
+/* * * Storage functions * * */
+
+// Returns a string key from a Tab windowId and tab id.
+function getTabKey(atab) {
+  return (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
+}
+
+/**
+ * Saves key/value pairs in storage for other files to read for given tab.
+ * @param atab {Tab}: Current tab which includes .windowId and .id values.
+ * @param data: Object of key:value pairs to store.
+ */
+function saveTabData(atab, data) {
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  let key = 'tab_' + getTabKey(atab)
+  let obj = {}
+  obj[key] = data
+  chrome.storage.local.set(obj, () => {})
+}
+
+/**
+ * Reads key/value pairs from storage for given tab.
+ * @param atab {Tab}: Current tab which includes .windowId and .id values.
+ * @param callback(data): Function called with data object of key:value pairs returned.
+ */
+function readTabData(atab, callback) {
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  let key = 'tab_' + getTabKey(atab)
+  chrome.storage.local.get([key], (result) => {
+    callback(result[key])
+  })
+}
+
 /* * * Wayback functions * * */
 
 /**
@@ -663,6 +696,9 @@ if (typeof module !== 'undefined') {
     notify,
     attachTooltip,
     getUserInfo,
+    getTabKey,
+    saveTabData,
+    readTabData,
     getWaybackCount,
     badgeCountText,
     isBadgeOnTop,
