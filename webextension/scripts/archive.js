@@ -39,7 +39,7 @@ function appendStyle() {
 
 // appending the actual dom of popup
 function appendHTML(url, code) {
-  const title = `${code} ${ERROR_CODE_DIC[code]}`
+  const title = ((code < 999) ? code + ' ' : '') + (ERROR_CODE_DIC[code] || 'Error')
   const close = chrome.runtime.getURL('images/close.svg')
   const logo = chrome.runtime.getURL('images/wayback-light.png')
   const caption = 'View a saved version courtesy of the'

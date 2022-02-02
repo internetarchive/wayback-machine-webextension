@@ -411,7 +411,7 @@ function setupViewArchived() {
           // show msg and View Archived button for error status codes
           const statusCode = result.customData.statusCode
           const waybackUrl = result.customData.statusWaybackUrl
-          const statusText = statusCode + ' ' + (ERROR_CODE_DIC[statusCode] || 'Error')
+          const statusText = ((statusCode < 999) ? statusCode + ' ' : '') + (ERROR_CODE_DIC[statusCode] || 'Error')
           $('#last-saved-msg').hide()
           $('#search-container').hide()
           $('#spn-container').hide()
