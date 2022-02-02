@@ -449,14 +449,15 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      if (bannerFlag) {
+      // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
+      if (bannerFlag && (details.tabId >= 0)) {
         // insert script first, then check wayback machine, then show banner
         chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
-          checkWM(details, bannerFlag)
+          checkWM(details, true)
         })
       } else {
         // don't insert script, check wayback machine, don't show banner
-        checkWM(details, bannerFlag)
+        checkWM(details, false)
       }
     }
   })
