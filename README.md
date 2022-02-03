@@ -1,3 +1,5 @@
+<img width="64px" align="left" src="webextension/images/app-icon/app-icon128.png">
+
 # Wayback Machine Web Browser Extension
 
 In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com), The [Internet Archive](https://archive.org) presents *The Official Wayback Machine Extension*. With the power of the Wayback Machine, we let you go back in time to see how a URL has changed and evolved through the history of the Web!
@@ -11,10 +13,11 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 - **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
 - **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
 - **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
+- **My Web Archive** - Save URLs to your public archive page on the Internet Archive.
 - **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
 - **Relevant Resources** - View archived digitized books while visiting *Amazon Books*, research papers and books while visiting *Wikipedia*, and recommended *TV News Clips* while visiting news websites.
 - **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
-- **Tweets, Alexa Internet, Share Links** - Search Twitter for information regarding your current page, or provide analytics from [Alexa Internet](https://www.alexa.com). Share archived links on social media.
+- **Tweets &amp; Share Links** - Search Twitter for information regarding your current page, or share archived links on social media.
 
 
 ## Installing the Extension
