@@ -6,11 +6,10 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
-let gStatusWaybackUrl = ''
 let gToolbarStates = {}
 let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -20,15 +19,6 @@ const API_TIMEOUT = 10000
 const API_RETRY = 1000
 let tabIdPromise
 const SPN_RETRY = 6000
-
-// Used to pass variables to other files since they can't read this file's globals.
-function saveGlobals() {
-  chrome.storage.local.set({
-    // this won't work as expected for multiple pages with 404s, but likely rare in practice
-    'statusCode': gStatusCode,
-    'statusWaybackUrl': gStatusWaybackUrl
-  }, () => {})
-}
 
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
@@ -411,9 +401,8 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
           chrome.tabs.get(details.tabId, (tab) => {
             checkLastError()
             addToolbarState(tab, 'V')
-            gStatusWaybackUrl = wayback_url
             gStatusCode = 999
-            saveGlobals()
+            saveTabData(tab, { 'statusCode': gStatusCode, 'statusWaybackUrl': wayback_url })
           })
         }, () => {})
       }
@@ -430,8 +419,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
     checkLastError()
     addToolbarState(tab, 'V')
     gStatusCode = statusCode
-    gStatusWaybackUrl = waybackUrl
-    saveGlobals()
+    saveTabData(tab, { 'statusCode': statusCode, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SHOW_BANNER',
@@ -461,14 +449,15 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      if (bannerFlag) {
+      // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
+      if (bannerFlag && (details.tabId >= 0)) {
         // insert script first, then check wayback machine, then show banner
         chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
-          checkWM(details, bannerFlag)
+          checkWM(details, true)
         })
       } else {
         // don't insert script, check wayback machine, don't show banner
-        checkWM(details, bannerFlag)
+        checkWM(details, false)
       }
     }
   })
@@ -565,9 +554,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       openByWindowSetting(context_url, null, resolve)
     })
   } else if (message.message === 'getToolbarState') {
-    // retrieve the toolbar state set
+    // retrieve the toolbar state set & custom tab data
     let state = getToolbarState(message.atab)
-    sendResponse({ stateArray: Array.from(state) })
+    readTabData(message.atab, (data) => {
+      sendResponse({ stateArray: Array.from(state), customData: data })
+    })
+    return true
   } else if (message.message === 'addToolbarStates') {
     // add one or more states to the toolbar
     // States will fail to show if tab is loading but not in focus!
@@ -891,17 +883,12 @@ function setToolbarIcon(name, tabId = null) {
   chrome.browserAction.setIcon(details, checkLastError)
 }
 
-// Returns a string key from a Tab windowId and tab id.
-function toolbarStateKey(atab) {
-  return (atab) ? '' + atab.windowId + atab.id : ''
-}
-
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 // Add 'books' or 'papers' to display popup buttons for wikipedia resources.
 function addToolbarState(atab, state) {
   if (!atab) { return }
-  const tabKey = toolbarStateKey(atab)
+  const tabKey = getTabKey(atab)
   if (!gToolbarStates[tabKey]) {
     gToolbarStates[tabKey] = new Set()
   }
@@ -912,7 +899,7 @@ function addToolbarState(atab, state) {
 // Remove state from the state set for given Tab, and update toolbar.
 function removeToolbarState(atab, state) {
   if (!atab) { return }
-  const tabKey = toolbarStateKey(atab)
+  const tabKey = getTabKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].delete(state)
   }
@@ -922,14 +909,14 @@ function removeToolbarState(atab, state) {
 // Returns a Set of toolbar states, or an empty set.
 function getToolbarState(atab) {
   if (!atab) { return new Set() }
-  const tabKey = toolbarStateKey(atab)
+  const tabKey = getTabKey(atab)
   return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
 }
 
 // Clears state for given Tab and update toolbar icon.
 function clearToolbarState(atab) {
   if (!atab) { return }
-  const tabKey = toolbarStateKey(atab)
+  const tabKey = getTabKey(atab)
   if (gToolbarStates[tabKey]) {
     gToolbarStates[tabKey].clear()
     delete gToolbarStates[tabKey]
@@ -944,7 +931,7 @@ function clearToolbarState(atab) {
  */
 function updateToolbar(atab) {
   if (!atab) { return }
-  const tabKey = toolbarStateKey(atab)
+  const tabKey = getTabKey(atab)
   // type 'normal' prevents updation of toolbar icon when it's a popup window
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
