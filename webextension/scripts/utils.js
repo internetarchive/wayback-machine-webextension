@@ -17,6 +17,7 @@ const excluded_urls = [
   'file:',
   'edge:',
   'extension:',
+  'safari-web-extension:',
   'chrome-error:'
 ]
 
