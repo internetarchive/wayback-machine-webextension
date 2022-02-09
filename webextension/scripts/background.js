@@ -17,8 +17,8 @@ const API_CACHE_SIZE = 5
 const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
 const API_RETRY = 1000
-let tabIdPromise
 const SPN_RETRY = 6000
+let tabIdPromise
 
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
@@ -48,176 +48,190 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
-function savePageNow(atab, page_url, silent = false, options = {}) {
-  if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-    const data = new URLSearchParams(options)
-    data.append('url', page_url) // this is correct!
+/**
+ * Calls Save Page Now API.
+ * If response OK, calls SPN Status API after a delay.
+ * @param atab {Tab}: Current tab used to update toolbar icon.
+ * @param pageUrl {string}: URL to save.
+ * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
+ * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
+ */
+function savePageNow(atab, pageUrl, silent = false, options = {}) {
+
+  if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
+    // setup api
+    const postData = new URLSearchParams(options)
+    postData.append('url', pageUrl)
     const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error('timeout'))
-      }, 30000)
+      setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
       fetch(hostURL + 'save/', {
         credentials: 'include',
         method: 'POST',
-        body: data,
+        body: postData,
         headers: hostHeaders
       })
       .then(resolve, reject)
     })
-    return timeoutPromise
+
+    // call api
+    timeoutPromise
       .then(response => response.json())
-      .then((res) => {
+      .then(async (res) => {
         // notifications depending on status
         let msg = res.message || 'Please Try Again'
         if (('job_id' in res) && (res.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: page_url, atab: atab }, checkLastError)
+            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: pageUrl, atab: atab }, checkLastError)
             if (!silent) { notify(msg) }
           } else {
-            // call status during save
-            validate_spn(atab, res.job_id, silent, page_url)
+            // update UI
+            addToolbarState(atab, 'S')
+            chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
+            // show resources during save
             if (!silent) {
-              notify('Saving ' + page_url)
-              // show resources during save
+              notify('Saving ' + pageUrl)
               chrome.storage.local.get(['resource_list_setting'], (settings) => {
                 if (settings && settings.resource_list_setting) {
-                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + page_url + '&job_id=' + res.job_id + '#not_refreshed'
+                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + res.job_id + '#not_refreshed'
                   openByWindowSetting(resource_list_url, 'windows')
                 }
               })
             }
+            // call status after SPN response
+            await sleep(SPN_RETRY)
+            savePageStatus(atab, pageUrl, silent, res.job_id)
           }
         } else {
           // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: page_url, atab: atab }, checkLastError)
+          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: pageUrl, atab: atab }, checkLastError)
           if (!silent) { notify('Error: ' + msg) }
         }
       })
       .catch((err) => {
         // handle http errors
         console.log(err)
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: page_url, atab: atab }, checkLastError)
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
       })
   }
 }
 
-// not currently used, but may in the future?
-function authCheckAPI() {
+/**
+ * Calls SPN Status API.
+ * If 'pending' status response, recursevely calls itself after a delay.
+ * @param atab {Tab}: Current tab used to update toolbar icon.
+ * @param pageUrl {string}: URL to save.
+ * @param silent {bool}: to pass to statusSuccess() or statusFailed().
+ * @param jobId {string}: job_id returned by SPN response, passed to Status API.
+ */
+function savePageStatus(atab, pageUrl, silent = false, jobId) {
+
+  // setup api
+  const postData = new URLSearchParams({ 'job_id': jobId })
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('timeout'))
-    }, 30000)
-    fetch(hostURL + 'save/', {
+    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    fetch(hostURL + 'save/status', {
       credentials: 'include',
       method: 'POST',
+      body: postData,
       headers: hostHeaders
     })
     .then(resolve, reject)
   })
-  return timeoutPromise
-  .then(response => response.json())
-}
 
-async function validate_spn(atab, job_id, silent = false, page_url) {
-  let vdata
-  let status = 'start'
-  const val_data = new URLSearchParams()
-  val_data.append('job_id', job_id)
-  let wait_time = 1000
-  while ((status === 'start') || (status === 'pending')) {
-    // update UI
-    chrome.runtime.sendMessage({
-      message: 'save_start',
-      atab: atab,
-      url: page_url
-    }, checkLastError)
-    addToolbarState(atab, 'S')
-
-    await sleep(wait_time)
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error('timeout'))
-      }, 30000)
-      if ((status === 'start') || (status === 'pending')) {
-        fetch(hostURL + 'save/status', {
-          credentials: 'include',
-          method: 'POST',
-          body: val_data,
-          headers: hostHeaders
-        })
-        .then(resolve, reject)
+  // call api
+  let retryAfter = SPN_RETRY
+  timeoutPromise
+    .then((response) => {
+      // reassign retryAfter from header value
+      const retryValue = parseInt(response.headers.get('Retry-After'), 10)
+      if (!Number.isNaN(retryValue)) { retryAfter = retryValue * 1000 }
+      return response.json()
+    })
+    .then(async (data) => {
+      const status = data.status || 'error'
+      chrome.runtime.sendMessage({ message: 'resource_list_show', data: data, url: pageUrl }, checkLastError)
+      if (status === 'success') {
+        statusSuccess(atab, pageUrl, silent, data)
+      } else if (status === 'pending') {
+        await sleep(retryAfter)
+        savePageStatus(atab, pageUrl, silent, jobId)
+      } else {
+        statusFailed(atab, pageUrl, silent, data)
       }
     })
-    timeoutPromise
-      .then((response) => {
-        let value = response.headers.get('Retry-After')
-        let secs = (value) ? parseInt(value, 10) : null
-        wait_time = (secs) ? (secs * 1000) : SPN_RETRY
-        return response.json()
-      })
-      .then((data) => {
-        status = data.status
-        vdata = data
-        chrome.runtime.sendMessage({
-          message: 'resource_list_show',
-          data: data,
-          url: page_url
-        }, checkLastError)
-      })
-      .catch((err) => {
-        // only report non-timeout errors for now, since timeouts aren't canceled, causing a bug
-        if (err.message !== 'timeout') {
-          chrome.runtime.sendMessage({
-            message: 'resource_list_show_error',
-            data: err,
-            url: page_url
-          }, checkLastError)
+    .catch((err) => {
+      statusFailed(atab, pageUrl, silent, null, err)
+    })
+}
+
+/**
+ * Call this to update UI, including toolbar icon, after SPN Status returns success.
+ * @param atab {Tab}: Current tab used to update toolbar icon.
+ * @param pageUrl {string}: URL saved.
+ * @param silent {bool}: set false to include notify popup.
+ * @param data {Object}: Response data from Status API.
+ */
+function statusSuccess(atab, pageUrl, silent, data) {
+
+  // update UI
+  removeToolbarState(atab, 'S')
+  addToolbarState(atab, 'check')
+  incrementCount(data.original_url)
+  chrome.runtime.sendMessage({
+    message: 'save_success',
+    timestamp: data.timestamp,
+    atab: atab,
+    url: pageUrl
+  }, checkLastError)
+
+  // notify
+  if (!silent && data && ('timestamp' in data)) {
+    // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on
+    checkSaveToMyWebArchive(pageUrl, data.timestamp)
+    // replace message if present in result
+    let msg = 'Successfully saved! Click to view snapshot.'
+    if (('message' in data) && (data.message.length > 0)) {
+      msg = data.message
+    }
+    notify(msg, (notificationId) => {
+      chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
+        if (notificationId === newNotificationId) {
+          openByWindowSetting('https://web.archive.org/web/' + data.timestamp + '/' + data.original_url)
         }
       })
+    })
   }
-  // update when done
-  removeToolbarState(atab, 'S')
+}
 
-  if (vdata.status === 'success') {
-    incrementCount(vdata.original_url)
-    // update UI
-    addToolbarState(atab, 'check')
+/**
+ * Call this to update UI, including toolbar icon, after SPN Status fails.
+ * @param atab {Tab}: Current tab used to update toolbar icon.
+ * @param pageUrl {string}: URL saved.
+ * @param silent {bool}: set false to include notify popup.
+ * @param data {Object}: Response data from Status API. (optional)
+ * @param err {Error}: Error from a catch block. (optional)
+ */
+function statusFailed(atab, pageUrl, silent, data, err) {
+
+  removeToolbarState(atab, 'S')
+  if (err) {
     chrome.runtime.sendMessage({
-      message: 'save_success',
-      timestamp: vdata.timestamp,
-      atab: atab,
-      url: page_url
+      message: 'resource_list_show_error',
+      url: pageUrl,
+      data: err
     }, checkLastError)
-    // notify
-    if (!silent) {
-      // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on.
-      checkSaveToMyWebArchive(page_url, vdata.timestamp)
-      // replace message if present in result
-      let msg = 'Successfully saved! Click to view snapshot.'
-      if (vdata.message && vdata.message.length > 0) {
-        msg = vdata.message
-      }
-      notify(msg, (notificationId) => {
-        chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
-          if (notificationId === newNotificationId) {
-            let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
-            openByWindowSetting(snapshot_url)
-          }
-        })
-      })
-    }
-  } else if (!vdata.status || (status === 'error')) {
-    // update UI
+  }
+  if (data && ('message' in data)) {
     chrome.runtime.sendMessage({
       message: 'save_error',
-      error: vdata.message,
-      url: page_url,
+      error: data.message,
+      url: pageUrl,
       atab: atab
     }, checkLastError)
     // notify
     if (!silent) {
-      notify('Error: ' + vdata.message, (notificationId) => {
+      notify('Error: ' + data.message, (notificationId) => {
         chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             openByWindowSetting('https://archive.org/account/login')
@@ -1015,7 +1029,6 @@ chrome.contextMenus.onClicked.addListener((click) => {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    tabIdPromise,
-    authCheckAPI
+    tabIdPromise
   }
 }
