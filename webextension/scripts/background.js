@@ -17,8 +17,8 @@ const API_CACHE_SIZE = 5
 const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
 const API_RETRY = 1000
-let tabIdPromise
 const SPN_RETRY = 6000
+let tabIdPromise
 
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 function rewriteUserAgentHeader(e) {
@@ -116,23 +116,6 @@ function savePageNow(atab, pageUrl, silent = false, options = {}) {
   }
 }
 
-/* REMOVE
-// not currently used, but may in the future?
-function authCheckAPI() {
-  const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-    fetch(hostURL + 'save/', {
-      credentials: 'include',
-      method: 'POST',
-      headers: hostHeaders
-    })
-    .then(resolve, reject)
-  })
-  return timeoutPromise
-  .then(response => response.json())
-}
-*/
-
 /**
  * Calls SPN Status API.
  * If 'pending' status response, recursevely calls itself after a delay.
@@ -163,7 +146,6 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
       // reassign retryAfter from header value
       const retryValue = parseInt(response.headers.get('Retry-After'), 10)
       if (!Number.isNaN(retryValue)) { retryAfter = retryValue * 1000 }
-      console.log('retryAfter: ', retryAfter) // DEBUG
       return response.json()
     })
     .then(async (data) => {
@@ -192,7 +174,6 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
  */
 function statusSuccess(atab, pageUrl, silent, data) {
 
-  console.log('statusSuccess') // DEBUG
   // update UI
   removeToolbarState(atab, 'S')
   addToolbarState(atab, 'check')
@@ -233,7 +214,6 @@ function statusSuccess(atab, pageUrl, silent, data) {
  */
 function statusFailed(atab, pageUrl, silent, data, err) {
 
-  console.log('statusFailed') // DEBUG
   removeToolbarState(atab, 'S')
   if (err) {
     chrome.runtime.sendMessage({
@@ -261,134 +241,6 @@ function statusFailed(atab, pageUrl, silent, data, err) {
     }
   }
 }
-
-/*
-// REMOVE function
-async function validate_spn(atab, job_id, silent = false, page_url) {
-  let vdata
-  let status = 'start'
-  const val_data = new URLSearchParams()
-  val_data.append('job_id', job_id)
-  let wait_time = 1000
-  // await sleep(wait_time) // initially wait 1 sec ?
-
-  while ((status === 'start') || (status === 'pending')) {
-    console.log({ vdata }) // DEBUG: didn't go here after status:success (which makes sense!!)
-    // await sleep(wait_time) // TODO: this is why there's a delay between success response and UI change
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error('timeout'))
-      }, API_TIMEOUT)
-      if ((status === 'start') || (status === 'pending')) {
-        fetch(hostURL + 'save/status', {
-          credentials: 'include',
-          method: 'POST',
-          body: val_data,
-          headers: hostHeaders
-        })
-        .then(resolve, reject)
-      }
-    })
-
-    // NOTE: this is called once per second until wait_time is reassigned
-    // may be better to wait until after response before calling again?
-    // Should check here after sleep() that status != 'success' before calling next!
-
-    // TEST #1:
-    // - 1st status called immediately after save, 2nd called 1 sec, 3rd called after 6 sec.
-    //   - which means 1st response taking 1+ sec after 1st call
-    //   - should change to call recursively within response
-    // - done after ~6 secs after status success.
-    // - 4 pending status + 1 success status (5 status calls)
-    // - wait_time assigned 5 times (=6000) (5 status responses)
-    // - 1 vdata undefined, then 4 vdata objs.
-
-    timeoutPromise
-      .then((response) => {
-        let value = response.headers.get('Retry-After')
-        let secs = (value) ? parseInt(value, 10) : null
-        wait_time = (secs) ? (secs * 1000) : SPN_RETRY
-        console.log('wait time: ', wait_time) // DEBUG
-        return response.json()
-      })
-      .then((data) => {
-        status = data.status || 'error'
-        vdata = data
-        chrome.runtime.sendMessage({
-          message: 'resource_list_show',
-          data: data,
-          url: page_url
-        }, checkLastError)
-      })
-      .catch((err) => {
-        // only report non-timeout errors for now, since timeouts aren't canceled, causing a bug
-        // removeToolbarState(atab, 'S') // REMOVE: no longer needed
-        if (err.message !== 'timeout') {
-          chrome.runtime.sendMessage({
-            message: 'resource_list_show_error',
-            data: err,
-            url: page_url
-          }, checkLastError)
-        }
-        // this should stop looping status calls on error
-        status = 'error'
-      })
-    // placing sleep() here should improve wait time, but could be improved further
-    await sleep(wait_time)
-  }
-  // update when done
-  console.log('SPN status done') // DEBUG: got here after ~15-20 sec delay after status:success??
-  removeToolbarState(atab, 'S')
-
-  if (status === 'success') {
-    incrementCount(vdata.original_url)
-    // update UI
-    addToolbarState(atab, 'check')
-    chrome.runtime.sendMessage({
-      message: 'save_success',
-      timestamp: vdata.timestamp,
-      atab: atab,
-      url: page_url
-    }, checkLastError)
-    // notify
-    if (!silent) {
-      // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on.
-      checkSaveToMyWebArchive(page_url, vdata.timestamp)
-      // replace message if present in result
-      let msg = 'Successfully saved! Click to view snapshot.'
-      if (vdata.message && vdata.message.length > 0) {
-        msg = vdata.message
-      }
-      notify(msg, (notificationId) => {
-        chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
-          if (notificationId === newNotificationId) {
-            let snapshot_url = 'https://web.archive.org/web/' + vdata.timestamp + '/' + vdata.original_url
-            openByWindowSetting(snapshot_url)
-          }
-        })
-      })
-    }
-  } else if (!('status' in vdata) || (status === 'error')) {
-    // update UI
-    chrome.runtime.sendMessage({
-      message: 'save_error',
-      error: vdata.message,
-      url: page_url,
-      atab: atab
-    }, checkLastError)
-    // notify
-    if (!silent) {
-      notify('Error: ' + vdata.message, (notificationId) => {
-        chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
-          if (notificationId === newNotificationId) {
-            openByWindowSetting('https://archive.org/account/login')
-          }
-        })
-      })
-    }
-  }
-}
-*/
 
 /**
  * Saves URL to user's My Web Archive list.
@@ -921,28 +773,20 @@ chrome.tabs.onActivated.addListener((info) => {
  * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
  */
 function autoSave(atab, url, beforeDate) {
-  console.log('autoSave A: ', { atab }, url) // DEBUG
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
-    console.log('autoSave B') // DEBUG
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
-      console.log('autoSave C: ', { items }) // DEBUG: last here for all URLs including 0 counts, items is empty {}, filled once Exclude List window opened!
       if (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list)) {
-        console.log('autoSave D') // DEBUG
         wmAvailabilityCheck(url,
           (wayback_url, url, timestamp) => {
             // save if timestamp from availability API is older than beforeDate
-            console.log('autoSave E') // DEBUG
             if (beforeDate) {
-              console.log('autoSave F') // DEBUG: here on normal page
               const checkDate = timestampToDate(timestamp)
               if (checkDate.getTime() < beforeDate.getTime()) {
-                console.log('autoSave G') // DEBUG
                 savePageNow(atab, url, true)
               }
             }
           },
           () => {
-            console.log('autoSave H') // DEBUG: auto save works now
             // set auto-save toolbar icon if page doesn't exist, then save it
             savePageNow(atab, url, true)
           }
