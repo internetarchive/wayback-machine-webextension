@@ -3,6 +3,16 @@
 // from 'test/setup.js'
 /*   global isInTestEnv */
 
+// default exclude list for auto-save
+const defaultAutoExcludeList = [
+  'archive.org*',
+  'web.archive.org*',
+  'google.com*',
+  '*.google.com*',
+  'mail.yahoo.com*',
+  'duckduckgo.com/?q=*'
+]
+
 // list of excluded URLs
 const excluded_urls = [
   'localhost',
@@ -633,6 +643,15 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
   })
 }
 
+// Saves the defaultAutoExcludeList[] to storage if 'auto_exclude_list' hasn't been set.
+function initAutoExcludeList() {
+  chrome.storage.local.get(['auto_exclude_list'], (items) => {
+    if (('auto_exclude_list' in items) === false) {
+      chrome.storage.local.set({ 'auto_exclude_list': defaultAutoExcludeList })
+    }
+  })
+}
+
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
   chrome.storage.local.set({
@@ -713,6 +732,7 @@ if (typeof module !== 'undefined') {
     timestampToDate,
     dateToTimestamp,
     viewableTimestamp,
+    initAutoExcludeList,
     initDefaultOptions,
     afterAcceptOptions,
     feedbackURL,

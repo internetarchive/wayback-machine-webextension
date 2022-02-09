@@ -1,16 +1,7 @@
 // exclude-list.js
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, cropPrefix */
-
-const defaultExcludeList = [
-  'archive.org*',
-  'web.archive.org*',
-  'google.com*',
-  '*.google.com*',
-  'mail.yahoo.com*',
-  'duckduckgo.com/?q=*'
-]
+/*   global defaultAutoExcludeList, isNotExcludedUrl, cropPrefix */
 
 // Removes focus outline on mouse click, while keeping during keyboard use.
 function clearFocus() {
@@ -34,7 +25,7 @@ function loadExcludeList() {
       fillTextArea(items.auto_exclude_list)
     } else {
       // use a default list of excluded URLs
-      fillTextArea(defaultExcludeList)
+      fillTextArea(defaultAutoExcludeList)
     }
   })
 }
@@ -53,11 +44,11 @@ function saveExcludeList() {
   }
   // save the modified list
   const exlist = Array.from(urlSet)
-  chrome.storage.local.set({ 'auto_exclude_list': exlist }, () => {})
+  chrome.storage.local.set({ 'auto_exclude_list': exlist })
 }
 
 function resetExcludeList() {
-  fillTextArea(defaultExcludeList)
+  fillTextArea(defaultAutoExcludeList)
 }
 
 function clearExcludeList() {
