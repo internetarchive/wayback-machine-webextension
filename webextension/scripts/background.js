@@ -6,7 +6,7 @@
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData */
+/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -369,6 +369,7 @@ chrome.runtime.onStartup.addListener((details) => {
 // Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
   initDefaultOptions()
+  initAutoExcludeList()
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && settings.agreement) {
       afterAcceptOptions()
@@ -761,7 +762,8 @@ chrome.tabs.onActivated.addListener((info) => {
 function autoSave(atab, url, beforeDate) {
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
-      if (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list)) {
+      if (!('auto_exclude_list' in items) ||
+       (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
         wmAvailabilityCheck(url,
           (wayback_url, url, timestamp) => {
             // save if timestamp from availability API is older than beforeDate
