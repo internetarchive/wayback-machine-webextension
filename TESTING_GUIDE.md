@@ -53,10 +53,12 @@ npm audit fix
 npm update
 ```
 
-Then update **build.js** as follows.
 
+## (NOT) Updating build.js (optional) ##
 
-## Updating build.js (optional) ##
+*We are no longer generating build.js, but instead using javascript frameworks directly.* All code must be readable and non-minified to pass Firefox code review, so no longer using webpack for the main webextension code. Libraries such as jQuery and Bootstrap are to be located in the `libs` directory.
+
+#### Old Info ####
 
 This doesn't have to be done but once in a great while. We recommend doing so in it's own branch or *Pull Request* instead of in a bug or feature PR that you're working on.
 
