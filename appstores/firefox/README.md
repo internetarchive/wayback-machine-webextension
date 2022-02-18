@@ -88,6 +88,9 @@ Support email: info@archive.org
 
 Support website: https://archive.org/about/contact.php
 
+Homepage: https://archive.org
+
+
 License:
 
 - [x] This add-on has a Privacy Policy
@@ -101,7 +104,11 @@ Notes to Reviewer:
 - Upload `add-on-icon128.png` (will resize to 32x32, 64x64, 128x128)
 - Upload screenshots under version's directory.
 
+
 #### Screenshot Captions
 
-TODO
-
+1. See how websites have changed through the history of the Web.
+2. View archived copies of missing websites.
+3. Instantly save the page you are currently viewing in the Wayback Machine.
+4. View archived research papers and books referenced in Wikipedia.
+5. See annotations for the current web page and domain provided by Hypothes.is.
