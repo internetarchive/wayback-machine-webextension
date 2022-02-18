@@ -1,6 +1,7 @@
 ## Firefox Add-ons Store Submission Notes
 
-This looks really complicated.
+This process involves more steps than other browser app stores.
+
 
 ### Get Extension Signed
 
@@ -19,11 +20,15 @@ This looks really complicated.
 
 - [Package your extension](https://extensionworkshop.com/documentation/publish/package-your-extension/)
 
-- Remove any `.DS_Store` files under `webextension` and subdirectories.
 
-- When creating a .ZIP file of `webextension`, it must not include the directory, but rather the `manifest.json` file must be in the root. On a mac, instead of right-clicking on `webextension`, simply select all the files and folders inside that directory, then right-click and "Compress".
+- Create a .ZIP file of the `webextension` directory. It must not include the directory name, and should not contain any `.DS_Store` or other hidden files, nor any hidden `__MACOSX/` directories which the Finder compress tool usually includes.
 
-- Above doesn't work because macOS will create a hidden `__MACOSX/` directory in ZIP file, which will be flagged.
+- If on a mac, run the following using Terminal, from within the `webextension` directory:
+
+```
+zip -r webext.zip . -x ".*" -x "*/.*"
+```
+- Then move this ZIP file to another location outside the repo. Upload this to submit, or test it first inside Firefox.
 
 - Verify that the ZIP file is formatted correctly. See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
@@ -32,10 +37,27 @@ This looks really complicated.
 
 - [Source code submission](https://extensionworkshop.com/documentation/publish/source-code-submission/)
 
+- Make sure that all libraries included are non-minimized. Since we removed the webpack build step and no longer generate `build.js`, we no longer need to provide any build steps to the reviewer. The ZIP'd `webextension` should be good enough and not require a separate Source Code submission.
+
 
 #### Submit Extension
 
 - https://addons.mozilla.org/developers/addon/submit/
+
+- To submit a new version, select the existing approved extension rather than adding a new one.
+
+- The validation proccess will find the following issue: "Unsafe assignment to innerHTML". **This is OK**.
+
+Answers to Questions:
+
+- Which application is this version compatible with? [x] Firefox, [ ] Firefox for Android.
+
+- Do You Need to Submit Source Code? [x] NO
+
+- Release Notes: See [changelog.md](../changelog.md)
+
+- Notes to Reviewer:
+  - Provide a test username and password for reviewer to use!
 
 
 ### Store Metadata
@@ -43,8 +65,10 @@ This looks really complicated.
 Name: Wayback Machine
 
 Add-on URL:
-https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/
-https://addons.mozilla.org/en-US/firefox/addon/wayback-machine
+- https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/ (current URL)
+- https://addons.mozilla.org/en-US/firefox/addon/wayback-machine (non-active URL)
+
+- Note that the *current URL* is also listed in `about.html` and `scripts/utils.js`.
 
 Summary:
 - see [description.md](../description.md)
@@ -80,18 +104,4 @@ Notes to Reviewer:
 #### Screenshot Captions
 
 TODO
-
-### Notes
-
-#### Add-on submission checklist
-
-Please verify the following points before finalizing your submission. This will minimize delays or misunderstanding during the review process:
-
-- Include detailed version notes (this can be done in the next step).
-- If your add-on requires an account to a website in order to be fully tested, include a test username and password in the Notes to Reviewer (this can be done in the next step).
-
-The validation process found these issues that can lead to rejections:
-- Unsafe assignment to innerHTML
-- The Function constructor is eval.
-
 
