@@ -1,11 +1,15 @@
 ## Firefox Add-ons Store Submission Notes
 
-This process involves more steps than other browser app stores.
+The main difficulty is signing in, as it requires using an authenticating app to scan a bar code for 2FA.
+
+This process may seem complicated but not anymore - just follow the directions for packaging the extension below.
+
+There isn't really any review done, and the submission will be approved immediately after ZIP is submitted. There's no method to set a release datetime like there is for Safari. Changing the metadata and screenshots is a separate step that may be done before or after submitting code, may be updated anytime and doesn't require updating the version or code.
 
 
 ### Get Extension Signed
 
-#### Info
+#### More Info
 
 - [Get your extension signed](https://extensionworkshop.com/documentation/publish/#get-your-extension-signed)
 
@@ -28,9 +32,9 @@ This process involves more steps than other browser app stores.
 ```
 zip -r webext.zip . -x ".*" -x "*/.*"
 ```
-- Then move this ZIP file to another location outside the repo. Upload this to submit, or test it first inside Firefox.
+- Then move ZIP file to another location on your computer outside of this repo.
 
-- Verify that the ZIP file is formatted correctly. See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
+- Verify that ZIP file is formatted correctly by testing in Firefox. See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
 
 #### Source Code Submission
@@ -46,9 +50,12 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 
 - To submit a new version, select the existing approved extension rather than adding a new one.
 
+- Upload ZIP file.
+
 - The validation proccess will find the following issue: "Unsafe assignment to innerHTML". **This is OK**.
 
-Answers to Questions:
+
+#### Answer Questions
 
 - Which application is this version compatible with? [x] Firefox, [ ] Firefox for Android.
 
@@ -57,7 +64,7 @@ Answers to Questions:
 - Release Notes: See [changelog.md](../changelog.md)
 
 - Notes to Reviewer:
-  - Provide a test username and password for reviewer to use!
+  - You can provide a test username and password for reviewer to use, however since it appears that no one actually reviews these before being approved, you might not have to.
 
 
 ### Store Metadata
@@ -90,13 +97,13 @@ Support website: https://archive.org/about/contact.php
 
 Homepage: https://archive.org
 
-
 License:
+- GNU Affero GPL Version 3 (which is not offered in the list)
+- see [LICENSE](../../LICENSE)
 
+Privacy Policy:
 - [x] This add-on has a Privacy Policy
-
-Notes to Reviewer:
-- Provide a login account to reviewer.
+- see [privacy-policy.md](../privacy-policy.md)
 
 
 ### Images
