@@ -1,5 +1,9 @@
 ## Apple App Store Submission Notes
 
+- Please Update [What's New - Version History](../changelog.md) (v3.0+) and [Description](../description.md).
+- [Old Version History](changelog-safari.md).
+
+
 ### To prepare in Xcode
 
 The following should already be set and nothing else need change.

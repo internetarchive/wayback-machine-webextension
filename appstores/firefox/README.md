@@ -1,5 +1,11 @@
 ## Firefox Add-ons Store Submission Notes
 
+- Please Update [Changelog](../changelog.md) (v3.0+) and [Description](../description.md).
+- [Old Changelog](changelog-firefox.md).
+
+
+### Notes
+
 The main difficulty is signing in, as it requires using an authenticating app to scan a bar code for 2FA.
 
 This process may seem complicated but not anymore - just follow the directions for packaging the extension below.
@@ -108,6 +114,7 @@ Privacy Policy:
 
 ### Images
 
+- See [image assets](image-assets.md) for screenshot info.
 - Upload `add-on-icon128.png` (will resize to 32x32, 64x64, 128x128)
 - Upload screenshots under version's directory.
 

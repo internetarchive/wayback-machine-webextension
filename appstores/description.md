@@ -4,7 +4,7 @@
 
 *(250 chars max)*
 
-Welcome to the Official Internet Archive Wayback Machine Browser Extension! Go back in time to see how a website has changed through the history of the Web. Save websites, view missing *404 Not Found* pages, or read archived books & papers.
+Welcome to the Official Internet Archive Wayback Machine Browser Extension! Go back in time to see how a website has changed through the history of the Web. Save websites, view missing 404 Not Found pages, or read archived books & papers.
 
 
 ### Full Description
