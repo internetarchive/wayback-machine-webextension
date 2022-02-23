@@ -1,37 +1,31 @@
-## Welcome to GitHub Pages
+# Wayback Machine Web Browser Extension
 
-You can use the [editor on GitHub](https://github.com/internetarchive/wayback-machine-webextension/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Welcome to the Official Internet Archive Wayback Machine Browser Extension! Go back in time to see how a website has changed through the history of the Web. Save websites, view missing *404 Not Found* pages, or read archived books & papers.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Most features work without requiring an account, but if you do create an account, you'll be able to archive any website easily with just a single tap of a button.
 
-### Markdown
+Some features must be enabled from Settings. Select *Private Mode* to prevent automatic sending of data.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
+**Features**
 
-# Header 1
-## Header 2
-### Header 3
+• **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on Auto Save Page in settings to save pages that have not previously been saved. Must be logged in to use.
 
-- Bulleted
-- List
+• **Oldest, Newest & Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages. Can also use by right-clicking over a page or link.
 
-1. Numbered
-2. List
+• **404 Not Found** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx & 5xx HTTP error codes.
 
-**Bold** and _Italic_ and `Code` text
+• **Wayback Machine Count** - Display a count of snapshots of the current page stored in the Wayback Machine over the toolbar icon, and the date of last save in the popup.
 
-[Link](url) and ![Image](src)
-```
+• **Relevant Resources** - View archived digitized books while visiting Amazon Books, research papers and books while visiting Wikipedia, and recommended TV News Clips while visiting news websites.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+• **Site Map & Word Cloud** - Present a Site Map as a radial tree graph built from an inventory of archived pages of a site, or create a word cloud from the link's anchor text of the page you are on.
 
-### Jekyll Themes
+• **My Web Archive** - Save URLs to your public archive page on the Internet Archive.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/internetarchive/wayback-machine-webextension/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+• **Annotations** - Provide a list of annotations for the current web page and domain, provided by Hypothes.is.
 
-### Support or Contact
+• **Tweets & Share Links** - Search Twitter for information regarding your current page, or share archived links on social media.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+
+For support, please email info@archive.org
