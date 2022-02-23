@@ -2,6 +2,9 @@
 
 - Please Update [Changelog](../changelog.md) and [Description](../description.md).
 
+Store ID: 0RDCKGF5PHSF
+Store URL: (pending)
+
 
 ### Notes
 
@@ -54,10 +57,10 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 - Category (required): Search Tools
   - "Productivity" has the most (2,000+) so may not be a good category to pick.
 - Privacy policy requirements: Yes
-- Privacy policy URL: ?
+- Privacy policy URL: https://internetarchive.github.io/wayback-machine-webextension/privacy-policy
 - Website URL (optional): https://archive.org
 - Support contact URL: https://archive.org/about/contact.php
-- Mature content: ?
+- Mature content: No
 
 
 #### 5. Add Store listing details
