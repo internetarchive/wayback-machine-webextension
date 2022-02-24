@@ -2,8 +2,8 @@
 
 - Please Update [Changelog](../changelog.md) and [Description](../description.md).
 
-Store ID: 0RDCKGF5PHSF
-Store URL: (pending)
+- Store ID: 0RDCKGF5PHSF
+- Store URL: (pending)
 
 
 ### Notes
