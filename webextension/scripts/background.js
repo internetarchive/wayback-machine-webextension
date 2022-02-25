@@ -178,6 +178,7 @@ function statusSuccess(atab, pageUrl, silent, data) {
   removeToolbarState(atab, 'S')
   addToolbarState(atab, 'check')
   incrementCount(data.original_url)
+  updateWaybackCountBadge(atab, data.original_url)
   chrome.runtime.sendMessage({
     message: 'save_success',
     timestamp: data.timestamp,
