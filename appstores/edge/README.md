@@ -3,7 +3,7 @@
 - Please Update [Changelog](../changelog.md) and [Description](../description.md).
 
 - Store ID: 0RDCKGF5PHSF
-- Store URL: (pending)
+- Store URL: https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn
 
 
 ### Notes
