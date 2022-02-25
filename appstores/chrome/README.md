@@ -66,21 +66,20 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 
 #### Single purpose
 
-To help provide context to people Browsing the Web.
+To help provide context to people browsing the web.
 
 #### Permission justification
 
 Permissions used: `activeTab, cookies, contextMenus, notifications, storage, webRequest, webRequestBlocking, <all_urls>`
 
-- notifications: To notify users of initiation, completion, and error alerts while saving.
-- tabs: (removed)
 - activeTab: For using tabs.executeScript() to insert html content for error popups and wikipedia.
+- cookies: Used in login authentication.
+- contextMenus: For right-click shortcuts to common features.
+- notifications: To notify users of initiation, completion, and error alerts while saving.
+- storage: For storing settings, cache, and other persistent data.
 - webRequest: To detect http fail codes such as 404 Not Found.
 - webRequestBlocking: To use onBeforeSendHeaders to rewrite http headers.
-- contextMenus: For right-click shortcuts to common features.
 - Host permission: Need access to all websites so that automatic http error detection will work.
-- cookies: Used in login authentication.
-- storage: For storing settings, cache, and other persistent data.
 
 - Are you using remote code? NO
 
@@ -100,6 +99,13 @@ Certify:
 - [x] I do not sell or transfer user date to third parties.
 - [x] I do not use or transfer user data for purposes that are unrelated to my item's single purpose.
 - [x] I do not use or transfer user data to determine creditworthiness or for lending purposes.
+
+### Payments & distribution
+
+- Payments: Free
+- Visibility: Public
+- Percentage rollout: 100%
+- Distribution: All Regions
 
 
 ### Images

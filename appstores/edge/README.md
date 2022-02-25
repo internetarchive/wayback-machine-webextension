@@ -8,11 +8,14 @@
 
 ### Notes
 
-- [Microsoft Edge Add-ons Developer](https://developer.microsoft.com/en-us/microsoft-edge/extensions/)
+- Sign in from [Microsoft Edge Add-ons Developer](https://developer.microsoft.com/en-us/microsoft-edge/extensions/)
+
 - [Overview of Microsoft Edge extensions](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/)
-- [Sign-in here](https://partner.microsoft.com/en-US/)
+
 - [Publish a Microsoft Edge extension](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
 - [Add-ons store policies](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/store-policies/developer-policies)
+
+- Don't [sign in here](https://partner.microsoft.com/en-US/) since it will say to log out of your personal account.
 
 
 ### Feedback URL
