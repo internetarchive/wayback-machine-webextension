@@ -87,7 +87,10 @@ const feedbackURLs = {
   chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
   chromium: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
   firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
-  safari: 'https://apps.apple.com/us/app/wayback-machine/id1472432422'
+  safari: 'https://apps.apple.com/us/app/wayback-machine/id1472432422',
+  brave: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en',
+  edge: 'https://archive.org/about/contact.php', // TODO
+  opera: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews?hl=en'
 }
 
 const gBrowser = getBrowser()
