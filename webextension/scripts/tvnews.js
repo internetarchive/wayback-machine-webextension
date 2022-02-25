@@ -6,7 +6,6 @@
 // from 'test/setup.js'
 /*   global isInTestEnv */
 
-const THRESHOLD = 0.85
 
 function parseDate (date) {
   if (typeof date === 'string') {
@@ -56,11 +55,9 @@ function getArticles(url) {
   getDetails(url)
   .then((clips) => {
     $('.loader').hide()
-    if (clips && (clips.length > 0) && (THRESHOLD >= clips[0]['similarity'])) {
+    if (clips && (clips.length > 0)) {
       for (let clip of clips) {
-        if (THRESHOLD >= clip['similarity']) {
-          $('#RecommendationTray').append(constructArticles(clip))
-        }
+        $('#RecommendationTray').append(constructArticles(clip))
       }
     } else {
       $('#RecommendationTray').css({ 'grid-template-columns': 'none' }).append(
