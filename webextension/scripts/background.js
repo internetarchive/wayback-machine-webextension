@@ -447,13 +447,17 @@ chrome.webRequest.onCompleted.addListener((details) => {
     wmAvailabilityCheck(details.url, (wayback_url, url) => {
       if (details.tabId >= 0) {
         // normally go here
-        chrome.tabs.get(details.tabId, (tab) => {
-          update(tab, wayback_url, details.statusCode, bannerFlag)
+        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
+          chrome.tabs.get(details.tabId, (tab) => {
+            update(tab, wayback_url, details.statusCode, bannerFlag)
+          })
         })
       } else {
         // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          update(tabs[0], wayback_url, details.statusCode, bannerFlag)
+          chrome.tabs.executeScript(tabs[0].id, { file: '/scripts/archive.js' }, () => {
+            update(tabs[0], wayback_url, details.statusCode, bannerFlag)
+          })
         })
       }
     })
@@ -466,12 +470,9 @@ chrome.webRequest.onCompleted.addListener((details) => {
       // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
       if (bannerFlag && (details.tabId >= 0)) {
         // insert script first, then check wayback machine, then show banner
-        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
           checkWM(details, true)
-        })
       } else {
-        // don't insert script, check wayback machine, don't show banner
-        checkWM(details, false)
+        checkWM(details, true)
       }
     }
   })
