@@ -99,10 +99,10 @@ While testing API calls, a couple of tools that I find useful is the Chrome brow
 
 404 Page not found:
 - https://www.whitehouse.gov/energy/climate-change
-- http://purl.oclc.org/docs/inet96.html (no longer available)
+- http://purl.oclc.org/docs/inet96.html
 
 302 Redirect to 404 above:
-- http://purl.oclc.org/OCLC/PURL/INET96 (no longer available)
+- http://purl.oclc.org/OCLC/PURL/INET96
 
 410 Page has gone:
 - https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
@@ -172,6 +172,10 @@ Should display blue 'R' and 'TV News Clips':
 - https://www.huffpost.com/entry/alex-jones-infowars-app-apple-google_n_5b694ec3e4b0de86f4a4bc1d
 - https://www.theverge.com/2018/8/29/17798118/president-donald-trump-google-state-of-the-union-address-liberal-bias
 - https://edition.cnn.com/2020/08/07/economy/larry-kudlow-poppy-harlow-unemployment/index.html
+- https://edition.cnn.com/europe/live-news/ukraine-russia-news-02-23-22/h_6d205f365f501bc935268528b826a824
+
+List of websites checked:
+- 'apnews.com', 'www.factcheck.org', 'www.forbes.com', 'www.huffpost.com', 'www.nytimes.com', 'www.politico.com', 'www.politifact.com', 'www.snopes.com', 'www.theverge.com', 'www.usatoday.com', 'www.vox.com', 'www.washingtonpost.com', 'edition.cnn.com'
 
 </td>
 </tr>
