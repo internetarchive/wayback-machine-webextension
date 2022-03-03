@@ -22,9 +22,10 @@ function constructArticles (clip) {
     $('<p>').text(clip.show).prepend($('<strong>').text(clip.station + ': '))
   )
   let bottomElements = $('<div>').addClass('bottom_elements').append(
-    $('<a>').attr({ 'href': '#' }).append(
+    $('<a>').attr({ 'href': clip.preview_url }).append(
       $('<img class="preview-clips">').attr({ 'src': clip.preview_thumb })
-    ).click(() => {
+    ).click((e) => {
+      e.preventDefault()
       openByWindowSetting(clip.preview_url)
     }),
     $('<p>').text(parseDate(clip.show_date))

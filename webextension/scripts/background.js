@@ -674,7 +674,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // checking resources
     const clean_url = getCleanUrl(tab.url)
     if (isValidUrl(clean_url) === false) { return }
-    chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (settings) => {
+    chrome.storage.local.get(['wiki_setting'], (settings) => {
       // checking wikipedia books & papers
       if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
@@ -687,17 +687,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           }, () => {}
         )
       }
-      // checking tv news
-      const news_host = new URL(clean_url).hostname
-      if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
-        getCachedTvNews(clean_url,
-          (clips) => {
-            if (clips && (clips.status !== 'error')) {
-              addToolbarState(tab, 'R')
-            }
-          }, () => {}
-        )
-      }
     })
   } else if (info.status === 'loading') {
     let received_url = tab.url
@@ -706,7 +695,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       let open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['amazon_setting'], (settings) => {
+      chrome.storage.local.get(['amazon_setting','tvnews_setting'], (settings) => {
         // checking amazon books settings
         if (settings && settings.amazon_setting) {
           const url = getCleanUrl(tab.url)
@@ -727,6 +716,18 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
               }
             })
           }
+        }
+        // checking tv news
+        const clean_url = getCleanUrl(tab.url)
+        const news_host = new URL(clean_url).hostname
+        if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
+          getCachedTvNews(clean_url,
+            (clips) => {
+              if (clips && (clips.status !== 'error')) {
+                addToolbarState(tab, 'R')
+              }
+            }, () => {}
+          )
         }
       })
     }
