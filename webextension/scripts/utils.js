@@ -198,7 +198,7 @@ function readTabData(atab, callback) {
  * Return true if version has 4 numbers, which means it's a development build not for release.
  */
 function isDevVersion() {
-  return (gVersion && (gVersion.split('.').length === 4)) ? true : false
+  return (gVersion && (gVersion.split('.').length === 4))
 }
 
 /**

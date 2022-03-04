@@ -697,7 +697,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       let open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['amazon_setting','tvnews_setting'], (settings) => {
+      chrome.storage.local.get(['amazon_setting', 'tvnews_setting'], (settings) => {
         // checking amazon books settings
         if (settings && settings.amazon_setting) {
           const url = getCleanUrl(tab.url)
@@ -894,9 +894,9 @@ function setToolbarIcon(name, tabId = null) {
   const beta = ((n === 'archive') && isDevVersion()) ? '-beta' : ''
   const allPaths = {
     '16': (path + n + b + beta + '16.png'),
-    '24': (path + n + b + beta +'24.png'),
-    '32': (path + n + b + beta +'32.png'),
-    '64': (path + n + b + beta +'64.png')
+    '24': (path + n + b + beta + '24.png'),
+    '32': (path + n + b + beta + '32.png'),
+    '64': (path + n + b + beta + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)
