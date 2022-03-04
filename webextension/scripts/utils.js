@@ -102,6 +102,16 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
+let gVersion = ''
+function getManifestVersion() {
+  let ver = ''
+  const manifest = chrome.runtime.getManifest()
+  if (manifest) {
+    ver = manifest.version
+  }
+  return ver
+}
+
 let gCustomUserAgent = ''
 function getCustomUserAgent() {
   let uAgent = ''
@@ -118,6 +128,7 @@ let hostHeaders = new Headers({
 
 // will not run during mocha testing
 if (typeof isInTestEnv === 'undefined') {
+  gVersion = getManifestVersion()
   gCustomUserAgent = getCustomUserAgent()
   // Chrome ignores this being set. Works in Firefox & Safari.
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
@@ -191,7 +202,14 @@ function readTabData(atab, callback) {
   })
 }
 
-/* * * Wayback functions * * */
+/* * * Toolbar icon functions * * */
+
+/**
+ * Return true if version has 4 numbers, which means it's a development build not for release.
+ */
+function isDevVersion() {
+  return (gVersion && (gVersion.split('.').length === 4))
+}
 
 /**
  * Return true if toolbar badge position is along top of icon, false or undefined if along bottom.
@@ -201,6 +219,8 @@ function isBadgeOnTop() {
   const badgeOnTop = { firefox: true, safari: true, chrome: false, edge: false }
   return badgeOnTop[gBrowser]
 }
+
+/* * * Wayback functions * * */
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -725,6 +745,7 @@ if (typeof module !== 'undefined') {
     getWaybackCount,
     badgeCountText,
     isBadgeOnTop,
+    isDevVersion,
     isChrome,
     isFirefox,
     isEdge,
