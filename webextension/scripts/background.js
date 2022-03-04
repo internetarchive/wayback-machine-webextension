@@ -63,9 +63,10 @@ function savePageNow(atab, pageUrl, silent = false, options = {}) {
     // setup api
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
+    const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-      fetch(hostURL + 'save/', {
+      fetch(hostURL + 'save/' + queryParams, {
         credentials: 'include',
         method: 'POST',
         body: postData,
