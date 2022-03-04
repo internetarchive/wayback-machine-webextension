@@ -93,7 +93,6 @@ const feedbackURLs = {
   opera: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
 }
 
-const gVersion = chrome.runtime.getManifest().version
 const gBrowser = getBrowser()
 const isChrome = (gBrowser === 'chrome') || (gBrowser === 'chromium')
 const isFirefox = (gBrowser === 'firefox')
@@ -102,6 +101,16 @@ const isSafari = (gBrowser === 'safari')
 
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
+
+let gVersion = ''
+function getManifestVersion() {
+  let ver = ''
+  const manifest = chrome.runtime.getManifest()
+  if (manifest) {
+    ver = manifest.version
+  }
+  return ver
+}
 
 let gCustomUserAgent = ''
 function getCustomUserAgent() {
@@ -119,6 +128,7 @@ let hostHeaders = new Headers({
 
 // will not run during mocha testing
 if (typeof isInTestEnv === 'undefined') {
+  gVersion = getManifestVersion()
   gCustomUserAgent = getCustomUserAgent()
   // Chrome ignores this being set. Works in Firefox & Safari.
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
