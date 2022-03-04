@@ -93,6 +93,7 @@ const feedbackURLs = {
   opera: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
 }
 
+const gVersion = chrome.runtime.getManifest().version
 const gBrowser = getBrowser()
 const isChrome = (gBrowser === 'chrome') || (gBrowser === 'chromium')
 const isFirefox = (gBrowser === 'firefox')
@@ -191,7 +192,14 @@ function readTabData(atab, callback) {
   })
 }
 
-/* * * Wayback functions * * */
+/* * * Toolbar icon functions * * */
+
+/**
+ * Return true if version has 4 numbers, which means it's a development build not for release.
+ */
+function isDevVersion() {
+  return (gVersion && (gVersion.split('.').length === 4)) ? true : false
+}
 
 /**
  * Return true if toolbar badge position is along top of icon, false or undefined if along bottom.
@@ -201,6 +209,8 @@ function isBadgeOnTop() {
   const badgeOnTop = { firefox: true, safari: true, chrome: false, edge: false }
   return badgeOnTop[gBrowser]
 }
+
+/* * * Wayback functions * * */
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -725,6 +735,7 @@ if (typeof module !== 'undefined') {
     getWaybackCount,
     badgeCountText,
     isBadgeOnTop,
+    isDevVersion,
     isChrome,
     isFirefox,
     isEdge,

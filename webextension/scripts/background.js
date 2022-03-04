@@ -7,6 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
+/*   global isDevVersion */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -890,11 +891,12 @@ function setToolbarIcon(name, tabId = null) {
   const path = 'images/toolbar/toolbar-icon-'
   const n = validToolbarIcons.has(name) ? name : 'archive'
   const b = (checkBadgePos.has(name) && isBadgeOnTop()) ? 'b' : ''
+  const beta = ((n === 'archive') && isDevVersion()) ? '-beta' : ''
   const allPaths = {
-    '16': (path + n + b + '16.png'),
-    '24': (path + n + b + '24.png'),
-    '32': (path + n + b + '32.png'),
-    '64': (path + n + b + '64.png')
+    '16': (path + n + b + beta + '16.png'),
+    '24': (path + n + b + beta +'24.png'),
+    '32': (path + n + b + beta +'32.png'),
+    '64': (path + n + b + beta +'64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)
