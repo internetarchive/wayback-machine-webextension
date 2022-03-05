@@ -105,6 +105,17 @@
         <button type="button" class="btn btn-sm btn-wide btn-dark-gray" id="tweets-btn" title="Display Tweets about a URL"><img src="images/fa/twitter-brands.svg" alt="Twitter" class="tweets-svg"> Search Tweets</button>
       </div>
      
+      <!-- Context Notice -->
+
+      <div id="fact-check-container">
+        <div class="btn-block">
+          <button type="button" class="btn btn-sm btn-block btn-wide btn-yellow" id="fact-check-btn" title="Check contextual information">
+            <img src="images/toolbar/toolbar-icon-Fc16.png" alt="F" class="toolbar-icon">
+            Contextual Notices
+          </button>
+        </div>
+      </div>
+
       <!-- Related Archived Resources -->
 
       <div id="readbook-container">
@@ -132,17 +143,6 @@
           <button type="button" class="btn btn-sm btn-equal btn-blue" id="wikipapers-btn" title="Read Cited Papers">
             <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
             Papers
-          </button>
-        </div>
-      </div>
-
-      <!-- Context Notice -->
-
-      <div id="fact-check-container">
-        <div class="btn-block">
-          <button type="button" class="btn btn-sm btn-block btn-wide btn-yellow" id="fact-check-btn" title="Check contextual information">
-            <img src="images/toolbar/toolbar-icon-Fc16.png" alt="F" class="toolbar-icon">
-            Contextual Notices
           </button>
         </div>
       </div>
@@ -253,6 +253,14 @@
           <span class="toggle">Private Mode</span>
         </div>
       </label>
+
+      <label class="setting-switch" for="wm-count-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="wm-count-setting">
+        <div class="setting-text-box">
+          <span class="toggle">Wayback Machine Count</span>
+        </div>
+      </label>
+
       <label class="setting-switch" for="not-found-setting">
         <input type="checkbox" class="saved-setting private-setting" id="not-found-setting">
         <div class="setting-text-box">
@@ -260,10 +268,12 @@
           <img src="images/toolbar/toolbar-icon-Vc16.png" alt="V" class="toolbar-icon">
         </div>
       </label>
-      <label class="setting-switch" for="wm-count-setting">
-        <input type="checkbox" class="saved-setting private-setting" id="wm-count-setting">
+
+      <label class="setting-switch" for="fact-check-setting">
+        <input type="checkbox" class="saved-setting private-setting" id="fact-check-setting">
         <div class="setting-text-box">
-          <span class="toggle">Wayback Machine Count</span>
+          <span class="toggle">Contextual Notices</span>
+          <img src="images/toolbar/toolbar-icon-Fc16.png" alt="F" class="toolbar-icon">
         </div>
       </label>
 
@@ -286,14 +296,6 @@
         <div class="setting-text-box">
           <span class="toggle">TV News Clips</span>
           <img src="images/toolbar/toolbar-icon-Rc16.png" alt="R" class="toolbar-icon">
-        </div>
-      </label>
-
-      <label class="setting-switch" for="fact-check-setting">
-        <input type="checkbox" class="saved-setting private-setting" id="fact-check-setting">
-        <div class="setting-text-box">
-          <span class="toggle">Contextual Notices</span>
-          <img src="images/toolbar/toolbar-icon-Fc16.png" alt="F" class="toolbar-icon">
         </div>
       </label>
 
