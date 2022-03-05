@@ -227,7 +227,7 @@ body {
     z-index: 5;
 }
 
-#readbook-container, #tvnews-container, #wiki-container, #view-archived-container {
+#readbook-container, #tvnews-container, #wiki-container, #view-archived-container, #fact-check-container {
     display: none;
 }
 
