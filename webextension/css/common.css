@@ -167,6 +167,16 @@ button.btn-mini {
     color: #eee !important;
 }
 
+.btn-yellow {
+    background-color: #AA8800 !important;
+    border: 1px solid #EECC00 !important;
+    color: #eee !important;
+}
+.btn-yellow:hover {
+    background-color: #BB9900 !important;
+    color: #eee !important;
+}
+
 .btn-blue {
     background-color: #405971 !important;
     border: 1px solid #668db3 !important;
@@ -281,6 +291,14 @@ button.btn-mini {
     .btn-mini:hover, .btn-mini:focus {
         background-color: #555;
         color: #fff;
+    }
+
+    .btn-yellow {
+        background-color: #886600 !important;
+        border: 1px solid #CCAA00 !important;
+    }
+    .btn-yellow:hover {
+        background-color: #997700 !important;
     }
 
     .btn-unselected {
