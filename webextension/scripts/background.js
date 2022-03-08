@@ -807,7 +807,7 @@ function factCheck(atab, url) {
         //   "status": "success"
 
         // parse notices from result
-        if (json && ('status' in json) && (json.status === 'success') && ('notices' in json) && (json.notices.length > 0)) {
+        if (json && ('status' in json) && (json.status === 'success') && ('notices' in json) && json.notices && (json.notices.length > 0)) {
           // Create a Wayback Machine URL from most recent timestamp, or the latest capture if no timestamp returned.
           // If multiple notices, pick notice with most recent timestamp.
 
@@ -816,8 +816,8 @@ function factCheck(atab, url) {
 
           // loop through every timestamp present
           json.notices.forEach(ntc => {
-            if (('where' in ntc) && ('timestamp' in ntc.where)) {
-              const tstamps = ntc.where.timestamp
+            if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
+              const tstamps = ntc.where.timestamp || []
               tstamps.forEach(tstamp => {
                 // compare each timestamp to latest
                 const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
