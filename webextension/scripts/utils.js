@@ -292,11 +292,10 @@ function getWaybackCount(url, onSuccess, onFail) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   const requestUrl = hostURL + 'wayback/available'
-  const requestParams = 'url=' + fixedEncodeURIComponent(url)
-  fetch(requestUrl, {
-    method: 'POST',
-    headers: hostHeaders,
-    body: requestParams
+  const requestParams = '?url=' + fixedEncodeURIComponent(url)
+  fetch(requestUrl + requestParams, {
+    method: 'GET',
+    headers: hostHeaders
   })
   .then(response => response.json())
   .then((json) => {
@@ -424,20 +423,18 @@ function getCleanUrl(url) {
 
 /**
  * Extracts the latest saved Wayback URL from wmAvailabilityCheck() response.
- * @param response {object}
+ * @param json {object}
  * @return {string or null}
  */
-function getWaybackUrlFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
+function getWaybackUrlFromResponse(json) {
+  if (json && json.archived_snapshots &&
+    json.archived_snapshots.closest &&
+    json.archived_snapshots.closest.available &&
+    json.archived_snapshots.closest.available === true &&
+    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
+    isValidUrl(json.archived_snapshots.closest.url)) {
     // not sure why we're replacing http: with https: here
-    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:')
+    return json.archived_snapshots.closest.url.replace(/^http:/, 'https:')
   } else {
     return null
   }
@@ -445,19 +442,17 @@ function getWaybackUrlFromResponse(response) {
 
 /**
  * Extracts latest saved timestamp from wmAvailabilityCheck() response.
- * @param response {object}
+ * @param json {object}
  * @return {string or null} as "yyyyMMddHHmmss"
  */
-function getWaybackTimestampFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.timestamp
+function getWaybackTimestampFromResponse(json) {
+  if (json && json.archived_snapshots &&
+    json.archived_snapshots.closest &&
+    json.archived_snapshots.closest.available &&
+    json.archived_snapshots.closest.available === true &&
+    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
+    isValidUrl(json.archived_snapshots.closest.url)) {
+    return json.archived_snapshots.closest.timestamp
   } else {
     return null
   }
