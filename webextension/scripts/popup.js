@@ -374,6 +374,14 @@ function openSitemap() {
   openWaybackPage('https://web.archive.org/web/sitemap/', activeURL)
 }
 
+function openCollections() {
+  openWaybackPage('https://web.archive.org/web/collections/*/', activeURL)
+}
+
+function openURLs() {
+  openWaybackPage('https://web.archive.org/web/*/', activeURL + '*')
+}
+
 function showSettings() {
   $('#popup-page').hide()
   $('#login-page').hide()
@@ -791,6 +799,8 @@ $(function() {
   $('#settings-tab-btn').click(showSettings)
   $('#feedback-tab-btn').click(open_feedback_page)
   $('#site-map-btn').click(openSitemap)
+  $('#collections-btn').click(openCollections)
+  $('#urls-btn').click(openURLs)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
   $('#annotations-btn').click(showContext)
