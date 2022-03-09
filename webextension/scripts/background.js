@@ -453,18 +453,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
           })
         })
       } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-        if(bannerFlag){
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if(bannerFlag){
             chrome.tabs.executeScript(tabs[0].id, { file: '/scripts/archive.js' }, () => {
               update(tabs[0], wayback_url, details.statusCode, bannerFlag)
             })
-          })
-        } else {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            update(tabs[0], wayback_url, details.statusCode, bannerFlag)
-          })
-        }
+          } else {
+              update(tabs[0], wayback_url, details.statusCode, bannerFlag)
+            }
+        })
       }
     })
   }
@@ -473,13 +471,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
-      if (bannerFlag) {
-        // insert script first, then check wayback machine, then show banner
-          checkWM(details, true)
-      } else {
-        checkWM(details, false)
-      }
+      checkWM(details, bannerFlag)
     }
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
