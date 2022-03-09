@@ -57,10 +57,11 @@ function URLopener(open_url, url, wmIsAvailable) {
  * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
-function savePageNow(atab, pageUrl, silent = false, options = {}) {
+function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
   if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
     // setup api
+/*
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
     const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
@@ -74,6 +75,50 @@ function savePageNow(atab, pageUrl, silent = false, options = {}) {
       })
       .then(resolve, reject)
     })
+*/
+
+    // *** BEGIN TEST ***
+
+    // POST
+    // content-type: application/x-www-form-urlencoded
+    // form data:
+    // url=xxx
+
+    // POSTing form data NOT WORKING: still get 401 "you need to be logged in..."
+
+    // NEED HELP! Ask how this works while not logged in!
+
+    // NEW - NOT TESTED / NOT WORKING
+    // setup api
+    const timeoutPromise = new Promise((resolve, reject) => {
+      setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+      let headers = new Headers(hostHeaders)
+      let saveUrl, postData, bodyData = null
+      if (loggedInFlag) {
+        // logged in
+        postData = new URLSearchParams(options)
+        postData.append('url', pageUrl)
+        bodyData = JSON.stringify(postData)
+        const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
+        saveUrl = hostURL + 'save/' + queryParams
+        headers.set('Content-Type', 'application/json')
+      } else {
+        // logged out (NOT WORKING)
+        saveUrl = 'https://web.archive.org/save/' + pageUrl
+        bodyData = 'url=' + fixedEncodeURIComponent(pageUrl)
+        headers.set('Content-Type', 'application/x-www-form-urlencoded')
+      }
+
+      fetch(saveUrl, {
+        /* credentials: 'include', */ // TODO: uncomment
+        method: (bodyData) ? 'POST' : 'GET',
+        body: bodyData,
+        headers: headers
+      })
+      .then(resolve, reject)
+    })
+
+    // *** END TEST ***
 
     // call api
     timeoutPromise
@@ -1018,7 +1063,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
           let options = { 'capture_all': 1 }
-          savePageNow(atab, page_url, false, options)
+          savePageNow(atab, page_url, false, options, false) // TEST logged out version
           return true
         }
         let open_url = wayback_url + page_url
