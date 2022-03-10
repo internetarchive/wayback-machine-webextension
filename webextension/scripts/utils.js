@@ -169,6 +169,17 @@ function getUserInfo() {
   })
 }
 
+/**
+ * Check if user is logged in by checking cookies.
+ * @param callback(result) : returns object { auth_check: bool } where auth_check == true if logged in, false if not.
+ */
+function checkAuthentication(acallback) {
+  chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
+    let loggedIn = (result && result.value && (result.value.length > 0)) || false
+    acallback({ 'auth_check': loggedIn })
+  })
+}
+
 /* * * Storage functions * * */
 
 // Returns a string key from a Tab windowId and tab id.
@@ -734,6 +745,7 @@ if (typeof module !== 'undefined') {
     notify,
     attachTooltip,
     getUserInfo,
+    checkAuthentication,
     getTabKey,
     saveTabData,
     readTabData,

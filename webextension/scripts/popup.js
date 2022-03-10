@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo */
+/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
 
 let searchBoxTimer
 
@@ -166,14 +166,6 @@ function loginSuccess() {
       $('#spn-back-label').text('URL not supported')
     }
   }
-}
-
-// Checks if user is logged in by checking if 'logged-in-sig' cookie exists (not by API call).
-// returns callback object: { auth_check: bool }
-function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
-    message: 'auth_check'
-  }, callback)
 }
 
 // Open Wayback Machine website for the given pageURL.

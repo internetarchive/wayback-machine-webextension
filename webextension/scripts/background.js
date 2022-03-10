@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion */
+/*   global isDevVersion, checkAuthentication */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -48,6 +48,16 @@ function URLopener(open_url, url, wmIsAvailable) {
 }
 
 /* * * API Calls * * */
+
+// First checks for login state before calling savePageNow()
+//
+function savePageNowChecked(atab, pageUrl, silent, options) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results)) {
+      savePageNow(atab, pageUrl, silent, options, results.auth_check)
+    }
+  })
+}
 
 /**
  * Calls Save Page Now API.
@@ -517,7 +527,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let page_url = getCleanUrl(message.page_url)
       let silent = message.silent || false
       let options = (message.options && (message.options !== null)) ? message.options : {}
-      savePageNow(message.atab, page_url, silent, options)
+      savePageNowChecked(message.atab, page_url, silent, options)
     }
   }
   else if (message.message === 'openurl') {
@@ -533,13 +543,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
       () => { sendResponse({ message: 'last_save', timestamp: '' }) }
     )
-    return true
-  } else if (message.message === 'auth_check') {
-    // auth check using cookies
-    chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0)) || false
-      sendResponse({ auth_check: loggedIn })
-    })
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
@@ -1025,7 +1028,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
           let options = { 'capture_all': 1 }
-          savePageNow(atab, page_url, false, options, false) // TEST logged out version
+          savePageNowChecked(atab, page_url, false, options)
           return true
         }
         let open_url = wayback_url + page_url
