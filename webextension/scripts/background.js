@@ -60,8 +60,14 @@ function URLopener(open_url, url, wmIsAvailable) {
 function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
   if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
+
+    if (loggedInFlag === false) {
+      // Use anonymous SPN GET method by opening a new tab and skipping status updates within extension.
+      openByWindowSetting('https://web.archive.org/save/' + pageUrl)
+      return
+    }
+
     // setup api
-/*
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
     const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
@@ -75,50 +81,6 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       })
       .then(resolve, reject)
     })
-*/
-
-    // *** BEGIN TEST ***
-
-    // POST
-    // content-type: application/x-www-form-urlencoded
-    // form data:
-    // url=xxx
-
-    // POSTing form data NOT WORKING: still get 401 "you need to be logged in..."
-
-    // NEED HELP! Ask how this works while not logged in!
-
-    // NEW - NOT TESTED / NOT WORKING
-    // setup api
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-      let headers = new Headers(hostHeaders)
-      let saveUrl, postData, bodyData = null
-      if (loggedInFlag) {
-        // logged in
-        postData = new URLSearchParams(options)
-        postData.append('url', pageUrl)
-        bodyData = JSON.stringify(postData)
-        const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
-        saveUrl = hostURL + 'save/' + queryParams
-        headers.set('Content-Type', 'application/json')
-      } else {
-        // logged out (NOT WORKING)
-        saveUrl = 'https://web.archive.org/save/' + pageUrl
-        bodyData = 'url=' + fixedEncodeURIComponent(pageUrl)
-        headers.set('Content-Type', 'application/x-www-form-urlencoded')
-      }
-
-      fetch(saveUrl, {
-        /* credentials: 'include', */ // TODO: uncomment
-        method: (bodyData) ? 'POST' : 'GET',
-        body: bodyData,
-        headers: headers
-      })
-      .then(resolve, reject)
-    })
-
-    // *** END TEST ***
 
     // call api
     timeoutPromise
