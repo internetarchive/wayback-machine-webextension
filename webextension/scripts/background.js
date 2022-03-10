@@ -671,10 +671,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, tab.url, beforeDate)
+            autoSaveChecked(tab, tab.url, beforeDate)
           }
         } else {
-          autoSave(tab, tab.url)
+          autoSaveChecked(tab, tab.url)
         }
       }
       // fact check
@@ -809,6 +809,16 @@ function autoSave(atab, url, beforeDate) {
       }
     })
   }
+}
+
+// Call autoSave() only if logged in.
+//
+function autoSaveChecked(atab, url, beforeDate) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results) && (results.auth_check === true)) {
+      autoSave(atab, url, beforeDate)
+    }
+  })
 }
 
 /*
