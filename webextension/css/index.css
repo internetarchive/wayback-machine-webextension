@@ -222,6 +222,11 @@ body {
     background-color: #ddd;
 }
 
+#chk-login-btn {
+    position: absolute;
+    width: 100%;
+}
+
 .spn-flip {
     /* to cover over the chk-frame */
     z-index: 5;

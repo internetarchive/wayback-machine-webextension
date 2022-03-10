@@ -113,41 +113,11 @@ function updateLastSaved() {
     } else {
       loginError()
     }
+    setupSaveAction()
   })
 }
 
-function loginError() {
-  // uncomment to restore Bulk Save button
-  // $('#bulk-save-btn').attr('disabled', true)
-  // $('#bulk-save-btn').attr('title', 'Log in to use')
-  // $('#bulk-save-btn').off('click')
-  $('.auth-disable').attr('disabled', true)
-  $('.auth-disable-text').css('opacity', '50%')
-  $('#my-archive-btn').off('click')
-  $('#spn-btn').addClass('flip-inside')
-  $('#spn-back-label').text('Log In to Save Page')
-  $('#spn-front-label').parent().attr('disabled', true)
-  $('#spn-btn').off('click').on('click', show_login_page)
-  $('#last-saved-msg').hide()
-  if (activeURL) {
-    if (!isNotExcludedUrl(activeURL)) { setExcluded() }
-  }
-}
-
-function loginSuccess() {
-  $('.auth-disable').removeAttr('disabled')
-  $('.auth-disable-text').css('opacity', '100%')
-  $('.tab-item').css('width', '18%')
-  $('#logout-tab-btn').css('display', 'inline-block')
-  $('#spn-front-label').parent().removeAttr('disabled')
-  $('#spn-btn').off('click')
-  $('#spn-btn').removeClass('flip-inside')
-  $('#my-archive-btn').click(openMyWebArchivePage)
-  // uncomment to restore Bulk Save button
-  // $('#bulk-save-btn').removeAttr('disabled')
-  // $('#bulk-save-btn').attr('title', '')
-  // $('#bulk-save-btn').click(bulkSave)
-
+function setupSaveAction() {
   if (activeURL) {
     if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
       $('#spn-btn').on('click', doSaveNow)
@@ -170,6 +140,48 @@ function loginSuccess() {
       $('#spn-back-label').text('URL not supported')
     }
   }
+}
+
+function loginError() {
+  // uncomment to restore Bulk Save button
+  // $('#bulk-save-btn').attr('disabled', true)
+  // $('#bulk-save-btn').attr('title', 'Log in to use')
+  // $('#bulk-save-btn').off('click')
+  $('.auth-disable').attr('disabled', true)
+  $('.auth-disable-text').css('opacity', '50%')
+  $('#my-archive-btn').off('click')
+  // $('#spn-btn').addClass('flip-inside')
+  // $('#spn-back-label').text('Log In to Save Page')
+  // $('#spn-front-label').parent().attr('disabled', true)
+  // $('#spn-btn').off('click').on('click', show_login_page)
+  $('#last-saved-msg').hide()
+  if (activeURL) {
+    if (!isNotExcludedUrl(activeURL)) { setExcluded() }
+  }
+  // hide SPN options and show login
+  $('#chk-outlinks-label').css('visibility', 'hidden')
+  $('#chk-screenshot-label').css('visibility', 'hidden')
+  $('#chk-login-btn').css('visibility', '').off('click').on('click', show_login_page)
+}
+
+function loginSuccess() {
+  $('.auth-disable').removeAttr('disabled')
+  $('.auth-disable-text').css('opacity', '100%')
+  $('.tab-item').css('width', '18%')
+  $('#logout-tab-btn').css('display', 'inline-block')
+  $('#spn-front-label').parent().removeAttr('disabled')
+  $('#spn-btn').off('click')
+  // $('#spn-btn').removeClass('flip-inside')
+  $('#my-archive-btn').click(openMyWebArchivePage)
+  // uncomment to restore Bulk Save button
+  // $('#bulk-save-btn').removeAttr('disabled')
+  // $('#bulk-save-btn').attr('title', '')
+  // $('#bulk-save-btn').click(bulkSave)
+
+  // show SPN options and hide login
+  $('#chk-outlinks-label').css('visibility', '')
+  $('#chk-screenshot-label').css('visibility', '')
+  $('#chk-login-btn').css('visibility', 'hidden')
 }
 
 // Open Wayback Machine website for the given pageURL.
