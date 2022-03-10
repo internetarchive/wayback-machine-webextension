@@ -121,7 +121,9 @@ function loginError() {
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
-  $('#my-archive-btn').attr('disabled', true).off('click')
+  $('.auth-disable').attr('disabled', true)
+  $('.auth-disable-text').css('opacity', '50%')
+  $('#my-archive-btn').off('click')
   $('#spn-btn').addClass('flip-inside')
   $('#spn-back-label').text('Log In to Save Page')
   $('#spn-front-label').parent().attr('disabled', true)
@@ -133,12 +135,14 @@ function loginError() {
 }
 
 function loginSuccess() {
+  $('.auth-disable').removeAttr('disabled')
+  $('.auth-disable-text').css('opacity', '100%')
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
   $('#spn-front-label').parent().removeAttr('disabled')
   $('#spn-btn').off('click')
   $('#spn-btn').removeClass('flip-inside')
-  $('#my-archive-btn').removeAttr('disabled').click(openMyWebArchivePage)
+  $('#my-archive-btn').click(openMyWebArchivePage)
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')

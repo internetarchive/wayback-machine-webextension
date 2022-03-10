@@ -70,10 +70,10 @@
         </div>
         <div class="chk-frame">
           <label class="chk-options" for="chk-outlinks" id="chk-outlinks-label" title="Archive all Outlinked URLs">
-            <input type="checkbox" class="saved-setting" id="chk-outlinks"><span id="chk-outlinks-text">Outlinks</span>
+            <input type="checkbox" class="saved-setting auth-disable" id="chk-outlinks"><span class="auth-disable-text" id="chk-outlinks-text">Outlinks</span>
           </label>
           <label class="chk-options" for="chk-screenshot" id="chk-screenshot-label" title="Archive a Screenshot (image)">
-            <input type="checkbox" class="saved-setting" id="chk-screenshot"><span id="chk-screenshot-text">Screenshot</span>
+            <input type="checkbox" class="saved-setting auth-disable" id="chk-screenshot"><span class="auth-disable-text" id="chk-screenshot-text">Screenshot</span>
           </label>
         </div>
       </div>
@@ -87,7 +87,7 @@
       <div class="btn-flex-block">
         <button type="button" class="btn btn-sm btn-equal btn-dark-gray" id="site-map-btn" title="Display a Site Map for a site, based on archived URLs in the Wayback Machine">Site Map</button>
         <!-- <button type="button" class="btn btn-sm btn-equal btn-dark-gray" id="bulk-save-btn">Bulk Save</button> -->
-        <button type="button" class="btn btn-sm btn-equal btn-dark-gray" id="my-archive-btn" title="Go to my public Web Archive page">My Archive</button>
+        <button type="button" class="btn btn-sm btn-equal btn-dark-gray auth-disable" id="my-archive-btn" title="Go to my public Web Archive page">My Archive</button>
       </div>
 
       <!-- Contexts -->
@@ -183,12 +183,12 @@
 
     <div id="first-panel" style="margin-bottom: 10px">
       <label class="setting-switch" for="auto-archive-setting">
-        <input type="checkbox" class="saved-setting private-setting" id="auto-archive-setting">
+        <input type="checkbox" class="saved-setting private-setting auth-disable" id="auto-archive-setting">
         <div class="setting-text-box">
-          <span class="toggle">Auto Save Page</span>
+          <span class="toggle auth-disable-text">Auto Save Page</span>
           <div style="margin-top: 0.5em">
-            if not archived:<br>
-            <select id="auto-archive-age" class="btn-mini">
+            <span class="auth-disable-text">if not archived:</span><br>
+            <select id="auto-archive-age" class="btn-mini auth-disable">
               <option value="99999" selected>previously</option>
               <option value="365">within past year</option>
               <option value="90">within 90 days</option>
@@ -198,26 +198,26 @@
             </select>
           </div>
           <div>
-            <button class="btn btn-mini" id="exclude-urls-btn">Exclude URLs...</button>
+            <button class="btn btn-mini auth-disable" id="exclude-urls-btn">Exclude URLs...</button>
           </div>
         </div>
       </label>
       <label class="setting-switch" for="email-outlinks-setting">
-        <input type="checkbox" class="saved-setting" id="email-outlinks-setting">
+        <input type="checkbox" class="saved-setting auth-disable" id="email-outlinks-setting">
         <div class="setting-text-box">
-          <span class="toggle">Email Outlinks</span>
+          <span class="toggle auth-disable-text">Email Outlinks</span>
         </div>
       </label>
       <label class="setting-switch" for="my-archive-setting">
-        <input type="checkbox" class="saved-setting" id="my-archive-setting">
+        <input type="checkbox" class="saved-setting auth-disable" id="my-archive-setting">
         <div class="setting-text-box">
-          <span class="toggle">Save To My Web Archive</span>
+          <span class="toggle auth-disable-text">Save To My Web Archive</span>
         </div>
       </label>
       <label class="setting-switch" for="resource-list-setting">
-        <input type="checkbox" class="saved-setting" id="resource-list-setting">
+        <input type="checkbox" class="saved-setting auth-disable" id="resource-list-setting">
         <div class="setting-text-box">
-          <span class="toggle">Show Resources During Save</span>
+          <span class="toggle auth-disable-text">Show Resources During Save</span>
         </div>
       </label>
       <label class="setting-switch" for="embed-popup-setting">
