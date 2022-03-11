@@ -4,7 +4,7 @@
 /*   global attachTooltip, openByWindowSetting */
 
 // from 'popup.js'
-/*   global setupWaybackCount */
+/*   global setupWaybackCount, goBackToMain */
 
 // onload
 $(function() {
@@ -14,7 +14,7 @@ $(function() {
   setupPanelSwitch()
   setupHelpDocs()
   $('#exclude-urls-btn').click(showExcludeList)
-  $('.back-btn').click(goBack)
+  $('.back-btn').off('click').on('click', goBackToMain)
 })
 
 function initSettings() {
@@ -29,7 +29,7 @@ function restoreSettings(items) {
   $('#private-mode-setting').prop('checked', items.private_mode_setting)
   $('#not-found-setting').prop('checked', items.not_found_setting)
   $('#wm-count-setting').prop('checked', items.wm_count_setting)
-  // $('#fact-check-setting').prop('checked', items.fact_check_setting)
+  $('#fact-check-setting').prop('checked', items.fact_check_setting)
   $('#wiki-setting').prop('checked', items.wiki_setting)
   $('#amazon-setting').prop('checked', items.amazon_setting)
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
@@ -52,7 +52,7 @@ function saveSettings() {
     private_mode_setting: $('#private-mode-setting').prop('checked'),
     not_found_setting: $('#not-found-setting').prop('checked'),
     wm_count_setting: $('#wm-count-setting').prop('checked'),
-    // fact_check_setting: $('#fact-check-setting').prop('checked'),
+    fact_check_setting: $('#fact-check-setting').prop('checked'),
     wiki_setting: $('#wiki-setting').prop('checked'),
     amazon_setting: $('#amazon-setting').prop('checked'),
     tvnews_setting: $('#tvnews-setting').prop('checked'),
@@ -131,25 +131,18 @@ function setupSettingsChange() {
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { tvnews_setting: false } })
     }
   })
-  /*
+
+  // context notices
   $('#fact-check-setting').change((e) => {
     if ($(e.target).prop('checked') === false) {
-      $('#fact-check-btn').removeClass('btn-purple')
+      $('#fact-check-container').hide()
       chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     }
   })
-  */
 }
 
 function showExcludeList() {
   openByWindowSetting(chrome.runtime.getURL('exclude-list.html'), 'windows')
-}
-
-// Returns to the main view.
-function goBack() {
-  $('#login-page').hide()
-  $('#setting-page').hide()
-  $('#popup-page').show()
 }
 
 // Prepares the top tab bar for switching between setting panels.
@@ -181,6 +174,7 @@ function setupHelpDocs() {
     'private-mode-setting': 'Don\'t initiate automatic communications between this extension and the Internet Archive.',
     'not-found-setting': 'If server returns a 4xx or 5xx then check the Wayback Machine for archives.',
     'wm-count-setting': 'Show number of times the current URL has been archived in the Wayback Machine.',
+    'fact-check-setting': 'Check for contextual information from fact checking organizations and origin websites.',
     'wiki-setting': 'Check for books and academic papers from the Internet Archive referenced in Wikipedia articles. ',
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
     'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',

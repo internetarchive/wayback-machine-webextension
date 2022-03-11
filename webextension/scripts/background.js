@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion */
+/*   global isDevVersion, checkAuthentication */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -49,6 +49,16 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
+// First checks for login state before calling savePageNow()
+//
+function savePageNowChecked(atab, pageUrl, silent, options) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results)) {
+      savePageNow(atab, pageUrl, silent, options, results.auth_check)
+    }
+  })
+}
+
 /**
  * Calls Save Page Now API.
  * If response OK, calls SPN Status API after a delay.
@@ -57,9 +67,16 @@ function URLopener(open_url, url, wmIsAvailable) {
  * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
-function savePageNow(atab, pageUrl, silent = false, options = {}) {
+function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
   if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
+
+    if (loggedInFlag === false) {
+      // Use anonymous SPN GET method by opening a new tab and skipping status updates within extension.
+      openByWindowSetting('https://web.archive.org/save/' + pageUrl)
+      return
+    }
+
     // setup api
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
@@ -280,7 +297,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
-    headers.set('backend', 'nomad')
+    // headers.set('backend', 'nomad')
     headers.set('Content-Type', 'application/json')
     fetch(url, {
       method: (postData) ? 'POST' : 'GET',
@@ -364,13 +381,10 @@ function getCachedTvNews(url, onSuccess, onFail) {
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
-// NOT USED
-/*
 function getCachedFactCheck(url, onSuccess, onFail) {
-  const requestUrl = ''
+  const requestUrl = hostURL + 'services/context/notices?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
-*/
 
 /* * * Startup related * * */
 
@@ -431,7 +445,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
 
-  // local functions
+  // display 'V' toolbar icon and banner
   function update(tab, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
@@ -445,19 +459,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
       })
     }
   }
-  function checkWM(details, bannerFlag) {
-    // display 'V' toolbar icon if wayback has a copy
+
+  // check if wayback machine has a copy
+  function checkWM(tab, details, bannerFlag) {
     wmAvailabilityCheck(details.url, (wayback_url, url) => {
-      if (details.tabId >= 0) {
-        // normally go here
-        chrome.tabs.get(details.tabId, (tab) => {
+      if (bannerFlag) {
+        chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
           update(tab, wayback_url, details.statusCode, bannerFlag)
         })
       } else {
-        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          update(tabs[0], wayback_url, details.statusCode, bannerFlag)
-        })
+        update(tab, wayback_url, details.statusCode, bannerFlag)
       }
     })
   }
@@ -466,15 +477,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
-      if (bannerFlag && (details.tabId >= 0)) {
-        // insert script first, then check wayback machine, then show banner
-        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
-          checkWM(details, true)
+      if (details.tabId >= 0) {
+        // normally go here
+        chrome.tabs.get(details.tabId, (tab) => {
+          checkWM(tab, details, bannerFlag)
         })
       } else {
-        // don't insert script, check wayback machine, don't show banner
-        checkWM(details, false)
+        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          checkWM(tabs[0], details, bannerFlag)
+        })
       }
     }
   })
@@ -510,7 +522,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let page_url = getCleanUrl(message.page_url)
       let silent = message.silent || false
       let options = (message.options && (message.options !== null)) ? message.options : {}
-      savePageNow(message.atab, page_url, silent, options)
+      savePageNowChecked(message.atab, page_url, silent, options)
     }
   }
   else if (message.message === 'openurl') {
@@ -526,13 +538,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
       () => { sendResponse({ message: 'last_save', timestamp: '' }) }
     )
-    return true
-  } else if (message.message === 'auth_check') {
-    // auth check using cookies
-    chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0)) || false
-      sendResponse({ auth_check: loggedIn })
-    })
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
@@ -661,18 +666,16 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, tab.url, beforeDate)
+            autoSaveChecked(tab, tab.url, beforeDate)
           }
         } else {
-          autoSave(tab, tab.url)
+          autoSaveChecked(tab, tab.url)
         }
       }
       // fact check
-      /*
       if (settings && settings.fact_check_setting) {
-        factCheckPage(tab, tab.url)
+        factCheck(tab, tab.url)
       }
-      */
     })
     // checking resources
     const clean_url = getCleanUrl(tab.url)
@@ -801,13 +804,53 @@ function autoSave(atab, url, beforeDate) {
   }
 }
 
-/*
-function factCheckPage(atab, url) {
+// Call autoSave() only if logged in.
+//
+function autoSaveChecked(atab, url, beforeDate) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results) && (results.auth_check === true)) {
+      autoSave(atab, url, beforeDate)
+    }
+  })
+}
+
+// Call Context Notices API, parse and store results if success, then set the toolbar state.
+//
+function factCheck(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     // retrieve fact check results
     getCachedFactCheck(url,
       (json) => {
-        if (json && json.results) {
+        // json is an object containing:
+        //   "notices": [ { "notice": "...", "where": { "timestamp": [ "-yyyymmdd123456" ] } } ],
+        //   "status": "success"
+
+        // parse notices from result
+        if (json && ('status' in json) && (json.status === 'success') && ('notices' in json) && json.notices && (json.notices.length > 0)) {
+          // Create a Wayback Machine URL from most recent timestamp, or the latest capture if no timestamp returned.
+          // If multiple notices, pick notice with most recent timestamp.
+
+          let latestTimestamp = '2' // latest capture in Wayback Machine URL
+          let latestDate = new Date(0) // epoch 1/1/1970
+
+          // loop through every timestamp present
+          json.notices.forEach(ntc => {
+            if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
+              const tstamps = ntc.where.timestamp || []
+              tstamps.forEach(tstamp => {
+                // compare each timestamp to latest
+                const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
+                const date = timestampToDate(timestamp)
+                if (date.getTime() > latestDate.getTime()) {
+                  latestDate = date
+                  latestTimestamp = timestamp
+                }
+              })
+            }
+          })
+          // save wayback url
+          const waybackUrl = 'https://web.archive.org/web/' + latestTimestamp + '/' + url
+          saveTabData(atab, { 'contextUrl': waybackUrl })
           addToolbarState(atab, 'F')
         }
       },
@@ -817,7 +860,6 @@ function factCheckPage(atab, url) {
     )
   }
 }
-*/
 
 /* * * Wayback Count * * */
 
@@ -1018,7 +1060,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
           let options = { 'capture_all': 1 }
-          savePageNow(atab, page_url, false, options)
+          savePageNowChecked(atab, page_url, false, options)
           return true
         }
         let open_url = wayback_url + page_url
