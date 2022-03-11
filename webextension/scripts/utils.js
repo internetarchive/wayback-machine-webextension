@@ -102,6 +102,16 @@ const isSafari = (gBrowser === 'safari')
 const hostURL = hostURLs[gBrowser] || hostURLs['chrome']
 const feedbackURL = feedbackURLs[gBrowser] || '#'
 
+let gVersion = ''
+function getManifestVersion() {
+  let ver = ''
+  const manifest = chrome.runtime.getManifest()
+  if (manifest) {
+    ver = manifest.version
+  }
+  return ver
+}
+
 let gCustomUserAgent = ''
 function getCustomUserAgent() {
   let uAgent = ''
@@ -118,6 +128,7 @@ let hostHeaders = new Headers({
 
 // will not run during mocha testing
 if (typeof isInTestEnv === 'undefined') {
+  gVersion = getManifestVersion()
   gCustomUserAgent = getCustomUserAgent()
   // Chrome ignores this being set. Works in Firefox & Safari.
   hostHeaders.set('User-Agent', navigator.userAgent + ' ' + gCustomUserAgent)
@@ -191,7 +202,14 @@ function readTabData(atab, callback) {
   })
 }
 
-/* * * Wayback functions * * */
+/* * * Toolbar icon functions * * */
+
+/**
+ * Return true if version has 4 numbers, which means it's a development build not for release.
+ */
+function isDevVersion() {
+  return (gVersion && (gVersion.split('.').length === 4))
+}
 
 /**
  * Return true if toolbar badge position is along top of icon, false or undefined if along bottom.
@@ -201,6 +219,8 @@ function isBadgeOnTop() {
   const badgeOnTop = { firefox: true, safari: true, chrome: false, edge: false }
   return badgeOnTop[gBrowser]
 }
+
+/* * * Wayback functions * * */
 
 /**
  * Convert given int to a string with metric suffix, separators localized.
@@ -272,11 +292,10 @@ function getWaybackCount(url, onSuccess, onFail) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   const requestUrl = hostURL + 'wayback/available'
-  const requestParams = 'url=' + fixedEncodeURIComponent(url)
-  fetch(requestUrl, {
-    method: 'POST',
-    headers: hostHeaders,
-    body: requestParams
+  const requestParams = '?url=' + fixedEncodeURIComponent(url)
+  fetch(requestUrl + requestParams, {
+    method: 'GET',
+    headers: hostHeaders
   })
   .then(response => response.json())
   .then((json) => {
@@ -404,20 +423,18 @@ function getCleanUrl(url) {
 
 /**
  * Extracts the latest saved Wayback URL from wmAvailabilityCheck() response.
- * @param response {object}
+ * @param json {object}
  * @return {string or null}
  */
-function getWaybackUrlFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
+function getWaybackUrlFromResponse(json) {
+  if (json && json.archived_snapshots &&
+    json.archived_snapshots.closest &&
+    json.archived_snapshots.closest.available &&
+    json.archived_snapshots.closest.available === true &&
+    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
+    isValidUrl(json.archived_snapshots.closest.url)) {
     // not sure why we're replacing http: with https: here
-    return response.results[0].archived_snapshots.closest.url.replace(/^http:/, 'https:')
+    return json.archived_snapshots.closest.url.replace(/^http:/, 'https:')
   } else {
     return null
   }
@@ -425,19 +442,17 @@ function getWaybackUrlFromResponse(response) {
 
 /**
  * Extracts latest saved timestamp from wmAvailabilityCheck() response.
- * @param response {object}
+ * @param json {object}
  * @return {string or null} as "yyyyMMddHHmmss"
  */
-function getWaybackTimestampFromResponse(response) {
-  if (response.results &&
-    response.results[0] &&
-    response.results[0].archived_snapshots &&
-    response.results[0].archived_snapshots.closest &&
-    response.results[0].archived_snapshots.closest.available &&
-    response.results[0].archived_snapshots.closest.available === true &&
-    response.results[0].archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.timestamp
+function getWaybackTimestampFromResponse(json) {
+  if (json && json.archived_snapshots &&
+    json.archived_snapshots.closest &&
+    json.archived_snapshots.closest.available &&
+    json.archived_snapshots.closest.available === true &&
+    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
+    isValidUrl(json.archived_snapshots.closest.url)) {
+    return json.archived_snapshots.closest.timestamp
   } else {
     return null
   }
@@ -725,6 +740,7 @@ if (typeof module !== 'undefined') {
     getWaybackCount,
     badgeCountText,
     isBadgeOnTop,
+    isDevVersion,
     isChrome,
     isFirefox,
     isEdge,

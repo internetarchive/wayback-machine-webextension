@@ -7,6 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
+/*   global isDevVersion */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -62,9 +63,10 @@ function savePageNow(atab, pageUrl, silent = false, options = {}) {
     // setup api
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
+    const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-      fetch(hostURL + 'save/', {
+      fetch(hostURL + 'save/' + queryParams, {
         credentials: 'include',
         method: 'POST',
         body: postData,
@@ -408,7 +410,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 //
 chrome.webRequest.onErrorOccurred.addListener((details) => {
   if ((['net::ERR_ABORTED', 'net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
-    'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0)) {
+    'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0) && (details.parentFrameId < 1)) {
+    // note: testing parentFrameId prevents false positives
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
@@ -672,7 +675,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     // checking resources
     const clean_url = getCleanUrl(tab.url)
     if (isValidUrl(clean_url) === false) { return }
-    chrome.storage.local.get(['wiki_setting', 'tvnews_setting'], (settings) => {
+    chrome.storage.local.get(['wiki_setting'], (settings) => {
       // checking wikipedia books & papers
       if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
@@ -685,17 +688,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           }, () => {}
         )
       }
-      // checking tv news
-      const news_host = new URL(clean_url).hostname
-      if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
-        getCachedTvNews(clean_url,
-          (clips) => {
-            if (clips && (clips.status !== 'error')) {
-              addToolbarState(tab, 'R')
-            }
-          }, () => {}
-        )
-      }
     })
   } else if (info.status === 'loading') {
     let received_url = tab.url
@@ -704,7 +696,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       received_url = received_url.replace(/^https?:\/\//, '')
       let open_url = received_url
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
-      chrome.storage.local.get(['amazon_setting'], (settings) => {
+      chrome.storage.local.get(['amazon_setting', 'tvnews_setting'], (settings) => {
         // checking amazon books settings
         if (settings && settings.amazon_setting) {
           const url = getCleanUrl(tab.url)
@@ -725,6 +717,18 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
               }
             })
           }
+        }
+        // checking tv news
+        const clean_url = getCleanUrl(tab.url)
+        const news_host = new URL(clean_url).hostname
+        if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
+          getCachedTvNews(clean_url,
+            (clips) => {
+              if (clips && (clips.status !== 'error')) {
+                addToolbarState(tab, 'R')
+              }
+            }, () => {}
+          )
         }
       })
     }
@@ -886,11 +890,12 @@ function setToolbarIcon(name, tabId = null) {
   const path = 'images/toolbar/toolbar-icon-'
   const n = validToolbarIcons.has(name) ? name : 'archive'
   const b = (checkBadgePos.has(name) && isBadgeOnTop()) ? 'b' : ''
+  const beta = ((n === 'archive') && isDevVersion()) ? '-beta' : ''
   const allPaths = {
-    '16': (path + n + b + '16.png'),
-    '24': (path + n + b + '24.png'),
-    '32': (path + n + b + '32.png'),
-    '64': (path + n + b + '64.png')
+    '16': (path + n + b + beta + '16.png'),
+    '24': (path + n + b + beta + '24.png'),
+    '32': (path + n + b + beta + '32.png'),
+    '64': (path + n + b + beta + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)

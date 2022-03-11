@@ -370,10 +370,8 @@ function about_support() {
   openByWindowSetting('about.html')
 }
 
-function sitemap() {
-  if (activeURL && isValidUrl(activeURL)) {
-    openByWindowSetting('https://web.archive.org/web/sitemap/' + activeURL)
-  }
+function openSitemap() {
+  openWaybackPage('https://web.archive.org/web/sitemap/', activeURL)
 }
 
 function showSettings() {
@@ -792,7 +790,7 @@ $(function() {
   $('#donate-tab-btn').click(open_donations_page)
   $('#settings-tab-btn').click(showSettings)
   $('#feedback-tab-btn').click(open_feedback_page)
-  $('#site-map-btn').click(sitemap)
+  $('#site-map-btn').click(openSitemap)
   $('#search-input').keydown(display_suggestions)
   $('.btn').click(clearFocus)
   $('#annotations-btn').click(showContext)
