@@ -280,7 +280,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
-    headers.set('backend', 'nomad')
+    // headers.set('backend', 'nomad')
     headers.set('Content-Type', 'application/json')
     fetch(url, {
       method: (postData) ? 'POST' : 'GET',
@@ -364,13 +364,10 @@ function getCachedTvNews(url, onSuccess, onFail) {
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
 
-// NOT USED
-/*
 function getCachedFactCheck(url, onSuccess, onFail) {
-  const requestUrl = ''
+  const requestUrl = hostURL + 'services/context/notices?url=' + fixedEncodeURIComponent(url)
   fetchCachedAPI(requestUrl, onSuccess, onFail)
 }
-*/
 
 /* * * Startup related * * */
 
@@ -666,11 +663,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         }
       }
       // fact check
-      /*
       if (settings && settings.fact_check_setting) {
-        factCheckPage(tab, tab.url)
+        factCheck(tab, tab.url)
       }
-      */
     })
     // checking resources
     const clean_url = getCleanUrl(tab.url)
@@ -799,13 +794,43 @@ function autoSave(atab, url, beforeDate) {
   }
 }
 
-/*
-function factCheckPage(atab, url) {
+// Call Context Notices API, parse and store results if success, then set the toolbar state.
+//
+function factCheck(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     // retrieve fact check results
     getCachedFactCheck(url,
       (json) => {
-        if (json && json.results) {
+        // json is an object containing:
+        //   "notices": [ { "notice": "...", "where": { "timestamp": [ "-yyyymmdd123456" ] } } ],
+        //   "status": "success"
+
+        // parse notices from result
+        if (json && ('status' in json) && (json.status === 'success') && ('notices' in json) && json.notices && (json.notices.length > 0)) {
+          // Create a Wayback Machine URL from most recent timestamp, or the latest capture if no timestamp returned.
+          // If multiple notices, pick notice with most recent timestamp.
+
+          let latestTimestamp = '2' // latest capture in Wayback Machine URL
+          let latestDate = new Date(0) // epoch 1/1/1970
+
+          // loop through every timestamp present
+          json.notices.forEach(ntc => {
+            if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
+              const tstamps = ntc.where.timestamp || []
+              tstamps.forEach(tstamp => {
+                // compare each timestamp to latest
+                const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
+                const date = timestampToDate(timestamp)
+                if (date.getTime() > latestDate.getTime()) {
+                  latestDate = date
+                  latestTimestamp = timestamp
+                }
+              })
+            }
+          })
+          // save wayback url
+          const waybackUrl = 'https://web.archive.org/web/' + latestTimestamp + '/' + url
+          saveTabData(atab, { 'contextUrl': waybackUrl })
           addToolbarState(atab, 'F')
         }
       },
@@ -815,7 +840,6 @@ function factCheckPage(atab, url) {
     )
   }
 }
-*/
 
 /* * * Wayback Count * * */
 

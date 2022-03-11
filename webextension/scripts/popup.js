@@ -252,6 +252,7 @@ function useSearchBox() {
   $('#readbook-container').hide()
   $('#tvnews-container').hide()
   $('#wiki-container').hide()
+  $('#fact-check-container').hide()
   clearWaybackCount()
   updateLastSaved()
 }
@@ -539,20 +540,22 @@ function setupWikiButtons() {
   })
 }
 
-// Display purple 'Fact Check' button. (NOT USED)
-/*
+// Display 'Contextual Notices' button.
 function setupFactCheck() {
-  $('#fact-check-btn').click(showContext)
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0] && isNotExcludedUrl(tabs[0].url)) {
+    if (tabs && tabs[0]) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
             checkLastError()
-            let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
-            if (state.has('F')) {
-              // show purple fact-check button
-              $('#fact-check-btn').addClass('btn-purple')
+            const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
+            if (state.has('F') && ('customData' in result) && ('contextUrl' in result.customData)) {
+              // show fact-check button
+              const contextUrl = result.customData.contextUrl
+              $('#fact-check-container').show()
+              $('#fact-check-btn').click(() => {
+                openByWindowSetting(contextUrl)
+              })
             }
           })
         }
@@ -560,7 +563,6 @@ function setupFactCheck() {
     }
   })
 }
-*/
 
 // Common function to show different context
 function showContext(eventObj) {
@@ -770,6 +772,7 @@ $(function() {
   setupNewsClips()
   setupWikiButtons()
   setupReadBook()
+  setupFactCheck()
   setupSearchBox()
   setupSaveButton()
   updateLastSaved()
