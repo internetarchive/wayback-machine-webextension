@@ -117,6 +117,7 @@ function updateLastSaved() {
   })
 }
 
+// Sets up the SPN button click event and Last Saved text.
 function setupSaveAction() {
   if (activeURL) {
     if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
@@ -142,46 +143,63 @@ function setupSaveAction() {
   }
 }
 
+// Called when logged-out.
 function loginError() {
+
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').attr('disabled', true)
   // $('#bulk-save-btn').attr('title', 'Log in to use')
   // $('#bulk-save-btn').off('click')
-  $('.auth-disable').attr('disabled', true)
-  $('.auth-disable-text').css('opacity', '50%')
-  $('#my-archive-btn').off('click')
+
+  // hide SPN options and show login
+  // $('#chk-outlinks-label').css('visibility', 'hidden')
+  // $('#chk-screenshot-label').css('visibility', 'hidden')
+  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginPage)
+
+  // setup login flip button
+  // $('#my-archive-btn').off('click')
   // $('#spn-btn').addClass('flip-inside')
   // $('#spn-back-label').text('Log In to Save Page')
   // $('#spn-front-label').parent().attr('disabled', true)
-  // $('#spn-btn').off('click').on('click', show_login_page)
+  // $('#spn-btn').off('click').on('click', showLoginPage)
+
+  // setup options that open login page
+  $('.auth-disabled').attr('disabled', true)
+  $('.auth-click').off('click').on('click', showLoginPage)
+  // $('.auth-dim').css('opacity', '66%')
+
+  // setup messages
   $('#last-saved-msg').hide()
-  if (activeURL) {
-    if (!isNotExcludedUrl(activeURL)) { setExcluded() }
-  }
-  // hide SPN options and show login
-  $('#chk-outlinks-label').css('visibility', 'hidden')
-  $('#chk-screenshot-label').css('visibility', 'hidden')
-  $('#chk-login-btn').css('visibility', '').off('click').on('click', show_login_page)
+  if (activeURL && !isNotExcludedUrl(activeURL)) { setExcluded() }
 }
 
+// Called when logged-in.
 function loginSuccess() {
-  $('.auth-disable').removeAttr('disabled')
-  $('.auth-disable-text').css('opacity', '100%')
+
+  // reset options that open login page
+  $('#my-archive-btn').click(openMyWebArchivePage)
+  $('.auth-disabled').removeAttr('disabled')
+  $('.auth-click').off('click')
+  // $('.auth-dim').css('opacity', '100%')
+
+  // add tab logout button
   $('.tab-item').css('width', '18%')
   $('#logout-tab-btn').css('display', 'inline-block')
-  $('#spn-front-label').parent().removeAttr('disabled')
-  $('#spn-btn').off('click')
+
+  // reset login flip button
+  // $('#spn-front-label').parent().removeAttr('disabled')
+  // $('#spn-btn').off('click')
   // $('#spn-btn').removeClass('flip-inside')
-  $('#my-archive-btn').click(openMyWebArchivePage)
+
   // uncomment to restore Bulk Save button
   // $('#bulk-save-btn').removeAttr('disabled')
   // $('#bulk-save-btn').attr('title', '')
   // $('#bulk-save-btn').click(bulkSave)
 
   // show SPN options and hide login
-  $('#chk-outlinks-label').css('visibility', '')
-  $('#chk-screenshot-label').css('visibility', '')
-  $('#chk-login-btn').css('visibility', 'hidden')
+  // $('#chk-outlinks-label').css('visibility', '')
+  // $('#chk-screenshot-label').css('visibility', '')
+  // $('#chk-login-btn').css('visibility', 'hidden')
 }
 
 // Open Wayback Machine website for the given pageURL.
@@ -389,9 +407,11 @@ function showSettings() {
   $('#setting-page').show()
 }
 
-function show_login_page() {
+function showLoginPage(e) {
+  e.preventDefault()
   $('#popup-page').hide()
   $('#setting-page').hide()
+  $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
 }
