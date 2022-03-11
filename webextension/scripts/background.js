@@ -428,7 +428,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
 
-  // local functions
+  // display 'V' toolbar icon and banner
   function update(tab, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
@@ -442,19 +442,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
       })
     }
   }
-  function checkWM(details, bannerFlag) {
-    // display 'V' toolbar icon if wayback has a copy
+
+  // check if wayback machine has a copy
+  function checkWM(tab, details, bannerFlag) {
     wmAvailabilityCheck(details.url, (wayback_url, url) => {
-      if (details.tabId >= 0) {
-        // normally go here
-        chrome.tabs.get(details.tabId, (tab) => {
+      if (bannerFlag) {
+        chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
           update(tab, wayback_url, details.statusCode, bannerFlag)
         })
       } else {
-        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          update(tabs[0], wayback_url, details.statusCode, bannerFlag)
-        })
+        update(tab, wayback_url, details.statusCode, bannerFlag)
       }
     })
   }
@@ -463,15 +460,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      // sometimes Firefox returns tabId < 0, which means we can't embed an html banner
-      if (bannerFlag && (details.tabId >= 0)) {
-        // insert script first, then check wayback machine, then show banner
-        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
-          checkWM(details, true)
+      if (details.tabId >= 0) {
+        // normally go here
+        chrome.tabs.get(details.tabId, (tab) => {
+          checkWM(tab, details, bannerFlag)
         })
       } else {
-        // don't insert script, check wayback machine, don't show banner
-        checkWM(details, false)
+        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          checkWM(tabs[0], details, bannerFlag)
+        })
       }
     }
   })
