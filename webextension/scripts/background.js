@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion */
+/*   global isDevVersion, checkAuthentication */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -49,6 +49,16 @@ function URLopener(open_url, url, wmIsAvailable) {
 
 /* * * API Calls * * */
 
+// First checks for login state before calling savePageNow()
+//
+function savePageNowChecked(atab, pageUrl, silent, options) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results)) {
+      savePageNow(atab, pageUrl, silent, options, results.auth_check)
+    }
+  })
+}
+
 /**
  * Calls Save Page Now API.
  * If response OK, calls SPN Status API after a delay.
@@ -57,9 +67,16 @@ function URLopener(open_url, url, wmIsAvailable) {
  * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
-function savePageNow(atab, pageUrl, silent = false, options = {}) {
+function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
   if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
+
+    if (loggedInFlag === false) {
+      // Use anonymous SPN GET method by opening a new tab and skipping status updates within extension.
+      openByWindowSetting('https://web.archive.org/save/' + pageUrl)
+      return
+    }
+
     // setup api
     const postData = new URLSearchParams(options)
     postData.append('url', pageUrl)
@@ -505,7 +522,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let page_url = getCleanUrl(message.page_url)
       let silent = message.silent || false
       let options = (message.options && (message.options !== null)) ? message.options : {}
-      savePageNow(message.atab, page_url, silent, options)
+      savePageNowChecked(message.atab, page_url, silent, options)
     }
   }
   else if (message.message === 'openurl') {
@@ -521,13 +538,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
       () => { sendResponse({ message: 'last_save', timestamp: '' }) }
     )
-    return true
-  } else if (message.message === 'auth_check') {
-    // auth check using cookies
-    chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-      let loggedIn = (result && result.value && (result.value.length > 0)) || false
-      sendResponse({ auth_check: loggedIn })
-    })
     return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
@@ -656,10 +666,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, tab.url, beforeDate)
+            autoSaveChecked(tab, tab.url, beforeDate)
           }
         } else {
-          autoSave(tab, tab.url)
+          autoSaveChecked(tab, tab.url)
         }
       }
       // fact check
@@ -792,6 +802,16 @@ function autoSave(atab, url, beforeDate) {
       }
     })
   }
+}
+
+// Call autoSave() only if logged in.
+//
+function autoSaveChecked(atab, url, beforeDate) {
+  checkAuthentication((results) => {
+    if (results && ('auth_check' in results) && (results.auth_check === true)) {
+      autoSave(atab, url, beforeDate)
+    }
+  })
 }
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
@@ -1040,7 +1060,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         } else if (click.menuItemId === 'save') {
           let atab = tabs[0]
           let options = { 'capture_all': 1 }
-          savePageNow(atab, page_url, false, options)
+          savePageNowChecked(atab, page_url, false, options)
           return true
         }
         let open_url = wayback_url + page_url

@@ -203,7 +203,7 @@ body {
 }
 
 .chk-options span {
-    vertical-align: middle;
+    vertical-align: text-top;
     padding-bottom: 2px;
 }
 
@@ -220,6 +220,11 @@ body {
     border: 1px solid #ddd;
     border-top: none;
     background-color: #ddd;
+}
+
+#chk-login-btn {
+    position: absolute;
+    width: 100%;
 }
 
 .spn-flip {

@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo */
+/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
 
 let searchBoxTimer
 
@@ -113,37 +113,12 @@ function updateLastSaved() {
     } else {
       loginError()
     }
+    setupSaveAction()
   })
 }
 
-function loginError() {
-  // uncomment to restore Bulk Save button
-  // $('#bulk-save-btn').attr('disabled', true)
-  // $('#bulk-save-btn').attr('title', 'Log in to use')
-  // $('#bulk-save-btn').off('click')
-  $('#my-archive-btn').attr('disabled', true).off('click')
-  $('#spn-btn').addClass('flip-inside')
-  $('#spn-back-label').text('Log In to Save Page')
-  $('#spn-front-label').parent().attr('disabled', true)
-  $('#spn-btn').off('click').on('click', show_login_page)
-  $('#last-saved-msg').hide()
-  if (activeURL) {
-    if (!isNotExcludedUrl(activeURL)) { setExcluded() }
-  }
-}
-
-function loginSuccess() {
-  $('.tab-item').css('width', '18%')
-  $('#logout-tab-btn').css('display', 'inline-block')
-  $('#spn-front-label').parent().removeAttr('disabled')
-  $('#spn-btn').off('click')
-  $('#spn-btn').removeClass('flip-inside')
-  $('#my-archive-btn').removeAttr('disabled').click(openMyWebArchivePage)
-  // uncomment to restore Bulk Save button
-  // $('#bulk-save-btn').removeAttr('disabled')
-  // $('#bulk-save-btn').attr('title', '')
-  // $('#bulk-save-btn').click(bulkSave)
-
+// Sets up the SPN button click event and Last Saved text.
+function setupSaveAction() {
   if (activeURL) {
     if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
       $('#spn-btn').on('click', doSaveNow)
@@ -168,12 +143,65 @@ function loginSuccess() {
   }
 }
 
-// Checks if user is logged in by checking if 'logged-in-sig' cookie exists (not by API call).
-// returns callback object: { auth_check: bool }
-function checkAuthentication(callback) {
-  chrome.runtime.sendMessage({
-    message: 'auth_check'
-  }, callback)
+// Called when logged-out.
+function loginError() {
+
+  // uncomment to restore Bulk Save button
+  // $('#bulk-save-btn').attr('disabled', true)
+  // $('#bulk-save-btn').attr('title', 'Log in to use')
+  // $('#bulk-save-btn').off('click')
+
+  // hide SPN options and show login
+  // $('#chk-outlinks-label').css('visibility', 'hidden')
+  // $('#chk-screenshot-label').css('visibility', 'hidden')
+  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginPage)
+
+  // setup login flip button
+  // $('#my-archive-btn').off('click')
+  // $('#spn-btn').addClass('flip-inside')
+  // $('#spn-back-label').text('Log In to Save Page')
+  // $('#spn-front-label').parent().attr('disabled', true)
+  // $('#spn-btn').off('click').on('click', showLoginPage)
+
+  // setup options that open login page
+  // $('.auth-dim').css('opacity', '66%')
+  $('.auth-disabled').attr('disabled', true)
+  $('.auth-click1').off('click').on('click', showLoginFromMain)
+  $('.auth-click2').off('click').on('click', showLoginFromSettings)
+
+  // setup messages
+  $('#last-saved-msg').hide()
+  if (activeURL && !isNotExcludedUrl(activeURL)) { setExcluded() }
+}
+
+// Called when logged-in.
+function loginSuccess() {
+
+  // reset options that open login page
+  // $('.auth-dim').css('opacity', '100%')
+  $('.auth-disabled').removeAttr('disabled')
+  $('.auth-click1').off('click')
+  $('.auth-click2').off('click')
+  $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
+
+  // add tab logout button
+  $('.tab-item').css('width', '18%')
+  $('#logout-tab-btn').css('display', 'inline-block')
+
+  // reset login flip button
+  // $('#spn-front-label').parent().removeAttr('disabled')
+  // $('#spn-btn').off('click')
+  // $('#spn-btn').removeClass('flip-inside')
+
+  // uncomment to restore Bulk Save button
+  // $('#bulk-save-btn').removeAttr('disabled')
+  // $('#bulk-save-btn').attr('title', '')
+  // $('#bulk-save-btn').click(bulkSave)
+
+  // show SPN options and hide login
+  // $('#chk-outlinks-label').css('visibility', '')
+  // $('#chk-screenshot-label').css('visibility', '')
+  // $('#chk-login-btn').css('visibility', 'hidden')
 }
 
 // Open Wayback Machine website for the given pageURL.
@@ -381,11 +409,39 @@ function showSettings() {
   $('#setting-page').show()
 }
 
-function show_login_page() {
+function showLoginPage(e) {
+  e.preventDefault()
   $('#popup-page').hide()
   $('#setting-page').hide()
+  $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
+}
+
+function showLoginFromMain(e) {
+  showLoginPage(e)
+  $('.back-btn').off('click').on('click', goBackToMain)
+}
+
+function showLoginFromSettings(e) {
+  showLoginPage(e)
+  $('.back-btn').off('click').on('click', goBackToSettings)
+}
+
+// Returns to the main view.
+function goBackToMain() {
+  $('#login-page').hide()
+  $('#setting-page').hide()
+  $('#popup-page').show()
+  $('.back-btn').off('click').on('click', goBackToMain)
+}
+
+// Returns to the settings view.
+function goBackToSettings() {
+  $('#login-page').hide()
+  $('#popup-page').hide()
+  $('#setting-page').show()
+  $('.back-btn').off('click').on('click', goBackToMain)
 }
 
 // not used

@@ -4,7 +4,7 @@
 /*   global attachTooltip, openByWindowSetting */
 
 // from 'popup.js'
-/*   global setupWaybackCount */
+/*   global setupWaybackCount, goBackToMain */
 
 // onload
 $(function() {
@@ -14,7 +14,7 @@ $(function() {
   setupPanelSwitch()
   setupHelpDocs()
   $('#exclude-urls-btn').click(showExcludeList)
-  $('.back-btn').click(goBack)
+  $('.back-btn').off('click').on('click', goBackToMain)
 })
 
 function initSettings() {
@@ -143,13 +143,6 @@ function setupSettingsChange() {
 
 function showExcludeList() {
   openByWindowSetting(chrome.runtime.getURL('exclude-list.html'), 'windows')
-}
-
-// Returns to the main view.
-function goBack() {
-  $('#login-page').hide()
-  $('#setting-page').hide()
-  $('#popup-page').show()
 }
 
 // Prepares the top tab bar for switching between setting panels.
