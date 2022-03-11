@@ -203,7 +203,7 @@ body {
 }
 
 .chk-options span {
-    vertical-align: middle;
+    vertical-align: text-top;
     padding-bottom: 2px;
 }
 

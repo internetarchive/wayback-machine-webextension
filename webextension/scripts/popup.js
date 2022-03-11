@@ -165,7 +165,8 @@ function loginError() {
 
   // setup options that open login page
   $('.auth-disabled').attr('disabled', true)
-  $('.auth-click').off('click').on('click', showLoginPage)
+  $('.auth-click1').off('click').on('click', showLoginFromMain)
+  $('.auth-click2').off('click').on('click', showLoginFromSettings)
   // $('.auth-dim').css('opacity', '66%')
 
   // setup messages
@@ -414,6 +415,32 @@ function showLoginPage(e) {
   $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
+}
+
+function showLoginFromMain(e) {
+  showLoginPage(e)
+  $('.back-btn').off('click').on('click', goBackToMain)
+}
+
+function showLoginFromSettings(e) {
+  showLoginPage(e)
+  $('.back-btn').off('click').on('click', goBackToSettings)
+}
+
+// Returns to the main view.
+function goBackToMain() {
+  $('#login-page').hide()
+  $('#setting-page').hide()
+  $('#popup-page').show()
+  $('.back-btn').off('click').on('click', goBackToMain)
+}
+
+// Returns to the settings view.
+function goBackToSettings() {
+  $('#login-page').hide()
+  $('#popup-page').hide()
+  $('#setting-page').show()
+  $('.back-btn').off('click').on('click', goBackToMain)
 }
 
 // not used
