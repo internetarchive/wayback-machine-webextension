@@ -408,7 +408,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 //
 chrome.webRequest.onErrorOccurred.addListener((details) => {
   if ((['net::ERR_ABORTED', 'net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
-       'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0)) {
+    'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0)) {
     chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
       if (settings && settings.not_found_setting && settings.agreement) {
         wmAvailabilityCheck(details.url, (wayback_url, url) => {
@@ -428,7 +428,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
 
-  // local functions
+  // display 'V' toolbar icon and banner
   function update(tab, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
@@ -442,27 +442,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
       })
     }
   }
-  function checkWM(details, bannerFlag) {
-    // display 'V' toolbar icon if wayback has a copy
+
+  // check if wayback machine has a copy
+  function checkWM(tab, details, bannerFlag) {
     wmAvailabilityCheck(details.url, (wayback_url, url) => {
-      if (details.tabId >= 0) {
-        // normally go here
-        chrome.tabs.executeScript(details.tabId, { file: '/scripts/archive.js' }, () => {
-          chrome.tabs.get(details.tabId, (tab) => {
-            update(tab, wayback_url, details.statusCode, bannerFlag)
-          })
+      if (bannerFlag) {
+        chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
+          update(tab, wayback_url, details.statusCode, bannerFlag)
         })
       } else {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-          if(bannerFlag){
-            chrome.tabs.executeScript(tabs[0].id, { file: '/scripts/archive.js' }, () => {
-              update(tabs[0], wayback_url, details.statusCode, bannerFlag)
-            })
-          } else {
-              update(tabs[0], wayback_url, details.statusCode, bannerFlag)
-            }
-        })
+        update(tab, wayback_url, details.statusCode, bannerFlag)
       }
     })
   }
@@ -471,7 +460,17 @@ chrome.webRequest.onCompleted.addListener((details) => {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
       const bannerFlag = settings.embed_popup_setting || false
-      checkWM(details, bannerFlag)
+      if (details.tabId >= 0) {
+        // normally go here
+        chrome.tabs.get(details.tabId, (tab) => {
+          checkWM(tab, details, bannerFlag)
+        })
+      } else {
+        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          checkWM(tabs[0], details, bannerFlag)
+        })
+      }
     }
   })
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
