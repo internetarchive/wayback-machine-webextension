@@ -931,15 +931,15 @@ function updateWaybackCountBadge(atab, url) {
 function setToolbarIcon(name, tabId = null) {
   const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
   const checkBadgePos = new Set(['R', 'F', 'V'])
-  const path = 'images/toolbar/toolbar-icon-'
+  const path = 'images/toolbar/'
   const n = validToolbarIcons.has(name) ? name : 'archive'
-  const b = (checkBadgePos.has(name) && isBadgeOnTop()) ? 'b' : ''
-  const beta = ((n === 'archive') && isDevVersion()) ? '-beta' : ''
+  const ab = checkBadgePos.has(name) ? (isBadgeOnTop() ? 'b' : 'a') : ''
+  const prefix = isDevVersion() ? 'dev-icon-' : 'toolbar-icon-'
   const allPaths = {
-    '16': (path + n + b + beta + '16.png'),
-    '24': (path + n + b + beta + '24.png'),
-    '32': (path + n + b + beta + '32.png'),
-    '64': (path + n + b + beta + '64.png')
+    '16': (path + prefix + n + ab + '16.png'),
+    '24': (path + prefix + n + ab + '24.png'),
+    '32': (path + prefix + n + ab + '32.png'),
+    '64': (path + prefix + n + ab + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
   chrome.browserAction.setIcon(details, checkLastError)
