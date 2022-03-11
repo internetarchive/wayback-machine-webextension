@@ -164,10 +164,10 @@ function loginError() {
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
   // setup options that open login page
+  // $('.auth-dim').css('opacity', '66%')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
-  // $('.auth-dim').css('opacity', '66%')
 
   // setup messages
   $('#last-saved-msg').hide()
@@ -178,10 +178,11 @@ function loginError() {
 function loginSuccess() {
 
   // reset options that open login page
-  $('#my-archive-btn').click(openMyWebArchivePage)
-  $('.auth-disabled').removeAttr('disabled')
-  $('.auth-click').off('click')
   // $('.auth-dim').css('opacity', '100%')
+  $('.auth-disabled').removeAttr('disabled')
+  $('.auth-click1').off('click')
+  $('.auth-click2').off('click')
+  $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
