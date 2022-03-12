@@ -190,14 +190,19 @@ function getTabKey(atab) {
 /**
  * Saves key/value pairs in storage for other files to read for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
- * @param data: Object of key:value pairs to store.
+ * @param data: Object of key:value pairs to store. Appends or writes over existing key:value pairs.
  */
 function saveTabData(atab, data) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
-  let obj = {}
-  obj[key] = data
-  chrome.storage.local.set(obj, () => {})
+  // take exisiting data in storage and overwrite with new data
+  chrome.storage.local.get([key], (result) => {
+    let exdata = result[key] || {}
+    for (let [k, v] of Object.entries(data)) { exdata[k] = v }
+    let obj = {}
+    obj[key] = exdata
+    chrome.storage.local.set(obj, () => {})
+  })
 }
 
 /**
