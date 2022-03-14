@@ -297,7 +297,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
-    // headers.set('backend', 'nomad')
+    headers.set('backend', 'nomad')
     headers.set('Content-Type', 'application/json')
     fetch(url, {
       method: (postData) ? 'POST' : 'GET',

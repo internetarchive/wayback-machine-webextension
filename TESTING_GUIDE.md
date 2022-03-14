@@ -125,7 +125,7 @@ Domain no longer exists:
 <th>Contextual Notices</th>
 <td>
 
-Should display yellow dot, 'Contextual Noticices':
+Should display yellow dot, 'Contextual Notices':
 - https://www.oralhealthgroup.com/features/face-masks-dont-work-revealing-review/
 - https://www.capradio.org/articles/2019/02/12/text-and-analysis-state-of-the-state-2019
 - https://jhunewsletter.com/article/2020/11/a-closer-look-at-u-s-deaths-due-to-covid-19
