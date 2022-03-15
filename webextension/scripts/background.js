@@ -72,8 +72,10 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
   if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
 
     if (loggedInFlag === false) {
-      // Use anonymous SPN GET method by opening a new tab and skipping status updates within extension.
-      openByWindowSetting('https://web.archive.org/save/' + pageUrl)
+      // Use anonymous SPN POST
+      // opens a new tab that submits a POST form to open page with URL prefilled.
+      const redirectUrl = chrome.runtime.getURL('spn-redirect.html') + '?url=' + pageUrl
+      openByWindowSetting(redirectUrl)
       return
     }
 
