@@ -94,13 +94,19 @@ function doSaveNow() {
     if ($('#chk-screenshot').prop('checked') === true) {
       options['capture_screenshot'] = 1
     }
+
     chrome.runtime.sendMessage({
       message: 'saveurl',
       page_url: url,
       options: options,
       atab: activeTab
     }, checkLastError)
-    showSaving()
+
+    // animate SPN button only if logged in
+    checkAuthentication((result) => {
+      checkLastError()
+      if (result && result.auth_check) { showSaving() }
+    })
   }
 }
 
