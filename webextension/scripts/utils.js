@@ -708,6 +708,7 @@ function initDefaultOptions () {
     /* General */
     resource_list_setting: false,
     email_outlinks_setting: false,
+    my_archive_setting: false,
     view_setting: 'tab',
     show_settings_tab_tip: true
   })
