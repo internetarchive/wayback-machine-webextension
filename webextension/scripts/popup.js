@@ -127,7 +127,6 @@ function updateLastSaved() {
 function setupSaveAction() {
   if (activeURL) {
     if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
-      $('#spn-btn').on('click', doSaveNow)
       chrome.storage.local.get(['private_mode_setting'], (settings) => {
         // auto save page
         if (settings && (settings.private_mode_setting === false)) {
@@ -851,6 +850,7 @@ $(function() {
   setupViewSetting()
   setupSettingsTabTip()
   $('.logo-wayback-machine').click(homepage)
+  $('#spn-btn').on('click', doSaveNow)
   $('#newest-btn').click(openNewestPage)
   $('#oldest-btn').click(openOldestPage)
   $('#overview-btn').click(openOverviewPage)
