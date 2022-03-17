@@ -10,18 +10,16 @@
     <title>Welcome to the Internet Archive's Wayback Machine Extension!</title>
   </head>
   <body>
-    <div id="container">
-      <div id="header">
+    <div class="body-container">
+      <div class="header-container">
         <img src="images/wayback-light.png" style="height:150px">
-        <h1 style="margin-top: 0.5em">
+        <h1>
           Welcome to the Internet Archive's<br>
           Wayback Machine Browser Extension
         </h1>
       </div>
-      <div id="content" style="margin-top: 2em">
-        <style>
-          h4 { margin-top: 1em; font-size: 14pt; }
-        </style>
+
+      <div class="content-container">
         <h3>
           The Internet Archive Wayback Machine Browser Extension Privacy Policy
         </h3>
@@ -67,15 +65,17 @@
         <p>
           We retain collected URLs for as long as they provide value to our mission.
         </p>
-        <p style="margin-top: 2em">
-          <button type="submit" name="accept-terms" id="accept-btn" class="btn btn-auto btn-blue">
-            <span>Accept and Enable</span>
-          </button>
-          <button type="submit" name="decline-terms" id="decline-btn" class="btn btn-auto btn-dark-gray">
-            <span>Cancel</span>
-          </button>
-        </p>
       </div>
+
+      <div class="bottom-container">
+        <button type="submit" name="accept-terms" id="accept-btn" class="btn btn-auto btn-blue">
+          <span>Accept and Enable</span>
+        </button>
+        <button type="submit" name="decline-terms" id="decline-btn" class="btn btn-auto btn-dark-gray">
+          <span>Cancel</span>
+        </button>
+      </div>
+
     </div>
 
     <script src="libs/jquery.js"></script>
