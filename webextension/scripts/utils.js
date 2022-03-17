@@ -714,19 +714,13 @@ function initDefaultOptions () {
   })
 }
 
-// Turn on these Settings after accepting terms.
-function afterAcceptOptions () {
+// Turn on these Settings and toolbar popup after accepting terms.
+function afterAcceptTerms () {
   chrome.storage.local.set({
-    /* Features */
-    not_found_setting: true,
-    wm_count_setting: false,
-    wiki_setting: false,
-    amazon_setting: false,
-    tvnews_setting: false,
-    fact_check_setting: false,
-    /* General */
-    email_outlinks_setting: false
+    agreement: true,
+    not_found_setting: true
   })
+  chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
 }
 
 if (typeof module !== 'undefined') {
@@ -772,7 +766,7 @@ if (typeof module !== 'undefined') {
     viewableTimestamp,
     initAutoExcludeList,
     initDefaultOptions,
-    afterAcceptOptions,
+    afterAcceptTerms,
     feedbackURL,
     newshosts,
     fixedEncodeURIComponent,

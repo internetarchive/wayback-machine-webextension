@@ -5,7 +5,7 @@
 
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
-/*   global initDefaultOptions, afterAcceptOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
+/*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication */
 
@@ -390,30 +390,33 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 
 /* * * Startup related * * */
 
+// Setup toolbar button action.
+chrome.storage.local.get({ agreement: false }, (settings) => {
+  if (settings && settings.agreement) {
+    chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  }
+})
+
 // Runs whenever extension starts up, except during incognito mode.
 chrome.runtime.onStartup.addListener((details) => {
-  chrome.storage.local.get({ agreement: false }, (settings) => {
-    if (settings && settings.agreement) {
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-    }
-  })
+
 })
 
 // Runs when extension first installed or updated, or browser updated.
 chrome.runtime.onInstalled.addListener((details) => {
-  initDefaultOptions()
-  initAutoExcludeList()
-  chrome.storage.local.get({ agreement: false }, (settings) => {
-    if (settings && settings.agreement) {
-      afterAcceptOptions()
-      chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-    }
-  })
+  if (details.reason === 'install') {
+    initDefaultOptions()
+    initAutoExcludeList()
+  }
 })
 
-// Opens Welcome page if popup not yet set.
+// Opens Welcome page on toolbar click if terms not yet accepted.
 chrome.browserAction.onClicked.addListener((tab) => {
-  openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
+  chrome.storage.local.get({ agreement: false }, (settings) => {
+    if (settings && (settings.agreement === false)) {
+      openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
+    }
+  })
 })
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
