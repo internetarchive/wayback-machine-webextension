@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C306856727E2576C002C1838 /* spn-redirect.html in Resources */ = {isa = PBXBuildFile; fileRef = C306856627E2576C002C1838 /* spn-redirect.html */; };
+		C306856927E258FB002C1838 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = C306856827E258FB002C1838 /* scripts */; };
 		C32EFC91271AA72A006F4A1E /* resource-list.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8C271AA72A006F4A1E /* resource-list.html */; };
 		C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8D271AA72A006F4A1E /* cited-papers.html */; };
 		C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8E271AA72A006F4A1E /* wordcloud.html */; };
@@ -26,7 +28,6 @@
 		C3CBA8EE26E4511300CC9485 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DA26E4511300CC9485 /* index.html */; };
 		C3CBA8F226E4511300CC9485 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DE26E4511300CC9485 /* css */; };
 		C3CBA8F426E4511300CC9485 /* images in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E026E4511300CC9485 /* images */; };
-		C3CBA8F926E4511300CC9485 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E526E4511300CC9485 /* scripts */; };
 		C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E626E4511300CC9485 /* welcome.html */; };
 		C3CBA8FB26E4511300CC9485 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E726E4511300CC9485 /* manifest.json */; };
 		C3CBA8FC26E4511300CC9485 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E826E4511300CC9485 /* fonts */; };
@@ -57,6 +58,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C306856627E2576C002C1838 /* spn-redirect.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "spn-redirect.html"; path = "../../webextension/spn-redirect.html"; sourceTree = "<group>"; };
+		C306856827E258FB002C1838 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../webextension/scripts; sourceTree = "<group>"; };
 		C32EFC8C271AA72A006F4A1E /* resource-list.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "resource-list.html"; path = "../../webextension/resource-list.html"; sourceTree = "<group>"; };
 		C32EFC8D271AA72A006F4A1E /* cited-papers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "cited-papers.html"; path = "../../webextension/cited-papers.html"; sourceTree = "<group>"; };
 		C32EFC8E271AA72A006F4A1E /* wordcloud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = wordcloud.html; path = ../../webextension/wordcloud.html; sourceTree = "<group>"; };
@@ -81,7 +84,6 @@
 		C3CBA8DA26E4511300CC9485 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../webextension/index.html; sourceTree = "<group>"; };
 		C3CBA8DE26E4511300CC9485 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../../webextension/css; sourceTree = "<group>"; };
 		C3CBA8E026E4511300CC9485 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../webextension/images; sourceTree = "<group>"; };
-		C3CBA8E526E4511300CC9485 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../webextension/scripts; sourceTree = "<group>"; };
 		C3CBA8E626E4511300CC9485 /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = welcome.html; path = ../../webextension/welcome.html; sourceTree = "<group>"; };
 		C3CBA8E726E4511300CC9485 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../webextension/manifest.json; sourceTree = "<group>"; };
 		C3CBA8E826E4511300CC9485 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../../webextension/fonts; sourceTree = "<group>"; };
@@ -164,7 +166,7 @@
 				C3CBA8DE26E4511300CC9485 /* css */,
 				C3CBA8E826E4511300CC9485 /* fonts */,
 				C3CBA8E026E4511300CC9485 /* images */,
-				C3CBA8E526E4511300CC9485 /* scripts */,
+				C306856827E258FB002C1838 /* scripts */,
 				C3B3C0EF271AA7E800BD70DF /* about.html */,
 				C3CBA8D726E4511300CC9485 /* annotations.html */,
 				C32EFC8F271AA72A006F4A1E /* cited-books.html */,
@@ -172,6 +174,7 @@
 				C3BDC358279946F9003A1E18 /* exclude-list.html */,
 				C3CBA8DA26E4511300CC9485 /* index.html */,
 				C32EFC8C271AA72A006F4A1E /* resource-list.html */,
+				C306856627E2576C002C1838 /* spn-redirect.html */,
 				C32EFC90271AA72A006F4A1E /* tvnews.html */,
 				C3CBA8E626E4511300CC9485 /* welcome.html */,
 				C32EFC8E271AA72A006F4A1E /* wordcloud.html */,
@@ -273,9 +276,10 @@
 				C3CBA8F426E4511300CC9485 /* images in Resources */,
 				C32EFC94271AA72A006F4A1E /* cited-books.html in Resources */,
 				C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */,
+				C306856927E258FB002C1838 /* scripts in Resources */,
+				C306856727E2576C002C1838 /* spn-redirect.html in Resources */,
 				C3B3C0F0271AA7E800BD70DF /* about.html in Resources */,
 				C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */,
-				C3CBA8F926E4511300CC9485 /* scripts in Resources */,
 				C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */,
 				C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */,
 				C3CBA8EE26E4511300CC9485 /* index.html in Resources */,
