@@ -45,3 +45,12 @@ p {
     background-color: #ddd;
     border-top: 1px solid #888;
 }
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+
+    body, div.bottom-container {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+}
