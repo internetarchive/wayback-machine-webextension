@@ -1037,31 +1037,6 @@ function updateToolbar(atab) {
 /* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
-chrome.contextMenus.create({
-  'id': 'first',
-  'title': 'Oldest Version',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'recent',
-  'title': 'Newest Version',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'all',
-  'title': 'All Versions',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'save',
-  'title': 'Save Page Now',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
