@@ -684,10 +684,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSaveChecked(tab, tab.url, beforeDate)
+            autoSave(tab, tab.url, beforeDate)
           }
         } else {
-          autoSaveChecked(tab, tab.url)
+          autoSave(tab, tab.url)
         }
       }
       // fact check
@@ -808,13 +808,13 @@ function autoSave(atab, url, beforeDate) {
             if (beforeDate) {
               const checkDate = timestampToDate(timestamp)
               if (checkDate.getTime() < beforeDate.getTime()) {
-                savePageNow(atab, url, true)
+                savePageNowChecked(atab, url, true)
               }
             }
           },
           () => {
             // set auto-save toolbar icon if page doesn't exist, then save it
-            savePageNow(atab, url, true)
+            savePageNowChecked(atab, url, true)
           }
         )
       }
