@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication */
+/*   global isDevVersion, checkAuthentication, showContextOptions */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -421,6 +421,11 @@ chrome.runtime.onInstalled.addListener((details) => {
     initDefaultOptions()
     initAutoExcludeList()
   }
+  chrome.storage.local.get(['agreement'], (settings) => {
+    if (settings.agreement === true) {
+      showContextOptions()
+    }
+  })
 })
 
 // Opens Welcome page on toolbar click if terms not yet accepted.
