@@ -112,6 +112,51 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       .then(resolve, reject)
     })
 
+  // call api
+  timeoutPromise
+    .then(response => (loggedInFlag ? response.json() : response.text()))
+    .then(async (data) => {
+      // get response info
+      const errMsg = (loggedInFlag && ('message' in data)) ? data.message : 'Please Try Again'
+      const jobId = loggedInFlag ? data.job_id : extractJobIdFromHTML(data)
+      // notifications depending on status
+      if (jobId) {
+        if (errMsg.indexOf('same snapshot') !== -1) {
+          // snapshot already archived within timeframe
+          chrome.runtime.sendMessage({ message: 'save_archived', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
+          if (!silent) { notify(errMsg) }
+        } else {
+          // update UI
+          addToolbarState(atab, 'S')
+          chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
+          // show resources during save
+          if (!silent) {
+            notify('Saving ' + pageUrl)
+            chrome.storage.local.get(['resource_list_setting'], (settings) => {
+              if (settings && settings.resource_list_setting) {
+                const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + jobId + '#not_refreshed'
+                openByWindowSetting(resource_list_url, 'windows')
+              }
+            })
+          }
+          // call status after SPN response
+          await sleep(SPN_RETRY)
+          savePageStatus(atab, pageUrl, silent, jobId)
+        }
+      } else {
+        // missing jobId error
+        chrome.runtime.sendMessage({ message: 'save_error', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
+        if (!silent) { notify('Error: ' + errMsg) }
+      }
+    })
+    .catch((err) => {
+      // http error
+      console.log(err)
+      chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
+    })
+
+
+/* TO REMOVE
   if (loggedInFlag) {
     // call api while logged in
     timeoutPromise
@@ -162,7 +207,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       .then(async (html) => {
         // parse the HTML text for the job id
         // match the spn id pattern
-        const jobRegex =  /spn2\-[a-z0-9\-]*/g
+        const jobRegex =
         const jobIds = html.match(jobRegex)
         console.log('job id patterns: ', jobIds) // DEBUG
 
@@ -186,7 +231,17 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
         chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
       })
   }
+*/
 
+}
+
+// Parse HTML text and return job id string. Returns null if not found.
+//
+function extractJobIdFromHTML(html) {
+  // match the spn id pattern
+  const jobRegex =  /spn2\-[a-z0-9\-]*/g
+  const jobIds = html.match(jobRegex)
+  return (jobIds && (jobIds.length > 0) ? jobIds[0] : null
 }
 
 /**
