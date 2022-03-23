@@ -69,72 +69,83 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  */
 function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
-  if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
-
-    if (loggedInFlag === false) {
-      // Use anonymous SPN POST
-      // opens a new tab that submits a POST form to open page with URL prefilled.
-      const redirectUrl = chrome.runtime.getURL('spn-redirect.html') + '?url=' + pageUrl
-      openByWindowSetting(redirectUrl)
-      return
-    }
-
-    // setup api
-    const postData = new URLSearchParams(options)
-    postData.append('url', pageUrl)
-    const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
-    const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-      fetch(hostURL + 'save/' + queryParams, {
-        credentials: 'include',
-        method: 'POST',
-        body: postData,
-        headers: hostHeaders
-      })
-      .then(resolve, reject)
-    })
-
-    // call api
-    timeoutPromise
-      .then(response => response.json())
-      .then(async (res) => {
-        // notifications depending on status
-        let msg = res.message || 'Please Try Again'
-        if (('job_id' in res) && (res.job_id !== null)) {
-          if (msg.indexOf('same snapshot') !== -1) {
-            // snapshot already archived within timeframe
-            chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: pageUrl, atab: atab }, checkLastError)
-            if (!silent) { notify(msg) }
-          } else {
-            // update UI
-            addToolbarState(atab, 'S')
-            chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
-            // show resources during save
-            if (!silent) {
-              notify('Saving ' + pageUrl)
-              chrome.storage.local.get(['resource_list_setting'], (settings) => {
-                if (settings && settings.resource_list_setting) {
-                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + res.job_id + '#not_refreshed'
-                  openByWindowSetting(resource_list_url, 'windows')
-                }
-              })
-            }
-            // call status after SPN response
-            await sleep(SPN_RETRY)
-            savePageStatus(atab, pageUrl, silent, res.job_id)
-          }
-        } else {
-          // handle error
-          chrome.runtime.sendMessage({ message: 'save_error', error: msg, url: pageUrl, atab: atab }, checkLastError)
-          if (!silent) { notify('Error: ' + msg) }
-        }
-      })
-      .catch((err) => {
-        // handle http errors
-        console.log(err)
-        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
-      })
+  if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
+    console.log('savePageNow URL excluded')
+    return
   }
+
+  // setup api
+  const postData = new URLSearchParams(options)
+  postData.set('url', pageUrl)
+  // const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl) // log URL only
+  const queryParams = '?' + postData.toString() // log URL + all options
+  let headers = new Headers(hostHeaders)
+  headers.set('Content-Type', 'application/x-www-form-urlencoded')
+  if (!loggedInFlag) {
+    headers.set('Accept', 'text/html,application/xhtml+xml,application/xml') // required when logged-out
+  } // else Accept: application/json
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
+    fetch(hostURL + 'save/' + queryParams, {
+      credentials: 'include',
+      method: 'POST',
+      body: postData,
+      headers: headers
+    })
+    .then(resolve, reject)
+  })
+
+  // call api
+  timeoutPromise
+    .then(response => (loggedInFlag ? response.json() : response.text()))
+    .then(async (data) => {
+      // get response info
+      const errMsg = (loggedInFlag && ('message' in data)) ? data.message : 'Please Try Again'
+      const jobId = loggedInFlag ? data.job_id : extractJobIdFromHTML(data)
+      // notifications depending on status
+      if (jobId) {
+        if (errMsg.indexOf('same snapshot') !== -1) {
+          // snapshot already archived within timeframe
+          chrome.runtime.sendMessage({ message: 'save_archived', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
+          if (!silent) { notify(errMsg) }
+        } else {
+          // update UI
+          addToolbarState(atab, 'S')
+          chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
+          // show resources during save
+          if (!silent) {
+            notify('Saving ' + pageUrl)
+            chrome.storage.local.get(['resource_list_setting'], (settings) => {
+              if (settings && settings.resource_list_setting) {
+                const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + jobId + '#not_refreshed'
+                openByWindowSetting(resource_list_url, 'windows')
+              }
+            })
+          }
+          // call status after SPN response
+          await sleep(SPN_RETRY)
+          savePageStatus(atab, pageUrl, silent, jobId)
+        }
+      } else {
+        // missing jobId error
+        chrome.runtime.sendMessage({ message: 'save_error', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
+        if (!silent) { notify('Error: ' + errMsg) }
+      }
+    })
+    .catch((err) => {
+      // http error
+      console.log(err)
+      chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
+    })
+}
+
+// Parse HTML text and return job id string. Returns null if not found.
+//
+function extractJobIdFromHTML(html) {
+  // match the spn id pattern
+  const jobRegex = /spn2-[a-z0-9-]*/g
+  const jobIds = html.match(jobRegex)
+  return (jobIds && (jobIds.length > 0)) ? jobIds[0] : null
 }
 
 /**
@@ -148,14 +159,16 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
 function savePageStatus(atab, pageUrl, silent = false, jobId) {
 
   // setup api
-  const postData = new URLSearchParams({ 'job_id': jobId })
+  // Accept header required when logged-out, even though response is in JSON.
+  let headers = new Headers(hostHeaders)
+  headers.set('Accept', 'text/html,application/xhtml+xml,application/xml')
+
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-    fetch(hostURL + 'save/status', {
+    fetch(hostURL + 'save/status/' + jobId, {
       credentials: 'include',
-      method: 'POST',
-      body: postData,
-      headers: hostHeaders
+      method: 'GET',
+      headers: headers
     })
     .then(resolve, reject)
   })
@@ -169,16 +182,16 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
       if (!Number.isNaN(retryValue)) { retryAfter = retryValue * 1000 }
       return response.json()
     })
-    .then(async (data) => {
-      const status = data.status || 'error'
-      chrome.runtime.sendMessage({ message: 'resource_list_show', data: data, url: pageUrl }, checkLastError)
+    .then(async (json) => {
+      const status = json.status || 'error'
+      chrome.runtime.sendMessage({ message: 'resource_list_show', data: json, url: pageUrl }, checkLastError)
       if (status === 'success') {
-        statusSuccess(atab, pageUrl, silent, data)
+        statusSuccess(atab, pageUrl, silent, json)
       } else if (status === 'pending') {
         await sleep(retryAfter)
         savePageStatus(atab, pageUrl, silent, jobId)
       } else {
-        statusFailed(atab, pageUrl, silent, data)
+        statusFailed(atab, pageUrl, silent, json)
       }
     })
     .catch((err) => {
@@ -671,10 +684,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSaveChecked(tab, tab.url, beforeDate)
+            autoSave(tab, tab.url, beforeDate)
           }
         } else {
-          autoSaveChecked(tab, tab.url)
+          autoSave(tab, tab.url)
         }
       }
       // fact check
@@ -795,13 +808,13 @@ function autoSave(atab, url, beforeDate) {
             if (beforeDate) {
               const checkDate = timestampToDate(timestamp)
               if (checkDate.getTime() < beforeDate.getTime()) {
-                savePageNow(atab, url, true)
+                savePageNowChecked(atab, url, true)
               }
             }
           },
           () => {
             // set auto-save toolbar icon if page doesn't exist, then save it
-            savePageNow(atab, url, true)
+            savePageNowChecked(atab, url, true)
           }
         )
       }
