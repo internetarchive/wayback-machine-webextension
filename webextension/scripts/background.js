@@ -69,8 +69,12 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  */
 function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
-  if (isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl)) {
+  if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
+    console.log('savePageNow URL excluded')
+    return
+  }
 
+  /* TO REMOVE
     if (loggedInFlag === false) {
       // Use anonymous SPN POST
       // opens a new tab that submits a POST form to open page with URL prefilled.
@@ -78,29 +82,44 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       openByWindowSetting(redirectUrl)
       return
     }
+  */
 
     // setup api
     const postData = new URLSearchParams(options)
-    postData.append('url', pageUrl)
-    const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl)
+    postData.set('url', pageUrl)
+
+    // REMOVE
+    // const queryParams = loggedInFlag ? ('?url=' + fixedEncodeURIComponent(pageUrl)) : pageUrl // ?
+    // const queryParams = loggedInFlag ? '?' + postData.toString() : pageUrl // WORKS
+    // const queryParams = pageUrl // DOESN'T WORK (when logged in and accept header is 'application/json', returns HTML 404)
+
+    // const queryParams = '?url=' + fixedEncodeURIComponent(pageUrl) // log URL only
+    const queryParams = '?' + postData.toString() // log URL + all options
+
+    let headers = new Headers(hostHeaders)
+    headers.set('Content-Type', 'application/x-www-form-urlencoded')
+    if (!loggedInFlag) {
+      headers.set('Accept', 'text/html,application/xhtml+xml,application/xml') // required when logged-out
+    } // else Accept: application/json
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
       fetch(hostURL + 'save/' + queryParams, {
         credentials: 'include',
         method: 'POST',
         body: postData,
-        headers: hostHeaders
+        headers: headers
       })
       .then(resolve, reject)
     })
 
-    // call api
+  if (loggedInFlag) {
+    // call api while logged in
     timeoutPromise
       .then(response => response.json())
-      .then(async (res) => {
+      .then(async (json) => {
         // notifications depending on status
-        let msg = res.message || 'Please Try Again'
-        if (('job_id' in res) && (res.job_id !== null)) {
+        let msg = json.message || 'Please Try Again'
+        if (('job_id' in json) && (json.job_id !== null)) {
           if (msg.indexOf('same snapshot') !== -1) {
             // snapshot already archived within timeframe
             chrome.runtime.sendMessage({ message: 'save_archived', error: msg, url: pageUrl, atab: atab }, checkLastError)
@@ -114,14 +133,14 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
               notify('Saving ' + pageUrl)
               chrome.storage.local.get(['resource_list_setting'], (settings) => {
                 if (settings && settings.resource_list_setting) {
-                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + res.job_id + '#not_refreshed'
+                  const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + json.job_id + '#not_refreshed'
                   openByWindowSetting(resource_list_url, 'windows')
                 }
               })
             }
             // call status after SPN response
             await sleep(SPN_RETRY)
-            savePageStatus(atab, pageUrl, silent, res.job_id)
+            savePageStatus(atab, pageUrl, silent, json.job_id)
           }
         } else {
           // handle error
@@ -134,7 +153,40 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
         console.log(err)
         chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
       })
+
+  } else {
+    // call api while logged out
+    // TODO: refactor + combine this code with prior code
+    timeoutPromise
+      .then(response => response.text())
+      .then(async (html) => {
+        // parse the HTML text for the job id
+        // match the spn id pattern
+        const jobRegex =  /spn2\-[a-z0-9\-]*/g
+        const jobIds = html.match(jobRegex)
+        console.log('job id patterns: ', jobIds) // DEBUG
+
+        if (jobIds && (jobIds.length > 0)) {
+          // TODO: no way to check for errors?
+
+          // update UI
+          addToolbarState(atab, 'S')
+          chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
+
+          // TODO: notify & resource list
+
+          // call status after SPN response
+          await sleep(SPN_RETRY)
+          savePageStatus(atab, pageUrl, silent, jobIds[0])
+        }
+      })
+      .catch((err) => {
+        // handle http errors
+        console.log(err)
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
+      })
   }
+
 }
 
 /**
@@ -149,13 +201,17 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
 
   // setup api
   const postData = new URLSearchParams({ 'job_id': jobId })
+
+  // Accept header required when logged-out, even though response is in JSON.
+  let headers = new Headers(hostHeaders)
+  headers.set('Accept', 'text/html,application/xhtml+xml,application/xml')
+
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-    fetch(hostURL + 'save/status', {
+    fetch(hostURL + 'save/status/' + jobId, {
       credentials: 'include',
-      method: 'POST',
-      body: postData,
-      headers: hostHeaders
+      method: 'GET',
+      headers: headers
     })
     .then(resolve, reject)
   })
@@ -169,16 +225,16 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
       if (!Number.isNaN(retryValue)) { retryAfter = retryValue * 1000 }
       return response.json()
     })
-    .then(async (data) => {
-      const status = data.status || 'error'
-      chrome.runtime.sendMessage({ message: 'resource_list_show', data: data, url: pageUrl }, checkLastError)
+    .then(async (json) => {
+      const status = json.status || 'error'
+      chrome.runtime.sendMessage({ message: 'resource_list_show', data: json, url: pageUrl }, checkLastError)
       if (status === 'success') {
-        statusSuccess(atab, pageUrl, silent, data)
+        statusSuccess(atab, pageUrl, silent, json)
       } else if (status === 'pending') {
         await sleep(retryAfter)
         savePageStatus(atab, pageUrl, silent, jobId)
       } else {
-        statusFailed(atab, pageUrl, silent, data)
+        statusFailed(atab, pageUrl, silent, json)
       }
     })
     .catch((err) => {
