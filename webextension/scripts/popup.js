@@ -83,7 +83,7 @@ function setupSettingsTabTip() {
 
 function doSaveNow() {
   const url = getCleanUrl(activeURL)
-  if (url) {
+  if (isValidUrl(url)) {
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
@@ -279,6 +279,7 @@ function searchTweet() {
 function useSearchBox() {
   chrome.runtime.sendMessage({ message: 'clearCountBadge' })
   chrome.runtime.sendMessage({ message: 'clearResource' })
+  $('#spn-btn').removeClass('flip-inside')
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
   $('#using-search-msg').show()
