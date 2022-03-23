@@ -158,9 +158,9 @@ function loginError() {
   // $('#bulk-save-btn').off('click')
 
   // hide SPN options and show login
-  // $('#chk-outlinks-label').css('visibility', 'hidden')
-  // $('#chk-screenshot-label').css('visibility', 'hidden')
-  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginPage)
+  $('#chk-outlinks-label').css('visibility', 'hidden')
+  $('#chk-screenshot-label').css('visibility', 'hidden')
+  $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginFromMain)
 
   // setup login flip button
   // $('#my-archive-btn').off('click')
@@ -205,9 +205,9 @@ function loginSuccess() {
   // $('#bulk-save-btn').click(bulkSave)
 
   // show SPN options and hide login
-  // $('#chk-outlinks-label').css('visibility', '')
-  // $('#chk-screenshot-label').css('visibility', '')
-  // $('#chk-login-btn').css('visibility', 'hidden')
+  $('#chk-outlinks-label').css('visibility', '')
+  $('#chk-screenshot-label').css('visibility', '')
+  $('#chk-login-btn').css('visibility', 'hidden')
 }
 
 // Open Wayback Machine website for the given pageURL.
@@ -427,19 +427,20 @@ function showLoginPage(e) {
   e.preventDefault()
   $('#popup-page').hide()
   $('#setting-page').hide()
-  $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
 }
 
 function showLoginFromMain(e) {
-  showLoginPage(e)
+  $('#login-label').html('Log in to the<br> Internet Archive')
   $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
 }
 
 function showLoginFromSettings(e) {
-  showLoginPage(e)
+  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
   $('.back-btn').off('click').on('click', goBackToSettings)
+  showLoginPage(e)
 }
 
 // Returns to the main view.
