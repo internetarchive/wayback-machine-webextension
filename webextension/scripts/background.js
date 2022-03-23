@@ -143,7 +143,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
 //
 function extractJobIdFromHTML(html) {
   // match the spn id pattern
-  const jobRegex =  /spn2\-[a-z0-9\-]*/g
+  const jobRegex = /spn2-[a-z0-9-]*/g
   const jobIds = html.match(jobRegex)
   return (jobIds && (jobIds.length > 0)) ? jobIds[0] : null
 }
