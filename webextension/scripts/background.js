@@ -407,6 +407,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
     chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+    showContextOptions()
   }
 })
 
@@ -421,11 +422,6 @@ chrome.runtime.onInstalled.addListener((details) => {
     initDefaultOptions()
     initAutoExcludeList()
   }
-  chrome.storage.local.get(['agreement'], (settings) => {
-    if (settings.agreement === true) {
-      showContextOptions()
-    }
-  })
 })
 
 // Opens Welcome page on toolbar click if terms not yet accepted.
