@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, showContextOptions */
+/*   global isDevVersion, checkAuthentication, setupContextMenus */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -407,7 +407,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
     chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-    showContextOptions()
+    setupContextMenus()
   }
 })
 

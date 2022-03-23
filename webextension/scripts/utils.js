@@ -687,7 +687,7 @@ function initAutoExcludeList() {
   })
 }
 
-function showContextOptions() {
+function setupContextMenus() {
   chrome.contextMenus.create({
     'id': 'first',
     'title': 'Oldest Version',
@@ -748,7 +748,7 @@ function afterAcceptTerms () {
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-  showContextOptions()
+  setupContextMenus()
 }
 
 if (typeof module !== 'undefined') {
