@@ -687,6 +687,33 @@ function initAutoExcludeList() {
   })
 }
 
+function setupContextMenus() {
+  chrome.contextMenus.create({
+    'id': 'first',
+    'title': 'Oldest Version',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'recent',
+    'title': 'Newest Version',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'all',
+    'title': 'All Versions',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'save',
+    'title': 'Save Page Now',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+}
+
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
   chrome.storage.local.set({
@@ -721,6 +748,7 @@ function afterAcceptTerms () {
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  setupContextMenus()
 }
 
 if (typeof module !== 'undefined') {

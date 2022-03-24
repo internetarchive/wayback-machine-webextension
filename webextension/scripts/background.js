@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication */
+/*   global isDevVersion, checkAuthentication, setupContextMenus */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -407,6 +407,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
     chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+    setupContextMenus()
   }
 })
 
@@ -1037,31 +1038,6 @@ function updateToolbar(atab) {
 /* * * Right-click Menu * * */
 
 // Right-click context menu "Wayback Machine" inside the page.
-chrome.contextMenus.create({
-  'id': 'first',
-  'title': 'Oldest Version',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'recent',
-  'title': 'Newest Version',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'all',
-  'title': 'All Versions',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-chrome.contextMenus.create({
-  'id': 'save',
-  'title': 'Save Page Now',
-  'contexts': ['all'],
-  'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-}, checkLastError)
-
 chrome.contextMenus.onClicked.addListener((click) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
