@@ -715,7 +715,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     })
   } else if (info.status === 'loading') {
     let received_url = tab.url
-    clearToolbarState(tab)
+    clearToolbarState(tab) // TODO: revisit later
     if (isNotExcludedUrl(received_url) && !isArchiveUrl(received_url)) {
       received_url = received_url.replace(/^https?:\/\//, '')
       let open_url = received_url

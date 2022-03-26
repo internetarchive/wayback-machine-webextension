@@ -182,9 +182,17 @@ function checkAuthentication(acallback) {
 
 /* * * Storage functions * * */
 
-// Returns a string key from a Tab windowId and tab id.
+// Returns a string key from a Tab windowId and tab id, and maybe a slice of URL.
 function getTabKey(atab) {
-  return (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
+  const url = atab.url || ''
+  const part1 = (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
+
+  // This is a hack that fixes issue #907 in Safari, but would break in Chrome,
+  // so we have to return different results depending on the browser.
+  // Eventually may need to rethink how toolbar states are stored in background.js.
+  const part2 = (isSafari) ? ('_' + url.slice(-10)) : ''
+
+  return part1 + part2
 }
 
 /**
