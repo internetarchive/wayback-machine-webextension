@@ -470,7 +470,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
     addToolbarState(tab, 'V')
     gStatusCode = statusCode
     saveTabData(tab, { 'statusCode': statusCode, 'statusWaybackUrl': waybackUrl })
-    if (bannerFlag) {
+    if (bannerFlag && ('id' in tab)) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SHOW_BANNER',
         wayback_url: waybackUrl,
@@ -482,7 +482,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
   // check if wayback machine has a copy
   function checkWM(tab, details, bannerFlag) {
     wmAvailabilityCheck(details.url, (wayback_url, url) => {
-      if (bannerFlag) {
+      if (bannerFlag && ('id' in tab)) {
         chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
           update(tab, wayback_url, details.statusCode, bannerFlag)
         })
