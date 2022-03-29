@@ -143,8 +143,9 @@ function setupSaveAction() {
       })
     } else {
       setExcluded()
-      $('#spn-back-label').text('URL not supported')
     }
+  } else {
+    setExcluded()
   }
 }
 
@@ -676,6 +677,7 @@ function setExcluded() {
   $('#spn-btn').addClass('flip-inside')
   $('#last-saved-msg').hide()
   $('#url-not-supported-msg').text('URL not supported')
+  $('#spn-back-label').text('URL not supported')
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.

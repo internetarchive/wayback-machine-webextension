@@ -687,6 +687,33 @@ function initAutoExcludeList() {
   })
 }
 
+function setupContextMenus() {
+  chrome.contextMenus.create({
+    'id': 'first',
+    'title': 'Oldest Version',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'recent',
+    'title': 'Newest Version',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'all',
+    'title': 'All Versions',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'save',
+    'title': 'Save Page Now',
+    'contexts': ['all'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+}
+
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
   chrome.storage.local.set({
@@ -708,24 +735,20 @@ function initDefaultOptions () {
     /* General */
     resource_list_setting: false,
     email_outlinks_setting: false,
+    my_archive_setting: false,
     view_setting: 'tab',
     show_settings_tab_tip: true
   })
 }
 
-// Turn on these Settings after accepting terms.
-function afterAcceptOptions () {
+// Turn on these Settings and toolbar popup after accepting terms.
+function afterAcceptTerms () {
   chrome.storage.local.set({
-    /* Features */
-    not_found_setting: true,
-    wm_count_setting: false,
-    wiki_setting: false,
-    amazon_setting: false,
-    tvnews_setting: false,
-    fact_check_setting: false,
-    /* General */
-    email_outlinks_setting: false
+    agreement: true,
+    not_found_setting: true
   })
+  chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  setupContextMenus()
 }
 
 if (typeof module !== 'undefined') {
@@ -771,7 +794,7 @@ if (typeof module !== 'undefined') {
     viewableTimestamp,
     initAutoExcludeList,
     initDefaultOptions,
-    afterAcceptOptions,
+    afterAcceptTerms,
     feedbackURL,
     newshosts,
     fixedEncodeURIComponent,
