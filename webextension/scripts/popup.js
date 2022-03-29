@@ -297,8 +297,8 @@ function setupSearchBox() {
     if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0)) {
       const url = makeValidURL(search_box.value)
       if (url && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-          activeURL = url
-          useSearchBox()
+        activeURL = url
+        useSearchBox()
       } else {
         $('#using-search-msg').hide()
       }
