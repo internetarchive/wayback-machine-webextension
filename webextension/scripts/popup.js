@@ -357,6 +357,7 @@ function display_list(key_word) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
+      dismissSearchHandler()
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
@@ -392,6 +393,15 @@ function display_suggestions(e) {
       display_list(query)
     }, 300)
   }
+}
+
+// Click handler to dismiss search display list when user clicks outside box.
+function dismissSearchHandler() {
+  $('html').off('click').on('click', (e) => {
+    if (!$(e.target).is('#suggestion-box')) {
+      $('#suggestion-box').text('').hide()
+    }
+  })
 }
 
 function open_feedback_page() {
