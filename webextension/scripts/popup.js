@@ -277,16 +277,24 @@ function searchTweet() {
 }
 
 // Update the UI when user is using the Search Box.
-function useSearchBox() {
-  showUrlNotSupported(false)
-  $('#last-saved-msg').hide()
-  $('#suggestion-box').text('').hide()
-  $('#url-not-supported-msg').hide()
-  $('#readbook-container').hide()
-  $('#tvnews-container').hide()
-  $('#wiki-container').hide()
-  $('#fact-check-container').hide()
-  $('#using-search-msg').show()
+function useSearchURL(flag) {
+  if (flag) {
+    showUrlNotSupported(false)
+    $('#last-saved-msg').hide()
+    $('#suggestion-box').text('').hide()
+    $('#url-not-supported-msg').hide()
+    $('#readbook-container').hide()
+    $('#tvnews-container').hide()
+    $('#wiki-container').hide()
+    $('#fact-check-container').hide()
+    $('#using-search-msg').text('Using Search URL').show()
+  } else {
+    $('#using-search-msg').hide()
+    // reassign activeURL
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      activeURL = (tabs && tabs[0]) ? tabs[0].url : null
+    })
+  }
 }
 
 // Setup keyboard handler for Search Box.
@@ -298,9 +306,9 @@ function setupSearchBox() {
       const url = makeValidURL(search_box.value)
       if (url && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
         activeURL = url
-        useSearchBox()
+        useSearchURL(true)
       } else {
-        $('#using-search-msg').hide()
+        useSearchURL(false)
       }
     }
   })
@@ -364,7 +372,7 @@ function display_list(key_word) {
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
-            if (activeURL) { useSearchBox() }
+            if (activeURL) { useSearchURL(true) }
           })
         )
       }
@@ -384,7 +392,7 @@ function display_suggestions(e) {
       $('#url-not-supported-msg').hide()
     } else {
       $('#url-not-supported-msg').show()
-      $('#using-search-msg').hide()
+      useSearchURL(false)
     }
     clearTimeout(searchBoxTimer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
