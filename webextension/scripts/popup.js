@@ -69,6 +69,7 @@ function initActiveTabURL() {
     if (tabs && tabs[0]) {
       activeTab = tabs[0]
       activeURL = tabs[0].url
+      setupSaveAction(activeURL)
     }
   })
 }
@@ -82,8 +83,8 @@ function setupSettingsTabTip() {
 }
 
 function doSaveNow() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
+  const url = activeURL
+  if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
@@ -110,8 +111,8 @@ function doSaveNow() {
   }
 }
 
-// Updates SPN button UI depending on logged-in status and fetches last saved time.
-function updateLastSaved() {
+// Update UI depending on logged-in state.
+function setupLoginState() {
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -119,34 +120,33 @@ function updateLastSaved() {
     } else {
       loginError()
     }
-    setupSaveAction()
   })
 }
 
 // Sets up the SPN button click event and Last Saved text.
-function setupSaveAction() {
-  if (activeURL) {
-    if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
-      $('#spn-btn').on('click', doSaveNow)
-      chrome.storage.local.get(['private_mode_setting'], (settings) => {
-        // auto save page
-        if (settings && (settings.private_mode_setting === false)) {
-          chrome.runtime.sendMessage({
-            message: 'getLastSaveTime',
-            page_url: activeURL
-          }, (message) => {
-            checkLastError()
-            if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
-            }
-          })
-        }
-      })
-    } else {
-      setExcluded()
-    }
+function setupSaveAction(url) {
+  if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+    $('#spn-btn').off('click').on('click', doSaveNow)
+    chrome.storage.local.get(['private_mode_setting'], (settings) => {
+      // auto save page
+      if (settings && (settings.private_mode_setting === false)) {
+        chrome.runtime.sendMessage({
+          message: 'getLastSaveTime',
+          page_url: url
+        }, (message) => {
+          checkLastError()
+          if (message && (message.message === 'last_save') && message.timestamp) {
+            $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          } else {
+            $('#last-saved-msg').hide()
+          }
+        })
+      } else {
+        $('#last-saved-msg').hide()
+      }
+    })
   } else {
-    setExcluded()
+    showUrlNotSupported(true)
   }
 }
 
@@ -177,8 +177,7 @@ function loginError() {
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
   // setup messages
-  $('#last-saved-msg').hide()
-  if (activeURL && !isNotExcludedUrl(activeURL)) { setExcluded() }
+  if (activeURL && !isNotExcludedUrl(activeURL)) { showUrlNotSupported(true) }
 }
 
 // Called when logged-in.
@@ -279,17 +278,15 @@ function searchTweet() {
 
 // Update the UI when user is using the Search Box.
 function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-  chrome.runtime.sendMessage({ message: 'clearResource' })
+  showUrlNotSupported(false)
+  $('#last-saved-msg').hide()
   $('#suggestion-box').text('').hide()
   $('#url-not-supported-msg').hide()
-  $('#using-search-msg').show()
   $('#readbook-container').hide()
   $('#tvnews-container').hide()
   $('#wiki-container').hide()
   $('#fact-check-container').hide()
-  clearWaybackCount()
-  updateLastSaved()
+  $('#using-search-msg').show()
 }
 
 // Setup keyboard handler for Search Box.
@@ -297,10 +294,14 @@ function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
-    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
-      activeURL = getCleanUrl(makeValidURL(search_box.value))
-      // use activeURL if it is valid, else update UI
-      activeURL ? useSearchBox() : $('#using-search-msg').hide()
+    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0)) {
+      const url = makeValidURL(search_box.value)
+      if (url && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+        activeURL = url
+        useSearchBox()
+      } else {
+        $('#using-search-msg').hide()
+      }
     }
   })
 }
@@ -356,6 +357,7 @@ function display_list(key_word) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
+      dismissSearchHandler()
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
@@ -391,6 +393,15 @@ function display_suggestions(e) {
       display_list(query)
     }, 300)
   }
+}
+
+// Click handler to dismiss search display list when user clicks outside box.
+function dismissSearchHandler() {
+  $('html').off('click').on('click', (e) => {
+    if (!$(e.target).is('#suggestion-box')) {
+      $('#suggestion-box').text('').hide()
+    }
+  })
 }
 
 function open_feedback_page() {
@@ -673,11 +684,18 @@ function openMyWebArchivePage() {
   })
 }
 
-function setExcluded() {
-  $('#spn-btn').addClass('flip-inside')
-  $('#last-saved-msg').hide()
-  $('#url-not-supported-msg').text('URL not supported')
-  $('#spn-back-label').text('URL not supported')
+function showUrlNotSupported(flag) {
+  if (flag) {
+    $('#spn-btn').off('click')
+    $('#spn-btn').addClass('flip-inside')
+    $('#last-saved-msg').hide()
+    $('#url-not-supported-msg').text('URL not supported')
+    $('#spn-back-label').text('URL not supported')
+  } else {
+    $('#spn-btn').off('click').on('click', doSaveNow)
+    $('#spn-btn').removeClass('flip-inside')
+    $('#url-not-supported-msg').text('').hide()
+  }
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -805,7 +823,7 @@ function setupSaveListener() {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
           $('#spn-btn').removeClass('flip-inside')
           setupWaybackCount()
           enableAfterSaving()
@@ -847,7 +865,7 @@ $(function() {
   setupFactCheck()
   setupSearchBox()
   setupSaveButton()
-  updateLastSaved()
+  setupLoginState()
   setupWaybackCount()
   setupSaveListener()
   setupViewSetting()
