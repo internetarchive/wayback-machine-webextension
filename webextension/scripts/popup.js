@@ -135,8 +135,14 @@ function setupSaveAction(url) {
           page_url: url
         }, (message) => {
           checkLastError()
-          if (message && (message.message === 'last_save') && message.timestamp) {
-            $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          if (message && (message.message === 'last_save')) {
+            if (message.timestamp) {
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+            } else if ('error' in message) {
+              $('#last-saved-msg').text('Wayback Machine Unavailable').show()
+            } else {
+              $('#last-saved-msg').hide()
+            }
           } else {
             $('#last-saved-msg').hide()
           }
