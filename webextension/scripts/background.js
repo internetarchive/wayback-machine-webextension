@@ -725,7 +725,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         if (settings && settings.amazon_setting) {
           const url = getCleanUrl(tab.url)
           // checking resource of amazon books
-          if (url.includes('www.amazon')) {
+          if (url.includes('www.amazon') && url.includes('/dp/')) {
             let headers = new Headers(hostHeaders)
             headers.set('backend', 'nomad')
             fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
