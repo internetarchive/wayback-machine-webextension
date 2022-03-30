@@ -555,7 +555,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // get most recent saved time
     getCachedWaybackCount(message.page_url,
       (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
-      () => { sendResponse({ message: 'last_save', timestamp: '' }) }
+      (error) => { sendResponse({ message: 'last_save', timestamp: '', error: error }) }
     )
     return true
   } else if (message.message === 'getWikipediaBooks') {
