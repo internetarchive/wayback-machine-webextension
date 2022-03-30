@@ -825,6 +825,7 @@ function autoSave(atab, url, beforeDate) {
 
 // Call autoSave() only if logged in.
 //
+/*
 function autoSaveChecked(atab, url, beforeDate) {
   checkAuthentication((results) => {
     if (results && ('auth_check' in results) && (results.auth_check === true)) {
@@ -832,6 +833,7 @@ function autoSaveChecked(atab, url, beforeDate) {
     }
   })
 }
+*/
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
 //
