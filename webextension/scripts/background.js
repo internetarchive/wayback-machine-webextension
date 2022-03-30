@@ -555,7 +555,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // get most recent saved time
     getCachedWaybackCount(message.page_url,
       (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
-      () => { sendResponse({ message: 'last_save', timestamp: '' }) }
+      (error) => { sendResponse({ message: 'last_save', timestamp: '', error: error }) }
     )
     return true
   } else if (message.message === 'getWikipediaBooks') {
@@ -725,7 +725,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         if (settings && settings.amazon_setting) {
           const url = getCleanUrl(tab.url)
           // checking resource of amazon books
-          if (url.includes('www.amazon')) {
+          if (url.includes('www.amazon') && url.includes('/dp/')) {
             let headers = new Headers(hostHeaders)
             headers.set('backend', 'nomad')
             fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
@@ -825,6 +825,7 @@ function autoSave(atab, url, beforeDate) {
 
 // Call autoSave() only if logged in.
 //
+/*
 function autoSaveChecked(atab, url, beforeDate) {
   checkAuthentication((results) => {
     if (results && ('auth_check' in results) && (results.auth_check === true)) {
@@ -832,6 +833,7 @@ function autoSaveChecked(atab, url, beforeDate) {
     }
   })
 }
+*/
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
 //
