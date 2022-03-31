@@ -93,7 +93,5 @@ function doLogout() {
   // clear screenname
   chrome.storage.local.remove(['screenname', 'itemname'])
   // update UI
-  $('#logout-tab-btn').hide()
-  $('.tab-item').css('width', '22%')
   loginError()
 }

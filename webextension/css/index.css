@@ -35,7 +35,7 @@ body {
     filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
 }
 
-.settings-icon-svg, .about-icon-svg, .logout-icon-svg {
+.settings-icon-svg, .about-icon-svg, .logout-icon-svg, .login-icon-svg {
     width: 25px;
     height: 25px;
 }
@@ -362,6 +362,11 @@ a.btn-social, .btn-social {
 
 #feedback-tab-btn {
     font-size: 190%;
+}
+
+#login-tab-btn {
+    display: none;
+    margin-top: -2px;
 }
 
 #logout-tab-btn {

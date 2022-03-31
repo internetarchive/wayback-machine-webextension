@@ -182,6 +182,11 @@ function loginError() {
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
+  // add tab login button
+  $('.tab-item').css('width', '18%')
+  $('#logout-tab-btn').hide()
+  $('#login-tab-btn').css('display', 'inline-block').off('click').on('click', showLoginFromTab)
+
   // setup messages
   if (activeURL && !isNotExcludedUrl(activeURL)) { showUrlNotSupported(true) }
 }
@@ -198,6 +203,7 @@ function loginSuccess() {
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
+  $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
 
   // reset login flip button
@@ -457,8 +463,13 @@ function showLoginPage(e) {
   $('#login-page').show()
 }
 
+function showLoginFromTab(e) {
+  $('#login-label').html('Log in to the<br> Internet Archive')
+  $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
+}
+
 function showLoginFromMain(e) {
-  // $('#login-label').html('Log in to the<br> Internet Archive')
   $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
   $('.back-btn').off('click').on('click', goBackToMain)
   showLoginPage(e)
