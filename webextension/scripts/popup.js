@@ -178,6 +178,7 @@ function loginError() {
 
   // setup options that open login page
   // $('.auth-dim').css('opacity', '50%')
+  $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
@@ -196,6 +197,7 @@ function loginSuccess() {
 
   // reset options that open login page
   // $('.auth-dim').css('opacity', '100%')
+  $('.auth-icon').removeClass('auth-icon-active')
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
