@@ -744,7 +744,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         }
         // checking tv news
         const clean_url = getCleanUrl(tab.url)
-        const news_host = new URL(clean_url).hostname
+        const news_host = new URL(clean_url).hostname // FIXME
         if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
           getCachedTvNews(clean_url,
             (clips) => {

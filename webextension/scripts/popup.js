@@ -167,7 +167,7 @@ function loginError() {
   // hide SPN options and show login
   // $('#chk-outlinks-label').css('visibility', 'hidden')
   // $('#chk-screenshot-label').css('visibility', 'hidden')
-  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginPage)
+  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginFromMain)
 
   // setup login flip button
   // $('#my-archive-btn').off('click')
@@ -177,10 +177,16 @@ function loginError() {
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
   // setup options that open login page
-  // $('.auth-dim').css('opacity', '66%')
+  // $('.auth-dim').css('opacity', '50%')
+  $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
+
+  // add tab login button
+  $('.tab-item').css('width', '18%')
+  $('#logout-tab-btn').hide()
+  $('#login-tab-btn').css('display', 'inline-block').off('click').on('click', showLoginFromTab)
 
   // setup messages
   if (activeURL && !isNotExcludedUrl(activeURL)) { showUrlNotSupported(true) }
@@ -191,6 +197,7 @@ function loginSuccess() {
 
   // reset options that open login page
   // $('.auth-dim').css('opacity', '100%')
+  $('.auth-icon').removeClass('auth-icon-active')
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
@@ -198,6 +205,7 @@ function loginSuccess() {
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
+  $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
 
   // reset login flip button
@@ -453,19 +461,26 @@ function showLoginPage(e) {
   e.preventDefault()
   $('#popup-page').hide()
   $('#setting-page').hide()
-  $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
 }
 
-function showLoginFromMain(e) {
-  showLoginPage(e)
+function showLoginFromTab(e) {
+  $('#login-label').html('Log in to the<br> Internet Archive')
   $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
+}
+
+function showLoginFromMain(e) {
+  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
+  $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
 }
 
 function showLoginFromSettings(e) {
-  showLoginPage(e)
+  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
   $('.back-btn').off('click').on('click', goBackToSettings)
+  showLoginPage(e)
 }
 
 // Returns to the main view.

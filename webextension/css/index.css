@@ -35,7 +35,16 @@ body {
     filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
 }
 
-.settings-icon-svg, .about-icon-svg, .logout-icon-svg {
+.auth-icon-active {
+    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat;
+    filter: invert(40%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(200%) contrast(50%);
+}
+.auth-icon-active input {
+    visibility: hidden;
+    float: none !important;
+}
+
+.settings-icon-svg, .about-icon-svg, .logout-icon-svg, .login-icon-svg {
     width: 25px;
     height: 25px;
 }
@@ -201,12 +210,12 @@ body {
 .chk-options input {
     margin: 5px 5px 0 0;
 }
-
+/*
 .chk-options span {
     vertical-align: text-top;
     padding-bottom: 2px;
 }
-
+*/
 .chk-frame {
     display: flex;
     gap: 2px;
@@ -364,6 +373,11 @@ a.btn-social, .btn-social {
     font-size: 190%;
 }
 
+#login-tab-btn {
+    display: none;
+    margin-top: -2px;
+}
+
 #logout-tab-btn {
     display: none;
     margin-top: -2px;
@@ -455,6 +469,11 @@ a.btn-social, .btn-social {
         color: #bbb;
         /* check above on how to calculate this */
         filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(83%) contrast(89%);
+    }
+
+    .auth-icon-active {
+        color: #bbb;
+        filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(60%) contrast(50%);
     }
 
     #search-input, .login-input {
