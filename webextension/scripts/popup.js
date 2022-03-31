@@ -165,9 +165,9 @@ function loginError() {
   // $('#bulk-save-btn').off('click')
 
   // hide SPN options and show login
-  $('#chk-outlinks-label').css('visibility', 'hidden')
-  $('#chk-screenshot-label').css('visibility', 'hidden')
-  $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginFromMain)
+  // $('#chk-outlinks-label').css('visibility', 'hidden')
+  // $('#chk-screenshot-label').css('visibility', 'hidden')
+  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginFromMain)
 
   // setup login flip button
   // $('#my-archive-btn').off('click')
@@ -177,7 +177,7 @@ function loginError() {
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
   // setup options that open login page
-  $('.auth-dim').css('opacity', '50%')
+  // $('.auth-dim').css('opacity', '50%')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
@@ -190,7 +190,7 @@ function loginError() {
 function loginSuccess() {
 
   // reset options that open login page
-  $('.auth-dim').css('opacity', '100%')
+  // $('.auth-dim').css('opacity', '100%')
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
@@ -211,9 +211,9 @@ function loginSuccess() {
   // $('#bulk-save-btn').click(bulkSave)
 
   // show SPN options and hide login
-  $('#chk-outlinks-label').css('visibility', '')
-  $('#chk-screenshot-label').css('visibility', '')
-  $('#chk-login-btn').css('visibility', 'hidden')
+  // $('#chk-outlinks-label').css('visibility', '')
+  // $('#chk-screenshot-label').css('visibility', '')
+  // $('#chk-login-btn').css('visibility', 'hidden')
 }
 
 // Open Wayback Machine website for the given pageURL.
@@ -458,7 +458,8 @@ function showLoginPage(e) {
 }
 
 function showLoginFromMain(e) {
-  $('#login-label').html('Log in to the<br> Internet Archive')
+  // $('#login-label').html('Log in to the<br> Internet Archive')
+  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
   $('.back-btn').off('click').on('click', goBackToMain)
   showLoginPage(e)
 }
