@@ -22,6 +22,21 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Installing the Extension
 
+Follow the link below to install the latest deployed version for your web browser.
+
+<table>
+<tr>
+<td>
+<img width="40px" align="left" src="webextension/images/about/chrome64.png">
+### [Chrome](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak)
+</td>
+<td>
+<img width="40px" align="left" src="webextension/images/about/firefox64.png">
+### [Firefox](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/)
+</td>
+</tr>
+</table>
+
 Follow the steps below for the currently deployed version depending on your browser.
 
 <img width="40px" align="left" src="webextension/images/about/chrome64.png">
