@@ -114,19 +114,24 @@ If you previously used the command line to clone this repo, note that it has bee
 
 ## Credits
 
-- Richard Caceres [@rchrd2](https://github.com/rchrd2)
-- Rakesh Naga Chinta [@rakesh-chinta](https://github.com/rakesh-chinta)
-- Abhishek Das [@abhidas17695](https://github.com/abhidas17695)
-- Mark Graham [@markjgraham](https://github.com/markjgraham)
-- Benjamin Mandel [@BenjaminMandel](https://github.com/BenjaminMandel)
-- Anton Shiryaev [@Eagle19243](https://github.com/Eagle19243)
-- Kumar Yogesh [@kumarjyogesh](https://github.com/kumarjyogesh)
-- Vangelis Banos [@vbanos](https://github.com/vbanos)
+By order of lines contributed (with years):
+
+- Carl Gorringe [@cgorringe](https://github.com/cgorringe) (2020-22)
+- Abhishek Das [@abhidas17695](https://github.com/abhidas17695) (2017-18)
+- Anish Kumar Sarangi [@anishsarangi](https://github.com/anishsarangi) (2018-22)
+- Vangelis Banos [@vbanos](https://github.com/vbanos) (2017-19)
+- Max Reinisch [@MaxReinisch](https://github.com/maxreinisch) (2018-19)
+- Pushkit Kapoor [@tikhsuP](https://github.com/tikhsuP) (2020)
+- Shubham Rath [@sr6033](https://github.com/sr6033) (2019)
+- Tanweer Anwar [@tanweer919](https://github.com/tanweer919) (2019)
+- Zerichen [@Zerichen](https://github.com/Zerichen) (2019)
+- pranshukharkwal [@pranshukharkwal](https://github.com/pranshukharkwal) (2020)
+- Chirag Vashist [@SerChirag](https://github.com/SerChirag) (2017)
+- Kumar Yogesh [@kumarjyogesh](https://github.com/kumarjyogesh) (2017)
+- Richard Caceres [@rchrd2](https://github.com/rchrd2) (2017)
 - Kerry Rodden [@kerryrodden](https://github.com/kerryrodden)
-- Max Reinisch [@MaxReinisch](https://github.com/maxreinisch)
-- Anish Kumar Sarangi [@anishsarangi](https://github.com/anishsarangi)
-- Pushkit Kapoor [@tikhsuP](https://github.com/tikhsuP)
-- Carl Gorringe [@cgorringe](https://github.com/cgorringe)
+- Karim Ratib [@infojunkie](https://github.com/infojunkie) (2020-21) - Manager
+- Mark Graham [@markjgraham](https://github.com/markjgraham) - Director
 
 
 ## License
