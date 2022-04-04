@@ -9,14 +9,16 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Features
 
-- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved. Must be logged in to use.
+- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved.
 - **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
-- **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
 - **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
-- **My Web Archive** - Save URLs to your public archive page on the Internet Archive.
-- **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
-- **Relevant Resources** - View archived digitized books while visiting *Amazon Books*, research papers and books while visiting *Wikipedia*, and recommended *TV News Clips* while visiting news websites.
+- **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
+- **Contextual Notices** - Check for contextual information from fact checking organizations and origin websites.
+- **Relevant Resources** - View research papers and books while visiting *Wikipedia*, archived digitized books while visiting *Amazon Books*, and recommended *TV News Clips* while visiting news websites.
+- **URLs &amp; Collections** - Show a list of URLs captured under the current website, and what collections they are saved under.
 - **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
+- **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
+- **My Web Archive** - Save URLs to your public archive page on the Internet Archive.
 - **Tweets &amp; Share Links** - Search Twitter for information regarding your current page, or share archived links on social media.
 
 
