@@ -32,7 +32,11 @@ Follow the link below to install the latest deployed version for your web browse
 
 ## Provide Feedback
 
+Your feedback helps us improve our web extension and is much appreciated!
+
 If you have a GitHub account, please check the [list of existing issues](https://github.com/internetarchive/wayback-machine-webextension/issues) (bugs are tagged red), then create a **New issue** to file a Bug report or Feature request. We recommend that you test against the _Latest Build from Source_ (if able to) to see that any bugs discovered haven't already been fixed.
+
+If you do not have an account, please send us an email to info@archive.org to report any bugs or feature requests. Please include the version of the web extension you are using (which you can find on the extension's About page) and what browser + version, and any other relevent info such as the website URL where the error occurs.
 
 
 ## Installing the Latest Build from Source
