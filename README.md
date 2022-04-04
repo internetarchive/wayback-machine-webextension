@@ -134,7 +134,7 @@ By order of lines contributed (with years):
 - Kumar Yogesh [@kumarjyogesh](https://github.com/kumarjyogesh) (2017)
 - Richard Caceres [@rchrd2](https://github.com/rchrd2) (2017)
 - Kerry Rodden [@kerryrodden](https://github.com/kerryrodden)
-- Karim Ratib [@infojunkie](https://github.com/infojunkie) (2020-21) - Manager
+- Karim Ratib [@infojunkie](https://github.com/infojunkie) (2021-22) - Manager
 - Mark Graham [@markjgraham](https://github.com/markjgraham) - Director
 
 
