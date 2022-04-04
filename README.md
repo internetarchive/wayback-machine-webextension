@@ -24,8 +24,8 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 Follow the link below to install the latest deployed version for your web browser.
 
-| [<img width="40px" align="left" src="webextension/images/about/chrome64.png"> Chrome](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak) | [![Firefox](webextension/images/about/firefox64.png)<br> Firefox](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) |
-| - | - |
+| [![Chrome](webextension/images/about/chrome64.png)<br> Chrome](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak) | [![Firefox](webextension/images/about/firefox64.png)<br> Firefox](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) | [![Safari]](webextension/images/about/safari64.png)<br> Safari 14+](https://apps.apple.com/us/app/wayback-machine/id1472432422?mt=12) | [![Edge](webextension/images/about/edge64.png)<br> Edge](https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn) |
+| -- | -- | -- | -- |
 
 
 Follow the steps below for the currently deployed version depending on your browser.
