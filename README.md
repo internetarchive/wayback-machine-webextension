@@ -28,6 +28,11 @@ Follow the link below to install the latest deployed version for your web browse
 | -- | -- | -- | -- |
 
 
+## Provide Feedback
+
+If you have a GitHub account, please check the [list of existing issues](https://github.com/internetarchive/wayback-machine-webextension/issues) (bugs are tagged red), then create a **New issue** to file a Bug report or Feature request. We recommend that you test against the _Latest Build from Source_ (if able to) to see that any bugs discovered haven't already been fixed.
+
+
 ## Installing the Latest Build from Source
 
 First tap on the **Code** button, **Download ZIP**, unzip the file in a location where you can find on your computer, then follow the steps below for your browser.
@@ -85,11 +90,6 @@ This will require Xcode to compile from source.
    - Select "Always Allow on Every Website..." button and confirm.
 4. Click on the newly added icon in the toolbar.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
-
-
-## Provide Feedback
-
-If you have a GitHub account, please check the [list of existing issues](https://github.com/internetarchive/wayback-machine-webextension/issues) (bugs are tagged red), then create a **New issue** to file a Bug report or Feature request.
 
 
 ## Contributing Code
