@@ -87,15 +87,6 @@ This will require Xcode to compile from source.
 5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 
-## Renamed Repo
-
-If you previously used the command line to clone this repo, note that it has been renamed. To update your local copy, run one of the following commands from the repo's directory.
-
-*SSH:* `git remote set-url origin git@github.com:internetarchive/wayback-machine-webextension.git`
-
-*HTTPS:* `git remote set-url origin https://github.com/internetarchive/wayback-machine-webextension.git`
-
-
 ## Provide Feedback
 
 If you have a GitHub account, please check the [list of existing issues](https://github.com/internetarchive/wayback-machine-webextension/issues) (bugs are tagged red), then create a **New issue** to file a Bug report or Feature request.
@@ -108,6 +99,15 @@ To contribute code and docs to the Wayback Machine Web Extension, please read th
 - [Contribution Guide](CONTRIBUTING.md)
 - [Style Guide](STYLE_GUIDE.md)
 - [Testing Guide](TESTING_GUIDE.md)
+
+
+## Renamed Repo
+
+If you previously used the command line to clone this repo, note that it has been renamed. To update your local copy, run one of the following commands from the repo's directory.
+
+*SSH:* `git remote set-url origin git@github.com:internetarchive/wayback-machine-webextension.git`
+
+*HTTPS:* `git remote set-url origin https://github.com/internetarchive/wayback-machine-webextension.git`
 
 
 ## Credits
