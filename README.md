@@ -24,33 +24,11 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 Follow the link below to install the latest deployed version for your web browser.
 
-| [![Chrome](webextension/images/about/chrome64.png)<br> Chrome](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak) | [![Firefox](webextension/images/about/firefox64.png)<br> Firefox](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) | [![Safari](webextension/images/about/safari64.png)<br> Safari 14+](https://apps.apple.com/us/app/wayback-machine/id1472432422?mt=12) | [![Edge](webextension/images/about/edge64.png)<br> Edge](https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn) |
+| [![Chrome](webextension/images/about/chrome64.png)<br> Chrome](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak) | [![Edge](webextension/images/about/edge64.png)<br> Edge](https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn) | [![Firefox](webextension/images/about/firefox64.png)<br> Firefox](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) | [![Safari](webextension/images/about/safari64.png)<br> Safari](https://apps.apple.com/us/app/wayback-machine/id1472432422?mt=12) |
 | -- | -- | -- | -- |
 
 
-Follow the steps below for the currently deployed version depending on your browser.
-
-<img width="40px" align="left" src="webextension/images/about/chrome64.png">
-
-### Chrome
-
-1. Go to our page on the [Chrome Web Store](https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak).
-2. Click the **Add to Chrome** button, then **Add extension**.
-3. Click on the *Extensions* puzzle-like icon in the toolbar.
-4. Now click on the **Pin** icon next to *Wayback Machine*.
-5. Click on the newly added icon.
-6. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
-
-<img width="40px" align="left" src="webextension/images/about/firefox64.png">
-
-### Firefox
-
-1. Go to the [Firefox Add-Ons](https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/) website.
-2. Click **+ Add to Firefox**
-3. Click on the newly added icon in the toolbar.
-
-
-## Installing the Latest Build
+## Installing the Latest Build from Source
 
 First tap on the **Code** button, **Download ZIP**, unzip the file in a location where you can find on your computer, then follow the steps below for your browser.
 
@@ -68,6 +46,16 @@ First tap on the **Code** button, **Download ZIP**, unzip the file in a location
 
 See [What are extensions?](https://developer.chrome.com/extensions) for more information on Chrome extensions.
 
+<img width="40px" align="left" src="webextension/images/about/edge64.png">
+
+### Edge
+
+1. Open Edge and navigate to `edge://extensions` in your browser. You can also access this page by clicking on the 3 horizontal dots menu on the top-right, then clicking **Extensions**.
+2. Turn on the switch next to **Developer mode**.
+3. Click the **Load unpacked** button and select the `wayback-machine-webextension/webextension` directory that contains this code.
+4. Click on the newly added icon in the toolbar.
+5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
+
 <img width="40px" align="left" src="webextension/images/about/firefox64.png">
 
 ### Firefox
@@ -80,16 +68,6 @@ See [What are extensions?](https://developer.chrome.com/extensions) for more inf
 6. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) for more information on Firefox extensions.
-
-<img width="40px" align="left" src="webextension/images/about/edge64.png">
-
-### Edge
-
-1. Open Edge and navigate to `edge://extensions` in your browser. You can also access this page by clicking on the 3 horizontal dots menu on the top-right, then clicking **Extensions**.
-2. Turn on the switch next to **Developer mode**.
-3. Click the **Load unpacked** button and select the `wayback-machine-webextension/webextension` directory that contains this code.
-4. Click on the newly added icon in the toolbar.
-5. Read the terms, then *Accept and Enable*. Click on the icon again to use the extension.
 
 <img width="40px" align="left" src="webextension/images/about/safari64.png">
 
