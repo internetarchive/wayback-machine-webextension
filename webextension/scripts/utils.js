@@ -304,9 +304,11 @@ function getWaybackCount(url, onSuccess, onFail) {
       onSuccess(values)
     })
     .catch(error => {
+      console.log('getWaybackCount FAILED: ', error)
       if (onFail) { onFail(error) }
     })
   } else {
+    console.log('getWaybackCount: not a valid URL')
     if (onFail) { onFail(null) }
   }
 }

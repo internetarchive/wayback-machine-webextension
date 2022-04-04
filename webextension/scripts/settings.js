@@ -179,7 +179,7 @@ function setupHelpDocs() {
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
     'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',
     // general tab
-    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
+    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
