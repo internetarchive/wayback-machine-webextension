@@ -94,7 +94,7 @@ This will require Xcode to compile from source.
 
 ## Contributing Code
 
-To contribute code and docs to the Wayback Machine Web Extension, please read the following:
+Thank you for your interest in contributing to this Open Source project! We welcome code contributions. Please read the following which should help you get started.
 
 - [Contribution Guide](CONTRIBUTING.md)
 - [Style Guide](STYLE_GUIDE.md)
