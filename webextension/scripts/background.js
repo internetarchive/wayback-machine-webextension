@@ -889,6 +889,15 @@ chrome.tabs.onActivated.addListener((info) => {
         const news_host = new URL(tab.url).hostname
         if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
       }
+      // clear '404 not found' dot if tab URL doesn't match stored URL
+      console.log('tabs.onActivated: info: ', info) // DEBUG
+      console.log('tabs.onActivated: tab.url: ', tab.url) // DEBUG
+      readTabData(tab, (data) => {
+        console.log('tabs.onActivated: data: ', data) // DEBUG
+        if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
+          removeToolbarState(tab, 'V')
+        }
+      })
       updateToolbar(tab)
       // update or clear count badge
       updateWaybackCountBadge(tab, tab.url)
