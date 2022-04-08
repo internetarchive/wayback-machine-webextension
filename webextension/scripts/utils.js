@@ -184,16 +184,7 @@ function checkAuthentication(acallback) {
 
 // Returns a string key from a Tab windowId and tab id, and maybe a slice of URL.
 function getTabKey(atab) {
-  if (!atab) { return '' }
-  const url = atab.url || ''
-  const part1 = (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
-
-  // This is a hack that fixes issue #907 in Safari, but would break in Chrome,
-  // so we have to return different results depending on the browser.
-  // Eventually may need to rethink how toolbar states are stored in background.js.
-  const part2 = (isSafari) ? ('_' + url.slice(-10)) : ''
-
-  return part1 // + part2
+  return (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
 }
 
 /**
@@ -202,12 +193,8 @@ function getTabKey(atab) {
  * @param data: Object of key:value pairs to store. Appends or writes over existing key:value pairs.
  */
 function saveTabData(atab, data) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) {
-    console.log('saveTabData returned: atab: ', atab) // DEBUG
-    return
-  }
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
-  console.log('saveTabData: key: ' + key + ', data: ', data) // DEBUG
   // take exisiting data in storage and overwrite with new data
   chrome.storage.local.get([key], (result) => {
     let exdata = result[key] || {}
@@ -224,12 +211,8 @@ function saveTabData(atab, data) {
  * @param keylist: Array of keys to delete.
  */
 function clearTabData(atab, keylist) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) {
-    console.log('clearTabData returned: atab: ', atab) // DEBUG
-    return
-  }
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
-  console.log('clearTabData: key: ' + key) // DEBUG
   // take exisiting data in storage and delete any items from keylist
   chrome.storage.local.get([key], (result) => {
     let exdata = result[key] || {}
@@ -248,13 +231,9 @@ function clearTabData(atab, keylist) {
  * @param callback(data): Function called with data object of key:value pairs returned.
  */
 function readTabData(atab, callback) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) {
-    console.log('readTabData returned: atab: ', atab) // DEBUG
-    return
-  }
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
   chrome.storage.local.get([key], (result) => {
-    console.log('readTabData: key: ' + key + ', data: ', result[key]) // DEBUG
     callback(result[key])
   })
 }

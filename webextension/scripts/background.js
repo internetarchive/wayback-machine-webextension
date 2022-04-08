@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, setupContextMenus */
+/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -442,27 +442,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 // Checks for error in page loading such as when a domain doesn't exist.
 //
 chrome.webRequest.onErrorOccurred.addListener((details) => {
-
-  // checkNotFound(details) // REMOVE
-
   if ((['net::ERR_ABORTED', 'net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0) && (details.parentFrameId < 1)) {
     // note: testing parentFrameId prevents false positives
-
-    /* REMOVE
-    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
-      if (settings && settings.not_found_setting && settings.agreement) {
-        wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.get(details.tabId, (tab) => {
-            checkLastError()
-            // addToolbarState(tab, 'V')
-            gStatusCode = 999
-            saveTabData(tab, { 'statusCode': gStatusCode, 'statusWaybackUrl': wayback_url, 'statusUrl': url })
-          })
-        }, () => {})
-      }
-    })
-    */
     const url = details.url
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       chrome.tabs.get(details.tabId, (tab) => {
@@ -471,20 +453,11 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
       })
     }
   }
-
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for website loading completed for 404-Not-Found popups.
 //
 chrome.webRequest.onCompleted.addListener((details) => {
-  console.log(`webRequest.onCompleted: url: ${details.url}`) // DEBUG
-
-  // REMOVE ALL
-  // there is no details.tab here
-  // clearToolbarState(details.tab) // TEST
-  // clearTabData(details.tab, ['statusCode', 'statusUrl', 'statusWaybackUrl']) // TEST
-  // checkNotFound(details) // REMOVE
-
   const url = details.url
 
   // checking statusCode >= 400 here or else tab data may be overwritten with status 200 URLs.
@@ -494,14 +467,11 @@ chrome.webRequest.onCompleted.addListener((details) => {
     if (details.tabId > 0) {
       // normally go here
       chrome.tabs.get(details.tabId, (tab) => {
-        console.log('tabId: ' + details.tabId + ', tab: ', tab) // DEBUG
         saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     } else {
-      console.log('tabId <= 0') // DEBUG
       // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        console.log('tabs: ', tabs) // DEBUG
         saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     }
@@ -520,7 +490,6 @@ function checkNotFound(details) {
     checkLastError()
     addToolbarState(tab, 'V')
     gStatusCode = statusCode
-    // DEBUG: this is called after onUpdated 'complete' reads 'data' using readTabData()
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
     saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag && ('id' in tab)) {
@@ -548,42 +517,14 @@ function checkNotFound(details) {
   gStatusCode = 0
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.agreement && settings.not_found_setting && isNotExcludedUrl(details.url)) {
-
-// REMOVE
-//      if (details.error && (['net::ERR_ABORTED', 'net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
-//        'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) &&
-//        (details.tabId >= 0) && (details.parentFrameId < 1)) {
-        // note: testing parentFrameId prevents false positives
-/* REMOVE
-        // Server Not Found (999)
-        chrome.tabs.get(details.tabId, (tab) => {
-          details.statusCode = 999
-          checkWM(tab, details, false)
-        })
-*/
-//      } else
       if (details.statusCode && (details.statusCode >= 400)) {
-
-        // const bannerFlag = settings.embed_popup_setting || false // REMOVE
         const bannerFlag = (settings.embed_popup_setting && (details.statusCode !== 999)) || false
-        // TODO: Not sure if we still need this check here??
-//        if (details.tabId >= 0) { // MAY REMOVE
-          // normally go here
-          chrome.tabs.get(details.tabId, (tab) => {
-            checkWM(tab, details, bannerFlag)
-          })
-//        } else { // MAY REMOVE
-//          // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-//          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//            checkWM(tabs[0], details, bannerFlag)
-//          })
-//        }
-
+        chrome.tabs.get(details.tabId, (tab) => {
+          checkWM(tab, details, bannerFlag)
+        })
       }
-
     }
   })
-
 }
 
 // Calls saveToMyWebArchive() if setting is set, and outputs errors to console.
@@ -748,21 +689,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-  console.log(`tabs.onUpdated: info.status: ${info.status}, url: ${tab.url}`) // DEBUG
-
   const url = tab.url
-  if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) {
-    console.log('tabs.onUpdated returned: url = ' + url) // DEBUG
-    return
-  }
-  // const clean_url = getCleanUrl(tab.url) // REMOVE
-  // if (isValidUrl(clean_url) === false) { return } // REMOVE
+  if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) { return }
 
   if (info.status === 'complete') {
-
     updateWaybackCountBadge(tab, url)
-    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
 
+    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
         if (settings.auto_archive_age) {
@@ -783,7 +716,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         readTabData(tab, (data) => {
           // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
           if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
-            // addToolbarState(tab, 'V') // REMOVE
             if (data.statusCode >= 400) {
               checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
             } else {
@@ -810,14 +742,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           }, () => {}
         )
       }
-
     })
-
   } else if (info.status === 'loading') {
-
     let received_url = url
     clearToolbarState(tab)
-    // clearTabData(tab, ['statusCode', 'statusUrl', 'statusWaybackUrl']) // TEST REMOVE
 
     if (received_url && !isArchiveUrl(received_url)) {
       let open_url = received_url.replace(/^https?:\/\//, '')
@@ -827,7 +755,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
         // checking amazon books
         if (settings && settings.amazon_setting) {
-          // const url = getCleanUrl(tab.url) // REMOVE
           // checking resource of amazon books
           if (url.includes('www.amazon') && url.includes('/dp/')) {
             let headers = new Headers(hostHeaders)
@@ -848,7 +775,6 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         }
 
         // checking tv news
-        // const clean_url = getCleanUrl(tab.url) // REMOVE
         const news_host = new URL(url).hostname // FIXME
         if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
           getCachedTvNews(url,
@@ -890,10 +816,7 @@ chrome.tabs.onActivated.addListener((info) => {
         if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
       }
       // clear '404 not found' dot if tab URL doesn't match stored URL
-      console.log('tabs.onActivated: info: ', info) // DEBUG
-      console.log('tabs.onActivated: tab.url: ', tab.url) // DEBUG
       readTabData(tab, (data) => {
-        console.log('tabs.onActivated: data: ', data) // DEBUG
         if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
           removeToolbarState(tab, 'V')
         }
