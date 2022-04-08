@@ -711,27 +711,32 @@ function initAutoExcludeList() {
 
 function setupContextMenus() {
   chrome.contextMenus.create({
+    'id': 'save',
+    'title': 'Save Page Now',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'type': 'separator',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  })
+  chrome.contextMenus.create({
     'id': 'first',
     'title': 'Oldest Version',
-    'contexts': ['all'],
+    'contexts': ['page', 'frame', 'link'],
     'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
   }, checkLastError)
   chrome.contextMenus.create({
     'id': 'recent',
     'title': 'Newest Version',
-    'contexts': ['all'],
+    'contexts': ['page', 'frame', 'link'],
     'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
   }, checkLastError)
   chrome.contextMenus.create({
     'id': 'all',
     'title': 'All Versions',
-    'contexts': ['all'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-  }, checkLastError)
-  chrome.contextMenus.create({
-    'id': 'save',
-    'title': 'Save Page Now',
-    'contexts': ['all'],
+    'contexts': ['page', 'frame', 'link'],
     'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
   }, checkLastError)
 }
