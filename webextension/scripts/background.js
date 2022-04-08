@@ -7,7 +7,7 @@
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, setupContextMenus */
+/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -445,32 +445,54 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
   if ((['net::ERR_ABORTED', 'net::ERR_NAME_NOT_RESOLVED', 'net::ERR_NAME_RESOLUTION_FAILED',
     'net::ERR_CONNECTION_TIMED_OUT', 'net::ERR_NAME_NOT_RESOLVED', 'NS_ERROR_UNKNOWN_HOST'].indexOf(details.error) >= 0) && (details.tabId >= 0) && (details.parentFrameId < 1)) {
     // note: testing parentFrameId prevents false positives
-    chrome.storage.local.get(['not_found_setting', 'agreement'], (settings) => {
-      if (settings && settings.not_found_setting && settings.agreement) {
-        wmAvailabilityCheck(details.url, (wayback_url, url) => {
-          chrome.tabs.get(details.tabId, (tab) => {
-            checkLastError()
-            addToolbarState(tab, 'V')
-            gStatusCode = 999
-            saveTabData(tab, { 'statusCode': gStatusCode, 'statusWaybackUrl': wayback_url })
-          })
-        }, () => {})
-      }
-    })
+    const url = details.url
+    if (isNotExcludedUrl(url) && isValidUrl(url)) {
+      chrome.tabs.get(details.tabId, (tab) => {
+        gStatusCode = 999
+        saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
+      })
+    }
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Listens for website loading completed for 404-Not-Found popups.
 //
 chrome.webRequest.onCompleted.addListener((details) => {
+  const url = details.url
 
-  // display 'V' toolbar icon and banner
-  function update(tab, waybackUrl, statusCode, bannerFlag) {
+  // checking statusCode >= 400 here or else tab data may be overwritten with status 200 URLs.
+  // another solution may be to forget using tab ids and use URLs for the key in saveTabData()
+  if (isNotExcludedUrl(url) && isValidUrl(url) && details.statusCode && (details.statusCode >= 400)) {
+    // must be > 0 and not => 0 or else tab may be undefined in Safari
+    if (details.tabId > 0) {
+      // normally go here
+      chrome.tabs.get(details.tabId, (tab) => {
+        saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      })
+    } else {
+      // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      })
+    }
+  }
+
+}, { urls: ['<all_urls>'], types: ['main_frame'] })
+
+// Check for 404 Not Found and other status errors.
+// pass these keys in details: { tabId, statusCode, url }
+//
+function checkNotFound(details) {
+  if (!details) { return }
+
+  // save status, display 'V' toolbar icon and banner
+  function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
     gStatusCode = statusCode
-    saveTabData(tab, { 'statusCode': statusCode, 'statusWaybackUrl': waybackUrl })
-    if (bannerFlag) {
+    // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
+    saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
+    if (bannerFlag && ('id' in tab)) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SHOW_BANNER',
         wayback_url: waybackUrl,
@@ -480,36 +502,30 @@ chrome.webRequest.onCompleted.addListener((details) => {
   }
 
   // check if wayback machine has a copy
-  function checkWM(tab, details, bannerFlag) {
-    wmAvailabilityCheck(details.url, (wayback_url, url) => {
-      if (bannerFlag) {
+  function checkWM(tab, details2, bannerFlag) {
+    wmAvailabilityCheck(details2.url, (wayback_url, url) => {
+      if (bannerFlag && ('id' in tab)) {
         chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
-          update(tab, wayback_url, details.statusCode, bannerFlag)
+          update(tab, url, wayback_url, details2.statusCode, bannerFlag)
         })
       } else {
-        update(tab, wayback_url, details.statusCode, bannerFlag)
+        update(tab, url, wayback_url, details2.statusCode, bannerFlag)
       }
     })
   }
 
   gStatusCode = 0
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
-    if (settings && settings.not_found_setting && settings.agreement && (details.statusCode >= 400) && isNotExcludedUrl(details.url)) {
-      const bannerFlag = settings.embed_popup_setting || false
-      if (details.tabId >= 0) {
-        // normally go here
+    if (settings && settings.agreement && settings.not_found_setting && isNotExcludedUrl(details.url)) {
+      if (details.statusCode && (details.statusCode >= 400)) {
+        const bannerFlag = (settings.embed_popup_setting && (details.statusCode !== 999)) || false
         chrome.tabs.get(details.tabId, (tab) => {
           checkWM(tab, details, bannerFlag)
-        })
-      } else {
-        // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          checkWM(tabs[0], details, bannerFlag)
         })
       }
     }
   })
-}, { urls: ['<all_urls>'], types: ['main_frame'] })
+}
 
 // Calls saveToMyWebArchive() if setting is set, and outputs errors to console.
 //
@@ -673,10 +689,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-  if (!isNotExcludedUrl(tab.url)) { return }
+  const url = tab.url
+  if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) { return }
+
   if (info.status === 'complete') {
-    updateWaybackCountBadge(tab, tab.url)
-    chrome.storage.local.get(['auto_archive_setting', 'auto_archive_age', 'fact_check_setting'], (settings) => {
+    updateWaybackCountBadge(tab, url)
+
+    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
         if (settings.auto_archive_age) {
@@ -685,25 +704,36 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
             const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, tab.url, beforeDate)
+            autoSave(tab, url, beforeDate)
           }
         } else {
-          autoSave(tab, tab.url)
+          autoSave(tab, url)
         }
       }
+
+      // 404 not found
+      if (settings && settings.not_found_setting) {
+        readTabData(tab, (data) => {
+          // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
+          if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
+            if (data.statusCode >= 400) {
+              checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
+            } else {
+              removeToolbarState(tab, 'V')
+            }
+          }
+        })
+      }
+
       // fact check
       if (settings && settings.fact_check_setting) {
-        factCheck(tab, tab.url)
+        factCheck(tab, url)
       }
-    })
-    // checking resources
-    const clean_url = getCleanUrl(tab.url)
-    if (isValidUrl(clean_url) === false) { return }
-    chrome.storage.local.get(['wiki_setting'], (settings) => {
-      // checking wikipedia books & papers
-      if (settings && settings.wiki_setting && clean_url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
+
+      // wikipedia papers
+      if (settings && settings.wiki_setting && url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
-        getCachedPapers(clean_url,
+        getCachedPapers(url,
           (data) => {
             if (data && (data.status !== 'error')) {
               addToolbarState(tab, 'R')
@@ -714,16 +744,17 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       }
     })
   } else if (info.status === 'loading') {
-    let received_url = tab.url
+    let received_url = url
     clearToolbarState(tab)
-    if (isNotExcludedUrl(received_url) && !isArchiveUrl(received_url)) {
-      received_url = received_url.replace(/^https?:\/\//, '')
-      let open_url = received_url
+
+    if (received_url && !isArchiveUrl(received_url)) {
+      let open_url = received_url.replace(/^https?:\/\//, '')
       if (open_url.slice(-1) === '/') { open_url = received_url.substring(0, open_url.length - 1) }
+
       chrome.storage.local.get(['amazon_setting', 'tvnews_setting'], (settings) => {
-        // checking amazon books settings
+
+        // checking amazon books
         if (settings && settings.amazon_setting) {
-          const url = getCleanUrl(tab.url)
           // checking resource of amazon books
           if (url.includes('www.amazon') && url.includes('/dp/')) {
             let headers = new Headers(hostHeaders)
@@ -742,11 +773,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             })
           }
         }
+
         // checking tv news
-        const clean_url = getCleanUrl(tab.url)
-        const news_host = new URL(clean_url).hostname // FIXME
+        const news_host = new URL(url).hostname // FIXME
         if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
-          getCachedTvNews(clean_url,
+          getCachedTvNews(url,
             (clips) => {
               if (clips && (clips.status !== 'error')) {
                 addToolbarState(tab, 'R')
@@ -754,6 +785,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             }, () => {}
           )
         }
+
       })
     }
   }
@@ -783,6 +815,12 @@ chrome.tabs.onActivated.addListener((info) => {
         const news_host = new URL(tab.url).hostname
         if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
       }
+      // clear '404 not found' dot if tab URL doesn't match stored URL
+      readTabData(tab, (data) => {
+        if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
+          removeToolbarState(tab, 'V')
+        }
+      })
       updateToolbar(tab)
       // update or clear count badge
       updateWaybackCountBadge(tab, tab.url)

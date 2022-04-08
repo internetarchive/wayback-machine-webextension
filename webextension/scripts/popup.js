@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
+/*   global attachTooltip, checkLastError, cropPrefix, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
 
 let searchBoxTimer
 
@@ -517,7 +517,10 @@ function setupViewArchived() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         checkLastError()
         const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
-        if (state.has('V') && ('customData' in result) && ('statusCode' in result.customData) && ('statusWaybackUrl' in result.customData)) {
+        if (state.has('V') && ('customData' in result) && ('statusWaybackUrl' in result.customData) &&
+          ('statusCode' in result.customData) && (result.customData.statusCode >= 400) &&
+          ('statusUrl' in result.customData) && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url)))
+        {
           // show msg and View Archived button for error status codes
           const statusCode = result.customData.statusCode
           const waybackUrl = result.customData.statusWaybackUrl

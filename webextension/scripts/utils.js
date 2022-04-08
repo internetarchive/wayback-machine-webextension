@@ -182,7 +182,7 @@ function checkAuthentication(acallback) {
 
 /* * * Storage functions * * */
 
-// Returns a string key from a Tab windowId and tab id.
+// Returns a string key from a Tab windowId and tab id, and maybe a slice of URL.
 function getTabKey(atab) {
   return (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
 }
@@ -199,6 +199,26 @@ function saveTabData(atab, data) {
   chrome.storage.local.get([key], (result) => {
     let exdata = result[key] || {}
     for (let [k, v] of Object.entries(data)) { exdata[k] = v }
+    let obj = {}
+    obj[key] = exdata
+    chrome.storage.local.set(obj, () => {})
+  })
+}
+
+/**
+ * Clears keys in storage for given tab.
+ * @param atab {Tab}: Current tab which includes .windowId and .id values.
+ * @param keylist: Array of keys to delete.
+ */
+function clearTabData(atab, keylist) {
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  let key = 'tab_' + getTabKey(atab)
+  // take exisiting data in storage and delete any items from keylist
+  chrome.storage.local.get([key], (result) => {
+    let exdata = result[key] || {}
+    for (let k of keylist) {
+      if (k in exdata) { delete exdata[k] }
+    }
     let obj = {}
     obj[key] = exdata
     chrome.storage.local.set(obj, () => {})
@@ -778,6 +798,7 @@ if (typeof module !== 'undefined') {
     checkAuthentication,
     getTabKey,
     saveTabData,
+    clearTabData,
     readTabData,
     getWaybackCount,
     badgeCountText,
