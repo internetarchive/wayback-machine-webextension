@@ -20,11 +20,17 @@ h1.underlined {
 
 .about-body {
     float: left;
-    font-size: 18px;
+    font-size: 14pt;
     margin-bottom: 2em;
 }
 .about-body div {
     padding-right: 3em;
+}
+
+.about-footer {
+    font-size: 11pt;
+    line-height: 1.1;
+    margin: 2em 0;
 }
 
 .about-app-icon {
@@ -35,6 +41,11 @@ h1.underlined {
 .about-badge {
     height: 50px;
     margin-bottom: 1em;
+}
+
+#about-news-list {
+    font-size: 11pt;
+    line-height: 1.1;
 }
 
 ul.features {
@@ -49,9 +60,6 @@ ul.features li:nth-child(odd) h4 {
 }
 ul.features li:nth-child(even) h4 {
     color: #522;
-}
-ul.features p {
-    padding-left: 2em;
 }
 
 /* Dark Mode */
