@@ -475,13 +475,13 @@ function showLoginFromTab(e) {
 }
 
 function showLoginFromMain(e) {
-  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
+  $('#login-label').html('This feature requires logging in to the Internet Archive')
   $('.back-btn').off('click').on('click', goBackToMain)
   showLoginPage(e)
 }
 
 function showLoginFromSettings(e) {
-  $('#login-label').html('The feature you have requested requires that you be logged into archive.org')
+  $('#login-label').html('This feature requires logging in to the Internet Archive')
   $('.back-btn').off('click').on('click', goBackToSettings)
   showLoginPage(e)
 }
