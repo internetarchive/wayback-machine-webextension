@@ -190,9 +190,6 @@ function loginError() {
 
   // setup messages
   if (activeURL && !isNotExcludedUrl(activeURL)) { showUrlNotSupported(true) }
-
-  // clears settings that should be clear when logged out.
-  $('.clear-on-logout').prop('checked', false).trigger('change')
 }
 
 // Called when logged-in.
@@ -889,7 +886,6 @@ function setupSaveListener() {
 
 // onload
 $(function() {
-  console.log('popup onload') // DEBUG
   $('#setting-page').hide()
   $('#login-page').hide()
   initAgreement()

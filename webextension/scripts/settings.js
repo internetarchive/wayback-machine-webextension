@@ -44,7 +44,6 @@ function restoreSettings(items) {
 }
 
 function saveSettings() {
-  console.log('saveSettings') // DEBUG
   let settings = {
     // SPN
     spn_outlinks: $('#chk-outlinks').prop('checked'),
@@ -67,6 +66,12 @@ function saveSettings() {
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
+}
+
+// clears settings that should be clear when logged out.
+function clearSettingsOnLogout() {
+  $('.clear-on-logout').prop('checked', false)
+  saveSettings()
 }
 
 function setupPrivateMode() {
@@ -199,6 +204,6 @@ function setupHelpDocs() {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-
+    clearSettingsOnLogout
   }
 }

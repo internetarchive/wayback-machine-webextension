@@ -6,6 +6,9 @@
 // from 'popup.js'
 /*   global loginSuccess, loginError */
 
+// from 'settings.js'
+/*   global clearSettingsOnLogout */
+
 // onload
 $(function() {
   $('#signup-btn').click(signUp)
@@ -94,4 +97,5 @@ function doLogout() {
   chrome.storage.local.remove(['screenname', 'itemname'])
   // update UI
   loginError()
+  clearSettingsOnLogout()
 }
