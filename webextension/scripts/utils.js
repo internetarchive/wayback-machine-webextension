@@ -743,7 +743,6 @@ function setupContextMenus() {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
-  console.log('initDefaultOptions') // DEBUG
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
@@ -774,6 +773,7 @@ function afterAcceptTerms () {
   console.log('afterAcceptTerms') // DEBUG
   chrome.storage.local.set({
     agreement: true,
+    private_mode_setting: false,
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
