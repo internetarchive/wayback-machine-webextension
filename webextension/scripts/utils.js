@@ -770,7 +770,6 @@ function initDefaultOptions () {
 
 // Turn on these Settings and toolbar popup after accepting terms.
 function afterAcceptTerms () {
-  console.log('afterAcceptTerms') // DEBUG
   chrome.storage.local.set({
     agreement: true,
     private_mode_setting: false,
