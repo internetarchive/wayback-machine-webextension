@@ -6,7 +6,7 @@
 
 What's New in v3.1
 
-We heard you and we fixed it - You can now archive using "Save Page Now" without logging into an account!
+We heard you - Now you can archive using "Save Page Now" without logging into an account!
 
 Some features still require logging in, which are indicated by an icon in place of checkboxes.
 
