@@ -68,6 +68,12 @@ function saveSettings() {
   chrome.storage.local.set(settings)
 }
 
+// clears settings that should be clear when logged out.
+function clearSettingsOnLogout() {
+  $('.clear-on-logout').prop('checked', false)
+  saveSettings()
+}
+
 function setupPrivateMode() {
   $('#private-mode-setting').change(onPrivateModeChange)
   $('.private-setting').change(onPrivateSettingChange)
@@ -198,6 +204,6 @@ function setupHelpDocs() {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-
+    clearSettingsOnLogout
   }
 }
