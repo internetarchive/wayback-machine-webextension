@@ -44,6 +44,7 @@ function restoreSettings(items) {
 }
 
 function saveSettings() {
+  console.log('saveSettings') // DEBUG
   let settings = {
     // SPN
     spn_outlinks: $('#chk-outlinks').prop('checked'),

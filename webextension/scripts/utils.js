@@ -743,13 +743,14 @@ function setupContextMenus() {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
+  console.log('initDefaultOptions') // DEBUG
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
     /* Features */
-    private_mode_setting: false,
+    private_mode_setting: true,
     not_found_setting: false,
     embed_popup_setting: false,
     wm_count_setting: false,
@@ -770,6 +771,7 @@ function initDefaultOptions () {
 
 // Turn on these Settings and toolbar popup after accepting terms.
 function afterAcceptTerms () {
+  console.log('afterAcceptTerms') // DEBUG
   chrome.storage.local.set({
     agreement: true,
     not_found_setting: true

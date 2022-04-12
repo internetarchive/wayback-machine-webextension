@@ -889,6 +889,7 @@ function setupSaveListener() {
 
 // onload
 $(function() {
+  console.log('popup onload') // DEBUG
   $('#setting-page').hide()
   $('#login-page').hide()
   initAgreement()
