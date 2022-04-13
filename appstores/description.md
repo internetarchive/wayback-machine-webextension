@@ -17,7 +17,6 @@ Most features will work without requiring an account including Save Page Now.
 
 Some features must be enabled from Settings. Turn on *Private Mode* to prevent automatic sending of data and to protect your privacy while browsing.
 
-
 **Features**
 
 • **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on Auto Save Page in settings to save pages that have not previously been saved. Works while logged out, or log in for additional options.
