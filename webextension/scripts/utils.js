@@ -749,7 +749,7 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* Features */
-    private_mode_setting: false,
+    private_mode_setting: true,
     not_found_setting: false,
     embed_popup_setting: false,
     wm_count_setting: false,
@@ -772,6 +772,7 @@ function initDefaultOptions () {
 function afterAcceptTerms () {
   chrome.storage.local.set({
     agreement: true,
+    private_mode_setting: false,
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
