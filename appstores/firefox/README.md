@@ -85,6 +85,7 @@ Add-on URL:
 
 Summary:
 - see [description.md](../description.md)
+  - Replace Markup with HTML: `*` with `<i>` and `**` with `<b>`
 
 Leave blank:
 - [ ] This add-on is experiemental
