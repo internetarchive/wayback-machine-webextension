@@ -33,7 +33,7 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 - Then move ZIP file to another location on your computer outside of this repo.
 - Verify that ZIP file is formatted correctly by testing in Chrome.
 
-- On the Chrome Web Store Dashboard, select the "Upload new package" button.
+- On the Chrome Web Store Dashboard, select "Package" along the left sidebar, then "Upload new package" button.
 
 
 ### Store Listing
@@ -43,6 +43,7 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 - Title: Wayback Machine
 - Summary: (from manifest description)
 - Description: see [description.md](../description.md)
+  - Make sure to remove all markdown formatting such as astericks!
 - Category: Search Tools (currently listed in Our Top Picks)
 - Language: English (United States)
 
