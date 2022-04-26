@@ -64,9 +64,6 @@ function doLogin(e) {
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
         // login success
-        const screenname = res.values.screenname || ''
-        const itemname = res.values.itemname || ''
-        chrome.storage.local.set({ screenname, itemname })
         $('#login-message').show().addClass('login-success').text('Success')
         loginSuccess()
         setTimeout(() => {
@@ -93,8 +90,6 @@ function doLogout() {
   // removes cookies in Chrome & Firefox
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
-  // clear screenname
-  chrome.storage.local.remove(['screenname', 'itemname'])
   // update UI
   loginError()
   clearSettingsOnLogout()

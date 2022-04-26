@@ -208,20 +208,6 @@ function loginSuccess() {
   $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
 
-  getUserInfo().then(info => {
-    if (info && ('screenname' in info) && ('itemname' in info)) {
-      var previous_user_itemname = ''
-      chrome.storage.local.get(['itemname'], (settings) => {
-        if (settings && settings.itemname) {
-          previous_user_itemname = settings.itemname
-        }
-      }) 
-      if (previous_user_itemname != info.itemname){
-        chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
-      }
-    }
-  })
-
   // reset login flip button
   // $('#spn-front-label').parent().removeAttr('disabled')
   // $('#spn-btn').off('click')
@@ -712,20 +698,11 @@ function showContext(eventObj) {
 }
 
 function openMyWebArchivePage() {
-  chrome.storage.local.get(['itemname'], (settings) => {
-    if (settings && settings.itemname) {
-      // using saved itemname
-      const url = `https://archive.org/details/${settings.itemname}?tab=web-archive`
+  // retrieve the itemname
+  getUserInfo().then(info => {
+    if (info && ('screenname' in info) && ('itemname' in info)) {
+      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
-    } else {
-      // retrieve & store itemname
-      getUserInfo().then(info => {
-        if (info && ('screenname' in info) && ('itemname' in info)) {
-          chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
-          const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
-          openByWindowSetting(url)
-        }
-      })
     }
   })
 }
