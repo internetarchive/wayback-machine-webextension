@@ -700,7 +700,7 @@ function showContext(eventObj) {
 function openMyWebArchivePage() {
   // retrieve the itemname
   getUserInfo().then(info => {
-    if (info && ('screenname' in info) && ('itemname' in info)) {
+    if (info && ('itemname' in info)) {
       const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
     }
