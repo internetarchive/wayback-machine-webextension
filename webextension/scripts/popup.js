@@ -698,20 +698,11 @@ function showContext(eventObj) {
 }
 
 function openMyWebArchivePage() {
-  chrome.storage.local.get(['itemname'], (settings) => {
-    if (settings && settings.itemname) {
-      // using saved itemname
-      const url = `https://archive.org/details/${settings.itemname}?tab=web-archive`
+  // retrieve the itemname
+  getUserInfo().then(info => {
+    if (info && ('itemname' in info)) {
+      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
-    } else {
-      // retrieve & store itemname
-      getUserInfo().then(info => {
-        if (info && ('screenname' in info) && ('itemname' in info)) {
-          chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
-          const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
-          openByWindowSetting(url)
-        }
-      })
     }
   })
 }
