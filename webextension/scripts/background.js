@@ -518,7 +518,7 @@ function checkNotFound(details) {
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.agreement && settings.not_found_setting && isNotExcludedUrl(details.url)) {
       if (details.statusCode && (details.statusCode >= 400)) {
-        const bannerFlag = (settings.embed_popup_setting && (details.statusCode !== 999)) || false
+        const bannerFlag = (details.statusCode !== 999) || false;
         chrome.tabs.get(details.tabId, (tab) => {
           checkWM(tab, details, bannerFlag)
         })
