@@ -1,0 +1,47 @@
+{
+  "name": "wayback-machine-webextension",
+  "version": "3.0.0",
+  "description": "A browser extension that interfaces with the internet archive",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "webpack",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetarchive/wayback-machine-webextension.git"
+  },
+  "author": "Internet Archive",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/internetarchive/wayback-machine-webextension/issues"
+  },
+  "homepage": "https://github.com/internetarchive/wayback-machine-webextension#readme",
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "bootstrap": "^3.4.1",
+    "chai": "^4.3.4",
+    "css-loader": "^5.2.1",
+    "eslint": "^7.2.9",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "fast-levenshtein": "^2.0.6",
+    "file-loader": "^6.2.0",
+    "jsdom": "^16.5.2",
+    "jssha": "^3.2.0",
+    "mini-css-extract-plugin": "^1.4.1",
+    "mocha": ">=8.3.2",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.31.2",
+    "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "url-loader": "^4.1.1"
+  }
+}

@@ -1,0 +1,34 @@
+
+.color_code {
+  color:#22c399;
+  width: 100%;
+}
+
+body {
+    max-height: 100%;
+}
+
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+    /* background: white; */
+}
+
+.extra_margin {
+    margin-top: 3px
+}
+
+.lower_margin {
+    margin-bottom: 5px;
+}
+
+#show_domaintools_data {
+    font-size: 20px;
+}
+#whois {
+    float: left;
+}
+
+.title .color_code {
+    float: left;
+}

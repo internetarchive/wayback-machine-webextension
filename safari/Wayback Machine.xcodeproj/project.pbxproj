@@ -1,0 +1,578 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C32EFC91271AA72A006F4A1E /* resource-list.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8C271AA72A006F4A1E /* resource-list.html */; };
+		C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8D271AA72A006F4A1E /* cited-papers.html */; };
+		C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8E271AA72A006F4A1E /* wordcloud.html */; };
+		C32EFC94271AA72A006F4A1E /* cited-books.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC8F271AA72A006F4A1E /* cited-books.html */; };
+		C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */ = {isa = PBXBuildFile; fileRef = C32EFC90271AA72A006F4A1E /* tvnews.html */; };
+		C33A028C27BF83BC00528EFF /* libs in Resources */ = {isa = PBXBuildFile; fileRef = C33A028B27BF83BC00528EFF /* libs */; };
+		C3B3C0F0271AA7E800BD70DF /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = C3B3C0EF271AA7E800BD70DF /* about.html */; };
+		C3BDC359279946F9003A1E18 /* exclude-list.html in Resources */ = {isa = PBXBuildFile; fileRef = C3BDC358279946F9003A1E18 /* exclude-list.html */; };
+		C3CBA8B426E4511100CC9485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8B326E4511100CC9485 /* AppDelegate.swift */; };
+		C3CBA8B726E4511100CC9485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8B526E4511100CC9485 /* Main.storyboard */; };
+		C3CBA8B926E4511100CC9485 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8B826E4511100CC9485 /* ViewController.swift */; };
+		C3CBA8BB26E4511200CC9485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8BA26E4511200CC9485 /* Assets.xcassets */; };
+		C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C3CBA8C726E4511200CC9485 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3CBA8C626E4511200CC9485 /* Cocoa.framework */; };
+		C3CBA8CA26E4511200CC9485 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8C926E4511200CC9485 /* SafariWebExtensionHandler.swift */; };
+		C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D726E4511300CC9485 /* annotations.html */; };
+		C3CBA8EE26E4511300CC9485 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DA26E4511300CC9485 /* index.html */; };
+		C3CBA8F226E4511300CC9485 /* css in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8DE26E4511300CC9485 /* css */; };
+		C3CBA8F426E4511300CC9485 /* images in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E026E4511300CC9485 /* images */; };
+		C3CBA8F926E4511300CC9485 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E526E4511300CC9485 /* scripts */; };
+		C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E626E4511300CC9485 /* welcome.html */; };
+		C3CBA8FB26E4511300CC9485 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E726E4511300CC9485 /* manifest.json */; };
+		C3CBA8FC26E4511300CC9485 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8E826E4511300CC9485 /* fonts */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C3CBA8C326E4511200CC9485 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C3CBA8A726E4511100CC9485 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C3CBA8C026E4511200CC9485;
+			remoteInfo = "Wayback Machine Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C3CBA8D226E4511200CC9485 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		C32EFC8C271AA72A006F4A1E /* resource-list.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "resource-list.html"; path = "../../webextension/resource-list.html"; sourceTree = "<group>"; };
+		C32EFC8D271AA72A006F4A1E /* cited-papers.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "cited-papers.html"; path = "../../webextension/cited-papers.html"; sourceTree = "<group>"; };
+		C32EFC8E271AA72A006F4A1E /* wordcloud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = wordcloud.html; path = ../../webextension/wordcloud.html; sourceTree = "<group>"; };
+		C32EFC8F271AA72A006F4A1E /* cited-books.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "cited-books.html"; path = "../../webextension/cited-books.html"; sourceTree = "<group>"; };
+		C32EFC90271AA72A006F4A1E /* tvnews.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = tvnews.html; path = ../../webextension/tvnews.html; sourceTree = "<group>"; };
+		C33A028B27BF83BC00528EFF /* libs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = libs; path = ../../webextension/libs; sourceTree = "<group>"; };
+		C3B3C0EF271AA7E800BD70DF /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = about.html; path = ../../webextension/about.html; sourceTree = "<group>"; };
+		C3BDC358279946F9003A1E18 /* exclude-list.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "exclude-list.html"; path = "../../webextension/exclude-list.html"; sourceTree = "<group>"; };
+		C3CBA8AF26E4511100CC9485 /* Wayback Machine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wayback Machine.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3CBA8B226E4511100CC9485 /* Wayback_Machine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wayback_Machine.entitlements; sourceTree = "<group>"; };
+		C3CBA8B326E4511100CC9485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C3CBA8B626E4511100CC9485 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C3CBA8B826E4511100CC9485 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C3CBA8BA26E4511200CC9485 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C3CBA8BC26E4511200CC9485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Wayback Machine Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3CBA8C626E4511200CC9485 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		C3CBA8C926E4511200CC9485 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		C3CBA8CB26E4511200CC9485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3CBA8CC26E4511200CC9485 /* Wayback_Machine_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wayback_Machine_Extension.entitlements; sourceTree = "<group>"; };
+		C3CBA8D726E4511300CC9485 /* annotations.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = annotations.html; path = ../../webextension/annotations.html; sourceTree = "<group>"; };
+		C3CBA8DA26E4511300CC9485 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../webextension/index.html; sourceTree = "<group>"; };
+		C3CBA8DE26E4511300CC9485 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../../webextension/css; sourceTree = "<group>"; };
+		C3CBA8E026E4511300CC9485 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../../webextension/images; sourceTree = "<group>"; };
+		C3CBA8E526E4511300CC9485 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../webextension/scripts; sourceTree = "<group>"; };
+		C3CBA8E626E4511300CC9485 /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = welcome.html; path = ../../webextension/welcome.html; sourceTree = "<group>"; };
+		C3CBA8E726E4511300CC9485 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../webextension/manifest.json; sourceTree = "<group>"; };
+		C3CBA8E826E4511300CC9485 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../../webextension/fonts; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C3CBA8AC26E4511100CC9485 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3CBA8BE26E4511200CC9485 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3CBA8C726E4511200CC9485 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C3CBA8A626E4511100CC9485 = {
+			isa = PBXGroup;
+			children = (
+				C3CBA8B126E4511100CC9485 /* Wayback Machine */,
+				C3CBA8C826E4511200CC9485 /* Wayback Machine Extension */,
+				C3CBA8C526E4511200CC9485 /* Frameworks */,
+				C3CBA8B026E4511100CC9485 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C3CBA8B026E4511100CC9485 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C3CBA8AF26E4511100CC9485 /* Wayback Machine.app */,
+				C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C3CBA8B126E4511100CC9485 /* Wayback Machine */ = {
+			isa = PBXGroup;
+			children = (
+				C3CBA8B226E4511100CC9485 /* Wayback_Machine.entitlements */,
+				C3CBA8B326E4511100CC9485 /* AppDelegate.swift */,
+				C3CBA8B526E4511100CC9485 /* Main.storyboard */,
+				C3CBA8B826E4511100CC9485 /* ViewController.swift */,
+				C3CBA8BA26E4511200CC9485 /* Assets.xcassets */,
+				C3CBA8BC26E4511200CC9485 /* Info.plist */,
+			);
+			path = "Wayback Machine";
+			sourceTree = "<group>";
+		};
+		C3CBA8C526E4511200CC9485 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C3CBA8C626E4511200CC9485 /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C3CBA8C826E4511200CC9485 /* Wayback Machine Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C3CBA8D626E4511300CC9485 /* Resources */,
+				C3CBA8C926E4511200CC9485 /* SafariWebExtensionHandler.swift */,
+				C3CBA8CB26E4511200CC9485 /* Info.plist */,
+				C3CBA8CC26E4511200CC9485 /* Wayback_Machine_Extension.entitlements */,
+			);
+			path = "Wayback Machine Extension";
+			sourceTree = "<group>";
+		};
+		C3CBA8D626E4511300CC9485 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C33A028B27BF83BC00528EFF /* libs */,
+				C3CBA8DE26E4511300CC9485 /* css */,
+				C3CBA8E826E4511300CC9485 /* fonts */,
+				C3CBA8E026E4511300CC9485 /* images */,
+				C3CBA8E526E4511300CC9485 /* scripts */,
+				C3B3C0EF271AA7E800BD70DF /* about.html */,
+				C3CBA8D726E4511300CC9485 /* annotations.html */,
+				C32EFC8F271AA72A006F4A1E /* cited-books.html */,
+				C32EFC8D271AA72A006F4A1E /* cited-papers.html */,
+				C3BDC358279946F9003A1E18 /* exclude-list.html */,
+				C3CBA8DA26E4511300CC9485 /* index.html */,
+				C32EFC8C271AA72A006F4A1E /* resource-list.html */,
+				C32EFC90271AA72A006F4A1E /* tvnews.html */,
+				C3CBA8E626E4511300CC9485 /* welcome.html */,
+				C32EFC8E271AA72A006F4A1E /* wordcloud.html */,
+				C3CBA8E726E4511300CC9485 /* manifest.json */,
+			);
+			name = Resources;
+			path = "Wayback Machine Extension";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C3CBA8AE26E4511100CC9485 /* Wayback Machine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3CBA8D326E4511200CC9485 /* Build configuration list for PBXNativeTarget "Wayback Machine" */;
+			buildPhases = (
+				C3CBA8AB26E4511100CC9485 /* Sources */,
+				C3CBA8AC26E4511100CC9485 /* Frameworks */,
+				C3CBA8AD26E4511100CC9485 /* Resources */,
+				C3CBA8D226E4511200CC9485 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C3CBA8C426E4511200CC9485 /* PBXTargetDependency */,
+			);
+			name = "Wayback Machine";
+			productName = "Wayback Machine";
+			productReference = C3CBA8AF26E4511100CC9485 /* Wayback Machine.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C3CBA8C026E4511200CC9485 /* Wayback Machine Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3CBA8CF26E4511200CC9485 /* Build configuration list for PBXNativeTarget "Wayback Machine Extension" */;
+			buildPhases = (
+				C3CBA8BD26E4511200CC9485 /* Sources */,
+				C3CBA8BE26E4511200CC9485 /* Frameworks */,
+				C3CBA8BF26E4511200CC9485 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Wayback Machine Extension";
+			productName = "Wayback Machine Extension";
+			productReference = C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C3CBA8A726E4511100CC9485 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1300;
+				TargetAttributes = {
+					C3CBA8AE26E4511100CC9485 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+					C3CBA8C026E4511200CC9485 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = C3CBA8AA26E4511100CC9485 /* Build configuration list for PBXProject "Wayback Machine" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C3CBA8A626E4511100CC9485;
+			productRefGroup = C3CBA8B026E4511100CC9485 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C3CBA8AE26E4511100CC9485 /* Wayback Machine */,
+				C3CBA8C026E4511200CC9485 /* Wayback Machine Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C3CBA8AD26E4511100CC9485 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3CBA8BB26E4511200CC9485 /* Assets.xcassets in Resources */,
+				C3CBA8B726E4511100CC9485 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3CBA8BF26E4511200CC9485 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3CBA8F426E4511300CC9485 /* images in Resources */,
+				C32EFC94271AA72A006F4A1E /* cited-books.html in Resources */,
+				C32EFC92271AA72A006F4A1E /* cited-papers.html in Resources */,
+				C3B3C0F0271AA7E800BD70DF /* about.html in Resources */,
+				C32EFC93271AA72A006F4A1E /* wordcloud.html in Resources */,
+				C3CBA8F926E4511300CC9485 /* scripts in Resources */,
+				C32EFC95271AA72A006F4A1E /* tvnews.html in Resources */,
+				C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */,
+				C3CBA8EE26E4511300CC9485 /* index.html in Resources */,
+				C3CBA8F226E4511300CC9485 /* css in Resources */,
+				C3CBA8FA26E4511300CC9485 /* welcome.html in Resources */,
+				C3BDC359279946F9003A1E18 /* exclude-list.html in Resources */,
+				C3CBA8FB26E4511300CC9485 /* manifest.json in Resources */,
+				C3CBA8FC26E4511300CC9485 /* fonts in Resources */,
+				C33A028C27BF83BC00528EFF /* libs in Resources */,
+				C32EFC91271AA72A006F4A1E /* resource-list.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C3CBA8AB26E4511100CC9485 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3CBA8B926E4511100CC9485 /* ViewController.swift in Sources */,
+				C3CBA8B426E4511100CC9485 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3CBA8BD26E4511200CC9485 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3CBA8CA26E4511200CC9485 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C3CBA8C426E4511200CC9485 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C3CBA8C026E4511200CC9485 /* Wayback Machine Extension */;
+			targetProxy = C3CBA8C326E4511200CC9485 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C3CBA8B526E4511100CC9485 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C3CBA8B626E4511100CC9485 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C3CBA8CD26E4511200CC9485 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C3CBA8CE26E4511200CC9485 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		C3CBA8D026E4511200CC9485 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Wayback Machine Extension/Wayback_Machine_Extension.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 22;
+				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				INFOPLIST_FILE = "Wayback Machine Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 3.1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C3CBA8D126E4511200CC9485 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Wayback Machine Extension/Wayback_Machine_Extension.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 22;
+				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				INFOPLIST_FILE = "Wayback Machine Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 3.1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C3CBA8D426E4511200CC9485 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Wayback Machine/Wayback_Machine.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 22;
+				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				INFOPLIST_FILE = "Wayback Machine/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 3.1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C3CBA8D526E4511200CC9485 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Wayback Machine/Wayback_Machine.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 22;
+				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				INFOPLIST_FILE = "Wayback Machine/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 3.1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C3CBA8AA26E4511100CC9485 /* Build configuration list for PBXProject "Wayback Machine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3CBA8CD26E4511200CC9485 /* Debug */,
+				C3CBA8CE26E4511200CC9485 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3CBA8CF26E4511200CC9485 /* Build configuration list for PBXNativeTarget "Wayback Machine Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3CBA8D026E4511200CC9485 /* Debug */,
+				C3CBA8D126E4511200CC9485 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3CBA8D326E4511200CC9485 /* Build configuration list for PBXNativeTarget "Wayback Machine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3CBA8D426E4511200CC9485 /* Debug */,
+				C3CBA8D526E4511200CC9485 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C3CBA8A726E4511100CC9485 /* Project object */;
+}

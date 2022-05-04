@@ -1,0 +1,142 @@
+body {
+    background-color: #eee;
+}
+
+.body-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.loader {
+    flex: none;
+}
+
+.outer-container {
+    display: contents;
+}
+
+#results-container {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    color: #000;
+    display: block;
+    min-height: 1em;
+    margin: 1em 0;
+    font-size: 20px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow-y: auto;
+    word-break: break-all;
+}
+
+#fact-check-url {
+    font-weight: normal;
+    margin: 0 1em;
+    word-break: break-all;
+}
+
+.fact-checks-list {
+    margin: 0;
+    padding: 0.5em;
+}
+
+#results-container .fact-checks-list:nth-child(even) {
+    background-color: #fff;
+}
+
+.name {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.ournews-branding {
+    font-size: 15px;
+}
+
+.ournews-branding img {
+    margin: 8px 0 0 4px;
+    width: 110px;
+}
+
+.container-scrollbar::-webkit-scrollbar {
+    background-color: #aaa;
+    width: 16px;
+    border-radius: 5px;
+}
+.container-scrollbar::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+.header-container, .title {
+    text-align: center;
+}
+
+.highlight-color {
+    color: #733;
+}
+
+.highlight {
+    color: #22c399;
+}
+
+.score-label {
+    margin-left: 1em;
+    padding: 3px 7px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.High {
+    background-color: green;
+}
+
+.Medium {
+    color: #000;
+    background-color: yellow;
+}
+
+.Low {
+    background-color: red;
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+
+    body {
+        background-color: #2C2C2C;
+        color: #eee;
+    }
+
+    #results-container {
+        color: #ddd;
+        background-color: #333;
+        border: 1px solid #555;
+    }
+
+    #results-container .fact-checks-list:nth-child(even) {
+        background-color: rgb(61, 61, 61);
+    }
+
+    .highlight-color {
+        color: #d88;
+    }
+
+    .branding {
+        color: #bbb;
+    }
+
+    .container-scrollbar::-webkit-scrollbar {
+        background-color: #555;
+    }
+    .container-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    a:hover {
+        color: #438ac9;
+    }
+}

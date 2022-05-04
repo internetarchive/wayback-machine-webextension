@@ -1,0 +1,56 @@
+{
+  "manifest_version": 2,
+  "name": "Wayback Machine",
+  "version": "3.1.0.1",
+  "description": "The Official Wayback Machine Extension - by the Internet Archive.",
+  "icons": {
+    "16": "images/app-icon/mini-icon16.png",
+    "24": "images/app-icon/mini-icon24.png",
+    "32": "images/app-icon/mini-icon32.png",
+    "48": "images/app-icon/mini-icon48.png",
+    "64": "images/app-icon/app-icon64.png",
+    "96": "images/app-icon/app-icon96.png",
+    "128": "images/app-icon/app-icon128.png",
+    "256": "images/app-icon/app-icon256.png",
+    "512": "images/app-icon/app-icon512.png",
+    "1024": "images/app-icon/app-icon1024.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "images/toolbar/toolbar-icon-archive16.png",
+      "24": "images/toolbar/toolbar-icon-archive24.png",
+      "32": "images/toolbar/toolbar-icon-archive32.png",
+      "64": "images/toolbar/toolbar-icon-archive64.png"
+    }
+  },
+  "homepage_url": "https://archive.org/",
+  "permissions": [
+      "activeTab",
+      "cookies",
+      "contextMenus",
+      "notifications",
+      "storage",
+      "webRequest",
+      "webRequestBlocking",
+      "https://archive.org/*",
+      "https://*.archive.org/*",
+      "https://hypothes.is/*",
+      "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["scripts/utils.js",
+                "scripts/background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
+      "js": ["scripts/wikipedia.js"],
+      "css": ["css/wikipedia.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "css/archive.css",
+    "images/*"
+  ]
+}

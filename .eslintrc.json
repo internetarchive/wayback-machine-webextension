@@ -1,0 +1,21 @@
+{
+  "extends": "standard",
+  "env": {
+    "browser": true,
+    "webextensions": true
+  },
+  "rules": {
+    "indent": ["warn", 2, { "SwitchCase": 1, "MemberExpression": "off" }],
+    "brace-style": "off",
+    "camelcase": "off",
+    "space-before-function-paren": "off",
+    "prefer-const": "off",
+    "quote-props": "off",
+    "one-var": "off",
+    "padded-blocks": "off",
+    "dot-notation": "off"
+  },
+  "globals": {
+    "$": "readonly"
+  }
+}

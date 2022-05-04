@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Usage: $0 [version]"
+echo " "
+
+version=`grep '"version"' webextension/manifest.json | sed 's/.*\"version\"\ *\:\ *\"\([0-9\.]*\)\".*/\1/'`
+echo "Current version is $version"
+
+if [ -n "$1" ]; then
+  echo "Updating version to $1"
+  sed -i '' -e "s/MARKETING_VERSION\ \=\ [0-9\.]*/MARKETING_VERSION = $1/" safari/Wayback\ Machine.xcodeproj/project.pbxproj
+  sed -i '' -e "s/\"version\"\ *\:\ *\"[0-9\.]*\"/\"version\"\:\ \"$1\"/" webextension/manifest.json
+  # sed -i '' -e "s/\"version\"\ *\:\ *\"[0-9\.]*\"/\"version\"\:\ \"$1\"/" package.json
+fi
