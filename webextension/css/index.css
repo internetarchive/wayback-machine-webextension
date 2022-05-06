@@ -255,7 +255,6 @@ body {
 .spn-flip {
     /* to cover over the chk-frame */
     z-index: 5;
-    margin-bottom: 7px;
 }
 
 
