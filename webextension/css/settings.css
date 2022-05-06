@@ -34,9 +34,11 @@
     text-align: left;
     cursor: pointer;
 }
-.setting-switch:hover {
+.setting-switch:hover, .setting-switch:focus-within {
     background-color: #ccc;
+    outline: none;
 }
+
 
 .btn-docs {
     background-color: #888;

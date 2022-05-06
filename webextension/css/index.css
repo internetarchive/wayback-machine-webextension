@@ -20,9 +20,10 @@ body {
     width: 22%;
     cursor: pointer;
     opacity: 1.0;
+    outline: none;
 }
 
-.tab-item:hover {
+.tab-item:hover, .tab-item:focus-visible {
     opacity: 0.7;
 }
 
@@ -36,15 +37,23 @@ body {
 }
 
 .auth-icon-active {
-    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat;
+    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat center;
+    background-size: 15px;
     filter: invert(40%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(200%) contrast(50%);
 }
+
 .auth-icon-active input {
     visibility: hidden;
-    float: none !important;
 }
 
-.settings-icon-svg, .about-icon-svg, .logout-icon-svg, .login-icon-svg {
+.auth-dim {
+    padding: 0px 5px;
+}
+
+.settings-icon-svg,
+.about-icon-svg,
+.logout-icon-svg,
+.login-icon-svg {
     width: 25px;
     height: 25px;
 }
@@ -67,13 +76,17 @@ body {
     margin: 0 2px;
 }
 
-#search-input, .login-input {
+#search-input,
+.login-input {
     background-color: #fff;
     border-color: #777;
     color: #222;
 }
 
-#wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
+#wayback-count-msg,
+#url-not-supported-msg,
+#using-search-msg,
+#last-saved-msg {
     font-size: 9pt;
     color: #222;
 }
@@ -92,6 +105,10 @@ body {
     color: #800;
     background-color: #edd;
     border: #666 solid 1px;
+}
+
+#spn-container {
+    /* background-color: cyan; */
 }
 
 .link-copied-block {
@@ -135,13 +152,15 @@ body {
     height: 64px;
 }
 
-#using-search-msg, #save-progress-bar {
-    display: none;
+#using-search-msg,
+#save-progress-bar {
+    display: block;
 }
 
 /* search and login boxes */
 
-#search-input, .login-input {
+#search-input,
+.login-input {
     display: block;
     position: relative;
     border-radius: 5px;
@@ -162,7 +181,8 @@ body {
     padding: 3px 10px;
 }
 
-#suggestion-box div:hover, .focused {
+#suggestion-box div:hover,
+.focused {
     background-color: #eee;
     border-radius: 3px;
 }
@@ -189,13 +209,18 @@ body {
 /* checkboxes */
 
 .chk-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 49%;
+    height: 30px;
     padding: 0 5px;
-    margin-bottom: 1px;
-    flex-grow: 1;
     cursor: pointer;
+    margin-top: 4px;
+    outline: none;
 }
 
-.chk-options:hover {
+.chk-options:hover, .chk-options:focus-visible {
     background-color: rgba(127, 127, 127, 0.2);
     border-radius: 5px;
 }
@@ -210,52 +235,65 @@ body {
 .chk-options input {
     margin: 5px 5px 0 0;
 }
-/*
-.chk-options span {
-    vertical-align: text-top;
-    padding-bottom: 2px;
-}
-*/
+
+
 .chk-frame {
     display: flex;
-    gap: 2px;
-    /* Safari doesn't support gap */
-    position: relative;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     border-radius: 5px;
-    top: -17px;
-    padding-top: 18px;
-    margin-bottom: -15px;
-    border: 1px solid #ddd;
-    border-top: none;
+    height: 30px;
     background-color: #ddd;
 }
 
-#chk-login-btn {
+/* #chk-login-btn {
     position: absolute;
     width: 100%;
-}
+} */
 
 .spn-flip {
     /* to cover over the chk-frame */
     z-index: 5;
+    margin-bottom: 7px;
 }
 
-#readbook-container, #tvnews-container, #wiki-container, #view-archived-container, #fact-check-container {
+
+#readbook-container,
+#tvnews-container,
+#wiki-container,
+#view-archived-container,
+#fact-check-container {
     display: none;
 }
 
-#spn-front-label {
-    width: 100%;
+.progress-container {
+    position: relative;
+}
+
+.progress, #spn-front-label {
+    top: 0;
+    left: 0;
     position: absolute;
-    bottom: 6px;
+}
+
+#spn-front-label {
+    background-color: transparent;
+    border: none;
+    outline: none;
     text-align: center;
-    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+#spn-front-label:focus-visible {
+    background-color: #a95a57;
 }
 
 /* social buttons */
 
-a.btn-social, .btn-social {
+a.btn-social,
+.btn-social {
     border-radius: 50%;
     color: #ffffff !important;
     display: inline-block;
@@ -271,7 +309,9 @@ a.btn-social, .btn-social {
     cursor: pointer;
 }
 
-.btn-social .fa, .btn-social i, .btn-social img {
+.btn-social .fa,
+.btn-social i,
+.btn-social img {
     -ms-transform: scale(1);
     -o-transform: scale(1);
     transform: scale(1);
@@ -290,13 +330,19 @@ a.btn-social, .btn-social {
     vertical-align: middle;
 }
 
-.btn-social:hover, .btn-social:focus {
+.btn-social:hover,
+.btn-social:focus {
     color: #fff;
     outline: none;
     text-decoration: none;
 }
 
-.btn-social:hover .fa, .btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i,  .btn-social:hover img, .btn-social:focus img {
+.btn-social:hover .fa,
+.btn-social:focus .fa,
+.btn-social:hover i,
+.btn-social:focus i,
+.btn-social:hover img,
+.btn-social:focus img {
     -ms-transform: scale(1.3);
     -o-transform: scale(1.3);
     transform: scale(1.3);
@@ -333,7 +379,7 @@ a.btn-social, .btn-social {
     background-color: #3b5998;
 }
 
-.btn-facebook:hover {
+.btn-facebook:hover, .btn-facebook:focus-visible {
     background-color: #4c70ba;
 }
 
@@ -341,7 +387,7 @@ a.btn-social, .btn-social {
     background-color: #55acee;
 }
 
-.btn-twitter:hover {
+.btn-twitter:hover, .btn-twitter:focus-visible {
     background-color: #83c3f3;
 }
 
@@ -349,7 +395,7 @@ a.btn-social, .btn-social {
     background-color: #1E88E5;
 }
 
-.btn-linkedin:hover {
+.btn-linkedin:hover, .btn-linkedin:focus-visible {
     background-color: #4a8aff;
 }
 
@@ -357,7 +403,7 @@ a.btn-social, .btn-social {
     background-color: #688099;
 }
 
-.btn-copy:hover {
+.btn-copy:hover, .btn-copy:focus-visible {
     background-color: #809ebd;
 }
 
@@ -418,6 +464,7 @@ a.btn-social, .btn-social {
 }
 
 .flip-inside {
+    background-color: pink;
     position: relative;
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -430,7 +477,8 @@ a.btn-social, .btn-social {
     transform: rotateX(180deg);
 }
 
-.flip-front, .flip-back {
+.flip-front,
+.flip-back {
     position: absolute;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -445,6 +493,7 @@ a.btn-social, .btn-social {
 .flip-back {
     transform: rotateX(180deg);
 }
+
 
 /* dark mode */
 
@@ -476,13 +525,17 @@ a.btn-social, .btn-social {
         filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(60%) contrast(50%);
     }
 
-    #search-input, .login-input {
+    #search-input,
+    .login-input {
         background-color: #222;
         border-color: #666;
         color: #ddd;
     }
 
-    #wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
+    #wayback-count-msg,
+    #url-not-supported-msg,
+    #using-search-msg,
+    #last-saved-msg {
         color: #eee;
     }
 
@@ -498,7 +551,8 @@ a.btn-social, .btn-social {
         border: 1px solid #666;
     }
 
-    #suggestion-box div:hover, .focused {
+    #suggestion-box div:hover,
+    .focused {
         background-color: #666;
     }
 
