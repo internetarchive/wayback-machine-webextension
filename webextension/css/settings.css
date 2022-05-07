@@ -141,7 +141,7 @@ label[for=tagcloud] {
         border: 1px solid #666;
     }
 
-    .setting-switch:hover {
+    .setting-switch:hover, .setting-switch:focus-within {
         background-color: #444;
     }
 

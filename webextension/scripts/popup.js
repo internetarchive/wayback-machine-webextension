@@ -44,21 +44,21 @@ function homepage() {
 // If the popup displays, we know user already agreed in Welcome page.
 // This is a fix for Safari resetting the 'agreement' setting.
 function initAgreement() {
-  chrome.storage.local.set({ agreement: true }, () => {})
+  chrome.storage.local.set({ agreement: true }, () => { })
 }
 
 // Popup tip over settings tab icon after first load.
 function showSettingsTabTip() {
   let tt = $('<div>').append($('<p>').text('There are more great features in Settings!').attr({ 'class': 'setting-tip' }))[0].outerHTML
-  let tabItem = $('#settings-tab-btn').parent()
+  let tabItem = $('#settings-tab-btn')
   setTimeout(() => {
     tabItem.append(attachTooltip(tabItem, tt, 'top'))
-    .tooltip('show')
-    .on('mouseenter', () => {
-      $(tabItem).tooltip('hide')
-      // prevent tooltip from ever showing again once mouse entered
-      chrome.storage.local.set({ show_settings_tab_tip: false }, () => {})
-    })
+      .tooltip('show')
+      .on('mouseenter', () => {
+        $(tabItem).tooltip('hide')
+        // prevent tooltip from ever showing again once mouse entered
+        chrome.storage.local.set({ show_settings_tab_tip: false }, () => { })
+      })
   }, 500)
 }
 
@@ -176,6 +176,10 @@ function loginError() {
   // $('#spn-front-label').parent().attr('disabled', true)
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
+  // if not logged in set tab index of below two buttons to 0.
+  $('#chk-outlinks-label').attr('tabindex', 0)
+  $('#chk-screenshot-label').attr('tabindex', 0)
+
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
@@ -199,12 +203,16 @@ function loginSuccess() {
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
-  $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
+  $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
   $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
+
+  // if logged in successfully then set tabinde as -1 for below button elements
+  $('#chk-outlinks-label').attr('tabindex', -1)
+  $('#chk-screenshot-label').attr('tabindex', -1)
 
   // reset login flip button
   // $('#spn-front-label').parent().removeAttr('disabled')
@@ -381,7 +389,8 @@ function display_list(key_word) {
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
-          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name)
+          .on('click', (event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
             if (activeURL) { useSearchURL(true) }
@@ -517,8 +526,7 @@ function setupViewArchived() {
         const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
         if (state.has('V') && ('customData' in result) && ('statusWaybackUrl' in result.customData) &&
           ('statusCode' in result.customData) && (result.customData.statusCode >= 400) &&
-          ('statusUrl' in result.customData) && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url)))
-        {
+          ('statusUrl' in result.customData) && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url))) {
           // show msg and View Archived button for error status codes
           const statusCode = result.customData.statusCode
           const waybackUrl = result.customData.statusWaybackUrl
@@ -528,7 +536,7 @@ function setupViewArchived() {
           $('#spn-container').hide()
           $('#view-archived-container').show()
           $('#view-archived-msg').text(statusText)
-          $('#view-archived-btn').click(() => {
+          $('#view-archived-btn').on('click', () => {
             openByWindowSetting(waybackUrl)
           })
         }
@@ -558,7 +566,7 @@ function setupReadBook() {
               // Checking if the tab url is the same as the last stored one
               if (stored_url === url) {
                 // if same, use the previously fetched url
-                $('#readbook-btn').click(() => {
+                $('#readbook-btn').on('click', () => {
                   openByWindowSetting(detail_url, context)
                 })
               } else {
@@ -569,15 +577,15 @@ function setupReadBook() {
                   method: 'GET',
                   headers: headers
                 })
-                .then(res => res.json())
-                .then(response => {
-                  if (response['metadata'] && response['metadata']['identifier-access']) {
-                    const new_details_url = response['metadata']['identifier-access']
-                    $('#readbook-btn').click(() => {
-                      openByWindowSetting(new_details_url, context)
-                    })
-                  }
-                })
+                  .then(res => res.json())
+                  .then(response => {
+                    if (response['metadata'] && response['metadata']['identifier-access']) {
+                      const new_details_url = response['metadata']['identifier-access']
+                      $('#readbook-btn').on('click', () => {
+                        openByWindowSetting(new_details_url, context)
+                      })
+                    }
+                  })
               }
             })
           }
@@ -599,7 +607,7 @@ function setupNewsClips() {
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             $('#tvnews-container').show()
-            $('#tvnews-btn').click(() => {
+            $('#tvnews-btn').on('click', () => {
               chrome.storage.local.get(['view_setting'], function (settings) {
                 if (settings && settings.view_setting) {
                   const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
@@ -627,11 +635,11 @@ function setupWikiButtons() {
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
             // show wikipedia cited books & papers buttons
-            $('#wikibooks-btn').click(() => {
+            $('#wikibooks-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
-            $('#wikipapers-btn').click(() => {
+            $('#wikipapers-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
@@ -665,7 +673,7 @@ function setupFactCheck() {
               // show fact-check button
               const contextUrl = result.customData.contextUrl
               $('#fact-check-container').show()
-              $('#fact-check-btn').click(() => {
+              $('#fact-check-btn').on('click', () => {
                 openByWindowSetting(contextUrl)
               })
             }
@@ -712,6 +720,15 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
+    /** Disable all popup buttons */
+    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').attr('disabled', true)
+    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').off('click')
+    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').css('opacity', '0.6')
+    // disable social icons
+    $('.share-block *').attr('disabled', true)
+    $('.share-block *').off('click')
+    $('.share-block *').css('opacity', '0.6')
+
   } else {
     $('#spn-btn').off('click').on('click', doSaveNow)
     $('#spn-btn').removeClass('flip-inside')
@@ -874,7 +891,7 @@ function setupSaveListener() {
 }
 
 // onload
-$(function() {
+$(function () {
   $('#setting-page').hide()
   $('#login-page').hide()
   initAgreement()
@@ -891,24 +908,24 @@ $(function() {
   setupSaveListener()
   setupViewSetting()
   setupSettingsTabTip()
-  $('.logo-wayback-machine').click(homepage)
-  $('#newest-btn').click(openNewestPage)
-  $('#oldest-btn').click(openOldestPage)
-  $('#overview-btn').click(openOverviewPage)
-  $('#facebook-share-btn').click(social_share)
-  $('#twitter-share-btn').click(social_share)
-  $('#linkedin-share-btn').click(social_share)
-  $('#copy-link-btn').click(social_share)
-  $('#tweets-btn').click(searchTweet)
-  $('#about-tab-btn').click(about_support)
-  $('#donate-tab-btn').click(open_donations_page)
-  $('#settings-tab-btn').click(showSettings)
-  $('#feedback-tab-btn').click(open_feedback_page)
-  $('#site-map-btn').click(openSitemap)
-  $('#collections-btn').click(openCollections)
-  $('#urls-btn').click(openURLs)
-  $('#search-input').keydown(display_suggestions)
-  $('.btn').click(clearFocus)
-  $('#annotations-btn').click(showContext)
-  $('#tag-cloud-btn').click(showContext)
+  $('.logo-wayback-machine').on('click', homepage)
+  $('#newest-btn').on('click', openNewestPage)
+  $('#oldest-btn').on('click', openOldestPage)
+  $('#overview-btn').on('click', openOverviewPage)
+  $('#facebook-share-btn').on('click', social_share)
+  $('#twitter-share-btn').on('click', social_share)
+  $('#linkedin-share-btn').on('click', social_share)
+  $('#copy-link-btn').on('click', social_share)
+  $('#tweets-btn').on('click', searchTweet)
+  $('#about-tab-btn').on('click', about_support)
+  $('#donate-tab-btn').on('click', open_donations_page)
+  $('#settings-tab-btn').on('click', showSettings)
+  $('#feedback-tab-btn').on('click', open_feedback_page)
+  $('#site-map-btn').on('click', openSitemap)
+  $('#collections-btn').on('click', openCollections)
+  $('#urls-btn').on('click', openURLs)
+  $('#search-input').on('keydown', display_suggestions)
+  $('.btn').on('click', clearFocus)
+  $('#annotations-btn').on('click', showContext)
+  $('#tag-cloud-btn').on('click', showContext)
 })
