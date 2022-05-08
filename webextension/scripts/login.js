@@ -11,10 +11,10 @@
 
 // onload
 $(function() {
-  $('#signup-btn').click(signUp)
-  $('#forgot-pw-btn').click(forgotPassword)
-  $('#login-btn').click(doLogin)
-  $('#logout-tab-btn').click(doLogout)
+  $('#signup-btn').on('click', signUp)
+  $('#forgot-pw-btn').on('click', forgotPassword)
+  $('#login-btn').on('click', doLogin)
+  $('#logout-tab-btn').on('click', doLogout)
 })
 
 function signUp() {

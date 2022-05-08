@@ -13,7 +13,7 @@ $(function() {
   setupSettingsChange()
   setupPanelSwitch()
   setupHelpDocs()
-  $('#exclude-urls-btn').click(showExcludeList)
+  $('#exclude-urls-btn').on('click', showExcludeList)
   $('.back-btn').off('click').on('click', goBackToMain)
 })
 
@@ -97,20 +97,20 @@ function onPrivateSettingChange(e) {
 function setupSettingsChange() {
 
   // save settings whenever one changes
-  $('.saved-setting').change(saveSettings)
+  $('.saved-setting').on('change', saveSettings)
 
   // auto save page
-  $('#auto-archive-age').change((e) => {
+  $('#auto-archive-age').on('change', (e) => {
     $('#auto-archive-setting').prop('checked', true).trigger('change')
     e.target.blur()
   })
 
   // view setting
-  $('#view-setting').click(switchTabWindow)
-  $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
+  $('#view-setting').on('click', switchTabWindow)
+  $('#view-setting').children('input,label').on('click', (e) => { e.stopPropagation() })
 
   // wayback count
-  $('#wm-count-setting').change((e) => {
+  $('#wm-count-setting').on('change', (e) => {
     // displays or clears the count badge, label, oldest and newest tooltips
     setupWaybackCount()
     if ($(e.target).prop('checked') === false) {
@@ -119,19 +119,19 @@ function setupSettingsChange() {
   })
 
   // resources
-  $('#wiki-setting').change((e) => {
+  $('#wiki-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#wiki-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { wiki_setting: false } })
     }
   })
-  $('#amazon-setting').change((e) => {
+  $('#amazon-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#readbook-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { amazon_setting: false } })
     }
   })
-  $('#tvnews-setting').change((e) => {
+  $('#tvnews-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#tvnews-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { tvnews_setting: false } })
@@ -139,7 +139,7 @@ function setupSettingsChange() {
   })
 
   // context notices
-  $('#fact-check-setting').change((e) => {
+  $('#fact-check-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#fact-check-container').hide()
       chrome.runtime.sendMessage({ message: 'clearFactCheck' })
@@ -155,13 +155,13 @@ function showExcludeList() {
 function setupPanelSwitch() {
   if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
   $('#first-panel').hide()
-  $('#panel1-btn').click(() => {
+  $('#panel1-btn').on('click', () => {
     $('#second-panel').hide()
     $('#first-panel').show()
     if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
     if ($('#panel2-btn').hasClass('selected')) { $('#panel2-btn').removeClass('selected') }
   })
-  $('#panel2-btn').click(() => {
+  $('#panel2-btn').on('click', () => {
     $('#first-panel').hide()
     $('#second-panel').show()
     if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
