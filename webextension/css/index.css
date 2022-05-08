@@ -152,7 +152,7 @@ body {
 
 #using-search-msg,
 #save-progress-bar {
-    display: block;
+    display: none;
 }
 
 /* search and login boxes */
@@ -267,6 +267,12 @@ body {
     top: 0;
     left: 0;
     position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-bar {
+    width: 100%;
 }
 
 #spn-front-label {
@@ -274,8 +280,6 @@ body {
     border: none;
     outline: none;
     text-align: center;
-    width: 100%;
-    height: 100%;
 }
 
 #spn-front-label:focus-visible {
