@@ -176,9 +176,14 @@ function loginError() {
   // $('#spn-front-label').parent().attr('disabled', true)
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
+  // if not logged in set tab index of below two buttons to 0.
+  $('#chk-outlinks-label').attr('tabindex', 0)
+  $('#chk-screenshot-label').attr('tabindex', 0)
+
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
+  $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
   // add tab login button
@@ -196,12 +201,18 @@ function loginSuccess() {
   // reset options that open login page
   $('.auth-icon').removeClass('auth-icon-active')
   $('.auth-disabled').removeAttr('disabled')
+  $('.auth-click1').off('click')
   $('.auth-click2').off('click')
+  $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
   $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
+
+  // if logged in successfully then set tabinde as -1 for below button elements
+  $('#chk-outlinks-label').attr('tabindex', -1)
+  $('#chk-screenshot-label').attr('tabindex', -1)
 
   // reset login flip button
   // $('#spn-front-label').parent().removeAttr('disabled')
@@ -379,11 +390,11 @@ function display_list(key_word) {
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name)
-            .on('click', (event) => {
-              document.getElementById('search-input').value = event.target.innerHTML
-              activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
-              if (activeURL) { useSearchURL(true) }
-            })
+          .on('click', (event) => {
+            document.getElementById('search-input').value = event.target.innerHTML
+            activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
+            if (activeURL) { useSearchURL(true) }
+          })
         )
       }
     }
@@ -879,63 +890,6 @@ function setupSaveListener() {
   )
 }
 
-// Checks or unchecks checkboxes on parent button click
-function setCheckboxListener() {
-
-  $('#chk-outlinks').on('click', (event) => {
-    event.stopPropagation()
-    $(this).prop('checked', !$(this).prop('checked'))
-  })
-
-  // on click of button check the checkbox
-  $('#chk-outlinks-label').on('click', (event) => {
-    checkAuthentication((result) => {
-      if (result && result.auth_check) {
-        // update checkbox checked value to be negated of current value 
-        const isCheckedOutlinks = !$('#chk-outlinks').prop('checked')
-        $('#chk-outlinks').prop('checked', isCheckedOutlinks).trigger('change')
-      } else {
-        showLoginPage(event)
-      }
-    })
-
-  })
-
-  // update checkbox checked value to be negated of current value 
-  $('#chk-screenshot').on('click', (event) => {
-    event.stopPropagation()
-    $(this).prop('checked', !$(this).prop('checked'))
-  })
-
-  // on click of button check the checkbox
-  $('#chk-screenshot-label').on('click', (event) => {
-    checkAuthentication((result) => {
-      if (result && result.auth_check) {
-        // update checkbox checked value to be negated of current value 
-        const isCheckedScreen = $('#chk-screenshot').prop('checked')
-        $('#chk-screenshot').prop('checked', !isCheckedScreen).trigger('change')
-      } else {
-        showLoginPage(event)
-      }
-    })
-  })
-
-
-
-}
-
-function myArchiveBtnListener() {
-  $('#my-archive-btn').on('click', (event) => {
-    checkAuthentication((result) => {
-      if (result && result.auth_check) {
-        openMyWebArchivePage()
-      } else {
-        showLoginPage(event)
-      }
-    })
-  })
-}
-
 // onload
 $(function () {
   $('#setting-page').hide()
@@ -954,8 +908,6 @@ $(function () {
   setupSaveListener()
   setupViewSetting()
   setupSettingsTabTip()
-  setCheckboxListener()
-  myArchiveBtnListener()
   $('.logo-wayback-machine').on('click', homepage)
   $('#newest-btn').on('click', openNewestPage)
   $('#oldest-btn').on('click', openOldestPage)
