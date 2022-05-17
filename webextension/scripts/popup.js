@@ -712,19 +712,12 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
-    /** Disable all popup buttons */
-    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').attr('disabled', true)
-    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').off('click')
-    $('#oldest-btn, #overview-btn ,#newest-btn, #urls-btn, #collections-btn, #site-map-btn, #tag-cloud-btn, #annotations-btn, #tweets-btn').css('opacity', '0.6')
-    // disable social icons
-    $('.share-block *').attr('disabled', true)
-    $('.share-block *').off('click')
-    $('.share-block *').css('opacity', '0.6')
-
+    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66')
   } else {
     $('#spn-btn').off('click').on('click', doSaveNow)
     $('#spn-btn').removeClass('flip-inside')
     $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0')
   }
 }
 
