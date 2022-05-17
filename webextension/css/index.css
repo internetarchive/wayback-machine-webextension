@@ -219,7 +219,7 @@ body {
     border: none;
 }
 
-.chk-options:hover, .chk-options:focus-within {
+.chk-options:hover {
     background-color: rgba(127, 127, 127, 0.2);
     border-radius: 5px;
 }
@@ -233,7 +233,6 @@ body {
 .chk-options input {
     margin: 5px 5px 0 0;
 }
-
 
 .chk-frame {
     display: flex;
@@ -498,7 +497,7 @@ body {
         color: #eee;
     }
 
-    .chk-options:hover, .chk-options:focus-within {
+    .chk-options:hover {
         background-color: #503838;
     }
 

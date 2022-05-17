@@ -176,10 +176,6 @@ function loginError() {
   // $('#spn-front-label').parent().attr('disabled', true)
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
-  // if not logged in set tab index of below two buttons to 0.
-  $('#chk-outlinks-label').attr('tabindex', 0)
-  $('#chk-screenshot-label').attr('tabindex', 0)
-
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
@@ -209,10 +205,6 @@ function loginSuccess() {
   $('.tab-item').css('width', '18%')
   $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
-
-  // if logged in successfully then set tabinde as -1 for below button elements
-  $('#chk-outlinks-label').attr('tabindex', -1)
-  $('#chk-screenshot-label').attr('tabindex', -1)
 
   // reset login flip button
   // $('#spn-front-label').parent().removeAttr('disabled')

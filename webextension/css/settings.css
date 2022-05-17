@@ -52,8 +52,7 @@
     height: 15px;
 }
 
-.setting-switch:hover,
-.setting-switch:focus-within {
+.setting-switch:hover {
     background-color: #ccc;
     outline: none;
 }
@@ -141,7 +140,7 @@ label[for=tagcloud] {
         border: 1px solid #666;
     }
 
-    .setting-switch:hover, .setting-switch:focus-within {
+    .setting-switch:hover {
         background-color: #444;
     }
 
