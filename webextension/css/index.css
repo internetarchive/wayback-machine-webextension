@@ -39,17 +39,13 @@ body {
 }
 
 .auth-icon-active {
-    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat center;
-    background-size: 15px;
+    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat;
     filter: invert(40%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(200%) contrast(50%);
 }
 
 .auth-icon-active input {
     visibility: hidden;
-}
-
-.auth-dim {
-    padding: 0px 5px;
+    float: none !important;
 }
 
 .settings-icon-svg,
@@ -207,16 +203,10 @@ body {
 /* checkboxes */
 
 .chk-options {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 49%;
-    height: 30px;
     padding: 0 5px;
+    margin-bottom: 1px;
+    flex-grow: 1;
     cursor: pointer;
-    background-color: transparent;
-    outline: none;
-    border: none;
 }
 
 .chk-options:hover {
@@ -236,11 +226,15 @@ body {
 
 .chk-frame {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    gap: 2px;
+    position: relative;
     width: 100%;
     border-radius: 5px;
-    height: 30px;
+    top: -17px;
+    padding-top: 18px;
+    margin-bottom: -15px;
+    border: 1px solid #ddd;
+    border-top: none;
     background-color: #ddd;
 }
 
@@ -503,6 +497,7 @@ body {
 
     .chk-frame {
         border: 1px solid #744;
+        border-top: none;
         background-color: #3c2c2c;
     }
 

@@ -23,11 +23,6 @@
     margin-top: 0.5em;
 }
 
-.setting-text-box p {
-    font-size: 12px;
-    margin: 0;
-}
-
 .setting-switch {
     width: 100%;
     min-height: 36px;
@@ -37,19 +32,6 @@
     padding: 8px 5px 8px 5px;
     text-align: left;
     cursor: pointer;
-}
-
-.setting-switch[for="email-outlinks-setting"],
-.setting-switch[for="my-archive-setting"] {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.setting-switch span.auth-icon {
-    display: block;
-    width: 15px;
-    height: 15px;
 }
 
 .setting-switch:hover {
