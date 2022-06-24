@@ -44,20 +44,20 @@ function homepage() {
 // If the popup displays, we know user already agreed in Welcome page.
 // This is a fix for Safari resetting the 'agreement' setting.
 function initAgreement() {
-  chrome.storage.local.set({ agreement: true }, () => {})
+  chrome.storage.local.set({ agreement: true }, () => { })
 }
 
 // Popup tip over settings tab icon after first load.
 function showSettingsTabTip() {
   let tt = $('<div>').append($('<p>').text('There are more great features in Settings!').attr({ 'class': 'setting-tip' }))[0].outerHTML
-  let tabItem = $('#settings-tab-btn').parent()
+  let tabItem = $('#settings-tab-btn')
   setTimeout(() => {
     tabItem.append(attachTooltip(tabItem, tt, 'top'))
     .tooltip('show')
     .on('mouseenter', () => {
       $(tabItem).tooltip('hide')
       // prevent tooltip from ever showing again once mouse entered
-      chrome.storage.local.set({ show_settings_tab_tip: false }, () => {})
+      chrome.storage.local.set({ show_settings_tab_tip: false }, () => { })
     })
   }, 500)
 }
@@ -177,7 +177,6 @@ function loginError() {
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
   // setup options that open login page
-  // $('.auth-dim').css('opacity', '50%')
   $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
@@ -196,7 +195,6 @@ function loginError() {
 function loginSuccess() {
 
   // reset options that open login page
-  // $('.auth-dim').css('opacity', '100%')
   $('.auth-icon').removeClass('auth-icon-active')
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
@@ -714,10 +712,12 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
+    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
   } else {
     $('#spn-btn').off('click').on('click', doSaveNow)
     $('#spn-btn').removeClass('flip-inside')
     $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0').css('cursor', '')
   }
 }
 

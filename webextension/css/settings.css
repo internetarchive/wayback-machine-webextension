@@ -1,4 +1,3 @@
-
 /* default light mode */
 
 #setting-page {
@@ -36,6 +35,7 @@
 }
 .setting-switch:hover {
     background-color: #ccc;
+    outline: none;
 }
 
 .btn-docs {
