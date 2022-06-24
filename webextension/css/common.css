@@ -161,12 +161,7 @@ button.selected:focus-visible {
     background-color: #AA4B48 !important;
     color: #eee !important;
 }
-/*
-.btn-red:focus-visible, button.selected:focus-visible {
-    background-color: #aa4b48 !important;
-    outline: none;
-}
-*/
+
 .btn-orange {
     background-color: #9A4316 !important;
     border: 1px solid #CC6029 !important;

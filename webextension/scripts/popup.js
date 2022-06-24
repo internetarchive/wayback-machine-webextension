@@ -712,12 +712,12 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
-    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66')
+    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
   } else {
     $('#spn-btn').off('click').on('click', doSaveNow)
     $('#spn-btn').removeClass('flip-inside')
     $('#url-not-supported-msg').text('').hide()
-    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0')
+    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0').css('cursor', '')
   }
 }
 

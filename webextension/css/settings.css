@@ -33,12 +33,10 @@
     text-align: left;
     cursor: pointer;
 }
-
 .setting-switch:hover {
     background-color: #ccc;
     outline: none;
 }
-
 
 .btn-docs {
     background-color: #888;
@@ -121,7 +119,6 @@ label[for=tagcloud] {
     .setting-switch {
         border: 1px solid #666;
     }
-
     .setting-switch:hover {
         background-color: #444;
     }
