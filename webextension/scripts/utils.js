@@ -681,7 +681,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     trigger: 'manual'
   })
   // Handles staying open
-  .on('mouseenter', () => {
+  .on('mouseenter click', () => {
     $(anchor).tooltip('show')
     $('.popup_box').on('mouseleave', () => {
       setTimeout(() => {
@@ -691,7 +691,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
       }, time)
     })
   })
-  .on('mouseleave', () => {
+  .on('mouseleave blur', () => {
     setTimeout(() => {
       if (!$('.popup_box:hover').length) {
         $(anchor).tooltip('hide')
