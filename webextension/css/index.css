@@ -28,7 +28,8 @@ body {
     outline: none;
 }
 
-.tab-item:hover, .tab-item:focus-visible {
+.tab-item:hover,
+.tab-item:focus-visible {
     opacity: 0.7;
 }
 
@@ -256,7 +257,8 @@ body {
     position: relative;
 }
 
-.progress, #spn-front-label {
+.progress,
+#spn-front-label {
     top: 0;
     left: 0;
     position: absolute;
@@ -366,32 +368,32 @@ body {
 .btn-facebook {
     background-color: #3b5998;
 }
-
-.btn-facebook:hover, .btn-facebook:focus-visible {
+.btn-facebook:hover,
+.btn-facebook:focus-visible {
     background-color: #4c70ba;
 }
 
 .btn-twitter {
     background-color: #55acee;
 }
-
-.btn-twitter:hover, .btn-twitter:focus-visible {
+.btn-twitter:hover,
+.btn-twitter:focus-visible {
     background-color: #83c3f3;
 }
 
 .btn-linkedin {
     background-color: #1E88E5;
 }
-
-.btn-linkedin:hover, .btn-linkedin:focus-visible {
+.btn-linkedin:hover,
+.btn-linkedin:focus-visible {
     background-color: #4a8aff;
 }
 
 .btn-copy {
     background-color: #688099;
 }
-
-.btn-copy:hover, .btn-copy:focus-visible {
+.btn-copy:hover,
+.btn-copy:focus-visible {
     background-color: #809ebd;
 }
 

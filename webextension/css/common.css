@@ -79,7 +79,8 @@ button {
     padding-left: 0;
     padding-right: 0;
 }
-.btn:active {
+.btn:active,
+.btn:focus-visible {
     outline: none !important;
 }
 
@@ -147,27 +148,32 @@ button.btn-mini {
 
 /* button colors */
 
-.btn-red, button.selected {
+.btn-red,
+button.selected {
     background-color: #9A3B38 !important;
     border: 1px solid #BF4946 !important;
     color: #eee !important;
 }
-.btn-red:hover, button.selected:hover {
-    background-color: #aa4b48 !important;
+.btn-red:hover,
+.btn-red:focus-visible,
+button.selected:hover,
+button.selected:focus-visible {
+    background-color: #AA4B48 !important;
     color: #eee !important;
 }
-
+/*
 .btn-red:focus-visible, button.selected:focus-visible {
     background-color: #aa4b48 !important;
     outline: none;
 }
-
+*/
 .btn-orange {
     background-color: #9A4316 !important;
     border: 1px solid #CC6029 !important;
     color: #eee !important;
 }
-.btn-orange:hover {
+.btn-orange:hover,
+.btn-orange:focus-visible {
     background-color: #AE460F !important;
     color: #eee !important;
 }
@@ -177,7 +183,8 @@ button.btn-mini {
     border: 1px solid #EECC00 !important;
     color: #eee !important;
 }
-.btn-yellow:hover {
+.btn-yellow:hover,
+.btn-yellow:focus-visible {
     background-color: #BB9900 !important;
     color: #eee !important;
 }
@@ -187,7 +194,8 @@ button.btn-mini {
     border: 1px solid #668db3 !important;
     color: #eee !important;
 }
-.btn-blue:hover {
+.btn-blue:hover,
+.btn-blue:focus-visible {
     background-color: #51708E !important;
 }
 
@@ -196,8 +204,9 @@ button.btn-mini {
     border: 1px solid #A766B3 !important;
     color: #eee !important;
 }
-.btn-purple:hover {
-    background-color: #85518E  !important;
+.btn-purple:hover,
+.btn-purple:focus-visible {
+    background-color: #85518E !important;
 }
 
 .btn-light-gray {
@@ -205,9 +214,9 @@ button.btn-mini {
     color: #eee !important;
     border: 1px solid #A9A9A9;
 }
-.btn-light-gray:hover, .btn-light-gray:focus-visible {
+.btn-light-gray:hover,
+.btn-light-gray:focus-visible {
     background-color: #838383;
-    outline: none;
 }
 
 .btn-dark-gray {
@@ -215,9 +224,9 @@ button.btn-mini {
     color: #eee !important;
     border: 1px solid #737373;
 }
-.btn-dark-gray:hover, .btn-dark-gray:focus-visible {
-    outline: none;
-    background-color: #5D5D5D !important;
+.btn-dark-gray:hover,
+.btn-dark-gray:focus-visible {
+    background-color: #5D5D5D;
 }
 
 .btn-unselected {
@@ -225,13 +234,10 @@ button.btn-mini {
     color: #333 !important;
     border: 1px solid transparent;
 }
-.btn-unselected:hover {
-    background-color: #88888822;
-    color: #000 !important;
-}
-.btn-unselected:focus-visible { 
+.btn-unselected:hover,
+.btn-unselected:focus-visible {
     background-color: #88888822 !important;
-    outline: none;
+    color: #000 !important;
 }
 
 /* segmented control */
@@ -316,7 +322,8 @@ button.btn-mini {
         color: #aaa !important;
         border: 1px solid transparent;
     }
-    .btn-unselected:hover {
+    .btn-unselected:hover,
+    .btn-unselected:focus-visible {
         color: #eee !important;
     }
 
