@@ -111,6 +111,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
         } else {
           // update UI
           addToolbarState(atab, 'S')
+          updateWaybackCountBadge(atab, null)
           chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
           // show resources during save
           if (!silent) {
@@ -960,7 +961,7 @@ function updateWaybackCountBadge(atab, url) {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, (values) => {
-        if (values.total >= 0) {
+        if ((values.total >= 0) && !getToolbarState(atab).has('S')) {
           // display badge
           let text = badgeCountText(values.total)
           chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
