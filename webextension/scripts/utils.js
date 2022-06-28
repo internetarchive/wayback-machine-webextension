@@ -627,6 +627,15 @@ function opener(url, option, callback) {
     chrome.tabs.create({ url: url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
+  } else if (option === 'replace') {
+    // TODO: need to be able to go Back to prior page!
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0]) {
+        chrome.tabs.update(tabs[0].id, { url: url }, (tab) => {
+          if (callback) { callback(tab.id) }
+        })
+      }
+    })
   } else {
     let w = window.screen.availWidth, h = window.screen.availHeight
     if (w > h) {
@@ -634,7 +643,7 @@ function opener(url, option, callback) {
       const maxW = 1200
       w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
       h = Math.floor(w * 0.75)
-    } else {
+    } else { // option === 'window'
       // portrait screen (likely mobile)
       w = Math.floor(w * 0.9)
       h = Math.floor(h * 0.9)
