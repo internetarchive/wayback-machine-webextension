@@ -628,10 +628,10 @@ function opener(url, option, callback) {
       if (callback) { callback(tab.id) }
     })
   } else if (option === 'replace') {
-    // TODO: need to be able to go Back to prior page!
+    // Back button may not work due to a bug in Chrome, but works fine in Firefox.
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs && tabs[0]) {
-        chrome.tabs.update(tabs[0].id, { url: url }, (tab) => {
+        chrome.tabs.update(tabs[0].id, { active: true, url: url }, (tab) => {
           if (callback) { callback(tab.id) }
         })
       }
