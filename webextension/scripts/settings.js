@@ -169,9 +169,14 @@ function setupPanelSwitch() {
   })
 }
 
-// Toggles the Tab/Window setting.
+// Cycles the Tab/Window setting.
 function switchTabWindow() {
-  $('input[name=view-setting-input]').not(':checked').prop('checked', true).trigger('change')
+  let idx = 0, inputs = $('input[name=view-setting-input]')
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].checked) { idx = i }
+  }
+  let j = (idx + 1) % inputs.length // wrap around using mod
+  $(inputs[j]).prop('checked', true).trigger('change')
 }
 
 function setupHelpDocs() {

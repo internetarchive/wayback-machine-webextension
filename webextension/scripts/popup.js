@@ -829,15 +829,6 @@ function enableAfterSaving() {
   $('#chk-screenshot').removeAttr('disabled')
 }
 
-// make the tab/window option in setting page checked according to previous setting
-function setupViewSetting() {
-  chrome.storage.local.get(['view_setting'], (settings) => {
-    if (settings && settings.view_setting) {
-      $(`input[name=tw][value=${settings.view_setting}]`).prop('checked', true)
-    }
-  })
-}
-
 // respond to Save Page Now success
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
@@ -891,7 +882,6 @@ $(function() {
   setupLoginState()
   setupWaybackCount()
   setupSaveListener()
-  setupViewSetting()
   setupSettingsTabTip()
   $('.logo-wayback-machine').click(homepage)
   $('#newest-btn').click(openNewestPage)

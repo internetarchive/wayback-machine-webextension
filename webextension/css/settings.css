@@ -62,6 +62,10 @@ ul.setting-nav li {
     text-align: center !important;
 }
 
+#view-setting label {
+    margin: 0;
+}
+
 .setting-switch * {
     cursor: pointer;
 }
