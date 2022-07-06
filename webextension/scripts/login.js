@@ -14,6 +14,7 @@ $(function() {
   $('#signup-btn').click(signUp)
   $('#forgot-pw-btn').click(forgotPassword)
   $('#login-btn').click(doLogin)
+  $('#g-login-btn').click(doGoogleLogin)
   $('#logout-tab-btn').click(doLogout)
 })
 
@@ -93,4 +94,41 @@ function doLogout() {
   // update UI
   loginError()
   clearSettingsOnLogout()
+}
+
+function doGoogleLogin(e) {
+
+  const CLIENT_ID = encodeURIComponent('41383750805-slra1gn7ge0bcc8ihpqnkk7hf0fo7dem.apps.googleusercontent.com')
+  const RESPONSE_TYPE = 'token' // 'id_token' ??
+  // const STATE = 'abcdefg' // optional string passed to server
+  const SCOPE = 'openid' // ?
+
+  // TODO: FIXME: Find out what the correct redirect_uri is in the Google Account!
+
+  // const REDIRECT_URL = encodeURIComponent('https://archive.org/account/login') // Error 400: redirect_uri_mismatch
+  // const REDIRECT_URL = encodeURIComponent('https://archive.org') // Error 400: redirect_uri_mismatch
+  const REDIRECT_URL = encodeURIComponent('https://archive.org/services/third_party_sso.php') // Error 400: redirect_uri_mismatch
+
+  // let nonce = encodeURIComponent(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+
+  let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}&prompt=consent`
+  // &state=${STATE}
+  // &nonce=${nonce}
+  console.log(url) // DEBUG
+
+  if (chrome.identity && chrome.identity.launchWebAuthFlow) {
+    // available in Chrome, Firefox, Edge
+    chrome.identity.launchWebAuthFlow({
+      url: url,
+      interactive: true
+    }, (redirect_url) => {
+      console.log(redirect_url) // DEBUG
+      openByWindowSetting(redirect_url) // TEST
+    })
+  } else {
+    // used in Safari
+    openByWindowSetting(url)
+  }
+
+
 }

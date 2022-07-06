@@ -28,6 +28,7 @@
       "activeTab",
       "cookies",
       "contextMenus",
+      "identity",
       "notifications",
       "storage",
       "webRequest",
