@@ -57,6 +57,11 @@ body {
     height: 25px;
 }
 
+.g-login-icon {
+    width: 20px;
+    height: 20px;
+}
+
 .feedback-icon-svg {
     width: 27px;
     height: 27px;
@@ -437,7 +442,8 @@ body {
     margin: 5px 2px 10px 2px;
 }
 
-.login-form * {
+.login-form input,
+.login-form button {
     margin-top: 8px;
 }
 
