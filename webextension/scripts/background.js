@@ -568,13 +568,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, false)
     }
-  } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time
-    getCachedWaybackCount(message.page_url,
-      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
-      (error) => { sendResponse({ message: 'last_save', timestamp: '', error: error }) }
-    )
-    return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
     getCachedBooks(message.query,
