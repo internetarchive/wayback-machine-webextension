@@ -131,13 +131,16 @@ function setupSaveAction(url) {
       // auto save page
       if (settings && (settings.private_mode_setting === false)) {
         chrome.runtime.sendMessage({
-          message: 'getLastSaveTime',
-          page_url: url
+          message: 'getCachedWaybackCount',
+          url: url
         }, (message) => {
           checkLastError()
-          if (message && (message.message === 'last_save')) {
-            if (message.timestamp) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          if (message) {
+            if (('last_ts' in message) && message.last_ts) {
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
+            } else if (('total' in message) && (message.total === -1)) {
+              $('#last-saved-msg').text('URL has been excluded').show()
+              $('.blocked-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
             } else if ('error' in message) {
               $('#last-saved-msg').text('Wayback Machine Unavailable').show()
             } else {
@@ -750,7 +753,7 @@ function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
     checkLastError()
-    if (result && ('total' in result)) {
+    if (result && ('total' in result) && (result.total >= 0)) {
       // set label
       let text = ''
       if (result.total === 1) {
