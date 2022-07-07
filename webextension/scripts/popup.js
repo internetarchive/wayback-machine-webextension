@@ -128,7 +128,6 @@ function setupSaveAction(url) {
   if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
     $('#spn-btn').off('click').on('click', doSaveNow)
     chrome.storage.local.get(['private_mode_setting'], (settings) => {
-      // auto save page
       if (settings && (settings.private_mode_setting === false)) {
         chrome.runtime.sendMessage({
           message: 'getCachedWaybackCount',
