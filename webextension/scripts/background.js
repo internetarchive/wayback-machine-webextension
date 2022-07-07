@@ -941,9 +941,13 @@ function incrementCount(url) {
   let cacheValues = waybackCountCache[url]
   let timestamp = dateToTimestamp(new Date())
   if (cacheValues && cacheValues.total) {
-    cacheValues.total += 1
-    cacheValues.last_ts = timestamp
-    waybackCountCache[url] = cacheValues
+    if (cacheValues.total > 0) {
+      cacheValues.total += 1
+      cacheValues.last_ts = timestamp
+      waybackCountCache[url] = cacheValues
+    } else {
+      // don't update if total is a special value < 0
+    }
   } else {
     waybackCountCache[url] = { total: 1, last_ts: timestamp }
   }
