@@ -365,14 +365,12 @@
     <div class="text-center">
       <img src="images/app-icon/app-icon128.png" alt="Internet Archive" class="ia-logo">
       <p id="login-label"></p>
-      <span id="login-message"></span>
       <form class="login-form">
         <button type="button" class="btn btn-sm btn-wide btn-white" id="g-login-btn"><img src="images/g-icon40.png" alt="Google Icon" class="g-login-icon">
           Sign in with Google
         </button>
-
         <hr class="or-line">
-
+        <span id="login-message"></span>
         <div class="bootstrap-typeahead-input" tabindex="-1">
           <input id="email-input" type="email" placeholder="Email Address" value="" autocomplete="off"
             class="form-control has-aux bootstrap-typeahead-input-main has-selection login-input">
@@ -381,11 +379,10 @@
           <input id="password-input" type="password" placeholder="Password" value="" autocomplete="off"
             class="form-control has-aux bootstrap-typeahead-input-main has-selection login-input">
         </div>
-        <button type="button" class="btn btn-sm btn-wide btn-red" id="login-btn">Log In</button>
+        <button type="submit" class="btn btn-sm btn-wide btn-red" id="login-btn">Log In</button>
         <button type="button" class="btn btn-sm btn-wide btn-dark-gray" id="signup-btn">Sign Up</button>
         <button type="button" class="btn btn-sm btn-wide btn-dark-gray" id="forgot-pw-btn">Forgot Password?</button>
       </form>
-
     </div>
 
     <div class="btn-block text-center">
