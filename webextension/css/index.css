@@ -442,9 +442,25 @@ body {
     margin: 5px 2px 10px 2px;
 }
 
+.login-form div,
 .login-form input,
 .login-form button {
     margin-top: 8px;
+}
+
+hr.or-line {
+    margin: 15px 3px 0 3px;
+    padding-bottom: 7px;
+    text-align: center;
+    overflow: visible;
+}
+hr.or-line:after {
+    font-size: 12px;
+    content: 'OR';
+    padding: 0 8px;
+    position: relative;
+    top: -10px;
+    background-color: #eee;
 }
 
 /* flipping effect */
@@ -551,4 +567,7 @@ body {
         background-color: #666;
     }
 
+    hr.or-line:after {
+        background-color: #2C2C2C;
+    }
 }
