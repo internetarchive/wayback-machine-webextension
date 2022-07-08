@@ -98,6 +98,10 @@ function doLogout() {
 
 function doGoogleLogin(e) {
 
+  // temp solution until we can get the OAuth flow working
+  openByWindowSetting('https://archive.org/account/login', 'tab')
+
+  /*
   const CLIENT_ID = encodeURIComponent('41383750805-slra1gn7ge0bcc8ihpqnkk7hf0fo7dem.apps.googleusercontent.com')
   const RESPONSE_TYPE = 'token' // 'id_token' ??
   // const STATE = 'abcdefg' // optional string passed to server
@@ -127,8 +131,7 @@ function doGoogleLogin(e) {
     })
   } else {
     // used in Safari
-    openByWindowSetting(url)
+    openByWindowSetting(url, 'tab')
   }
-
-
+  */
 }
