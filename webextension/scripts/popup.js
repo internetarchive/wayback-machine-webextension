@@ -138,7 +138,7 @@ function setupSaveAction(url) {
             if (('last_ts' in message) && message.last_ts) {
               $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
             } else if (('total' in message) && (message.total === -1)) {
-              $('#last-saved-msg').text('URL has been excluded').show()
+              $('#last-saved-msg').text('URL excluded from viewing').show()
               $('.blocked-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
             } else if ('error' in message) {
               $('#last-saved-msg').text('Wayback Machine Unavailable').show()
