@@ -461,6 +461,7 @@ function showLoginPage(e) {
   $('#setting-page').hide()
   $('#login-message').hide()
   $('#login-page').show()
+  $('#email-input').focus()
 }
 
 function showLoginFromTab(e) {
