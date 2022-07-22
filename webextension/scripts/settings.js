@@ -40,7 +40,6 @@ function restoreSettings(items) {
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $('#embed-popup-setting').prop('checked', items.embed_popup_setting)
-  // $('#embed-popup-setting').val(items.embed_popup_setting || 'true') // TEST REMOVE
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
   // update UI
   enableEmbedPopupSetting(items.not_found_setting)
@@ -66,7 +65,6 @@ function saveSettings() {
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
     embed_popup_setting: $('#embed-popup-setting').prop('checked'),
-    // embed_popup_setting: $('#embed-popup-setting').val(), // TEST REMOVE
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
@@ -134,17 +132,9 @@ function setupSettingsChange() {
   })
 
   // 404 embed-popup-setting
-  // enableEmbedPopupSetting($('#not-found-setting').prop('checked') != false) // doesn't work here - REMOVE
   $('#not-found-setting').change((e) => {
-    console.log('change 404 setting') // DEBUG
     enableEmbedPopupSetting($(e.target).prop('checked') === true)
   })
-
-  /* // DOESN'T WORK - REMOVE
-  $('#embed-popup-setting').mousedown((e) => {
-    e.stopPropagation()
-  })
-  */
 
   // resources
   $('#wiki-setting').change((e) => {
@@ -221,8 +211,7 @@ function setupHelpDocs() {
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
-    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
-    /* 'embed-popup-setting': 'Also present error conditions such as 404s via pop-up within website.' */ // REMOVE
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {
