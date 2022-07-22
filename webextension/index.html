@@ -277,12 +277,14 @@
           <span class="toggle">Show Resources During Save</span>
         </div>
       </label>
+<!--
       <label class="setting-switch" for="embed-popup-setting">
         <input type="checkbox" class="saved-setting" id="embed-popup-setting">
         <div class="setting-text-box">
           <span class="toggle">Errors Pop-Up in Page</span>
         </div>
       </label>
+-->
       <div class="setting-switch" id="view-setting">
         <div id="view-setting-text">Show Features In</div>
         <input class="saved-setting" type="radio" name="view-setting-input" id="view-setting-tab" value="tab">
@@ -312,8 +314,23 @@
       <label class="setting-switch" for="not-found-setting">
         <input type="checkbox" class="saved-setting private-setting" id="not-found-setting">
         <div class="setting-text-box">
-          <span class="toggle">Replace 404s, etc...</span>
+          <!-- <span class="toggle">Replace 404s, etc...</span> -->
+          <span class="toggle">404 Not Found, etc...</span>
           <img src="images/toolbar/toolbar-icon-Vc16.png" alt="V" class="toolbar-icon">
+
+          <div style="margin-top: 0.5em; line-height: 1em">
+            <input type="checkbox" class="saved-setting" id="embed-popup-setting" style="margin: 0 0.5em 0 0">
+            <label id="embed-popup-label" for="embed-popup-setting" style="font-size: 11px">pop-up in page</label>
+          </div>
+
+<!-- REMOVE
+          <div style="margin-top: 0.5em">
+            <select id="embed-popup-setting" class="btn-mini">
+              <option value="true" selected>show pop-up</option>
+              <option value="false">don't show pop-up</option>
+            </select>
+          </div>
+-->
         </div>
       </label>
 
