@@ -88,16 +88,16 @@ label[for=tagcloud] {
 }
 
 .embed-popup-group {
-    margin-top: 0.5em;
-    line-height: 1em
+    line-height: 1em;
 }
 
-#embed-popup-setting {
-    margin: 0 0.5em 0 0;
+.embed-popup-group input {
+    margin: 0 7px 0 0 !important;
 }
 
-#embed-popup-label {
-    font-size: 11px;
+.embed-popup-group label {
+    margin: 0;
+    font-size: 11px !important;
 }
 
 
