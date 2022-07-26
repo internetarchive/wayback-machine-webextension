@@ -34,19 +34,6 @@ function rewriteUserAgentHeader(e) {
   return { requestHeaders: e.requestHeaders }
 }
 
-function URLopener(open_url, url, wmIsAvailable) {
-  if (wmIsAvailable === true) {
-    wmAvailabilityCheck(url, () => {
-      openByWindowSetting(open_url)
-    }, () => {
-      const msg = 'This page has not been archived.'
-      if (isFirefox) { notify(msg) } else { alert(msg) }
-    })
-  } else {
-    openByWindowSetting(open_url)
-  }
-}
-
 /* * * API Calls * * */
 
 // First checks for login state before calling savePageNow()
@@ -565,8 +552,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // open URL in new tab or window depending on setting
     let page_url = getCleanUrl(message.page_url)
     if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-      let open_url = message.wayback_url + page_url
-      URLopener(open_url, page_url, false)
+      openByWindowSetting(message.wayback_url + page_url)
     }
   } else if (message.message === 'getLastSaveTime') {
     // get most recent saved time
@@ -1098,8 +1084,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
           savePageNowChecked(atab, page_url, false, options)
           return true
         }
-        let open_url = wayback_url + page_url
-        URLopener(open_url, page_url, false)
+        openByWindowSetting(wayback_url + page_url)
       } else {
         const msg = 'This URL is excluded.'
         if (isFirefox) { notify(msg) } else { alert(msg) }
