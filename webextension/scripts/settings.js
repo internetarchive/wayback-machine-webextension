@@ -201,6 +201,7 @@ function setupHelpDocs() {
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
+    'notify-setting': 'Turn off all notifications.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
     'embed-popup-setting': 'Also present error conditions such as 404s via pop-up within website.'
   }
