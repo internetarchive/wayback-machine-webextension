@@ -39,6 +39,7 @@ function restoreSettings(items) {
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
+  $('#notify-setting').prop('checked', items.notify_setting)
   $('#embed-popup-setting').prop('checked', items.embed_popup_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
 }
@@ -62,6 +63,7 @@ function saveSettings() {
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
+    notify_setting: $('#notify-setting').prop('checked'),
     embed_popup_setting: $('#embed-popup-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
@@ -104,6 +106,12 @@ function setupSettingsChange() {
     $('#auto-archive-setting').prop('checked', true).trigger('change')
     e.target.blur()
   })
+
+  // notify setting
+  // hide setting if notifications unsupported (e.g. Safari)
+  if (!chrome.notifications) {
+    $('#notify-label').hide()
+  }
 
   // view setting
   $('#view-setting').click(switchTabWindow)

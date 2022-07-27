@@ -655,16 +655,23 @@ function opener(url, option, callback) {
 }
 
 // Displays a notification by the OS.
-// Safari does nothing.
+// Unless Disable Notificaions setting is true.
+// Safari doesn't support notifications so this will do nothing.
 //
 function notifyMsg(msg, callback) {
-  let options = {
-    type: 'basic',
-    title: 'Wayback Machine',
-    message: msg,
-    iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+  if (chrome.notifications) {
+    chrome.storage.local.get(['notify_setting'], (settings) => {
+      if (settings && !settings.notify_setting) {
+        const options = {
+          type: 'basic',
+          title: 'Wayback Machine',
+          message: msg,
+          iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+        }
+        chrome.notifications.create(options, callback)
+      }
+    })
   }
-  chrome.notifications && chrome.notifications.create(options, callback)
 }
 
 // Pop up an alert message.
