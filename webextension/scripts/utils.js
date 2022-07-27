@@ -654,6 +654,9 @@ function opener(url, option, callback) {
   }
 }
 
+// Displays a notification by the OS.
+// Safari does nothing.
+//
 function notify(message, callback) {
   let options = {
     type: 'basic',
@@ -662,6 +665,15 @@ function notify(message, callback) {
     iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
   }
   chrome.notifications && chrome.notifications.create(options, callback)
+}
+
+// Pop up an alert message.
+//   Chrome & Edge: Popup alert modal.
+//   Firefox: Errors on alert(), so show notification instead.
+//   Safari: Ignores alert()
+//
+function alertMessage(msg) {
+  if (isFirefox) { notify(msg) } else { alert(msg) }
 }
 
 function checkLastError() {
@@ -808,6 +820,7 @@ if (typeof module !== 'undefined') {
     openByWindowSetting,
     sleep,
     notify,
+    alertMessage,
     attachTooltip,
     getUserInfo,
     checkAuthentication,

@@ -4,10 +4,10 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix */
+/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMessage */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -1086,8 +1086,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         }
         openByWindowSetting(wayback_url + page_url)
       } else {
-        const msg = 'This URL is excluded.'
-        if (isFirefox) { notify(msg) } else { alert(msg) }
+        alertMessage('URL not supported.')
       }
     }
   })
