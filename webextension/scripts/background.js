@@ -4,10 +4,10 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
+/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMessage */
+/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -94,7 +94,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
         if (errMsg.indexOf('same snapshot') !== -1) {
           // snapshot already archived within timeframe
           chrome.runtime.sendMessage({ message: 'save_archived', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
-          if (!silent) { notify(errMsg) }
+          if (!silent) { notifyMsg(errMsg) }
         } else {
           // update UI
           addToolbarState(atab, 'S')
@@ -102,7 +102,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
           chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
           // show resources during save
           if (!silent) {
-            notify('Saving ' + pageUrl)
+            notifyMsg('Saving ' + pageUrl)
             chrome.storage.local.get(['resource_list_setting'], (settings) => {
               if (settings && settings.resource_list_setting) {
                 const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + jobId + '#not_refreshed'
@@ -117,7 +117,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       } else {
         // missing jobId error
         chrome.runtime.sendMessage({ message: 'save_error', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
-        if (!silent) { notify('Error: ' + errMsg) }
+        if (!silent) { notifyMsg('Error: ' + errMsg) }
       }
     })
     .catch((err) => {
@@ -217,7 +217,7 @@ function statusSuccess(atab, pageUrl, silent, data) {
     if (('message' in data) && (data.message.length > 0)) {
       msg = data.message
     }
-    notify(msg, (notificationId) => {
+    notifyMsg(msg, (notificationId) => {
       chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
         if (notificationId === newNotificationId) {
           openByWindowSetting('https://web.archive.org/web/' + data.timestamp + '/' + data.original_url)
@@ -254,7 +254,7 @@ function statusFailed(atab, pageUrl, silent, data, err) {
     }, checkLastError)
     // notify
     if (!silent) {
-      notify('Error: ' + data.message, (notificationId) => {
+      notifyMsg('Error: ' + data.message, (notificationId) => {
         chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             openByWindowSetting('https://archive.org/account/login')
@@ -1086,7 +1086,7 @@ chrome.contextMenus.onClicked.addListener((click) => {
         }
         openByWindowSetting(wayback_url + page_url)
       } else {
-        alertMessage('URL not supported.')
+        alertMsg('URL not supported.')
       }
     }
   })
