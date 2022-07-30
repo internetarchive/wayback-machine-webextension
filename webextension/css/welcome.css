@@ -1,5 +1,6 @@
 
 body {
+    background-color: #eee;
     font-size: 24px;
     text-align: left;
 }
@@ -49,8 +50,21 @@ p {
 /* dark mode */
 @media (prefers-color-scheme: dark) {
 
-    body, div.bottom-container {
-        background-color: #2C2C2C;
-        color: #eee;
+    body {
+        background-color: #222;
+        color: #ccc;
     }
+
+    .bottom-container {
+        background-color: #333;
+    }
+
+    h1 {
+        color: #ddd;
+    }
+
+    h2, h3, h4 {
+        color: #dcc;
+    }
+
 }
