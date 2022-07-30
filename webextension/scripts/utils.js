@@ -658,14 +658,33 @@ function opener(url, option, callback) {
   }
 }
 
-function notify(message, callback) {
-  let options = {
-    type: 'basic',
-    title: 'Wayback Machine',
-    message: message,
-    iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+// Displays a notification by the OS.
+// Unless Disable Notificaions setting is true.
+// Safari doesn't support notifications so this will do nothing.
+//
+function notifyMsg(msg, callback) {
+  if (chrome.notifications) {
+    chrome.storage.local.get(['notify_setting'], (settings) => {
+      if (settings && !settings.notify_setting) {
+        const options = {
+          type: 'basic',
+          title: 'Wayback Machine',
+          message: msg,
+          iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+        }
+        chrome.notifications.create(options, callback)
+      }
+    })
   }
-  chrome.notifications && chrome.notifications.create(options, callback)
+}
+
+// Pop up an alert message.
+//   Chrome & Edge: Popup alert modal.
+//   Firefox: Errors on alert(), so show notification instead.
+//   Safari: Ignores alert()
+//
+function alertMsg(msg) {
+  if (isFirefox) { notifyMsg(msg) } else { alert(msg) }
 }
 
 function checkLastError() {
@@ -811,7 +830,8 @@ if (typeof module !== 'undefined') {
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
-    notify,
+    notifyMsg,
+    alertMsg,
     attachTooltip,
     getUserInfo,
     checkAuthentication,
