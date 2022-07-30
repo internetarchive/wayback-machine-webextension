@@ -312,6 +312,10 @@ function getWaybackCount(url, onSuccess, onFail) {
           }
         }
       }
+      // set total to special value if URL is excluded from viewing
+      if (json.error && json.error.type && (json.error.type === 'blocked')) {
+        total = -1
+      }
       let values = { total: total, first_ts: json.first_ts, last_ts: json.last_ts }
       onSuccess(values)
     })
