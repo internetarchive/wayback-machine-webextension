@@ -182,7 +182,7 @@ function checkAuthentication(acallback) {
 
 /* * * Storage functions * * */
 
-// Returns a string key from a Tab windowId and tab id.
+// Returns a string key from a Tab windowId and tab id, and maybe a slice of URL.
 function getTabKey(atab) {
   return (atab) ? '' + (('windowId' in atab) ? atab.windowId : '') + 'i' + (('id' in atab) ? atab.id : '') : ''
 }
@@ -199,6 +199,26 @@ function saveTabData(atab, data) {
   chrome.storage.local.get([key], (result) => {
     let exdata = result[key] || {}
     for (let [k, v] of Object.entries(data)) { exdata[k] = v }
+    let obj = {}
+    obj[key] = exdata
+    chrome.storage.local.set(obj, () => {})
+  })
+}
+
+/**
+ * Clears keys in storage for given tab.
+ * @param atab {Tab}: Current tab which includes .windowId and .id values.
+ * @param keylist: Array of keys to delete.
+ */
+function clearTabData(atab, keylist) {
+  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  let key = 'tab_' + getTabKey(atab)
+  // take exisiting data in storage and delete any items from keylist
+  chrome.storage.local.get([key], (result) => {
+    let exdata = result[key] || {}
+    for (let k of keylist) {
+      if (k in exdata) { delete exdata[k] }
+    }
     let obj = {}
     obj[key] = exdata
     chrome.storage.local.set(obj, () => {})
@@ -292,13 +312,19 @@ function getWaybackCount(url, onSuccess, onFail) {
           }
         }
       }
+      // set total to special value if URL is excluded from viewing
+      if (json.error && json.error.type && (json.error.type === 'blocked')) {
+        total = -1
+      }
       let values = { total: total, first_ts: json.first_ts, last_ts: json.last_ts }
       onSuccess(values)
     })
     .catch(error => {
+      console.log('getWaybackCount FAILED: ', error)
       if (onFail) { onFail(error) }
     })
   } else {
+    console.log('getWaybackCount: not a valid URL')
     if (onFail) { onFail(null) }
   }
 }
@@ -605,6 +631,15 @@ function opener(url, option, callback) {
     chrome.tabs.create({ url: url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
+  } else if (option === 'replace') {
+    // Back button may not work due to a bug in Chrome, but works fine in Firefox.
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs[0]) {
+        chrome.tabs.update(tabs[0].id, { active: true, url: url }, (tab) => {
+          if (callback) { callback(tab.id) }
+        })
+      }
+    })
   } else {
     let w = window.screen.availWidth, h = window.screen.availHeight
     if (w > h) {
@@ -612,7 +647,7 @@ function opener(url, option, callback) {
       const maxW = 1200
       w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
       h = Math.floor(w * 0.75)
-    } else {
+    } else { // option === 'window'
       // portrait screen (likely mobile)
       w = Math.floor(w * 0.9)
       h = Math.floor(h * 0.9)
@@ -623,14 +658,33 @@ function opener(url, option, callback) {
   }
 }
 
-function notify(message, callback) {
-  let options = {
-    type: 'basic',
-    title: 'Wayback Machine',
-    message: message,
-    iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+// Displays a notification by the OS.
+// Unless Disable Notificaions setting is true.
+// Safari doesn't support notifications so this will do nothing.
+//
+function notifyMsg(msg, callback) {
+  if (chrome.notifications) {
+    chrome.storage.local.get(['notify_setting'], (settings) => {
+      if (settings && !settings.notify_setting) {
+        const options = {
+          type: 'basic',
+          title: 'Wayback Machine',
+          message: msg,
+          iconUrl: chrome.runtime.getURL('images/app-icon/app-icon96.png')
+        }
+        chrome.notifications.create(options, callback)
+      }
+    })
   }
-  chrome.notifications && chrome.notifications.create(options, callback)
+}
+
+// Pop up an alert message.
+//   Chrome & Edge: Popup alert modal.
+//   Firefox: Errors on alert(), so show notification instead.
+//   Safari: Ignores alert()
+//
+function alertMsg(msg) {
+  if (isFirefox) { notifyMsg(msg) } else { alert(msg) }
 }
 
 function checkLastError() {
@@ -659,7 +713,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
     trigger: 'manual'
   })
   // Handles staying open
-  .on('mouseenter', () => {
+  .on('mouseenter click', () => {
     $(anchor).tooltip('show')
     $('.popup_box').on('mouseleave', () => {
       setTimeout(() => {
@@ -669,7 +723,7 @@ function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
       }, time)
     })
   })
-  .on('mouseleave', () => {
+  .on('mouseleave blur', () => {
     setTimeout(() => {
       if (!$('.popup_box:hover').length) {
         $(anchor).tooltip('hide')
@@ -687,6 +741,38 @@ function initAutoExcludeList() {
   })
 }
 
+function setupContextMenus() {
+  chrome.contextMenus.create({
+    'id': 'save',
+    'title': 'Save Page Now',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'type': 'separator',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  })
+  chrome.contextMenus.create({
+    'id': 'first',
+    'title': 'Oldest Version',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'recent',
+    'title': 'Newest Version',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+  chrome.contextMenus.create({
+    'id': 'all',
+    'title': 'All Versions',
+    'contexts': ['page', 'frame', 'link'],
+    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+  }, checkLastError)
+}
+
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
   chrome.storage.local.set({
@@ -695,7 +781,7 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     /* Features */
-    private_mode_setting: false,
+    private_mode_setting: true,
     not_found_setting: false,
     embed_popup_setting: false,
     wm_count_setting: false,
@@ -718,9 +804,11 @@ function initDefaultOptions () {
 function afterAcceptTerms () {
   chrome.storage.local.set({
     agreement: true,
+    private_mode_setting: false,
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  setupContextMenus()
 }
 
 if (typeof module !== 'undefined') {
@@ -742,12 +830,14 @@ if (typeof module !== 'undefined') {
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
-    notify,
+    notifyMsg,
+    alertMsg,
     attachTooltip,
     getUserInfo,
     checkAuthentication,
     getTabKey,
     saveTabData,
+    clearTabData,
     readTabData,
     getWaybackCount,
     badgeCountText,

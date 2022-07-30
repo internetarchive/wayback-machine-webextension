@@ -39,8 +39,11 @@ function restoreSettings(items) {
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
+  $('#notify-setting').prop('checked', items.notify_setting)
   $('#embed-popup-setting').prop('checked', items.embed_popup_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
+  // update UI
+  enableEmbedPopupSetting(items.not_found_setting)
 }
 
 function saveSettings() {
@@ -62,10 +65,17 @@ function saveSettings() {
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
+    notify_setting: $('#notify-setting').prop('checked'),
     embed_popup_setting: $('#embed-popup-setting').prop('checked'),
     view_setting: $('input[name=view-setting-input]:checked').val()
   }
   chrome.storage.local.set(settings)
+}
+
+// clears settings that should be clear when logged out.
+function clearSettingsOnLogout() {
+  $('.clear-on-logout').prop('checked', false)
+  saveSettings()
 }
 
 function setupPrivateMode() {
@@ -87,6 +97,17 @@ function onPrivateSettingChange(e) {
   }
 }
 
+// Enable or disable setting when flag is true or false.
+function enableEmbedPopupSetting(flag) {
+  if (flag) {
+    $('#embed-popup-setting').attr('disabled', false)
+    $('#embed-popup-label').css('opacity', '1.0').css('cursor', '')
+  } else {
+    $('#embed-popup-setting').attr('disabled', true)
+    $('#embed-popup-label').css('opacity', '0.66').css('cursor', 'not-allowed')
+  }
+}
+
 // Save settings on change and other actions on particular settings.
 function setupSettingsChange() {
 
@@ -99,6 +120,12 @@ function setupSettingsChange() {
     e.target.blur()
   })
 
+  // notify setting
+  // hide setting if notifications unsupported (e.g. Safari)
+  if (!chrome.notifications) {
+    $('#notify-label').hide()
+  }
+
   // view setting
   $('#view-setting').click(switchTabWindow)
   $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
@@ -110,6 +137,11 @@ function setupSettingsChange() {
     if ($(e.target).prop('checked') === false) {
       chrome.runtime.sendMessage({ message: 'clearCountCache' })
     }
+  })
+
+  // 404 embed-popup-setting
+  $('#not-found-setting').change((e) => {
+    enableEmbedPopupSetting($(e.target).prop('checked') === true)
   })
 
   // resources
@@ -163,9 +195,14 @@ function setupPanelSwitch() {
   })
 }
 
-// Toggles the Tab/Window setting.
+// Cycles the Tab/Window setting.
 function switchTabWindow() {
-  $('input[name=view-setting-input]').not(':checked').prop('checked', true).trigger('change')
+  let idx = 0, inputs = $('input[name=view-setting-input]')
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].checked) { idx = i }
+  }
+  let j = (idx + 1) % inputs.length // wrap around using mod
+  $(inputs[j]).prop('checked', true).trigger('change')
 }
 
 function setupHelpDocs() {
@@ -179,11 +216,11 @@ function setupHelpDocs() {
     'amazon-setting': 'Check if books from Amazon are available from the Internet Archive.',
     'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',
     // general tab
-    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine. You need to be logged in to use this feature.',
+    'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
-    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
-    'embed-popup-setting': 'Also present error conditions such as 404s via pop-up within website.'
+    'notify-setting': 'Turn off all notifications.',
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {
@@ -198,6 +235,6 @@ function setupHelpDocs() {
 
 if (typeof module !== 'undefined') {
   module.exports = {
-
+    clearSettingsOnLogout
   }
 }

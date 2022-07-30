@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
 /*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
-/*   global attachTooltip, checkLastError, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
+/*   global attachTooltip, checkLastError, cropPrefix, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
 
 let searchBoxTimer
 
@@ -44,20 +44,20 @@ function homepage() {
 // If the popup displays, we know user already agreed in Welcome page.
 // This is a fix for Safari resetting the 'agreement' setting.
 function initAgreement() {
-  chrome.storage.local.set({ agreement: true }, () => {})
+  chrome.storage.local.set({ agreement: true }, () => { })
 }
 
 // Popup tip over settings tab icon after first load.
 function showSettingsTabTip() {
   let tt = $('<div>').append($('<p>').text('There are more great features in Settings!').attr({ 'class': 'setting-tip' }))[0].outerHTML
-  let tabItem = $('#settings-tab-btn').parent()
+  let tabItem = $('#settings-tab-btn')
   setTimeout(() => {
     tabItem.append(attachTooltip(tabItem, tt, 'top'))
     .tooltip('show')
     .on('mouseenter', () => {
       $(tabItem).tooltip('hide')
       // prevent tooltip from ever showing again once mouse entered
-      chrome.storage.local.set({ show_settings_tab_tip: false }, () => {})
+      chrome.storage.local.set({ show_settings_tab_tip: false }, () => { })
     })
   }, 500)
 }
@@ -69,6 +69,7 @@ function initActiveTabURL() {
     if (tabs && tabs[0]) {
       activeTab = tabs[0]
       activeURL = tabs[0].url
+      setupSaveAction(activeURL)
     }
   })
 }
@@ -82,8 +83,8 @@ function setupSettingsTabTip() {
 }
 
 function doSaveNow() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
+  const url = activeURL
+  if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
@@ -110,8 +111,8 @@ function doSaveNow() {
   }
 }
 
-// Updates SPN button UI depending on logged-in status and fetches last saved time.
-function updateLastSaved() {
+// Update UI depending on logged-in state.
+function setupLoginState() {
   checkAuthentication((result) => {
     checkLastError()
     if (result && result.auth_check) {
@@ -119,33 +120,41 @@ function updateLastSaved() {
     } else {
       loginError()
     }
-    setupSaveAction()
   })
 }
 
 // Sets up the SPN button click event and Last Saved text.
-function setupSaveAction() {
-  if (activeURL) {
-    if (isValidUrl(activeURL) && isNotExcludedUrl(activeURL) && !isArchiveUrl(activeURL)) {
-      $('#spn-btn').on('click', doSaveNow)
-      chrome.storage.local.get(['private_mode_setting'], (settings) => {
-        // auto save page
-        if (settings && (settings.private_mode_setting === false)) {
-          chrome.runtime.sendMessage({
-            message: 'getLastSaveTime',
-            page_url: activeURL
-          }, (message) => {
-            checkLastError()
-            if (message && (message.message === 'last_save') && message.timestamp) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
+function setupSaveAction(url) {
+  if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+    $('#spn-btn').off('click').on('click', doSaveNow)
+    chrome.storage.local.get(['private_mode_setting'], (settings) => {
+      if (settings && (settings.private_mode_setting === false)) {
+        chrome.runtime.sendMessage({
+          message: 'getCachedWaybackCount',
+          url: url
+        }, (message) => {
+          checkLastError()
+          if (message) {
+            if (('last_ts' in message) && message.last_ts) {
+              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
+            } else if (('total' in message) && (message.total === -1)) {
+              $('#last-saved-msg').text('URL excluded from viewing').show()
+              $('.blocked-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
+            } else if ('error' in message) {
+              $('#last-saved-msg').text('Wayback Machine Unavailable').show()
+            } else {
+              $('#last-saved-msg').hide()
             }
-          })
-        }
-      })
-    } else {
-      setExcluded()
-      $('#spn-back-label').text('URL not supported')
-    }
+          } else {
+            $('#last-saved-msg').hide()
+          }
+        })
+      } else {
+        $('#last-saved-msg').hide()
+      }
+    })
+  } else {
+    showUrlNotSupported(true)
   }
 }
 
@@ -160,7 +169,7 @@ function loginError() {
   // hide SPN options and show login
   // $('#chk-outlinks-label').css('visibility', 'hidden')
   // $('#chk-screenshot-label').css('visibility', 'hidden')
-  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginPage)
+  // $('#chk-login-btn').css('visibility', '').off('click').on('click', showLoginFromMain)
 
   // setup login flip button
   // $('#my-archive-btn').off('click')
@@ -170,21 +179,25 @@ function loginError() {
   // $('#spn-btn').off('click').on('click', showLoginPage)
 
   // setup options that open login page
-  // $('.auth-dim').css('opacity', '66%')
+  $('.auth-icon').addClass('auth-icon-active')
   $('.auth-disabled').attr('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
+  // add tab login button
+  $('.tab-item').css('width', '18%')
+  $('#logout-tab-btn').hide()
+  $('#login-tab-btn').css('display', 'inline-block').off('click').on('click', showLoginFromTab)
+
   // setup messages
-  $('#last-saved-msg').hide()
-  if (activeURL && !isNotExcludedUrl(activeURL)) { setExcluded() }
+  if (activeURL && !isNotExcludedUrl(activeURL)) { showUrlNotSupported(true) }
 }
 
 // Called when logged-in.
 function loginSuccess() {
 
   // reset options that open login page
-  // $('.auth-dim').css('opacity', '100%')
+  $('.auth-icon').removeClass('auth-icon-active')
   $('.auth-disabled').removeAttr('disabled')
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
@@ -192,6 +205,7 @@ function loginSuccess() {
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
+  $('#login-tab-btn').hide()
   $('#logout-tab-btn').css('display', 'inline-block')
 
   // reset login flip button
@@ -277,18 +291,24 @@ function searchTweet() {
 }
 
 // Update the UI when user is using the Search Box.
-function useSearchBox() {
-  chrome.runtime.sendMessage({ message: 'clearCountBadge' })
-  chrome.runtime.sendMessage({ message: 'clearResource' })
-  $('#suggestion-box').text('').hide()
-  $('#url-not-supported-msg').hide()
-  $('#using-search-msg').show()
-  $('#readbook-container').hide()
-  $('#tvnews-container').hide()
-  $('#wiki-container').hide()
-  $('#fact-check-container').hide()
-  clearWaybackCount()
-  updateLastSaved()
+function useSearchURL(flag) {
+  if (flag) {
+    showUrlNotSupported(false)
+    $('#last-saved-msg').hide()
+    $('#suggestion-box').text('').hide()
+    $('#url-not-supported-msg').hide()
+    $('#readbook-container').hide()
+    $('#tvnews-container').hide()
+    $('#wiki-container').hide()
+    $('#fact-check-container').hide()
+    $('#using-search-msg').text('Using Search URL').show()
+  } else {
+    $('#using-search-msg').hide()
+    // reassign activeURL
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      activeURL = (tabs && tabs[0]) ? tabs[0].url : null
+    })
+  }
 }
 
 // Setup keyboard handler for Search Box.
@@ -296,10 +316,14 @@ function setupSearchBox() {
   const search_box = document.getElementById('search-input')
   search_box.addEventListener('keyup', (e) => {
     // exclude UP and DOWN keys from keyup event
-    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0) && isNotExcludedUrl(search_box.value)) {
-      activeURL = getCleanUrl(makeValidURL(search_box.value))
-      // use activeURL if it is valid, else update UI
-      activeURL ? useSearchBox() : $('#using-search-msg').hide()
+    if (!((e.key === 'ArrowUp') || (e.key === 'ArrowDown')) && (search_box.value.length >= 0)) {
+      const url = makeValidURL(search_box.value)
+      if (url && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+        activeURL = url
+        useSearchURL(true)
+      } else {
+        useSearchURL(false)
+      }
     }
   })
 }
@@ -355,13 +379,14 @@ function display_list(key_word) {
     $('#suggestion-box').text('').hide()
     if (data.hosts.length > 0 && $('#search-input').val() !== '') {
       $('#suggestion-box').show()
+      dismissSearchHandler()
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
           $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
-            if (activeURL) { useSearchBox() }
+            if (activeURL) { useSearchURL(true) }
           })
         )
       }
@@ -381,7 +406,7 @@ function display_suggestions(e) {
       $('#url-not-supported-msg').hide()
     } else {
       $('#url-not-supported-msg').show()
-      $('#using-search-msg').hide()
+      useSearchURL(false)
     }
     clearTimeout(searchBoxTimer)
     // Call display_list function if the difference between keypress is greater than 300ms (Debouncing)
@@ -390,6 +415,15 @@ function display_suggestions(e) {
       display_list(query)
     }, 300)
   }
+}
+
+// Click handler to dismiss search display list when user clicks outside box.
+function dismissSearchHandler() {
+  $('html').off('click').on('click', (e) => {
+    if (!$(e.target).is('#suggestion-box')) {
+      $('#suggestion-box').text('').hide()
+    }
+  })
 }
 
 function open_feedback_page() {
@@ -427,19 +461,26 @@ function showLoginPage(e) {
   e.preventDefault()
   $('#popup-page').hide()
   $('#setting-page').hide()
-  $('#login-label').text('The feature you have requested requires that you be logged into archive.org')
   $('#login-message').hide()
   $('#login-page').show()
 }
 
-function showLoginFromMain(e) {
-  showLoginPage(e)
+function showLoginFromTab(e) {
+  $('#login-label').html('Log in to the<br> Internet Archive')
   $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
+}
+
+function showLoginFromMain(e) {
+  $('#login-label').html('This feature requires logging in to the Internet Archive')
+  $('.back-btn').off('click').on('click', goBackToMain)
+  showLoginPage(e)
 }
 
 function showLoginFromSettings(e) {
-  showLoginPage(e)
+  $('#login-label').html('This feature requires logging in to the Internet Archive')
   $('.back-btn').off('click').on('click', goBackToSettings)
+  showLoginPage(e)
 }
 
 // Returns to the main view.
@@ -476,7 +517,10 @@ function setupViewArchived() {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         checkLastError()
         const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
-        if (state.has('V') && ('customData' in result) && ('statusCode' in result.customData) && ('statusWaybackUrl' in result.customData)) {
+        if (state.has('V') && ('customData' in result) && ('statusWaybackUrl' in result.customData) &&
+          ('statusCode' in result.customData) && (result.customData.statusCode >= 400) &&
+          ('statusUrl' in result.customData) && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url)))
+        {
           // show msg and View Archived button for error status codes
           const statusCode = result.customData.statusCode
           const waybackUrl = result.customData.statusWaybackUrl
@@ -654,28 +698,29 @@ function showContext(eventObj) {
 }
 
 function openMyWebArchivePage() {
-  chrome.storage.local.get(['itemname'], (settings) => {
-    if (settings && settings.itemname) {
-      // using saved itemname
-      const url = `https://archive.org/details/${settings.itemname}?tab=web-archive`
+  // retrieve the itemname
+  getUserInfo().then(info => {
+    if (info && ('itemname' in info)) {
+      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
-    } else {
-      // retrieve & store itemname
-      getUserInfo().then(info => {
-        if (info && ('screenname' in info) && ('itemname' in info)) {
-          chrome.storage.local.set({ screenname: info.screenname, itemname: info.itemname })
-          const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
-          openByWindowSetting(url)
-        }
-      })
     }
   })
 }
 
-function setExcluded() {
-  $('#spn-btn').addClass('flip-inside')
-  $('#last-saved-msg').hide()
-  $('#url-not-supported-msg').text('URL not supported')
+function showUrlNotSupported(flag) {
+  if (flag) {
+    $('#spn-btn').off('click')
+    $('#spn-btn').addClass('flip-inside')
+    $('#last-saved-msg').hide()
+    $('#url-not-supported-msg').text('URL not supported')
+    $('#spn-back-label').text('URL not supported')
+    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
+  } else {
+    $('#spn-btn').off('click').on('click', doSaveNow)
+    $('#spn-btn').removeClass('flip-inside')
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0').css('cursor', '')
+  }
 }
 
 // For removing focus outline around buttons on mouse click, while keeping during keyboard use.
@@ -707,7 +752,7 @@ function showWaybackCount(url) {
   $('#wayback-count-msg').show()
   chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
     checkLastError()
-    if (result && ('total' in result)) {
+    if (result && ('total' in result) && (result.total >= 0)) {
       // set label
       let text = ''
       if (result.total === 1) {
@@ -786,15 +831,6 @@ function enableAfterSaving() {
   $('#chk-screenshot').removeAttr('disabled')
 }
 
-// make the tab/window option in setting page checked according to previous setting
-function setupViewSetting() {
-  chrome.storage.local.get(['view_setting'], (settings) => {
-    if (settings && settings.view_setting) {
-      $(`input[name=tw][value=${settings.view_setting}]`).prop('checked', true)
-    }
-  })
-}
-
 // respond to Save Page Now success
 function setupSaveListener() {
   chrome.runtime.onMessage.addListener(
@@ -803,7 +839,7 @@ function setupSaveListener() {
         if (message.message === 'save_success') {
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Save successful')
-          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp))
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
           $('#spn-btn').removeClass('flip-inside')
           setupWaybackCount()
           enableAfterSaving()
@@ -845,10 +881,9 @@ $(function() {
   setupFactCheck()
   setupSearchBox()
   setupSaveButton()
-  updateLastSaved()
+  setupLoginState()
   setupWaybackCount()
   setupSaveListener()
-  setupViewSetting()
   setupSettingsTabTip()
   $('.logo-wayback-machine').click(homepage)
   $('#newest-btn').click(openNewestPage)

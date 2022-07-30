@@ -12,30 +12,47 @@ body {
 
 .tab-bar {
     padding-top: 2px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .tab-item {
-    display: inline-block;
-    vertical-align: top;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 22%;
     cursor: pointer;
-    opacity: 1.0;
+    outline: none;
 }
 
-.tab-item:hover {
+.tab-item:hover,
+.tab-item:focus-visible {
     opacity: 0.7;
 }
 
 .tab-icon {
     color: #444;
-    position: relative;
-    top: 0;
-    margin: 0 auto;
     /* Calculate filter colors using this tool: https://codepen.io/sosuke/pen/Pjoqqp */
     filter: invert(20%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(108%) contrast(84%);
 }
 
-.settings-icon-svg, .about-icon-svg, .logout-icon-svg {
+.auth-icon-active {
+    background: url("../images/fa/sign-in-alt-solid.svg") no-repeat;
+    filter: invert(40%) sepia(5%) saturate(21%) hue-rotate(355deg) brightness(200%) contrast(50%);
+}
+
+.auth-icon-active input {
+    visibility: hidden;
+    float: none !important;
+}
+
+.settings-icon-svg,
+.about-icon-svg,
+.logout-icon-svg,
+.login-icon-svg {
     width: 25px;
     height: 25px;
 }
@@ -50,7 +67,6 @@ body {
     height: 25px;
 }
 
-
 .toolbar-icon {
     width: 8px;
     height: 8px;
@@ -58,13 +74,17 @@ body {
     margin: 0 2px;
 }
 
-#search-input, .login-input {
+#search-input,
+.login-input {
     background-color: #fff;
     border-color: #777;
     color: #222;
 }
 
-#wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
+#wayback-count-msg,
+#url-not-supported-msg,
+#using-search-msg,
+#last-saved-msg {
     font-size: 9pt;
     color: #222;
 }
@@ -84,6 +104,7 @@ body {
     background-color: #edd;
     border: #666 solid 1px;
 }
+
 
 .link-copied-block {
     position: relative;
@@ -126,13 +147,15 @@ body {
     height: 64px;
 }
 
-#using-search-msg, #save-progress-bar {
+#using-search-msg,
+#save-progress-bar {
     display: none;
 }
 
 /* search and login boxes */
 
-#search-input, .login-input {
+#search-input,
+.login-input {
     display: block;
     position: relative;
     border-radius: 5px;
@@ -153,7 +176,8 @@ body {
     padding: 3px 10px;
 }
 
-#suggestion-box div:hover, .focused {
+#suggestion-box div:hover,
+.focused {
     background-color: #eee;
     border-radius: 3px;
 }
@@ -195,22 +219,15 @@ body {
     font-size: 12px;
     font-weight: 400;
     margin: 0;
-    cursor: pointer;
 }
 
 .chk-options input {
     margin: 5px 5px 0 0;
 }
 
-.chk-options span {
-    vertical-align: text-top;
-    padding-bottom: 2px;
-}
-
 .chk-frame {
     display: flex;
     gap: 2px;
-    /* Safari doesn't support gap */
     position: relative;
     width: 100%;
     border-radius: 5px;
@@ -222,47 +239,69 @@ body {
     background-color: #ddd;
 }
 
-#chk-login-btn {
-    position: absolute;
-    width: 100%;
-}
-
 .spn-flip {
     /* to cover over the chk-frame */
     z-index: 5;
 }
 
-#readbook-container, #tvnews-container, #wiki-container, #view-archived-container, #fact-check-container {
+
+#readbook-container,
+#tvnews-container,
+#wiki-container,
+#view-archived-container,
+#fact-check-container {
     display: none;
 }
 
+.progress-container {
+    position: relative;
+}
+
+.progress,
 #spn-front-label {
-    width: 100%;
+    top: 0;
+    left: 0;
     position: absolute;
-    bottom: 6px;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-bar {
+    width: 100%;
+}
+
+#spn-front-label {
+    background-color: transparent;
+    border: none;
+    outline: none;
     text-align: center;
-    margin: auto;
+}
+
+#spn-front-label:focus-visible {
+    background-color: #a95a57;
 }
 
 /* social buttons */
 
-a.btn-social, .btn-social {
+.btn-social {
     border-radius: 50%;
-    color: #ffffff !important;
+    color: #ffffff;
     display: inline-block;
+    position: relative;
+    width: 54px;
     height: 54px;
     line-height: 54px;
-    margin: 8px 4px;
     text-align: center;
     text-decoration: none;
+    border: none;
     transition: background-color .3s;
     -webkit-transition: background-color .3s;
-    width: 54px;
-    position: relative;
     cursor: pointer;
 }
 
-.btn-social .fa, .btn-social i, .btn-social img {
+.btn-social .fa,
+.btn-social i,
+.btn-social img {
     -ms-transform: scale(1);
     -o-transform: scale(1);
     transform: scale(1);
@@ -281,13 +320,19 @@ a.btn-social, .btn-social {
     vertical-align: middle;
 }
 
-.btn-social:hover, .btn-social:focus {
+.btn-social:hover,
+.btn-social:focus {
     color: #fff;
     outline: none;
     text-decoration: none;
 }
 
-.btn-social:hover .fa, .btn-social:focus .fa, .btn-social:hover i, .btn-social:focus i,  .btn-social:hover img, .btn-social:focus img {
+.btn-social:hover .fa,
+.btn-social:focus .fa,
+.btn-social:hover i,
+.btn-social:focus i,
+.btn-social:hover img,
+.btn-social:focus img {
     -ms-transform: scale(1.3);
     -o-transform: scale(1.3);
     transform: scale(1.3);
@@ -323,32 +368,32 @@ a.btn-social, .btn-social {
 .btn-facebook {
     background-color: #3b5998;
 }
-
-.btn-facebook:hover {
+.btn-facebook:hover,
+.btn-facebook:focus-visible {
     background-color: #4c70ba;
 }
 
 .btn-twitter {
     background-color: #55acee;
 }
-
-.btn-twitter:hover {
+.btn-twitter:hover,
+.btn-twitter:focus-visible {
     background-color: #83c3f3;
 }
 
 .btn-linkedin {
     background-color: #1E88E5;
 }
-
-.btn-linkedin:hover {
+.btn-linkedin:hover,
+.btn-linkedin:focus-visible {
     background-color: #4a8aff;
 }
 
 .btn-copy {
     background-color: #688099;
 }
-
-.btn-copy:hover {
+.btn-copy:hover,
+.btn-copy:focus-visible {
     background-color: #809ebd;
 }
 
@@ -362,6 +407,11 @@ a.btn-social, .btn-social {
 
 #feedback-tab-btn {
     font-size: 190%;
+}
+
+#login-tab-btn {
+    display: none;
+    margin-top: -2px;
 }
 
 #logout-tab-btn {
@@ -416,7 +466,8 @@ a.btn-social, .btn-social {
     transform: rotateX(180deg);
 }
 
-.flip-front, .flip-back {
+.flip-front,
+.flip-back {
     position: absolute;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -431,6 +482,7 @@ a.btn-social, .btn-social {
 .flip-back {
     transform: rotateX(180deg);
 }
+
 
 /* dark mode */
 
@@ -457,13 +509,22 @@ a.btn-social, .btn-social {
         filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(83%) contrast(89%);
     }
 
-    #search-input, .login-input {
+    .auth-icon-active {
+        color: #bbb;
+        filter: invert(92%) sepia(0%) saturate(751%) hue-rotate(174deg) brightness(60%) contrast(50%);
+    }
+
+    #search-input,
+    .login-input {
         background-color: #222;
         border-color: #666;
         color: #ddd;
     }
 
-    #wayback-count-msg, #url-not-supported-msg, #using-search-msg, #last-saved-msg {
+    #wayback-count-msg,
+    #url-not-supported-msg,
+    #using-search-msg,
+    #last-saved-msg {
         color: #eee;
     }
 
@@ -479,7 +540,8 @@ a.btn-social, .btn-social {
         border: 1px solid #666;
     }
 
-    #suggestion-box div:hover, .focused {
+    #suggestion-box div:hover,
+    .focused {
         background-color: #666;
     }
 
