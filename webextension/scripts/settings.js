@@ -41,6 +41,8 @@ function restoreSettings(items) {
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $('#embed-popup-setting').prop('checked', items.embed_popup_setting)
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
+  // update UI
+  enableEmbedPopupSetting(items.not_found_setting)
 }
 
 function saveSettings() {
@@ -93,6 +95,17 @@ function onPrivateSettingChange(e) {
   }
 }
 
+// Enable or disable setting when flag is true or false.
+function enableEmbedPopupSetting(flag) {
+  if (flag) {
+    $('#embed-popup-setting').attr('disabled', false)
+    $('#embed-popup-label').css('opacity', '1.0').css('cursor', '')
+  } else {
+    $('#embed-popup-setting').attr('disabled', true)
+    $('#embed-popup-label').css('opacity', '0.66').css('cursor', 'not-allowed')
+  }
+}
+
 // Save settings on change and other actions on particular settings.
 function setupSettingsChange() {
 
@@ -116,6 +129,11 @@ function setupSettingsChange() {
     if ($(e.target).prop('checked') === false) {
       chrome.runtime.sendMessage({ message: 'clearCountCache' })
     }
+  })
+
+  // 404 embed-popup-setting
+  $('#not-found-setting').change((e) => {
+    enableEmbedPopupSetting($(e.target).prop('checked') === true)
   })
 
   // resources
@@ -193,8 +211,7 @@ function setupHelpDocs() {
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
-    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.',
-    'embed-popup-setting': 'Also present error conditions such as 404s via pop-up within website.'
+    'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
   let labels = $('label')
   for (let i = 0; i < labels.length; i++) {
