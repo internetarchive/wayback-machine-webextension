@@ -4,10 +4,10 @@
 // Copyright 2016-2020, Internet Archive
 
 // from 'utils.js'
-/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notify, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL, isFirefox */
+/*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
-/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix */
+/*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
 // Used to store the statuscode of the if it is a httpFailCodes
 let gStatusCode = 0
@@ -32,19 +32,6 @@ function rewriteUserAgentHeader(e) {
     }
   }
   return { requestHeaders: e.requestHeaders }
-}
-
-function URLopener(open_url, url, wmIsAvailable) {
-  if (wmIsAvailable === true) {
-    wmAvailabilityCheck(url, () => {
-      openByWindowSetting(open_url)
-    }, () => {
-      const msg = 'This page has not been archived.'
-      if (isFirefox) { notify(msg) } else { alert(msg) }
-    })
-  } else {
-    openByWindowSetting(open_url)
-  }
 }
 
 /* * * API Calls * * */
@@ -107,7 +94,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
         if (errMsg.indexOf('same snapshot') !== -1) {
           // snapshot already archived within timeframe
           chrome.runtime.sendMessage({ message: 'save_archived', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
-          if (!silent) { notify(errMsg) }
+          if (!silent) { notifyMsg(errMsg) }
         } else {
           // update UI
           addToolbarState(atab, 'S')
@@ -115,7 +102,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
           chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
           // show resources during save
           if (!silent) {
-            notify('Saving ' + pageUrl)
+            notifyMsg('Saving ' + pageUrl)
             chrome.storage.local.get(['resource_list_setting'], (settings) => {
               if (settings && settings.resource_list_setting) {
                 const resource_list_url = chrome.runtime.getURL('resource-list.html') + '?url=' + pageUrl + '&job_id=' + jobId + '#not_refreshed'
@@ -130,7 +117,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
       } else {
         // missing jobId error
         chrome.runtime.sendMessage({ message: 'save_error', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
-        if (!silent) { notify('Error: ' + errMsg) }
+        if (!silent) { notifyMsg('Error: ' + errMsg) }
       }
     })
     .catch((err) => {
@@ -230,7 +217,7 @@ function statusSuccess(atab, pageUrl, silent, data) {
     if (('message' in data) && (data.message.length > 0)) {
       msg = data.message
     }
-    notify(msg, (notificationId) => {
+    notifyMsg(msg, (notificationId) => {
       chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
         if (notificationId === newNotificationId) {
           openByWindowSetting('https://web.archive.org/web/' + data.timestamp + '/' + data.original_url)
@@ -267,7 +254,7 @@ function statusFailed(atab, pageUrl, silent, data, err) {
     }, checkLastError)
     // notify
     if (!silent) {
-      notify('Error: ' + data.message, (notificationId) => {
+      notifyMsg('Error: ' + data.message, (notificationId) => {
         chrome.notifications && chrome.notifications.onClicked.addListener((newNotificationId) => {
           if (notificationId === newNotificationId) {
             openByWindowSetting('https://archive.org/account/login')
@@ -565,16 +552,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // open URL in new tab or window depending on setting
     let page_url = getCleanUrl(message.page_url)
     if (isValidUrl(page_url) && isNotExcludedUrl(page_url)) {
-      let open_url = message.wayback_url + page_url
-      URLopener(open_url, page_url, false)
+      openByWindowSetting(message.wayback_url + page_url)
     }
-  } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time
-    getCachedWaybackCount(message.page_url,
-      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
-      (error) => { sendResponse({ message: 'last_save', timestamp: '', error: error }) }
-    )
-    return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
     getCachedBooks(message.query,
@@ -853,8 +832,19 @@ function autoSave(atab, url, beforeDate) {
             }
           },
           () => {
-            // set auto-save toolbar icon if page doesn't exist, then save it
-            savePageNowChecked(atab, url, true)
+            // URL not found in availability check, which means URL is new, or it's been blocked.
+            // Need to call this next to determine which.
+            getCachedWaybackCount(url, (values) => {
+              if (('total' in values) && (values.total === -1)) {
+                // don't auto save since this is a blocked URL
+              } else {
+                // set auto-save toolbar icon if page doesn't exist, then save it
+                savePageNowChecked(atab, url, true)
+              }
+            },
+            (error) => {
+              console.log('wayback count error: ' + error)
+            })
           }
         )
       }
@@ -942,15 +932,19 @@ function clearCountCache() {
 /**
  * Adds +1 to url in cache, or set to 1 if it doesn't exist.
  * Also updates "last_ts" with current timestamp.
+ * Doesn't update if cached "total" value was < 0.
  * @param url {string}
  */
 function incrementCount(url) {
   let cacheValues = waybackCountCache[url]
   let timestamp = dateToTimestamp(new Date())
   if (cacheValues && cacheValues.total) {
-    cacheValues.total += 1
-    cacheValues.last_ts = timestamp
-    waybackCountCache[url] = cacheValues
+    if (cacheValues.total > 0) {
+      cacheValues.total += 1
+      cacheValues.last_ts = timestamp
+      waybackCountCache[url] = cacheValues
+    }
+    // else don't update if total is a special value < 0
   } else {
     waybackCountCache[url] = { total: 1, last_ts: timestamp }
   }
@@ -1098,11 +1092,9 @@ chrome.contextMenus.onClicked.addListener((click) => {
           savePageNowChecked(atab, page_url, false, options)
           return true
         }
-        let open_url = wayback_url + page_url
-        URLopener(open_url, page_url, false)
+        openByWindowSetting(wayback_url + page_url)
       } else {
-        const msg = 'This URL is excluded.'
-        if (isFirefox) { notify(msg) } else { alert(msg) }
+        alertMsg('URL not supported.')
       }
     }
   })
