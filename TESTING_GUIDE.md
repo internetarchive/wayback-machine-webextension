@@ -258,6 +258,9 @@ Test that SPN works on URLs containing percent-encodings: [#279](https://github.
 
 Check above URLs work with Wayback (Oldest, Overview, Newest), Social Links, Copy to Clipboard.
 
+Test that URLs which are excluded from the Wayback Machine don't Auto-Save, buttons disabled, message shows. See issue [#944](https://github.com/internetarchive/wayback-machine-webextension/issues/944) and [PR #951](https://github.com/internetarchive/wayback-machine-webextension/pull/951) for screenshots.
+- Example: https://www.tomshardware.com/
+
 </td>
 </tr>
 

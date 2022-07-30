@@ -568,13 +568,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let open_url = message.wayback_url + page_url
       URLopener(open_url, page_url, false)
     }
-  } else if (message.message === 'getLastSaveTime') {
-    // get most recent saved time
-    getCachedWaybackCount(message.page_url,
-      (values) => { sendResponse({ message: 'last_save', timestamp: values.last_ts }) },
-      (error) => { sendResponse({ message: 'last_save', timestamp: '', error: error }) }
-    )
-    return true
   } else if (message.message === 'getWikipediaBooks') {
     // retrieve wikipedia books
     getCachedBooks(message.query,
@@ -853,8 +846,19 @@ function autoSave(atab, url, beforeDate) {
             }
           },
           () => {
-            // set auto-save toolbar icon if page doesn't exist, then save it
-            savePageNowChecked(atab, url, true)
+            // URL not found in availability check, which means URL is new, or it's been blocked.
+            // Need to call this next to determine which.
+            getCachedWaybackCount(url, (values) => {
+              if (('total' in values) && (values.total === -1)) {
+                // don't auto save since this is a blocked URL
+              } else {
+                // set auto-save toolbar icon if page doesn't exist, then save it
+                savePageNowChecked(atab, url, true)
+              }
+            },
+            (error) => {
+              console.log('wayback count error: ' + error)
+            })
           }
         )
       }
@@ -942,15 +946,19 @@ function clearCountCache() {
 /**
  * Adds +1 to url in cache, or set to 1 if it doesn't exist.
  * Also updates "last_ts" with current timestamp.
+ * Doesn't update if cached "total" value was < 0.
  * @param url {string}
  */
 function incrementCount(url) {
   let cacheValues = waybackCountCache[url]
   let timestamp = dateToTimestamp(new Date())
   if (cacheValues && cacheValues.total) {
-    cacheValues.total += 1
-    cacheValues.last_ts = timestamp
-    waybackCountCache[url] = cacheValues
+    if (cacheValues.total > 0) {
+      cacheValues.total += 1
+      cacheValues.last_ts = timestamp
+      waybackCountCache[url] = cacheValues
+    }
+    // else don't update if total is a special value < 0
   } else {
     waybackCountCache[url] = { total: 1, last_ts: timestamp }
   }
