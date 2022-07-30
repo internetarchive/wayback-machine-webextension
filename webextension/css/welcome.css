@@ -47,6 +47,13 @@ p {
     border-top: 1px solid #888;
 }
 
+.welcome-logo {
+    background: url('../images/wayback-light.png') center/cover no-repeat;
+    width: 375px;
+    height: 150px;
+    margin: 0 auto;
+}
+
 /* dark mode */
 @media (prefers-color-scheme: dark) {
 
@@ -55,16 +62,20 @@ p {
         color: #ccc;
     }
 
-    .bottom-container {
-        background-color: #333;
-    }
-
     h1 {
         color: #ddd;
     }
 
     h2, h3, h4 {
         color: #dcc;
+    }
+
+    .bottom-container {
+        background-color: #333;
+    }
+
+    .welcome-logo {
+        background-image: url('../images/wayback-dark.png')
     }
 
 }
