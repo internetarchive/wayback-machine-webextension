@@ -36,6 +36,7 @@ function restoreSettings(items) {
   // second panel
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
+  $('#auto-bookmark-setting').prop('checked', items.auto_bookmark_setting)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
@@ -62,6 +63,7 @@ function saveSettings() {
     // second panel
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
+    auto_bookmark_setting: $('#auto-bookmark-setting').prop('checked'),
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
@@ -217,6 +219,7 @@ function setupHelpDocs() {
     'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
+    'auto-bookmark-setting': 'Archive when a website is bookmarked, except if on the Exclude URLs list.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'notify-setting': 'Turn off all notifications.',
