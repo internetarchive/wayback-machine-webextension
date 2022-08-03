@@ -829,6 +829,9 @@ function autoSave(atab, url, beforeDate) {
               if (checkDate.getTime() < beforeDate.getTime()) {
                 savePageNowChecked(atab, url, true)
               }
+            } else {
+              // TODO: this still needs to be fully tested
+              savePageNowChecked(atab, url, true)
             }
           },
           () => {
@@ -863,6 +866,44 @@ function autoSaveChecked(atab, url, beforeDate) {
   })
 }
 */
+
+// Functions for handling Auto Save Bookmarks.
+// Safari not supported.
+//
+if (chrome.bookmarks) {
+  let gBookmarksOn = true
+
+  // Disables onCreated callback from running while import taking place. Firefox not supported.
+  chrome.bookmarks.onImportBegan && chrome.bookmarks.onImportBegan.addListener(() => {
+    console.log('bookmarks.onImportBegan')
+    gBookmarksOn = false
+  })
+
+  // Re-enables onCreated callback after importing ends. Firefox not supported.
+  chrome.bookmarks.onImportEnded && chrome.bookmarks.onImportEnded.addListener(() => {
+    console.log('bookmarks.onImportEnded')
+    gBookmarksOn = true
+  })
+
+  // Runs whenever a bookmark is saved.
+  chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener((id, bookmark) => {
+    if (gBookmarksOn && ('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
+      chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
+        if (settings && settings.auto_bookmark_setting) {
+          // BUG: When bookmarking "All Tabs" this will likely only save 1 URL! We don't currently have a fix.
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs && tabs[0]) {
+              console.log('archiving bookmark: ' + bookmark.url)
+              autoSave(tabs[0], bookmark.url)
+            } else {
+              console.log('failed to retrieve current tab!')
+            }
+          })
+        }
+      })
+    }
+  })
+}
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
 //
