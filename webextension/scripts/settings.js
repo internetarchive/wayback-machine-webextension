@@ -122,6 +122,12 @@ function setupSettingsChange() {
     e.target.blur()
   })
 
+  // auto bookmark
+  // hide setting if bookmarks unsupported (e.g. Safari)
+  if (!chrome.bookmarks) {
+    $('#auto-bookmark-label').hide()
+  }
+
   // notify setting
   // hide setting if notifications unsupported (e.g. Safari)
   if (!chrome.notifications) {

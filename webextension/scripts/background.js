@@ -890,7 +890,7 @@ if (chrome.bookmarks) {
     if (gBookmarksOn && ('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
       chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
         if (settings && settings.auto_bookmark_setting) {
-          // BUG: When bookmarking "All Tabs" this will likely only save 1 URL! We don't currently have a fix.
+          // BUG: When bookmarking "All Tabs" this may save too many at once, causing issues.
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs && tabs[0]) {
               console.log('archiving bookmark: ' + bookmark.url)
