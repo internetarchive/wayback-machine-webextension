@@ -83,6 +83,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
   })
 
   // call api
+  console.log('archiving: ' + pageUrl)
   timeoutPromise
     .then(response => (loggedInFlag ? response.json() : response.text()))
     .then(async (data) => {
@@ -890,13 +891,12 @@ if (chrome.bookmarks) {
     if (gBookmarksOn && ('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
       chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
         if (settings && settings.auto_bookmark_setting) {
-          // BUG: When bookmarking "All Tabs" this may save too many at once, causing issues.
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs && tabs[0]) {
-              console.log('archiving bookmark: ' + bookmark.url)
+            // The check here that current tab URL == bookmark URL is a temp solution to
+            // the issue caused when bookmarking "All Tabs" which could cause too many saves at once.
+            // This forces only 1 URL to be saved. Also prevents importing URLs on Firefox from saving.
+            if (tabs && tabs[0] && (tabs[0].url === bookmark.url)) {
               autoSave(tabs[0], bookmark.url)
-            } else {
-              console.log('failed to retrieve current tab!')
             }
           })
         }
