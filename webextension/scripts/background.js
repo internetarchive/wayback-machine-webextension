@@ -873,23 +873,9 @@ function autoSaveChecked(atab, url, beforeDate) {
 //
 // FIXME: this will be false until permission allowed, so will fail to run!
 if (chrome.bookmarks) {
-  let gBookmarksOn = true
-
-  // Disables onCreated callback from running while import taking place. Firefox not supported.
-  chrome.bookmarks.onImportBegan && chrome.bookmarks.onImportBegan.addListener(() => {
-    console.log('bookmarks.onImportBegan')
-    gBookmarksOn = false
-  })
-
-  // Re-enables onCreated callback after importing ends. Firefox not supported.
-  chrome.bookmarks.onImportEnded && chrome.bookmarks.onImportEnded.addListener(() => {
-    console.log('bookmarks.onImportEnded')
-    gBookmarksOn = true
-  })
-
   // Runs whenever a bookmark is saved.
   chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener((id, bookmark) => {
-    if (gBookmarksOn && ('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
+    if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
       chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
         if (settings && settings.auto_bookmark_setting) {
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
