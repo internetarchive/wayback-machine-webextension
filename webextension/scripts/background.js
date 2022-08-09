@@ -871,6 +871,7 @@ function autoSaveChecked(atab, url, beforeDate) {
 // Functions for handling Auto Save Bookmarks.
 // Safari not supported.
 //
+// FIXME: this will be false until permission allowed, so will fail to run!
 if (chrome.bookmarks) {
   let gBookmarksOn = true
 

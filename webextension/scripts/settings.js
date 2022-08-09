@@ -110,18 +110,15 @@ function enableEmbedPopupSetting(flag) {
   }
 }
 
+// Popup request for optional bookmarks permission if not yet set to allowed.
 function checkBookmarksPermission() {
   // first clear checkbox before permissions popup
-  $('#auto-bookmark-setting').prop('checked', false)
+  // $('#auto-bookmark-setting').prop('checked', false) // REMOVE
   // permissions popup causes extension popup to disappear
   chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
     if (granted) {
-      console.log('granted')
       $('#auto-bookmark-setting').prop('checked', true)
-    } else {
-      // prevent checkbox from being checked
-      console.log('not granted')
-      // $('#auto-bookmark-setting').prop('checked', false)
+      saveSettings()
     }
   })
 }
@@ -140,10 +137,10 @@ function setupSettingsChange() {
 
   // auto bookmark
   // hide setting if bookmarks unsupported (e.g. Safari)
-  if (!chrome.bookmarks) {
+  if (!chrome.bookmarks) { // TODO: need to rethink, as bookmarks is null prior to permission set to Allow
     // $('#auto-bookmark-label').hide()
   }
-  $('#auto-bookmark-setting').change((e) => {
+  $('#auto-bookmark-setting').click((e) => {
     if ($(e.target).prop('checked') === true) {
       // while attempting to turn on setting, first check permissions
       e.preventDefault()
