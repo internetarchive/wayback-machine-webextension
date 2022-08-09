@@ -26,7 +26,6 @@
   "homepage_url": "https://archive.org/",
   "permissions": [
       "activeTab",
-      "bookmarks",
       "cookies",
       "contextMenus",
       "notifications",
@@ -37,6 +36,9 @@
       "https://*.archive.org/*",
       "https://hypothes.is/*",
       "<all_urls>"
+  ],
+  "optional_permissions": [
+      "bookmarks"
   ],
   "background": {
     "scripts": ["scripts/utils.js",
