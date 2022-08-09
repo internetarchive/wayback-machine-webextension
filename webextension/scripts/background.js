@@ -868,29 +868,44 @@ function autoSaveChecked(atab, url, beforeDate) {
 }
 */
 
-// Functions for handling Auto Save Bookmarks.
-// Safari not supported.
-//
-// FIXME: this will be false until permission allowed, so will fail to run!
-if (chrome.bookmarks) {
-  // Runs whenever a bookmark is saved.
-  chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener((id, bookmark) => {
-    if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
-      chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
-        if (settings && settings.auto_bookmark_setting) {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            // The check here that current tab URL == bookmark URL is a temp solution to
-            // the issue caused when bookmarking "All Tabs" which could cause too many saves at once.
-            // This forces only 1 URL to be saved. Also prevents importing URLs on Firefox from saving.
-            if (tabs && tabs[0] && (tabs[0].url === bookmark.url)) {
-              autoSave(tabs[0], bookmark.url)
-            }
-          })
-        }
-      })
-    }
-  })
+// Add a listener for handling Auto Save Bookmarks.
+function autoBookmarksListener(id, bookmark) {
+  // This runs whenever a bookmark is saved.
+  console.log('autoBookmarksListener ', bookmark) // DEBUG
+  if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
+    chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
+      if (settings && settings.auto_bookmark_setting) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          // The check here that current tab URL == bookmark URL is a temp solution to
+          // the issue caused when bookmarking "All Tabs" which could cause too many saves at once.
+          // This forces only 1 URL to be saved. Also prevents importing URLs from saving any.
+          if (tabs && tabs[0] && (tabs[0].url === bookmark.url)) {
+            autoSave(tabs[0], bookmark.url)
+          }
+        })
+      }
+    })
+  }
 }
+
+// Should call this after 'bookmarks' permission Allowed and on start.
+function setupAutoSaveBookmarks() {
+  console.log('setupAutoSaveBookmarks') // DEBUG
+  // adding a named function instead of anonymous function should prevent multiple listeners from being added.
+  // safari doesn't support chrome.bookmarks
+  chrome.bookmarks && chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener(autoBookmarksListener)
+}
+
+// Called when 'bookmarks' permission is acquired.
+chrome.permissions.onAdded.addListener((permissions) => {
+  console.log('permissions onAdded') // DEBUG
+  if (permissions.permissions.indexOf('bookmarks') >= 0) {
+    setupAutoSaveBookmarks()
+  }
+})
+
+// Called once on extension load, in case permission allowed on start.
+setupAutoSaveBookmarks()
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
 //
