@@ -124,6 +124,7 @@ function setupSettingsChange() {
 
   // auto save bookmarks
   if (isSafari) {
+    // Tried alternatives to test bookmarks support, but none worked out.
     // hide setting if bookmarks unsupported
     $('#auto-bookmark-label').hide()
   } else {
