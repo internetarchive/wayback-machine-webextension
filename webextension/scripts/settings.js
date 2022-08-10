@@ -133,7 +133,6 @@ function setupSettingsChange() {
         e.preventDefault()
         chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
           if (granted) {
-            console.log('granted') // DEBUG
             // Set checkmark and save it since it was prevented.
             // Permissions popup will cause main popup to disappear, preventing this code from running.
             // Fixed by saving auto_bookmark_setting to true in background.js when permission granted.
