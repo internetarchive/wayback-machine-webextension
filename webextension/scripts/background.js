@@ -872,7 +872,7 @@ function autoSaveChecked(atab, url, beforeDate) {
 function autoBookmarksListener(id, bookmark) {
   // This runs whenever a bookmark is saved.
   console.log('autoBookmarksListener ', bookmark) // DEBUG
-  if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url) ) {
+  if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url)) {
     chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
       if (settings && settings.auto_bookmark_setting) {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -897,12 +897,15 @@ function setupAutoSaveBookmarks() {
   chrome.bookmarks && chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener(autoBookmarksListener)
 }
 
-// Called when 'bookmarks' permission is acquired.
+// Called when an optional permission is acquired such as 'bookmarks'.
 chrome.permissions.onAdded.addListener((permissions) => {
   console.log('permissions onAdded') // DEBUG
   if (permissions.permissions.indexOf('bookmarks') >= 0) {
     setupAutoSaveBookmarks()
-    // bug fix to set setting here because when popup goes away, code in settings.js won't run
+    // Bug fix to set setting value because when popup goes away, code in settings.js won't run.
+    // FIXME: This is a Hack which may be unintended if any other code attempts to request the
+    // 'bookmarks' permission (or ANY optional permission!) in the future. (e.g. Bulk Save)
+    // It's hard to see a solution without major refactoring since dependent functions are all in background.js
     chrome.storage.local.set({ auto_bookmark_setting: true })
   }
 })

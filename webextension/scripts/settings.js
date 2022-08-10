@@ -1,7 +1,7 @@
 // settings.js
 
 // from 'utils.js'
-/*   global attachTooltip, openByWindowSetting */
+/*   global attachTooltip, openByWindowSetting, isSafari */
 
 // from 'popup.js'
 /*   global setupWaybackCount, goBackToMain */
@@ -123,27 +123,27 @@ function setupSettingsChange() {
   })
 
   // auto save bookmarks
-  if (!chrome.bookmarks) { // TODO: need to rethink, as bookmarks is null prior to permission set to Allow
-    // hide setting if bookmarks unsupported (e.g. Safari)
-    // $('#auto-bookmark-label').hide()
+  if (isSafari) {
+    // hide setting if bookmarks unsupported
+    $('#auto-bookmark-label').hide()
+  } else {
+    // before setting Auto Save Bookmarks, check optional 'bookmarks' permission and popup request if not yet acquired.
+    $('#auto-bookmark-setting').click((e) => {
+      if ($(e.target).prop('checked') === true) {
+        e.preventDefault()
+        chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
+          if (granted) {
+            console.log('granted') // DEBUG
+            // Set checkmark and save it since it was prevented.
+            // Permissions popup will cause main popup to disappear, preventing this code from running.
+            // Fixed by saving auto_bookmark_setting to true in background.js when permission granted.
+            $('#auto-bookmark-setting').prop('checked', true)
+            saveSettings()
+          }
+        })
+      }
+    })
   }
-
-  // Before setting Auto Save Bookmarks, check optional 'bookmarks' permission and popup request if not yet acquired.
-  $('#auto-bookmark-setting').click((e) => {
-    if ($(e.target).prop('checked') === true) {
-      e.preventDefault()
-      chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
-        if (granted) {
-          console.log('granted') // DEBUG
-          // Set checkmark and save it since it was prevented.
-          // Permissions popup will cause popup to disappear, causing this code to not run.
-          // Fixed by saving auto_bookmark_setting to true in background.js when permission granted.
-          $('#auto-bookmark-setting').prop('checked', true)
-          saveSettings()
-        }
-      })
-    }
-  })
 
   // notify setting
   // hide setting if notifications unsupported (e.g. Safari)
@@ -242,7 +242,7 @@ function setupHelpDocs() {
     'tvnews-setting': 'Auto check for related TV News Clips while visiting selected news websites.',
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
-    'auto-bookmark-setting': 'Archive when a website is bookmarked, except if on the Exclude URLs list.',
+    'auto-bookmark-setting': 'Archive at most one website when bookmarked, not including Excluded URLs.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'notify-setting': 'Turn off all notifications.',
