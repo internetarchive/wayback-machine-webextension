@@ -110,19 +110,6 @@ function enableEmbedPopupSetting(flag) {
   }
 }
 
-// Popup request for optional bookmarks permission if not yet set to allowed.
-function checkBookmarksPermission() {
-  // first clear checkbox before permissions popup
-  // $('#auto-bookmark-setting').prop('checked', false) // REMOVE
-  // permissions popup causes extension popup to disappear
-  chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
-    if (granted) {
-      $('#auto-bookmark-setting').prop('checked', true)
-      saveSettings()
-    }
-  })
-}
-
 // Save settings on change and other actions on particular settings.
 function setupSettingsChange() {
 
@@ -135,16 +122,26 @@ function setupSettingsChange() {
     e.target.blur()
   })
 
-  // auto bookmark
-  // hide setting if bookmarks unsupported (e.g. Safari)
+  // auto save bookmarks
   if (!chrome.bookmarks) { // TODO: need to rethink, as bookmarks is null prior to permission set to Allow
+    // hide setting if bookmarks unsupported (e.g. Safari)
     // $('#auto-bookmark-label').hide()
   }
+
+  // Before setting Auto Save Bookmarks, check optional 'bookmarks' permission and popup request if not yet acquired.
   $('#auto-bookmark-setting').click((e) => {
     if ($(e.target).prop('checked') === true) {
-      // while attempting to turn on setting, first check permissions
       e.preventDefault()
-      checkBookmarksPermission()
+      chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
+        if (granted) {
+          console.log('granted') // DEBUG
+          // Set checkmark and save it since it was prevented.
+          // Permissions popup will cause popup to disappear, causing this code to not run.
+          // Fixed by saving auto_bookmark_setting to true in background.js when permission granted.
+          $('#auto-bookmark-setting').prop('checked', true)
+          saveSettings()
+        }
+      })
     }
   })
 

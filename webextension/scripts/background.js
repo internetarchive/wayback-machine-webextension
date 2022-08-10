@@ -879,6 +879,7 @@ function autoBookmarksListener(id, bookmark) {
           // The check here that current tab URL == bookmark URL is a temp solution to
           // the issue caused when bookmarking "All Tabs" which could cause too many saves at once.
           // This forces only 1 URL to be saved. Also prevents importing URLs from saving any.
+          // Trying to solve multiple URLs would require a queue. Could open a Bulk Save window?
           if (tabs && tabs[0] && (tabs[0].url === bookmark.url)) {
             autoSave(tabs[0], bookmark.url)
           }
@@ -901,6 +902,8 @@ chrome.permissions.onAdded.addListener((permissions) => {
   console.log('permissions onAdded') // DEBUG
   if (permissions.permissions.indexOf('bookmarks') >= 0) {
     setupAutoSaveBookmarks()
+    // bug fix to set setting here because when popup goes away, code in settings.js won't run
+    chrome.storage.local.set({ auto_bookmark_setting: true })
   }
 })
 
