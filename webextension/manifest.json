@@ -28,7 +28,6 @@
       "activeTab",
       "cookies",
       "contextMenus",
-      "identity",
       "notifications",
       "storage",
       "webRequest",
@@ -37,6 +36,9 @@
       "https://*.archive.org/*",
       "https://hypothes.is/*",
       "<all_urls>"
+  ],
+  "optional_permissions": [
+      "identity"
   ],
   "background": {
     "scripts": ["scripts/utils.js",

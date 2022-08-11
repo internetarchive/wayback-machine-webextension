@@ -98,8 +98,16 @@ function doLogout() {
 
 function doGoogleLogin(e) {
 
-  // temp solution until we can get the OAuth flow working
-  openByWindowSetting('https://archive.org/account/login', 'tab')
+  chrome.permissions.request({ permissions: ['identity'] }, (granted) => {
+    // 'identity' permission shouldn't popup a warning and should be granted automatically
+    if (granted) {
+
+      // temp solution until we can get the OAuth flow working
+      openByWindowSetting('https://archive.org/account/login', 'tab')
+
+      // TODO: move code that calls chrome.identity here
+    }
+  })
 
   /*
   const CLIENT_ID = encodeURIComponent('41383750805-slra1gn7ge0bcc8ihpqnkk7hf0fo7dem.apps.googleusercontent.com')
