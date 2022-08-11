@@ -171,12 +171,37 @@ function getUserInfo() {
 
 /**
  * Check if user is logged in by checking cookies.
+ * Will retrieve auth cookies from storage and restore cookies if missing.
  * @param callback(result) : returns object { auth_check: bool } where auth_check == true if logged in, false if not.
  */
 function checkAuthentication(acallback) {
+
   chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
     let loggedIn = (result && result.value && (result.value.length > 0)) || false
-    acallback({ 'auth_check': loggedIn })
+    // console.log('checkAuth() loggedIn: ', loggedIn) // DEBUG TO REMOVE
+    if (!loggedIn) {
+      // if cookies not set but found in storage, then restore cookies from storage
+      chrome.storage.local.get(['auth_cookies'], (items) => {
+        // console.log('auth_cookies: ', items) // DEBUG TO REMOVE
+        if (items.auth_cookies) {
+          items.auth_cookies.forEach(cookie => {
+            // console.log({ cookie }) // DEBUG TO REMOVE
+            // set only a subset of keys to avoid TypeErrors
+            const cookie2 = Object.fromEntries(
+              ['domain', 'expirationDate', 'httpOnly', 'name', 'path', 'sameSite', 'secure', 'storeId', 'url', 'value']
+              .filter(k => k in cookie).map(k => [k, cookie[k]])
+            )
+            cookie2.url = 'https://archive.org'
+            // console.log({ cookie2 }) // DEBUG TO REMOVE
+            chrome.cookies.set(cookie2)
+            if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
+          })
+        }
+        acallback({ 'auth_check': loggedIn })
+      })
+    } else {
+      acallback({ 'auth_check': loggedIn })
+    }
   })
 }
 

@@ -58,6 +58,7 @@ function doLogin(e) {
   loginPromise
     .then(response => response.json())
     .then((res) => {
+      console.log('login response: ', res) // DEBUG TO REMOVE
       $('#login-btn').val('Login')
       if (res.success === false) {
         // login failed
@@ -74,6 +75,11 @@ function doLogin(e) {
         }, 500)
         $('#email-input').val('')
         $('#password-input').val('')
+        // store auth cookies in storage
+        chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
+          console.log('login cookies: ', cookies) // DEBUG TO REMOVE
+          chrome.storage.local.set({ auth_cookies: cookies })
+        })
       }
     })
     .catch((e) => {
@@ -90,6 +96,8 @@ function doLogout() {
   // removes cookies in Chrome & Firefox
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
+  // remove auth cookies from storage
+  chrome.storage.local.remove(['auth_cookies'])
   // update UI
   loginError()
   clearSettingsOnLogout()
