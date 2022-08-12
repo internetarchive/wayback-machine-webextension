@@ -58,7 +58,6 @@ function doLogin(e) {
   loginPromise
     .then(response => response.json())
     .then((res) => {
-      console.log('login response: ', res) // DEBUG TO REMOVE
       $('#login-btn').val('Login')
       if (res.success === false) {
         // login failed
@@ -77,7 +76,6 @@ function doLogin(e) {
         $('#password-input').val('')
         // store auth cookies in storage
         chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
-          console.log('login cookies: ', cookies) // DEBUG TO REMOVE
           chrome.storage.local.set({ auth_cookies: cookies })
         })
       }
