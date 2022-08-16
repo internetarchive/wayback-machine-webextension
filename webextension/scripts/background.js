@@ -812,6 +812,8 @@ chrome.tabs.onActivated.addListener((info) => {
  * Runs savePageNow if given tab not currently in saving state.
  * First checks if url available in WM, and only saves if beforeDate is prior
  * to last save date, or saves if never been saved before.
+ * Pass in Date.now() for beforeDate to save even if saved before.
+ * Will not save URLs blocked by the WM API.
  * @param atab {Tab}: Current tab, required to check save status.
  * @param url {string}: URL to save.
  * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
@@ -821,32 +823,24 @@ function autoSave(atab, url, beforeDate) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
        (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
-        wmAvailabilityCheck(url,
-          (wayback_url, url, timestamp) => {
-            // save if timestamp from availability API is older than beforeDate
-            if (beforeDate) {
-              const checkDate = timestampToDate(timestamp)
-              if (checkDate.getTime() < beforeDate.getTime()) {
-                savePageNowChecked(atab, url, true)
-              }
+        // checking against cached time will prevent recent auto-saves from re-saving again.
+        getCachedWaybackCount(url, (values) => {
+          if (('total' in values) && (values.total === -1)) {
+            // don't auto save since this is a blocked URL
+          } else if (('total' in values) && (values.total === 0)) {
+            // save since url hasn't been saved before
+            savePageNowChecked(atab, url, true)
+          } else if (beforeDate && ('last_ts' in values) && values.last_ts) {
+            // save if timestamp from wayback count is older than beforeDate
+            const checkDate = timestampToDate(values.last_ts)
+            if (checkDate.getTime() < beforeDate.getTime()) {
+              savePageNowChecked(atab, url, true)
             }
-          },
-          () => {
-            // URL not found in availability check, which means URL is new, or it's been blocked.
-            // Need to call this next to determine which.
-            getCachedWaybackCount(url, (values) => {
-              if (('total' in values) && (values.total === -1)) {
-                // don't auto save since this is a blocked URL
-              } else {
-                // set auto-save toolbar icon if page doesn't exist, then save it
-                savePageNowChecked(atab, url, true)
-              }
-            },
-            (error) => {
-              console.log('wayback count error: ' + error)
-            })
           }
-        )
+        },
+        (error) => {
+          console.log('wayback count error: ' + error)
+        })
       }
     })
   }
