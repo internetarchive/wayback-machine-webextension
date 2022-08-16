@@ -812,13 +812,12 @@ chrome.tabs.onActivated.addListener((info) => {
  * Runs savePageNow if given tab not currently in saving state.
  * First checks if url available in WM, and only saves if beforeDate is prior
  * to last save date, or saves if never been saved before.
- * Pass in Date.now() for beforeDate to save even if saved before.
  * Will not save URLs blocked by the WM API.
  * @param atab {Tab}: Current tab, required to check save status.
  * @param url {string}: URL to save.
- * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
+ * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM. Default = now.
  */
-function autoSave(atab, url, beforeDate) {
+function autoSave(atab, url, beforeDate = new Date()) {
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
