@@ -175,27 +175,32 @@ function getUserInfo() {
  * @param callback(result) : returns object { auth_check: bool } where auth_check == true if logged in, false if not.
  */
 function checkAuthentication(acallback) {
-  chrome.cookies.get({ url: 'https://archive.org', name: 'logged-in-sig' }, (result) => {
-    let loggedIn = (result && result.value && (result.value.length > 0)) || false
-    if (!loggedIn) {
+  chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
+    let loggedIn = false
+    cookies.forEach(cookie => {
+      if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
+    })
+    if (loggedIn) {
+      // store auth cookies in storage
+      chrome.storage.local.set({ auth_cookies: cookies })
+      acallback({ 'auth_check': true })
+    } else {
       // if cookies not set but found in storage, then restore cookies from storage
       chrome.storage.local.get(['auth_cookies'], (items) => {
         if (items.auth_cookies) {
-          items.auth_cookies.forEach(cookie => {
+          items.auth_cookies.forEach(authCookie => {
             // set only a subset of keys to avoid TypeErrors
-            const cookie2 = Object.fromEntries(
+            const newCookie = Object.fromEntries(
               ['domain', 'expirationDate', 'httpOnly', 'name', 'path', 'sameSite', 'secure', 'storeId', 'url', 'value']
-              .filter(k => k in cookie).map(k => [k, cookie[k]])
+              .filter(k => k in authCookie).map(k => [k, authCookie[k]])
             )
-            cookie2.url = 'https://archive.org'
-            chrome.cookies.set(cookie2)
-            if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
+            newCookie.url = 'https://archive.org'
+            chrome.cookies.set(newCookie)
+            if ((authCookie.name === 'logged-in-sig') && authCookie.value && (authCookie.value.length > 0)) { loggedIn = true }
           })
         }
         acallback({ 'auth_check': loggedIn })
       })
-    } else {
-      acallback({ 'auth_check': loggedIn })
     }
   })
 }

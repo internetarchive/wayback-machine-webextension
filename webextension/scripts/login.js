@@ -74,10 +74,6 @@ function doLogin(e) {
         }, 500)
         $('#email-input').val('')
         $('#password-input').val('')
-        // store auth cookies in storage
-        chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
-          chrome.storage.local.set({ auth_cookies: cookies })
-        })
       }
     })
     .catch((e) => {
