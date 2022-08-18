@@ -176,18 +176,20 @@ function getUserInfo() {
  */
 function checkAuthentication(acallback) {
   chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
-    let loggedIn = false
+    let loggedIn = false, ia_auth = false
     cookies.forEach(cookie => {
       if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
+      else if ((cookie.name === 'ia-auth') && cookie.value && (cookie.value.length > 0)) { ia_auth = true }
     })
     if (loggedIn) {
       // store auth cookies in storage
       chrome.storage.local.set({ auth_cookies: cookies })
       acallback({ 'auth_check': true })
     } else {
-      // if cookies not set but found in storage, then restore cookies from storage
+      // if cookies not set but found in storage, then restore cookies from storage,
+      // but if user previously logged out of archive.org on the web (ia_auth == true), then don't restore cookies from storage.
       chrome.storage.local.get(['auth_cookies'], (items) => {
-        if (items.auth_cookies) {
+        if (items.auth_cookies && !ia_auth) {
           items.auth_cookies.forEach(authCookie => {
             // set only a subset of keys to avoid TypeErrors
             const newCookie = Object.fromEntries(
