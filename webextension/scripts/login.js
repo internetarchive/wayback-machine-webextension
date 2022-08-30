@@ -90,6 +90,8 @@ function doLogout() {
   // removes cookies in Chrome & Firefox
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-user' })
   chrome.cookies.remove({ url: 'https://archive.org', name: 'logged-in-sig' })
+  // remove auth cookies from storage
+  chrome.storage.local.remove(['auth_cookies'])
   // update UI
   loginError()
   clearSettingsOnLogout()
