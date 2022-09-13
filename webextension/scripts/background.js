@@ -678,17 +678,16 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
+        let beforeData = null
         if (settings.auto_archive_age) {
           // auto_archive_age is an int of days before now
           const days = parseInt(settings.auto_archive_age, 10)
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
-            const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, url, beforeDate)
+            beforeDate = new Date(Date.now() - milisecs)
           }
-        } else {
-          autoSave(tab, url)
         }
+        autoSave(tab, url, beforeDate)
       }
 
       // 404 not found
@@ -811,11 +810,12 @@ chrome.tabs.onActivated.addListener((info) => {
 /**
  * Runs savePageNow if given tab not currently in saving state.
  * First checks if url available in WM, and only saves if beforeDate is prior
- * to last save date, or saves if never been saved before.
- * Will not save URLs blocked by the WM API.
+ * to last save date, or saves if never been saved before, or beforeDate not provided.
+ * Will not save URLs blocked by the WM API, or URLs in the Auto Exclude List.
  * @param atab {Tab}: Current tab, required to check save status.
  * @param url {string}: URL to save.
- * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM. Default = now.
+ * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
+ * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
 function autoSave(atab, url, beforeDate = new Date()) {
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
