@@ -113,7 +113,7 @@ Any URL
 - https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
 
 Domain no longer exists:
-- https://thekindlyones.org/2010/10/13/refusing-to-look-through-galileos-telescope/
+- http://mercedesfan.store/
 
 </td>
 </tr>
