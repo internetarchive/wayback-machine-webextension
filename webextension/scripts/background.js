@@ -83,7 +83,6 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
   })
 
   // call api
-  console.log('archiving: ' + pageUrl)
   timeoutPromise
     .then(response => (loggedInFlag ? response.json() : response.text()))
     .then(async (data) => {
