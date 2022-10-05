@@ -678,7 +678,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
-        let beforeData = null
+        let beforeDate = null
         if (settings.auto_archive_age) {
           // auto_archive_age is an int of days before now
           const days = parseInt(settings.auto_archive_age, 10)
