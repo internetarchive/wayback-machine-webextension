@@ -109,14 +109,11 @@ Any URL
 - https://www.whitehouse.gov/energy/climate-change
 - http://purl.oclc.org/docs/inet96.html
 
-302 Redirect to 404 above:
-- http://purl.oclc.org/OCLC/PURL/INET96
-
 410 Page has gone:
 - https://medium.com/@communismkills/here-are-the-companies-that-support-antifa-black-lives-matter-and-want-you-dead-1d79b1845f59
 
 Domain no longer exists:
-- https://thekindlyones.org/2010/10/13/refusing-to-look-through-galileos-telescope/
+- http://mercedesfan.store/
 
 </td>
 </tr>

@@ -85,10 +85,11 @@ function setupPrivateMode() {
   $('.private-setting').change(onPrivateSettingChange)
 }
 
-// Clear all private checkboxes when private mode turned on.
+// When Private Mode turned on, clear all private checkboxes and clear cached data.
 function onPrivateModeChange(e) {
   if ($('#private-mode-setting').prop('checked') === true) {
     $('.private-setting').prop('checked', false).trigger('change')
+    chrome.runtime.sendMessage({ message: 'clearCountCache' })
   }
 }
 
@@ -159,9 +160,6 @@ function setupSettingsChange() {
   $('#wm-count-setting').change((e) => {
     // displays or clears the count badge, label, oldest and newest tooltips
     setupWaybackCount()
-    if ($(e.target).prop('checked') === false) {
-      chrome.runtime.sendMessage({ message: 'clearCountCache' })
-    }
   })
 
   // 404 embed-popup-setting
