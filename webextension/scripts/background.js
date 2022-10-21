@@ -395,7 +395,9 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
     chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-    setupContextMenus()
+    setupContextMenus(true)
+  } else {
+    setupContextMenus(false)
   }
 })
 
@@ -1109,8 +1111,9 @@ function updateToolbar(atab) {
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.onClicked.addListener((click) => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
+
+  if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = click.linkUrl || tabs[0].url
       if (isValidUrl(url) && isNotExcludedUrl(url)) {
         let page_url = getCleanUrl(url)
@@ -1131,8 +1134,10 @@ chrome.contextMenus.onClicked.addListener((click) => {
       } else {
         alertMsg('URL not supported.')
       }
-    }
-  })
+    })
+  } else if (click.menuItemId === 'welcome') {
+    openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
+  }
 })
 
 if (typeof module !== 'undefined') {
