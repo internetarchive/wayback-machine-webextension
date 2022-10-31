@@ -678,17 +678,16 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
+        let beforeDate = null
         if (settings.auto_archive_age) {
           // auto_archive_age is an int of days before now
           const days = parseInt(settings.auto_archive_age, 10)
           if (!isNaN(days)) {
             const milisecs = days * 24 * 60 * 60 * 1000
-            const beforeDate = new Date(Date.now() - milisecs)
-            autoSave(tab, url, beforeDate)
+            beforeDate = new Date(Date.now() - milisecs)
           }
-        } else {
-          autoSave(tab, url)
         }
+        autoSave(tab, url, beforeDate)
       }
 
       // 404 not found
@@ -811,42 +810,36 @@ chrome.tabs.onActivated.addListener((info) => {
 /**
  * Runs savePageNow if given tab not currently in saving state.
  * First checks if url available in WM, and only saves if beforeDate is prior
- * to last save date, or saves if never been saved before.
+ * to last save date, or saves if never been saved before, or beforeDate not provided.
+ * Will not save URLs blocked by the WM API, or URLs in the Auto Exclude List.
  * @param atab {Tab}: Current tab, required to check save status.
  * @param url {string}: URL to save.
  * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
+ * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
-function autoSave(atab, url, beforeDate) {
+function autoSave(atab, url, beforeDate = new Date()) {
   if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
        (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
-        wmAvailabilityCheck(url,
-          (wayback_url, url, timestamp) => {
-            // save if timestamp from availability API is older than beforeDate
-            if (beforeDate) {
-              const checkDate = timestampToDate(timestamp)
-              if (checkDate.getTime() < beforeDate.getTime()) {
-                savePageNowChecked(atab, url, true)
-              }
+        // checking against cached time will prevent recent auto-saves from re-saving again.
+        getCachedWaybackCount(url, (values) => {
+          if (('total' in values) && (values.total === -1)) {
+            // don't auto save since this is a blocked URL
+          } else if (('total' in values) && (values.total === 0)) {
+            // save since url hasn't been saved before
+            savePageNowChecked(atab, url, true)
+          } else if (beforeDate && ('last_ts' in values) && values.last_ts) {
+            // save if timestamp from wayback count is older than beforeDate
+            const checkDate = timestampToDate(values.last_ts)
+            if (checkDate.getTime() < beforeDate.getTime()) {
+              savePageNowChecked(atab, url, true)
             }
-          },
-          () => {
-            // URL not found in availability check, which means URL is new, or it's been blocked.
-            // Need to call this next to determine which.
-            getCachedWaybackCount(url, (values) => {
-              if (('total' in values) && (values.total === -1)) {
-                // don't auto save since this is a blocked URL
-              } else {
-                // set auto-save toolbar icon if page doesn't exist, then save it
-                savePageNowChecked(atab, url, true)
-              }
-            },
-            (error) => {
-              console.log('wayback count error: ' + error)
-            })
           }
-        )
+        },
+        (error) => {
+          console.log('wayback count error: ' + error)
+        })
       }
     })
   }
@@ -863,6 +856,48 @@ function autoSaveChecked(atab, url, beforeDate) {
   })
 }
 */
+
+// Add a listener for handling Auto Save Bookmarks.
+function autoBookmarksListener(id, bookmark) {
+  // This runs whenever a bookmark is saved.
+  if (('url' in bookmark) && isValidUrl(bookmark.url) && isNotExcludedUrl(bookmark.url) && !isArchiveUrl(bookmark.url)) {
+    chrome.storage.local.get(['auto_bookmark_setting'], (settings) => {
+      if (settings && settings.auto_bookmark_setting) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          // The check here that current tab URL == bookmark URL is a temp solution to
+          // the issue caused when bookmarking "All Tabs" which could cause too many saves at once.
+          // This forces only 1 URL to be saved. Also prevents importing URLs from saving any.
+          // Trying to solve multiple URLs would require a queue. Could open a Bulk Save window?
+          if (tabs && tabs[0] && (tabs[0].url === bookmark.url)) {
+            autoSave(tabs[0], bookmark.url)
+          }
+        })
+      }
+    })
+  }
+}
+
+// Should call this after 'bookmarks' permission Allowed and on start.
+function setupAutoSaveBookmarks() {
+  // adding a named function instead of anonymous function should prevent multiple listeners from being added.
+  // safari doesn't support chrome.bookmarks
+  chrome.bookmarks && chrome.bookmarks.onCreated && chrome.bookmarks.onCreated.addListener(autoBookmarksListener)
+}
+
+// Called when an optional permission is acquired such as 'bookmarks'.
+chrome.permissions.onAdded.addListener((permissions) => {
+  if (permissions.permissions.indexOf('bookmarks') >= 0) {
+    setupAutoSaveBookmarks()
+    // Bug fix to set setting value because when popup goes away, code in settings.js won't run.
+    // FIXME: This is a Hack which may be unintended if any other code attempts to request the
+    // 'bookmarks' permission (or ANY optional permission!) in the future. (e.g. Bulk Save)
+    // It's hard to see a solution without major refactoring since dependent functions are all in background.js
+    chrome.storage.local.set({ auto_bookmark_setting: true })
+  }
+})
+
+// Called once on extension load, in case permission allowed on start.
+setupAutoSaveBookmarks()
 
 // Call Context Notices API, parse and store results if success, then set the toolbar state.
 //
