@@ -1111,7 +1111,6 @@ function updateToolbar(atab) {
 
 // Right-click context menu "Wayback Machine" inside the page.
 chrome.contextMenus.onClicked.addListener((click) => {
-
   if (['first', 'recent', 'save', 'all'].indexOf(click.menuItemId) >= 0) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       let url = click.linkUrl || tabs[0].url
