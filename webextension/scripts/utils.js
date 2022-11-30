@@ -768,36 +768,47 @@ function initAutoExcludeList() {
   })
 }
 
-function setupContextMenus() {
-  chrome.contextMenus.create({
-    'id': 'save',
-    'title': 'Save Page Now',
-    'contexts': ['page', 'frame', 'link'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-  }, checkLastError)
-  chrome.contextMenus.create({
-    'type': 'separator',
-    'contexts': ['page', 'frame', 'link'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+function setupContextMenus(enabled) {
+  chrome.contextMenus.removeAll(() => {
+    if (enabled) {
+      chrome.contextMenus.create({
+        'id': 'save',
+        'title': 'Save Page Now',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      }, checkLastError)
+      chrome.contextMenus.create({
+        'type': 'separator',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      })
+      chrome.contextMenus.create({
+        'id': 'first',
+        'title': 'Oldest Version',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      }, checkLastError)
+      chrome.contextMenus.create({
+        'id': 'recent',
+        'title': 'Newest Version',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      }, checkLastError)
+      chrome.contextMenus.create({
+        'id': 'all',
+        'title': 'All Versions',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      }, checkLastError)
+    } else {
+      chrome.contextMenus.create({
+        'id': 'welcome',
+        'title': 'Welcome to the Wayback Machine',
+        'contexts': ['page', 'frame', 'link'],
+        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
+      }, checkLastError)
+    }
   })
-  chrome.contextMenus.create({
-    'id': 'first',
-    'title': 'Oldest Version',
-    'contexts': ['page', 'frame', 'link'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-  }, checkLastError)
-  chrome.contextMenus.create({
-    'id': 'recent',
-    'title': 'Newest Version',
-    'contexts': ['page', 'frame', 'link'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-  }, checkLastError)
-  chrome.contextMenus.create({
-    'id': 'all',
-    'title': 'All Versions',
-    'contexts': ['page', 'frame', 'link'],
-    'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-  }, checkLastError)
 }
 
 // Default Settings prior to accepting terms.
@@ -835,7 +846,7 @@ function afterAcceptTerms () {
     not_found_setting: true
   })
   chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
-  setupContextMenus()
+  setupContextMenus(true)
 }
 
 if (typeof module !== 'undefined') {
