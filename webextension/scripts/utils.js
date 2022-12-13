@@ -391,7 +391,7 @@ function isArchiveUrl(url) {
   if (typeof url !== 'string') { return false }
   try {
     const hostname = new URL(url).hostname
-    return (hostname === 'archive.org') || hostname.endsWith('.archive.org')
+    return (!hostname.startsWith('mastodon')) && (hostname === 'archive.org' || hostname.endsWith('.archive.org'))
   } catch (e) {
     // url not formated correctly
     return false
