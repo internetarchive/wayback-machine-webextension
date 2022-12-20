@@ -16,6 +16,8 @@ const defaultAutoExcludeList = [
 // list of excluded URLs
 const excluded_urls = [
   '127.0.0.1',
+  'localhost',
+  '0.0.0.0',
   'chrome:',
   'chrome-extension:',
   'about:',
