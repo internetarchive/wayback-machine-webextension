@@ -24,9 +24,9 @@ describe('twitter', () => {
 
 describe('isArchiveUrl', () => {
   var test_cases = [
-    { 'url': 'http://archive.org', 'result': true },
-    { 'url': 'https://archive.org', 'result': true },
-    { 'url': 'http://archive.org/some/path/?key=value', 'result': true },
+    { 'url': 'http://archive.org', 'result': false },
+    { 'url': 'https://archive.org', 'result': false },
+    { 'url': 'http://archive.org/some/path/?key=value', 'result': false },
     { 'url': 'https://web.archive.org', 'result': true },
     { 'url': 'https://web.archive.org/some/path', 'result': true },
     { 'url': 'http://example.com', 'result': false },
