@@ -128,12 +128,12 @@ By order of lines contributed (with years):
 - Pushkit Kapoor [@tikhsuP](https://github.com/tikhsuP) (2020)
 - Tanweer Anwar [@tanweer919](https://github.com/tanweer919) (2019)
 - Zerichen [@Zerichen](https://github.com/Zerichen) (2019)
-- pranshukharkwal [@pranshukharkwal](https://github.com/pranshukharkwal) (2020)
+- Pranshu Kharkwal [@pranshukharkwal](https://github.com/pranshukharkwal) (2020)
 - Chirag Vashist [@SerChirag](https://github.com/SerChirag) (2017)
 - Kumar Yogesh [@kumarjyogesh](https://github.com/kumarjyogesh) (2017)
 - Richard Caceres [@rchrd2](https://github.com/rchrd2) (2017)
 - Shubham Rath [@sr6033](https://github.com/sr6033) (2019)
-- RGV [@VishnuRaghavan](https://github.com/VishnuRaghavan) (2022)
+- Vishnu Raghavan [@VishnuRaghavan](https://github.com/VishnuRaghavan) (2022)
 - Kerry Rodden [@kerryrodden](https://github.com/kerryrodden)
 - Karim Ratib [@infojunkie](https://github.com/infojunkie) (2021-22) - Manager
 - Mark Graham [@markjgraham](https://github.com/markjgraham) - Director
