@@ -9,17 +9,17 @@ In cooperation with [Google Summer of Code](https://summerofcode.withgoogle.com)
 
 ## Features
 
-- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved.
-- **Oldest, Newest &amp; Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages.
-- **Wayback Machine Count** - Display count of snapshots of the current page stored in the Wayback Machine.
-- **Replace 404s, etc...** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx &amp; 5xx HTTP error codes.
+- **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved, or *Auto Save Bookmarks* to save when bookmarking a page. Works while logged out, or log in for additional options.
+- **Oldest, Newest & Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages. Can also use by right-clicking over a page or link.
+- **Wayback Machine Count** - Display a count of snapshots of the current page stored in the Wayback Machine over the toolbar icon, and the date of last save in the popup.
+- **404 Not Found** - When an error occurs, automatically check if an archived copy is available. Checks against 4xx & 5xx HTTP error codes.
 - **Contextual Notices** - Check for contextual information from fact checking organizations and origin websites.
 - **Relevant Resources** - View research papers and books while visiting *Wikipedia*, archived digitized books while visiting *Amazon Books*, and recommended *TV News Clips* while visiting news websites.
-- **URLs &amp; Collections** - Show a list of URLs captured under the current website, and what collections they are saved under.
-- **Site Map &amp; Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
-- **Annotations** - Provides a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
+- **URLs & Collections** - Show a list of URLs captured under the current website, and what collections they are saved under.
+- **Site Map & Word Cloud** - Present a sunburst diagram for the domain you are currently viewing, or create a *Word Cloud* from the link's anchor text of the page you are on.
+- **Annotations** - Provide a list of annotations for the current web page and domain, provided by [Hypothes.is](https://web.hypothes.is).
 - **My Web Archive** - Save URLs to your public archive page on the Internet Archive.
-- **Tweets &amp; Share Links** - Search Twitter for information regarding your current page, or share archived links on social media.
+- **Tweets & Share Links** - Search Twitter for information regarding your current page, or share archived links on social media.
 
 
 ## Installing the Extension
@@ -121,18 +121,19 @@ If you previously used the command line to clone this repo, note that it has bee
 By order of lines contributed (with years):
 
 - Carl Gorringe [@cgorringe](https://github.com/cgorringe) (2020-22)
-- Abhishek Das [@abhidas17695](https://github.com/abhidas17695) (2017-18)
 - Anish Kumar Sarangi [@anishsarangi](https://github.com/anishsarangi) (2018-22)
+- Abhishek Das [@abhidas17695](https://github.com/abhidas17695) (2017-18)
 - Vangelis Banos [@vbanos](https://github.com/vbanos) (2017-19)
 - Max Reinisch [@MaxReinisch](https://github.com/maxreinisch) (2018-19)
 - Pushkit Kapoor [@tikhsuP](https://github.com/tikhsuP) (2020)
-- Shubham Rath [@sr6033](https://github.com/sr6033) (2019)
 - Tanweer Anwar [@tanweer919](https://github.com/tanweer919) (2019)
 - Zerichen [@Zerichen](https://github.com/Zerichen) (2019)
 - pranshukharkwal [@pranshukharkwal](https://github.com/pranshukharkwal) (2020)
 - Chirag Vashist [@SerChirag](https://github.com/SerChirag) (2017)
 - Kumar Yogesh [@kumarjyogesh](https://github.com/kumarjyogesh) (2017)
 - Richard Caceres [@rchrd2](https://github.com/rchrd2) (2017)
+- Shubham Rath [@sr6033](https://github.com/sr6033) (2019)
+- RGV [@VishnuRaghavan](https://github.com/VishnuRaghavan) (2022)
 - Kerry Rodden [@kerryrodden](https://github.com/kerryrodden)
 - Karim Ratib [@infojunkie](https://github.com/infojunkie) (2021-22) - Manager
 - Mark Graham [@markjgraham](https://github.com/markjgraham) - Director
