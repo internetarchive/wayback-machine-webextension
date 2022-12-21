@@ -19,7 +19,7 @@ Some features must be enabled from Settings. Turn on *Private Mode* to prevent a
 
 **Features**
 
-• **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on Auto Save Page in settings to save pages that have not previously been saved. Works while logged out, or log in for additional options.
+• **Save Page Now** - Instantly save the page you are currently viewing in the Wayback Machine. Turn on *Auto Save Page* in settings to save pages that have not previously been saved, or *Auto Save Bookmarks* to save when bookmarking a page. Works while logged out, or log in for additional options.
 
 • **Oldest, Newest & Overview** - View the first version of a page or the most recently saved in the Wayback Machine. Or view a calendar overview of all archived pages. Can also use by right-clicking over a page or link.
 
@@ -43,4 +43,11 @@ Some features must be enabled from Settings. Turn on *Private Mode* to prevent a
 
 
 For support, please email info@archive.org
+
+
+### Full Description (Safari only)
+
+*(replace with the following)*
+
+• Save Page Now - Instantly save the page you are currently viewing in the Wayback Machine. Turn on Auto Save Page in settings to save pages that have not previously been saved. Works while logged out, or log in for additional options.
 
