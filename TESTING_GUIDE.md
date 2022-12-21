@@ -122,9 +122,11 @@ Domain no longer exists:
 <th>Contextual Notices</th>
 <td>
 
-Should display yellow dot, 'Contextual Notices':
-- https://www.oralhealthgroup.com/features/face-masks-dont-work-revealing-review/
+Should display yellow dot, 'Show Context':
 - https://www.capradio.org/articles/2019/02/12/text-and-analysis-state-of-the-state-2019
+
+Should return data but NOT display yellow dot:
+- https://www.oralhealthgroup.com/features/face-masks-dont-work-revealing-review/
 - https://jhunewsletter.com/article/2020/11/a-closer-look-at-u-s-deaths-due-to-covid-19
 - https://chicagotribune.com/coronavirus/fl-ne-miami-doctor-vaccine-death-20210107-afzysvqqjbgwnetcy5v6ec62py-story.html
 

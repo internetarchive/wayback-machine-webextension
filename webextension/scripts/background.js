@@ -935,10 +935,19 @@ function factCheck(atab, url) {
           //     })
           //   }
           // })
-          // save wayback url
-          const contextUrl = (json.notices[0]['notice']).match(/href="([^"]*)/)[1]
-          saveTabData(atab, { 'contextUrl': contextUrl })
-          addToolbarState(atab, 'F')
+
+          // extract context URL from notice text, if present
+          if ('notice' in json.notices[0]) {
+            const aMatch = (json.notices[0]['notice']).match(/href="([^"]*)/)
+            if (aMatch) {
+              const contextUrl = aMatch[1]
+              if (contextUrl !== url) {
+                // only show context button if URL different than current URL in address bar
+                saveTabData(atab, { 'contextUrl': contextUrl })
+                addToolbarState(atab, 'F')
+              }
+            }
+          }
         }
       },
       (error) => {

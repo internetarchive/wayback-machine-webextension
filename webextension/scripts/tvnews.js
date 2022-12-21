@@ -6,7 +6,6 @@
 // from 'test/setup.js'
 /*   global isInTestEnv */
 
-
 function parseDate (date) {
   if (typeof date === 'string') {
     const dateObject = new Date(date)
