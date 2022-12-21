@@ -71,9 +71,10 @@ To help provide context to people browsing the web.
 
 #### Permission justification
 
-Permissions used: `activeTab, cookies, contextMenus, notifications, storage, webRequest, webRequestBlocking, <all_urls>`
+Permissions used: `activeTab, bookmarks, cookies, contextMenus, notifications, storage, webRequest, webRequestBlocking, <all_urls>`
 
 - activeTab: For using tabs.executeScript() to insert html content for error popups and wikipedia.
+- bookmarks: Used in Auto Save Bookmarks feature.
 - cookies: Used in login authentication.
 - contextMenus: For right-click shortcuts to common features.
 - notifications: To notify users of initiation, completion, and error alerts while saving.
