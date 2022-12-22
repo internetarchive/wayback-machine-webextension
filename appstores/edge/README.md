@@ -15,12 +15,6 @@
 - [Add-ons store policies](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/store-policies/developer-policies)
 
 
-### Feedback URL
-
-- Since we don't yet have an extension in the store, our *Feedback Icon* and *Write a Review* URL defaults to the [contact page](https://archive.org/about/contact.php).
-- Modify `feedbackURLs` in `utils.js` to include the Edge store link once it's available.
-
-
 ### Login to Account
 
 - Sign in from [Microsoft Edge Add-ons Developer](https://developer.microsoft.com/en-us/microsoft-edge/extensions/)
