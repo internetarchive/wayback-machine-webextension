@@ -19,7 +19,7 @@
 		C3CBA8B726E4511100CC9485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8B526E4511100CC9485 /* Main.storyboard */; };
 		C3CBA8B926E4511100CC9485 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8B826E4511100CC9485 /* ViewController.swift */; };
 		C3CBA8BB26E4511200CC9485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8BA26E4511200CC9485 /* Assets.xcassets */; };
-		C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C3CBA8C126E4511200CC9485 /* Wayback Machine Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C3CBA8C726E4511200CC9485 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3CBA8C626E4511200CC9485 /* Cocoa.framework */; };
 		C3CBA8CA26E4511200CC9485 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBA8C926E4511200CC9485 /* SafariWebExtensionHandler.swift */; };
 		C3CBA8EB26E4511300CC9485 /* annotations.html in Resources */ = {isa = PBXBuildFile; fileRef = C3CBA8D726E4511300CC9485 /* annotations.html */; };
@@ -43,15 +43,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C3CBA8D226E4511200CC9485 /* Embed App Extensions */ = {
+		C3CBA8D226E4511200CC9485 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed App Extensions */,
+				C3CBA8C226E4511200CC9485 /* Wayback Machine Extension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -191,7 +191,7 @@
 				C3CBA8AB26E4511100CC9485 /* Sources */,
 				C3CBA8AC26E4511100CC9485 /* Frameworks */,
 				C3CBA8AD26E4511100CC9485 /* Resources */,
-				C3CBA8D226E4511200CC9485 /* Embed App Extensions */,
+				C3CBA8D226E4511200CC9485 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -227,7 +227,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					C3CBA8AE26E4511100CC9485 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -365,6 +365,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -426,6 +427,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -452,8 +454,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Wayback Machine Extension/Wayback_Machine_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Wayback Machine Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -461,7 +465,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 3.1.0.11;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -475,8 +479,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Wayback Machine Extension/Wayback_Machine_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Wayback Machine Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -484,7 +490,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 3.1.0.11;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -502,15 +508,17 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Wayback Machine/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 3.1.0.11;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -527,15 +535,17 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Wayback Machine/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 3.1.0.11;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

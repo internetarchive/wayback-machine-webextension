@@ -36,3 +36,5 @@ First add new version in App Store Connect, then:
 - Uses Encryption? YES
 - Qualify for Exemption? YES
 
+- What type of encryption algorithms does your app implement?
+- [x] None of the algorithms mentioned above

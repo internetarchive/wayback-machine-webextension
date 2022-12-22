@@ -2,6 +2,26 @@
 
 *All Browsers*
 
+### 3.2 ###
+
+What's New in v3.2
+
+In this version, we've introduced an option to Disable Notifications in Settings, and a new Auto Save Bookmarks feature.
+
+We've fixed some bugs: Stay logged in after clearing cookies, prevent Auto Save from activating again on recently saved web pages, correctly handle blocked websites, and other minor bugs.
+
+Additional tweaks: Added third option to Show Features setting, hide the count badge while saving, improved keyboard accessibility, and "Show Context" takes you directly to the relevant context.
+
+
+### 3.2 (Safari) ###
+
+What's New in v3.2
+
+In this version, we've fixed some bugs: Stay logged in after clearing cookies, prevent Auto Save from activating again on recently saved web pages, correctly handle blocked websites, and other minor bugs.
+
+Additional tweaks: Added third option to Show Features setting, hide the count badge while saving, and "Show Context" takes you directly to the relevant context.
+
+
 ### 3.1 ###
 
 What's New in v3.1

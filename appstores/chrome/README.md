@@ -6,13 +6,6 @@
 - Store ID: fpnmgdkabkmnadcjpehmlllkndpkmiak
 - Store URL: https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak
 
-- [Developer Dashboard](https://chrome.google.com/webstore/devconsole/)
-
-- May need to verify info. Go to upper left menu and select "Account".
-
-- My need to set up 2FA (which should already be set up?)
-  - https://www.google.com/landing/2step
-
 
 ### Notes
 
@@ -22,8 +15,10 @@
 
 - [Update your Chrome Web Store item](https://developer.chrome.com/docs/webstore/update/)
 
+- [Authentication Tools for Secure Sign In](https://safety.google/authentication/) - Info about 2FA.
 
-### Package
+
+### Create Package
 
 - Create a .ZIP file of the `webextension` directory. It must not include the directory name, and should not contain any `.DS_Store` or other hidden files, nor any hidden `__MACOSX/` directories which the Finder compress tool usually includes.
 - If on a mac, run the following using Terminal, from within the `webextension` directory:
@@ -33,7 +28,20 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 - Then move ZIP file to another location on your computer outside of this repo.
 - Verify that ZIP file is formatted correctly by testing in Chrome.
 
-- On the Chrome Web Store Dashboard, select "Package" along the left sidebar, then "Upload new package" button.
+
+### Login to Account
+
+- [Sign in to Google](https://accounts.google.com/)
+  - Use standard app email account and password.
+  - This will send a verification code SMS to number listed, who you will need to ask for the code.
+
+- After login, go to the [Developer Dashboard](https://chrome.google.com/webstore/devconsole/).
+
+- You can manage the account by selecting "Account" from the upper left menu.
+
+- Next select the item "Wayback Machine" (latest version)
+
+- Then select "Package" along the left sidebar, then "Upload new package" button and upload the ZIP file.
 
 
 ### Store Listing
@@ -71,9 +79,10 @@ To help provide context to people browsing the web.
 
 #### Permission justification
 
-Permissions used: `activeTab, cookies, contextMenus, notifications, storage, webRequest, webRequestBlocking, <all_urls>`
+Permissions used: `activeTab, bookmarks, cookies, contextMenus, notifications, storage, webRequest, webRequestBlocking, <all_urls>`
 
 - activeTab: For using tabs.executeScript() to insert html content for error popups and wikipedia.
+- bookmarks: Used in Auto Save Bookmarks feature.
 - cookies: Used in login authentication.
 - contextMenus: For right-click shortcuts to common features.
 - notifications: To notify users of initiation, completion, and error alerts while saving.
