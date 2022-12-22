@@ -42,6 +42,13 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 
 - Verify that ZIP file is formatted correctly by testing in Firefox. See [Temporary installation in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
+Don't go to `about:addons` to install ZIP file. Instead go to `about:debugging`:
+
+- Enter `about:debugging` in the URL bar
+- Click "This Firefox" button
+- Click "Load Temporary Add-on"
+- Select the packaged extension (.zip file)
+
 
 #### Source Code Submission
 
