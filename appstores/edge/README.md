@@ -8,14 +8,11 @@
 
 ### Notes
 
-- Sign in from [Microsoft Edge Add-ons Developer](https://developer.microsoft.com/en-us/microsoft-edge/extensions/)
-
 - [Overview of Microsoft Edge extensions](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/)
 
-- [Publish a Microsoft Edge extension](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
-- [Add-ons store policies](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/store-policies/developer-policies)
+- More Info at [Publish a Microsoft Edge extension](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension)
 
-- Don't [sign in here](https://partner.microsoft.com/en-US/) since it will say to log out of your personal account.
+- [Add-ons store policies](https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/store-policies/developer-policies)
 
 
 ### Feedback URL
@@ -24,12 +21,27 @@
 - Modify `feedbackURLs` in `utils.js` to include the Edge store link once it's available.
 
 
+### Login to Account
+
+- Sign in from [Microsoft Edge Add-ons Developer](https://developer.microsoft.com/en-us/microsoft-edge/extensions/)
+  - Select "Login to Partner Center" button.
+  - Use @outlook.com email.
+  - No 2FA required.
+
+- Don't sign in at https://partner.microsoft.com/en-US/ since it will say to log out of your personal account.
+
 ### Submit
 
-https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/publish/publish-extension
+- Select existing "Wayback Machine" link under Overview list.
+
+- Select "Update" button.
+
+- Replace ZIP file. (follow directions below to create ZIP)
 
 
 #### 1. Start a new submission
+
+Don't need to start a new one, instead replace the existing one.
 
 To submit your extension to the store, you need to provide the following items:
 
@@ -51,7 +63,7 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 
 #### 3. Provide Availability details
 
-- Select `Public` or `Hidden`
+- Select [x] Public or [ ] Hidden
 - Markets: All 241 Markets
 
 
@@ -70,6 +82,7 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 
 - Display Name: Wayback Machine
 - [Description](../description.md).
+  - Make sure to remove all markdown formatting such as astericks!
 - Extension Store Logo: 300x300 px (see images)
 - Small promotional tile: (see images)
 - Screenshots: (see images)
@@ -77,6 +90,8 @@ zip -r webext.zip . -x ".*" -x "*/.*"
 - YouTube video URL: none
 - Short description: (stored in manifest)
 - Search terms: max 7 terms and 21 words (see google doc)
+
+- The Edge store doesn't display a changelog / version history.
 
 
 #### 6. Complete submission
