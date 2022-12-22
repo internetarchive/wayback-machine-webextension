@@ -13,7 +13,7 @@ This process may seem complicated but not anymore - just follow the directions f
 There isn't really any review done, and the submission will be approved immediately after ZIP is submitted. There's no method to set a release datetime like there is for Safari. Changing the metadata and screenshots is a separate step that may be done before or after submitting code, may be updated anytime and doesn't require updating the version or code.
 
 
-#### Get Extension Signed
+### Get Extension Signed
 
 We can skip this step since we're only updating the version on the app store and not distributing it ourselves.
 
@@ -49,7 +49,7 @@ Don't go to `about:addons` to install ZIP file. Instead:
 - Select the packaged extension (.zip file)
 
 
-#### Source Code Submission
+### Source Code Submission
 
 We can skip this part.
 
@@ -89,7 +89,7 @@ We can skip this part.
   - May want to provide a test email and password for reviewer to use to login to archive.org
 
 
-#### Store Metadata
+### Store Metadata
 
 Name: Wayback Machine
 
