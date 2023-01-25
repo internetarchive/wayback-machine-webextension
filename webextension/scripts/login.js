@@ -40,7 +40,22 @@ function doLogin(e) {
   }
   $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
-  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
+  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' }, (cookie) => {
+    if (!cookie) {
+      // failed to set cookie
+      console.log("Cookie access is blocked. Please check cookie settings.")
+      console.log("This could happen if 'privacy.firstparty.isolate' is set to true.")
+      $('#login-message').show().text("Please Enable Cookies")
+      $('#login-btn').val('Login')
+    }
+    else {
+      // cookie was set
+      doLoginAPI(email, password)
+    }
+  })
+}
+
+function doLoginAPI(email, password) {
   let data = JSON.stringify({ email: email, password: password })
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
