@@ -78,17 +78,28 @@ function doLoginAPI(email, password) {
         // login failed
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
-        // login success
-        $('#login-message').show().addClass('login-success').text('Success')
-        loginSuccess()
-        setTimeout(() => {
-          $('#login-page').hide()
-          $('#setting-page').hide()
-          $('#popup-page').show()
-          $('#login-message').removeClass('login-success').hide()
-        }, 500)
-        $('#email-input').val('')
-        $('#password-input').val('')
+        // this will check that we have cookie access
+        checkAuthentication((result) => {
+          checkLastError()
+          if (result && result.auth_check) {
+            // login success
+            $('#login-message').show().addClass('login-success').text('Success')
+            loginSuccess()
+            setTimeout(() => {
+              $('#login-page').hide()
+              $('#setting-page').hide()
+              $('#popup-page').show()
+              $('#login-message').removeClass('login-success').hide()
+            }, 500)
+            $('#email-input').val('')
+            $('#password-input').val('')
+          } else {
+            // failed cookie access check
+            console.log("Cookie access is blocked. Please check cookie settings.")
+            $('#login-message').show().text("Please Enable Cookies")
+            $('#login-btn').val('Login')
+          }
+        })
       }
     })
     .catch((e) => {
