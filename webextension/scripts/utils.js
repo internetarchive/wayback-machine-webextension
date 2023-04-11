@@ -778,11 +778,6 @@ function setupContextMenus(enabled) {
         'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
       }, checkLastError)
       chrome.contextMenus.create({
-        'type': 'separator',
-        'contexts': ['page', 'frame', 'link'],
-        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-      })
-      chrome.contextMenus.create({
         'id': 'first',
         'title': 'Oldest Version',
         'contexts': ['page', 'frame', 'link'],
@@ -845,7 +840,7 @@ function afterAcceptTerms () {
     private_mode_setting: false,
     not_found_setting: true
   })
-  chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
   setupContextMenus(true)
 }
 

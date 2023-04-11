@@ -3,6 +3,7 @@
 // License: AGPL-3
 // Copyright 2016-2020, Internet Archive
 
+importScripts('utils.js')
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
@@ -21,18 +22,19 @@ const API_RETRY = 1000
 const SPN_RETRY = 6000
 let tabIdPromise
 
-// updates User-Agent header in Chrome & Firefox, but not in Safari
-function rewriteUserAgentHeader(e) {
-  for (let header of e.requestHeaders) {
-    if (header.name.toLowerCase() === 'user-agent') {
-      const customUA = gCustomUserAgent
-      const statusUA = 'Status-code/' + gStatusCode
-      // add customUA only if not yet present in user-agent
-      header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
-    }
-  }
-  return { requestHeaders: e.requestHeaders }
-}
+// not required because in manifest v3, a new header is set using declarativeNetRequest rules
+// // updates User-Agent header in Chrome & Firefox, but not in Safari
+// function rewriteUserAgentHeader(e) {
+//   for (let header of e.requestHeaders) {
+//     if (header.name.toLowerCase() === 'user-agent') {
+//       const customUA = gCustomUserAgent
+//       const statusUA = 'Status-code/' + gStatusCode
+//       // add customUA only if not yet present in user-agent
+//       header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
+//     }
+//   }
+//   return { requestHeaders: e.requestHeaders }
+// }
 
 /* * * API Calls * * */
 
@@ -394,7 +396,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 // Setup toolbar button action.
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
-    chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+    chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     setupContextMenus(true)
   } else {
     setupContextMenus(false)
@@ -415,7 +417,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 // Opens Welcome page on toolbar click if terms not yet accepted.
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && (settings.agreement === false)) {
       openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
@@ -423,11 +425,16 @@ chrome.browserAction.onClicked.addListener((tab) => {
   })
 })
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  rewriteUserAgentHeader,
-  { urls: [hostURL + '*'] },
-  ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
-)
+// chrome.webRequest.onBeforeSendHeaders is not supported in manifest v3 and currently we are not looking to rewrite the user-agent
+// as we already use diffent host-names for different endpoints
+
+// chrome.webRequest.onBeforeSendHeaders.addListener(
+//   rewriteUserAgentHeader,
+//   { urls: [hostURL + '*'] },
+//   ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
+// )
+
+// chrome.webRequest.onErrorOccurred is not supported in manifest v3.
 
 // Checks for error in page loading such as when a domain doesn't exist.
 //
@@ -466,7 +473,6 @@ chrome.webRequest.onCompleted.addListener((details) => {
       })
     }
   }
-
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Check for 404 Not Found and other status errors.
@@ -495,7 +501,10 @@ function checkNotFound(details) {
   function checkWM(tab, details2, bannerFlag) {
     wmAvailabilityCheck(details2.url, (wayback_url, url) => {
       if (bannerFlag && ('id' in tab)) {
-        chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['/scripts/archive.js']
+        }).then(() => {
           update(tab, url, wayback_url, details2.statusCode, bannerFlag)
         })
       } else {
@@ -1004,18 +1013,18 @@ function updateWaybackCountBadge(atab, url) {
         if ((values.total >= 0) && !getToolbarState(atab).has('S')) {
           // display badge
           let text = badgeCountText(values.total)
-          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
+          chrome.action.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
+          chrome.action.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
         } else {
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+          chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
         }
       },
       (error) => {
         console.log('wayback count error: ' + error)
-        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+        chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
       })
     } else {
-      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+      chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
     }
   })
 }
@@ -1031,7 +1040,7 @@ function updateWaybackCountBadge(atab, url) {
 function setToolbarIcon(name, tabId = null) {
   const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
   const checkBadgePos = new Set(['R', 'F', 'V'])
-  const path = 'images/toolbar/'
+  const path = '../images/toolbar/'
   const n = validToolbarIcons.has(name) ? name : 'archive'
   const ab = checkBadgePos.has(name) ? (isBadgeOnTop() ? 'b' : 'a') : ''
   const prefix = isDevVersion() ? 'dev-icon-' : 'toolbar-icon-'
@@ -1042,7 +1051,7 @@ function setToolbarIcon(name, tabId = null) {
     '64': (path + prefix + n + ab + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
-  chrome.browserAction.setIcon(details, checkLastError)
+  chrome.action.setIcon(details, checkLastError)
 }
 
 // Add state to the state set for given Tab, and update toolbar.

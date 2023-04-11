@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Wayback Machine",
-  "version": "3.2",
+  "version": "3.2.0.1",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/mini-icon16.png",
@@ -15,7 +15,7 @@
     "512": "images/app-icon/app-icon512.png",
     "1024": "images/app-icon/app-icon1024.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "images/toolbar/toolbar-icon-archive16.png",
       "24": "images/toolbar/toolbar-icon-archive24.png",
@@ -30,20 +30,23 @@
       "contextMenus",
       "notifications",
       "storage",
+      "scripting",
       "webRequest",
-      "webRequestBlocking",
-      "https://archive.org/*",
-      "https://*.archive.org/*",
-      "https://hypothes.is/*",
-      "<all_urls>"
+      "declarativeNetRequestWithHostAccess",
+      "declarativeNetRequest",
+      "declarativeNetRequestFeedback"
+  ],
+  "host_permissions":[
+    "https://archive.org/*",
+    "https://*.archive.org/*",
+    "https://hypothes.is/*",
+    "<all_urls>"
   ],
   "optional_permissions": [
       "bookmarks"
   ],
   "background": {
-    "scripts": ["scripts/utils.js",
-                "scripts/background.js"],
-    "persistent": true
+    "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {
@@ -52,8 +55,15 @@
       "css": ["css/wikipedia.css"]
     }
   ],
-  "web_accessible_resources": [
-    "css/archive.css",
-    "images/*"
-  ]
+  "web_accessible_resources": [{
+    "resources":[ "/css/archive.css","/images/*"],
+    "matches": ["<all_urls>"]
+  }],
+  "declarative_net_request" : {
+      "rule_resources" : [{
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules_1.json"
+      }]
+    }
 }
