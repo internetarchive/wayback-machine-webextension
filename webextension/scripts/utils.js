@@ -668,20 +668,25 @@ function opener(url, option, callback) {
       }
     })
   } else {
-    let w = window.screen.availWidth, h = window.screen.availHeight
-    if (w > h) {
-      // landscape screen
-      const maxW = 1200
-      w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
-      h = Math.floor(w * 0.75)
-    } else { // option === 'window'
-      // portrait screen (likely mobile)
-      w = Math.floor(w * 0.9)
-      h = Math.floor(h * 0.9)
-    }
-    chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
-      if (callback) { callback(window.tabs[0].id) }
-    })
+    
+    chrome.windows.getCurrent({populate: true}, (window) => {
+      // Access window properties  
+      let h = window.width;
+      let w = window.height;
+      if (w > h) {
+        // landscape screen
+        const maxW = 1200
+        w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
+        h = Math.floor(w * 0.75)
+      } else { // option === 'window'
+        // portrait screen (likely mobile)
+        w = Math.floor(w * 0.9)
+        h = Math.floor(h * 0.9)
+      }
+      chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
+        if (callback) { callback(window.tabs[0].id) }
+      })
+    });
   }
 }
 
