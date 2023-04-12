@@ -5,7 +5,7 @@
     "action": {
       "type": "modifyHeaders",
       "requestHeaders": [
-        { "header": "Wayback_Browser_Extension", "operation": "set", "value": "ok" }
+        { "header": "Wayback-Browser-Extension", "operation": "set", "value": "ok" }
       ]
     },
     "condition": {
