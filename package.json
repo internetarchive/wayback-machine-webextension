@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/internetarchive/wayback-machine-webextension#readme",
   "devDependencies": {
+    "bootstrap": "^5.2.3",
     "chai": "^4.3.4",
     "css-loader": "^6.7.3",
     "eslint": "^8.38.0",
@@ -29,7 +30,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "fast-levenshtein": "^3.0.0",
+    "@fortawesome/fontawesome-free": "^6.4.0",
     "file-loader": "^6.2.0",
+    "jquery": "^3.6.0",
     "jsdom": "^21.1.1",
     "jssha": "^3.2.0",
     "mini-css-extract-plugin": "^2.7.5",
@@ -38,10 +41,5 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.31.2",
     "webpack-cli": "^5.0.1"
-  },
-  "dependencies": {
-    "bootstrap": "^5.2.3",
-    "@fortawesome/fontawesome-free": "^6.4.0",
-    "jquery": "^3.6.0"
   }
 }
