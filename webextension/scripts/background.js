@@ -917,37 +917,27 @@ function factCheck(atab, url) {
           // Create a Wayback Machine URL from most recent timestamp, or the latest capture if no timestamp returned.
           // If multiple notices, pick notice with most recent timestamp.
 
-          // let latestTimestamp = '2' // latest capture in Wayback Machine URL
-          // let latestDate = new Date(0) // epoch 1/1/1970
+          let latestTimestamp = '2' // latest capture in Wayback Machine URL
+          let latestDate = new Date(0) // epoch 1/1/1970
 
           // loop through every timestamp present
-          // json.notices.forEach(ntc => {
-          //   if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
-          //     const tstamps = ntc.where.timestamp || []
-          //     tstamps.forEach(tstamp => {
-          //       // compare each timestamp to latest
-          //       const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
-          //       const date = timestampToDate(timestamp)
-          //       if (date.getTime() > latestDate.getTime()) {
-          //         latestDate = date
-          //         latestTimestamp = timestamp
-          //       }
-          //     })
-          //   }
-          // })
-
-          // extract context URL from notice text, if present
-          if ('notice' in json.notices[0]) {
-            const aMatch = (json.notices[0]['notice']).match(/href="([^"]*)/)
-            if (aMatch) {
-              const contextUrl = aMatch[1]
-              if (contextUrl !== url) {
-                // only show context button if URL different than current URL in address bar
-                saveTabData(atab, { 'contextUrl': contextUrl })
-                addToolbarState(atab, 'F')
-              }
+          json.notices.forEach(ntc => {
+            if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
+              const tstamps = ntc.where.timestamp || []
+              tstamps.forEach(tstamp => {
+                // compare each timestamp to latest
+                const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
+                const date = timestampToDate(timestamp)
+                if (date.getTime() > latestDate.getTime()) {
+                  latestDate = date
+                  latestTimestamp = timestamp
+                }
+              })
             }
-          }
+          })
+          const waybackUrl = 'https://web.archive.org/web/' + latestTimestamp + '/' + url
+          saveTabData(atab, { 'contextUrl': waybackUrl })
+          addToolbarState(atab, 'F')
         }
       },
       (error) => {
