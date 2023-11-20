@@ -8,7 +8,10 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:js": "eslint webextension/scripts test",
+    "lint:css": "stylelint webextension/css"
   },
   "repository": {
     "type": "git",
@@ -39,6 +42,8 @@
     "mocha": ">=8.3.2",
     "style-loader": "^3.3.2",
     "url-loader": "^4.1.1",
+    "stylelint": "^14",
+    "stylelint-config-standard": "^29",
     "webpack": "^5.31.2",
     "webpack-cli": "^5.0.1"
   }
