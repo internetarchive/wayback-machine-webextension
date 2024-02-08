@@ -10,7 +10,8 @@ const defaultAutoExcludeList = [
   'google.com*',
   '*.google.com*',
   'mail.yahoo.com*',
-  'duckduckgo.com/?q=*'
+  'duckduckgo.com/?q=*',
+  '*.proton.me*'
 ]
 
 // list of excluded URLs
