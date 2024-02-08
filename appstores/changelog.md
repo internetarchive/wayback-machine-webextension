@@ -2,6 +2,13 @@
 
 *All Browsers*
 
+### 3.3 (Safari) ###
+
+New version of context API integration
+False 404 Popup bug fix
+Updating all the outdated dependancies
+
+
 ### 3.2 ###
 
 What's New in v3.2
