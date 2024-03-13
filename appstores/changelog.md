@@ -2,6 +2,11 @@
 
 *All Browsers*
 
+### 3.3.1 (Edge) ###
+
+Inform if cookies are turned off when logging in
+
+
 ### 3.3 (Safari) ###
 
 New version of context API integration
