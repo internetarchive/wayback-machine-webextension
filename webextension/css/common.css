@@ -204,6 +204,16 @@ button.selected:focus-visible {
     background-color: #85518E !important;
 }
 
+.btn-white {
+    background-color: #fff;
+    color: #333 !important;
+    border: 1px solid #ccc;
+}
+.btn-white:hover,
+.btn-white:focus-visible {
+    background-color: #f6f6f6;
+}
+
 .btn-light-gray {
     background-color: #737373;
     color: #eee !important;
@@ -303,6 +313,15 @@ button.selected:focus-visible {
     .btn-mini:hover, .btn-mini:focus {
         background-color: #555;
         color: #fff;
+    }
+
+    .btn-white {
+        background-color: #bbb;
+        border: 1px solid #eee;
+    }
+    .btn-white:hover,
+    .btn-white:focus-visible {
+        background-color: #ccc;
     }
 
     .btn-yellow {
