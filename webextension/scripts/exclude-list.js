@@ -31,6 +31,7 @@ function loadExcludeList() {
 }
 
 // Saves exclude list from textarea to storage.
+// Returns a Promise.
 function saveExcludeList() {
   const text = document.getElementById('exclude-list-area').value
   const lines = text.split('\n')
@@ -44,7 +45,7 @@ function saveExcludeList() {
   }
   // save the modified list
   const exlist = Array.from(urlSet)
-  chrome.storage.local.set({ 'auto_exclude_list': exlist })
+  return chrome.storage.local.set({ 'auto_exclude_list': exlist })
 }
 
 function resetExcludeList() {
@@ -62,8 +63,9 @@ $(function() {
   $('#reset-btn').click(resetExcludeList)
   $('#cancel-btn').click(closeWindow)
   $('#save-btn').click((e) => {
-    saveExcludeList()
-    closeWindow()
+    saveExcludeList().then(() => {
+      closeWindow()
+    })
   })
   loadExcludeList()
 })
