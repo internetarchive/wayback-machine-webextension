@@ -184,10 +184,10 @@ Should display blue 'R' and 'Read Book':
 <td>
 
 Should display blue 'R' and 'TV News Clips':
-- https://www.huffingtonpost.com/entry/alex-jones-infowars-app-apple-google_us_5b694ec3e4b0de86f4a4bc1d
-- https://www.huffpost.com/entry/alex-jones-infowars-app-apple-google_n_5b694ec3e4b0de86f4a4bc1d
+- https://www.huffpost.com/entry/dan-kildee-brother-killed-michigan_n_65fae2dfe4b0947e4200e49d
+- https://edition.cnn.com/2024/03/12/media/cnbc-trump-interview-lies/index.html
 - https://www.theverge.com/2018/8/29/17798118/president-donald-trump-google-state-of-the-union-address-liberal-bias
-- https://edition.cnn.com/2020/08/07/economy/larry-kudlow-poppy-harlow-unemployment/index.html
+- https://edition.cnn.com/2024/03/19/politics/texas-immigration-law-blocked-appeals/index.html?iid=cnn_buildContentRecirc_end_recirc
 - https://edition.cnn.com/europe/live-news/ukraine-russia-news-02-23-22/h_6d205f365f501bc935268528b826a824
 
 List of websites checked:
