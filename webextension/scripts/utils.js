@@ -813,11 +813,19 @@ function setupContextMenus(enabled) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
+  let globalAPICache = new Map();
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
+    gStatusCode: 0,
+    waybackCountCache: {},
+    API_CACHE_SIZE: 5,
+    API_LOADING: 'LOADING',
+    API_TIMEOUT: 10000,
+    API_RETRY: 1000,
+    SPN_RETRY: 6000,
     /* Features */
     private_mode_setting: true,
     not_found_setting: false,

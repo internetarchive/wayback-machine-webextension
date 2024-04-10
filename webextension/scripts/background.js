@@ -11,15 +11,15 @@ importScripts('utils.js')
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
 // Used to store the statuscode of the if it is a httpFailCodes
-let gStatusCode = 0
+//let gStatusCode = 0
 let gToolbarStates = {}
-let waybackCountCache = {}
+// let waybackCountCache = {}
 let globalAPICache = new Map()
-const API_CACHE_SIZE = 5
-const API_LOADING = 'LOADING'
-const API_TIMEOUT = 10000
-const API_RETRY = 1000
-const SPN_RETRY = 6000
+// const API_CACHE_SIZE = 5
+// const API_LOADING = 'LOADING'
+// const API_TIMEOUT = 10000
+// const API_RETRY = 1000
+// const SPN_RETRY = 6000
 let tabIdPromise
 
 // not required because in manifest v3, a new header is set using declarativeNetRequest rules
@@ -56,8 +56,15 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
-function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
+async function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
+  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
+    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
+      resolve(result);
+    });
+  });
+
+  console.log(API_TIMEOUT,SPN_RETRY)
   if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
     console.log('savePageNow URL excluded')
     return
@@ -146,13 +153,17 @@ function extractJobIdFromHTML(html) {
  * @param silent {bool}: to pass to statusSuccess() or statusFailed().
  * @param jobId {string}: job_id returned by SPN response, passed to Status API.
  */
-function savePageStatus(atab, pageUrl, silent = false, jobId) {
-
+async function savePageStatus(atab, pageUrl, silent = false, jobId) {
+  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
+    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
+      resolve(result);
+    });
+  });
   // setup api
   // Accept header required when logged-out, even though response is in JSON.
   let headers = new Headers(hostHeaders)
   headers.set('Accept', 'text/html,application/xhtml+xml,application/xml')
-
+  // call status after SPN response
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     fetch(hostURL + 'save/status/' + jobId, {
@@ -162,7 +173,6 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
     })
     .then(resolve, reject)
   })
-
   // call api
   let retryAfter = SPN_RETRY
   timeoutPromise
@@ -274,7 +284,12 @@ function statusFailed(atab, pageUrl, silent, data, err) {
  * @param timestamp {string}: Wayback timestamp as "yyyyMMddHHmmss" in UTC.
  * @return Promise: which should return this JSON on success: { "success": true }
  */
-function saveToMyWebArchive(url, timestamp) {
+async function saveToMyWebArchive(url, timestamp) {
+  let { API_TIMEOUT } = await new Promise((resolve) => {
+    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
+      resolve(result);
+    });
+  });
   const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
@@ -298,7 +313,12 @@ function saveToMyWebArchive(url, timestamp) {
  * @param postData {object}: if present, uses POST instead of GET and sends postData object converted to json.
  * @return Promise
  */
-function fetchAPI(url, onSuccess, onFail, postData = null) {
+async function fetchAPI(url, onSuccess, onFail, postData = null) {
+  let { API_TIMEOUT } = await new Promise((resolve) => {
+    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
+      resolve(result);
+    });
+  });
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
@@ -333,7 +353,12 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @param postData {object}: uses POST if present.
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
-function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
+async function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
+  let { API_CACHE_SIZE, API_LOADING, API_RETRY} = await new Promise((resolve) => {
+    chrome.storage.local.get(['API_CACHE_SIZE', 'API_LOADING', 'API_RETRY'], function(result) {
+      resolve(result);
+    });
+  });
   let data = globalAPICache.get(url)
   if (data === API_LOADING) {
     // re-call after delay if previous fetch hadn't returned yet
@@ -445,7 +470,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     const url = details.url
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       chrome.tabs.get(details.tabId, (tab) => {
-        gStatusCode = 999
+        chrome.storage.local.set({ gStatusCode : 999 });
         saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
       })
     }
@@ -485,7 +510,7 @@ function checkNotFound(details) {
   function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     addToolbarState(tab, 'V')
-    gStatusCode = statusCode
+    chrome.storage.local.set({ gStatusCode : statusCode });
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
     saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag && ('id' in tab)) {
@@ -501,6 +526,7 @@ function checkNotFound(details) {
   function checkWM(tab, details2, bannerFlag) {
     wmAvailabilityCheck(details2.url, (wayback_url, url) => {
       if (bannerFlag && ('id' in tab)) {
+        // scripting permission is required as executeScript() is moved from the tabs API to the scripting API
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           files: ['/scripts/archive.js']
@@ -967,21 +993,57 @@ function factCheck(atab, url) {
 }
 
 /* * * Wayback Count * * */
-
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheValues = waybackCountCache[url]
-  if (cacheValues) {
-    onSuccess(cacheValues)
-  } else {
-    getWaybackCount(url, (values) => {
-      waybackCountCache[url] = values
-      onSuccess(values)
-    }, onFail)
-  }
+  // Retrieve the waybackCountCache object from chrome.storage
+  chrome.storage.local.get(['waybackCountCache'], function(result) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+      onFail(); // Call onFail callback in case of error
+      return;
+    }
+
+    // Get the waybackCountCache object from the result or initialize it if it doesn't exist
+    let waybackCountCache = result.waybackCountCache || {};
+
+    // Check if cacheValues for the specified URL exist in the waybackCountCache
+    let cacheValues = waybackCountCache[url];
+
+    if (cacheValues) {
+      // If cacheValues exist, call onSuccess callback with cacheValues
+      onSuccess(cacheValues);
+    } else {
+      // If cacheValues don't exist, fetch them using getWaybackCount
+      getWaybackCount(url, function(values) {
+        // Update waybackCountCache with the fetched values
+        waybackCountCache[url] = values;
+
+        // Store the updated waybackCountCache back into chrome.storage
+        chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+            onFail(); // Call onFail callback in case of error while storing
+          } else {
+            // Call onSuccess callback with the fetched values
+            onSuccess(values);
+          }
+        });
+      }, onFail);
+    }
+  });
 }
 
+
+
 function clearCountCache() {
-  waybackCountCache = {}
+  let waybackCountCache = {};
+  // Store the updated waybackCountCache into chrome.storage
+  chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('waybackCountCache reset and stored successfully');
+    }
+  });
 }
 
 /**
@@ -990,20 +1052,44 @@ function clearCountCache() {
  * Doesn't update if cached "total" value was < 0.
  * @param url {string}
  */
-function incrementCount(url) {
-  let cacheValues = waybackCountCache[url]
-  let timestamp = dateToTimestamp(new Date())
-  if (cacheValues && cacheValues.total) {
-    if (cacheValues.total > 0) {
-      cacheValues.total += 1
-      cacheValues.last_ts = timestamp
-      waybackCountCache[url] = cacheValues
+ function incrementCount(url) {
+  // Retrieve the waybackCountCache object from chrome.storage
+  chrome.storage.local.get(['waybackCountCache'], function(result) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+      return; // Exit if there's an error
     }
-    // else don't update if total is a special value < 0
-  } else {
-    waybackCountCache[url] = { total: 1, last_ts: timestamp }
-  }
+
+    // Get the waybackCountCache object from the result or initialize it if it doesn't exist
+    let waybackCountCache = result.waybackCountCache || {};
+
+    // Get the current timestamp
+    let timestamp = dateToTimestamp(new Date());
+
+    // Get the cacheValues for the specified URL
+    let cacheValues = waybackCountCache[url] || {};
+
+    // Increment count and update last_ts if cacheValues and cacheValues.total exist and is greater than 0
+    if (cacheValues.total && cacheValues.total > 0) {
+      cacheValues.total += 1;
+      cacheValues.last_ts = timestamp;
+      waybackCountCache[url] = cacheValues;
+    } else {
+      // Set count to 1 and update last_ts if cacheValues.total doesn't exist or is not greater than 0
+      waybackCountCache[url] = { total: 1, last_ts: timestamp };
+    }
+
+    // Store the updated waybackCountCache back into chrome.storage
+    chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError);
+      } else {
+        console.log('waybackCountCache updated and stored successfully');
+      }
+    });
+  });
 }
+
 
 function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
