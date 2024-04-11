@@ -12,7 +12,7 @@ importScripts('utils.js')
 
 // Used to store the statuscode of the if it is a httpFailCodes
 //let gStatusCode = 0
-let gToolbarStates = {}
+// let gToolbarStates = {}
 // let waybackCountCache = {}
 // let globalAPICache = new Map()
 // const API_CACHE_SIZE = 5
@@ -23,7 +23,7 @@ let gToolbarStates = {}
 let tabIdPromise
 
 // not required because in manifest v3, a new header is set using declarativeNetRequest rules
-// // updates User-Agent header in Chrome & Firefox, but not in Safari
+// updates User-Agent header in Chrome & Firefox, but not in Safari
 // function rewriteUserAgentHeader(e) {
 //   for (let header of e.requestHeaders) {
 //     if (header.name.toLowerCase() === 'user-agent') {
@@ -64,7 +64,6 @@ async function savePageNow(atab, pageUrl, silent = false, options = {}, loggedIn
     });
   });
 
-  console.log(API_TIMEOUT,SPN_RETRY)
   if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
     console.log('savePageNow URL excluded')
     return
@@ -206,11 +205,11 @@ async function savePageStatus(atab, pageUrl, silent = false, jobId) {
  * @param silent {bool}: set false to include notify popup.
  * @param data {Object}: Response data from Status API.
  */
-function statusSuccess(atab, pageUrl, silent, data) {
+async function statusSuccess(atab, pageUrl, silent, data) {
 
   // update UI
-  removeToolbarState(atab, 'S')
-  addToolbarState(atab, 'check')
+  await removeToolbarState(atab, 'S')
+  await addToolbarState(atab, 'check')
   incrementCount(data.original_url)
   updateWaybackCountBadge(atab, data.original_url)
   chrome.runtime.sendMessage({
@@ -247,9 +246,9 @@ function statusSuccess(atab, pageUrl, silent, data) {
  * @param data {Object}: Response data from Status API. (optional)
  * @param err {Error}: Error from a catch block. (optional)
  */
-function statusFailed(atab, pageUrl, silent, data, err) {
+async function statusFailed(atab, pageUrl, silent, data, err) {
 
-  removeToolbarState(atab, 'S')
+  await removeToolbarState(atab, 'S')
   if (err) {
     chrome.runtime.sendMessage({
       message: 'resource_list_show_error',
@@ -528,9 +527,9 @@ function checkNotFound(details) {
   if (!details) { return }
 
   // save status, display 'V' toolbar icon and banner
-  function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
+  async function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
-    addToolbarState(tab, 'V')
+    await addToolbarState(tab, 'V')
     chrome.storage.local.set({ gStatusCode : statusCode });
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
     saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
@@ -650,8 +649,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set & custom tab data
-    let state = getToolbarState(message.atab)
-    readTabData(message.atab, (data) => {
+    readTabData(message.atab, async (data) => {
+      let state = await getToolbarState(message.atab)
       sendResponse({ stateArray: Array.from(state), customData: data })
     })
     return true
@@ -659,10 +658,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // add one or more states to the toolbar
     // States will fail to show if tab is loading but not in focus!
     // Content scripts cannot use tabs.query and send the tab, so it must be called here.
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0] && (tabs[0].url === message.url)) {
         for (let state of message.states) {
-          addToolbarState(tabs[0], state)
+          await addToolbarState(tabs[0], state)
         }
       }
     })
@@ -682,7 +681,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
   } else if (message.message === 'clearResource') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0]) {
         if (message.settings) {
           // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
@@ -690,19 +689,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
               ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
-            removeToolbarState(tabs[0], 'R')
+            await removeToolbarState(tabs[0], 'R')
           }
         } else {
           // clear 'R' if settings not provided
-          removeToolbarState(tabs[0], 'R')
+          await removeToolbarState(tabs[0], 'R')
         }
       }
     })
   } else if (message.message === 'clearFactCheck') {
     // fact check settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0]) {
-        removeToolbarState(tabs[0], 'F')
+        await removeToolbarState(tabs[0], 'F')
       }
     })
   } else if (message.message === 'getCachedWaybackCount') {
@@ -750,13 +749,13 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 
       // 404 not found
       if (settings && settings.not_found_setting) {
-        readTabData(tab, (data) => {
+        readTabData(tab, async (data) => {
           // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
           if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
             if (data.statusCode >= 400) {
               checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
             } else {
-              removeToolbarState(tab, 'V')
+              await removeToolbarState(tab, 'V')
             }
           }
         })
@@ -771,10 +770,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       if (settings && settings.wiki_setting && url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
         getCachedPapers(url,
-          (data) => {
+          async (data) => {
             if (data && (data.status !== 'error')) {
-              addToolbarState(tab, 'R')
-              addToolbarState(tab, 'papers')
+              await addToolbarState(tab, 'R')
+              await addToolbarState(tab, 'papers')
             }
           }, () => {}
         )
@@ -801,9 +800,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
               headers: headers
             })
             .then(resp => resp.json())
-            .then(resp => {
+            .then(async (resp) => {
               if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                addToolbarState(tab, 'R')
+                await addToolbarState(tab, 'R')
                 // Storing the tab url as well as the fetched archive url for future use
                 chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
               }
@@ -815,9 +814,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         const news_host = new URL(url).hostname // FIXME
         if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
           getCachedTvNews(url,
-            (clips) => {
+            async (clips) => {
               if (clips && (clips.status !== 'error')) {
-                addToolbarState(tab, 'R')
+                await addToolbarState(tab, 'R')
               }
             }, () => {}
           )
@@ -832,33 +831,34 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
-    chrome.tabs.get(info.tabId, (tab) => {
+    chrome.tabs.get(info.tabId, async (tab) => {
       checkLastError()
       if (typeof tab === 'undefined') { return }
+      toolbarState = await getToolbarState(tab)
       // fact check settings unchecked
-      if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
-        removeToolbarState(tab, 'F')
+      if (settings && (settings.fact_check_setting === false) && toolbarState.has('F')) {
+        await removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
-      if (settings && (settings.wiki_setting === false) && getToolbarState(tab).has('R')) {
-        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
+      if (settings && (settings.wiki_setting === false) && toolbarState.has('R')) {
+        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { await removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
-      if (settings && (settings.amazon_setting === false) && getToolbarState(tab).has('R')) {
-        if (tab.url.includes('www.amazon')) { removeToolbarState(tab, 'R') }
+      if (settings && (settings.amazon_setting === false) && toolbarState.has('R')) {
+        if (tab.url.includes('www.amazon')) { await removeToolbarState(tab, 'R') }
       }
       // tvnews_setting settings unchecked
-      if (settings && (settings.tvnews_setting === false) && getToolbarState(tab).has('R')) {
+      if (settings && (settings.tvnews_setting === false) && toolbarState.has('R')) {
         const news_host = new URL(tab.url).hostname
-        if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
+        if (newshosts.has(news_host)) { await removeToolbarState(tab, 'R') }
       }
       // clear '404 not found' dot if tab URL doesn't match stored URL
-      readTabData(tab, (data) => {
+      readTabData(tab, async (data) => {
         if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
-          removeToolbarState(tab, 'V')
+          await removeToolbarState(tab, 'V')
         }
       })
-      updateToolbar(tab)
+      await updateToolbar(tab)
       // update or clear count badge
       updateWaybackCountBadge(tab, tab.url)
     })
@@ -875,8 +875,9 @@ chrome.tabs.onActivated.addListener((info) => {
  * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
  * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
-function autoSave(atab, url, beforeDate = new Date()) {
-  if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
+async function autoSave(atab, url, beforeDate = new Date()) {
+  toolbarState = getToolbarState(atab)
+  if (isValidUrl(url) && isNotExcludedUrl(url) && !toolbarState.has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
        (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
@@ -963,7 +964,7 @@ function factCheck(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     // retrieve fact check results
     getCachedFactCheck(url,
-      (json) => {
+      async (json) => {
         // json is an object containing:
         //   "notices": [ { "notice": "...", "where": { "timestamp": [ "-yyyymmdd123456" ] } } ],
         //   "status": "success"
@@ -1000,7 +1001,7 @@ function factCheck(atab, url) {
               if (contextUrl !== url) {
                 // only show context button if URL different than current URL in address bar
                 saveTabData(atab, { 'contextUrl': contextUrl })
-                addToolbarState(atab, 'F')
+                await addToolbarState(atab, 'F')
               }
             }
           }
@@ -1116,8 +1117,9 @@ function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      getCachedWaybackCount(url, (values) => {
-        if ((values.total >= 0) && !getToolbarState(atab).has('S')) {
+      getCachedWaybackCount(url, async(values) => {
+        let toolbarstate = await getToolbarState(atab)
+        if ((values.total >= 0) && !toolbarstate.has('S')) {
           // display badge
           let text = badgeCountText(values.total)
           chrome.action.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
@@ -1144,7 +1146,7 @@ function updateWaybackCountBadge(atab, url) {
  * @param name {string} = one of 'archive', 'check', 'R', or 'S'
  * @param tabId {int} (optional) = tab id, else sets current or global icon.
  */
-function setToolbarIcon(name, tabId = null) {
+async function setToolbarIcon(name, tabId = null) {
   const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
   const checkBadgePos = new Set(['R', 'F', 'V'])
   const path = '../images/toolbar/'
@@ -1164,73 +1166,202 @@ function setToolbarIcon(name, tabId = null) {
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 // Add 'books' or 'papers' to display popup buttons for wikipedia resources.
-function addToolbarState(atab, state) {
+async function addToolbarState(atab, state) {
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (!gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey] = new Set()
+  const tabKey = getTabKey(atab);
+  // Retrieve gToolbarStates from chrome.storage
+  const gToolbarStatesSerialized = await new Promise((resolve) => {
+    chrome.storage.local.get(['gToolbarStates'], function(result) {
+      resolve(result.gToolbarStates || {});
+    });
+  });
+  // Convert arrays back to Set objects
+  const gToolbarStates = {};
+  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
+    gToolbarStates[key] = new Set(value);
   }
-  gToolbarStates[tabKey].add(state)
-  updateToolbar(atab)
+  // Initialize the Set for the tabKey if it doesn't exist
+  if (!gToolbarStates[tabKey]) {
+    gToolbarStates[tabKey] = new Set();
+  }
+  // Add the state to the Set for the tabKey
+  gToolbarStates[tabKey].add(state);
+  // Convert Set objects to arrays before storing in chrome.storage
+  const gToolbarStatesToStore = {};
+  for (const [key, value] of Object.entries(gToolbarStates)) {
+    gToolbarStatesToStore[key] = Array.from(value);
+  }
+  // Store the updated gToolbarStates back into chrome.storage
+  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('gToolbarStates updated and stored successfully');
+    }
+  });
+
+  // Update the toolbar
+  await updateToolbar(atab);
 }
+
 
 // Remove state from the state set for given Tab, and update toolbar.
-function removeToolbarState(atab, state) {
+async function removeToolbarState(atab, state) {
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey].delete(state)
+
+  const tabKey = getTabKey(atab);
+  // Retrieve gToolbarStates from chrome.storage
+  const gToolbarStatesSerialized = await new Promise((resolve) => {
+    chrome.storage.local.get(['gToolbarStates'], function(result) {
+      resolve(result.gToolbarStates || {});
+    });
+  });
+
+  // Convert arrays back to Set objects
+  const gToolbarStates = {};
+  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
+    gToolbarStates[key] = new Set(value);
   }
-  updateToolbar(atab)
+
+  // Check if the state set for the tabKey exists
+  if (gToolbarStates[tabKey]) {
+    // Remove state from the state set for the given Tab
+    gToolbarStates[tabKey].delete(state);
+  }
+
+  // Convert Set objects to arrays before storing in chrome.storage
+  const gToolbarStatesToStore = {};
+  for (const [key, value] of Object.entries(gToolbarStates)) {
+    gToolbarStatesToStore[key] = Array.from(value);
+  }
+
+  // Store the updated gToolbarStates back into chrome.storage
+  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('gToolbarStates updated and stored successfully');
+    }
+  });
+
+  // Update the toolbar
+  await updateToolbar(atab);
 }
 
+
 // Returns a Set of toolbar states, or an empty set.
-function getToolbarState(atab) {
+async function getToolbarState(atab) {
   if (!atab) { return new Set() }
-  const tabKey = getTabKey(atab)
-  return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
+
+  const tabKey = getTabKey(atab);
+
+  // Retrieve gToolbarStates from chrome.storage
+  const gToolbarStatesSerialized = await new Promise((resolve) => {
+    chrome.storage.local.get(['gToolbarStates'], function(result) {
+      resolve(result.gToolbarStates || {});
+    });
+  });
+
+  // Convert arrays back to Set objects
+  const gToolbarStates = {};
+  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
+    gToolbarStates[key] = new Set(value);
+  }
+
+  // Return the state set for the tabKey or an empty Set if it doesn't exist
+  return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set();
 }
 
 // Clears state for given Tab and update toolbar icon.
-function clearToolbarState(atab) {
+async function clearToolbarState(atab) {
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey].clear()
-    delete gToolbarStates[tabKey]
+
+  const tabKey = getTabKey(atab);
+
+  // Retrieve gToolbarStates from chrome.storage
+  const gToolbarStatesSerialized = await new Promise((resolve) => {
+    chrome.storage.local.get(['gToolbarStates'], function(result) {
+      resolve(result.gToolbarStates || {});
+    });
+  });
+
+  // Convert arrays back to Set objects
+  const gToolbarStates = {};
+  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
+    gToolbarStates[key] = new Set(value);
   }
-  updateToolbar(atab)
+
+  // Clear the state set for the tabKey and delete the tabKey entry
+  if (gToolbarStates[tabKey]) {
+    gToolbarStates[tabKey].clear();
+    delete gToolbarStates[tabKey];
+  }
+
+  // Convert Set objects to arrays before storing in chrome.storage
+  const gToolbarStatesToStore = {};
+  for (const [key, value] of Object.entries(gToolbarStates)) {
+    gToolbarStatesToStore[key] = Array.from(value);
+  }
+
+  // Store the updated gToolbarStates back into chrome.storage
+  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('gToolbarStates updated and stored successfully');
+    }
+  });
+
+  // Update the toolbar
+  await updateToolbar(atab);
 }
+
 
 /**
  * Updates the toolbar icon using the state set stored in gToolbarStates.
  * Only updates icon if atab is the currently active tab, else does nothing.
  * @param atab {Tab}
  */
-function updateToolbar(atab) {
+async function updateToolbar(atab) {
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  // type 'normal' prevents updation of toolbar icon when it's a popup window
-  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
+
+  const tabKey = getTabKey(atab);
+
+  // Retrieve gToolbarStates from chrome.storage
+  const gToolbarStatesSerialized = await new Promise((resolve) => {
+    chrome.storage.local.get(['gToolbarStates'], function(result) {
+      resolve(result.gToolbarStates || {});
+    });
+  });
+
+  // Convert arrays back to Set objects
+  const gToolbarStates = {};
+  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
+    gToolbarStates[key] = new Set(value);
+  }
+
+  // Query active tab to update toolbar icon
+  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, async (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
-      let state = gToolbarStates[tabKey]
-      // this order defines the priority of what icon to display
+      let state = gToolbarStates[tabKey];
+      // Determine which icon to display based on state
       if (state && state.has('S')) {
-        setToolbarIcon('S', atab.id)
+        await setToolbarIcon('S', atab.id);
       } else if (state && state.has('V')) {
-        setToolbarIcon('V', atab.id)
+        await setToolbarIcon('V', atab.id);
       } else if (state && state.has('F')) {
-        setToolbarIcon('F', atab.id)
+        await setToolbarIcon('F', atab.id);
       } else if (state && state.has('R')) {
-        setToolbarIcon('R', atab.id)
+        await setToolbarIcon('R', atab.id);
       } else if (state && state.has('check')) {
-        setToolbarIcon('check', atab.id)
+        await setToolbarIcon('check', atab.id);
       } else {
-        setToolbarIcon('archive', atab.id)
+        await setToolbarIcon('archive', atab.id);
       }
     }
-  })
+  });
 }
+
 
 /* * * Right-click Menu * * */
 
