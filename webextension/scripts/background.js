@@ -966,7 +966,7 @@ function factCheck(atab, url) {
     getCachedFactCheck(url,
       async (json) => {
         // json is an object containing:
-        //   "notices": [ { "notice": "...", "where": { "timestamp": [ "-yyyymmdd123456" ] } } ],
+        //   "notices": [ { "notice": "...", "context_url": "..." } ],
         //   "status": "success"
 
         // parse notices from result
@@ -992,17 +992,13 @@ function factCheck(atab, url) {
           //     })
           //   }
           // })
-
-          // extract context URL from notice text, if present
-          if ('notice' in json.notices[0]) {
-            const aMatch = (json.notices[0]['notice']).match(/href="([^"]*)/)
-            if (aMatch) {
-              const contextUrl = aMatch[1]
-              if (contextUrl !== url) {
-                // only show context button if URL different than current URL in address bar
-                saveTabData(atab, { 'contextUrl': contextUrl })
-                await addToolbarState(atab, 'F')
-              }
+          // extract context URL if present
+          if ('context_url' in json.notices[0]) {
+            const contextUrl = json.notices[0]['context_url']
+            if (contextUrl !== url) {
+              // only show context button if URL different than current URL in address bar
+              saveTabData(atab, { 'contextUrl': contextUrl })
+              await addToolbarState(atab, 'F')
             }
           }
         }

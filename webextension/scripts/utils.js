@@ -10,7 +10,8 @@ const defaultAutoExcludeList = [
   'google.com*',
   '*.google.com*',
   'mail.yahoo.com*',
-  'duckduckgo.com/?q=*'
+  'duckduckgo.com/?q=*',
+  '*.proton.me*'
 ]
 
 // list of excluded URLs
@@ -177,7 +178,7 @@ function getUserInfo() {
 function checkAuthentication(acallback) {
   chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
     let loggedIn = false, ia_auth = false
-    cookies.forEach(cookie => {
+    cookies && cookies.forEach(cookie => {
       if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
       else if ((cookie.name === 'ia-auth') && cookie.value && (cookie.value.length > 0)) { ia_auth = true }
     })

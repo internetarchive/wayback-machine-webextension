@@ -40,7 +40,22 @@ function doLogin(e) {
   }
   $('#login-btn').val('Please Wait...')
   // need to set test-cookie for login API to return json instead of html
-  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' })
+  chrome.cookies.set({ url: 'https://archive.org', name: 'test-cookie', value: '1' }, (cookie) => {
+    if (!cookie) {
+      // failed to set cookie
+      console.log("Cookie access is blocked. Please check cookie settings.")
+      console.log("This could happen if 'privacy.firstparty.isolate' is set to true.")
+      $('#login-message').show().text("Please Enable Cookies")
+      $('#login-btn').val('Login')
+    }
+    else {
+      // cookie was set
+      doLoginAPI(email, password)
+    }
+  })
+}
+
+function doLoginAPI(email, password) {
   let data = JSON.stringify({ email: email, password: password })
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -63,17 +78,28 @@ function doLogin(e) {
         // login failed
         $('#login-message').show().text('Incorrect Email or Password')
       } else {
-        // login success
-        $('#login-message').show().addClass('login-success').text('Success')
-        loginSuccess()
-        setTimeout(() => {
-          $('#login-page').hide()
-          $('#setting-page').hide()
-          $('#popup-page').show()
-          $('#login-message').removeClass('login-success').hide()
-        }, 500)
-        $('#email-input').val('')
-        $('#password-input').val('')
+        // this will check that we have cookie access
+        checkAuthentication((result) => {
+          checkLastError()
+          if (result && result.auth_check) {
+            // login success
+            $('#login-message').show().addClass('login-success').text('Success')
+            loginSuccess()
+            setTimeout(() => {
+              $('#login-page').hide()
+              $('#setting-page').hide()
+              $('#popup-page').show()
+              $('#login-message').removeClass('login-success').hide()
+            }, 500)
+            $('#email-input').val('')
+            $('#password-input').val('')
+          } else {
+            // failed cookie access check
+            console.log("Cookie access is blocked. Please check cookie settings.")
+            $('#login-message').show().text("Please Enable Cookies")
+            $('#login-btn').val('Login')
+          }
+        })
       }
     })
     .catch((e) => {
