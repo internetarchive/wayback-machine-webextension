@@ -821,6 +821,7 @@ function initDefaultOptions () {
     selectedFeature: null,
     gStatusCode: 0,
     waybackCountCache: {},
+    globalAPICache: {},
     API_CACHE_SIZE: 5,
     API_LOADING: 'LOADING',
     API_TIMEOUT: 10000,
