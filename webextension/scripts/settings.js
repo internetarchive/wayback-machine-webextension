@@ -7,7 +7,7 @@
 /*   global setupWaybackCount, goBackToMain */
 
 // onload
-$(function() {
+$(function () {
   initSettings()
   setupPrivateMode()
   setupSettingsChange()
@@ -46,6 +46,7 @@ function restoreSettings(items) {
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
   // update UI
   enableEmbedPopupSetting(items.not_found_setting)
+  enableAutoMyArchiveSetting(items.auto_archive_setting)
 }
 
 function saveSettings() {
@@ -113,6 +114,17 @@ function enableEmbedPopupSetting(flag) {
   }
 }
 
+// Enable or disable setting when flag is true or false.
+function enableAutoMyArchiveSetting(flag) {
+  if (flag) {
+    $('#auto-my-archive-setting').attr('disabled', false)
+    $('#auto-my-archive-label').css('opacity', '1.0').css('cursor', '')
+  } else {
+    $('#auto-my-archive-setting').attr('disabled', true)
+    $('#auto-my-archive-label').css('opacity', '0.66').css('cursor', 'not-allowed')
+  }
+}
+
 // Save settings on change and other actions on particular settings.
 function setupSettingsChange() {
 
@@ -125,13 +137,10 @@ function setupSettingsChange() {
     e.target.blur()
   })
   $('#my-archive-setting').change((e) => {
-    if ($(e.target).prop('checked') === true) {
-      $('#auto-my-archive-setting').attr('disabled', false)
-      $('#auto-my-archive-label').css('opacity', '1.0').css('cursor', '')
-    } else {
+    enableAutoMyArchiveSetting($(e.target).prop('checked') === true)
+
+    if ($(e.target).prop('checked') === false) {
       $('#auto-my-archive-setting').prop('checked', false).trigger('change')
-      $('#auto-my-archive-setting').attr('disabled', true)
-      $('#auto-my-archive-label').css('opacity', '0.66').css('cursor', 'not-allowed')
       e.target.blur()
     }
   })
