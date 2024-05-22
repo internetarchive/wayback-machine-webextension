@@ -22,7 +22,7 @@ importScripts('utils.js')
 // const SPN_RETRY = 6000
 let tabIdPromise
 
-// not required because in manifest v3, a new header is set using declarativeNetRequest rules
+// not required because in manifest v3, we use different subdomain of hostURLs for different browsers
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 // function rewriteUserAgentHeader(e) {
 //   for (let header of e.requestHeaders) {
@@ -471,7 +471,7 @@ chrome.action.onClicked.addListener((tab) => {
 })
 
 // chrome.webRequest.onBeforeSendHeaders is not supported in manifest v3 and currently we are not looking to rewrite the user-agent
-// as we already use diffent host-names for different endpoints
+// as we already use diffent host-names for different browsers
 
 // chrome.webRequest.onBeforeSendHeaders.addListener(
 //   rewriteUserAgentHeader,
