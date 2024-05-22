@@ -85,13 +85,13 @@ const hostURLs = {
 }
 
 const feedbackURLs = {
-  chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
-  chromium: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  chrome: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  chromium: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
   firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
   safari: 'https://apps.apple.com/us/app/wayback-machine/id1472432422',
-  brave: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  brave: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn',
-  opera: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
+  opera: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
 }
 
 const gBrowser = getBrowser()
