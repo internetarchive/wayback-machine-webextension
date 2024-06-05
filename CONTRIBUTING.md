@@ -6,7 +6,7 @@ There can be multiple ways in which you can help us improve the project from wha
 
 ### Contributing code
 
-The chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript and JQuery. Other than that, we use git for version control, so knowledge of git would come handy.
+The Chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript and JQuery. Other than that, we use git for version control, so knowledge of git would come handy.
 
 ### Contributing content / documentation
 
