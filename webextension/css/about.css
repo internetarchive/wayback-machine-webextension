@@ -6,28 +6,28 @@ h1.underlined {
     padding-bottom: 0.5em;
 }
 
-.about-header {
+header {
     /* float: left; */
     margin-bottom: 3em;
     text-align: center;
 }
-.about-header * {
+header * {
     /* float: left; */
 }
-.about-header img {
+header img {
     margin: 1em 1em 0 0;
 }
 
-.about-body {
+main {
     float: left;
     font-size: 14pt;
     margin-bottom: 2em;
 }
-.about-body div {
+main div {
     padding-right: 3em;
 }
 
-.about-footer {
+footer {
     font-size: 11pt;
     line-height: 1.1;
     margin: 2em 0;
