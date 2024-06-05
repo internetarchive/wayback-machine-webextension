@@ -48,7 +48,6 @@ p {
 }
 
 .welcome-logo {
-    background: url('../images/wayback-light.png') center/cover no-repeat;
     width: 375px;
     height: 150px;
     margin: 0 auto;
@@ -73,9 +72,4 @@ p {
     .bottom-container {
         background-color: #333;
     }
-
-    .welcome-logo {
-        background-image: url('../images/wayback-dark.png')
-    }
-
 }
