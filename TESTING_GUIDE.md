@@ -43,7 +43,7 @@ To avoid `no-undef` errors that may occur with external global variables or func
 
 ## Updating Dependencies ##
 
-Github's Dependabot may alert potential security issues in dependencies.
+GitHub's Dependabot may alert potential security issues in dependencies.
 
 To view and fix these issues:
 
