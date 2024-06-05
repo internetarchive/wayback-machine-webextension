@@ -208,10 +208,12 @@ function statusSuccess(atab, pageUrl, silent, data) {
     url: pageUrl
   }, checkLastError)
 
+  if (!data || !('timestamp' in data)) return
+
+  checkSaveToMyWebArchive(pageUrl, data.timestamp, silent)
+
   // notify
-  if (!silent && data && ('timestamp' in data)) {
-    // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on
-    checkSaveToMyWebArchive(pageUrl, data.timestamp)
+  if (!silent) {
     // replace message if present in result
     let msg = 'Successfully saved! Click to view snapshot.'
     if (('message' in data) && (data.message.length > 0)) {
@@ -518,10 +520,13 @@ function checkNotFound(details) {
 }
 
 // Calls saveToMyWebArchive() if setting is set, and outputs errors to console.
-//
-function checkSaveToMyWebArchive(url, timestamp) {
-  chrome.storage.local.get(['my_archive_setting'], (settings) => {
-    if (settings && settings.my_archive_setting) {
+// silent is false if triggered by SPN, true otherwise  
+function checkSaveToMyWebArchive(url, timestamp, silent) {
+  chrome.storage.local.get(['my_archive_setting', 'auto_my_archive_setting'], (settings) => {
+    if (!settings || !settings.my_archive_setting) { return }
+    // save if not triggered by SPN and always save setting is enabled
+    if (!settings.auto_my_archive_setting && silent) { return }
+
       saveToMyWebArchive(url, timestamp)
       .then(response => response.json())
       .then(data => {
@@ -532,7 +537,6 @@ function checkSaveToMyWebArchive(url, timestamp) {
       .catch(error => {
         console.log('Save to My Web Archive FAILED: ', error)
       })
-    }
   })
 }
 
