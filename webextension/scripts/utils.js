@@ -669,20 +669,25 @@ function opener(url, option, callback) {
       }
     })
   } else {
-    let w = window.screen.availWidth, h = window.screen.availHeight
-    if (w > h) {
-      // landscape screen
-      const maxW = 1200
-      w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
-      h = Math.floor(w * 0.75)
-    } else { // option === 'window'
-      // portrait screen (likely mobile)
-      w = Math.floor(w * 0.9)
-      h = Math.floor(h * 0.9)
-    }
-    chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
-      if (callback) { callback(window.tabs[0].id) }
-    })
+    
+    chrome.windows.getCurrent({populate: true}, (window) => {
+      // Access window properties  
+      let h = window.width;
+      let w = window.height;
+      if (w > h) {
+        // landscape screen
+        const maxW = 1200
+        w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
+        h = Math.floor(w * 0.75)
+      } else { // option === 'window'
+        // portrait screen (likely mobile)
+        w = Math.floor(w * 0.9)
+        h = Math.floor(h * 0.9)
+      }
+      chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
+        if (callback) { callback(window.tabs[0].id) }
+      })
+    });
   }
 }
 
@@ -779,11 +784,6 @@ function setupContextMenus(enabled) {
         'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
       }, checkLastError)
       chrome.contextMenus.create({
-        'type': 'separator',
-        'contexts': ['page', 'frame', 'link'],
-        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-      })
-      chrome.contextMenus.create({
         'id': 'first',
         'title': 'Oldest Version',
         'contexts': ['page', 'frame', 'link'],
@@ -814,11 +814,21 @@ function setupContextMenus(enabled) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
+  let globalAPICache = new Map();
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
+    gStatusCode: 0,
+    waybackCountCache: {},
+    gToolbarStates: {},
+    globalAPICache: {},
+    API_CACHE_SIZE: 5,
+    API_LOADING: 'LOADING',
+    API_TIMEOUT: 10000,
+    API_RETRY: 1000,
+    SPN_RETRY: 6000,
     /* Features */
     private_mode_setting: true,
     not_found_setting: false,
@@ -846,7 +856,7 @@ function afterAcceptTerms () {
     private_mode_setting: false,
     not_found_setting: true
   })
-  chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
   setupContextMenus(true)
 }
 
