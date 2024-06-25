@@ -15,11 +15,11 @@ importScripts('utils.js')
 // let gToolbarStates = {}
 // let waybackCountCache = {}
 // let globalAPICache = new Map()
-// const API_CACHE_SIZE = 5
-// const API_LOADING = 'LOADING'
-// const API_TIMEOUT = 10000
-// const API_RETRY = 1000
-// const SPN_RETRY = 6000
+const API_CACHE_SIZE = 5
+const API_LOADING = 'LOADING'
+const API_TIMEOUT = 10000
+const API_RETRY = 1000
+const SPN_RETRY = 6000
 let tabIdPromise
 
 // not required because in manifest v3, we use different subdomain of hostURLs for different browsers
@@ -56,13 +56,13 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  * @param silent {bool}: if false, include notify popup if supported by browser/OS, and open Resource List window if setting is on.
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
-async function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
+function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
-  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
+  //let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
+  //  chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
+  //    resolve(result);
+  //  });
+  //});
 
   if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
     console.log('savePageNow URL excluded')
@@ -152,17 +152,17 @@ function extractJobIdFromHTML(html) {
  * @param silent {bool}: to pass to statusSuccess() or statusFailed().
  * @param jobId {string}: job_id returned by SPN response, passed to Status API.
  */
-async function savePageStatus(atab, pageUrl, silent = false, jobId) {
-  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
+function savePageStatus(atab, pageUrl, silent = false, jobId) {
+  //let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
+  //  chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
+  //    resolve(result);
+  //  });
+  //});
   // setup api
   // Accept header required when logged-out, even though response is in JSON.
   let headers = new Headers(hostHeaders)
   headers.set('Accept', 'text/html,application/xhtml+xml,application/xml')
-  // call status after SPN response
+
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     fetch(hostURL + 'save/status/' + jobId, {
@@ -283,12 +283,12 @@ async function statusFailed(atab, pageUrl, silent, data, err) {
  * @param timestamp {string}: Wayback timestamp as "yyyyMMddHHmmss" in UTC.
  * @return Promise: which should return this JSON on success: { "success": true }
  */
-async function saveToMyWebArchive(url, timestamp) {
-  let { API_TIMEOUT } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-      resolve(result);
-    });
-  });
+function saveToMyWebArchive(url, timestamp) {
+  //let { API_TIMEOUT } = await new Promise((resolve) => { // TODO: REMOVE
+  //  chrome.storage.local.get(['API_TIMEOUT'], function(result) {
+  //    resolve(result);
+  //  });
+  //});
   const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
@@ -312,12 +312,12 @@ async function saveToMyWebArchive(url, timestamp) {
  * @param postData {object}: if present, uses POST instead of GET and sends postData object converted to json.
  * @return Promise
  */
-async function fetchAPI(url, onSuccess, onFail, postData = null) {
-  let { API_TIMEOUT } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-      resolve(result);
-    });
-  });
+function fetchAPI(url, onSuccess, onFail, postData = null) {
+  //let { API_TIMEOUT } = await new Promise((resolve) => { // TODO: REMOVE
+  //  chrome.storage.local.get(['API_TIMEOUT'], function(result) {
+  //    resolve(result);
+  //  });
+  //});
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
@@ -353,11 +353,11 @@ async function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
  async function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
-  let { API_CACHE_SIZE, API_LOADING, API_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_CACHE_SIZE', 'API_LOADING', 'API_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
+  //let { API_CACHE_SIZE, API_LOADING, API_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
+  //  chrome.storage.local.get(['API_CACHE_SIZE', 'API_LOADING', 'API_RETRY'], function(result) {
+  //    resolve(result);
+  //  });
+  //});
 
   chrome.storage.local.get(['globalAPICache'], async function(result) {
     let globalAPICache = result.globalAPICache ? new Map(Object.entries(result.globalAPICache)) : new Map();
