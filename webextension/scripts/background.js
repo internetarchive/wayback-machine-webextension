@@ -14,7 +14,7 @@ importScripts('utils.js')
 //let gStatusCode = 0
 // let gToolbarStates = {}
 // let waybackCountCache = {}
-// let globalAPICache = new Map()
+let globalAPICache = new Map()
 const API_CACHE_SIZE = 5
 const API_LOADING = 'LOADING'
 const API_TIMEOUT = 10000
@@ -352,58 +352,33 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @param postData {object}: uses POST if present.
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
- async function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
-  //let { API_CACHE_SIZE, API_LOADING, API_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
-  //  chrome.storage.local.get(['API_CACHE_SIZE', 'API_LOADING', 'API_RETRY'], function(result) {
-  //    resolve(result);
-  //  });
-  //});
-
-  chrome.storage.local.get(['globalAPICache'], async function(result) {
-    let globalAPICache = result.globalAPICache ? new Map(Object.entries(result.globalAPICache)) : new Map();
-    let data = globalAPICache.get(url);
-
-    if (data === API_LOADING) {
-      setTimeout(() => {
-        fetchCachedAPI(url, onSuccess, onFail, postData)
-      }, API_RETRY);
-      return null;
-    } else if (data !== undefined) {
-      onSuccess(data);
-      return data;
-    } else {
-      // if cache full, remove first object which is the oldest from the cache
-      if (globalAPICache.size >= API_CACHE_SIZE) {
-        globalAPICache.delete(globalAPICache.keys().next().value);
-      }
-      globalAPICache.set(url, API_LOADING);
-
-      // Convert Map back to object before storing it in chrome.storage
-      let globalAPICacheObject = Object.fromEntries(globalAPICache);
-
-      chrome.storage.local.set({ globalAPICache: globalAPICacheObject }, function() {
-        fetchAPI(url, (json) => {
-          globalAPICache.set(url, json);
-
-          // Convert Map back to object before storing it in chrome.storage
-          let globalAPICacheObject = Object.fromEntries(globalAPICache);
-          chrome.storage.local.set({ globalAPICache: globalAPICacheObject });
-          
-          onSuccess(json);
-        }, (error) => {
-          globalAPICache.delete(url);
-
-          // Convert Map back to object before storing it in chrome.storage
-          let globalAPICacheObject = Object.fromEntries(globalAPICache);
-          chrome.storage.local.set({ globalAPICache: globalAPICacheObject });
-
-          onFail(error);
-        }, postData);
-      });
+ function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
+  if (typeof globalAPICache === 'undefined') { globalAPICache = new Map() }
+  let data = globalAPICache.get(url)
+  if (data === API_LOADING) {
+    // re-call after delay if previous fetch hadn't returned yet
+    setTimeout(() => {
+      fetchCachedAPI(url, onSuccess, onFail, postData)
+    }, API_RETRY)
+    return null
+  } else if (data !== undefined) {
+    onSuccess(data)
+    return data
+  } else {
+    // if cache full, remove first object which is the oldest from the cache
+    if (globalAPICache.size >= API_CACHE_SIZE) {
+      globalAPICache.delete(globalAPICache.keys().next().value)
     }
-  });
+    globalAPICache.set(url, API_LOADING)
+    return fetchAPI(url, (json) => {
+      globalAPICache.set(url, json)
+      onSuccess(json)
+    }, (error) => {
+      globalAPICache.delete(url)
+      onFail(error)
+    }, postData)
+  }
 }
-
 
 /**
  * The books API uses both GET, and POST with isbns array as the body.

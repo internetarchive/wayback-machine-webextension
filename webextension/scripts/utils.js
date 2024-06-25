@@ -814,7 +814,6 @@ function setupContextMenus(enabled) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
-  //let globalAPICache = new Map(); // TODO: REMOVE
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
@@ -823,7 +822,6 @@ function initDefaultOptions () {
     gStatusCode: 0,
     waybackCountCache: {},
     gToolbarStates: {},
-    globalAPICache: {},
     //API_CACHE_SIZE: 5,      // TODO: REMOVE
     //API_LOADING: 'LOADING',
     //API_TIMEOUT: 10000,
