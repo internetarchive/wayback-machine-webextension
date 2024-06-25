@@ -819,7 +819,6 @@ function initDefaultOptions () {
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    gStatusCode: 0,
     waybackCountCache: {},
     gToolbarStates: {},
     //API_CACHE_SIZE: 5,      // TODO: REMOVE

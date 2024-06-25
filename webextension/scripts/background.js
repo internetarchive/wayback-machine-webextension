@@ -10,8 +10,6 @@ importScripts('utils.js')
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
-// Used to store the statuscode of the if it is a httpFailCodes
-//let gStatusCode = 0
 // let gToolbarStates = {}
 // let waybackCountCache = {}
 let globalAPICache = new Map()
@@ -465,7 +463,6 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     const url = details.url
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
       chrome.tabs.get(details.tabId, (tab) => {
-        chrome.storage.local.set({ gStatusCode : 999 });
         saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
       })
     }
@@ -505,7 +502,6 @@ function checkNotFound(details) {
   async function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
     await addToolbarState(tab, 'V')
-    chrome.storage.local.set({ gStatusCode : statusCode });
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
     saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag && ('id' in tab)) {
@@ -534,7 +530,6 @@ function checkNotFound(details) {
     })
   }
 
-  gStatusCode = 0
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.agreement && settings.not_found_setting && isNotExcludedUrl(details.url)) {
       if (details.statusCode && (details.statusCode >= 400)) {
