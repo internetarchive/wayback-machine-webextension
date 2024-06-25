@@ -1006,12 +1006,15 @@ function getCachedWaybackCount(url, onSuccess, onFail) {
         waybackCountCache[url] = values;
 
         // Store the updated waybackCountCache back into chrome.storage
+        // TODO: Is this the most efficient way to store? Do objects take up too much space? [CG]
         chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
           if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
+            // TODO: since we have the values, should still pass to onSuccess() [CG]
             onFail(); // Call onFail callback in case of error while storing
           } else {
             // Call onSuccess callback with the fetched values
+            // TODO: may want to call onSuccess() outside .set ?? [CG]
             onSuccess(values);
           }
         });
@@ -1025,6 +1028,7 @@ function getCachedWaybackCount(url, onSuccess, onFail) {
 function clearCountCache() {
   let waybackCountCache = {};
   // Store the updated waybackCountCache into chrome.storage
+  // TODO: Would it be better to delete the key? [CG]
   chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
@@ -1042,7 +1046,7 @@ function clearCountCache() {
  */
  function incrementCount(url) {
   // Retrieve the waybackCountCache object from chrome.storage
-  chrome.storage.local.get(['waybackCountCache'], function(result) {
+  chrome.storage.local.get(['waybackCountCache'], (result) => {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
       return; // Exit if there's an error
@@ -1055,20 +1059,21 @@ function clearCountCache() {
     let timestamp = dateToTimestamp(new Date());
 
     // Get the cacheValues for the specified URL
-    let cacheValues = waybackCountCache[url] || {};
-
-    // Increment count and update last_ts if cacheValues and cacheValues.total exist and is greater than 0
-    if (cacheValues.total && cacheValues.total > 0) {
-      cacheValues.total += 1;
-      cacheValues.last_ts = timestamp;
-      waybackCountCache[url] = cacheValues;
+    let cacheValues = waybackCountCache[url];
+    if (cacheValues && cacheValues.total) {
+      if (cacheValues.total > 0) {
+        cacheValues.total += 1;
+        cacheValues.last_ts = timestamp;
+        waybackCountCache[url] = cacheValues;
+      }
+      // else don't update if total is a special value < 0
     } else {
-      // Set count to 1 and update last_ts if cacheValues.total doesn't exist or is not greater than 0
+      // set total to 1 if it's a new URL
       waybackCountCache[url] = { total: 1, last_ts: timestamp };
     }
 
     // Store the updated waybackCountCache back into chrome.storage
-    chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+    chrome.storage.local.set({ waybackCountCache: waybackCountCache }, () => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError);
       } else {
