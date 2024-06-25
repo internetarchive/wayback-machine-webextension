@@ -105,7 +105,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
           if (!silent) { notifyMsg(errMsg) }
         } else {
           // update UI
-          addToolbarState(atab, 'S')
+          await addToolbarState(atab, 'S')
           updateWaybackCountBadge(atab, null)
           chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
           // show resources during save
@@ -707,7 +707,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, url)
 
-    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
+    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], async (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
         let beforeDate = null
@@ -719,7 +719,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             beforeDate = new Date(Date.now() - milisecs)
           }
         }
-        autoSave(tab, url, beforeDate)
+        await autoSave(tab, url, beforeDate)
       }
 
       // 404 not found
@@ -756,7 +756,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     })
   } else if (info.status === 'loading') {
     let received_url = url
-    clearToolbarState(tab)
+    await clearToolbarState(tab)
 
     if (received_url && !isArchiveUrl(received_url)) {
       let open_url = received_url.replace(/^https?:\/\//, '')
@@ -851,7 +851,7 @@ chrome.tabs.onActivated.addListener((info) => {
  * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
 async function autoSave(atab, url, beforeDate = new Date()) {
-  toolbarState = getToolbarState(atab)
+  toolbarState = await getToolbarState(atab)
   if (isValidUrl(url) && isNotExcludedUrl(url) && !toolbarState.has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
@@ -1117,7 +1117,7 @@ function updateWaybackCountBadge(atab, url) {
  * @param name {string} = one of 'archive', 'check', 'R', or 'S'
  * @param tabId {int} (optional) = tab id, else sets current or global icon.
  */
-async function setToolbarIcon(name, tabId = null) {
+function setToolbarIcon(name, tabId = null) {
   const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
   const checkBadgePos = new Set(['R', 'F', 'V'])
   const path = '../images/toolbar/'
@@ -1317,17 +1317,17 @@ async function updateToolbar(atab) {
       let state = gToolbarStates[tabKey];
       // Determine which icon to display based on state
       if (state && state.has('S')) {
-        await setToolbarIcon('S', atab.id);
+        setToolbarIcon('S', atab.id);
       } else if (state && state.has('V')) {
-        await setToolbarIcon('V', atab.id);
+        setToolbarIcon('V', atab.id);
       } else if (state && state.has('F')) {
-        await setToolbarIcon('F', atab.id);
+        setToolbarIcon('F', atab.id);
       } else if (state && state.has('R')) {
-        await setToolbarIcon('R', atab.id);
+        setToolbarIcon('R', atab.id);
       } else if (state && state.has('check')) {
-        await setToolbarIcon('check', atab.id);
+        setToolbarIcon('check', atab.id);
       } else {
-        await setToolbarIcon('archive', atab.id);
+        setToolbarIcon('archive', atab.id);
       }
     }
   });
