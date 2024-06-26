@@ -695,7 +695,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return false
 })
 
-chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   const url = tab.url
   if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) { return }
 
