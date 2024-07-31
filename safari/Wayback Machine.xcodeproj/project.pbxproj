@@ -468,7 +468,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -494,7 +494,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -522,7 +522,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -549,7 +549,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = archive.org.waybackmachine.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

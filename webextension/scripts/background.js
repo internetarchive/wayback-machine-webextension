@@ -15,11 +15,11 @@ importScripts('utils.js')
 // let gToolbarStates = {}
 // let waybackCountCache = {}
 // let globalAPICache = new Map()
-// const API_CACHE_SIZE = 5
-// const API_LOADING = 'LOADING'
-// const API_TIMEOUT = 10000
-// const API_RETRY = 1000
-// const SPN_RETRY = 6000
+const API_CACHE_SIZE = 5
+const API_LOADING = 'LOADING'
+const API_TIMEOUT = 10000
+const API_RETRY = 1000
+const SPN_RETRY = 6000
 let tabIdPromise
 
 // not required because in manifest v3, we use different subdomain of hostURLs for different browsers
@@ -57,12 +57,6 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  * @param options {Object}: key/value pairs to send in POST data. See SPN API spec.
  */
 async function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
-
-  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
 
   if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
     console.log('savePageNow URL excluded')
@@ -153,11 +147,6 @@ function extractJobIdFromHTML(html) {
  * @param jobId {string}: job_id returned by SPN response, passed to Status API.
  */
 async function savePageStatus(atab, pageUrl, silent = false, jobId) {
-  let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
   // setup api
   // Accept header required when logged-out, even though response is in JSON.
   let headers = new Headers(hostHeaders)
@@ -283,25 +272,19 @@ async function statusFailed(atab, pageUrl, silent, data, err) {
  * @param timestamp {string}: Wayback timestamp as "yyyyMMddHHmmss" in UTC.
  * @return Promise: which should return this JSON on success: { "success": true }
  */
-async function saveToMyWebArchive(url, timestamp) {
-  let { API_TIMEOUT } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-      resolve(result);
-    });
-  });
-  const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
+ async function saveToMyWebArchive(url, timestamp) {
+  const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] };
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
-    let headers = new Headers(hostHeaders)
-    headers.set('Content-Type', 'application/json')
-    fetch(hostURL + '__wb/web-archive', {
-      method: 'POST',
-      body: JSON.stringify(postData),
-      headers: headers
-    })
-    .then(resolve, reject)
-  })
-  return timeoutPromise
+      setTimeout(() => reject(new Error('timeout')), API_TIMEOUT);
+      fetch(hostURL + '__wb/web-archive', {
+          method: 'POST',
+          body: JSON.stringify(postData),
+          headers: new Headers({ 'Content-Type': 'application/json', ...hostHeaders })
+      })
+      .then(resolve)
+      .catch(reject);
+  });
+  return timeoutPromise;
 }
 
 /**
@@ -313,11 +296,6 @@ async function saveToMyWebArchive(url, timestamp) {
  * @return Promise
  */
 async function fetchAPI(url, onSuccess, onFail, postData = null) {
-  let { API_TIMEOUT } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-      resolve(result);
-    });
-  });
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
@@ -353,12 +331,6 @@ async function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
  async function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
-  let { API_CACHE_SIZE, API_LOADING, API_RETRY } = await new Promise((resolve) => {
-    chrome.storage.local.get(['API_CACHE_SIZE', 'API_LOADING', 'API_RETRY'], function(result) {
-      resolve(result);
-    });
-  });
-
   chrome.storage.local.get(['globalAPICache'], async function(result) {
     let globalAPICache = result.globalAPICache ? new Map(Object.entries(result.globalAPICache)) : new Map();
     let data = globalAPICache.get(url);
@@ -725,7 +697,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return false
 })
 
-chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+chrome.tabs.onUpdated.addListener( async (tabId, info, tab) => {
   const url = tab.url
   if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) { return }
 
@@ -876,7 +848,7 @@ chrome.tabs.onActivated.addListener((info) => {
  * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
 async function autoSave(atab, url, beforeDate = new Date()) {
-  toolbarState = getToolbarState(atab)
+  toolbarState = await getToolbarState(atab)
   if (isValidUrl(url) && isNotExcludedUrl(url) && !toolbarState.has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
