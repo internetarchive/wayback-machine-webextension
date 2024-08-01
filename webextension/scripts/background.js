@@ -211,7 +211,7 @@ async function statusSuccess(atab, pageUrl, silent, data) {
   // notify
   if (!silent && data && ('timestamp' in data)) {
     // since not silent, saves to My Web Archive only if SPN explicitly clicked and turned on
-    checkSaveToMyWebArchive(pageUrl, data.timestamp)
+    await checkSaveToMyWebArchive(pageUrl, data.timestamp)
     // replace message if present in result
     let msg = 'Successfully saved! Click to view snapshot.'
     if (('message' in data) && (data.message.length > 0)) {
@@ -546,21 +546,22 @@ function checkNotFound(details) {
 
 // Calls saveToMyWebArchive() if setting is set, and outputs errors to console.
 //
-function checkSaveToMyWebArchive(url, timestamp) {
-  chrome.storage.local.get(['my_archive_setting'], (settings) => {
-    if (settings && settings.my_archive_setting) {
-      saveToMyWebArchive(url, timestamp)
-      .then(response => response.json())
-      .then(data => {
-        if (!(data && (data['success'] === true))) {
-          console.log('Save to My Web Archive FAILED: ', data.error)
-        }
-      })
-      .catch(error => {
-        console.log('Save to My Web Archive FAILED: ', error)
-      })
-    }
-  })
+async function checkSaveToMyWebArchive(url, timestamp) {
+  const settings = await new Promise((resolve) => {
+    chrome.storage.local.get(['my_archive_setting'], resolve);
+  });
+  if (settings && settings.my_archive_setting) {
+    await saveToMyWebArchive(url, timestamp)
+    .then(response => response.json())
+    .then(data => {
+      if (!(data && (data['success'] === true))) {
+        console.log('Save to My Web Archive FAILED: ', data.error)
+      }
+    })
+    .catch(error => {
+      console.log('Save to My Web Archive FAILED: ', error)
+    })
+  }
 }
 
 // Listens for messages to call background functions from other scripts.
