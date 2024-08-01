@@ -823,7 +823,6 @@ function initDefaultOptions () {
     gStatusCode: 0,
     waybackCountCache: {},
     gToolbarStates: {},
-    globalAPICache: {},
     /* Features */
     private_mode_setting: true,
     not_found_setting: false,
