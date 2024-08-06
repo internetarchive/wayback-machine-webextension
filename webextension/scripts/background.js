@@ -3,7 +3,10 @@
 // License: AGPL-3
 // Copyright 2016-2020, Internet Archive
 
-importScripts('utils.js')
+if (typeof importScripts === 'function') {
+  importScripts('utils.js')
+}
+
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
