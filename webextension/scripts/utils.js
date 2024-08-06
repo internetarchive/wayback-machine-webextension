@@ -247,12 +247,17 @@ async function clearTabData(atab, keylist) {
   // take exisiting data in storage and delete any items from keylist
   let result = await chrome.storage.session.get(key);
   let exdata = result[key] || {}
+  let count = 0;
   for (let k of keylist) {
-    if (k in exdata) { delete exdata[k] }
+    if (k in exdata) { delete exdata[k]; count += 1; }
   }
-  let obj = {}
-  obj[key] = exdata
-  return chrome.storage.session.set(obj);
+  console.log("keys cleared: " + count); // DEBUG REMOVE
+  if (count > 0) {
+    // Only save to storage if changes occurred
+    let obj = {}
+    obj[key] = exdata
+    return chrome.storage.session.set(obj);
+  }
 }
 
 /**

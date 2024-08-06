@@ -1231,7 +1231,7 @@ async function clearToolbarState(atab) {
   console.log("clearToolbarState"); // DEBUG REMOVE
   if (!atab) { return }
   const tabKey = getTabKey(atab);
-  await saveTabData(atab, { states: [] });
+  await clearTabData(atab, ['states']);
   updateToolbar(atab, null);
 }
 
