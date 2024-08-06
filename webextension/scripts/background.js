@@ -10,7 +10,6 @@ importScripts('utils.js')
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
-// let gToolbarStates = {}
 // let waybackCountCache = {}
 let globalAPICache = new Map()
 const API_CACHE_SIZE = 5
@@ -462,8 +461,9 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     // note: testing parentFrameId prevents false positives
     const url = details.url
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      chrome.tabs.get(details.tabId, (tab) => {
-        saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
+      chrome.tabs.get(details.tabId, async (tab) => {
+        // TODO FIXME: There's a bug causing normal pages to store status 999 and display a red dot.
+        await saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
       })
     }
   }
@@ -480,13 +480,13 @@ chrome.webRequest.onCompleted.addListener((details) => {
     // must be > 0 and not => 0 or else tab may be undefined in Safari
     if (details.tabId > 0) {
       // normally go here
-      chrome.tabs.get(details.tabId, (tab) => {
-        saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      chrome.tabs.get(details.tabId, async (tab) => {
+        await saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     } else {
       // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        await saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     }
   }
@@ -503,7 +503,7 @@ function checkNotFound(details) {
     checkLastError()
     await addToolbarState(tab, 'V')
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
-    saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
+    await saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag && ('id' in tab)) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SHOW_BANNER',
@@ -619,10 +619,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set & custom tab data
-    readTabData(message.atab, async (data) => {
-      let state = await getToolbarState(message.atab)
+    console.log("msg getToolbarState BEGIN"); // DEBUG REMOVE
+    (async () => {
+      let data = await readTabData(message.atab);
+      console.log("msg getToolbarState data: ", data); // DEBUG REMOVE
+      let state = await getToolbarState(message.atab); // TODO: states also stored in data, could rewrite? [CG]
+      console.log("msg getToolbarState state: ", state); // DEBUG REMOVE
       sendResponse({ stateArray: Array.from(state), customData: data })
-    })
+      console.log("msg getToolbarState END"); // DEBUG REMOVE
+    })()
     return true
   } else if (message.message === 'addToolbarStates') {
     // add one or more states to the toolbar
@@ -719,16 +724,15 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 
       // 404 not found
       if (settings && settings.not_found_setting) {
-        readTabData(tab, async (data) => {
-          // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
-          if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
-            if (data.statusCode >= 400) {
-              checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
-            } else {
-              await removeToolbarState(tab, 'V')
-            }
+        let data = await readTabData(tab);
+        // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
+        if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
+          if (data.statusCode >= 400) {
+            checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
+          } else {
+            await removeToolbarState(tab, 'V')
           }
-        })
+        }
       }
 
       // fact check
@@ -774,6 +778,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
               if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
                 await addToolbarState(tab, 'R')
                 // Storing the tab url as well as the fetched archive url for future use
+                // TODO: may want to redo this?
                 chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
               }
             })
@@ -801,35 +806,40 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
+    console.log("tab selected"); // DEBUG REMOVE
     chrome.tabs.get(info.tabId, async (tab) => {
       checkLastError()
       if (typeof tab === 'undefined') { return }
-      toolbarState = await getToolbarState(tab)
+      const tbStates = await getToolbarState(tab);
       // fact check settings unchecked
-      if (settings && (settings.fact_check_setting === false) && toolbarState.has('F')) {
+      if (settings && (settings.fact_check_setting === false) && tbStates.has('F')) {
         await removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
-      if (settings && (settings.wiki_setting === false) && toolbarState.has('R')) {
+      if (settings && (settings.wiki_setting === false) && tbStates.has('R')) {
         if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { await removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
-      if (settings && (settings.amazon_setting === false) && toolbarState.has('R')) {
+      if (settings && (settings.amazon_setting === false) && tbStates.has('R')) {
         if (tab.url.includes('www.amazon')) { await removeToolbarState(tab, 'R') }
       }
       // tvnews_setting settings unchecked
-      if (settings && (settings.tvnews_setting === false) && toolbarState.has('R')) {
+      if (settings && (settings.tvnews_setting === false) && tbStates.has('R')) {
         const news_host = new URL(tab.url).hostname
         if (newshosts.has(news_host)) { await removeToolbarState(tab, 'R') }
       }
       // clear '404 not found' dot if tab URL doesn't match stored URL
-      readTabData(tab, async (data) => {
-        if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
-          await removeToolbarState(tab, 'V')
-        }
-      })
-      await updateToolbar(tab)
-      // update or clear count badge
+      let data = await readTabData(tab);
+      if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
+        // TODO FIXME: stored data with statusCode: 999 and data.statusUrl doesn't match tab.url
+        // since data is never cleared, this is called every time user switches to this tab.
+        // Could check if has 'V' first? (tab id doesn't match the one in toolbar state)
+        // BUG: Stale 'V' state stored for tab id that no longer exists, never gets cleared!
+        console.log(tab); // DEBUG REMOVE
+        console.log(data); // DEBUG REMOVE
+        await removeToolbarState(tab, 'V'); console.log('828'); // TEST HERE
+      }
+      updateToolbar(tab, tbStates);
       updateWaybackCountBadge(tab, tab.url)
     })
   })
@@ -846,8 +856,8 @@ chrome.tabs.onActivated.addListener((info) => {
  * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
 async function autoSave(atab, url, beforeDate = new Date()) {
-  toolbarState = await getToolbarState(atab)
-  if (isValidUrl(url) && isNotExcludedUrl(url) && !toolbarState.has('S')) {
+  let tbStates = await getToolbarState(atab);
+  if (isValidUrl(url) && isNotExcludedUrl(url) && !tbStates.has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
        (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
@@ -967,7 +977,7 @@ function factCheck(atab, url) {
             const contextUrl = json.notices[0]['context_url']
             if (contextUrl !== url) {
               // only show context button if URL different than current URL in address bar
-              saveTabData(atab, { 'contextUrl': contextUrl })
+              await saveTabData(atab, { 'contextUrl': contextUrl })
               await addToolbarState(atab, 'F')
             }
           }
@@ -1089,8 +1099,8 @@ function updateWaybackCountBadge(atab, url) {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
       getCachedWaybackCount(url, async(values) => {
-        let toolbarstate = await getToolbarState(atab)
-        if ((values.total >= 0) && !toolbarstate.has('S')) {
+        let tbStates = await getToolbarState(atab);
+        if ((values.total >= 0) && !tbStates.has('S')) {
           // display badge
           let text = badgeCountText(values.total)
           chrome.action.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
@@ -1138,193 +1148,119 @@ function setToolbarIcon(name, tabId = null) {
 // state is 'S', 'R', or 'check'
 // Add 'books' or 'papers' to display popup buttons for wikipedia resources.
 async function addToolbarState(atab, state) {
-  if (!atab) { return }
-  const tabKey = getTabKey(atab);
-  // Retrieve gToolbarStates from chrome.storage
-  const gToolbarStatesSerialized = await new Promise((resolve) => {
-    chrome.storage.local.get(['gToolbarStates'], function(result) {
-      resolve(result.gToolbarStates || {});
-    });
-  });
-  // Convert arrays back to Set objects
-  const gToolbarStates = {};
-  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
-    gToolbarStates[key] = new Set(value);
-  }
-  // Initialize the Set for the tabKey if it doesn't exist
-  if (!gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey] = new Set();
-  }
-  // Add the state to the Set for the tabKey
-  gToolbarStates[tabKey].add(state);
-  // Convert Set objects to arrays before storing in chrome.storage
-  const gToolbarStatesToStore = {};
-  for (const [key, value] of Object.entries(gToolbarStates)) {
-    gToolbarStatesToStore[key] = Array.from(value);
-  }
-  // Store the updated gToolbarStates back into chrome.storage
-  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else {
-      console.log('gToolbarStates updated and stored successfully');
-    }
-  });
 
-  // Update the toolbar
-  await updateToolbar(atab);
+  console.log("addToolbarState: ", state) // DEBUG REMOVE
+  if (!atab) { return }
+  let tabKey = getTabKey(atab);
+  let data = await readTabData(atab);
+  let tbStates = new Set();
+  if (data && ('states' in data)) {
+    // TODO: check if a Set can be stored (else store an Array)
+    //tbStates = data.states; // using stored Set
+    // convert stored Array to a Set
+    tbStates = new Set(data.states);
+  }
+  console.log("prior states: ", tbStates); // DEBUG REMOVE
+  if (!tbStates.has(state)) {
+    // only save state if not already in set
+    tbStates.add(state);
+    console.log("saving states: ", tbStates); // DEBUG REMOVE
+    tbStatesArray = Array.from(tbStates);
+    await saveTabData(atab, { states: tbStatesArray });
+  }
+  updateToolbar(atab, tbStates);
 }
 
 
 // Remove state from the state set for given Tab, and update toolbar.
 async function removeToolbarState(atab, state) {
+
+  console.log("removeToolbarState: ", state); // DEBUG REMOVE
   if (!atab) { return }
-
-  const tabKey = getTabKey(atab);
-  // Retrieve gToolbarStates from chrome.storage
-  const gToolbarStatesSerialized = await new Promise((resolve) => {
-    chrome.storage.local.get(['gToolbarStates'], function(result) {
-      resolve(result.gToolbarStates || {});
-    });
-  });
-
-  // Convert arrays back to Set objects
-  const gToolbarStates = {};
-  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
-    gToolbarStates[key] = new Set(value);
+  let tabKey = getTabKey(atab);
+  let data = await readTabData(atab);
+  let tbStates = new Set();
+  if (data && ('states' in data)) {
+    // convert stored Array to a Set
+    tbStates = new Set(data.states);
   }
-
-  // Check if the state set for the tabKey exists
-  if (gToolbarStates[tabKey]) {
-    // Remove state from the state set for the given Tab
-    gToolbarStates[tabKey].delete(state);
+  console.log("prior states: ", tbStates); // DEBUG REMOVE
+  // only save state if state to remove was in set
+  if (tbStates.has(state)) {
+    tbStates.delete(state);
+    console.log("saving states: ", tbStates); // DEBUG REMOVE
+    tbStatesArray = Array.from(tbStates);
+    await saveTabData(atab, { states: tbStatesArray });
   }
-
-  // Convert Set objects to arrays before storing in chrome.storage
-  const gToolbarStatesToStore = {};
-  for (const [key, value] of Object.entries(gToolbarStates)) {
-    gToolbarStatesToStore[key] = Array.from(value);
-  }
-
-  // Store the updated gToolbarStates back into chrome.storage
-  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else {
-      console.log('gToolbarStates updated and stored successfully');
-    }
-  });
-
-  // Update the toolbar
-  await updateToolbar(atab);
+  updateToolbar(atab, tbStates);
 }
 
+/*
+// NOT USED YET, might REMOVE?
+async function getToolbarStateFromTabData(data) {
 
-// Returns a Set of toolbar states, or an empty set.
-async function getToolbarState(atab) {
-  if (!atab) { return new Set() }
-
-  const tabKey = getTabKey(atab);
-
-  // Retrieve gToolbarStates from chrome.storage
-  const gToolbarStatesSerialized = await new Promise((resolve) => {
-    chrome.storage.local.get(['gToolbarStates'], function(result) {
-      resolve(result.gToolbarStates || {});
-    });
-  });
-
-  // Convert arrays back to Set objects
-  const gToolbarStates = {};
-  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
-    gToolbarStates[key] = new Set(value);
+  console.log("getToolbarStateFromTabData"); // DEBUG REMOVE
+  let tbStates = new Set();
+  if (data && ('states' in data)) {
+    // convert stored Array to a Set
+    tbStates = new Set(data.states);
   }
+  console.log("prior states: ", tbStates); // DEBUG REMOVE
+  return tbStates;
+}
+*/
 
-  // Return the state set for the tabKey or an empty Set if it doesn't exist
-  return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set();
+// Returns a Promise of a Set of toolbar states, or an empty set.
+async function getToolbarState(atab) {
+
+  console.log("getToolbarState"); // DEBUG REMOVE
+  if (!atab) { return new Set() }
+  let data = await readTabData(atab);
+  let tbStates = new Set();
+  if (data && ('states' in data)) {
+    // convert stored Array to a Set
+    tbStates = new Set(data.states);
+  }
+  console.log("prior states: ", tbStates); // DEBUG REMOVE
+  return tbStates;
 }
 
 // Clears state for given Tab and update toolbar icon.
 async function clearToolbarState(atab) {
+
+  console.log("clearToolbarState"); // DEBUG REMOVE
   if (!atab) { return }
-
   const tabKey = getTabKey(atab);
-
-  // Retrieve gToolbarStates from chrome.storage
-  const gToolbarStatesSerialized = await new Promise((resolve) => {
-    chrome.storage.local.get(['gToolbarStates'], function(result) {
-      resolve(result.gToolbarStates || {});
-    });
-  });
-
-  // Convert arrays back to Set objects
-  const gToolbarStates = {};
-  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
-    gToolbarStates[key] = new Set(value);
-  }
-
-  // Clear the state set for the tabKey and delete the tabKey entry
-  if (gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey].clear();
-    delete gToolbarStates[tabKey];
-  }
-
-  // Convert Set objects to arrays before storing in chrome.storage
-  const gToolbarStatesToStore = {};
-  for (const [key, value] of Object.entries(gToolbarStates)) {
-    gToolbarStatesToStore[key] = Array.from(value);
-  }
-
-  // Store the updated gToolbarStates back into chrome.storage
-  chrome.storage.local.set({ gToolbarStates: gToolbarStatesToStore }, function() {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else {
-      console.log('gToolbarStates updated and stored successfully');
-    }
-  });
-
-  // Update the toolbar
-  await updateToolbar(atab);
+  await saveTabData(atab, { states: [] });
+  updateToolbar(atab, null);
 }
 
 
 /**
- * Updates the toolbar icon using the state set stored in gToolbarStates.
+ * Updates the toolbar icon using the Set of states provided.
  * Only updates icon if atab is the currently active tab, else does nothing.
  * @param atab {Tab}
+ * @param states {Set}
  */
-async function updateToolbar(atab) {
+function updateToolbar(atab, states) {
+
+  console.log("updateToolbar: ", states); // DEBUG REMOVE
   if (!atab) { return }
-
-  const tabKey = getTabKey(atab);
-
-  // Retrieve gToolbarStates from chrome.storage
-  const gToolbarStatesSerialized = await new Promise((resolve) => {
-    chrome.storage.local.get(['gToolbarStates'], function(result) {
-      resolve(result.gToolbarStates || {});
-    });
-  });
-
-  // Convert arrays back to Set objects
-  const gToolbarStates = {};
-  for (const [key, value] of Object.entries(gToolbarStatesSerialized)) {
-    gToolbarStates[key] = new Set(value);
-  }
+  if (!states) { states = new Set(); }
 
   // Query active tab to update toolbar icon
-  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, async (tabs) => {
+  chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
-      let state = gToolbarStates[tabKey];
       // Determine which icon to display based on state
-      if (state && state.has('S')) {
+      if (states && states.has('S')) {
         setToolbarIcon('S', atab.id);
-      } else if (state && state.has('V')) {
+      } else if (states && states.has('V')) {
         setToolbarIcon('V', atab.id);
-      } else if (state && state.has('F')) {
+      } else if (states && states.has('F')) {
         setToolbarIcon('F', atab.id);
-      } else if (state && state.has('R')) {
+      } else if (states && states.has('R')) {
         setToolbarIcon('R', atab.id);
-      } else if (state && state.has('check')) {
+      } else if (states && states.has('check')) {
         setToolbarIcon('check', atab.id);
       } else {
         setToolbarIcon('archive', atab.id);

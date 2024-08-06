@@ -166,7 +166,7 @@ function getUserInfo() {
     }
   })
   .catch((e) => {
-    console.log(e)
+    console.log("getUserInfo ERROR: ", e)
   })
 }
 
@@ -219,52 +219,57 @@ function getTabKey(atab) {
  * Saves key/value pairs in storage for other files to read for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
  * @param data: Object of key:value pairs to store. Appends or writes over existing key:value pairs.
+ * @return Promise
  */
-function saveTabData(atab, data) {
+async function saveTabData(atab, data) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
+  console.log("saveTabData: ", key, data); // DEBUG REMOVE
   // take exisiting data in storage and overwrite with new data
-  chrome.storage.local.get([key], (result) => {
-    let exdata = result[key] || {}
-    for (let [k, v] of Object.entries(data)) { exdata[k] = v }
-    let obj = {}
-    obj[key] = exdata
-    chrome.storage.local.set(obj, () => {})
-  })
+  let result = await chrome.storage.session.get(key);
+  let exdata = result[key] || {}
+  for (let [k, v] of Object.entries(data)) { exdata[k] = v }
+  let obj = {}
+  obj[key] = exdata
+  return chrome.storage.session.set(obj);
 }
 
 /**
  * Clears keys in storage for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
  * @param keylist: Array of keys to delete.
+ * @return Promise
  */
-function clearTabData(atab, keylist) {
+async function clearTabData(atab, keylist) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
+  console.log("clearTabData: ", key, keylist); // DEBUG REMOVE
   // take exisiting data in storage and delete any items from keylist
-  chrome.storage.local.get([key], (result) => {
-    let exdata = result[key] || {}
-    for (let k of keylist) {
-      if (k in exdata) { delete exdata[k] }
-    }
-    let obj = {}
-    obj[key] = exdata
-    chrome.storage.local.set(obj, () => {})
-  })
+  let result = await chrome.storage.session.get(key);
+  let exdata = result[key] || {}
+  for (let k of keylist) {
+    if (k in exdata) { delete exdata[k] }
+  }
+  let obj = {}
+  obj[key] = exdata
+  return chrome.storage.session.set(obj);
 }
 
 /**
  * Reads key/value pairs from storage for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
- * @param callback(data): Function called with data object of key:value pairs returned.
+ * @return Promise data is an object of key:value pairs stored for given tab, or data is undefined.
  */
-function readTabData(atab, callback) {
+async function readTabData(atab) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
-  let key = 'tab_' + getTabKey(atab)
-  chrome.storage.local.get([key], (result) => {
-    callback(result[key])
-  })
+  const key = 'tab_' + getTabKey(atab)
+  console.log("readTabData: ", key); // DEBUG REMOVE
+  const result = await chrome.storage.session.get(key);
+  return result[key];
 }
+
+// TODO: Need to clear stale tab data for tabs that no longer exist.
+// Using chrome.storage.session instead of .local helps somewhat.
 
 /* * * Toolbar icon functions * * */
 
@@ -379,7 +384,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   })
   .catch((err) => {
     // catch the error in case of api failure
-    console.log(err)
+    console.log("wmAvailabilityCheck ERROR: ", err)
   })
 }
 
@@ -725,7 +730,7 @@ function checkLastError() {
     if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
       // Skip
     } else {
-      console.log(chrome.runtime.lastError.message)
+      console.log("checkLastError: ", chrome.runtime.lastError.message)
       // console.trace() // uncomment while debugging
     }
   } else {
@@ -820,7 +825,6 @@ function initDefaultOptions () {
     spn_screenshot: false,
     selectedFeature: null,
     waybackCountCache: {},
-    gToolbarStates: {},
     //API_CACHE_SIZE: 5,      // TODO: REMOVE
     //API_LOADING: 'LOADING',
     //API_TIMEOUT: 10000,

@@ -515,6 +515,7 @@ function setupViewArchived() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        console.log("POPUP-V getToolbarState result: ", result); // DEBUG REMOVE
         checkLastError()
         const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
         if (state.has('V') && ('customData' in result) && ('statusWaybackUrl' in result.customData) &&
@@ -548,6 +549,7 @@ function setupReadBook() {
       const url = tabs[0].url
       if (url.includes('www.amazon') && url.includes('/dp/')) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          console.log("POPUP-RB getToolbarState result: ", result); // DEBUG REMOVE
           checkLastError()
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
@@ -597,6 +599,7 @@ function setupNewsClips() {
       const news_host = new URL(url).hostname
       if (newshosts.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          console.log("POPUP-N getToolbarState result: ", result); // DEBUG REMOVE
           checkLastError()
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
@@ -625,6 +628,7 @@ function setupWikiButtons() {
       const url = tabs[0].url
       if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+          console.log("POPUP-W getToolbarState result: ", result); // DEBUG REMOVE
           checkLastError()
           let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
           if (state.has('R')) {
@@ -661,6 +665,7 @@ function setupFactCheck() {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
         if (settings && settings.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+            console.log("POPUP-FC getToolbarState result: ", result); // DEBUG REMOVE
             checkLastError()
             const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
             if (state.has('F') && ('customData' in result) && ('contextUrl' in result.customData)) {
@@ -796,6 +801,7 @@ function setupSaveButton() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
+        console.log("POPUP-S getToolbarState result: ", result); // DEBUG REMOVE
         checkLastError()
         let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
         if (state.has('S')) {
