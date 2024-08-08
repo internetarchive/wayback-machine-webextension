@@ -626,7 +626,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
       let data = await readTabData(message.atab);
       console.log("msg getToolbarState data: ", data); // DEBUG REMOVE
-      let state = await getToolbarState(message.atab); // TODO: states also stored in data, could rewrite? [CG]
+      let state = toolbarStateFromTabData(data);
       console.log("msg getToolbarState state: ", state); // DEBUG REMOVE
       sendResponse({ stateArray: Array.from(state), customData: data })
       console.log("msg getToolbarState END"); // DEBUG REMOVE
@@ -1156,13 +1156,7 @@ async function addToolbarState(atab, state) {
   if (!atab) { return }
   let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
-  let tbStates = new Set();
-  if (data && ('states' in data)) {
-    // TODO: check if a Set can be stored (else store an Array)
-    //tbStates = data.states; // using stored Set
-    // convert stored Array to a Set
-    tbStates = new Set(data.states);
-  }
+  let tbStates = toolbarStateFromTabData(data);
   console.log("prior states: ", tbStates); // DEBUG REMOVE
   if (!tbStates.has(state)) {
     // only save state if not already in set
@@ -1182,11 +1176,7 @@ async function removeToolbarState(atab, state) {
   if (!atab) { return }
   let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
-  let tbStates = new Set();
-  if (data && ('states' in data)) {
-    // convert stored Array to a Set
-    tbStates = new Set(data.states);
-  }
+  let tbStates = toolbarStateFromTabData(data);
   console.log("prior states: ", tbStates); // DEBUG REMOVE
   // only save state if state to remove was in set
   if (tbStates.has(state)) {
@@ -1198,20 +1188,15 @@ async function removeToolbarState(atab, state) {
   updateToolbar(atab, tbStates);
 }
 
-/*
-// NOT USED YET, might REMOVE?
-async function getToolbarStateFromTabData(data) {
-
-  console.log("getToolbarStateFromTabData"); // DEBUG REMOVE
+// Helper function to return Set of toolbar states from tab data.
+function toolbarStateFromTabData(data) {
   let tbStates = new Set();
   if (data && ('states' in data)) {
     // convert stored Array to a Set
     tbStates = new Set(data.states);
   }
-  console.log("prior states: ", tbStates); // DEBUG REMOVE
   return tbStates;
 }
-*/
 
 // Returns a Promise of a Set of toolbar states, or an empty set.
 async function getToolbarState(atab) {
@@ -1219,11 +1204,7 @@ async function getToolbarState(atab) {
   console.log("getToolbarState"); // DEBUG REMOVE
   if (!atab) { return new Set() }
   let data = await readTabData(atab);
-  let tbStates = new Set();
-  if (data && ('states' in data)) {
-    // convert stored Array to a Set
-    tbStates = new Set(data.states);
-  }
+  let tbStates = toolbarStateFromTabData(data);
   console.log("prior states: ", tbStates); // DEBUG REMOVE
   return tbStates;
 }
