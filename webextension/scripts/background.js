@@ -13,7 +13,6 @@ if (typeof importScripts === 'function') {
 /*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
-// let waybackCountCache = {}
 let globalAPICache = new Map()
 const API_CACHE_SIZE = 5
 const API_LOADING = 'LOADING'
@@ -836,7 +835,7 @@ chrome.tabs.onActivated.addListener((info) => {
       if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
         // TODO FIXME: stored data with statusCode: 999 and data.statusUrl doesn't match tab.url
         // since data is never cleared, this is called every time user switches to this tab.
-        // Could check if has 'V' first? (tab id doesn't match the one in toolbar state)
+        // Could check if has 'V' first? (tab id doesn't match the one in toolbar state) [FIXED]
         // BUG: Stale 'V' state stored for tab id that no longer exists, never gets cleared!
         console.log(tab); // DEBUG REMOVE
         console.log(data); // DEBUG REMOVE
@@ -994,9 +993,10 @@ function factCheck(atab, url) {
 }
 
 /* * * Wayback Count * * */
+
 function getCachedWaybackCount(url, onSuccess, onFail) {
   // Retrieve the waybackCountCache object from chrome.storage
-  chrome.storage.local.get(['waybackCountCache'], function(result) {
+  chrome.storage.session.get(['waybackCountCache'], function(result) {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
       onFail(); // Call onFail callback in case of error
@@ -1020,7 +1020,7 @@ function getCachedWaybackCount(url, onSuccess, onFail) {
 
         // Store the updated waybackCountCache back into chrome.storage
         // TODO: Is this the most efficient way to store? Do objects take up too much space? [CG]
-        chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+        chrome.storage.session.set({ waybackCountCache: waybackCountCache }, function() {
           if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
             // TODO: since we have the values, should still pass to onSuccess() [CG]
@@ -1036,13 +1036,10 @@ function getCachedWaybackCount(url, onSuccess, onFail) {
   });
 }
 
-
-
 function clearCountCache() {
-  let waybackCountCache = {};
   // Store the updated waybackCountCache into chrome.storage
   // TODO: Would it be better to delete the key? [CG]
-  chrome.storage.local.set({ waybackCountCache: waybackCountCache }, function() {
+  chrome.storage.session.set({ waybackCountCache: {} }, function() {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
     } else {
@@ -1059,7 +1056,7 @@ function clearCountCache() {
  */
  function incrementCount(url) {
   // Retrieve the waybackCountCache object from chrome.storage
-  chrome.storage.local.get(['waybackCountCache'], (result) => {
+  chrome.storage.session.get(['waybackCountCache'], (result) => {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
       return; // Exit if there's an error
@@ -1086,7 +1083,7 @@ function clearCountCache() {
     }
 
     // Store the updated waybackCountCache back into chrome.storage
-    chrome.storage.local.set({ waybackCountCache: waybackCountCache }, () => {
+    chrome.storage.session.set({ waybackCountCache: waybackCountCache }, () => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError);
       } else {

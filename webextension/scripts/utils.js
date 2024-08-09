@@ -824,12 +824,14 @@ function setupContextMenus(enabled) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
+  chrome.storage.session.set({
+    waybackCountCache: {}
+  });
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    waybackCountCache: {},
     //API_CACHE_SIZE: 5,      // TODO: REMOVE
     //API_LOADING: 'LOADING',
     //API_TIMEOUT: 10000,
