@@ -6,7 +6,7 @@ There can be multiple ways in which you can help us improve the project from wha
 
 ### Contributing code
 
-The chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript and JQuery. Other than that, we use git for version control, so knowledge of git would come handy.
+The Chrome extension is built using with Node.js on the top of HTML , CSS and JavaScript and JQuery. Other than that, we use git for version control, so knowledge of git would come handy.
 
 ### Contributing content / documentation
 
@@ -23,7 +23,7 @@ To share either bug or features, [create an issue here](https://github.com/inter
 
 Before we begin, if you don't already have, download [git](https://git-scm.com/downloads ) and [node.js](https://nodejs.org/en/download/ ). You may look at relevant tutorials to set them up according to your operating system.
 
- - Open the [wayback machine browser extension github page](https://github.com/internetarchive/wayback-machine-webextension/ ) and fork the project.
+ - Open the [wayback machine browser extension GitHub page](https://github.com/internetarchive/wayback-machine-webextension/ ) and fork the project.
  - Open the terminal and navigate to the directory where you wish to clone the project using   
     `cd <Address-to-the-directory>`
  - Clone the project and navigate to working directory by typing the commands
@@ -56,7 +56,7 @@ Once you have cloned the repository to your local machine (this would work with 
 `npm test`
  - Read the [Testing Guide](TESTING_GUIDE.md) for details.
 
-### Push the changes to Github
+### Push the changes to GitHub
 
  - Open your git terminal
  - Create a new branch for every feature you add, or every set of bugs you fix and more to that branch using  
@@ -69,7 +69,7 @@ Once you have cloned the repository to your local machine (this would work with 
 To learn how to write a good commit message, please see [https://chris.beams.io/posts/git-commit/](https://chris.beams.io/posts/git-commit/)
  - Push the changes to the repository using  
 `git push -u origin <branch-name>`
- - Open the main github repository, and create a Pull Request. (You will see an option when you open the repository)
+ - Open the main GitHub repository, and create a Pull Request. (You will see an option when you open the repository)
  - Review the PR title, and make it meaningful. For example  
 `"Fix 399: Popup background now Black"`
 
