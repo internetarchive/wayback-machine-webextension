@@ -224,7 +224,6 @@ function getTabKey(atab) {
 async function saveTabData(atab, data) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
-  console.log("saveTabData: ", key, data); // DEBUG REMOVE
   // take exisiting data in storage and overwrite with new data
   let result = await chrome.storage.session.get(key);
   let exdata = result[key] || {}
@@ -243,7 +242,6 @@ async function saveTabData(atab, data) {
 async function clearTabData(atab, keylist) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
-  console.log("clearTabData: ", key, keylist); // DEBUG REMOVE
   // take exisiting data in storage and delete any items from keylist
   let result = await chrome.storage.session.get(key);
   let exdata = result[key] || {}
@@ -251,7 +249,6 @@ async function clearTabData(atab, keylist) {
   for (let k of keylist) {
     if (k in exdata) { delete exdata[k]; count += 1; }
   }
-  console.log("keys cleared: " + count); // DEBUG REMOVE
   if (count > 0) {
     // Only save to storage if changes occurred
     let obj = {}
@@ -268,7 +265,6 @@ async function clearTabData(atab, keylist) {
 async function readTabData(atab) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   const key = 'tab_' + getTabKey(atab)
-  console.log("readTabData: ", key); // DEBUG REMOVE
   const result = await chrome.storage.session.get(key);
   return result[key];
 }
@@ -832,11 +828,6 @@ function initDefaultOptions () {
     spn_outlinks: false,
     spn_screenshot: false,
     selectedFeature: null,
-    //API_CACHE_SIZE: 5,      // TODO: REMOVE
-    //API_LOADING: 'LOADING',
-    //API_TIMEOUT: 10000,
-    //API_RETRY: 1000,
-    //SPN_RETRY: 6000,
     /* Features */
     private_mode_setting: true,
     not_found_setting: false,

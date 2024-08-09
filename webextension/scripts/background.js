@@ -57,12 +57,6 @@ function savePageNowChecked(atab, pageUrl, silent, options) {
  */
 function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag = true) {
 
-  //let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
-  //  chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-  //    resolve(result);
-  //  });
-  //});
-
   if (!(isValidUrl(pageUrl) && isNotExcludedUrl(pageUrl))) {
     console.log('savePageNow URL excluded')
     return
@@ -152,11 +146,7 @@ function extractJobIdFromHTML(html) {
  * @param jobId {string}: job_id returned by SPN response, passed to Status API.
  */
 function savePageStatus(atab, pageUrl, silent = false, jobId) {
-  //let { API_TIMEOUT, SPN_RETRY } = await new Promise((resolve) => { // TODO: REMOVE
-  //  chrome.storage.local.get(['API_TIMEOUT', 'SPN_RETRY'], function(result) {
-  //    resolve(result);
-  //  });
-  //});
+
   // setup api
   // Accept header required when logged-out, even though response is in JSON.
   let headers = new Headers(hostHeaders)
@@ -283,11 +273,7 @@ async function statusFailed(atab, pageUrl, silent, data, err) {
  * @return Promise: which should return this JSON on success: { "success": true }
  */
 function saveToMyWebArchive(url, timestamp) {
-  //let { API_TIMEOUT } = await new Promise((resolve) => { // TODO: REMOVE
-  //  chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-  //    resolve(result);
-  //  });
-  //});
+
   const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
@@ -312,11 +298,7 @@ function saveToMyWebArchive(url, timestamp) {
  * @return Promise
  */
 function fetchAPI(url, onSuccess, onFail, postData = null) {
-  //let { API_TIMEOUT } = await new Promise((resolve) => { // TODO: REMOVE
-  //  chrome.storage.local.get(['API_TIMEOUT'], function(result) {
-  //    resolve(result);
-  //  });
-  //});
+
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
@@ -621,14 +603,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set & custom tab data
-    console.log("msg getToolbarState BEGIN"); // DEBUG REMOVE
     (async () => {
       let data = await readTabData(message.atab);
-      console.log("msg getToolbarState data: ", data); // DEBUG REMOVE
       let state = toolbarStateFromTabData(data);
-      console.log("msg getToolbarState state: ", state); // DEBUG REMOVE
       sendResponse({ stateArray: Array.from(state), customData: data })
-      console.log("msg getToolbarState END"); // DEBUG REMOVE
     })()
     return true
   } else if (message.message === 'addToolbarStates') {
@@ -808,7 +786,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
-    console.log("tab selected"); // DEBUG REMOVE
     chrome.tabs.get(info.tabId, async (tab) => {
       checkLastError()
       if (typeof tab === 'undefined') { return }
@@ -837,9 +814,7 @@ chrome.tabs.onActivated.addListener((info) => {
         // since data is never cleared, this is called every time user switches to this tab.
         // Could check if has 'V' first? (tab id doesn't match the one in toolbar state) [FIXED]
         // BUG: Stale 'V' state stored for tab id that no longer exists, never gets cleared!
-        console.log(tab); // DEBUG REMOVE
-        console.log(data); // DEBUG REMOVE
-        await removeToolbarState(tab, 'V'); console.log('828'); // TEST HERE
+        await removeToolbarState(tab, 'V');
       }
       updateToolbar(tab, tbStates);
       updateWaybackCountBadge(tab, tab.url)
@@ -1149,16 +1124,13 @@ function setToolbarIcon(name, tabId = null) {
 // Add 'books' or 'papers' to display popup buttons for wikipedia resources.
 async function addToolbarState(atab, state) {
 
-  console.log("addToolbarState: ", state) // DEBUG REMOVE
   if (!atab) { return }
   let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
   let tbStates = toolbarStateFromTabData(data);
-  console.log("prior states: ", tbStates); // DEBUG REMOVE
   if (!tbStates.has(state)) {
     // only save state if not already in set
     tbStates.add(state);
-    console.log("saving states: ", tbStates); // DEBUG REMOVE
     tbStatesArray = Array.from(tbStates);
     await saveTabData(atab, { states: tbStatesArray });
   }
@@ -1169,16 +1141,13 @@ async function addToolbarState(atab, state) {
 // Remove state from the state set for given Tab, and update toolbar.
 async function removeToolbarState(atab, state) {
 
-  console.log("removeToolbarState: ", state); // DEBUG REMOVE
   if (!atab) { return }
   let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
   let tbStates = toolbarStateFromTabData(data);
-  console.log("prior states: ", tbStates); // DEBUG REMOVE
-  // only save state if state to remove was in set
   if (tbStates.has(state)) {
+    // only save state if state to remove was in set
     tbStates.delete(state);
-    console.log("saving states: ", tbStates); // DEBUG REMOVE
     tbStatesArray = Array.from(tbStates);
     await saveTabData(atab, { states: tbStatesArray });
   }
@@ -1198,18 +1167,15 @@ function toolbarStateFromTabData(data) {
 // Returns a Promise of a Set of toolbar states, or an empty set.
 async function getToolbarState(atab) {
 
-  console.log("getToolbarState"); // DEBUG REMOVE
   if (!atab) { return new Set() }
   let data = await readTabData(atab);
   let tbStates = toolbarStateFromTabData(data);
-  console.log("prior states: ", tbStates); // DEBUG REMOVE
   return tbStates;
 }
 
 // Clears state for given Tab and update toolbar icon.
 async function clearToolbarState(atab) {
 
-  console.log("clearToolbarState"); // DEBUG REMOVE
   if (!atab) { return }
   const tabKey = getTabKey(atab);
   await clearTabData(atab, ['states']);
@@ -1225,10 +1191,8 @@ async function clearToolbarState(atab) {
  */
 function updateToolbar(atab, states) {
 
-  console.log("updateToolbar: ", states); // DEBUG REMOVE
   if (!atab) { return }
   if (!states) { states = new Set(); }
-
   // Query active tab to update toolbar icon
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
