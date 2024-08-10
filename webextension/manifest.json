@@ -38,7 +38,8 @@
       "<all_urls>"
   ],
   "optional_permissions": [
-      "bookmarks"
+      "bookmarks",
+      "identity"
   ],
   "background": {
     "scripts": ["scripts/utils.js",
