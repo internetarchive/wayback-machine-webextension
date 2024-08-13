@@ -2,7 +2,8 @@
   "extends": "standard",
   "env": {
     "browser": true,
-    "webextensions": true
+    "webextensions": true,
+    "worker": true
   },
   "rules": {
     "indent": ["warn", 2, { "SwitchCase": 1, "MemberExpression": "off" }],
@@ -13,7 +14,8 @@
     "quote-props": "off",
     "one-var": "off",
     "padded-blocks": "off",
-    "dot-notation": "off"
+    "dot-notation": "off",
+    "semi": "off"
   },
   "globals": {
     "$": "readonly"
