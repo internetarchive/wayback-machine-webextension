@@ -10,7 +10,7 @@ if (typeof importScripts === 'function') {
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
+/*   global hostHeaders, timestampToDate, isBadgeOnTop, isUrlInList, saveTabData, clearTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
 let globalAPICache = new Map()
@@ -333,7 +333,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @param postData {object}: uses POST if present.
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
- function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
+function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
   if (typeof globalAPICache === 'undefined') { globalAPICache = new Map() }
   let data = globalAPICache.get(url)
   if (data === API_LOADING) {
@@ -1029,7 +1029,7 @@ function clearCountCache() {
  * Doesn't update if cached "total" value was < 0.
  * @param url {string}
  */
- function incrementCount(url) {
+function incrementCount(url) {
   // Retrieve the waybackCountCache object from chrome.storage
   chrome.storage.session.get(['waybackCountCache'], (result) => {
     if (chrome.runtime.lastError) {
@@ -1067,7 +1067,6 @@ function clearCountCache() {
     });
   });
 }
-
 
 function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
@@ -1125,31 +1124,26 @@ function setToolbarIcon(name, tabId = null) {
 async function addToolbarState(atab, state) {
 
   if (!atab) { return }
-  let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
   let tbStates = toolbarStateFromTabData(data);
   if (!tbStates.has(state)) {
     // only save state if not already in set
     tbStates.add(state);
-    tbStatesArray = Array.from(tbStates);
-    await saveTabData(atab, { states: tbStatesArray });
+    await saveTabData(atab, { states: Array.from(tbStates) });
   }
   updateToolbar(atab, tbStates);
 }
-
 
 // Remove state from the state set for given Tab, and update toolbar.
 async function removeToolbarState(atab, state) {
 
   if (!atab) { return }
-  let tabKey = getTabKey(atab);
   let data = await readTabData(atab);
   let tbStates = toolbarStateFromTabData(data);
   if (tbStates.has(state)) {
     // only save state if state to remove was in set
     tbStates.delete(state);
-    tbStatesArray = Array.from(tbStates);
-    await saveTabData(atab, { states: tbStatesArray });
+    await saveTabData(atab, { states: Array.from(tbStates) });
   }
   updateToolbar(atab, tbStates);
 }
@@ -1177,11 +1171,9 @@ async function getToolbarState(atab) {
 async function clearToolbarState(atab) {
 
   if (!atab) { return }
-  const tabKey = getTabKey(atab);
   await clearTabData(atab, ['states']);
   updateToolbar(atab, null);
 }
-
 
 /**
  * Updates the toolbar icon using the Set of states provided.
@@ -1213,7 +1205,6 @@ function updateToolbar(atab, states) {
     }
   });
 }
-
 
 /* * * Right-click Menu * * */
 

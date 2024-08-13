@@ -166,7 +166,7 @@ function getUserInfo() {
     }
   })
   .catch((e) => {
-    console.log("getUserInfo ERROR: ", e)
+    console.log('getUserInfo ERROR: ', e)
   })
 }
 
@@ -385,7 +385,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   })
   .catch((err) => {
     // catch the error in case of api failure
-    console.log("wmAvailabilityCheck ERROR: ", err)
+    console.log('wmAvailabilityCheck ERROR: ', err)
   })
 }
 
@@ -675,9 +675,8 @@ function opener(url, option, callback) {
       }
     })
   } else {
-    
-    chrome.windows.getCurrent({populate: true}, (window) => {
-      // Access window properties  
+    chrome.windows.getCurrent({ populate: true }, (window) => {
+      // Access window properties
       let h = window.width;
       let w = window.height;
       if (w > h) {
@@ -731,7 +730,7 @@ function checkLastError() {
     if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
       // Skip
     } else {
-      console.log("checkLastError: ", chrome.runtime.lastError.message)
+      console.log('checkLastError: ', chrome.runtime.lastError.message)
       // console.trace() // uncomment while debugging
     }
   } else {

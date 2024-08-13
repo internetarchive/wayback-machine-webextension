@@ -33,7 +33,7 @@
       "scripting",
       "webRequest"
   ],
-  "host_permissions":[
+  "host_permissions": [
     "https://archive.org/*",
     "https://*.archive.org/*",
     "https://hypothes.is/*",
@@ -54,7 +54,7 @@
     }
   ],
   "web_accessible_resources": [{
-    "resources":[ "/css/archive.css","/images/*"],
+    "resources": ["/css/archive.css", "/images/*"],
     "matches": ["<all_urls>"]
   }]
 }
