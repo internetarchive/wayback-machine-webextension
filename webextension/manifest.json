@@ -25,13 +25,13 @@
   },
   "homepage_url": "https://archive.org/",
   "permissions": [
-      "activeTab",
-      "cookies",
-      "contextMenus",
-      "notifications",
-      "storage",
-      "scripting",
-      "webRequest"
+    "activeTab",
+    "cookies",
+    "contextMenus",
+    "notifications",
+    "storage",
+    "scripting",
+    "webRequest"
   ],
   "host_permissions": [
     "https://archive.org/*",
@@ -40,19 +40,17 @@
     "<all_urls>"
   ],
   "optional_permissions": [
-      "bookmarks"
+    "bookmarks"
   ],
   "background": {
-    "scripts": ["scripts/background.js", "scripts/utils.js"],
+    // "scripts": ["scripts/background.js", "scripts/utils.js"],
     "service_worker": "scripts/background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
-      "js": ["scripts/wikipedia.js"],
-      "css": ["css/wikipedia.css"]
-    }
-  ],
+  "content_scripts": [{
+    "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
+    "js": ["scripts/wikipedia.js"],
+    "css": ["css/wikipedia.css"]
+  }],
   "web_accessible_resources": [{
     "resources": ["/css/archive.css", "/images/*"],
     "matches": ["<all_urls>"]
