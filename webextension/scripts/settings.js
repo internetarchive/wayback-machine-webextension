@@ -7,7 +7,7 @@
 /*   global setupWaybackCount, goBackToMain */
 
 // onload
-$(function() {
+$(function () {
   initSettings()
   setupPrivateMode()
   setupSettingsChange()
@@ -35,6 +35,7 @@ function restoreSettings(items) {
   $('#tvnews-setting').prop('checked', items.tvnews_setting)
   // second panel
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
+  $('#auto-my-archive-setting').prop('checked', items.auto_my_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#auto-bookmark-setting').prop('checked', items.auto_bookmark_setting)
   $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
@@ -45,6 +46,7 @@ function restoreSettings(items) {
   $(`input[name=view-setting-input][value=${items.view_setting}]`).prop('checked', true)
   // update UI
   enableEmbedPopupSetting(items.not_found_setting)
+  enableAutoMyArchiveSetting(items.auto_archive_setting)
 }
 
 function saveSettings() {
@@ -62,6 +64,7 @@ function saveSettings() {
     tvnews_setting: $('#tvnews-setting').prop('checked'),
     // second panel
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
+    auto_my_archive_setting: $('#auto-my-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
     auto_bookmark_setting: $('#auto-bookmark-setting').prop('checked'),
     email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
@@ -111,6 +114,17 @@ function enableEmbedPopupSetting(flag) {
   }
 }
 
+// Enable or disable setting when flag is true or false.
+function enableAutoMyArchiveSetting(flag) {
+  if (flag) {
+    $('#auto-my-archive-setting').attr('disabled', false)
+    $('#auto-my-archive-label').css('opacity', '1.0').css('cursor', '')
+  } else {
+    $('#auto-my-archive-setting').attr('disabled', true)
+    $('#auto-my-archive-label').css('opacity', '0.66').css('cursor', 'not-allowed')
+  }
+}
+
 // Save settings on change and other actions on particular settings.
 function setupSettingsChange() {
 
@@ -121,6 +135,14 @@ function setupSettingsChange() {
   $('#auto-archive-age').change((e) => {
     $('#auto-archive-setting').prop('checked', true).trigger('change')
     e.target.blur()
+  })
+  $('#my-archive-setting').change((e) => {
+    enableAutoMyArchiveSetting($(e.target).prop('checked') === true)
+
+    if ($(e.target).prop('checked') === false) {
+      $('#auto-my-archive-setting').prop('checked', false).trigger('change')
+      e.target.blur()
+    }
   })
 
   // auto save bookmarks
@@ -242,7 +264,7 @@ function setupHelpDocs() {
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'auto-bookmark-setting': 'Archive when bookmarking a website, except Excluded URLs.',
     'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
-    'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
+    'my-archive-setting': 'Adds URL to My Web Archive only when Save Page Now is triggered (unless "always save" is turned on).',
     'notify-setting': 'Turn off all notifications.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
   }
