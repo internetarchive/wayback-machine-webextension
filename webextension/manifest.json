@@ -43,7 +43,7 @@
     "bookmarks"
   ],
   "background": {
-    // "scripts": ["scripts/background.js", "scripts/utils.js"],
+    "scripts": ["scripts/background.js", "scripts/utils.js"],
     "service_worker": "scripts/background.js"
   },
   "content_scripts": [{

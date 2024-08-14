@@ -2,6 +2,15 @@
 
 *All Browsers*
 
+### 3.4.2 ###
+
+What's New in v3.4.2
+
+We did a bit of internal code changes for upgrading to Manifest v3 (which just means we're keeping up with the latest browser requirements.)
+
+Fixed a bug saving Exclude URLs and updated some website links that changed.
+
+
 ### 3.3.1 (Edge) ###
 
 Inform if cookies are turned off when logging in
