@@ -30,8 +30,7 @@
     "contextMenus",
     "notifications",
     "storage",
-    "scripting",
-    "webRequest"
+    "scripting"
   ],
   "host_permissions": [
     "https://archive.org/*",
