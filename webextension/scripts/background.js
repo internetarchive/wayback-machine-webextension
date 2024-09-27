@@ -436,7 +436,7 @@ chrome.action.onClicked.addListener((tab) => {
 // )
 
 // chrome.webRequest.onErrorOccurred is not supported in manifest v3.
-
+/*
 // Checks for error in page loading such as when a domain doesn't exist.
 //
 chrome.webRequest.onErrorOccurred.addListener((details) => {
@@ -475,7 +475,7 @@ chrome.webRequest.onCompleted.addListener((details) => {
     }
   }
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
-
+*/
 // Check for 404 Not Found and other status errors.
 // pass these keys in details: { tabId, statusCode, url }
 //
