@@ -3,16 +3,16 @@
 // License: AGPL-3
 // Copyright 2016-2020, Internet Archive
 
+if (typeof importScripts === 'function') {
+  importScripts('utils.js')
+}
+
 // from 'utils.js'
 /*   global isNotExcludedUrl, getCleanUrl, isArchiveUrl, isValidUrl, notifyMsg, openByWindowSetting, sleep, wmAvailabilityCheck, hostURL */
 /*   global initDefaultOptions, badgeCountText, getWaybackCount, newshosts, dateToTimestamp, fixedEncodeURIComponent, checkLastError */
-/*   global hostHeaders, gCustomUserAgent, timestampToDate, isBadgeOnTop, isUrlInList, getTabKey, saveTabData, readTabData, initAutoExcludeList */
+/*   global hostHeaders, timestampToDate, isBadgeOnTop, isUrlInList, saveTabData, clearTabData, readTabData, initAutoExcludeList */
 /*   global isDevVersion, checkAuthentication, setupContextMenus, cropPrefix, alertMsg */
 
-// Used to store the statuscode of the if it is a httpFailCodes
-let gStatusCode = 0
-let gToolbarStates = {}
-let waybackCountCache = {}
 let globalAPICache = new Map()
 const API_CACHE_SIZE = 5
 const API_LOADING = 'LOADING'
@@ -21,18 +21,19 @@ const API_RETRY = 1000
 const SPN_RETRY = 6000
 let tabIdPromise
 
+// not required because in manifest v3, we use different subdomain of hostURLs for different browsers
 // updates User-Agent header in Chrome & Firefox, but not in Safari
-function rewriteUserAgentHeader(e) {
-  for (let header of e.requestHeaders) {
-    if (header.name.toLowerCase() === 'user-agent') {
-      const customUA = gCustomUserAgent
-      const statusUA = 'Status-code/' + gStatusCode
-      // add customUA only if not yet present in user-agent
-      header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
-    }
-  }
-  return { requestHeaders: e.requestHeaders }
-}
+// function rewriteUserAgentHeader(e) {
+//   for (let header of e.requestHeaders) {
+//     if (header.name.toLowerCase() === 'user-agent') {
+//       const customUA = gCustomUserAgent
+//       const statusUA = 'Status-code/' + gStatusCode
+//       // add customUA only if not yet present in user-agent
+//       header.value += ((header.value.indexOf(customUA) === -1) ? ' ' + customUA : '') + (gStatusCode ? ' ' + statusUA : '')
+//     }
+//   }
+//   return { requestHeaders: e.requestHeaders }
+// }
 
 /* * * API Calls * * */
 
@@ -97,7 +98,7 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
           if (!silent) { notifyMsg(errMsg) }
         } else {
           // update UI
-          addToolbarState(atab, 'S')
+          await addToolbarState(atab, 'S')
           updateWaybackCountBadge(atab, null)
           chrome.runtime.sendMessage({ message: 'save_start', atab: atab, url: pageUrl }, checkLastError)
           // show resources during save
@@ -160,7 +161,6 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
     })
     .then(resolve, reject)
   })
-
   // call api
   let retryAfter = SPN_RETRY
   timeoutPromise
@@ -194,11 +194,11 @@ function savePageStatus(atab, pageUrl, silent = false, jobId) {
  * @param silent {bool}: set false to include notify popup.
  * @param data {Object}: Response data from Status API.
  */
-function statusSuccess(atab, pageUrl, silent, data) {
+async function statusSuccess(atab, pageUrl, silent, data) {
 
   // update UI
-  removeToolbarState(atab, 'S')
-  addToolbarState(atab, 'check')
+  await removeToolbarState(atab, 'S')
+  await addToolbarState(atab, 'check')
   incrementCount(data.original_url)
   updateWaybackCountBadge(atab, data.original_url)
   chrome.runtime.sendMessage({
@@ -235,9 +235,9 @@ function statusSuccess(atab, pageUrl, silent, data) {
  * @param data {Object}: Response data from Status API. (optional)
  * @param err {Error}: Error from a catch block. (optional)
  */
-function statusFailed(atab, pageUrl, silent, data, err) {
+async function statusFailed(atab, pageUrl, silent, data, err) {
 
-  removeToolbarState(atab, 'S')
+  await removeToolbarState(atab, 'S')
   if (err) {
     chrome.runtime.sendMessage({
       message: 'resource_list_show_error',
@@ -273,6 +273,7 @@ function statusFailed(atab, pageUrl, silent, data, err) {
  * @return Promise: which should return this JSON on success: { "success": true }
  */
 function saveToMyWebArchive(url, timestamp) {
+
   const postData = { 'url': url, 'snapshot': timestamp, 'tags': [] }
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
@@ -297,6 +298,7 @@ function saveToMyWebArchive(url, timestamp) {
  * @return Promise
  */
 function fetchAPI(url, onSuccess, onFail, postData = null) {
+
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => { reject(new Error('timeout')) }, API_TIMEOUT)
     let headers = new Headers(hostHeaders)
@@ -332,6 +334,7 @@ function fetchAPI(url, onSuccess, onFail, postData = null) {
  * @return Promise if calls API, json data if in cache, null if loading in progress.
  */
 function fetchCachedAPI(url, onSuccess, onFail, postData = null) {
+  if (typeof globalAPICache === 'undefined') { globalAPICache = new Map() }
   let data = globalAPICache.get(url)
   if (data === API_LOADING) {
     // re-call after delay if previous fetch hadn't returned yet
@@ -394,7 +397,7 @@ function getCachedFactCheck(url, onSuccess, onFail) {
 // Setup toolbar button action.
 chrome.storage.local.get({ agreement: false }, (settings) => {
   if (settings && settings.agreement) {
-    chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+    chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
     setupContextMenus(true)
   } else {
     setupContextMenus(false)
@@ -415,7 +418,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 // Opens Welcome page on toolbar click if terms not yet accepted.
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get({ agreement: false }, (settings) => {
     if (settings && (settings.agreement === false)) {
       openByWindowSetting(chrome.runtime.getURL('welcome.html'), 'tab')
@@ -423,11 +426,16 @@ chrome.browserAction.onClicked.addListener((tab) => {
   })
 })
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  rewriteUserAgentHeader,
-  { urls: [hostURL + '*'] },
-  ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
-)
+// chrome.webRequest.onBeforeSendHeaders is not supported in manifest v3 and currently we are not looking to rewrite the user-agent
+// as we already use diffent host-names for different browsers
+
+// chrome.webRequest.onBeforeSendHeaders.addListener(
+//   rewriteUserAgentHeader,
+//   { urls: [hostURL + '*'] },
+//   ['blocking', 'requestHeaders'] // FIXME: not supported in Safari
+// )
+
+// chrome.webRequest.onErrorOccurred is not supported in manifest v3.
 
 // Checks for error in page loading such as when a domain doesn't exist.
 //
@@ -437,9 +445,9 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
     // note: testing parentFrameId prevents false positives
     const url = details.url
     if (isNotExcludedUrl(url) && isValidUrl(url)) {
-      chrome.tabs.get(details.tabId, (tab) => {
-        gStatusCode = 999
-        saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
+      chrome.tabs.get(details.tabId, async (tab) => {
+        // TODO FIXME: There's a bug causing normal pages to store status 999 and display a red dot.
+        await saveTabData(tab, { 'statusCode': 999, 'statusUrl': url })
       })
     }
   }
@@ -456,17 +464,16 @@ chrome.webRequest.onCompleted.addListener((details) => {
     // must be > 0 and not => 0 or else tab may be undefined in Safari
     if (details.tabId > 0) {
       // normally go here
-      chrome.tabs.get(details.tabId, (tab) => {
-        saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      chrome.tabs.get(details.tabId, async (tab) => {
+        await saveTabData(tab, { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     } else {
       // fixes case where tabId is -1 on first load in Firefox, which is likely a bug
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
+      chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        await saveTabData(tabs[0], { 'statusCode': details.statusCode, 'statusUrl': url, 'statusWaybackUrl': null })
       })
     }
   }
-
 }, { urls: ['<all_urls>'], types: ['main_frame'] })
 
 // Check for 404 Not Found and other status errors.
@@ -476,12 +483,11 @@ function checkNotFound(details) {
   if (!details) { return }
 
   // save status, display 'V' toolbar icon and banner
-  function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
+  async function update(tab, statusUrl, waybackUrl, statusCode, bannerFlag) {
     checkLastError()
-    addToolbarState(tab, 'V')
-    gStatusCode = statusCode
+    await addToolbarState(tab, 'V')
     // need the following to store statusWaybackUrl, other keys are overwritten with the same values.
-    saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
+    await saveTabData(tab, { 'statusCode': statusCode, 'statusUrl': statusUrl, 'statusWaybackUrl': waybackUrl })
     if (bannerFlag && ('id' in tab)) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SHOW_BANNER',
@@ -495,7 +501,11 @@ function checkNotFound(details) {
   function checkWM(tab, details2, bannerFlag) {
     wmAvailabilityCheck(details2.url, (wayback_url, url) => {
       if (bannerFlag && ('id' in tab)) {
-        chrome.tabs.executeScript(tab.id, { file: '/scripts/archive.js' }, () => {
+        // scripting permission is required as executeScript() is moved from the tabs API to the scripting API
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['/scripts/archive.js']
+        }).then(() => {
           update(tab, url, wayback_url, details2.statusCode, bannerFlag)
         })
       } else {
@@ -504,7 +514,6 @@ function checkNotFound(details) {
     })
   }
 
-  gStatusCode = 0
   chrome.storage.local.get(['agreement', 'not_found_setting', 'embed_popup_setting'], (settings) => {
     if (settings && settings.agreement && settings.not_found_setting && isNotExcludedUrl(details.url)) {
       if (details.statusCode && (details.statusCode >= 400)) {
@@ -594,19 +603,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
   } else if (message.message === 'getToolbarState') {
     // retrieve the toolbar state set & custom tab data
-    let state = getToolbarState(message.atab)
-    readTabData(message.atab, (data) => {
+    (async () => {
+      let data = await readTabData(message.atab);
+      let state = toolbarStateFromTabData(data);
       sendResponse({ stateArray: Array.from(state), customData: data })
-    })
+    })()
     return true
   } else if (message.message === 'addToolbarStates') {
     // add one or more states to the toolbar
     // States will fail to show if tab is loading but not in focus!
     // Content scripts cannot use tabs.query and send the tab, so it must be called here.
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0] && (tabs[0].url === message.url)) {
         for (let state of message.states) {
-          addToolbarState(tabs[0], state)
+          await addToolbarState(tabs[0], state)
         }
       }
     })
@@ -626,7 +636,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
   } else if (message.message === 'clearResource') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0]) {
         if (message.settings) {
           // clear 'R' state if wiki, amazon, or tvnews settings have been cleared
@@ -634,19 +644,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           if (((message.settings.wiki_setting === false) && tabs[0].url.match(/^https?:\/\/[\w.]*wikipedia.org/)) ||
               ((message.settings.amazon_setting === false) && tabs[0].url.includes('www.amazon')) ||
               ((message.settings.tvnews_setting === false) && newshosts.has(news_host))) {
-            removeToolbarState(tabs[0], 'R')
+            await removeToolbarState(tabs[0], 'R')
           }
         } else {
           // clear 'R' if settings not provided
-          removeToolbarState(tabs[0], 'R')
+          await removeToolbarState(tabs[0], 'R')
         }
       }
     })
   } else if (message.message === 'clearFactCheck') {
     // fact check settings unchecked
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs && tabs[0]) {
-        removeToolbarState(tabs[0], 'F')
+        await removeToolbarState(tabs[0], 'F')
       }
     })
   } else if (message.message === 'getCachedWaybackCount') {
@@ -670,14 +680,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return false
 })
 
-chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   const url = tab.url
   if (!(isNotExcludedUrl(url) && isValidUrl(url)) || isArchiveUrl(url)) { return }
 
   if (info.status === 'complete') {
     updateWaybackCountBadge(tab, url)
 
-    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], (settings) => {
+    chrome.storage.local.get(['not_found_setting', 'auto_archive_setting', 'auto_archive_age', 'fact_check_setting', 'wiki_setting'], async (settings) => {
       // auto save page
       if (settings && settings.auto_archive_setting) {
         let beforeDate = null
@@ -689,21 +699,20 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
             beforeDate = new Date(Date.now() - milisecs)
           }
         }
-        autoSave(tab, url, beforeDate)
+        await autoSave(tab, url, beforeDate)
       }
 
       // 404 not found
       if (settings && settings.not_found_setting) {
-        readTabData(tab, (data) => {
-          // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
-          if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
-            if (data.statusCode >= 400) {
-              checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
-            } else {
-              removeToolbarState(tab, 'V')
-            }
+        let data = await readTabData(tab);
+        // cropPrefix used because Wayback's URL may not match exactly (e.g. "http" != "https")
+        if (data && ('statusCode' in data) && (cropPrefix(data.statusUrl) === cropPrefix(url))) {
+          if (data.statusCode >= 400) {
+            checkNotFound({ 'tabId': tabId, 'statusCode': data.statusCode, 'url': data.statusUrl })
+          } else {
+            await removeToolbarState(tab, 'V')
           }
-        })
+        }
       }
 
       // fact check
@@ -715,10 +724,10 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
       if (settings && settings.wiki_setting && url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         // if the papers API were to be updated similar to books API, then this would move to wikipedia.js
         getCachedPapers(url,
-          (data) => {
+          async (data) => {
             if (data && (data.status !== 'error')) {
-              addToolbarState(tab, 'R')
-              addToolbarState(tab, 'papers')
+              await addToolbarState(tab, 'R')
+              await addToolbarState(tab, 'papers')
             }
           }, () => {}
         )
@@ -726,7 +735,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
     })
   } else if (info.status === 'loading') {
     let received_url = url
-    clearToolbarState(tab)
+    await clearToolbarState(tab)
 
     if (received_url && !isArchiveUrl(received_url)) {
       let open_url = received_url.replace(/^https?:\/\//, '')
@@ -745,10 +754,11 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
               headers: headers
             })
             .then(resp => resp.json())
-            .then(resp => {
+            .then(async (resp) => {
               if (('metadata' in resp && 'identifier' in resp['metadata']) || 'ocaid' in resp) {
-                addToolbarState(tab, 'R')
+                await addToolbarState(tab, 'R')
                 // Storing the tab url as well as the fetched archive url for future use
+                // TODO: may want to redo this?
                 chrome.storage.local.set({ 'tab_url': url, 'detail_url': resp['metadata']['identifier-access'] }, () => {})
               }
             })
@@ -759,9 +769,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         const news_host = new URL(url).hostname // FIXME
         if (settings && settings.tvnews_setting && newshosts.has(news_host)) {
           getCachedTvNews(url,
-            (clips) => {
+            async (clips) => {
               if (clips && (clips.status !== 'error')) {
-                addToolbarState(tab, 'R')
+                await addToolbarState(tab, 'R')
               }
             }, () => {}
           )
@@ -776,34 +786,37 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
   chrome.storage.local.get(['fact_check_setting', 'wiki_setting', 'amazon_setting', 'tvnews_setting'], (settings) => {
     checkLastError()
-    chrome.tabs.get(info.tabId, (tab) => {
+    chrome.tabs.get(info.tabId, async (tab) => {
       checkLastError()
       if (typeof tab === 'undefined') { return }
+      const tbStates = await getToolbarState(tab);
       // fact check settings unchecked
-      if (settings && (settings.fact_check_setting === false) && getToolbarState(tab).has('F')) {
-        removeToolbarState(tab, 'F')
+      if (settings && (settings.fact_check_setting === false) && tbStates.has('F')) {
+        await removeToolbarState(tab, 'F')
       }
       // wiki_setting settings unchecked
-      if (settings && (settings.wiki_setting === false) && getToolbarState(tab).has('R')) {
-        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { removeToolbarState(tab, 'R') }
+      if (settings && (settings.wiki_setting === false) && tbStates.has('R')) {
+        if (tab.url.match(/^https?:\/\/[\w.]*wikipedia.org/)) { await removeToolbarState(tab, 'R') }
       }
       // amazon_setting settings unchecked
-      if (settings && (settings.amazon_setting === false) && getToolbarState(tab).has('R')) {
-        if (tab.url.includes('www.amazon')) { removeToolbarState(tab, 'R') }
+      if (settings && (settings.amazon_setting === false) && tbStates.has('R')) {
+        if (tab.url.includes('www.amazon')) { await removeToolbarState(tab, 'R') }
       }
       // tvnews_setting settings unchecked
-      if (settings && (settings.tvnews_setting === false) && getToolbarState(tab).has('R')) {
+      if (settings && (settings.tvnews_setting === false) && tbStates.has('R')) {
         const news_host = new URL(tab.url).hostname
-        if (newshosts.has(news_host)) { removeToolbarState(tab, 'R') }
+        if (newshosts.has(news_host)) { await removeToolbarState(tab, 'R') }
       }
       // clear '404 not found' dot if tab URL doesn't match stored URL
-      readTabData(tab, (data) => {
-        if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
-          removeToolbarState(tab, 'V')
-        }
-      })
-      updateToolbar(tab)
-      // update or clear count badge
+      let data = await readTabData(tab);
+      if (data && ('statusUrl' in data) && (cropPrefix(data.statusUrl) !== cropPrefix(tab.url))) {
+        // TODO FIXME: stored data with statusCode: 999 and data.statusUrl doesn't match tab.url
+        // since data is never cleared, this is called every time user switches to this tab.
+        // Could check if has 'V' first? (tab id doesn't match the one in toolbar state) [FIXED]
+        // BUG: Stale 'V' state stored for tab id that no longer exists, never gets cleared!
+        await removeToolbarState(tab, 'V');
+      }
+      updateToolbar(tab, tbStates);
       updateWaybackCountBadge(tab, tab.url)
     })
   })
@@ -819,8 +832,9 @@ chrome.tabs.onActivated.addListener((info) => {
  * @param beforeDate {Date}: Date that will be checked only if url previously saved in WM.
  * Leave empty to always save. Set to null to save only if hadn't been previously saved.
  */
-function autoSave(atab, url, beforeDate = new Date()) {
-  if (isValidUrl(url) && isNotExcludedUrl(url) && !getToolbarState(atab).has('S')) {
+async function autoSave(atab, url, beforeDate = new Date()) {
+  let tbStates = await getToolbarState(atab);
+  if (isValidUrl(url) && isNotExcludedUrl(url) && !tbStates.has('S')) {
     chrome.storage.local.get(['auto_exclude_list'], (items) => {
       if (!('auto_exclude_list' in items) ||
        (('auto_exclude_list' in items) && items.auto_exclude_list && !isUrlInList(url, items.auto_exclude_list))) {
@@ -907,20 +921,41 @@ function factCheck(atab, url) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
     // retrieve fact check results
     getCachedFactCheck(url,
-      (json) => {
+      async (json) => {
         // json is an object containing:
         //   "notices": [ { "notice": "...", "context_url": "..." } ],
         //   "status": "success"
 
         // parse notices from result
         if (json && ('status' in json) && (json.status === 'success') && ('notices' in json) && json.notices && (json.notices.length > 0)) {
+          // Create a Wayback Machine URL from most recent timestamp, or the latest capture if no timestamp returned.
+          // If multiple notices, pick notice with most recent timestamp.
+
+          // let latestTimestamp = '2' // latest capture in Wayback Machine URL
+          // let latestDate = new Date(0) // epoch 1/1/1970
+
+          // loop through every timestamp present
+          // json.notices.forEach(ntc => {
+          //   if (('where' in ntc) && ntc.where && ('timestamp' in ntc.where)) {
+          //     const tstamps = ntc.where.timestamp || []
+          //     tstamps.forEach(tstamp => {
+          //       // compare each timestamp to latest
+          //       const timestamp = (tstamp.charAt(0) === '-') ? tstamp.slice(1) : tstamp // remove leading dash
+          //       const date = timestampToDate(timestamp)
+          //       if (date.getTime() > latestDate.getTime()) {
+          //         latestDate = date
+          //         latestTimestamp = timestamp
+          //       }
+          //     })
+          //   }
+          // })
           // extract context URL if present
           if ('context_url' in json.notices[0]) {
             const contextUrl = json.notices[0]['context_url']
             if (contextUrl !== url) {
               // only show context button if URL different than current URL in address bar
-              saveTabData(atab, { 'contextUrl': contextUrl })
-              addToolbarState(atab, 'F')
+              await saveTabData(atab, { 'contextUrl': contextUrl })
+              await addToolbarState(atab, 'F')
             }
           }
         }
@@ -935,19 +970,57 @@ function factCheck(atab, url) {
 /* * * Wayback Count * * */
 
 function getCachedWaybackCount(url, onSuccess, onFail) {
-  let cacheValues = waybackCountCache[url]
-  if (cacheValues) {
-    onSuccess(cacheValues)
-  } else {
-    getWaybackCount(url, (values) => {
-      waybackCountCache[url] = values
-      onSuccess(values)
-    }, onFail)
-  }
+  // Retrieve the waybackCountCache object from chrome.storage
+  chrome.storage.session.get(['waybackCountCache'], function(result) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+      onFail(); // Call onFail callback in case of error
+      return;
+    }
+
+    // Get the waybackCountCache object from the result or initialize it if it doesn't exist
+    let waybackCountCache = result.waybackCountCache || {};
+
+    // Check if cacheValues for the specified URL exist in the waybackCountCache
+    let cacheValues = waybackCountCache[url];
+
+    if (cacheValues) {
+      // If cacheValues exist, call onSuccess callback with cacheValues
+      onSuccess(cacheValues);
+    } else {
+      // If cacheValues don't exist, fetch them using getWaybackCount
+      getWaybackCount(url, function(values) {
+        // Update waybackCountCache with the fetched values
+        waybackCountCache[url] = values;
+
+        // Store the updated waybackCountCache back into chrome.storage
+        // TODO: Is this the most efficient way to store? Do objects take up too much space? [CG]
+        chrome.storage.session.set({ waybackCountCache: waybackCountCache }, function() {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+            // TODO: since we have the values, should still pass to onSuccess() [CG]
+            onFail(); // Call onFail callback in case of error while storing
+          } else {
+            // Call onSuccess callback with the fetched values
+            // TODO: may want to call onSuccess() outside .set ?? [CG]
+            onSuccess(values);
+          }
+        });
+      }, onFail);
+    }
+  });
 }
 
 function clearCountCache() {
-  waybackCountCache = {}
+  // Store the updated waybackCountCache into chrome.storage
+  // TODO: Would it be better to delete the key? [CG]
+  chrome.storage.session.set({ waybackCountCache: {} }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('waybackCountCache reset and stored successfully');
+    }
+  });
 }
 
 /**
@@ -957,40 +1030,65 @@ function clearCountCache() {
  * @param url {string}
  */
 function incrementCount(url) {
-  let cacheValues = waybackCountCache[url]
-  let timestamp = dateToTimestamp(new Date())
-  if (cacheValues && cacheValues.total) {
-    if (cacheValues.total > 0) {
-      cacheValues.total += 1
-      cacheValues.last_ts = timestamp
-      waybackCountCache[url] = cacheValues
+  // Retrieve the waybackCountCache object from chrome.storage
+  chrome.storage.session.get(['waybackCountCache'], (result) => {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+      return; // Exit if there's an error
     }
-    // else don't update if total is a special value < 0
-  } else {
-    waybackCountCache[url] = { total: 1, last_ts: timestamp }
-  }
+
+    // Get the waybackCountCache object from the result or initialize it if it doesn't exist
+    let waybackCountCache = result.waybackCountCache || {};
+
+    // Get the current timestamp
+    let timestamp = dateToTimestamp(new Date());
+
+    // Get the cacheValues for the specified URL
+    let cacheValues = waybackCountCache[url];
+    if (cacheValues && cacheValues.total) {
+      if (cacheValues.total > 0) {
+        cacheValues.total += 1;
+        cacheValues.last_ts = timestamp;
+        waybackCountCache[url] = cacheValues;
+      }
+      // else don't update if total is a special value < 0
+    } else {
+      // set total to 1 if it's a new URL
+      waybackCountCache[url] = { total: 1, last_ts: timestamp };
+    }
+
+    // Store the updated waybackCountCache back into chrome.storage
+    chrome.storage.session.set({ waybackCountCache: waybackCountCache }, () => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError);
+      } else {
+        console.log('waybackCountCache updated and stored successfully');
+      }
+    });
+  });
 }
 
 function updateWaybackCountBadge(atab, url) {
   if (!atab) { return }
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     if (settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-      getCachedWaybackCount(url, (values) => {
-        if ((values.total >= 0) && !getToolbarState(atab).has('S')) {
+      getCachedWaybackCount(url, async(values) => {
+        let tbStates = await getToolbarState(atab);
+        if ((values.total >= 0) && !tbStates.has('S')) {
           // display badge
           let text = badgeCountText(values.total)
-          chrome.browserAction.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
+          chrome.action.setBadgeBackgroundColor({ color: '#9A3B38' }, checkLastError) // red
+          chrome.action.setBadgeText({ tabId: atab.id, text: text }, checkLastError)
         } else {
-          chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+          chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
         }
       },
       (error) => {
         console.log('wayback count error: ' + error)
-        chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+        chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
       })
     } else {
-      chrome.browserAction.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
+      chrome.action.setBadgeText({ tabId: atab.id, text: '' }, checkLastError)
     }
   })
 }
@@ -1006,7 +1104,7 @@ function updateWaybackCountBadge(atab, url) {
 function setToolbarIcon(name, tabId = null) {
   const validToolbarIcons = new Set(['R', 'S', 'F', 'V', 'check', 'archive'])
   const checkBadgePos = new Set(['R', 'F', 'V'])
-  const path = 'images/toolbar/'
+  const path = '../images/toolbar/'
   const n = validToolbarIcons.has(name) ? name : 'archive'
   const ab = checkBadgePos.has(name) ? (isBadgeOnTop() ? 'b' : 'a') : ''
   const prefix = isDevVersion() ? 'dev-icon-' : 'toolbar-icon-'
@@ -1017,78 +1115,95 @@ function setToolbarIcon(name, tabId = null) {
     '64': (path + prefix + n + ab + '64.png')
   }
   let details = (tabId) ? { path: allPaths, tabId: tabId } : { path: allPaths }
-  chrome.browserAction.setIcon(details, checkLastError)
+  chrome.action.setIcon(details, checkLastError)
 }
 
 // Add state to the state set for given Tab, and update toolbar.
 // state is 'S', 'R', or 'check'
 // Add 'books' or 'papers' to display popup buttons for wikipedia resources.
-function addToolbarState(atab, state) {
+async function addToolbarState(atab, state) {
+
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (!gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey] = new Set()
+  let data = await readTabData(atab);
+  let tbStates = toolbarStateFromTabData(data);
+  if (!tbStates.has(state)) {
+    // only save state if not already in set
+    tbStates.add(state);
+    await saveTabData(atab, { states: Array.from(tbStates) });
   }
-  gToolbarStates[tabKey].add(state)
-  updateToolbar(atab)
+  updateToolbar(atab, tbStates);
 }
 
 // Remove state from the state set for given Tab, and update toolbar.
-function removeToolbarState(atab, state) {
+async function removeToolbarState(atab, state) {
+
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey].delete(state)
+  let data = await readTabData(atab);
+  let tbStates = toolbarStateFromTabData(data);
+  if (tbStates.has(state)) {
+    // only save state if state to remove was in set
+    tbStates.delete(state);
+    await saveTabData(atab, { states: Array.from(tbStates) });
   }
-  updateToolbar(atab)
+  updateToolbar(atab, tbStates);
 }
 
-// Returns a Set of toolbar states, or an empty set.
-function getToolbarState(atab) {
+// Helper function to return Set of toolbar states from tab data.
+function toolbarStateFromTabData(data) {
+  let tbStates = new Set();
+  if (data && ('states' in data)) {
+    // convert stored Array to a Set
+    tbStates = new Set(data.states);
+  }
+  return tbStates;
+}
+
+// Returns a Promise of a Set of toolbar states, or an empty set.
+async function getToolbarState(atab) {
+
   if (!atab) { return new Set() }
-  const tabKey = getTabKey(atab)
-  return (gToolbarStates[tabKey]) ? gToolbarStates[tabKey] : new Set()
+  let data = await readTabData(atab);
+  let tbStates = toolbarStateFromTabData(data);
+  return tbStates;
 }
 
 // Clears state for given Tab and update toolbar icon.
-function clearToolbarState(atab) {
+async function clearToolbarState(atab) {
+
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  if (gToolbarStates[tabKey]) {
-    gToolbarStates[tabKey].clear()
-    delete gToolbarStates[tabKey]
-  }
-  updateToolbar(atab)
+  await clearTabData(atab, ['states']);
+  updateToolbar(atab, null);
 }
 
 /**
- * Updates the toolbar icon using the state set stored in gToolbarStates.
+ * Updates the toolbar icon using the Set of states provided.
  * Only updates icon if atab is the currently active tab, else does nothing.
  * @param atab {Tab}
+ * @param states {Set}
  */
-function updateToolbar(atab) {
+function updateToolbar(atab, states) {
+
   if (!atab) { return }
-  const tabKey = getTabKey(atab)
-  // type 'normal' prevents updation of toolbar icon when it's a popup window
+  if (!states) { states = new Set(); }
+  // Query active tab to update toolbar icon
   chrome.tabs.query({ active: true, windowId: atab.windowId, windowType: 'normal' }, (tabs) => {
     if (tabs && tabs[0] && (tabs[0].id === atab.id) && (tabs[0].windowId === atab.windowId)) {
-      let state = gToolbarStates[tabKey]
-      // this order defines the priority of what icon to display
-      if (state && state.has('S')) {
-        setToolbarIcon('S', atab.id)
-      } else if (state && state.has('V')) {
-        setToolbarIcon('V', atab.id)
-      } else if (state && state.has('F')) {
-        setToolbarIcon('F', atab.id)
-      } else if (state && state.has('R')) {
-        setToolbarIcon('R', atab.id)
-      } else if (state && state.has('check')) {
-        setToolbarIcon('check', atab.id)
+      // Determine which icon to display based on state
+      if (states && states.has('S')) {
+        setToolbarIcon('S', atab.id);
+      } else if (states && states.has('V')) {
+        setToolbarIcon('V', atab.id);
+      } else if (states && states.has('F')) {
+        setToolbarIcon('F', atab.id);
+      } else if (states && states.has('R')) {
+        setToolbarIcon('R', atab.id);
+      } else if (states && states.has('check')) {
+        setToolbarIcon('check', atab.id);
       } else {
-        setToolbarIcon('archive', atab.id)
+        setToolbarIcon('archive', atab.id);
       }
     }
-  })
+  });
 }
 
 /* * * Right-click Menu * * */

@@ -85,13 +85,13 @@ const hostURLs = {
 }
 
 const feedbackURLs = {
-  chrome: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
-  chromium: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  chrome: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  chromium: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
   firefox: 'https://addons.mozilla.org/en-US/firefox/addon/wayback-machine_new/',
   safari: 'https://apps.apple.com/us/app/wayback-machine/id1472432422',
-  brave: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
+  brave: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/wayback-machine/kjmickeoogghaimmomagaghnogelpcpn',
-  opera: 'https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
+  opera: 'https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak/reviews'
 }
 
 const gBrowser = getBrowser()
@@ -166,7 +166,7 @@ function getUserInfo() {
     }
   })
   .catch((e) => {
-    console.log(e)
+    console.log('getUserInfo ERROR: ', e)
   })
 }
 
@@ -219,52 +219,58 @@ function getTabKey(atab) {
  * Saves key/value pairs in storage for other files to read for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
  * @param data: Object of key:value pairs to store. Appends or writes over existing key:value pairs.
+ * @return Promise
  */
-function saveTabData(atab, data) {
+async function saveTabData(atab, data) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
   // take exisiting data in storage and overwrite with new data
-  chrome.storage.local.get([key], (result) => {
-    let exdata = result[key] || {}
-    for (let [k, v] of Object.entries(data)) { exdata[k] = v }
-    let obj = {}
-    obj[key] = exdata
-    chrome.storage.local.set(obj, () => {})
-  })
+  let result = await chrome.storage.session.get(key);
+  let exdata = result[key] || {}
+  for (let [k, v] of Object.entries(data)) { exdata[k] = v }
+  let obj = {}
+  obj[key] = exdata
+  return chrome.storage.session.set(obj);
 }
 
 /**
  * Clears keys in storage for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
  * @param keylist: Array of keys to delete.
+ * @return Promise
  */
-function clearTabData(atab, keylist) {
+async function clearTabData(atab, keylist) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
   let key = 'tab_' + getTabKey(atab)
   // take exisiting data in storage and delete any items from keylist
-  chrome.storage.local.get([key], (result) => {
-    let exdata = result[key] || {}
-    for (let k of keylist) {
-      if (k in exdata) { delete exdata[k] }
-    }
+  let result = await chrome.storage.session.get(key);
+  let exdata = result[key] || {}
+  let count = 0;
+  for (let k of keylist) {
+    if (k in exdata) { delete exdata[k]; count += 1; }
+  }
+  if (count > 0) {
+    // Only save to storage if changes occurred
     let obj = {}
     obj[key] = exdata
-    chrome.storage.local.set(obj, () => {})
-  })
+    return chrome.storage.session.set(obj);
+  }
 }
 
 /**
  * Reads key/value pairs from storage for given tab.
  * @param atab {Tab}: Current tab which includes .windowId and .id values.
- * @param callback(data): Function called with data object of key:value pairs returned.
+ * @return Promise data is an object of key:value pairs stored for given tab, or data is undefined.
  */
-function readTabData(atab, callback) {
+async function readTabData(atab) {
   if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
-  let key = 'tab_' + getTabKey(atab)
-  chrome.storage.local.get([key], (result) => {
-    callback(result[key])
-  })
+  const key = 'tab_' + getTabKey(atab)
+  const result = await chrome.storage.session.get(key);
+  return result[key];
 }
+
+// TODO: Need to clear stale tab data for tabs that no longer exist.
+// Using chrome.storage.session instead of .local helps somewhat.
 
 /* * * Toolbar icon functions * * */
 
@@ -379,7 +385,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   })
   .catch((err) => {
     // catch the error in case of api failure
-    console.log(err)
+    console.log('wmAvailabilityCheck ERROR: ', err)
   })
 }
 
@@ -669,20 +675,24 @@ function opener(url, option, callback) {
       }
     })
   } else {
-    let w = window.screen.availWidth, h = window.screen.availHeight
-    if (w > h) {
-      // landscape screen
-      const maxW = 1200
-      w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
-      h = Math.floor(w * 0.75)
-    } else { // option === 'window'
-      // portrait screen (likely mobile)
-      w = Math.floor(w * 0.9)
-      h = Math.floor(h * 0.9)
-    }
-    chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
-      if (callback) { callback(window.tabs[0].id) }
-    })
+    chrome.windows.getCurrent({ populate: true }, (window) => {
+      // Access window properties
+      let h = window.width;
+      let w = window.height;
+      if (w > h) {
+        // landscape screen
+        const maxW = 1200
+        w = Math.floor(((w > maxW) ? maxW : w) * 0.666)
+        h = Math.floor(w * 0.75)
+      } else { // option === 'window'
+        // portrait screen (likely mobile)
+        w = Math.floor(w * 0.9)
+        h = Math.floor(h * 0.9)
+      }
+      chrome.windows.create({ url: url, width: w, height: h, type: 'popup' }, (window) => {
+        if (callback) { callback(window.tabs[0].id) }
+      })
+    });
   }
 }
 
@@ -720,7 +730,7 @@ function checkLastError() {
     if (chrome.runtime.lastError.message.startsWith('No tab with id:')) {
       // Skip
     } else {
-      console.log(chrome.runtime.lastError.message)
+      console.log('checkLastError: ', chrome.runtime.lastError.message)
       // console.trace() // uncomment while debugging
     }
   } else {
@@ -779,11 +789,6 @@ function setupContextMenus(enabled) {
         'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
       }, checkLastError)
       chrome.contextMenus.create({
-        'type': 'separator',
-        'contexts': ['page', 'frame', 'link'],
-        'documentUrlPatterns': ['*://*/*', 'ftp://*/*']
-      })
-      chrome.contextMenus.create({
         'id': 'first',
         'title': 'Oldest Version',
         'contexts': ['page', 'frame', 'link'],
@@ -814,6 +819,9 @@ function setupContextMenus(enabled) {
 
 // Default Settings prior to accepting terms.
 function initDefaultOptions () {
+  chrome.storage.session.set({
+    waybackCountCache: {}
+  });
   chrome.storage.local.set({
     agreement: false, // needed for firefox
     spn_outlinks: false,
@@ -846,7 +854,7 @@ function afterAcceptTerms () {
     private_mode_setting: false,
     not_found_setting: true
   })
-  chrome.browserAction.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
+  chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
   setupContextMenus(true)
 }
 
