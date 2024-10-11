@@ -21,6 +21,38 @@ const API_RETRY = 1000
 const SPN_RETRY = 6000
 let tabIdPromise
 
+// Queue mechanism to store requests in the Browser Storage area
+const QUEUE_KEY = 'wayback_queue'
+const RATE_LIMIT_AND_SERVER_ERROR_CODES = [401, 403, 408, 429, 500, 502, 503, 504]
+const RETRY_INTERVAL = 60000 // 1 minute
+
+// Function to add a request to the queue
+function addToQueue(request) {
+  chrome.storage.local.get([QUEUE_KEY], (result) => {
+    const queue = result[QUEUE_KEY] || []
+    queue.push(request)
+    chrome.storage.local.set({ [QUEUE_KEY]: queue })
+  })
+}
+
+// Function to process the queue
+function processQueue() {
+  chrome.storage.local.get([QUEUE_KEY], (result) => {
+    const queue = result[QUEUE_KEY] || []
+    if (queue.length > 0) {
+      const request = queue.shift()
+      savePageNowChecked(request.atab, request.pageUrl, request.silent, request.options)
+      chrome.storage.local.set({ [QUEUE_KEY]: queue })
+    }
+  })
+}
+
+// Function to handle rate limit errors
+function handleRateLimitError(atab, pageUrl, silent, options) {
+  addToQueue({ atab, pageUrl, silent, options })
+  setTimeout(processQueue, RETRY_INTERVAL)
+}
+
 // not required because in manifest v3, we use different subdomain of hostURLs for different browsers
 // updates User-Agent header in Chrome & Firefox, but not in Safari
 // function rewriteUserAgentHeader(e) {
@@ -124,7 +156,11 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
     .catch((err) => {
       // http error
       console.log(err)
-      chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
+      if (RATE_LIMIT_AND_SERVER_ERROR_CODES.includes(err.status)) {
+        handleRateLimitError(atab, pageUrl, silent, options)
+      } else {
+        chrome.runtime.sendMessage({ message: 'save_error', error: 'Save Error', url: pageUrl, atab: atab }, checkLastError)
+      }
     })
 }
 
@@ -207,6 +243,13 @@ async function statusSuccess(atab, pageUrl, silent, data) {
     atab: atab,
     url: pageUrl
   }, checkLastError)
+
+  // Remove the request from the queue when the operation is successful
+  chrome.storage.local.get([QUEUE_KEY], (result) => {
+    const queue = result[QUEUE_KEY] || []
+    const updatedQueue = queue.filter(request => request.pageUrl !== pageUrl)
+    chrome.storage.local.set({ [QUEUE_KEY]: updatedQueue })
+  })
 
   // notify
   if (!silent && data && ('timestamp' in data)) {
@@ -406,7 +449,8 @@ chrome.storage.local.get({ agreement: false }, (settings) => {
 
 // Runs whenever extension starts up, except during incognito mode.
 chrome.runtime.onStartup.addListener((details) => {
-
+  // Process the queue when the browser starts up
+  processQueue()
 })
 
 // Runs when extension first installed or updated, or browser updated.
