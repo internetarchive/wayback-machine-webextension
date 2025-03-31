@@ -662,8 +662,13 @@ function openByWindowSetting(url, op = null, cb) {
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url }, (tab) => {
-      if (callback) { callback(tab.id) }
+    chrome.tabs.query({
+      active: true, currentWindow: true
+    }, tabs => {
+      let currentIndex = tabs[0].index;
+      chrome.tabs.create({ url: url, index: currentIndex + 1 }, (tab) => {
+        if (callback) { callback(tab.id) }
+      })
     })
   } else if (option === 'replace') {
     // Back button may not work due to a bug in Chrome, but works fine in Firefox.
