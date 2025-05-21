@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Wayback Machine",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "The Official Wayback Machine Extension - by the Internet Archive.",
   "icons": {
     "16": "images/app-icon/mini-icon16.png",
@@ -47,8 +47,8 @@
     "service_worker": "scripts/background.js"
   },
   "content_scripts": [{
-    "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
-    "js": ["scripts/wikipedia.js"],
+    "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*","https://citationsy.com/*","https://www.easybib.com/*"],
+    "js": ["scripts/wikipedia.js","scripts/content_script.js"],
     "css": ["css/wikipedia.css"]
   }],
   "web_accessible_resources": [{
