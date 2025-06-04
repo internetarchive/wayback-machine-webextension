@@ -2,24 +2,47 @@
 function makeCitationLink(el) {
     const text = el.innerText.trim();
   
-    // Wrap the text in an anchor (dummy href)
+    // Create a clickable <a> link
     const link = document.createElement('a');
-    link.href = '#'; // Replace with real logic if needed
+    link.href = '#';
     link.innerText = text;
     link.style.textDecoration = 'underline';
     link.style.color = '#1a0dab';
   
-    // Clear and replace the content
+    // Click handler to POST citation info to API
+    link.addEventListener('click', (e) => {
+      e.preventDefault(); // Don't jump to # on click
+      e.stopPropagation();
+  
+      chrome.runtime.sendMessage({
+        type: 'log-citation-click',
+        payload: {
+          page_url: window.location.href,
+          citation_text: text,
+          clicked_at: new Date().toISOString()
+        }
+      }, (response) => {
+        if (response && response.ok) {
+          console.log("Citation click logged successfully.");
+        } else {
+          console.warn("Failed to log citation click.");
+        }
+      });
+    });
+  
+    // Replace citation text with clickable link
     el.innerHTML = '';
     el.appendChild(link);
   
-    // Optional: Add visual border and padding
+    // Optional: Style the block
     el.style.border = '2px dashed #3f51b5';
     el.style.backgroundColor = '#e8eaf6';
     el.style.padding = '4px';
     el.style.borderRadius = '4px';
     el.style.margin = '4px 0';
   }
+  
+  
   
   // === Wikipedia Handler ===
   function handleWikipedia() {

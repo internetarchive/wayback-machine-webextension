@@ -677,6 +677,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   }
   */
+  else if (message.type === 'log-citation-click') {
+    const { page_url, citation_text, clicked_at } = message.payload;
+
+    const fullUrl = `https://gext-log.archive.org/ctest` +
+      `?url=${encodeURIComponent(page_url)}` +
+      `&text=${encodeURIComponent(citation_text)}` +
+      `&ts=${encodeURIComponent(clicked_at)}`;
+
+    fetch(fullUrl)
+      .then(res => {
+        console.log('API responded with:', res.status);
+        sendResponse({ ok: true }); // response to content script
+      })
+      .catch(err => {
+        console.error('API error:', err);
+        sendResponse({ ok: false });
+      });
+
+    // Keep the message channel open until sendResponse is called
+    return true;
+  }
   return false
 })
 
