@@ -677,28 +677,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   }
   */
-  else if (message.type === 'log-citation-click') {
-    const { page_url, citation_text, clicked_at } = message.payload;
-
-    const fullUrl = `https://gext-log.archive.org/ctest` +
-      `?url=${encodeURIComponent(page_url)}` +
-      `&text=${encodeURIComponent(citation_text)}` +
-      `&ts=${encodeURIComponent(clicked_at)}`;
-
-    fetch(fullUrl)
-      .then(res => {
-        console.log('API responded with:', res.status);
-        sendResponse({ ok: true }); // response to content script
+  else if (message.type === 'store-citations') {
+      const { page_url, citations } = message.payload;
+  
+      fetch('https://services-citation-detector.dev.archive.org/report-citation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: page_url, // ✅ use 'url' key instead of 'page_url'
+          citations
+        })
       })
-      .catch(err => {
-        console.error('API error:', err);
-        sendResponse({ ok: false });
-      });
-
-    // Keep the message channel open until sendResponse is called
-    return true;
-  }
-  return false
+        .then(res => {
+          if (!res.ok) {
+            console.warn('Failed to send citations to backend.');
+          } else {
+            console.log('Citations stored successfully.');
+          }
+        })
+        .catch(err => {
+          console.error('Network error while storing citations:', err);
+        });
+    }
+    return false;
 })
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
