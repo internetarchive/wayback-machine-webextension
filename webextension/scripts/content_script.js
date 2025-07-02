@@ -1,16 +1,9 @@
 const collectedCitations = new Set();
 
-function makeCitationBlock(el) {
-  const text = el.innerText.trim();
-  if (!text) return;
-
-  collectedCitations.add(text);
-
-  el.style.border = '2px dashed #3f51b5';
-  el.style.backgroundColor = '#e8eaf6';
-  el.style.padding = '4px';
-  el.style.borderRadius = '4px';
-  el.style.margin = '4px 0';
+function collectCitation(text) {
+  if (text) {
+    collectedCitations.add(text.trim());
+  }
 }
 
 function handleWikipedia() {
@@ -21,7 +14,7 @@ function handleWikipedia() {
       (/\(([^)]*?\d{4})\)/.test(span.innerText) ||
        /, ?\d{4}(?:\.|,|$)|\d{4}\./.test(span.innerText))
     ) {
-      makeCitationBlock(li);
+      collectCitation(li.innerText);
     }
   });
 }
@@ -29,7 +22,7 @@ function handleWikipedia() {
 function handleCitationsy() {
   document.querySelectorAll('div.reference').forEach(el => {
     if (el.innerText.match(/\d{4}/)) {
-      makeCitationBlock(el);
+      collectCitation(el.innerText);
     }
   });
 }
@@ -39,7 +32,7 @@ function handleEasyBib() {
     const text = p.innerText.trim();
     const citationRegex = /\(\d{4}\)|,\s?\d{4}\.|[^a-zA-Z](\d{4})[.)]/;
     if (citationRegex.test(text)) {
-      makeCitationBlock(p);
+      collectCitation(text);
     }
   });
 }
@@ -56,21 +49,21 @@ function processPageAndSend() {
     handleEasyBib();
   }
 
-  // Delay the message to ensure citations are collected
+  // Delay sending to allow DOM processing
   setTimeout(() => {
     if (collectedCitations.size > 0) {
       console.log("Sending collected citations to background:", collectedCitations);
       chrome.runtime.sendMessage({
         type: 'store-citations',
         payload: {
-          page_url: window.location.href,
+          page_url: url,
           citations: Array.from(collectedCitations)
         }
       });
     } else {
       console.log("No citations collected.");
     }
-  }, 500); // Adjust this if needed
+  }, 500);
 }
 
 processPageAndSend();
