@@ -88,9 +88,9 @@ function doSaveNow() {
     let options = { 'capture_all': 1 }
     if ($('#chk-outlinks').prop('checked') === true) {
       options['capture_outlinks'] = 1
-      if ($('#email-outlinks-setting').prop('checked') === true) {
-        options['email_result'] = 1
-      }
+    }
+    if ($('#email-results-setting').prop('checked') === true) {
+      options['email_result'] = 1
     }
     if ($('#chk-screenshot').prop('checked') === true) {
       options['capture_screenshot'] = 1
@@ -847,6 +847,12 @@ function setupSaveListener() {
           // snapshot already archived within timeframe
           $('#save-progress-bar').hide()
           $('#spn-front-label').text('Recently Saved')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if (message.message === 'slow_archive_msg') {
+          // the snapshot archiving process will start in some time
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Processing')
           $('#spn-btn').attr('title', message.error)
           enableAfterSaving()
         } else if (message.message === 'save_start') {

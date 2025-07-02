@@ -37,7 +37,7 @@ function restoreSettings(items) {
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#auto-bookmark-setting').prop('checked', items.auto_bookmark_setting)
-  $('#email-outlinks-setting').prop('checked', items.email_outlinks_setting)
+  $('#email-results-setting').prop('checked', items.email_results_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
   $('#notify-setting').prop('checked', items.notify_setting)
@@ -64,7 +64,7 @@ function saveSettings() {
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
     auto_bookmark_setting: $('#auto-bookmark-setting').prop('checked'),
-    email_outlinks_setting: $('#email-outlinks-setting').prop('checked'),
+    email_results_setting: $('#email-results-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
     notify_setting: $('#notify-setting').prop('checked'),
@@ -241,7 +241,7 @@ function setupHelpDocs() {
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'auto-bookmark-setting': 'Archive when bookmarking a website, except Excluded URLs.',
-    'email-outlinks-setting': 'Send an email of results when Outlinks option is selected.',
+    'email-results-setting': 'Get an email report with the list of URLs you have captured.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'notify-setting': 'Turn off all notifications.',
     'resource-list-setting': 'Display embedded URLs archived with Save Page Now.'
