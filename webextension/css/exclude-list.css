@@ -14,11 +14,11 @@ p {
     height: 100vh;
 }
 
-.header-container {
+header {
     text-align: center;
 }
 
-.outer-container {
+main {
     display: contents;
 }
 
