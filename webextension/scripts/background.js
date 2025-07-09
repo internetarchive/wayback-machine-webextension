@@ -96,6 +96,10 @@ function savePageNow(atab, pageUrl, silent = false, options = {}, loggedInFlag =
           // snapshot already archived within timeframe
           chrome.runtime.sendMessage({ message: 'save_archived', error: errMsg, url: pageUrl, atab: atab }, checkLastError)
           if (!silent) { notifyMsg(errMsg) }
+        } 
+        else if(errMsg.indexOf('capture will start') !== -1){
+          chrome.runtime.sendMessage({ message: 'slow_archive_msg', error: "Processing", url: pageUrl, atab: atab }, checkLastError)
+          if (!silent) { notifyMsg(errMsg) }
         } else {
           // update UI
           await addToolbarState(atab, 'S')
@@ -457,7 +461,7 @@ chrome.webRequest.onErrorOccurred.addListener((details) => {
 //
 chrome.webRequest.onCompleted.addListener((details) => {
   const url = details.url
-
+  
   // checking statusCode >= 400 here or else tab data may be overwritten with status 200 URLs.
   // another solution may be to forget using tab ids and use URLs for the key in saveTabData()
   if (isNotExcludedUrl(url) && isValidUrl(url) && details.statusCode && (details.statusCode >= 400)) {
