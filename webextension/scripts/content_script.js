@@ -52,7 +52,6 @@ function processPageAndSend() {
   // Delay sending to allow DOM processing
   setTimeout(() => {
     if (collectedCitations.size > 0) {
-      console.log("Sending collected citations to background:", collectedCitations);
       chrome.runtime.sendMessage({
         type: 'store-citations',
         payload: {
@@ -60,10 +59,15 @@ function processPageAndSend() {
           citations: Array.from(collectedCitations)
         }
       });
-    } else {
-      console.log("No citations collected.");
     }
   }, 500);
 }
 
-processPageAndSend();
+// === Check setting before processing ===
+chrome.storage.local.get(['private_mode_setting'], (settings) => {
+  if (settings && settings.private_mode_setting === true) {
+    return;
+  } else {
+    processPageAndSend();
+  }
+});
