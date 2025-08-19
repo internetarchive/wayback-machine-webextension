@@ -2,6 +2,18 @@
 
 *All Browsers*
 
+### 3.4.6 ###
+
+What's New in v3.4.6
+
+Universal Citation Detection: The extension now detects citations on all websites, not just academic ones. This includes news sites, blogs, research papers, and any webpage with citation-like content.
+
+Improved Citation Detection: Enhanced algorithms for better citation parsing, deduplication, and quality filtering. Removed fragmented and duplicate citations.
+
+Code Cleanup: Removed all debug code, console logs, and test functions for production-ready deployment.
+
+Performance Improvements: Eliminated infinite loops and improved reliability of citation detection across different website types.
+
 ### 3.4.2 ###
 
 What's New in v3.4.2
