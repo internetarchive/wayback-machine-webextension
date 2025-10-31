@@ -447,12 +447,14 @@ function cropScheme(url) {
   return null
 }
 
-// Function to check whether it is a valid URL or not.
+// Function to check whether it is a valid URL or not. Case insensitive.
 // Returns: true = good, false = excluded URL.
 function isNotExcludedUrl(url) {
   if (typeof url !== 'string') { return false }
   if (url.trim() === '') { return false }
-  for (const exUrl of excluded_urls) {
+  url = url.toLowerCase()
+  for (let exUrl of excluded_urls) {
+    exUrl = exUrl.toLowerCase()
     if (url.startsWith(exUrl) || url.startsWith('http://' + exUrl) || url.startsWith('https://' + exUrl)) {
       return false
     }
