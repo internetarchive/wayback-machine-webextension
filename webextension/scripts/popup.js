@@ -125,37 +125,39 @@ function setupLoginState() {
 
 // Sets up the SPN button click event and Last Saved text.
 function setupSaveAction(url) {
-  if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
-    $('#spn-btn').off('click').on('click', doSaveNow)
-    chrome.storage.local.get(['private_mode_setting'], (settings) => {
-      if (settings && (settings.private_mode_setting === false)) {
-        chrome.runtime.sendMessage({
-          message: 'getCachedWaybackCount',
-          url: url
-        }, (message) => {
-          checkLastError()
-          if (message) {
-            if (('last_ts' in message) && message.last_ts) {
-              $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
-            } else if (('total' in message) && (message.total === -1)) {
-              $('#last-saved-msg').text('URL excluded from viewing').show()
-              $('.blocked-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
-            } else if ('error' in message) {
-              $('#last-saved-msg').text('Wayback Machine Unavailable').show()
-            } else {
-              $('#last-saved-msg').hide()
-            }
-          } else {
-            $('#last-saved-msg').hide()
-          }
-        })
+  if (!url || !isValidUrl(url) || !isNotExcludedUrl(url) || isArchiveUrl(url)) {
+    return showUrlNotSupported(true)
+  }
+
+  $('#spn-btn').off('click').on('click', doSaveNow)
+
+  chrome.storage.local.get(['private_mode_setting'], ({ private_mode_setting }) => {
+    if (private_mode_setting !== false) {
+         $('#last-saved-msg').hide()
+         return
+    }
+
+    chrome.runtime.sendMessage({
+      message: 'getCachedWaybackCount',
+      url: url
+    }, (message) => {
+      checkLastError()
+      if (message) {
+        if (('last_ts' in message) && message.last_ts) {
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
+        } else if (('total' in message) && (message.total === -1)) {
+          $('#last-saved-msg').text('URL excluded from viewing').show()
+          $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+        } else if ('error' in message) {
+          $('#last-saved-msg').text('Wayback Machine Unavailable').show()
+        } else {
+          $('#last-saved-msg').hide()
+        }
       } else {
         $('#last-saved-msg').hide()
       }
     })
-  } else {
-    showUrlNotSupported(true)
-  }
+  })  
 }
 
 // Called when logged-out.
@@ -249,14 +251,13 @@ function social_share(eventObj) {
   let clean_url = getCleanUrl(activeURL)
   if (isValidUrl(clean_url)) {
     let timestamp = dateToTimestamp(new Date())
-    let wayback_url = 'https://web.archive.org/web/' + timestamp + '/'
-    let sharing_url = wayback_url + clean_url
+    let sharing_url = 'https://web.archive.org/web/' + timestamp + '/' + clean_url
 
     // Latest Social Share URLs: https://github.com/bradvin/social-share-urls
     if (id.includes('facebook-share-btn')) {
       openByWindowSetting('https://www.facebook.com/sharer.php?u=' + fixedEncodeURIComponent(sharing_url))
     } else if (id.includes('twitter-share-btn')) {
-      openByWindowSetting('https://twitter.com/intent/tweet?url=' + fixedEncodeURIComponent(sharing_url))
+      openByWindowSetting('https://x.com/intent/post?url=' + fixedEncodeURIComponent(sharing_url))
     } else if (id.includes('linkedin-share-btn')) {
       openByWindowSetting('https://www.linkedin.com/sharing/share-offsite/?url=' + fixedEncodeURIComponent(sharing_url))
     } else if (id.includes('copy-link-btn') && navigator.clipboard) {
@@ -284,7 +285,7 @@ function searchTweet() {
         surl = surl.substring(0, surl.length - 1)
       }
       const query = `(${surl} OR https://${curl} OR http://${curl})`
-      let open_url = 'https://twitter.com/search?q=' + fixedEncodeURIComponent(query)
+      let open_url = 'https://x.com/search?q=' + fixedEncodeURIComponent(query)
       openByWindowSetting(open_url)
     }
   }
@@ -296,11 +297,7 @@ function useSearchURL(flag) {
     showUrlNotSupported(false)
     $('#last-saved-msg').hide()
     $('#suggestion-box').text('').hide()
-    $('#url-not-supported-msg').hide()
-    $('#readbook-container').hide()
-    $('#tvnews-container').hide()
-    $('#wiki-container').hide()
-    $('#fact-check-container').hide()
+    $('#url-not-supported-msg, #readbook-container, #tvnews-container, #wiki-container, #fact-check-container').hide()
     $('#using-search-msg').text('Using Search URL').show()
   } else {
     $('#using-search-msg').hide()
@@ -459,9 +456,7 @@ function showSettings() {
 
 function showLoginPage(e) {
   e.preventDefault()
-  $('#popup-page').hide()
-  $('#setting-page').hide()
-  $('#login-message').hide()
+  $('#popup-page, #setting-page, #login-message').hide()
   $('#login-page').show()
 }
 
@@ -485,16 +480,14 @@ function showLoginFromSettings(e) {
 
 // Returns to the main view.
 function goBackToMain() {
-  $('#login-page').hide()
-  $('#setting-page').hide()
+  $('#login-page, #setting-page').hide()
   $('#popup-page').show()
   $('.back-btn').off('click').on('click', goBackToMain)
 }
 
 // Returns to the settings view.
 function goBackToSettings() {
-  $('#login-page').hide()
-  $('#popup-page').hide()
+  $('#login-page, #popup-page').hide()
   $('#setting-page').show()
   $('.back-btn').off('click').on('click', goBackToMain)
 }
@@ -525,9 +518,7 @@ function setupViewArchived() {
           const statusCode = result.customData.statusCode
           const waybackUrl = result.customData.statusWaybackUrl
           const statusText = ((statusCode < 999) ? statusCode + ' ' : '') + (ERROR_CODE_DIC[statusCode] || 'Error')
-          $('#last-saved-msg').hide()
-          $('#search-container').hide()
-          $('#spn-container').hide()
+          $('#last-saved-msg, #search-container, #spn-container').hide()
           $('#view-archived-container').show()
           $('#view-archived-msg').text(statusText)
           $('#view-archived-btn').click(() => {
@@ -683,11 +674,7 @@ function showContext(eventObj) {
   const id = eventObj.target.getAttribute('id')
   const url = getCleanUrl(activeURL)
   if (url && isValidUrl(url)) {
-    if (id.includes('alexa-btn')) {
-      const hostname = new URL(url).hostname
-      const alexaUrl = 'https://www.alexa.com/siteinfo/' + hostname
-      openByWindowSetting(alexaUrl)
-    } else if (id.includes('annotations-btn')) {
+    if (id.includes('annotations-btn')) {
       const annotationsUrl = chrome.runtime.getURL('annotations.html') + '?url=' + url
       openByWindowSetting(annotationsUrl)
     } else if (id.includes('tag-cloud-btn')) {
@@ -709,17 +696,15 @@ function openMyWebArchivePage() {
 
 function showUrlNotSupported(flag) {
   if (flag) {
-    $('#spn-btn').off('click')
-    $('#spn-btn').addClass('flip-inside')
+    $('#spn-btn').addClass('flip-inside').off('click')
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
-    $('.not-sup-dim').attr('disabled', true).css('opacity', '0.66').css('cursor', 'not-allowed')
+    $('.not-sup-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
   } else {
-    $('#spn-btn').off('click').on('click', doSaveNow)
-    $('#spn-btn').removeClass('flip-inside')
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
     $('#url-not-supported-msg').text('').hide()
-    $('.not-sup-dim').attr('disabled', false).css('opacity', '1.0').css('cursor', '')
+    $('.not-sup-dim').attr('disabled', false).css({ opacity: 1, cursor: '' })
   }
 }
 
@@ -820,15 +805,11 @@ function showSaving(count) {
 }
 
 function disableWhileSaving() {
-  $('#search-input').attr('disabled', 'disabled')
-  $('#chk-outlinks').attr('disabled', 'disabled')
-  $('#chk-screenshot').attr('disabled', 'disabled')
+  $('#search-input, #chk-outlinks, #chk-screenshot').attr('disabled', 'disabled')
 }
 
 function enableAfterSaving() {
-  $('#search-input').removeAttr('disabled')
-  $('#chk-outlinks').removeAttr('disabled')
-  $('#chk-screenshot').removeAttr('disabled')
+  $('#search-input, #chk-outlinks, #chk-screenshot').removeAttr('disabled')
 }
 
 // respond to Save Page Now success
@@ -876,8 +857,7 @@ function setupSaveListener() {
 
 // onload
 $(function() {
-  $('#setting-page').hide()
-  $('#login-page').hide()
+  $('#setting-page, #login-page').hide()
   initAgreement()
   initActiveTabURL()
   setupViewArchived()
