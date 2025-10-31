@@ -26,11 +26,11 @@ p {
     padding: 0;
 }
 
-.header-container {
+header {
     text-align: center;
 }
 
-.content-container {
+main {
     margin: 2em 15vw 10vh 15vw;
     padding-bottom: 5em;
 }
