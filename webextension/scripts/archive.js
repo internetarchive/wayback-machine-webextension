@@ -42,15 +42,13 @@ function appendHTML(url, code) {
   const title = ((code < 999) ? code + ' ' : '') + (ERROR_CODE_DIC[code] || 'Error')
   const close = chrome.runtime.getURL('images/close.svg')
   const logo = chrome.runtime.getURL('images/wayback-light.png')
-  const caption = 'View a saved version courtesy of the'
-  const archive = 'View Archived Version'
   return `
     <div id="popup-container">
       <div id="title-txt">${title}</div>
       <img id="close-btn" src=${close}>
-      <p>${caption}</p>
+      <p>View a saved version courtesy of the</p>
       <img class="wm-logo" alt="Internet Archive Wayback Machine" src=${logo}>
-      <a href=${url} id="archive-btn">${archive}</a>
+      <a href=${url} id="archive-btn">View Archived Version</a>
     </div>`
 }
 
@@ -63,15 +61,12 @@ function popupWayback(url, code) {
   document.body.insertAdjacentElement('beforeend', container)
 
   // Adding functionality to close and archive button
-  const closeBtn = gShadowRoot.querySelector('#close-btn')
-  closeBtn.addEventListener('click', () => {
+  gShadowRoot.querySelector('#close-btn')?.addEventListener('click', () => {
     gCloseClicked = true
-    let popup = gShadowRoot.querySelector('#popup-container')
-    popup.style.display = 'none'
+    gShadowRoot.querySelector('#popup-container')?.style.display = 'none'
   })
 
-  const archiveBtn = gShadowRoot.querySelector('#archive-btn')
-  archiveBtn.addEventListener('click', (e) => {
+  gShadowRoot.querySelector('#archive-btn')?.addEventListener('click', (e) => {
     gArchiveClicked = true
     // Work-around for myspace which hijacks the link
     if (window.location.hostname.indexOf('myspace.com') >= 0) {
@@ -93,10 +88,8 @@ function refreshWayback(url, code) {
 // Listens to SHOW_BANNER messages
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
-    if (request.type === 'SHOW_BANNER') {
-      if (('status_code' in request) && ('wayback_url' in request)) {
-        refreshWayback(request.wayback_url, request.status_code)
-      }
+    if (request.type === 'SHOW_BANNER' && ('status_code' in request) && ('wayback_url' in request)) {
+      refreshWayback(request.wayback_url, request.status_code)
     }
   }
 )
