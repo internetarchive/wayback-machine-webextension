@@ -174,12 +174,18 @@ function setupSaveAction(url) {
 
   chrome.storage.local.get(['private_mode_setting'], ({ private_mode_setting }) => {
     if (private_mode_setting !== false) {
+<<<<<<< HEAD
       $('#last-saved-msg').hide()
       return
+=======
+         $('#last-saved-msg').hide()
+         return
+>>>>>>> fefc844 (Simplify popup.js code)
     }
 
     chrome.runtime.sendMessage({
       message: 'getCachedWaybackCount',
+<<<<<<< HEAD
       url
     }, (message) => {
       checkLastError()
@@ -190,6 +196,18 @@ function setupSaveAction(url) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
           $('.blocked-dim').prop('disabled', true)
         } else if (message?.error) {
+=======
+      url: url
+    }, (message) => {
+      checkLastError()
+      if (message) {
+        if (('last_ts' in message) && message.last_ts) {
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
+        } else if (('total' in message) && (message.total === -1)) {
+          $('#last-saved-msg').text('URL excluded from viewing').show()
+          $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+        } else if ('error' in message) {
+>>>>>>> fefc844 (Simplify popup.js code)
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
         } else {
           $('#last-saved-msg').hide()
@@ -198,7 +216,11 @@ function setupSaveAction(url) {
         $('#last-saved-msg').hide()
       }
     })
+<<<<<<< HEAD
   })
+=======
+  })  
+>>>>>>> fefc844 (Simplify popup.js code)
 }
 
 // Called when logged-out.
@@ -326,7 +348,12 @@ function searchTweet() {
         surl = surl.substring(0, surl.length - 1)
       }
       const query = `(${surl} OR https://${curl} OR http://${curl})`
+<<<<<<< HEAD
       openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
+=======
+      let open_url = 'https://x.com/search?q=' + fixedEncodeURIComponent(query)
+      openByWindowSetting(open_url)
+>>>>>>> fefc844 (Simplify popup.js code)
     }
   }
 }
@@ -733,11 +760,19 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
+<<<<<<< HEAD
     $('.not-sup-dim').prop('disabled', true)
   } else {
     $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
     $('#url-not-supported-msg').text('').hide()
     $('.not-sup-dim').prop('disabled', false)
+=======
+    $('.not-sup-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').attr('disabled', false).css({ opacity: 1, cursor: '' })
+>>>>>>> fefc844 (Simplify popup.js code)
   }
 }
 
@@ -836,11 +871,19 @@ function showSaving(count) {
 }
 
 function disableWhileSaving() {
+<<<<<<< HEAD
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
 }
 
 function enableAfterSaving() {
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', false)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').attr('disabled', 'disabled')
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').removeAttr('disabled')
+>>>>>>> fefc844 (Simplify popup.js code)
 }
 
 // respond to Save Page Now success
@@ -926,6 +969,7 @@ $(function() {
   $('.btn').click(clearFocus)
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
+<<<<<<< HEAD
 =======
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
   $('.logo-wayback-machine').on('click', homepage)
@@ -954,3 +998,6 @@ $(function() {
 >>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
 })
+=======
+})
+>>>>>>> 4d915a7 (Simplify popup.js code)
