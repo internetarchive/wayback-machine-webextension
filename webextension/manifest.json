@@ -52,7 +52,7 @@
     "css": ["css/wikipedia.css"]
   }],
   "web_accessible_resources": [{
-    "resources": ["/css/archive.css", "/images/*"],
+    "resources": ["css/archive.css", "images/*"],
     "matches": ["<all_urls>"]
   }]
 }
