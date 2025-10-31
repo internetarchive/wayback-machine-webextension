@@ -30,15 +30,21 @@ header {
     text-align: center;
 }
 
+main, .bottom {
+    max-inline-size: min(60ch, 100%);
+    margin-inline: auto;
+    padding-inline: 16px;
+}
+
 main {
-    margin: 2em 15vw 10vh 15vw;
+    margin-block: 2em 10vh;
     padding-bottom: 5em;
 }
 
 .bottom-container {
     position: fixed;
     margin: 0;
-    padding: 0.5em 15vw 0.5em 15vw;
+    padding-block: 0.5em;
     bottom: 0;
     left: 0;
     right: 0;
