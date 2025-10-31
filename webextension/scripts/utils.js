@@ -11,6 +11,7 @@ const defaultAutoExcludeList = [
   '*.google.com*',
   'mail.yahoo.com*',
   'duckduckgo.com/?q=*',
+  '*.discord.com/api/webhooks/*',
   '*.proton.me*'
 ]
 
