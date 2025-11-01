@@ -323,13 +323,12 @@ function badgeCountText(count) {
  */
 function getWaybackCount(url, onSuccess, onFail) {
   if (isValidUrl(url) && isNotExcludedUrl(url)) {
-    const requestUrl = hostURL + '__wb/sparkline'
-    const requestParams = '?collection=web&output=json&url=' + fixedEncodeURIComponent(url)
+    const requestUrl = hostURL + '__wb/sparkline?collection=web&output=json&url=' + fixedEncodeURIComponent(url)
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error('timeout'))
       }, 30000)
-      fetch(requestUrl + requestParams, {
+      fetch(requestUrl, {
         method: 'GET',
         headers: hostHeaders
       })
@@ -338,21 +337,15 @@ function getWaybackCount(url, onSuccess, onFail) {
     return timeoutPromise
     .then(response => response.json())
     .then(json => {
-      const years = json.years
       let total = 0
-      if (isObject(years)) {
-        for (let y in years) {
-          for (let c of years[y]) {
-            total += c
-          }
-        }
+      if (isObject(json.years)) {
+        total = Object.values(json.years).flat().reduce((a, b) => a + b, 0)
       }
       // set total to special value if URL is excluded from viewing
-      if (json.error && json.error.type && (json.error.type === 'blocked')) {
+      if (json?.error?.type === 'blocked') {
         total = -1
       }
-      let values = { total: total, first_ts: json.first_ts, last_ts: json.last_ts }
-      onSuccess(values)
+      onSuccess({ total: total, first_ts: json.first_ts, last_ts: json.last_ts })
     })
     .catch(error => {
       console.log('getWaybackCount FAILED: ', error)
@@ -368,9 +361,8 @@ function getWaybackCount(url, onSuccess, onFail) {
  * Checks Wayback Machine API for url snapshot
  */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
-  const requestUrl = hostURL + 'wayback/available'
-  const requestParams = '?url=' + fixedEncodeURIComponent(url)
-  fetch(requestUrl + requestParams, {
+  const requestUrl = hostURL + 'wayback/available?url=' + fixedEncodeURIComponent(url)
+  fetch(requestUrl, {
     method: 'GET',
     headers: hostHeaders
   })
@@ -506,17 +498,16 @@ function getCleanUrl(url) {
  * @return {string or null}
  */
 function getWaybackUrlFromResponse(json) {
-  if (json && json.archived_snapshots &&
-    json.archived_snapshots.closest &&
-    json.archived_snapshots.closest.available &&
-    json.archived_snapshots.closest.available === true &&
-    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(json.archived_snapshots.closest.url)) {
-    // not sure why we're replacing http: with https: here
-    return json.archived_snapshots.closest.url.replace(/^http:/, 'https:')
-  } else {
+  const url = json?.archived_snapshots?.closest?.url
+  const status = json?.archived_snapshots?.closest?.status
+  const available = json?.archived_snapshots?.closest?.available
+
+  if (!available || !status?.startsWith('2') || !isValidUrl(url)) {
     return null
   }
+
+  // Preserve https preference if needed
+  return url.replace(/^http:/, 'https:')
 }
 
 /**
@@ -525,16 +516,11 @@ function getWaybackUrlFromResponse(json) {
  * @return {string or null} as "yyyyMMddHHmmss"
  */
 function getWaybackTimestampFromResponse(json) {
-  if (json && json.archived_snapshots &&
-    json.archived_snapshots.closest &&
-    json.archived_snapshots.closest.available &&
-    json.archived_snapshots.closest.available === true &&
-    json.archived_snapshots.closest.status.indexOf('2') === 0 &&
-    isValidUrl(json.archived_snapshots.closest.url)) {
-    return json.archived_snapshots.closest.timestamp
-  } else {
+  const closest = json?.archived_snapshots?.closest
+  if (!closest?.available || !closest.status?.startsWith('2') || !isValidUrl(closest.url)) {
     return null
   }
+  return closest.timestamp
 }
 
 /**
@@ -632,8 +618,7 @@ function matchWildcard(text, pattern) {
  */
 function isUrlInList(url, patterns) {
   const curl = cropPrefix(url)
-  const matched = patterns.some(pat => matchWildcard(curl, pat))
-  return matched
+  return patterns.some(pat => matchWildcard(curl, pat))
 }
 
 /**
