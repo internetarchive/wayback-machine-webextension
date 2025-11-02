@@ -88,7 +88,7 @@ function refreshWayback(url, code) {
 // Listens to SHOW_BANNER messages
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
-    if (request.type === 'SHOW_BANNER' && ('status_code' in request) && ('wayback_url' in request)) {
+    if (request.type === 'SHOW_BANNER' && request?.status_code && request?.wayback_url) {
       refreshWayback(request.wayback_url, request.status_code)
     }
   }

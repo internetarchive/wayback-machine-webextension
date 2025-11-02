@@ -76,7 +76,7 @@ function initActiveTabURL() {
 
 function setupSettingsTabTip() {
   chrome.storage.local.get(['show_settings_tab_tip'], (settings) => {
-    if (settings && settings.show_settings_tab_tip) {
+    if (settings?.show_settings_tab_tip) {
       showSettingsTabTip()
     }
   })
@@ -133,22 +133,22 @@ function setupSaveAction(url) {
 
   chrome.storage.local.get(['private_mode_setting'], ({ private_mode_setting }) => {
     if (private_mode_setting !== false) {
-         $('#last-saved-msg').hide()
-         return
+      $('#last-saved-msg').hide()
+      return
     }
 
     chrome.runtime.sendMessage({
       message: 'getCachedWaybackCount',
-      url: url
+      url
     }, (message) => {
       checkLastError()
       if (message) {
-        if (('last_ts' in message) && message.last_ts) {
+        if (message?.last_ts) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
-        } else if (('total' in message) && (message.total === -1)) {
+        } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
           $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
-        } else if ('error' in message) {
+        } else if (message?.error) {
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
         } else {
           $('#last-saved-msg').hide()
@@ -157,7 +157,7 @@ function setupSaveAction(url) {
         $('#last-saved-msg').hide()
       }
     })
-  })  
+  })
 }
 
 // Called when logged-out.
@@ -303,7 +303,7 @@ function useSearchURL(flag) {
     $('#using-search-msg').hide()
     // reassign activeURL
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      activeURL = (tabs && tabs[0]) ? tabs[0].url : null
+      activeURL = (tabs?.[0]) ? tabs[0].url : null
     })
   }
 }
@@ -506,13 +506,12 @@ function show_all_screens() {
 //
 function setupViewArchived() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
+    if (tabs?.[0]) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         checkLastError()
-        const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
-        if (state.has('V') && ('customData' in result) && ('statusWaybackUrl' in result.customData) &&
-          ('statusCode' in result.customData) && (result.customData.statusCode >= 400) &&
-          ('statusUrl' in result.customData) && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url)))
+        const state = new Set(result?.stateArray ?? []);
+        if (state.has('V') && result?.customData?.statusWaybackUrl && result.customData?.statusCode >= 400 &&
+          result.customData?.statusUrl && (cropPrefix(result.customData.statusUrl) === cropPrefix(tabs[0].url)))
         {
           // show msg and View Archived button for error status codes
           const statusCode = result.customData.statusCode
@@ -535,12 +534,12 @@ function setupViewArchived() {
 //
 function setupReadBook() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
+    if (tabs?.[0]) {
       const url = tabs[0].url
       if (url.includes('www.amazon') && url.includes('/dp/')) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           checkLastError()
-          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             $('#readbook-container').show()
             chrome.storage.local.get(['tab_url', 'detail_url', 'view_setting'], (settings) => {
@@ -560,7 +559,7 @@ function setupReadBook() {
                 headers.set('backend', 'nomad')
                 fetch(hostURL + 'services/context/amazonbooks?url=' + url, {
                   method: 'GET',
-                  headers: headers
+                  headers
                 })
                 .then(res => res.json())
                 .then(response => {
@@ -583,18 +582,18 @@ function setupReadBook() {
 // Display 'TV News Clips' button if current url is present in newshosts[]
 function setupNewsClips() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
+    if (tabs?.[0]) {
       const url = tabs[0].url
       const news_host = new URL(url).hostname
       if (newshosts.has(news_host)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           checkLastError()
-          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             $('#tvnews-container').show()
             $('#tvnews-btn').click(() => {
               chrome.storage.local.get(['view_setting'], function (settings) {
-                if (settings && settings.view_setting) {
+                if (settings?.view_setting) {
                   const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
                   openByWindowSetting(URL, settings.view_setting)
                 } else {
@@ -612,12 +611,12 @@ function setupNewsClips() {
 // Display 'Cited Books' & 'Cited Papers' buttons.
 function setupWikiButtons() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
+    if (tabs?.[0]) {
       const url = tabs[0].url
       if (url.match(/^https?:\/\/[\w.]*wikipedia.org/)) {
         chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
           checkLastError()
-          let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+          let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             // show wikipedia cited books & papers buttons
             $('#wikibooks-btn').click(() => {
@@ -650,11 +649,11 @@ function setupFactCheck() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0]) {
       chrome.storage.local.get(['fact_check_setting'], (settings) => {
-        if (settings && settings.fact_check_setting) {
+        if (settings?.fact_check_setting) {
           chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
             checkLastError()
-            const state = (result && ('stateArray' in result)) ? new Set(result.stateArray) : new Set()
-            if (state.has('F') && ('customData' in result) && ('contextUrl' in result.customData)) {
+            const state = new Set(result?.stateArray ?? []);
+            if (state.has('F') && result?.customData?.contextUrl) {
               // show fact-check button
               const contextUrl = result.customData.contextUrl
               $('#fact-check-container').show()
@@ -687,7 +686,7 @@ function showContext(eventObj) {
 function openMyWebArchivePage() {
   // retrieve the itemname
   getUserInfo().then(info => {
-    if (info && ('itemname' in info)) {
+    if (info?.itemname) {
       const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
     }
@@ -717,10 +716,10 @@ function clearFocus() {
 function setupWaybackCount() {
   chrome.storage.local.get(['wm_count_setting'], (settings) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs && tabs[0]) {
+      if (tabs?.[0]) {
         // not using activeURL as we don't want wayback count on search url
         const url = tabs[0].url
-        if (url && settings && settings.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
+        if (url && settings?.wm_count_setting && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
           showWaybackCount(url)
           chrome.runtime.sendMessage({ message: 'updateCountBadge' })
         } else {
@@ -735,9 +734,9 @@ function setupWaybackCount() {
 // Displays Wayback count, and Oldest and Newest timestamps
 function showWaybackCount(url) {
   $('#wayback-count-msg').show()
-  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url: url }, (result) => {
+  chrome.runtime.sendMessage({ message: 'getCachedWaybackCount', url }, (result) => {
     checkLastError()
-    if (result && ('total' in result) && (result.total >= 0)) {
+    if (result?.total >= 0) {
       // set label
       let text = ''
       if (result.total === 1) {
@@ -751,11 +750,11 @@ function showWaybackCount(url) {
     } else {
       clearWaybackCount()
     }
-    if (result && result.first_ts) {
+    if (result?.first_ts) {
       let date = timestampToDate(result.first_ts)
       $('#oldest-btn').attr('title', date.toLocaleString())
     }
-    if (result && result.last_ts) {
+    if (result?.last_ts) {
       let date = timestampToDate(result.last_ts)
       $('#newest-btn').attr('title', date.toLocaleString())
     }
@@ -779,10 +778,10 @@ function bulkSave() {
 function setupSaveButton() {
   // not using activeTab here as it may not be assigned yet
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) {
+    if (tabs?.[0]) {
       chrome.runtime.sendMessage({ message: 'getToolbarState', atab: tabs[0] }, (result) => {
         checkLastError()
-        let state = (result && result.stateArray) ? new Set(result.stateArray) : new Set()
+        let state = new Set(result?.stateArray ?? []);
         if (state.has('S')) {
           showSaving()
         }
@@ -846,7 +845,7 @@ function setupSaveListener() {
         } else if ((message.message === 'resource_list_show')) {
           // show resource count from SPN status in SPN button
           const vdata = message.data
-          if (('resources' in vdata) && vdata.resources.length) {
+          if (vdata?.resources?.length) {
             showSaving(vdata.resources.length)
           }
         }
