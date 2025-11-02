@@ -82,6 +82,47 @@ function setupSettingsTabTip() {
   })
 }
 
+/**
+ * First check SPN system status for general issues. Then check user status
+ * (if authenticated) and display a notification.
+ */
+function spnSystemStatus() {
+  $.getJSON(hostURL + 'save/status/system', (data) => {
+    let msg = ''
+    if (data?.recent_captures < 100 || data?.status !== 'ok') {
+      msg = 'Save Page Now has issues right now, please try again later.'
+    } else if (data?.recent_captures > 3000) {
+      msg = 'Save Page Now is overloaded right now, please try again later.'
+    } else {
+      if (data?.queues) {
+        const sum = Object.values(data.queues).reduce((a, b) => a + b, 0)
+        if (sum > 0) {
+          msg = 'Save Page Now is overloaded right now, please try again later.'
+        }
+      }
+    }
+    if (msg !== '') {
+      $('#spn-system-status-msg').text(msg)
+    } else {
+      checkAuthentication((result) => {
+        checkLastError()
+        if (result && result.auth_check) {
+          $.getJSON(hostURL + 'save/status/user', (data) => {
+            if (data?.available - data?.processing <= 1) {
+              msg = 'You have done too many captures, please wait a few minutes and retry.'
+            } else if (data?.daily_captures >= data?.daily_captures_limit) {
+              msg = 'You have done too many captures today, please try again tomorrow.'
+            }
+            if (msg !== '') {
+              $('#spn-system-status-msg').text(msg)
+            }
+          })
+        }
+      })
+    }
+  })
+}
+
 function doSaveNow() {
   const url = activeURL
   if (url && isValidUrl(url) && isNotExcludedUrl(url) && !isArchiveUrl(url)) {
@@ -99,7 +140,7 @@ function doSaveNow() {
     chrome.runtime.sendMessage({
       message: 'saveurl',
       page_url: url,
-      options: options,
+      options,
       atab: activeTab
     }, checkLastError)
 
@@ -285,8 +326,7 @@ function searchTweet() {
         surl = surl.substring(0, surl.length - 1)
       }
       const query = `(${surl} OR https://${curl} OR http://${curl})`
-      let open_url = 'https://x.com/search?q=' + fixedEncodeURIComponent(query)
-      openByWindowSetting(open_url)
+      openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
     }
   }
 }
@@ -428,8 +468,7 @@ function open_feedback_page() {
 }
 
 function open_donations_page() {
-  let donation_url = 'https://archive.org/donate/'
-  openByWindowSetting(donation_url)
+  openByWindowSetting('https://archive.org/donate/')
 }
 
 function about_support() {
@@ -449,8 +488,7 @@ function openURLs() {
 }
 
 function showSettings() {
-  $('#popup-page').hide()
-  $('#login-page').hide()
+  $('#popup-page, #login-page').hide()
   $('#setting-page').show()
 }
 
@@ -491,16 +529,6 @@ function goBackToSettings() {
   $('#setting-page').show()
   $('.back-btn').off('click').on('click', goBackToMain)
 }
-
-// not used
-/*
-function show_all_screens() {
-  const url = getCleanUrl(activeURL)
-  if (url) {
-    chrome.runtime.sendMessage({ message: 'showall', url: url })
-  }
-}
-*/
 
 // Checks toolbar state if 404 or similar error set, then show 'View Archived Version' button.
 //
@@ -655,11 +683,8 @@ function setupFactCheck() {
             const state = new Set(result?.stateArray ?? []);
             if (state.has('F') && result?.customData?.contextUrl) {
               // show fact-check button
-              const contextUrl = result.customData.contextUrl
               $('#fact-check-container').show()
-              $('#fact-check-btn').click(() => {
-                openByWindowSetting(contextUrl)
-              })
+              $('#fact-check-btn').click(() => openByWindowSetting(result.customData.contextUrl))
             }
           })
         }
@@ -687,8 +712,7 @@ function openMyWebArchivePage() {
   // retrieve the itemname
   getUserInfo().then(info => {
     if (info?.itemname) {
-      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
-      openByWindowSetting(url)
+      openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
     }
   })
 }
@@ -751,12 +775,10 @@ function showWaybackCount(url) {
       clearWaybackCount()
     }
     if (result?.first_ts) {
-      let date = timestampToDate(result.first_ts)
-      $('#oldest-btn').attr('title', date.toLocaleString())
+      $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
     }
     if (result?.last_ts) {
-      let date = timestampToDate(result.last_ts)
-      $('#newest-btn').attr('title', date.toLocaleString())
+      $('#newest-btn').attr('title', timestampToDate(result.last_ts).toLocaleString())
     }
   })
 }
@@ -813,45 +835,46 @@ function enableAfterSaving() {
 
 // respond to Save Page Now success
 function setupSaveListener() {
-  chrome.runtime.onMessage.addListener(
-    (message) => {
-      if (activeURL === message.url) {
-        if (message.message === 'save_success') {
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Save successful')
-          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
-          $('#spn-btn').removeClass('flip-inside')
-          setupWaybackCount()
-          enableAfterSaving()
-        } else if (message.message === 'save_archived') {
-          // snapshot already archived within timeframe
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Recently Saved')
-          $('#spn-btn').attr('title', message.error)
-          enableAfterSaving()
-        } else if (message.message === 'slow_archive_msg') {
-          // the snapshot archiving process will start in some time
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Processing')
-          $('#spn-btn').attr('title', message.error)
-          enableAfterSaving()
-        } else if (message.message === 'save_start') {
-          showSaving()
-        } else if (message.message === 'save_error') {
-          $('#save-progress-bar').hide()
-          $('#spn-front-label').text('Save Failed')
-          $('#spn-btn').attr('title', message.error)
-          enableAfterSaving()
-        } else if ((message.message === 'resource_list_show')) {
-          // show resource count from SPN status in SPN button
-          const vdata = message.data
-          if (vdata?.resources?.length) {
-            showSaving(vdata.resources.length)
-          }
-        }
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.url !== activeURL) {
+      return
+    }
+    if (message.message === 'save_success') {
+      $('#save-progress-bar').hide()
+      $('#spn-front-label').text('Save successful')
+      $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+      $('#spn-btn').removeClass('flip-inside')
+      setupWaybackCount()
+      enableAfterSaving()
+    } else if (message.message === 'save_archived') {
+      // snapshot already archived within timeframe
+      $('#save-progress-bar').hide()
+      $('#spn-front-label').text('Recently Saved')
+      $('#spn-btn').attr('title', message.error)
+      enableAfterSaving()
+    } else if (message.message === 'slow_archive_msg') {
+      // the snapshot archiving process will start in some time
+      $('#save-progress-bar').hide()
+      $('#spn-front-label').text('Processing')
+      $('#spn-btn').attr('title', message.error)
+      enableAfterSaving()
+      spnSystemStatus()
+    } else if (message.message === 'save_start') {
+      showSaving()
+    } else if (message.message === 'save_error') {
+      $('#save-progress-bar').hide()
+      $('#spn-front-label').text('Save Failed')
+      $('#spn-btn').attr('title', message.error)
+      enableAfterSaving()
+      spnSystemStatus()
+    } else if ((message.message === 'resource_list_show')) {
+      // show resource count from SPN status in SPN button
+      const resources = message.data?.resources
+      if (resources?.length) {
+        showSaving(resources.length)
       }
     }
-  )
+  })
 }
 
 // onload
