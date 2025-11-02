@@ -366,11 +366,15 @@ function searchTweet() {
       }
       const query = `(${surl} OR https://${curl} OR http://${curl})`
 <<<<<<< HEAD
+<<<<<<< HEAD
       openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
 =======
       let open_url = 'https://x.com/search?q=' + fixedEncodeURIComponent(query)
       openByWindowSetting(open_url)
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+      openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   }
 }
@@ -729,8 +733,11 @@ function setupFactCheck() {
               // show fact-check button
               $('#fact-check-container').show()
 <<<<<<< HEAD
+<<<<<<< HEAD
               $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
 =======
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
 <<<<<<< HEAD
               $('#fact-check-btn').click(() => {
                 openByWindowSetting(contextUrl)
@@ -738,7 +745,13 @@ function setupFactCheck() {
 =======
               $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
 >>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+<<<<<<< HEAD
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
+=======
+=======
+              $('#fact-check-btn').click(() => openByWindowSetting(result.customData.contextUrl))
+>>>>>>> e92eb77 (Display extra SPN system status when capture fails)
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
             }
           })
         }
@@ -767,11 +780,15 @@ function openMyWebArchivePage() {
   getUserInfo().then(info => {
     if (info?.itemname) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
 =======
       const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
       openByWindowSetting(url)
 >>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+      openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   })
 }
@@ -843,6 +860,7 @@ function showWaybackCount(url) {
     }
     if (result?.first_ts) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
     }
     if (result?.last_ts) {
@@ -855,6 +873,12 @@ function showWaybackCount(url) {
       let date = timestampToDate(result.last_ts)
       $('#newest-btn').attr('title', date.toLocaleString())
 >>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+      $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
+    }
+    if (result?.last_ts) {
+      $('#newest-btn').attr('title', timestampToDate(result.last_ts).toLocaleString())
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   })
 }
@@ -920,6 +944,9 @@ function enableAfterSaving() {
 // respond to Save Page Now success
 function setupSaveListener() {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
   chrome.runtime.onMessage.addListener((message) => {
     if (message.url !== activeURL) {
       return
@@ -957,6 +984,7 @@ function setupSaveListener() {
       const resources = message.data?.resources
       if (resources?.length) {
         showSaving(resources.length)
+<<<<<<< HEAD
 =======
   chrome.runtime.onMessage.addListener(
     (message) => {
@@ -995,6 +1023,8 @@ function setupSaveListener() {
           }
         }
 >>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
       }
     }
   })
