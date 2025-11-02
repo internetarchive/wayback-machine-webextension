@@ -251,7 +251,7 @@
   // calling direct instead of onload because of delay while injecting script
   if ((typeof chrome !== 'undefined') && chrome.storage) {
     chrome.storage.local.get(['agreement', 'wiki_setting'], (settings) => {
-      if (settings && settings.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
+      if (settings?.agreement && settings.wiki_setting && location.href && isWikipediaUrl(location.href)) {
         addCitations(location.href)
       }
     })

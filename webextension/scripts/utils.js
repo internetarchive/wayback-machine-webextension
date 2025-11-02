@@ -159,7 +159,7 @@ function getUserInfo() {
   return apiPromise
   .then(response => response.json())
   .then((res) => {
-    if (res && res.success && ('value' in res)) {
+    if (res?.success && ('value' in res)) {
       // success
       return res.value
     } else {
@@ -179,9 +179,9 @@ function getUserInfo() {
 function checkAuthentication(acallback) {
   chrome.cookies.getAll({ url: 'https://archive.org' }, (cookies) => {
     let loggedIn = false, ia_auth = false
-    cookies && cookies.forEach(cookie => {
-      if ((cookie.name === 'logged-in-sig') && cookie.value && (cookie.value.length > 0)) { loggedIn = true }
-      else if ((cookie.name === 'ia-auth') && cookie.value && (cookie.value.length > 0)) { ia_auth = true }
+    cookies?.forEach(cookie => {
+      if (cookie.name === 'logged-in-sig' && cookie.value?.length > 0) { loggedIn = true }
+      else if (cookie.name === 'ia-auth' && cookie.value?.length > 0) { ia_auth = true }
     })
     if (loggedIn) {
       // store auth cookies in storage
@@ -200,7 +200,7 @@ function checkAuthentication(acallback) {
             )
             newCookie.url = 'https://archive.org'
             chrome.cookies.set(newCookie)
-            if ((authCookie.name === 'logged-in-sig') && authCookie.value && (authCookie.value.length > 0)) { loggedIn = true }
+            if (authCookie.name === 'logged-in-sig' && authCookie.value?.length > 0) { loggedIn = true }
           })
         }
         acallback({ 'auth_check': loggedIn })
@@ -223,7 +223,7 @@ function getTabKey(atab) {
  * @return Promise
  */
 async function saveTabData(atab, data) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  if (!(atab?.id && atab?.windowId)) { return }
   let key = 'tab_' + getTabKey(atab)
   // take exisiting data in storage and overwrite with new data
   let result = await chrome.storage.session.get(key);
@@ -241,7 +241,7 @@ async function saveTabData(atab, data) {
  * @return Promise
  */
 async function clearTabData(atab, keylist) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  if (!(atab?.id && atab?.windowId)) { return }
   let key = 'tab_' + getTabKey(atab)
   // take exisiting data in storage and delete any items from keylist
   let result = await chrome.storage.session.get(key);
@@ -264,7 +264,7 @@ async function clearTabData(atab, keylist) {
  * @return Promise data is an object of key:value pairs stored for given tab, or data is undefined.
  */
 async function readTabData(atab) {
-  if (!(atab && ('id' in atab) && ('windowId' in atab))) { return }
+  if (!(atab?.id && atab?.windowId)) { return }
   const key = 'tab_' + getTabKey(atab)
   const result = await chrome.storage.session.get(key);
   return result[key];
@@ -279,7 +279,7 @@ async function readTabData(atab) {
  * Return true if version has 4 numbers, which means it's a development build not for release.
  */
 function isDevVersion() {
-  return (gVersion && (gVersion.split('.').length === 4))
+  return gVersion?.split('.').length === 4
 }
 
 /**
@@ -530,7 +530,7 @@ function getWaybackTimestampFromResponse(json) {
  */
 function timestampToDate(timestamp) {
   let date = null
-  if (timestamp && timestamp.length >= 4) {
+  if (timestamp?.length >= 4) {
     date = new Date(Date.UTC(
       Number(timestamp.substring(0, 4)), // year
       (Number(timestamp.substring(4, 6)) || 1) - 1, // month
@@ -650,14 +650,14 @@ function openByWindowSetting(url, op = null, cb) {
 
 function opener(url, option, callback) {
   if (option === 'tab' || option === undefined) {
-    chrome.tabs.create({ url: url }, (tab) => {
+    chrome.tabs.create({ url }, (tab) => {
       if (callback) { callback(tab.id) }
     })
   } else if (option === 'replace') {
     // Back button may not work due to a bug in Chrome, but works fine in Firefox.
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs && tabs[0]) {
-        chrome.tabs.update(tabs[0].id, { active: true, url: url }, (tab) => {
+      if (tabs?.[0]) {
+        chrome.tabs.update(tabs[0].id, { active: true, url }, (tab) => {
           if (callback) { callback(tab.id) }
         })
       }
