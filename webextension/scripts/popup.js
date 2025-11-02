@@ -175,16 +175,22 @@ function setupSaveAction(url) {
   chrome.storage.local.get(['private_mode_setting'], ({ private_mode_setting }) => {
     if (private_mode_setting !== false) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       $('#last-saved-msg').hide()
       return
 =======
          $('#last-saved-msg').hide()
          return
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+      $('#last-saved-msg').hide()
+      return
+>>>>>>> 81c3c94 (Refactor webextension scripts)
     }
 
     chrome.runtime.sendMessage({
       message: 'getCachedWaybackCount',
+<<<<<<< HEAD
 <<<<<<< HEAD
       url
     }, (message) => {
@@ -198,16 +204,23 @@ function setupSaveAction(url) {
         } else if (message?.error) {
 =======
       url: url
+=======
+      url
+>>>>>>> 81c3c94 (Refactor webextension scripts)
     }, (message) => {
       checkLastError()
       if (message) {
-        if (('last_ts' in message) && message.last_ts) {
+        if (message?.last_ts) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
-        } else if (('total' in message) && (message.total === -1)) {
+        } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
           $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+<<<<<<< HEAD
         } else if ('error' in message) {
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+        } else if (message?.error) {
+>>>>>>> 81c3c94 (Refactor webextension scripts)
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
         } else {
           $('#last-saved-msg').hide()
@@ -217,10 +230,14 @@ function setupSaveAction(url) {
       }
     })
 <<<<<<< HEAD
+<<<<<<< HEAD
   })
 =======
   })  
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+  })
+>>>>>>> 81c3c94 (Refactor webextension scripts)
 }
 
 // Called when logged-out.
@@ -749,7 +766,12 @@ function openMyWebArchivePage() {
   // retrieve the itemname
   getUserInfo().then(info => {
     if (info?.itemname) {
+<<<<<<< HEAD
       openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
+=======
+      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
+      openByWindowSetting(url)
+>>>>>>> 81c3c94 (Refactor webextension scripts)
     }
   })
 }
@@ -820,10 +842,19 @@ function showWaybackCount(url) {
       clearWaybackCount()
     }
     if (result?.first_ts) {
+<<<<<<< HEAD
       $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
     }
     if (result?.last_ts) {
       $('#newest-btn').attr('title', timestampToDate(result.last_ts).toLocaleString())
+=======
+      let date = timestampToDate(result.first_ts)
+      $('#oldest-btn').attr('title', date.toLocaleString())
+    }
+    if (result?.last_ts) {
+      let date = timestampToDate(result.last_ts)
+      $('#newest-btn').attr('title', date.toLocaleString())
+>>>>>>> 81c3c94 (Refactor webextension scripts)
     }
   })
 }
@@ -888,6 +919,7 @@ function enableAfterSaving() {
 
 // respond to Save Page Now success
 function setupSaveListener() {
+<<<<<<< HEAD
   chrome.runtime.onMessage.addListener((message) => {
     if (message.url !== activeURL) {
       return
@@ -925,6 +957,44 @@ function setupSaveListener() {
       const resources = message.data?.resources
       if (resources?.length) {
         showSaving(resources.length)
+=======
+  chrome.runtime.onMessage.addListener(
+    (message) => {
+      if (activeURL === message.url) {
+        if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save successful')
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          $('#spn-btn').removeClass('flip-inside')
+          setupWaybackCount()
+          enableAfterSaving()
+        } else if (message.message === 'save_archived') {
+          // snapshot already archived within timeframe
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Recently Saved')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if (message.message === 'slow_archive_msg') {
+          // the snapshot archiving process will start in some time
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Processing')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if (message.message === 'save_start') {
+          showSaving()
+        } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save Failed')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if ((message.message === 'resource_list_show')) {
+          // show resource count from SPN status in SPN button
+          const vdata = message.data
+          if (vdata?.resources?.length) {
+            showSaving(vdata.resources.length)
+          }
+        }
+>>>>>>> 81c3c94 (Refactor webextension scripts)
       }
     }
   })
@@ -970,6 +1040,7 @@ $(function() {
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
   $('.logo-wayback-machine').on('click', homepage)
@@ -1001,3 +1072,6 @@ $(function() {
 =======
 })
 >>>>>>> 4d915a7 (Simplify popup.js code)
+=======
+})
+>>>>>>> 9dceb52 (Refactor webextension scripts)
