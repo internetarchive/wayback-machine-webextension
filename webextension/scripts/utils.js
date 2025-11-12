@@ -728,12 +728,13 @@ function checkLastError() {
 
 function attachTooltip (anchor, tooltip, pos = 'right', time = 200) {
   // Modified code from https://embed.plnkr.co/plunk/HLqrJ6 to get tooltip to stay
+  // Note: Bootstrap 5 changed data-toggle to data-bs-toggle, but jQuery plugin API still works
   return anchor.attr({
-    'data-toggle': 'tooltip',
+    'data-bs-toggle': 'tooltip',
     'title': tooltip
   })
   .tooltip({
-    animated: false,
+    // animated option removed in Bootstrap 5, but jQuery plugin API should handle it
     placement: `${pos} auto`,
     html: true,
     trigger: 'manual'
