@@ -200,7 +200,11 @@ function setupSaveAction(url) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
+<<<<<<< HEAD
           $('.blocked-dim').prop('disabled', true)
+=======
+          $('.blocked-dim').addClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
         } else if (message?.error) {
 =======
       url: url
@@ -214,11 +218,7 @@ function setupSaveAction(url) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
-          $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
-<<<<<<< HEAD
-        } else if ('error' in message) {
->>>>>>> fefc844 (Simplify popup.js code)
-=======
+          $('.blocked-dim').addClass('button-disabled')
         } else if (message?.error) {
 >>>>>>> 81c3c94 (Refactor webextension scripts)
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
@@ -262,7 +262,11 @@ function loginError() {
 
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', true)
+=======
+  $('.auth-disabled').addClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
@@ -280,7 +284,11 @@ function loginSuccess() {
 
   // reset options that open login page
   $('.auth-icon').removeClass('auth-icon-active')
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', false)
+=======
+  $('.auth-disabled').removeClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
   $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
@@ -800,6 +808,7 @@ function showUrlNotSupported(flag) {
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
 <<<<<<< HEAD
+<<<<<<< HEAD
     $('.not-sup-dim').prop('disabled', true)
   } else {
     $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
@@ -812,6 +821,13 @@ function showUrlNotSupported(flag) {
     $('#url-not-supported-msg').text('').hide()
     $('.not-sup-dim').attr('disabled', false).css({ opacity: 1, cursor: '' })
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+    $('.not-sup-dim').addClass('button-disabled')
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').removeClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
   }
 }
 
@@ -927,6 +943,7 @@ function showSaving(count) {
 
 function disableWhileSaving() {
 <<<<<<< HEAD
+<<<<<<< HEAD
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
 }
 
@@ -939,6 +956,13 @@ function enableAfterSaving() {
 function enableAfterSaving() {
   $('#search-input, #chk-outlinks, #chk-screenshot').removeAttr('disabled')
 >>>>>>> fefc844 (Simplify popup.js code)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').addClass('button-disabled').prop('disabled', true)
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').removeClass('button-disabled').prop('disabled', false)
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
 }
 
 // respond to Save Page Now success
@@ -1071,6 +1095,7 @@ $(function() {
   $('#tag-cloud-btn').click(showContext)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
   $('.logo-wayback-machine').on('click', homepage)
@@ -1097,7 +1122,19 @@ $(function() {
 <<<<<<< HEAD
 =======
 >>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+<<<<<<< HEAD
 >>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
+=======
+=======
+  
+  // Prevent clicks on disabled buttons
+  $(document).on('click', '.button-disabled', function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    return false
+  })
+>>>>>>> 758d15e (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
 })
 =======
 })
