@@ -201,6 +201,7 @@ function setupSaveAction(url) {
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
 <<<<<<< HEAD
+<<<<<<< HEAD
           $('.blocked-dim').prop('disabled', true)
 =======
           $('.blocked-dim').addClass('button-disabled')
@@ -219,6 +220,9 @@ function setupSaveAction(url) {
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
           $('.blocked-dim').addClass('button-disabled')
+=======
+          $('.blocked-dim').prop('disabled', true)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
         } else if (message?.error) {
 >>>>>>> 81c3c94 (Refactor webextension scripts)
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
@@ -263,10 +267,14 @@ function loginError() {
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
 <<<<<<< HEAD
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', true)
 =======
   $('.auth-disabled').addClass('button-disabled')
 >>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('.auth-disabled').prop('disabled', true)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
@@ -285,10 +293,14 @@ function loginSuccess() {
   // reset options that open login page
   $('.auth-icon').removeClass('auth-icon-active')
 <<<<<<< HEAD
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', false)
 =======
   $('.auth-disabled').removeClass('button-disabled')
 >>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('.auth-disabled').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
   $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
@@ -809,6 +821,7 @@ function showUrlNotSupported(flag) {
     $('#spn-back-label').text('URL not supported')
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     $('.not-sup-dim').prop('disabled', true)
   } else {
     $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
@@ -828,6 +841,13 @@ function showUrlNotSupported(flag) {
     $('#url-not-supported-msg').text('').hide()
     $('.not-sup-dim').removeClass('button-disabled')
 >>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+    $('.not-sup-dim').prop('disabled', true)
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   }
 }
 
@@ -944,6 +964,7 @@ function showSaving(count) {
 function disableWhileSaving() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
 }
 
@@ -963,6 +984,13 @@ function enableAfterSaving() {
 function enableAfterSaving() {
   $('#search-input, #chk-outlinks, #chk-screenshot').removeClass('button-disabled').prop('disabled', false)
 >>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
 }
 
 // respond to Save Page Now success
@@ -1127,6 +1155,7 @@ $(function() {
 =======
 =======
   
+<<<<<<< HEAD
   // Prevent clicks on disabled buttons
   $(document).on('click', '.button-disabled', function(e) {
     e.preventDefault()
@@ -1134,7 +1163,12 @@ $(function() {
     return false
   })
 >>>>>>> 758d15e (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+<<<<<<< HEAD
 >>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+=======
+>>>>>>> d7483f1 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
 })
 =======
 })
