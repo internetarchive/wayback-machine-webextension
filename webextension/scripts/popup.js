@@ -188,7 +188,7 @@ function setupSaveAction(url) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
-          $('.blocked-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+          $('.blocked-dim').prop('disabled', true)
         } else if (message?.error) {
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
         } else {
@@ -223,7 +223,7 @@ function loginError() {
 
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
-  $('.auth-disabled').attr('disabled', true)
+  $('.auth-disabled').prop('disabled', true)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
@@ -241,7 +241,7 @@ function loginSuccess() {
 
   // reset options that open login page
   $('.auth-icon').removeClass('auth-icon-active')
-  $('.auth-disabled').removeAttr('disabled')
+  $('.auth-disabled').prop('disabled', false)
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
   $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
@@ -723,11 +723,11 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
-    $('.not-sup-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+    $('.not-sup-dim').prop('disabled', true)
   } else {
     $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
     $('#url-not-supported-msg').text('').hide()
-    $('.not-sup-dim').attr('disabled', false).css({ opacity: 1, cursor: '' })
+    $('.not-sup-dim').prop('disabled', false)
   }
 }
 
@@ -826,11 +826,11 @@ function showSaving(count) {
 }
 
 function disableWhileSaving() {
-  $('#search-input, #chk-outlinks, #chk-screenshot').attr('disabled', 'disabled')
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
 }
 
 function enableAfterSaving() {
-  $('#search-input, #chk-outlinks, #chk-screenshot').removeAttr('disabled')
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', false)
 }
 
 // respond to Save Page Now success
@@ -913,4 +913,5 @@ $(function() {
   $('.btn').click(clearFocus)
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
+  
 })

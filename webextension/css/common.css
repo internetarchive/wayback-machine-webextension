@@ -84,6 +84,41 @@ button {
     outline: none !important;
 }
 
+/* Disabled button styling using standard HTML disabled attribute and :disabled CSS selector */
+.btn:disabled,
+input:disabled,
+button:disabled {
+    opacity: 0.66 !important;
+    cursor: not-allowed !important;
+    pointer-events: auto !important; /* Override Bootstrap's pointer-events: none to allow cursor display */
+}
+
+/* Prevent color changes on disabled buttons when hovered/focused/active */
+.btn:disabled:hover,
+.btn:disabled:focus,
+.btn:disabled:active,
+.btn:disabled:focus-visible {
+    opacity: 0.66 !important;
+    box-shadow: none !important;
+}
+
+/* Preserve original button colors for disabled state - override hover/active states */
+.btn-red:disabled:hover,
+.btn-red:disabled:active,
+.btn-red:disabled:focus { background-color: #9A3B38 !important; border-color: #BF4946 !important; }
+.btn-light-gray:disabled:hover,
+.btn-light-gray:disabled:active,
+.btn-light-gray:disabled:focus { background-color: #737373 !important; border-color: #A9A9A9 !important; }
+.btn-dark-gray:disabled:hover,
+.btn-dark-gray:disabled:active,
+.btn-dark-gray:disabled:focus { background-color: #4D4D4D !important; border-color: #737373 !important; }
+.btn-yellow:disabled:hover,
+.btn-yellow:disabled:active,
+.btn-yellow:disabled:focus { background-color: #AA8800 !important; border-color: #EECC00 !important; }
+.btn-blue:disabled:hover,
+.btn-blue:disabled:active,
+.btn-blue:disabled:focus { background-color: #405971 !important; border-color: #668db3 !important; }
+
 /* button sizes */
 
 .btn-mini {
