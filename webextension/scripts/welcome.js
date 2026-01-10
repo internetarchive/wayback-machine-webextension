@@ -4,7 +4,13 @@
 /*   global afterAcceptTerms, checkLastError */
 
 $('#accept-btn').click(() => {
-  afterAcceptTerms()
+  try {
+    afterAcceptTerms()
+  }
+  catch (error) {
+    // Some browsers may not support the menu API.
+    console.log('afterAcceptTerms ERROR: ', error)
+  }
   chrome.tabs.getCurrent((tab) => {
     chrome.tabs.remove(tab.id, checkLastError)
   })
