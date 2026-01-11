@@ -244,7 +244,7 @@ function loginSuccess() {
   $('.auth-disabled').prop('disabled', false)
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
-  $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
+  $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
@@ -420,7 +420,7 @@ function display_list(key_word) {
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
-          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).on('click', (event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
             if (activeURL) { useSearchURL(true) }
@@ -548,7 +548,7 @@ function setupViewArchived() {
           $('#last-saved-msg, #search-container, #spn-container').hide()
           $('#view-archived-container').show()
           $('#view-archived-msg').text(statusText)
-          $('#view-archived-btn').click(() => {
+          $('#view-archived-btn').on('click', () => {
             openByWindowSetting(waybackUrl)
           })
         }
@@ -578,7 +578,7 @@ function setupReadBook() {
               // Checking if the tab url is the same as the last stored one
               if (stored_url === url) {
                 // if same, use the previously fetched url
-                $('#readbook-btn').click(() => {
+                $('#readbook-btn').on('click', () => {
                   openByWindowSetting(detail_url, context)
                 })
               } else {
@@ -593,7 +593,7 @@ function setupReadBook() {
                 .then(response => {
                   if (response['metadata'] && response['metadata']['identifier-access']) {
                     const new_details_url = response['metadata']['identifier-access']
-                    $('#readbook-btn').click(() => {
+                    $('#readbook-btn').on('click', () => {
                       openByWindowSetting(new_details_url, context)
                     })
                   }
@@ -619,7 +619,7 @@ function setupNewsClips() {
           let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             $('#tvnews-container').show()
-            $('#tvnews-btn').click(() => {
+            $('#tvnews-btn').on('click', () => {
               chrome.storage.local.get(['view_setting'], function (settings) {
                 if (settings?.view_setting) {
                   const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
@@ -647,11 +647,11 @@ function setupWikiButtons() {
           let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             // show wikipedia cited books & papers buttons
-            $('#wikibooks-btn').click(() => {
+            $('#wikibooks-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
-            $('#wikipapers-btn').click(() => {
+            $('#wikipapers-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
@@ -684,7 +684,7 @@ function setupFactCheck() {
             if (state.has('F') && result?.customData?.contextUrl) {
               // show fact-check button
               $('#fact-check-container').show()
-              $('#fact-check-btn').click(() => openByWindowSetting(result.customData.contextUrl))
+              $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
             }
           })
         }
@@ -893,25 +893,25 @@ $(function() {
   setupWaybackCount()
   setupSaveListener()
   setupSettingsTabTip()
-  $('.logo-wayback-machine').click(homepage)
-  $('#newest-btn').click(openNewestPage)
-  $('#oldest-btn').click(openOldestPage)
-  $('#overview-btn').click(openOverviewPage)
-  $('#facebook-share-btn').click(social_share)
-  $('#twitter-share-btn').click(social_share)
-  $('#linkedin-share-btn').click(social_share)
-  $('#copy-link-btn').click(social_share)
-  $('#tweets-btn').click(searchTweet)
-  $('#about-tab-btn').click(about_support)
-  $('#donate-tab-btn').click(open_donations_page)
-  $('#settings-tab-btn').click(showSettings)
-  $('#feedback-tab-btn').click(open_feedback_page)
-  $('#site-map-btn').click(openSitemap)
-  $('#collections-btn').click(openCollections)
-  $('#urls-btn').click(openURLs)
-  $('#search-input').keydown(display_suggestions)
-  $('.btn').click(clearFocus)
-  $('#annotations-btn').click(showContext)
-  $('#tag-cloud-btn').click(showContext)
+  $('.logo-wayback-machine').on('click', homepage)
+  $('#newest-btn').on('click', openNewestPage)
+  $('#oldest-btn').on('click', openOldestPage)
+  $('#overview-btn').on('click', openOverviewPage)
+  $('#facebook-share-btn').on('click', social_share)
+  $('#twitter-share-btn').on('click', social_share)
+  $('#linkedin-share-btn').on('click', social_share)
+  $('#copy-link-btn').on('click', social_share)
+  $('#tweets-btn').on('click', searchTweet)
+  $('#about-tab-btn').on('click', about_support)
+  $('#donate-tab-btn').on('click', open_donations_page)
+  $('#settings-tab-btn').on('click', showSettings)
+  $('#feedback-tab-btn').on('click', open_feedback_page)
+  $('#site-map-btn').on('click', openSitemap)
+  $('#collections-btn').on('click', openCollections)
+  $('#urls-btn').on('click', openURLs)
+  $('#search-input').on('keydown', display_suggestions)
+  $('.btn').on('click', clearFocus)
+  $('#annotations-btn').on('click', showContext)
+  $('#tag-cloud-btn').on('click', showContext)
   
 })

@@ -1,5 +1,7 @@
 // settings.js
 
+const { openByWindowSetting } = require("./utils")
+
 // from 'utils.js'
 /*   global attachTooltip, openByWindowSetting, isSafari */
 
@@ -13,7 +15,7 @@ $(function() {
   setupSettingsChange()
   setupPanelSwitch()
   setupHelpDocs()
-  $('#exclude-urls-btn').click(showExcludeList)
+  $('#exclude-urls-btn').on('click', showExcludeList)
   $('.back-btn').off('click').on('click', goBackToMain)
 })
 
@@ -81,8 +83,8 @@ function clearSettingsOnLogout() {
 }
 
 function setupPrivateMode() {
-  $('#private-mode-setting').change(onPrivateModeChange)
-  $('.private-setting').change(onPrivateSettingChange)
+  $('#private-mode-setting').on('change', onPrivateModeChange)
+  $('.private-setting').on('change', onPrivateSettingChange)
 }
 
 // When Private Mode turned on, clear all private checkboxes and clear cached data.
@@ -115,10 +117,10 @@ function enableEmbedPopupSetting(flag) {
 function setupSettingsChange() {
 
   // save settings whenever one changes
-  $('.saved-setting').change(saveSettings)
+  $('.saved-setting').on('change', saveSettings)
 
   // auto save page
-  $('#auto-archive-age').change((e) => {
+  $('#auto-archive-age').on('change', (e) => {
     $('#auto-archive-setting').prop('checked', true).trigger('change')
     e.target.blur()
   })
@@ -130,7 +132,7 @@ function setupSettingsChange() {
     $('#auto-bookmark-label').hide()
   } else {
     // before setting Auto Save Bookmarks, check optional 'bookmarks' permission and popup request if not yet acquired.
-    $('#auto-bookmark-setting').click((e) => {
+    $('#auto-bookmark-setting').on('click', (e) => {
       if ($(e.target).prop('checked') === true) {
         e.preventDefault()
         chrome.permissions.request({ permissions: ['bookmarks'] }, (granted) => {
@@ -153,34 +155,34 @@ function setupSettingsChange() {
   }
 
   // view setting
-  $('#view-setting').click(switchTabWindow)
-  $('#view-setting').children('input,label').click((e) => { e.stopPropagation() })
+  $('#view-setting').on('click', switchTabWindow)
+  $('#view-setting').children('input,label').on('click', (e) => { e.stopPropagation() })
 
   // wayback count
-  $('#wm-count-setting').change((e) => {
+  $('#wm-count-setting').on('change', (e) => {
     // displays or clears the count badge, label, oldest and newest tooltips
     setupWaybackCount()
   })
 
   // 404 embed-popup-setting
-  $('#not-found-setting').change((e) => {
+  $('#not-found-setting').on('change', (e) => {
     enableEmbedPopupSetting($(e.target).prop('checked') === true)
   })
 
   // resources
-  $('#wiki-setting').change((e) => {
+  $('#wiki-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#wiki-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { wiki_setting: false } })
     }
   })
-  $('#amazon-setting').change((e) => {
+  $('#amazon-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#readbook-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { amazon_setting: false } })
     }
   })
-  $('#tvnews-setting').change((e) => {
+  $('#tvnews-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#tvnews-container').hide()
       chrome.runtime.sendMessage({ message: 'clearResource', settings: { tvnews_setting: false } })
@@ -188,7 +190,7 @@ function setupSettingsChange() {
   })
 
   // context notices
-  $('#fact-check-setting').change((e) => {
+  $('#fact-check-setting').on('change', (e) => {
     if ($(e.target).prop('checked') === false) {
       $('#fact-check-container').hide()
       chrome.runtime.sendMessage({ message: 'clearFactCheck' })
@@ -197,20 +199,26 @@ function setupSettingsChange() {
 }
 
 function showExcludeList() {
-  openByWindowSetting(chrome.runtime.getURL('exclude-list.html'), 'windows')
+  try {
+    openByWindowSetting(chrome.runtime.getURL('exclude-list.html'), 'windows')
+  }
+  catch {
+    $('#setting-page').hide()
+    opener(chrome.runtime.getURL('exclude-list.html'), 'tab')
+  }
 }
 
 // Prepares the top tab bar for switching between setting panels.
 function setupPanelSwitch() {
   if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }
   $('#first-panel').hide()
-  $('#panel1-btn').click(() => {
+  $('#panel1-btn').on('click', () => {
     $('#second-panel').hide()
     $('#first-panel').show()
     if (!$('#panel1-btn').hasClass('selected')) { $('#panel1-btn').addClass('selected') }
     if ($('#panel2-btn').hasClass('selected')) { $('#panel2-btn').removeClass('selected') }
   })
-  $('#panel2-btn').click(() => {
+  $('#panel2-btn').on('click', () => {
     $('#first-panel').hide()
     $('#second-panel').show()
     if (!$('#panel2-btn').hasClass('selected')) { $('#panel2-btn').addClass('selected') }

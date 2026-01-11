@@ -3,7 +3,7 @@
 // from 'utils.js'
 /*   global afterAcceptTerms, checkLastError */
 
-$('#accept-btn').click(() => {
+$('#accept-btn').on('click', () => {
   try {
     afterAcceptTerms()
   }
@@ -15,7 +15,7 @@ $('#accept-btn').click(() => {
     chrome.tabs.remove(tab.id, checkLastError)
   })
 })
-$('#decline-btn').click(() => {
+$('#decline-btn').on('click', () => {
   chrome.tabs.getCurrent((tab) => {
     chrome.tabs.remove(tab.id, checkLastError)
   })
