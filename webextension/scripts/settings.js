@@ -1,7 +1,5 @@
 // settings.js
 
-const { openByWindowSetting } = require("./utils")
-
 // from 'utils.js'
 /*   global attachTooltip, openByWindowSetting, isSafari */
 
