@@ -684,7 +684,17 @@ function setupFactCheck() {
             if (state.has('F') && result?.customData?.contextUrl) {
               // show fact-check button
               $('#fact-check-container').show()
+<<<<<<< HEAD
               $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
+=======
+<<<<<<< HEAD
+              $('#fact-check-btn').click(() => {
+                openByWindowSetting(contextUrl)
+              })
+=======
+              $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
+>>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
             }
           })
         }
@@ -893,6 +903,31 @@ $(function() {
   setupWaybackCount()
   setupSaveListener()
   setupSettingsTabTip()
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  $('.logo-wayback-machine').click(homepage)
+  $('#newest-btn').click(openNewestPage)
+  $('#oldest-btn').click(openOldestPage)
+  $('#overview-btn').click(openOverviewPage)
+  $('#facebook-share-btn').click(social_share)
+  $('#twitter-share-btn').click(social_share)
+  $('#linkedin-share-btn').click(social_share)
+  $('#copy-link-btn').click(social_share)
+  $('#tweets-btn').click(searchTweet)
+  $('#about-tab-btn').click(about_support)
+  $('#donate-tab-btn').click(open_donations_page)
+  $('#settings-tab-btn').click(showSettings)
+  $('#feedback-tab-btn').click(open_feedback_page)
+  $('#site-map-btn').click(openSitemap)
+  $('#collections-btn').click(openCollections)
+  $('#urls-btn').click(openURLs)
+  $('#search-input').keydown(display_suggestions)
+  $('.btn').click(clearFocus)
+  $('#annotations-btn').click(showContext)
+  $('#tag-cloud-btn').click(showContext)
+=======
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
   $('.logo-wayback-machine').on('click', homepage)
   $('#newest-btn').on('click', openNewestPage)
   $('#oldest-btn').on('click', openOldestPage)
@@ -914,4 +949,8 @@ $(function() {
   $('#annotations-btn').on('click', showContext)
   $('#tag-cloud-btn').on('click', showContext)
   
+<<<<<<< HEAD
+=======
+>>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
 })
