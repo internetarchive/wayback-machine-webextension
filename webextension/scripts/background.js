@@ -418,6 +418,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
     initDefaultOptions()
     initAutoExcludeList()
+    afterAcceptTerms()
   }
 })
 
@@ -558,8 +559,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       let page_url = getCleanUrl(message.page_url)
       let silent = message.silent || false
       let options = message.options || {}
-      savePageNowChecked(message.atab, page_url, silent, options)
+      savePageNow(message.atab, page_url, silent, options, false)
     }
+    return true
   }
   else if (message.message === 'openurl') {
     // open URL in new tab or window depending on setting
