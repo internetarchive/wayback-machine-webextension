@@ -4,7 +4,7 @@
 - [Old Changelog](changelog-chrome.md).
 
 - Store ID: fpnmgdkabkmnadcjpehmlllkndpkmiak
-- Store URL: https://chrome.google.com/webstore/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak
+- Store URL: https://chromewebstore.google.com/detail/wayback-machine/fpnmgdkabkmnadcjpehmlllkndpkmiak
 
 
 ### Notes
@@ -35,7 +35,7 @@ zip -r webext.zip . -x ".*" -x "*/.*"
   - Use standard app email account and password.
   - This will send a verification code SMS to number listed, who you will need to ask for the code.
 
-- After login, go to the [Developer Dashboard](https://chrome.google.com/webstore/devconsole/).
+- After login, go to the [Developer Dashboard](https://chromewebstore.google.com/devconsole/).
 
 - You can manage the account by selecting "Account" from the upper left menu.
 
