@@ -63,7 +63,8 @@ function popupWayback(url, code) {
   // Adding functionality to close and archive button
   gShadowRoot.querySelector('#close-btn')?.addEventListener('click', () => {
     gCloseClicked = true
-    gShadowRoot.querySelector('#popup-container')?.style.display = 'none'
+    const popup = gShadowRoot.querySelector('#popup-container')
+    if (popup) { popup.style.display = 'none' }
   })
 
   gShadowRoot.querySelector('#archive-btn')?.addEventListener('click', (e) => {
