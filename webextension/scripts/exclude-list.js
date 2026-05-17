@@ -59,11 +59,11 @@ function clearExcludeList() {
 
 // onload
 $(function() {
-  $('.btn').click(clearFocus)
-  $('#clear-btn').click(clearExcludeList)
-  $('#reset-btn').click(resetExcludeList)
-  $('#cancel-btn').click(closeWindow)
-  $('#save-btn').click((e) => {
+  $('.btn').on('click', clearFocus)
+  $('#clear-btn').on('click', clearExcludeList)
+  $('#reset-btn').on('click', resetExcludeList)
+  $('#cancel-btn').on('click', closeWindow)
+  $('#save-btn').on('click', (e) => {
     saveExcludeListAndClose()
   })
   loadExcludeList()
