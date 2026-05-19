@@ -45,12 +45,13 @@ function getAnnotations(type = 'url') {
         let row = $('#row_contain-' + type)
         let item = row.clone()
         item.attr('id', 'row-' + i)
-        item.find('.date').html('Dated on ' + date)
-        item.find('.userinfo').html(user)
+        item.find('.date').text('Dated on ' + date)
+        item.find('.userinfo').text(user)
+        const safeSource = /^https?:\/\//i.test(source) ? source : '#'
         item.find('#source-contain').append(
-          $('<a>').attr({ 'href': source, 'target': '_blank' }).html(title)
+          $('<a>').attr({ 'href': safeSource, 'target': '_blank', 'rel': 'noopener noreferrer' }).text(title)
         )
-        item.find('#text-contain').html(exactData)
+        item.find('#text-contain').text(exactData)
         item.find('.links').append(
           $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in Context').click(() => {
             openByWindowSetting(rowData.links.incontext)
@@ -63,7 +64,7 @@ function getAnnotations(type = 'url') {
         if ('selector' in rowData.target[0]) {
           let selector_length = rowData.target[0].selector.length
           let exact = rowData.target[0].selector[selector_length - 1].exact
-          item.find('.target-selector-exact').html(exact)
+          item.find('.target-selector-exact').text(exact)
         } else {
           item.find('.target-selector-exact').hide()
         }
