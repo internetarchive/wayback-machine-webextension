@@ -1,0 +1,42 @@
+{
+  "ext_name": {
+    "message": "Wayback Machine",
+    "description": "Name of the extension."
+  },
+  "ext_description": {
+    "message": "The Official Wayback Machine Extension - by the Internet Archive.",
+    "description": "Description of the extension."
+  },
+  "exclude_title": {
+    "message": "Exclude URLs",
+    "description": "Title shown on the Exclude URLs page."
+  },
+  "exclude_description": {
+    "message": "Enter URL patterns below to exclude from Auto Save.",
+    "description": "Instructions on the Exclude URLs page."
+  },
+  "exclude_clear_all": {
+    "message": "Clear All",
+    "description": "Button to clear all excluded URL patterns."
+  },
+  "exclude_reset_defaults": {
+    "message": "Reset to Defaults",
+    "description": "Button to reset excluded URL patterns to defaults."
+  },
+  "exclude_placeholder": {
+    "message": "Enter 1 URL per line. For example: archive.org*",
+    "description": "Placeholder text for the exclude list textarea."
+  },
+  "exclude_legend": {
+    "message": "Use * as a wildcard. For example: archive.org*",
+    "description": "Help text explaining wildcard usage in the exclude list."
+  },
+  "exclude_cancel": {
+    "message": "Cancel",
+    "description": "Button to cancel changes to the exclude list."
+  },
+  "exclude_save": {
+    "message": "Save",
+    "description": "Button to save changes to the exclude list."
+  }
+}
