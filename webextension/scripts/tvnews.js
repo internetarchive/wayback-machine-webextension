@@ -23,7 +23,7 @@ function constructArticles (clip) {
   let bottomElements = $('<div>').addClass('bottom_elements').append(
     $('<a>').attr({ 'href': clip.preview_url }).append(
       $('<img class="preview-clips">').attr({ 'src': clip.preview_thumb })
-    ).click((e) => {
+    ).on('click', (e) => {
       e.preventDefault()
       openByWindowSetting(clip.preview_url)
     }),
