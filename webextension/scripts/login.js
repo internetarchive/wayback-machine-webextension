@@ -60,7 +60,7 @@ function doLoginAPI(email, password) {
   const loginPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('timeout'))
-    }, 5000)
+    }, 20000)
     let headers = new Headers(hostHeaders)
     headers.set('Content-Type', 'application/json')
     fetch('https://archive.org/services/xauthn?op=login', {
