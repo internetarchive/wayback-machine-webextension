@@ -174,12 +174,24 @@ function setupSaveAction(url) {
 
   chrome.storage.local.get(['private_mode_setting'], ({ private_mode_setting }) => {
     if (private_mode_setting !== false) {
+<<<<<<< HEAD
+<<<<<<< HEAD
       $('#last-saved-msg').hide()
       return
+=======
+         $('#last-saved-msg').hide()
+         return
+>>>>>>> fefc844 (Simplify popup.js code)
+=======
+      $('#last-saved-msg').hide()
+      return
+>>>>>>> 81c3c94 (Refactor webextension scripts)
     }
 
     chrome.runtime.sendMessage({
       message: 'getCachedWaybackCount',
+<<<<<<< HEAD
+<<<<<<< HEAD
       url
     }, (message) => {
       checkLastError()
@@ -188,8 +200,31 @@ function setupSaveAction(url) {
           $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
         } else if (message?.total === -1) {
           $('#last-saved-msg').text('URL excluded from viewing').show()
+<<<<<<< HEAD
+<<<<<<< HEAD
           $('.blocked-dim').prop('disabled', true)
+=======
+          $('.blocked-dim').addClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
         } else if (message?.error) {
+=======
+      url: url
+=======
+      url
+>>>>>>> 81c3c94 (Refactor webextension scripts)
+    }, (message) => {
+      checkLastError()
+      if (message) {
+        if (message?.last_ts) {
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.last_ts)).show()
+        } else if (message?.total === -1) {
+          $('#last-saved-msg').text('URL excluded from viewing').show()
+          $('.blocked-dim').addClass('button-disabled')
+=======
+          $('.blocked-dim').prop('disabled', true)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
+        } else if (message?.error) {
+>>>>>>> 81c3c94 (Refactor webextension scripts)
           $('#last-saved-msg').text('Wayback Machine Unavailable').show()
         } else {
           $('#last-saved-msg').hide()
@@ -198,7 +233,15 @@ function setupSaveAction(url) {
         $('#last-saved-msg').hide()
       }
     })
+<<<<<<< HEAD
+<<<<<<< HEAD
   })
+=======
+  })  
+>>>>>>> fefc844 (Simplify popup.js code)
+=======
+  })
+>>>>>>> 81c3c94 (Refactor webextension scripts)
 }
 
 // Called when logged-out.
@@ -223,7 +266,15 @@ function loginError() {
 
   // setup options that open login page
   $('.auth-icon').addClass('auth-icon-active')
+<<<<<<< HEAD
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', true)
+=======
+  $('.auth-disabled').addClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('.auth-disabled').prop('disabled', true)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   $('.auth-click1').off('click').on('click', showLoginFromMain)
   $('.auth-click2').off('click').on('click', showLoginFromSettings)
 
@@ -241,10 +292,18 @@ function loginSuccess() {
 
   // reset options that open login page
   $('.auth-icon').removeClass('auth-icon-active')
+<<<<<<< HEAD
+<<<<<<< HEAD
   $('.auth-disabled').prop('disabled', false)
+=======
+  $('.auth-disabled').removeClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('.auth-disabled').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   $('.auth-click1').off('click')
   $('.auth-click2').off('click')
-  $('#my-archive-btn').click(openMyWebArchivePage) // keep after above code
+  $('#my-archive-btn').on('click', openMyWebArchivePage) // keep after above code
 
   // add tab logout button
   $('.tab-item').css('width', '18%')
@@ -326,7 +385,16 @@ function searchTweet() {
         surl = surl.substring(0, surl.length - 1)
       }
       const query = `(${surl} OR https://${curl} OR http://${curl})`
+<<<<<<< HEAD
+<<<<<<< HEAD
       openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
+=======
+      let open_url = 'https://x.com/search?q=' + fixedEncodeURIComponent(query)
+      openByWindowSetting(open_url)
+>>>>>>> fefc844 (Simplify popup.js code)
+=======
+      openByWindowSetting('https://x.com/search?q=' + fixedEncodeURIComponent(query))
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   }
 }
@@ -420,7 +488,7 @@ function display_list(key_word) {
       arrow_key_access()
       for (let i = 0; i < data.hosts.length; i++) {
         $('#suggestion-box').append(
-          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).click((event) => {
+          $('<div>').attr('role', 'button').text(data.hosts[i].display_name).on('click', (event) => {
             document.getElementById('search-input').value = event.target.innerHTML
             activeURL = getCleanUrl(makeValidURL(event.target.innerHTML))
             if (activeURL) { useSearchURL(true) }
@@ -548,7 +616,7 @@ function setupViewArchived() {
           $('#last-saved-msg, #search-container, #spn-container').hide()
           $('#view-archived-container').show()
           $('#view-archived-msg').text(statusText)
-          $('#view-archived-btn').click(() => {
+          $('#view-archived-btn').on('click', () => {
             openByWindowSetting(waybackUrl)
           })
         }
@@ -578,7 +646,7 @@ function setupReadBook() {
               // Checking if the tab url is the same as the last stored one
               if (stored_url === url) {
                 // if same, use the previously fetched url
-                $('#readbook-btn').click(() => {
+                $('#readbook-btn').on('click', () => {
                   openByWindowSetting(detail_url, context)
                 })
               } else {
@@ -593,7 +661,7 @@ function setupReadBook() {
                 .then(response => {
                   if (response['metadata'] && response['metadata']['identifier-access']) {
                     const new_details_url = response['metadata']['identifier-access']
-                    $('#readbook-btn').click(() => {
+                    $('#readbook-btn').on('click', () => {
                       openByWindowSetting(new_details_url, context)
                     })
                   }
@@ -619,7 +687,7 @@ function setupNewsClips() {
           let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             $('#tvnews-container').show()
-            $('#tvnews-btn').click(() => {
+            $('#tvnews-btn').on('click', () => {
               chrome.storage.local.get(['view_setting'], function (settings) {
                 if (settings?.view_setting) {
                   const URL = chrome.runtime.getURL('tvnews.html') + '?url=' + url
@@ -647,11 +715,11 @@ function setupWikiButtons() {
           let state = new Set(result?.stateArray ?? []);
           if (state.has('R')) {
             // show wikipedia cited books & papers buttons
-            $('#wikibooks-btn').click(() => {
+            $('#wikibooks-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-books.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
-            $('#wikipapers-btn').click(() => {
+            $('#wikipapers-btn').on('click', () => {
               const URL = chrome.runtime.getURL('cited-papers.html') + '?url=' + fixedEncodeURIComponent(url)
               openByWindowSetting(URL)
             })
@@ -684,7 +752,26 @@ function setupFactCheck() {
             if (state.has('F') && result?.customData?.contextUrl) {
               // show fact-check button
               $('#fact-check-container').show()
+<<<<<<< HEAD
+<<<<<<< HEAD
+              $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
+=======
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
+<<<<<<< HEAD
+              $('#fact-check-btn').click(() => {
+                openByWindowSetting(contextUrl)
+              })
+=======
+              $('#fact-check-btn').on('click', () => openByWindowSetting(result.customData.contextUrl))
+>>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+<<<<<<< HEAD
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
+=======
+=======
               $('#fact-check-btn').click(() => openByWindowSetting(result.customData.contextUrl))
+>>>>>>> e92eb77 (Display extra SPN system status when capture fails)
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
             }
           })
         }
@@ -712,7 +799,16 @@ function openMyWebArchivePage() {
   // retrieve the itemname
   getUserInfo().then(info => {
     if (info?.itemname) {
+<<<<<<< HEAD
+<<<<<<< HEAD
       openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
+=======
+      const url = `https://archive.org/details/${info.itemname}?tab=web-archive`
+      openByWindowSetting(url)
+>>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+      openByWindowSetting(`https://archive.org/details/${info.itemname}?tab=web-archive`)
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   })
 }
@@ -723,11 +819,35 @@ function showUrlNotSupported(flag) {
     $('#last-saved-msg').hide()
     $('#url-not-supported-msg').text('URL not supported')
     $('#spn-back-label').text('URL not supported')
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     $('.not-sup-dim').prop('disabled', true)
   } else {
     $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
     $('#url-not-supported-msg').text('').hide()
     $('.not-sup-dim').prop('disabled', false)
+=======
+    $('.not-sup-dim').attr('disabled', true).css({ opacity: 0.66, cursor: 'not-allowed' })
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').attr('disabled', false).css({ opacity: 1, cursor: '' })
+>>>>>>> fefc844 (Simplify popup.js code)
+=======
+    $('.not-sup-dim').addClass('button-disabled')
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').removeClass('button-disabled')
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+    $('.not-sup-dim').prop('disabled', true)
+  } else {
+    $('#spn-btn').removeClass('flip-inside').off('click').on('click', doSaveNow)
+    $('#url-not-supported-msg').text('').hide()
+    $('.not-sup-dim').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
   }
 }
 
@@ -775,10 +895,26 @@ function showWaybackCount(url) {
       clearWaybackCount()
     }
     if (result?.first_ts) {
+<<<<<<< HEAD
+<<<<<<< HEAD
       $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
     }
     if (result?.last_ts) {
       $('#newest-btn').attr('title', timestampToDate(result.last_ts).toLocaleString())
+=======
+      let date = timestampToDate(result.first_ts)
+      $('#oldest-btn').attr('title', date.toLocaleString())
+    }
+    if (result?.last_ts) {
+      let date = timestampToDate(result.last_ts)
+      $('#newest-btn').attr('title', date.toLocaleString())
+>>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+      $('#oldest-btn').attr('title', timestampToDate(result.first_ts).toLocaleString())
+    }
+    if (result?.last_ts) {
+      $('#newest-btn').attr('title', timestampToDate(result.last_ts).toLocaleString())
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
     }
   })
 }
@@ -826,15 +962,43 @@ function showSaving(count) {
 }
 
 function disableWhileSaving() {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
 }
 
 function enableAfterSaving() {
   $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', false)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').attr('disabled', 'disabled')
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').removeAttr('disabled')
+>>>>>>> fefc844 (Simplify popup.js code)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').addClass('button-disabled').prop('disabled', true)
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').removeClass('button-disabled').prop('disabled', false)
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', true)
+}
+
+function enableAfterSaving() {
+  $('#search-input, #chk-outlinks, #chk-screenshot').prop('disabled', false)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
 }
 
 // respond to Save Page Now success
 function setupSaveListener() {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
   chrome.runtime.onMessage.addListener((message) => {
     if (message.url !== activeURL) {
       return
@@ -872,6 +1036,47 @@ function setupSaveListener() {
       const resources = message.data?.resources
       if (resources?.length) {
         showSaving(resources.length)
+<<<<<<< HEAD
+=======
+  chrome.runtime.onMessage.addListener(
+    (message) => {
+      if (activeURL === message.url) {
+        if (message.message === 'save_success') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save successful')
+          $('#last-saved-msg').text('Last Saved ' + viewableTimestamp(message.timestamp)).show()
+          $('#spn-btn').removeClass('flip-inside')
+          setupWaybackCount()
+          enableAfterSaving()
+        } else if (message.message === 'save_archived') {
+          // snapshot already archived within timeframe
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Recently Saved')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if (message.message === 'slow_archive_msg') {
+          // the snapshot archiving process will start in some time
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Processing')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if (message.message === 'save_start') {
+          showSaving()
+        } else if (message.message === 'save_error') {
+          $('#save-progress-bar').hide()
+          $('#spn-front-label').text('Save Failed')
+          $('#spn-btn').attr('title', message.error)
+          enableAfterSaving()
+        } else if ((message.message === 'resource_list_show')) {
+          // show resource count from SPN status in SPN button
+          const vdata = message.data
+          if (vdata?.resources?.length) {
+            showSaving(vdata.resources.length)
+          }
+        }
+>>>>>>> 81c3c94 (Refactor webextension scripts)
+=======
+>>>>>>> a8c03dd (Display extra SPN system status when capture fails)
       }
     }
   })
@@ -893,6 +1098,9 @@ $(function() {
   setupWaybackCount()
   setupSaveListener()
   setupSettingsTabTip()
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
   $('.logo-wayback-machine').click(homepage)
   $('#newest-btn').click(openNewestPage)
   $('#oldest-btn').click(openOldestPage)
@@ -913,5 +1121,58 @@ $(function() {
   $('.btn').click(clearFocus)
   $('#annotations-btn').click(showContext)
   $('#tag-cloud-btn').click(showContext)
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
+  $('.logo-wayback-machine').on('click', homepage)
+  $('#newest-btn').on('click', openNewestPage)
+  $('#oldest-btn').on('click', openOldestPage)
+  $('#overview-btn').on('click', openOverviewPage)
+  $('#facebook-share-btn').on('click', social_share)
+  $('#twitter-share-btn').on('click', social_share)
+  $('#linkedin-share-btn').on('click', social_share)
+  $('#copy-link-btn').on('click', social_share)
+  $('#tweets-btn').on('click', searchTweet)
+  $('#about-tab-btn').on('click', about_support)
+  $('#donate-tab-btn').on('click', open_donations_page)
+  $('#settings-tab-btn').on('click', showSettings)
+  $('#feedback-tab-btn').on('click', open_feedback_page)
+  $('#site-map-btn').on('click', openSitemap)
+  $('#collections-btn').on('click', openCollections)
+  $('#urls-btn').on('click', openURLs)
+  $('#search-input').on('keydown', display_suggestions)
+  $('.btn').on('click', clearFocus)
+  $('#annotations-btn').on('click', showContext)
+  $('#tag-cloud-btn').on('click', showContext)
   
+<<<<<<< HEAD
+=======
+>>>>>>> 4a1739a (Update settings.js, replace deprecated methods)
+<<<<<<< HEAD
+>>>>>>> 1ac25ff (Update settings.js, replace deprecated methods)
+=======
+=======
+  
+<<<<<<< HEAD
+  // Prevent clicks on disabled buttons
+  $(document).on('click', '.button-disabled', function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    return false
+  })
+>>>>>>> 758d15e (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+<<<<<<< HEAD
+>>>>>>> 87c71d0 (fix: replace disabled attribute with CSS class for Bootstrap 5 compatibility)
+=======
+=======
+>>>>>>> d7483f1 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
+>>>>>>> f2985f2 (use standard HTML disabled attribute and :disabled CSS selector and bumped the version)
 })
+=======
+})
+>>>>>>> 4d915a7 (Simplify popup.js code)
+=======
+})
+>>>>>>> 9dceb52 (Refactor webextension scripts)

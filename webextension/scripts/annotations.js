@@ -53,10 +53,10 @@ function getAnnotations(type = 'url') {
         )
         item.find('#text-contain').text(exactData)
         item.find('.links').append(
-          $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in Context').click(() => {
+          $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in Context').on('click', () => {
             openByWindowSetting(rowData.links.incontext)
           })
-          // , $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in HTML').click(() => {
+          // , $('<button>').attr({ 'class': 'btn btn-red btn-auto' }).text('Show in HTML').on('click', () => {
           //   openByWindowSetting(rowData.links.html)
           // })
         )
@@ -107,7 +107,7 @@ function get_hypothesis() {
 
 // onload
 $(function() {
-  $('.tablink').click(() => {
+  $('.tablink').on('click', () => {
     showAnnotations($(this).attr('value'))
   })
   // will not run during mocha testing

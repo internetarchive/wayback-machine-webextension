@@ -41,7 +41,9 @@ let tabIdPromise
 //
 function savePageNowChecked(atab, pageUrl, silent, options) {
   checkAuthentication((results) => {
-    savePageNow(atab, pageUrl, silent, options, results?.auth_check || false)
+    if (results?.auth_check) {
+      savePageNow(atab, pageUrl, silent, options, results.auth_check)
+    }
   })
 }
 
