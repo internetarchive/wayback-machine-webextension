@@ -298,16 +298,27 @@ button.selected:focus-visible {
     margin: 0;
     overflow: hidden;
     border-radius: 5px;
+    background-color: transparent; /* Override Bootstrap 5's light gray bg so .btn-red parent shows through */
 }
 
 .progress-bar {
     background-color: #9A3B38;
+    height: 100%;
+}
+
+.progress-bar-striped {
+    background-size: 40px 40px; /* Override Bootstrap 5's 1rem stripes to match original larger stripes */
 }
 
 .progress-bar.active {
     -webkit-animation: progress-bar-stripes 0.5s linear infinite;
     -o-animation: progress-bar-stripes 0.5s linear infinite;
     animation: progress-bar-stripes 0.5s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+    from { background-position: 40px 0; }
+    to { background-position: 0 0; }
 }
 
 /* Dark Mode */
