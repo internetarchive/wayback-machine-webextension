@@ -41,7 +41,7 @@ let tabIdPromise
 //
 function savePageNowChecked(atab, pageUrl, silent, options) {
   checkAuthentication((results) => {
-    savePageNow(atab, pageUrl, silent, options, results?.auth_check || false)
+    savePageNow(atab, pageUrl.replace(/^https?:\/\/web\.archive\.org\/web\/\w*\//, ""), silent, options, results?.auth_check || false)
   })
 }
 
