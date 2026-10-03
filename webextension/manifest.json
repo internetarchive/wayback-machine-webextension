@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Wayback Machine",
+  "name": "__MSG_ext_name__",
   "version": "3.4.8",
-  "description": "The Official Wayback Machine Extension - by the Internet Archive.",
+  "description": "__MSG_ext_description__",
+  "default_locale": "en",
   "icons": {
     "16": "images/app-icon/mini-icon16.png",
     "24": "images/app-icon/mini-icon24.png",
