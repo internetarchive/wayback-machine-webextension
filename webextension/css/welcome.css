@@ -58,6 +58,7 @@ main {
     max-width: 375px;
     height: auto;
     margin: 0 auto;
+    padding: 16px;
 }
 
 /* dark mode */
