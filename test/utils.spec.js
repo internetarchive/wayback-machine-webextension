@@ -13,6 +13,18 @@ const makeValidURL = require('../webextension/scripts/utils').makeValidURL
 const cropPrefix = require('../webextension/scripts/utils').cropPrefix
 const cropScheme = require('../webextension/scripts/utils').cropScheme
 const matchWildcard = require('../webextension/scripts/utils').matchWildcard
+const tabCreateOptions = require('../webextension/scripts/utils').tabCreateOptions
+
+describe('tabCreateOptions', () => {
+  it('opens an archive tab directly after the active tab', () => {
+    expect(tabCreateOptions('https://web.archive.org/web/2006/https://example.com', { index: 4 }))
+      .to.deep.equal({ url: 'https://web.archive.org/web/2006/https://example.com', index: 5 })
+  })
+
+  it('opens a tab without an index when there is no active tab', () => {
+    expect(tabCreateOptions('https://web.archive.org/')).to.deep.equal({ url: 'https://web.archive.org/' })
+  })
+})
 
 describe('twitter', () => {
   it('should extract correct tweet url', () => {
