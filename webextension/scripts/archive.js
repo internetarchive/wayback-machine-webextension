@@ -41,7 +41,7 @@ function appendStyle() {
 function appendHTML(url, code) {
   const title = ((code < 999) ? code + ' ' : '') + (ERROR_CODE_DIC[code] || 'Error')
   const close = chrome.runtime.getURL('images/close.svg')
-  const logo = chrome.runtime.getURL('images/wayback-light.png')
+  const logo = chrome.runtime.getURL('images/wayback-light.svg')
   return `
     <div id="popup-container">
       <div id="title-txt">${title}</div>
