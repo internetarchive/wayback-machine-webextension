@@ -455,6 +455,32 @@ function isNotExcludedUrl(url) {
   return true
 }
 
+// Trims URL to remove unimportant query parameters (campaign)
+// Returns the base URL.
+function cropQuery(url) {
+  const pos = url.search(/\?/)
+  let queries = ''
+  if (pos !== -1) {
+    if (url.includes('#')) { queries = url.substring(pos + 1, url.indexOf('#')) }
+    else { queries = url.substring(pos + 1).split('&') }
+    let i = 0
+    do {
+      if (queries[i].startsWith('utm_') || queries[i].startsWith('fbclid=') || queries[i].startsWith('twclid=') ||
+          queries[i].startsWith('mc_eid=') || queries[i].startsWith('mkt_tok=') || queries[i].startsWith('_hsenc=') ||
+          queries[i].startsWith('vero_id=') || queries[i].startsWith('vero_conv=') || queries[i].startsWith('oly_anon_id=') ||
+          queries[i].startsWith('oly_enc_id=') || queries[i].startsWith('__s=')) {
+        queries.splice(i, 1)
+      }
+      else {
+        i += 1
+      }
+    } while (i < queries.length)
+    if (queries.length > 0) { return url.substring(0, pos + 1) + queries.join('&') }
+    else { return url.substring(0, pos) }
+  }
+  return url
+}
+
 function remove_port(url) {
   if (url.substr(-4) === ':80/') {
     url = url.substring(0, url.length - 4)
@@ -829,6 +855,7 @@ function initDefaultOptions () {
     fact_check_setting: false,
     /* General */
     resource_list_setting: false,
+    clean_url_setting: false,
     email_results_setting: false,
     my_archive_setting: false,
     view_setting: 'tab',
@@ -841,7 +868,8 @@ function afterAcceptTerms () {
   chrome.storage.local.set({
     agreement: true,
     private_mode_setting: false,
-    not_found_setting: true
+    not_found_setting: true,
+    clean_url_setting: true
   })
   chrome.action.setPopup({ popup: chrome.runtime.getURL('index.html') }, checkLastError)
   setupContextMenus(true)
@@ -863,6 +891,7 @@ if (typeof module !== 'undefined') {
     cropScheme,
     isNotExcludedUrl,
     getCleanUrl,
+    cropQuery,
     wmAvailabilityCheck,
     openByWindowSetting,
     sleep,
