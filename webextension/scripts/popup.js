@@ -1,8 +1,8 @@
 // popup.js
 
 // from 'utils.js'
-/*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, getCleanUrl, openByWindowSetting, hostURL */
-/*   global feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
+/*   global isArchiveUrl, isValidUrl, makeValidURL, isNotExcludedUrl, cropQuery, getCleanUrl, openByWindowSetting  */
+/*   global hostURL, feedbackURL, newshosts, dateToTimestamp, timestampToDate, viewableTimestamp, fixedEncodeURIComponent */
 /*   global attachTooltip, checkLastError, cropPrefix, cropScheme, hostHeaders, getUserInfo, checkAuthentication */
 
 let searchBoxTimer
@@ -135,6 +135,9 @@ function doSaveNow() {
     }
     if ($('#chk-screenshot').prop('checked') === true) {
       options['capture_screenshot'] = 1
+    }
+    if ($('#clean-url-setting').prop('checked') === true) {
+      url = cropQuery(url)
     }
 
     chrome.runtime.sendMessage({

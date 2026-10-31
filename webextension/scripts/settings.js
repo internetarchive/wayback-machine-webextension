@@ -37,6 +37,7 @@ function restoreSettings(items) {
   $('#auto-archive-setting').prop('checked', items.auto_archive_setting)
   $('#auto-archive-age').val(items.auto_archive_age || '99999')
   $('#auto-bookmark-setting').prop('checked', items.auto_bookmark_setting)
+  $('#clean-url-setting').prop('checked', items.clean_url_setting)
   $('#email-results-setting').prop('checked', items.email_results_setting)
   $('#my-archive-setting').prop('checked', items.my_archive_setting)
   $('#resource-list-setting').prop('checked', items.resource_list_setting)
@@ -64,6 +65,7 @@ function saveSettings() {
     auto_archive_setting: $('#auto-archive-setting').prop('checked'),
     auto_archive_age: $('#auto-archive-age').val(),
     auto_bookmark_setting: $('#auto-bookmark-setting').prop('checked'),
+    clean_url_setting: $('#clean-url-setting').prop('checked'),
     email_results_setting: $('#email-results-setting').prop('checked'),
     my_archive_setting: $('#my-archive-setting').prop('checked'),
     resource_list_setting: $('#resource-list-setting').prop('checked'),
@@ -194,6 +196,11 @@ function setupSettingsChange() {
       chrome.runtime.sendMessage({ message: 'clearFactCheck' })
     }
   })
+
+  // clean URL setting
+  $('#clean-url-setting').change((e) => {
+    $('#clean-url-setting').prop('checked', true).trigger('change')
+  })
 }
 
 function showExcludeList() {
@@ -241,6 +248,7 @@ function setupHelpDocs() {
     // general tab
     'auto-archive-setting': 'Archive URLs that have not previously been archived to the Wayback Machine.',
     'auto-bookmark-setting': 'Archive when bookmarking a website, except Excluded URLs.',
+    'clean-url-setting': 'Remove unnecessary query parameters from the URL before manually archiving.',
     'email-results-setting': 'Get an email report with the list of URLs you have captured.',
     'my-archive-setting': 'Adds URL to My Web Archive when Save Page Now is selected.',
     'notify-setting': 'Turn off all notifications.',
